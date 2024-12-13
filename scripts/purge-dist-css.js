@@ -13,7 +13,6 @@ await Promise.all([
 		await writeFile(file, css);
 
 		const postSize = (await stat(file)).size / 1024;
-		// eslint-disable-next-line no-console
 		console.log(`${file}: ${initialSize} -> ${postSize} KB`);
 	}),
 ]);

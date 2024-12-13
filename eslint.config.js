@@ -11,11 +11,18 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
+	{
+		ignores: ['dist/**/*', 'node_modules/**/*', '.*/**/*'],
+	},
+
 	eslint.configs.recommended,
+	{
+		linterOptions: {
+			reportUnusedDisableDirectives: true,
+		},
+	},
 
 	// TypeScript configs
-	tseslint.configs.strictTypeCheckedOnly,
-	tseslint.configs.stylisticTypeChecked,
 	{
 		files: ['src/**/*.{js,ts,jsx,tsx}'],
 		languageOptions: {
@@ -25,52 +32,24 @@ export default tseslint.config(
 			},
 		},
 	},
+	tseslint.configs.recommended,
+	tseslint.configs.stylistic,
 
-	// Lint rules for config files
-	{
-		files: ['*.js', '*.ts', '*.cjs'],
-		ignores: ['src/**/*'],
-		languageOptions: {
-			parser: tsParser,
-			parserOptions: {
-				project: './tsconfig.node.json',
-			},
-			globals: {
-				...globals.node,
-			},
-		},
-		rules: {
-			'@typescript-eslint/no-require-imports': 'off',
-			'comma-dangle': 'off',
-		},
-	},
-
+	// Ye-olde plugins
 	eslintConfigPrettier,
 	solid.configs['flat/typescript'],
 	tailwind.configs['flat/recommended'],
 
-	// Ignore stuff in dist
+	// Base config for all files
 	{
-		linterOptions: {
-			reportUnusedDisableDirectives: true,
-		},
-	},
-
-	{
-		// Base config for all files
 		files: ['**/*.{js,ts,jsx,tsx,cjs,mjs}'],
 		plugins: {
 			'no-relative-import-paths': noRelativeImportPaths,
 			prettier: prettierPlugin,
 			'simple-import-sort': simpleImportSort,
-
 			...importPlugin.flatConfigs?.recommended.plugins,
 		},
-		languageOptions: {
-			globals: {
-				...globals.browser,
-			},
-		},
+
 		rules: {
 			// TypeScript rules
 			'@typescript-eslint/consistent-type-imports': [
@@ -81,17 +60,11 @@ export default tseslint.config(
 				},
 			],
 			'@typescript-eslint/explicit-module-boundary-types': 'off',
-			'@typescript-eslint/no-explicit-any': 'off',
 			'@typescript-eslint/no-empty-function': 'off',
 			'@typescript-eslint/no-empty-object-type': 'off',
 			'@typescript-eslint/no-unnecessary-type-assertion': 'off',
 
 			// These are annoying -- figure them out later
-			'@typescript-eslint/no-unsafe-argument': 'off',
-			'@typescript-eslint/no-unsafe-assignment': 'off',
-			'@typescript-eslint/no-unsafe-member-access': 'off',
-			'@typescript-eslint/no-unsafe-return': 'off',
-
 			'@typescript-eslint/no-unused-vars': [
 				'error',
 				{
@@ -100,21 +73,9 @@ export default tseslint.config(
 					varsIgnorePattern: '^_',
 				},
 			],
-			'@typescript-eslint/restrict-template-expressions': [
-				'error',
-				{
-					allow: [{ name: ['Error', 'URL', 'URLSearchParams'], from: 'lib' }],
-					allowAny: false,
-					allowBoolean: true,
-					allowNullish: true,
-					allowNumber: true,
-					allowRegExp: true,
-				},
-			],
 
 			// General rules
 			'comma-dangle': ['error', 'always-multiline'],
-			'no-console': 'error',
 
 			// Import rules
 			'import/no-cycle': ['error', { ignoreExternal: true }],
@@ -139,11 +100,43 @@ export default tseslint.config(
 		},
 	},
 
-	// Misc src file rules
+	// Lint rules for config files
+	{
+		files: ['*.config.{js,ts}', '*.cjs', '.*.js', 'scripts/**/*.{js,ts}'],
+		languageOptions: {
+			globals: {
+				...globals.node,
+			},
+		},
+		rules: {
+			'@typescript-eslint/no-require-imports': 'off',
+			'comma-dangle': 'off',
+		},
+	},
+
+	// src-specific rules
 	{
 		files: ['src/**/*.{js,ts,jsx,tsx}'],
+		languageOptions: {
+			globals: {
+				...globals.browser,
+			},
+		},
 		rules: {
+			'@typescript-eslint/no-explicit-any': 'off',
+			'@typescript-eslint/restrict-template-expressions': [
+				'error',
+				{
+					allow: [{ name: ['Error', 'URL', 'URLSearchParams'], from: 'lib' }],
+					allowAny: false,
+					allowBoolean: true,
+					allowNullish: true,
+					allowNumber: true,
+					allowRegExp: true,
+				},
+			],
 			'import/no-default-export': 'error',
+			'no-console': 'error',
 			'no-relative-import-paths/no-relative-import-paths': [
 				'error',
 				{
@@ -154,16 +147,16 @@ export default tseslint.config(
 			],
 
 			// Tailwind styling overrides
-			'tailwindcss/no-arbitrary-value': 'warn',
-			'tailwindcss/no-custom-classname': 'error',
+			// 'tailwindcss/no-arbitrary-value': 'warn',
+			// 'tailwindcss/no-custom-classname': 'error',
 		},
 
-		settings: {
-			tailwindcss: {
-				callees: ['classnames', 'clsx', 'cx'],
-				classRegex: '^class(List|Name)?$',
-			},
-		},
+		// settings: {
+		// 	tailwindcss: {
+		// 		callees: ['classnames', 'clsx', 'cx'],
+		// 		classRegex: '^class(List|Name)?$',
+		// 	},
+		// },
 	},
 
 	// Allow conosle log in logging

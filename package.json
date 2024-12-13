@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && npm run purge-css",
-    "purge-css": "node ./purge-dist-css.js",
+    "purge-css": "node ./scripts/purge-dist-css.js",
     "lint": "eslint --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",

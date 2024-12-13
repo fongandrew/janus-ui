@@ -6,6 +6,6 @@
 		"moduleResolution": "bundler",
 		"strict": true
 	},
-	"exclude": ["src", "vitest.setup.ts"],
-	"include": ["*.cjs", ".*.cjs", "*.js", ".*.js", "*.ts"]
+	"exclude": ["dist", "src", "vitest.setup.ts"],
+	"include": ["*.config.js", "*.config.ts", "*rc.js", "scripts"]
 }
