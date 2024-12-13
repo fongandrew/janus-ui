@@ -6,8 +6,8 @@ export default {
 	darkMode: [
 		'variant',
 		[
-			'@media (prefers-color-scheme: dark) { &:not([data-theme="light"] *) }',
-			'&:is([data-theme="dark"] *)',
+			'@media (prefers-color-scheme: dark) { &:not([data-color-scheme="light"] *) }',
+			'&:is([data-color-scheme="dark"] *)',
 		],
 	],
 	content: ['.src/**/*.html', './src/**/*.{js,ts,jsx,tsx}'],
@@ -120,8 +120,8 @@ export default {
 						'--tw-prose-quote-borders': 'hsl(var(--border))',
 						'--tw-prose-captions': 'hsl(var(--muted-foreground))',
 						'--tw-prose-code': 'hsl(var(--foreground))',
-						'--tw-prose-pre-code': 'hsl(var(--foreground))',
-						'--tw-prose-pre-bg': 'hsl(var(--muted))',
+						'--tw-prose-pre-code': 'hsl(var(--code-foreground))',
+						'--tw-prose-pre-bg': 'hsl(var(--code-background))',
 						'--tw-prose-th-borders': 'hsl(var(--border))',
 						'--tw-prose-td-borders': 'hsl(var(--border))',
 						// Customize paragraph spacing
