@@ -1,0 +1,11 @@
+{
+	"compilerOptions": {
+		"skipLibCheck": true,
+		"allowSyntheticDefaultImports": true,
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"strict": true
+	},
+	"exclude": ["src", "vitest.setup.ts"],
+	"include": ["*.cjs", ".*.cjs", "*.js", ".*.js", "*.ts"]
+}
