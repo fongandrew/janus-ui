@@ -6,7 +6,7 @@ import { render } from 'solid-js/web';
 const App: Component = () => {
 	return (
 		<>
-			<div class="text-blue-500">Hello world</div>
+			<div class="bg-primary text-primary-foreground">Hello world</div>
 		</>
 	);
 };

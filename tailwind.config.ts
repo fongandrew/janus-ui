@@ -12,100 +12,100 @@ export default {
 	],
 	content: ['.src/**/*.html', './src/**/*.{js,ts,jsx,tsx}'],
 	theme: {
+		colors: {
+			background: 'hsl(var(--background))',
+			foreground: 'hsl(var(--foreground))',
+			card: {
+				DEFAULT: 'hsl(var(--card))',
+				foreground: 'hsl(var(--card-foreground))',
+			},
+			code: {
+				background: 'hsl(var(--code-background))',
+				foreground: 'hsl(var(--code-foreground))',
+			},
+			popover: {
+				DEFAULT: 'hsl(var(--popover))',
+				foreground: 'hsl(var(--popover-foreground))',
+			},
+			primary: {
+				DEFAULT: 'hsl(var(--primary))',
+				foreground: 'hsl(var(--primary-foreground))',
+			},
+			secondary: {
+				DEFAULT: 'hsl(var(--secondary))',
+				foreground: 'hsl(var(--secondary-foreground))',
+			},
+			muted: {
+				DEFAULT: 'hsl(var(--muted))',
+				foreground: 'hsl(var(--muted-foreground))',
+			},
+			accent: {
+				DEFAULT: 'hsl(var(--accent))',
+				foreground: 'hsl(var(--accent-foreground))',
+			},
+			destructive: {
+				DEFAULT: 'hsl(var(--destructive))',
+				foreground: 'hsl(var(--destructive-foreground))',
+			},
+			border: 'hsl(var(--border))',
+			ring: 'hsl(var(--ring))',
+		},
+
+		borderRadius: {
+			sm: '0.25rem',
+			md: '0.375rem',
+			lg: '0.5rem',
+		},
+
+		borderWidth: {
+			sm: '1px',
+			md: '0.25rem',
+			lg: '0.5rem',
+		},
+
+		fontSize: {
+			xs: ['0.8125rem', { lineHeight: '1.125rem' }],
+			sm: ['0.875rem', { lineHeight: '1.25rem' }],
+			md: ['1rem', { lineHeight: '1.5rem' }],
+			lg: ['1.125rem', { lineHeight: '1.75rem' }],
+			xl: ['1.25rem', { lineHeight: '1.75rem' }],
+			'2xl': ['1.5rem', { lineHeight: '2rem' }],
+
+			// Alias for md
+			base: ['1rem', { lineHeight: '1.5rem' }],
+
+			// Identical to normal t-shirt sizes for now but separate
+			// in case we want to tweak them independently
+			'input-sm': ['0.875rem', { lineHeight: '1.25rem' }],
+			'input-md': ['1rem', { lineHeight: '1.5rem' }],
+			'input-lg': ['1.125rem', { lineHeight: '1.75rem' }],
+		},
+
+		height: {
+			'input-sm': '2rem',
+			'input-md': '2.25rem',
+			'input-lg': '3rem',
+		},
+
+		spacing: {
+			// Base sizes
+			xs: '0.25rem',
+			sm: '0.5rem',
+			md: '1rem',
+			lg: '1.5rem',
+			xl: '2rem',
+			'2xl': '2.5rem',
+
+			// Calculated as (input height - corresponding line height) / 2
+			// These are useful as a way to get an element to the sought after
+			// height in the one-line case while still leaving it flexible
+			// if more lines show up
+			'input-pad-sm': '0.375rem',
+			'input-pad-md': '0.375rem',
+			'input-pad-lg': '0.625rem',
+		},
+
 		extend: {
-			colors: {
-				background: 'hsl(var(--background))',
-				foreground: 'hsl(var(--foreground))',
-				card: {
-					DEFAULT: 'hsl(var(--card))',
-					foreground: 'hsl(var(--card-foreground))',
-				},
-				code: {
-					background: 'hsl(var(--code-background))',
-					foreground: 'hsl(var(--code-foreground))',
-				},
-				popover: {
-					DEFAULT: 'hsl(var(--popover))',
-					foreground: 'hsl(var(--popover-foreground))',
-				},
-				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))',
-				},
-				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))',
-				},
-				muted: {
-					DEFAULT: 'hsl(var(--muted))',
-					foreground: 'hsl(var(--muted-foreground))',
-				},
-				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))',
-				},
-				destructive: {
-					DEFAULT: 'hsl(var(--destructive))',
-					foreground: 'hsl(var(--destructive-foreground))',
-				},
-				border: 'hsl(var(--border))',
-				ring: 'hsl(var(--ring))',
-			},
-
-			borderRadius: {
-				sm: '0.25rem',
-				md: '0.375rem',
-				lg: '0.5rem',
-			},
-
-			borderWidth: {
-				sm: '1px',
-				md: '0.25rem',
-				lg: '0.5rem',
-			},
-
-			fontSize: {
-				xs: ['0.8125rem', { lineHeight: '1.125rem' }],
-				sm: ['0.875rem', { lineHeight: '1.25rem' }],
-				md: ['1rem', { lineHeight: '1.5rem' }],
-				lg: ['1.125rem', { lineHeight: '1.75rem' }],
-				xl: ['1.25rem', { lineHeight: '1.75rem' }],
-				'2xl': ['1.5rem', { lineHeight: '2rem' }],
-
-				// Alias for md
-				base: ['1rem', { lineHeight: '1.5rem' }],
-
-				// Identical to normal t-shirt sizes for now but separate
-				// in case we want to tweak them independently
-				'input-sm': ['0.875rem', { lineHeight: '1.25rem' }],
-				'input-md': ['1rem', { lineHeight: '1.5rem' }],
-				'input-lg': ['1.125rem', { lineHeight: '1.75rem' }],
-			},
-
-			height: {
-				'input-sm': '2rem',
-				'input-md': '2.25rem',
-				'input-lg': '3rem',
-			},
-
-			spacing: {
-				// Base sizes
-				xs: '0.25rem',
-				sm: '0.5rem',
-				md: '1rem',
-				lg: '1.5rem',
-				xl: '2rem',
-				'2xl': '2.5rem',
-
-				// Calculated as (input height - corresponding line height) / 2
-				// These are useful as a way to get an element to the sought after
-				// height in the one-line case while still leaving it flexible
-				// if more lines show up
-				'input-pad-sm': '0.375rem',
-				'input-pad-md': '0.375rem',
-				'input-pad-lg': '0.625rem',
-			},
-
 			typography: {
 				DEFAULT: {
 					css: {
