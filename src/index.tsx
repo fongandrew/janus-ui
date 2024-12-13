@@ -3,10 +3,13 @@ import '~/shared/style/tailwind.css';
 import { type Component } from 'solid-js';
 import { render } from 'solid-js/web';
 
+import { Button } from '~/shared/components/button';
+
 const App: Component = () => {
 	return (
 		<>
-			<div class="bg-primary text-primary-foreground">Hello world</div>
+			<div class="bg-primary text-primary-fg">Hello world</div>
+			<Button>Click me</Button>
 		</>
 	);
 };
