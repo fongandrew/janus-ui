@@ -1,6 +1,7 @@
-import tailwindCSS from '@tailwindcss/postcss';
+import autoprefixer from 'autoprefixer';
+import tailwindCSS from 'tailwindcss';
 import pruneVars from 'postcss-prune-var';
 
 export default {
-	plugins: [tailwindCSS, pruneVars],
+	plugins: [tailwindCSS, autoprefixer, pruneVars],
 };

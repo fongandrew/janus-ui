@@ -6,6 +6,7 @@ import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths';
 import prettierPlugin from 'eslint-plugin-prettier';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import solid from 'eslint-plugin-solid';
+import tailwind from 'eslint-plugin-tailwindcss';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -44,10 +45,9 @@ export default tseslint.config(
 		},
 	},
 
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 	eslintConfigPrettier,
-
 	solid.configs['flat/typescript'],
+	tailwind.configs['flat/recommended'],
 
 	// Ignore stuff in dist
 	{
@@ -63,7 +63,7 @@ export default tseslint.config(
 			'no-relative-import-paths': noRelativeImportPaths,
 			prettier: prettierPlugin,
 			'simple-import-sort': simpleImportSort,
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
 			...importPlugin.flatConfigs?.recommended.plugins,
 		},
 		languageOptions: {
@@ -85,8 +85,13 @@ export default tseslint.config(
 			'@typescript-eslint/no-empty-function': 'off',
 			'@typescript-eslint/no-empty-object-type': 'off',
 			'@typescript-eslint/no-unnecessary-type-assertion': 'off',
+
+			// These are annoying -- figure them out later
+			'@typescript-eslint/no-unsafe-argument': 'off',
 			'@typescript-eslint/no-unsafe-assignment': 'off',
+			'@typescript-eslint/no-unsafe-member-access': 'off',
 			'@typescript-eslint/no-unsafe-return': 'off',
+
 			'@typescript-eslint/no-unused-vars': [
 				'error',
 				{
@@ -147,6 +152,17 @@ export default tseslint.config(
 					rootDir: 'src',
 				},
 			],
+
+			// Tailwind styling overrides
+			'tailwindcss/no-arbitrary-value': 'warn',
+			'tailwindcss/no-custom-classname': 'error',
+		},
+
+		settings: {
+			tailwindcss: {
+				callees: ['classnames', 'clsx', 'cx'],
+				classRegex: '^class(List|Name)?$',
+			},
 		},
 	},
 

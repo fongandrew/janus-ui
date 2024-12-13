@@ -1,6 +1,6 @@
 /** @type {import('stylelint').Config} */
 export default {
-	extends: ['stylelint-config-standard'],
+	extends: ['stylelint-config-standard', 'stylelint-config-tailwindcss'],
 	rules: {
 		'import-notation': null,
 		'selector-class-pattern': null,
