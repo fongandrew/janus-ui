@@ -9,5 +9,8 @@
     ],
     "tailwindCSS.experimental.classRegex": [
         "cx\\(['\"]([^'\"]*)"
-    ]
+    ],
+    "files.exclude": {
+        "dist": true
+    }
 }
