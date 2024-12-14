@@ -4,6 +4,7 @@ import { PurgeCSS } from 'purgecss';
 const purgeCSSResult = await new PurgeCSS().purge({
 	content: ['./dist/**/*.js', './dist/**/*.html'],
 	css: ['./dist/**/*.css'],
+	variables: true,
 });
 
 await Promise.all([
