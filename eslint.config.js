@@ -102,7 +102,13 @@ export default tseslint.config(
 
 	// Lint rules for config files
 	{
-		files: ['*.config.{js,ts}', '*.cjs', '.*.js', 'scripts/**/*.{js,ts}'],
+		files: [
+			'*.config.{js,ts}',
+			'*.cjs',
+			'.*.js',
+			'plugins/**/*.{js,ts}',
+			'scripts/**/*.{js,ts}',
+		],
 		languageOptions: {
 			globals: {
 				...globals.node,

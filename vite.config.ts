@@ -1,8 +1,17 @@
 import solidPlugin from 'vite-plugin-solid';
 import { defineConfig } from 'vitest/config';
 
+import purgeCSSPlugin from './plugins/vite-plugin-purgecss';
+
 export default defineConfig({
-	plugins: [solidPlugin()],
+	plugins: [
+		solidPlugin(),
+		purgeCSSPlugin({
+			variables: true,
+			keyframes: true,
+			fontFace: true,
+		}),
+	],
 	css: {
 		modules: {
 			localsConvention: 'camelCaseOnly',

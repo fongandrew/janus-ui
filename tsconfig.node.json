@@ -7,5 +7,5 @@
 		"strict": true
 	},
 	"exclude": ["dist", "src", "vitest.setup.ts"],
-	"include": ["*.config.js", "*.config.ts", "*rc.js", "scripts"]
+	"include": ["*.config.js", "*.config.ts", "*rc.js", "plugins", "scripts"]
 }
