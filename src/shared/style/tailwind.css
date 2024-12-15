@@ -1,11 +1,16 @@
-@layer kit;
+@layer kit, kit-helpers;
+
+@import '~/shared/style/helpers.css';
+@import '~/shared/components/box.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Color scheme */
 @layer base {
 	:root {
+		/* Default (light) color scheme */
 		--background: 0 0% 100%;
 		--foreground: 0 0% 3.9%;
 		--card: 0 0% 100%;
@@ -68,6 +73,7 @@
 	}
 }
 
+/* Defaults */
 @layer base {
 	* {
 		@apply border-border;
@@ -75,5 +81,10 @@
 
 	body {
 		@apply bg-background text-base text-foreground;
+		@apply underline-offset;
+	}
+
+	a {
+		@apply link-style;
 	}
 }

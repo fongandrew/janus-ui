@@ -1,0 +1,19 @@
+@tailwind base;
+
+/*
+	Helpers + common styles -- this goes in base rather than utilities because Tailwind orders
+	by base / components / utilities, and we want these to be available for use in compnents.
+*/
+@layer base {
+	.with-disabled {
+		@apply disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50;
+	}
+
+	.with-focus-ring {
+		@apply focus-visible:ring focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset;
+	}
+
+	.link-style {
+		@apply text-primary underline hover:text-accent;
+	}
+}

@@ -1,0 +1,57 @@
+@import '~/shared/style/helpers.css';
+
+@tailwind components;
+@tailwind utilities;
+
+@layer kit {
+	.btn {
+		/* stylelint-disable-next-line value-keyword-case */
+		border: 1px solid theme(colors.primary.DEFAULT);
+	}
+}
+
+@layer components {
+	.btn {
+		@apply with-disabled with-focus-ring hover:contrast-hover inline-flex items-center justify-center whitespace-nowrap transition-[colors,shadow] hover:shadow-md active:shadow-none [&_svg]:pointer-events-none [&_svg]:size-[1em] [&_svg]:shrink-0;
+
+		/* Secondary by default */
+		@apply bg-secondary text-secondary-fg;
+
+		/* md by default */
+		@apply gap-sm rounded-md px-md py-input-pad-md text-input-md;
+	}
+}
+
+@layer utilities {
+	/* Color variants */
+
+	.btnPrimary {
+		@apply bg-primary text-primary-fg;
+	}
+
+	.btnDanger {
+		@apply bg-danger text-danger-fg;
+	}
+
+	.btnGhost {
+		@apply bg-transparent text-accent;
+	}
+
+	.btnLink {
+		@apply link-style;
+	}
+
+	.btnOutline {
+		@apply border-md border-input;
+	}
+
+	/* Size variants */
+
+	.btnSm {
+		@apply gap-xs rounded-sm px-sm py-input-pad-sm text-input-sm hover:shadow-sm active:shadow-none;
+	}
+
+	.btnLg {
+		@apply gap-sm rounded-lg px-sm py-input-pad-lg text-input-lg hover:shadow-lg active:shadow-none;
+	}
+}

@@ -1,0 +1,8 @@
+@import '~/shared/style/helpers.css';
+
+@layer base {
+	.boxo {
+		/* md by default */
+		@apply p-md;
+	}
+}
