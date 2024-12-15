@@ -2,6 +2,59 @@ import tailwindCSSTypography from '@tailwindcss/typography';
 import { type Config } from 'tailwindcss';
 import tailwindCSSAnimate from 'tailwindcss-animate';
 
+// Helper to convert rems to pixels using a 16px base
+const pxToRem = (px: number) => `${parseFloat((px / 16).toFixed(4))}rem`;
+
+// Base pixel values we use to derive other stuff
+const px = {
+	borderRadius: {
+		sm: 4,
+		md: 6,
+		lg: 8,
+	},
+	spacing: {
+		xs: 4,
+		sm: 8,
+		md: 16,
+		lg: 24,
+		xl: 32,
+		'2xl': 40,
+	},
+	fontSize: {
+		xs: 13,
+		sm: 14,
+		md: 15,
+		lg: 16,
+		xl: 20,
+		'2xl': 24,
+		input: {
+			sm: 14,
+			md: 15,
+			lg: 26,
+		},
+	},
+	height: {
+		input: {
+			sm: 28,
+			md: 32,
+			lg: 36,
+		},
+	},
+	lineHeight: {
+		xs: 18,
+		sm: 20,
+		md: 22,
+		lg: 24,
+		xl: 28,
+		'2xl': 32,
+		input: {
+			sm: 14,
+			md: 15,
+			lg: 26,
+		},
+	},
+} as const;
+
 export default {
 	darkMode: [
 		'variant',
@@ -55,50 +108,44 @@ export default {
 
 		borderRadius: {
 			'0': '0',
-			sm: '0.25rem',
-			md: '0.375rem',
-			lg: '0.5rem',
+			sm: pxToRem(px.borderRadius.sm),
+			md: pxToRem(px.borderRadius.md),
+			lg: pxToRem(px.borderRadius.lg),
 		},
 
 		borderWidth: {
 			'0': '0',
-			sm: '1px',
-			md: '0.0625rem',
-			lg: '0.125rem',
+			sm: '1px', // Separate px value so it's always smallest regardless of rem
+			md: pxToRem(1),
+			lg: pxToRem(2),
 		},
 
 		fontSize: {
-			xs: ['0.8125rem', { lineHeight: '1.125rem' }], // 13/18px
-			sm: ['0.875rem', { lineHeight: '1.25rem' }], // 14/20px
-			md: ['0.9375rem', { lineHeight: '1.375rem' }], // 15/22px
-			lg: ['1rem', { lineHeight: '1.5rem' }], // 16/24px
-			xl: ['1.25rem', { lineHeight: '1.75rem' }], // 20/28px
-			'2xl': ['1.5rem', { lineHeight: '2rem' }], // 24/32px
+			xs: [pxToRem(px.fontSize.xs), { lineHeight: pxToRem(px.lineHeight.xs) }],
+			sm: [pxToRem(px.fontSize.sm), { lineHeight: pxToRem(px.lineHeight.sm) }],
+			md: [pxToRem(px.fontSize.md), { lineHeight: pxToRem(px.lineHeight.md) }],
+			lg: [pxToRem(px.fontSize.lg), { lineHeight: pxToRem(px.lineHeight.lg) }],
+			xl: [pxToRem(px.fontSize.xl), { lineHeight: pxToRem(px.lineHeight.xl) }],
+			'2xl': [pxToRem(px.fontSize['2xl']), { lineHeight: pxToRem(px.lineHeight['2xl']) }],
 
 			// Alias for md
-			base: ['1rem', { lineHeight: '1.5rem' }],
+			base: [pxToRem(px.fontSize.md), { lineHeight: pxToRem(px.lineHeight.md) }],
 
 			// Identical to normal t-shirt sizes for now but separate
 			// in case we want to tweak them independently
-			'input-sm': ['0.875rem', { lineHeight: '1.25rem' }],
-			'input-md': ['0.9375rem', { lineHeight: '1.375rem' }],
-			'input-lg': ['1.5rem', { lineHeight: '1.5rem' }],
-		},
-
-		height: {
-			'input-sm': '1.75rem',
-			'input-md': '2rem',
-			'input-lg': '2.25rem',
+			'input-sm': [pxToRem(px.fontSize.sm), { lineHeight: pxToRem(px.lineHeight.sm) }],
+			'input-md': [pxToRem(px.fontSize.md), { lineHeight: pxToRem(px.lineHeight.md) }],
+			'input-lg': [pxToRem(px.fontSize.lg), { lineHeight: pxToRem(px.lineHeight.lg) }],
 		},
 
 		ringWidth: {
 			'0': '0',
-			DEFAULT: '0.125rem',
+			DEFAULT: pxToRem(2),
 		},
 
 		ringOffsetWidth: {
 			'0': '0',
-			DEFAULT: '0.125rem',
+			DEFAULT: pxToRem(2),
 		},
 
 		ringOpacity: {
@@ -109,20 +156,19 @@ export default {
 		spacing: {
 			// Base sizes
 			'0': '0',
-			xs: '0.25rem',
-			sm: '0.5rem',
-			md: '1rem',
-			lg: '1.5rem',
-			xl: '2rem',
-			'2xl': '2.5rem',
+			xs: pxToRem(px.spacing.xs),
+			sm: pxToRem(px.spacing.sm),
+			md: pxToRem(px.spacing.md),
+			lg: pxToRem(px.spacing.lg),
+			xl: pxToRem(px.spacing.xl),
+			'2xl': pxToRem(px.spacing['2xl']),
 
-			// Calculated as (input height - corresponding line height) / 2
 			// These are useful as a way to get an element to the sought after
 			// height in the one-line case while still leaving it flexible
 			// if more lines show up
-			'input-pad-sm': '0.25rem',
-			'input-pad-md': '0.3125rem',
-			'input-pad-lg': '0.375rem',
+			'input-pad-sm': pxToRem((px.height.input.sm - px.lineHeight.sm) / 2),
+			'input-pad-md': pxToRem((px.height.input.md - px.lineHeight.md) / 2),
+			'input-pad-lg': pxToRem((px.height.input.lg - px.lineHeight.lg) / 2),
 		},
 
 		textUnderlineOffset: {
@@ -130,6 +176,17 @@ export default {
 		},
 
 		extend: {
+			contrast: {
+				hover: '.95',
+			},
+
+			height: {
+				// Input sizes
+				'input-sm': pxToRem(px.height.input.sm),
+				'input-md': pxToRem(px.height.input.md),
+				'input-lg': pxToRem(px.height.input.lg),
+			},
+
 			typography: {
 				DEFAULT: {
 					css: {
