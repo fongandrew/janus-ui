@@ -1,13 +1,15 @@
 @import '~/shared/style/helpers.css';
 
-@layer kit {
+@layer components {
 	.group {
 		@apply flex items-center;
 
 		/* md by default */
 		@apply gap-md;
 	}
+}
 
+@layer utilities {
 	/* Size variants */
 
 	.groupSm {

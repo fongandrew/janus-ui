@@ -1,7 +1,13 @@
 @layer kit, kit-helpers;
 
+/*
+	Manually importing all our component styles here to avoid ordering issues
+	TODO: Switch to module imports and rely on @layer to handle ordering with Tailwind v4
+*/
 @import '~/shared/style/helpers.css';
+@import '~/shared/components/button.css';
 @import '~/shared/components/box.css';
+@import '~/shared/components/group.css';
 
 @tailwind base;
 @tailwind components;

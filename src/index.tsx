@@ -6,14 +6,13 @@ import { render } from 'solid-js/web';
 
 import { Box } from '~/shared/components/box';
 import { Button } from '~/shared/components/button';
-import { btnDanger, btnLg, btnPrimary, btnSm } from '~/shared/components/button.module.css';
 import { Group } from '~/shared/components/group';
 
 const App: Component = () => {
 	return (
 		<Box class="p-lg">
 			<Group>
-				<Button class={btnSm}>
+				<Button class="btnSm">
 					<Settings /> Small Button
 				</Button>
 
@@ -21,13 +20,13 @@ const App: Component = () => {
 					<Settings /> Default Button
 				</Button>
 
-				<Button class={btnLg}>
+				<Button class="btnLg">
 					<Settings /> Large Button
 				</Button>
 			</Group>
 			<Group>
-				<Button class={btnPrimary}>Primary</Button>
-				<Button class={btnDanger}>Danger</Button>
+				<Button class="btnPrimary">Primary</Button>
+				<Button class="btnDanger">Danger</Button>
 			</Group>
 		</Box>
 	);

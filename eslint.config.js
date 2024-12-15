@@ -153,16 +153,16 @@ export default tseslint.config(
 			],
 
 			// Tailwind styling overrides
-			// 'tailwindcss/no-arbitrary-value': 'warn',
-			// 'tailwindcss/no-custom-classname': 'error',
+			'tailwindcss/no-arbitrary-value': 'warn',
+			'tailwindcss/no-custom-classname': 'error',
 		},
 
-		// settings: {
-		// 	tailwindcss: {
-		// 		callees: ['classnames', 'clsx', 'cx'],
-		// 		classRegex: '^class(List|Name)?$',
-		// 	},
-		// },
+		settings: {
+			tailwindcss: {
+				callees: ['classnames', 'clsx', 'cx'],
+				classRegex: '^class(List|Name)?$',
+			},
+		},
 	},
 
 	// Allow conosle log in logging

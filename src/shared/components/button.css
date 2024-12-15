@@ -1,18 +1,8 @@
 @import '~/shared/style/helpers.css';
 
-@tailwind components;
-@tailwind utilities;
-
-@layer kit {
-	.btn {
-		/* stylelint-disable-next-line value-keyword-case */
-		border: 1px solid theme(colors.primary.DEFAULT);
-	}
-}
-
 @layer components {
 	.btn {
-		@apply with-disabled with-focus-ring hover:contrast-hover inline-flex items-center justify-center whitespace-nowrap transition-[colors,shadow] hover:shadow-md active:shadow-none [&_svg]:pointer-events-none [&_svg]:size-[1em] [&_svg]:shrink-0;
+		@apply with-disabled with-focus-ring inline-flex items-center justify-center whitespace-nowrap transition-[colors,shadow] hover:shadow-md hover:contrast-hover active:shadow-none [&_svg]:pointer-events-none [&_svg]:size-[1em] [&_svg]:shrink-0;
 
 		/* Secondary by default */
 		@apply bg-secondary text-secondary-fg;

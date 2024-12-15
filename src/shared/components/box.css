@@ -1,7 +1,7 @@
 @import '~/shared/style/helpers.css';
 
-@layer base {
-	.boxo {
+@layer components {
+	.box {
 		/* md by default */
 		@apply p-md;
 	}
