@@ -1,0 +1,27 @@
+@import '~/shared/style/helpers.css';
+
+@layer components {
+	.c-card {
+		@apply border-dynamic-card rounded-lg border-md bg-card text-card-fg shadow;
+	}
+
+	.c-card__header {
+		@apply pt-txt-pad-md flex-col gap-sm px-md pb-0;
+	}
+
+	.c-card__title {
+		@apply font-semibold;
+	}
+
+	.c-card__description {
+		@apply text-sm text-muted;
+	}
+
+	.c-card__content {
+		@apply p-md;
+	}
+
+	.c-card__footer {
+		@apply flex items-center justify-between gap-sm px-md pb-md pt-0;
+	}
+}

@@ -55,6 +55,13 @@ const px = {
 			lg: 26,
 		},
 	},
+	shadow: {
+		DEFAULT: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
+		sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+		md: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
+		lg: '0 6px 9px -2px rgb(0 0 0 / 0.05), 0 3px 5px -3px rgb(0 0 0 / 0.05)',
+		xl: '0 12px 18px -4px rgb(0 0 0 / 0.05)',
+	},
 } as const;
 
 export default {
@@ -167,6 +174,12 @@ export default {
 			lg: pxToRem(px.spacing.lg),
 			xl: pxToRem(px.spacing.xl),
 			'2xl': pxToRem(px.spacing['2xl']),
+
+			// These are useful as a way to get an even vertical padding that
+			// accounts for text line height
+			'txt-pad-sm': pxToRem(px.spacing.sm - (px.lineHeight.sm - px.fontSize.sm) / 2),
+			'txt-pad-md': pxToRem(px.spacing.md - (px.lineHeight.md - px.fontSize.md) / 2),
+			'txt-pad-lg': pxToRem(px.spacing.lg - (px.lineHeight.lg - px.fontSize.lg) / 2),
 
 			// These are useful as a way to get an element to the sought after
 			// height in the one-line case while still leaving it flexible
