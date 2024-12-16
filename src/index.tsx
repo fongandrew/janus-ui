@@ -7,27 +7,32 @@ import { render } from 'solid-js/web';
 import { Box } from '~/shared/components/box';
 import { Button } from '~/shared/components/button';
 import { Group } from '~/shared/components/group';
+import { Stack } from '~/shared/components/stack';
 
 const App: Component = () => {
 	return (
 		<Box class="p-lg">
-			<Group>
-				<Button class="btnSm">
-					<Settings /> Small Button
-				</Button>
+			<Stack>
+				<Group>
+					<Button class="c-btn--sm">
+						<Settings /> Small Button
+					</Button>
 
-				<Button>
-					<Settings /> Default Button
-				</Button>
+					<Button>
+						<Settings /> Default Button
+					</Button>
 
-				<Button class="btnLg">
-					<Settings /> Large Button
-				</Button>
-			</Group>
-			<Group>
-				<Button class="btnPrimary">Primary</Button>
-				<Button class="btnDanger">Danger</Button>
-			</Group>
+					<Button class="c-btn--lg">
+						<Settings /> Large Button
+					</Button>
+				</Group>
+				<Group>
+					<Button class="c-btn--primary">Primary</Button>
+					<Button class="c-btn--danger">Danger</Button>
+					<Button class="c-btn--ghost">Ghost</Button>
+					<Button class="c-btn--link">Link</Button>
+				</Group>
+			</Stack>
 		</Box>
 	);
 };
