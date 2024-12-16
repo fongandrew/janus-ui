@@ -17,6 +17,8 @@ import {
 import { Grid } from '~/shared/components/grid';
 import { Group } from '~/shared/components/group';
 import { Input } from '~/shared/components/input';
+import { Label } from '~/shared/components/label';
+import { LabelStack } from '~/shared/components/label-stack';
 import { Stack } from '~/shared/components/stack';
 import { Textarea } from '~/shared/components/textarea';
 
@@ -60,21 +62,30 @@ const App: Component = () => {
 				<Card>
 					<CardHeader>
 						<CardTitle>Inputs</CardTitle>
-						<CardDescription>Text input fields in different sizes</CardDescription>
+						<CardDescription>Text input fields in different states</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<Stack>
-							<Input placeholder="Default (medium) input" />
-							<Input aria-invalid placeholder="Error state input" />
-							<Input disabled placeholder="Disabled input" />
+							<LabelStack>
+								<Label>Default Input</Label>
+								<Input placeholder="Placeholder content" />
+							</LabelStack>
+							<LabelStack>
+								<Label class="c-label--error">Error State Input</Label>
+								<Input aria-invalid="true" placeholder="Some wrong value" />
+							</LabelStack>
+							<LabelStack>
+								<Label class="c-label--disabled">Disabled Input</Label>
+								<Input disabled placeholder="Can't touch this" />
+							</LabelStack>
 						</Stack>
 					</CardContent>
 				</Card>
 
 				<Card>
 					<CardHeader>
-						<CardTitle>Inputs</CardTitle>
-						<CardDescription>Text input fields in different sizes</CardDescription>
+						<CardTitle>Text areas</CardTitle>
+						<CardDescription>Larger input areas</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<Stack>
@@ -87,21 +98,8 @@ const App: Component = () => {
 
 				<Card>
 					<CardHeader>
-						<CardTitle>Card Two</CardTitle>
-						<CardDescription>Another example card in the grid</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<p>This card demonstrates the responsive grid layout.</p>
-					</CardContent>
-					<CardFooter>
-						<Button class="c-btn--primary">Learn More</Button>
-					</CardFooter>
-				</Card>
-
-				<Card>
-					<CardHeader>
-						<CardTitle>Card Three</CardTitle>
-						<CardDescription>A third card to show the grid in action</CardDescription>
+						<CardTitle>Card with a footer</CardTitle>
+						<CardDescription>A card to show footer + grid in action</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<p>The grid will adjust columns based on screen size.</p>

@@ -1,0 +1,16 @@
+@layer components {
+	.c-label {
+		@apply text-input-md font-medium;
+		@apply block;
+	}
+}
+
+@layer utilities {
+	.c-label--error {
+		@apply text-danger;
+	}
+
+	.c-label--disabled {
+		@apply text-muted;
+	}
+}

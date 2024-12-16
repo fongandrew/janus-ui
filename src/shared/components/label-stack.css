@@ -1,0 +1,11 @@
+@import '~/shared/style/helpers.css';
+
+@layer components {
+	.c-label-stack {
+		@apply flex flex-col gap-xs;
+	}
+
+	.c-label-stack label {
+		@apply px-xs;
+	}
+}
