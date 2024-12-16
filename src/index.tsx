@@ -16,6 +16,7 @@ import {
 } from '~/shared/components/card';
 import { Grid } from '~/shared/components/grid';
 import { Group } from '~/shared/components/group';
+import { Input } from '~/shared/components/input';
 import { Stack } from '~/shared/components/stack';
 
 const App: Component = () => {
@@ -50,6 +51,21 @@ const App: Component = () => {
 								<Button class="c-btn--ghost">Ghost</Button>
 								<Button class="c-btn--link">Link</Button>
 							</Group>
+						</Stack>
+					</CardContent>
+				</Card>
+
+				<Card class="col-span-full">
+					<CardHeader>
+						<CardTitle>Inputs</CardTitle>
+						<CardDescription>Text input fields in different sizes</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<Stack>
+							<Input class="c-input--sm" placeholder="Small input" />
+							<Input placeholder="Default (medium) input" />
+							<Input class="c-input--lg" placeholder="Large input" />
+							<Input aria-invalid placeholder="Error state input" />
 						</Stack>
 					</CardContent>
 				</Card>

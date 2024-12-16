@@ -106,10 +106,13 @@ export default {
 				DEFAULT: 'var(--danger)',
 				fg: 'var(--danger-fg)',
 			},
+			input: {
+				bg: 'var(--input-bg)',
+				fg: 'var(--input-fg)',
+			},
 			muted: 'var(--muted)',
 			link: 'var(--link)',
 			border: 'var(--border)',
-			input: 'var(--input)',
 			ring: 'var(--ring)',
 		},
 

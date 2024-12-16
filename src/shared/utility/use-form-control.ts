@@ -3,7 +3,10 @@ import { createEffect, createMemo, mergeProps, splitProps } from 'solid-js';
 /** Listener that selectively disables event propagation if aria-disabled */
 function preventDefaultIfAriaDisabled(event: Event) {
 	const target = event.target as HTMLElement;
-	if (target && target.closest('[aria-disabled]')?.getAttribute('aria-disabled') !== 'false') {
+	if (!target) return;
+
+	const closestAriaDisabled = target.closest('[aria-disabled]');
+	if (closestAriaDisabled && closestAriaDisabled?.getAttribute('aria-disabled') !== 'false') {
 		if (event instanceof KeyboardEvent && event.key === 'Tab') {
 			return;
 		}
