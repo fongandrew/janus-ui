@@ -20,7 +20,7 @@
 @layer base {
 	:root {
 		/* Default (light) color scheme */
-		--background: hsl(0deg 0% 100%);
+		--background: hsl(0deg 0% 99%);
 		--foreground: hsl(0deg 0% 3.9%);
 		--card: hsl(0deg 0% 100%);
 		--card-fg: hsl(0deg 0% 3.9%);
@@ -53,7 +53,7 @@
 		--background: hsl(0deg 0% 3.9%);
 		--foreground: hsl(0deg 0% 98%);
 		--card: hsl(0deg 0% 3.9%);
-		--card-fg: hsl(0deg 0% 12.9%);
+		--card-fg: hsl(0deg 0% 98%);
 		--code-bg: hsl(0deg 0% 98%);
 		--code-fg: hsl(0deg 0% 3.9%);
 		--popover: hsl(0deg 0% 3.9%);
@@ -64,13 +64,15 @@
 		--secondary-fg: hsl(0deg 0% 98%);
 		--callout: hsl(0deg 0% 14.9%);
 		--callout-fg: hsl(0deg 0% 98%);
-		--danger: hsl(0deg 62.8% 30.6%);
+		--danger: hsl(0deg 42.8% 30.6%);
 		--danger-fg: hsl(0deg 0% 98%);
-		--muted: hsl(0deg 0% 14.9%);
+		--muted: hsl(0deg 0% 54.9%);
 		--link: hsl(200deg 80% 80%);
 		--border: hsl(0deg 0% 14.9%);
 		--input: hsl(0deg 0% 14.9%);
 		--ring: hsl(0deg 0% 83.1%);
+		--border-dynamic-base: white;
+		--border-dynamic-mix: 25%;
 	}
 
 	/* Apply dark color scheme for system preference when in system mode */
@@ -93,8 +95,12 @@
 	}
 
 	body {
-		@apply bg-background text-base text-foreground;
+		@apply text-base text-foreground;
 		@apply underline-offset;
+
+		background: linear-gradient(102deg, hsl(0deg 0% 100% / 0%), rgb(255 204 0 / 5%)),
+			linear-gradient(12deg, rgb(33 37 41 / 5%), hsl(0deg 0% 100% / 0%)), var(--background);
+		min-height: 100vh;
 	}
 
 	a {
