@@ -2,6 +2,8 @@ import tailwindCSSTypography from '@tailwindcss/typography';
 import { type Config } from 'tailwindcss';
 import tailwindCSSAnimate from 'tailwindcss-animate';
 
+import { twBorderDynamicPlugin } from './plugins/tw-border-dynamic';
+
 // Helper to convert rems to pixels using a 16px base
 const pxToRem = (px: number) => `${parseFloat((px / 16).toFixed(4))}rem`;
 
@@ -104,6 +106,11 @@ export default {
 			border: 'hsl(var(--border))',
 			input: 'hsl(var(--input))',
 			ring: 'hsl(var(--ring))',
+		},
+
+		borderDynamic: {
+			base: 'var(--border-dynamic-base)',
+			mix: 'var(--border-dynamic-mix)',
 		},
 
 		borderRadius: {
@@ -257,5 +264,5 @@ export default {
 			},
 		},
 	},
-	plugins: [tailwindCSSAnimate, tailwindCSSTypography],
+	plugins: [tailwindCSSAnimate, tailwindCSSTypography, twBorderDynamicPlugin],
 } satisfies Config;

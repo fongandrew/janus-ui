@@ -52,6 +52,7 @@ export default tseslint.config(
 
 		rules: {
 			// TypeScript rules
+			'@typescript-eslint/no-explicit-any': 'off',
 			'@typescript-eslint/consistent-type-imports': [
 				'error',
 				{
@@ -129,7 +130,6 @@ export default tseslint.config(
 			},
 		},
 		rules: {
-			'@typescript-eslint/no-explicit-any': 'off',
 			'@typescript-eslint/restrict-template-expressions': [
 				'error',
 				{
