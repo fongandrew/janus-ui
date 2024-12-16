@@ -95,6 +95,6 @@
 	}
 
 	a {
-		@apply link-style;
+		@apply t-link-style;
 	}
 }

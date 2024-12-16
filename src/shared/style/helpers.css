@@ -5,15 +5,39 @@
 	by base / components / utilities, and we want these to be available for use in compnents.
 */
 @layer base {
-	.with-disabled {
+	.t-disabled {
 		@apply disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50;
 	}
 
-	.with-focus-ring {
-		@apply focus-visible:ring focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset;
+	.t-focus-ring {
+		@apply focus-visible:outline-none focus-visible:ring focus-visible:ring-ring focus-visible:ring-offset;
 	}
 
-	.link-style {
-		@apply text-primary underline hover:text-accent;
+	.t-input-pad-sm {
+		@apply px-sm py-input-pad-sm;
+	}
+
+	.t-input-pad-md {
+		@apply px-md py-input-pad-md;
+	}
+
+	.t-input-pad-lg {
+		@apply px-lg py-input-pad-lg;
+	}
+
+	.t-input-size-sm {
+		@apply t-input-pad-sm text-input-sm;
+	}
+
+	.t-input-size-md {
+		@apply t-input-pad-md text-input-md;
+	}
+
+	.t-input-size-lg {
+		@apply t-input-pad-lg text-input-lg;
+	}
+
+	.t-link-style {
+		@apply text-link hover:saturate-hover underline underline-offset hover:contrast-hover;
 	}
 }

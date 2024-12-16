@@ -1,47 +1,44 @@
 @import '~/shared/style/helpers.css';
 
 @layer components {
-	.btn {
-		@apply with-disabled with-focus-ring inline-flex items-center justify-center whitespace-nowrap transition-[colors,shadow] hover:shadow-md hover:contrast-hover active:shadow-none [&_svg]:pointer-events-none [&_svg]:size-[1em] [&_svg]:shrink-0;
+	.c-btn {
+		@apply t-disabled t-focus-ring inline-flex items-center justify-center whitespace-nowrap font-medium transition-[colors,shadow] hover:shadow-md hover:contrast-hover active:shadow-none [&_svg]:pointer-events-none [&_svg]:size-[1em] [&_svg]:shrink-0;
 
 		/* Secondary by default */
-		@apply bg-secondary text-secondary-fg;
+		@apply border-dynamic-secondary border-md bg-secondary text-secondary-fg;
 
 		/* md by default */
-		@apply gap-sm rounded-md px-md py-input-pad-md text-input-md;
+		@apply t-input-size-md gap-sm rounded-md;
 	}
 }
 
 @layer utilities {
 	/* Color variants */
 
-	.btnPrimary {
-		@apply bg-primary text-primary-fg;
+	.c-btn--primary {
+		@apply border-dynamic-primary bg-primary text-primary-fg;
 	}
 
-	.btnDanger {
-		@apply bg-danger text-danger-fg;
+	.c-btn--danger {
+		@apply border-dynamic-danger bg-danger text-danger-fg;
 	}
 
-	.btnGhost {
-		@apply bg-transparent text-accent;
+	.c-btn--ghost {
+		@apply border-transparent bg-transparent hover:border-secondary hover:bg-secondary hover:text-secondary-fg hover:shadow-none;
 	}
 
-	.btnLink {
-		@apply link-style;
-	}
-
-	.btnOutline {
-		@apply border-md border-input;
+	.c-btn--link {
+		@apply t-link-style inline border-0 bg-transparent p-0 hover:shadow-none;
 	}
 
 	/* Size variants */
 
-	.btnSm {
-		@apply gap-xs rounded-sm px-sm py-input-pad-sm text-input-sm hover:shadow-sm active:shadow-none;
+	.c-btn--sm {
+		@apply t-input-size-sm gap-xs rounded-sm hover:shadow-sm active:shadow-none;
 	}
 
-	.btnLg {
-		@apply gap-sm rounded-lg px-sm py-input-pad-lg text-input-lg hover:shadow-lg active:shadow-none;
+	.c-btn--lg {
+		/* Intentionally no shadow-lg */
+		@apply t-input-size-lg gap-sm rounded-lg;
 	}
 }

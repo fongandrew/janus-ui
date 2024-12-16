@@ -11,5 +11,5 @@ export type BoxProps = JSX.IntrinsicAttributes &
 
 export function Box(props: BoxProps) {
 	const [local, rest] = splitProps(props, ['as']);
-	return <Dynamic component={local.as || 'div'} {...rest} class={cx('box', props.class)} />;
+	return <Dynamic component={local.as || 'div'} {...rest} class={cx('c-box', props.class)} />;
 }

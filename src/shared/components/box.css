@@ -1,8 +1,20 @@
 @import '~/shared/style/helpers.css';
 
 @layer components {
-	.box {
+	.c-box {
 		/* md by default */
 		@apply p-md;
+	}
+}
+
+@layer utilities {
+	/* Size variants */
+
+	.c-box--sm {
+		@apply p-sm;
+	}
+
+	.c-box--lg {
+		@apply p-lg;
 	}
 }

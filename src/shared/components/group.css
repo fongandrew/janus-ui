@@ -1,7 +1,7 @@
 @import '~/shared/style/helpers.css';
 
 @layer components {
-	.group {
+	.c-group {
 		@apply flex items-center;
 
 		/* md by default */
@@ -12,11 +12,11 @@
 @layer utilities {
 	/* Size variants */
 
-	.groupSm {
+	.c-group--sm {
 		@apply gap-sm;
 	}
 
-	.groupLg {
+	.c-group--lg {
 		@apply gap-lg;
 	}
 }
