@@ -5,24 +5,28 @@
 	by base / components / utilities, and we want these to be available for use in compnents.
 */
 @layer base {
-	.t-disabled {
-		@apply disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50;
+	.t-with-disabled-btn {
+		@apply disabled:pointer-events-none disabled:opacity-75 aria-disabled:pointer-events-none aria-disabled:opacity-75;
 	}
 
-	.t-focus-ring {
+	.t-with-disabled-input {
+		@apply disabled:bg-input-disabled aria-disabled:bg-input-disabled;
+	}
+
+	.t-with-focus-ring {
 		@apply focus-visible:outline-none focus-visible:ring focus-visible:ring-ring focus-visible:ring-offset;
 	}
 
 	.t-input-pad-sm {
-		@apply px-sm py-input-pad-sm;
+		@apply px-input-x-sm py-input-y-sm;
 	}
 
 	.t-input-pad-md {
-		@apply px-md py-input-pad-md;
+		@apply px-input-x-md py-input-y-md;
 	}
 
 	.t-input-pad-lg {
-		@apply px-lg py-input-pad-lg;
+		@apply px-input-x-lg py-input-y-lg;
 	}
 
 	.t-input-size-sm {

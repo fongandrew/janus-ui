@@ -12,6 +12,7 @@
 @import '~/shared/components/group.css';
 @import '~/shared/components/stack.css';
 @import '~/shared/components/input.css';
+@import '~/shared/components/textarea.css';
 
 @tailwind base;
 @tailwind components;
@@ -39,6 +40,7 @@
 		--danger-fg: hsl(0deg 0% 98%);
 		--input-bg: hsl(0deg 0% 100%);
 		--input-fg: hsl(0deg 0% 3.9%);
+		--input-disabled-bg: hsl(0deg 0% 96.1%);
 		--muted: hsl(0deg 0% 45.1%);
 		--link: hsl(200deg 80% 20%);
 		--border: color-mix(in srgb, currentcolor 85%, black);
@@ -70,6 +72,7 @@
 		--danger-fg: hsl(0deg 0% 98%);
 		--input-bg: hsl(0deg 0% 3.9%);
 		--input-fg: hsl(0deg 0% 98%);
+		--input-disabled-bg: hsl(0deg 0% 14.9%);
 		--muted: hsl(0deg 0% 54.9%);
 		--link: hsl(200deg 80% 80%);
 		--border: hsl(0deg 0% 14.9%);

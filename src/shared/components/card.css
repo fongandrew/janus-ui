@@ -6,7 +6,7 @@
 	}
 
 	.c-card__header {
-		@apply pt-txt-pad-md flex-col gap-sm px-md pb-0;
+		@apply pt-text-y-md flex-col gap-sm px-md pb-0;
 	}
 
 	.c-card__title {

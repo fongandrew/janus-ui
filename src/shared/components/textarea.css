@@ -1,0 +1,25 @@
+@import '~/shared/style/helpers.css';
+
+@layer components {
+	.c-textarea {
+		@apply t-with-disabled-input t-with-focus-ring min-h-[6em] w-full resize-y transition-[colors,shadow];
+
+		/* Base styles */
+		@apply border-dynamic-secondary bg-input-bg border-md text-foreground placeholder:text-muted;
+
+		/* md by default */
+		@apply t-input-size-md rounded-md;
+	}
+}
+
+@layer utilities {
+	/* State variants */
+	.c-textarea--error,
+	.c-textarea[aria-invalid='true'] {
+		@apply border-dynamic-danger;
+	}
+
+	.c-textarea[aria-disabled='true'] {
+		@apply bg-input-disabled;
+	}
+}

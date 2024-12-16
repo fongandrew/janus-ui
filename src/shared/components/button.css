@@ -2,13 +2,13 @@
 
 @layer components {
 	.c-btn {
-		@apply t-disabled t-focus-ring inline-flex items-center justify-center whitespace-nowrap font-medium transition-[colors,shadow] hover:shadow-md hover:contrast-hover active:shadow-none [&_svg]:pointer-events-none [&_svg]:size-[1em] [&_svg]:shrink-0;
+		@apply t-with-disabled-btn t-with-focus-ring inline-flex items-center justify-center whitespace-nowrap font-medium transition-[colors,shadow] hover:shadow-md hover:contrast-hover active:shadow-none [&_svg]:pointer-events-none [&_svg]:size-[1em] [&_svg]:shrink-0;
 
 		/* Secondary by default */
 		@apply border-dynamic-secondary border-md bg-secondary text-secondary-fg;
 
 		/* md by default */
-		@apply t-input-size-md gap-sm rounded-md;
+		@apply py-input-y-md gap-sm rounded-md px-md text-input-md;
 	}
 }
 
@@ -34,11 +34,11 @@
 	/* Size variants */
 
 	.c-btn--sm {
-		@apply t-input-size-sm gap-xs rounded-sm hover:shadow-sm active:shadow-none;
+		@apply py-input-y-sm gap-xs rounded-sm px-sm text-input-sm hover:shadow-sm active:shadow-none;
 	}
 
 	.c-btn--lg {
 		/* Intentionally no shadow-lg */
-		@apply t-input-size-lg gap-sm rounded-lg;
+		@apply py-input-y-lg gap-sm rounded-lg px-lg text-input-lg;
 	}
 }

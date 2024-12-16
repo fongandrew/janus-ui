@@ -18,6 +18,7 @@ import { Grid } from '~/shared/components/grid';
 import { Group } from '~/shared/components/group';
 import { Input } from '~/shared/components/input';
 import { Stack } from '~/shared/components/stack';
+import { Textarea } from '~/shared/components/textarea';
 
 const App: Component = () => {
 	return (
@@ -48,6 +49,7 @@ const App: Component = () => {
 							<Group>
 								<Button class="c-btn--primary">Primary</Button>
 								<Button class="c-btn--danger">Danger</Button>
+								<Button disabled>Disabled</Button>
 								<Button class="c-btn--ghost">Ghost</Button>
 								<Button class="c-btn--link">Link</Button>
 							</Group>
@@ -55,17 +57,30 @@ const App: Component = () => {
 					</CardContent>
 				</Card>
 
-				<Card class="col-span-full">
+				<Card>
 					<CardHeader>
 						<CardTitle>Inputs</CardTitle>
 						<CardDescription>Text input fields in different sizes</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<Stack>
-							<Input class="c-input--sm" placeholder="Small input" />
 							<Input placeholder="Default (medium) input" />
-							<Input class="c-input--lg" placeholder="Large input" />
 							<Input aria-invalid placeholder="Error state input" />
+							<Input disabled placeholder="Disabled input" />
+						</Stack>
+					</CardContent>
+				</Card>
+
+				<Card>
+					<CardHeader>
+						<CardTitle>Inputs</CardTitle>
+						<CardDescription>Text input fields in different sizes</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<Stack>
+							<Textarea placeholder="Default (medium) textarea" />
+							<Textarea aria-invalid placeholder="Error state textarea" />
+							<Textarea disabled placeholder="Disabled textarea" />
 						</Stack>
 					</CardContent>
 				</Card>

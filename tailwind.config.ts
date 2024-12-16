@@ -109,6 +109,7 @@ export default {
 			input: {
 				bg: 'var(--input-bg)',
 				fg: 'var(--input-fg)',
+				disabled: 'var(--input-disabled-bg)',
 			},
 			muted: 'var(--muted)',
 			link: 'var(--link)',
@@ -177,19 +178,6 @@ export default {
 			lg: pxToRem(px.spacing.lg),
 			xl: pxToRem(px.spacing.xl),
 			'2xl': pxToRem(px.spacing['2xl']),
-
-			// These are useful as a way to get an even vertical padding that
-			// accounts for text line height
-			'txt-pad-sm': pxToRem(px.spacing.sm - (px.lineHeight.sm - px.fontSize.sm) / 2),
-			'txt-pad-md': pxToRem(px.spacing.md - (px.lineHeight.md - px.fontSize.md) / 2),
-			'txt-pad-lg': pxToRem(px.spacing.lg - (px.lineHeight.lg - px.fontSize.lg) / 2),
-
-			// These are useful as a way to get an element to the sought after
-			// height in the one-line case while still leaving it flexible
-			// if more lines show up
-			'input-pad-sm': pxToRem((px.height.input.sm - px.lineHeight.sm) / 2),
-			'input-pad-md': pxToRem((px.height.input.md - px.lineHeight.md) / 2),
-			'input-pad-lg': pxToRem((px.height.input.lg - px.lineHeight.lg) / 2),
 		},
 
 		textUnderlineOffset: {
@@ -210,6 +198,26 @@ export default {
 				'input-sm': pxToRem(px.height.input.sm),
 				'input-md': pxToRem(px.height.input.md),
 				'input-lg': pxToRem(px.height.input.lg),
+			},
+
+			padding: {
+				// These are useful as a way to get an even vertical padding that
+				// accounts for text line height
+				'text-y-sm': pxToRem(px.spacing.sm - (px.lineHeight.sm - px.fontSize.sm) / 2),
+				'text-y-md': pxToRem(px.spacing.md - (px.lineHeight.md - px.fontSize.md) / 2),
+				'text-y-lg': pxToRem(px.spacing.lg - (px.lineHeight.lg - px.fontSize.lg) / 2),
+
+				// These are useful as a way to get an element to the sought after
+				// height in the one-line case while still leaving it flexible
+				// if more lines show up
+				'input-y-sm': pxToRem((px.height.input.sm - px.lineHeight.sm) / 2),
+				'input-y-md': pxToRem((px.height.input.md - px.lineHeight.md) / 2),
+				'input-y-lg': pxToRem((px.height.input.lg - px.lineHeight.lg) / 2),
+
+				// Corresponding horizontal padding for the above
+				'input-x-sm': pxToRem((px.height.input.sm - px.fontSize.sm) / 2),
+				'input-x-md': pxToRem((px.height.input.md - px.fontSize.md) / 2),
+				'input-x-lg': pxToRem((px.height.input.lg - px.fontSize.lg) / 2),
 			},
 
 			typography: {
