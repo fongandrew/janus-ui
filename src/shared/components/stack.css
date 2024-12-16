@@ -1,0 +1,22 @@
+@import '~/shared/style/helpers.css';
+
+@layer components {
+	.c-stack {
+		@apply flex flex-col;
+
+		/* md by default */
+		@apply gap-md;
+	}
+}
+
+@layer utilities {
+	/* Size variants */
+
+	.c-stack--sm {
+		@apply gap-sm;
+	}
+
+	.c-stack--lg {
+		@apply gap-lg;
+	}
+}
