@@ -2,7 +2,7 @@
 
 @layer components {
 	.c-radio {
-		@apply rounded-full inline-flex h-[1em] w-[1em] cursor-pointer items-center justify-center border-md border-solid bg-input-bg text-input-md shadow-inner transition-colors border-dynamic-secondary-fg;
+		@apply inline-flex h-[1em] w-[1em] cursor-pointer items-center justify-center rounded-full border-md border-solid bg-input-bg text-input-md shadow-inner transition-colors border-dynamic-secondary-fg;
 	}
 
 	.c-radio:has(input:checked) {
@@ -17,16 +17,14 @@
 		@apply t-focus-ring;
 	}
 
-	.c-radio svg {
-		@apply h-[0.5em] w-[0.5em];
-	}
-
 	.c-radio .c-radio__dot {
 		display: none;
 	}
 
 	.c-radio input:checked ~ .c-radio__dot {
 		display: block;
+
+		@apply h-2/3 w-2/3 rounded-full bg-primary-fg;
 	}
 }
 

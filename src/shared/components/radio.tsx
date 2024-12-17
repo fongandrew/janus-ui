@@ -1,5 +1,4 @@
 import cx from 'classix';
-import { Circle } from 'lucide-solid';
 import { type JSX, splitProps, useContext } from 'solid-js';
 
 import { RadioGroupContext } from '~/shared/components/radio-group-context';
@@ -40,7 +39,7 @@ export function Radio(props: RadioProps) {
 				onChange={handleChange}
 				{...formProps}
 			/>
-			<Circle class="c-radio__dot" />
+			<span class="c-radio__dot" />
 		</div>
 	);
 }
