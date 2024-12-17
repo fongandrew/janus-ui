@@ -4,7 +4,7 @@
 	}
 
 	.c-label:has(input) {
-		@apply inline-flex items-center gap-xs;
+		@apply inline-flex items-center gap-sm font-normal;
 	}
 
 	.c-label:has([aria-invalid='true']),

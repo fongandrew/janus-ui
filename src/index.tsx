@@ -20,6 +20,7 @@ import { Group } from '~/shared/components/group';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
+import { Radio } from '~/shared/components/radio';
 import { Stack } from '~/shared/components/stack';
 import { Textarea } from '~/shared/components/textarea';
 
@@ -81,6 +82,29 @@ const App: Component = () => {
 							</Label>
 							<Label>
 								<Checkbox disabled /> Disabled Checkbox
+							</Label>
+						</Stack>
+					</CardContent>
+				</Card>
+
+				<Card>
+					<CardHeader>
+						<CardTitle>Radio Buttons</CardTitle>
+						<CardDescription>Different radio states and variations</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<Stack>
+							<Label>
+								<Radio name="demo" value="default" /> Default Radio
+							</Label>
+							<Label>
+								<Radio name="demo" value="checked" checked /> Checked Radio
+							</Label>
+							<Label>
+								<Radio name="demo" value="error" aria-invalid /> Error State Radio
+							</Label>
+							<Label>
+								<Radio name="demo" value="disabled" disabled /> Disabled Radio
 							</Label>
 						</Stack>
 					</CardContent>

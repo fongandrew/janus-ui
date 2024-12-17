@@ -1,0 +1,42 @@
+@import '~/shared/style/helpers.css';
+
+@layer components {
+	.c-radio {
+		@apply rounded-full inline-flex h-[1em] w-[1em] cursor-pointer items-center justify-center border-md border-solid bg-input-bg text-input-md shadow-inner transition-colors border-dynamic-secondary-fg;
+	}
+
+	.c-radio:has(input:checked) {
+		@apply bg-primary text-primary-fg;
+	}
+
+	.c-radio input {
+		@apply sr-only;
+	}
+
+	.c-radio input:focus-visible ~ .c-radio__box {
+		@apply t-focus-ring;
+	}
+
+	.c-radio svg {
+		@apply h-[0.5em] w-[0.5em];
+	}
+
+	.c-radio .c-radio__dot {
+		display: none;
+	}
+
+	.c-radio input:checked ~ .c-radio__dot {
+		display: block;
+	}
+}
+
+@layer utilities {
+	.c-radio--error,
+	.c-radio:has([aria-invalid='true']) {
+		@apply border-dynamic-danger;
+	}
+
+	.c-radio:has([aria-disabled='true']) {
+		@apply cursor-not-allowed bg-input-disabled;
+	}
+}

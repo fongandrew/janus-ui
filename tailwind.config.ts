@@ -128,6 +128,7 @@ export default {
 			sm: pxToRem(px.borderRadius.sm),
 			md: pxToRem(px.borderRadius.md),
 			lg: pxToRem(px.borderRadius.lg),
+			full: '9999px',
 		},
 
 		borderWidth: {
