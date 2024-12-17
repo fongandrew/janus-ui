@@ -13,7 +13,7 @@
 		@apply sr-only;
 	}
 
-	.c-checkbox input:focus-visible ~ .c-checkbox__box {
+	.c-checkbox:has(input:focus-visible) {
 		@apply t-focus-ring;
 	}
 
@@ -36,15 +36,15 @@
 	.c-checkbox input:indeterminate ~ .c-checkbox__indeterminate {
 		display: block;
 	}
-}
 
-@layer utilities {
-	.c-checkbox--error,
-	.c-checkbox:has([aria-invalid='true']) {
-		@apply border-dynamic-danger;
-	}
+	@layer utilities {
+		.c-checkbox--error,
+		.c-checkbox:has([aria-invalid='true']) {
+			@apply border-dynamic-danger;
+		}
 
-	.c-checkbox:has([aria-disabled='true']) {
-		@apply cursor-not-allowed bg-input-disabled;
+		.c-checkbox:has([aria-disabled='true']) {
+			@apply cursor-not-allowed bg-input-disabled;
+		}
 	}
 }

@@ -13,7 +13,7 @@
 		@apply sr-only;
 	}
 
-	.c-radio input:focus-visible ~ .c-radio__box {
+	.c-radio:has(input:focus-visible) {
 		@apply t-focus-ring;
 	}
 
