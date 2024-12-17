@@ -1,7 +1,7 @@
 import '~/shared/style/tailwind.css';
 
 import { Settings } from 'lucide-solid';
-import { type Component } from 'solid-js';
+import { type Component, createSignal } from 'solid-js';
 import { render } from 'solid-js/web';
 
 import { Box } from '~/shared/components/box';
@@ -21,8 +21,32 @@ import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
 import { Radio } from '~/shared/components/radio';
+import { RadioGroup } from '~/shared/components/radio-group';
 import { Stack } from '~/shared/components/stack';
 import { Textarea } from '~/shared/components/textarea';
+
+const RadioGroupDemo: Component = () => {
+	const [value, setValue] = createSignal('checked');
+	return (
+		<RadioGroup name="demo" value={value()} onChange={(event) => setValue(event.target.value)}>
+			<Stack>
+				<Label>Selected: {value()}</Label>
+				<Label>
+					<Radio value="default" /> Default Radio
+				</Label>
+				<Label>
+					<Radio value="checked" /> Checked Radio
+				</Label>
+				<Label>
+					<Radio value="error" aria-invalid /> Error State Radio
+				</Label>
+				<Label>
+					<Radio value="disabled" disabled /> Disabled Radio
+				</Label>
+			</Stack>
+		</RadioGroup>
+	);
+};
 
 const App: Component = () => {
 	return (
@@ -93,20 +117,7 @@ const App: Component = () => {
 						<CardDescription>Different radio states and variations</CardDescription>
 					</CardHeader>
 					<CardContent>
-						<Stack>
-							<Label>
-								<Radio name="demo" value="default" /> Default Radio
-							</Label>
-							<Label>
-								<Radio name="demo" value="checked" checked /> Checked Radio
-							</Label>
-							<Label>
-								<Radio name="demo" value="error" aria-invalid /> Error State Radio
-							</Label>
-							<Label>
-								<Radio name="demo" value="disabled" disabled /> Disabled Radio
-							</Label>
-						</Stack>
+						<RadioGroupDemo />
 					</CardContent>
 				</Card>
 
