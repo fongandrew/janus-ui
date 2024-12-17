@@ -1,7 +1,20 @@
 @layer components {
 	.c-label {
-		@apply text-input-md font-medium;
-		@apply block;
+		@apply inline-block text-input-md font-medium;
+	}
+
+	.c-label:has(input) {
+		@apply inline-flex items-center gap-xs;
+	}
+
+	.c-label:has([aria-invalid='true']),
+	.c-label:has(+ [aria-invalid='true']) {
+		@apply text-danger;
+	}
+
+	.c-label:has(input[aria-disabled='true']),
+	.c-label:has(+ input[aria-disabled='true']) {
+		@apply text-muted;
 	}
 }
 

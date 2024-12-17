@@ -61,6 +61,7 @@ const px = {
 		md: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
 		lg: '0 6px 9px -2px rgb(0 0 0 / 0.05), 0 3px 5px -3px rgb(0 0 0 / 0.05)',
 		xl: '0 12px 18px -4px rgb(0 0 0 / 0.05)',
+		inner: 'inset 0 1px 2px 0 rgb(0 0 0 / 0.05)',
 	},
 } as const;
 

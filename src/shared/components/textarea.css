@@ -2,10 +2,10 @@
 
 @layer components {
 	.c-textarea {
-		@apply t-with-disabled-input t-with-focus-ring min-h-[6em] w-full resize-y transition-[colors,shadow];
+		@apply t-with-disabled-input t-with-focus-ring min-h-[6em] w-full resize-y shadow-inner transition-colors;
 
 		/* Base styles */
-		@apply border-dynamic-secondary bg-input-bg border-md text-foreground placeholder:text-muted;
+		@apply border-md bg-input-bg text-foreground border-dynamic-secondary placeholder:text-muted;
 
 		/* md by default */
 		@apply t-input-size-md rounded-md;

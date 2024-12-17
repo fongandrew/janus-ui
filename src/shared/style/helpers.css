@@ -13,8 +13,12 @@
 		@apply disabled:bg-input-disabled aria-disabled:bg-input-disabled;
 	}
 
+	.t-focus-ring {
+		@apply outline-none ring ring-ring ring-offset;
+	}
+
 	.t-with-focus-ring {
-		@apply focus-visible:outline-none focus-visible:ring focus-visible:ring-ring focus-visible:ring-offset;
+		@apply focus-visible:t-focus-ring;
 	}
 
 	.t-input-pad-sm {
@@ -42,6 +46,6 @@
 	}
 
 	.t-link-style {
-		@apply text-link hover:saturate-hover underline underline-offset hover:contrast-hover;
+		@apply text-link underline underline-offset hover:contrast-hover hover:saturate-hover;
 	}
 }

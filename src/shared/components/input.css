@@ -2,10 +2,10 @@
 
 @layer components {
 	.c-input {
-		@apply t-with-disabled-input t-with-focus-ring w-full transition-[colors,shadow];
+		@apply t-with-disabled-input t-with-focus-ring w-full shadow-inner transition-colors;
 
 		/* Base styles */
-		@apply border-dynamic-secondary bg-input-bg text-input-fg border-md placeholder:text-muted;
+		@apply border-md bg-input-bg text-input-fg border-dynamic-secondary placeholder:text-muted;
 
 		/* md by default */
 		@apply t-input-size-md rounded-md;

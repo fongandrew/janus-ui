@@ -1,0 +1,50 @@
+@import '~/shared/style/helpers.css';
+
+@layer components {
+	.c-checkbox {
+		@apply inline-flex h-[1em] w-[1em] cursor-pointer items-center justify-center rounded-sm border-md border-solid bg-input-bg text-input-md shadow-inner transition-colors border-dynamic-secondary-fg;
+	}
+
+	.c-checkbox:has(input:checked) {
+		@apply bg-primary text-primary-fg;
+	}
+
+	.c-checkbox input {
+		@apply sr-only;
+	}
+
+	.c-checkbox input:focus-visible ~ .c-checkbox__box {
+		@apply t-focus-ring;
+	}
+
+	.c-checkbox svg {
+		@apply h-[1em] w-[1em];
+	}
+
+	.c-checkbox .c-checkbox__check {
+		display: none;
+	}
+
+	.c-checkbox .c-checkbox__indeterminate {
+		display: none;
+	}
+
+	.c-checkbox input:checked ~ .c-checkbox__check {
+		display: block;
+	}
+
+	.c-checkbox input:indeterminate ~ .c-checkbox__indeterminate {
+		display: block;
+	}
+}
+
+@layer utilities {
+	.c-checkbox--error,
+	.c-checkbox:has([aria-invalid='true']) {
+		@apply border-dynamic-danger;
+	}
+
+	.c-checkbox:has([aria-disabled='true']) {
+		@apply cursor-not-allowed bg-input-disabled;
+	}
+}

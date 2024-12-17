@@ -14,6 +14,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '~/shared/components/card';
+import { Checkbox } from '~/shared/components/checkbox';
 import { Grid } from '~/shared/components/grid';
 import { Group } from '~/shared/components/group';
 import { Input } from '~/shared/components/input';
@@ -61,6 +62,32 @@ const App: Component = () => {
 
 				<Card>
 					<CardHeader>
+						<CardTitle>Checkboxes</CardTitle>
+						<CardDescription>Different checkbox states and variations</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<Stack>
+							<Label>
+								<Checkbox /> Default Checkbox
+							</Label>
+							<Label>
+								<Checkbox checked /> Checked Checkbox
+							</Label>
+							<Label>
+								<Checkbox indeterminate /> Indeterminate Checkbox
+							</Label>
+							<Label>
+								<Checkbox aria-invalid /> Error State Checkbox
+							</Label>
+							<Label>
+								<Checkbox disabled /> Disabled Checkbox
+							</Label>
+						</Stack>
+					</CardContent>
+				</Card>
+
+				<Card>
+					<CardHeader>
 						<CardTitle>Inputs</CardTitle>
 						<CardDescription>Text input fields in different states</CardDescription>
 					</CardHeader>
@@ -71,11 +98,11 @@ const App: Component = () => {
 								<Input placeholder="Placeholder content" />
 							</LabelStack>
 							<LabelStack>
-								<Label class="c-label--error">Error State Input</Label>
+								<Label>Error State Input</Label>
 								<Input aria-invalid="true" placeholder="Some wrong value" />
 							</LabelStack>
 							<LabelStack>
-								<Label class="c-label--disabled">Disabled Input</Label>
+								<Label>Disabled Input</Label>
 								<Input disabled placeholder="Can't touch this" />
 							</LabelStack>
 						</Stack>
