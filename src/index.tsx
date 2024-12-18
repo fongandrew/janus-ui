@@ -147,125 +147,136 @@ const TooltipDemo: Component = () => {
 	);
 };
 
+const ButtonsCard: Component = () => (
+	<Card class="col-span-full">
+		<CardHeader>
+			<CardTitle>Buttons</CardTitle>
+			<CardDescription>Different variations on your standard button</CardDescription>
+		</CardHeader>
+		<CardContent>
+			<Stack>
+				<Group class="flex-wrap">
+					<Button class="c-btn--sm">
+						<Settings /> Small Button
+					</Button>
+
+					<Button>
+						<Settings /> Default Button
+					</Button>
+
+					<Button class="c-btn--lg">
+						<Settings /> Large Button
+					</Button>
+				</Group>
+				<Group>
+					<Button class="c-btn--primary">Primary</Button>
+					<Button class="c-btn--danger">Danger</Button>
+					<Button disabled>Disabled</Button>
+					<Button class="c-btn--ghost">Ghost</Button>
+					<Button class="c-btn--link">Link</Button>
+				</Group>
+			</Stack>
+		</CardContent>
+	</Card>
+);
+
+const CheckboxesCard: Component = () => (
+	<Card>
+		<CardHeader>
+			<CardTitle>Checkboxes</CardTitle>
+			<CardDescription>Different checkbox states and variations</CardDescription>
+		</CardHeader>
+		<CardContent>
+			<Stack>
+				<Label>
+					<Checkbox /> Default Checkbox
+				</Label>
+				<Label>
+					<Checkbox checked /> Checked Checkbox
+				</Label>
+				<Label>
+					<Checkbox indeterminate /> Indeterminate Checkbox
+				</Label>
+				<Label>
+					<Checkbox aria-invalid /> Error State Checkbox
+				</Label>
+				<Label>
+					<Checkbox disabled /> Disabled Checkbox
+				</Label>
+			</Stack>
+		</CardContent>
+	</Card>
+);
+
+const InputsCard: Component = () => (
+	<Card>
+		<CardHeader>
+			<CardTitle>Inputs</CardTitle>
+			<CardDescription>Text input fields in different states</CardDescription>
+		</CardHeader>
+		<CardContent>
+			<Stack>
+				<LabelStack>
+					<Label>Default Input</Label>
+					<Input placeholder="Placeholder content" />
+				</LabelStack>
+				<LabelStack>
+					<Label>Error State Input</Label>
+					<Input aria-invalid="true" placeholder="Some wrong value" />
+				</LabelStack>
+				<LabelStack>
+					<Label>Disabled Input</Label>
+					<Input disabled placeholder="Can't touch this" />
+				</LabelStack>
+			</Stack>
+		</CardContent>
+	</Card>
+);
+
+const TextareasCard: Component = () => (
+	<Card>
+		<CardHeader>
+			<CardTitle>Text areas</CardTitle>
+			<CardDescription>Larger input areas</CardDescription>
+		</CardHeader>
+		<CardContent>
+			<Stack>
+				<Textarea placeholder="Default (medium) textarea" />
+				<Textarea aria-invalid placeholder="Error state textarea" />
+				<Textarea disabled placeholder="Disabled textarea" />
+			</Stack>
+		</CardContent>
+	</Card>
+);
+
+const FooterCard: Component = () => (
+	<Card>
+		<CardHeader>
+			<CardTitle>Card with a footer</CardTitle>
+			<CardDescription>A card to show footer + grid in action</CardDescription>
+		</CardHeader>
+		<CardContent>
+			<p>The grid will adjust columns based on screen size.</p>
+		</CardContent>
+		<CardFooter>
+			<Button class="c-btn--ghost">Skip</Button>
+			<Button class="c-btn--primary">Continue</Button>
+		</CardFooter>
+	</Card>
+);
+
 const App: Component = () => {
 	return (
 		<Box>
 			<Grid>
-				<Card class="col-span-full">
-					<CardHeader>
-						<CardTitle>Buttons</CardTitle>
-						<CardDescription>
-							Different variations on your standard button
-						</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<Stack>
-							<Group class="flex-wrap">
-								<Button class="c-btn--sm">
-									<Settings /> Small Button
-								</Button>
-
-								<Button>
-									<Settings /> Default Button
-								</Button>
-
-								<Button class="c-btn--lg">
-									<Settings /> Large Button
-								</Button>
-							</Group>
-							<Group>
-								<Button class="c-btn--primary">Primary</Button>
-								<Button class="c-btn--danger">Danger</Button>
-								<Button disabled>Disabled</Button>
-								<Button class="c-btn--ghost">Ghost</Button>
-								<Button class="c-btn--link">Link</Button>
-							</Group>
-						</Stack>
-					</CardContent>
-				</Card>
-
+				<ButtonsCard />
 				<MenuDemo />
-
-				<Card>
-					<CardHeader>
-						<CardTitle>Checkboxes</CardTitle>
-						<CardDescription>Different checkbox states and variations</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<Stack>
-							<Label>
-								<Checkbox /> Default Checkbox
-							</Label>
-							<Label>
-								<Checkbox checked /> Checked Checkbox
-							</Label>
-							<Label>
-								<Checkbox indeterminate /> Indeterminate Checkbox
-							</Label>
-							<Label>
-								<Checkbox aria-invalid /> Error State Checkbox
-							</Label>
-							<Label>
-								<Checkbox disabled /> Disabled Checkbox
-							</Label>
-						</Stack>
-					</CardContent>
-				</Card>
-
+				<CheckboxesCard />
 				<RadioGroupDemo />
-
 				<TooltipDemo />
-
-				<Card>
-					<CardHeader>
-						<CardTitle>Inputs</CardTitle>
-						<CardDescription>Text input fields in different states</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<Stack>
-							<LabelStack>
-								<Label>Default Input</Label>
-								<Input placeholder="Placeholder content" />
-							</LabelStack>
-							<LabelStack>
-								<Label>Error State Input</Label>
-								<Input aria-invalid="true" placeholder="Some wrong value" />
-							</LabelStack>
-							<LabelStack>
-								<Label>Disabled Input</Label>
-								<Input disabled placeholder="Can't touch this" />
-							</LabelStack>
-						</Stack>
-					</CardContent>
-				</Card>
-
-				<Card>
-					<CardHeader>
-						<CardTitle>Text areas</CardTitle>
-						<CardDescription>Larger input areas</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<Stack>
-							<Textarea placeholder="Default (medium) textarea" />
-							<Textarea aria-invalid placeholder="Error state textarea" />
-							<Textarea disabled placeholder="Disabled textarea" />
-						</Stack>
-					</CardContent>
-				</Card>
-
-				<Card>
-					<CardHeader>
-						<CardTitle>Card with a footer</CardTitle>
-						<CardDescription>A card to show footer + grid in action</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<p>The grid will adjust columns based on screen size.</p>
-					</CardContent>
-					<CardFooter>
-						<Button class="c-btn--ghost">Skip</Button>
-						<Button class="c-btn--primary">Continue</Button>
-					</CardFooter>
-				</Card>
+				<InputsCard />
+				<TextareasCard />
+				<FooterCard />
 			</Grid>
 		</Box>
 	);
