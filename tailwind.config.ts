@@ -103,6 +103,10 @@ export default {
 				DEFAULT: 'var(--secondary)',
 				fg: 'var(--secondary-fg)',
 			},
+			highlight: {
+				DEFAULT: 'var(--highlight)',
+				fg: 'var(--highlight-fg)',
+			},
 			callout: {
 				DEFAULT: 'var(--callout)',
 				fg: 'var(--callout-fg)',
@@ -209,9 +213,14 @@ export default {
 			padding: {
 				// These are useful as a way to get an even vertical padding that
 				// accounts for text line height
+				'text-y-xs': pxToRem(px.spacing.xs - (px.lineHeight.xs - px.fontSize.xs) / 2),
 				'text-y-sm': pxToRem(px.spacing.sm - (px.lineHeight.sm - px.fontSize.sm) / 2),
 				'text-y-md': pxToRem(px.spacing.md - (px.lineHeight.md - px.fontSize.md) / 2),
 				'text-y-lg': pxToRem(px.spacing.lg - (px.lineHeight.lg - px.fontSize.lg) / 2),
+				'text-y-xl': pxToRem(px.spacing.xl - (px.lineHeight.xl - px.fontSize.xl) / 2),
+				'text-y-2xl': pxToRem(
+					px.spacing['2xl'] - (px.lineHeight['2xl'] - px.fontSize['2xl']) / 2,
+				),
 
 				// These are useful as a way to get an element to the sought after
 				// height in the one-line case while still leaving it flexible

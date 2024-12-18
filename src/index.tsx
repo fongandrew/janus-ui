@@ -21,11 +21,68 @@ import { Group } from '~/shared/components/group';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
+import { createDropdown, Menu, MenuGroup, MenuItem } from '~/shared/components/menu';
 import { Radio } from '~/shared/components/radio';
 import { RadioGroup } from '~/shared/components/radio-group';
 import { Stack } from '~/shared/components/stack';
 import { Textarea } from '~/shared/components/textarea';
 import { Tooltip } from '~/shared/components/tooltip';
+
+const MenuDemo: Component = () => {
+	const [selection, setSelection] = createSignal<string | null>(null);
+	const [simpleTrigger, simpleMenu] = createDropdown();
+	const [groupsTrigger, groupsMenu] = createDropdown();
+	const handleSelect = (_event: Event, value: string) => {
+		setSelection(value);
+	};
+
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Menu</CardTitle>
+				<CardDescription>Dropdown menu with groups and items</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<Stack class="gap-xs">
+					<p>Selected: {selection() ?? 'None'}</p>
+					<Group>
+						<Button ref={simpleTrigger}>Simple Menu</Button>
+						<Menu ref={simpleMenu} onSelect={handleSelect}>
+							<MenuItem value="a">Option A</MenuItem>
+							<MenuItem value="b">Option B</MenuItem>
+							<MenuItem value="c">Option C</MenuItem>
+						</Menu>
+
+						<Button ref={groupsTrigger}>Menu with Groups</Button>
+						<Menu ref={groupsMenu} onSelect={handleSelect}>
+							<MenuGroup heading="File">
+								<MenuItem value="new">New File</MenuItem>
+								<MenuItem value="open">Open...</MenuItem>
+								<MenuItem value="save">Save</MenuItem>
+							</MenuGroup>
+							<MenuGroup heading="Edit">
+								<MenuItem value="cut">Cut</MenuItem>
+								<MenuItem value="copy">Copy</MenuItem>
+								<MenuItem value="paste">Paste</MenuItem>
+							</MenuGroup>
+							<MenuGroup>
+								<MenuItem role="menuitemcheckbox" value="sidebar">
+									Show Sidebar
+								</MenuItem>
+								<MenuItem role="menuitemcheckbox" value="status">
+									Show Status Bar
+								</MenuItem>
+							</MenuGroup>
+							<MenuGroup>
+								<MenuItem href="https://example.com">Link to Site</MenuItem>
+							</MenuGroup>
+						</Menu>
+					</Group>
+				</Stack>
+			</CardContent>
+		</Card>
+	);
+};
 
 const RadioGroupDemo: Component = () => {
 	const [value, setValue] = createSignal('checked');
@@ -126,6 +183,8 @@ const App: Component = () => {
 						</Stack>
 					</CardContent>
 				</Card>
+
+				<MenuDemo />
 
 				<Card>
 					<CardHeader>

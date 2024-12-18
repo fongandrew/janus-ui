@@ -1,0 +1,42 @@
+@import '~/shared/style/helpers.css';
+
+@layer components {
+	.c-menu {
+		@apply rounded-md border-md bg-popover px-0 py-xs text-sm text-popover-fg shadow-lg border-dynamic-card;
+		@apply z-50 min-w-[180px];
+	}
+
+	.c-menu__item {
+		@apply block w-full px-input-x-md py-input-y-sm text-left text-input-sm;
+		@apply hover:bg-highlight hover:text-highlight-fg;
+		@apply focus-visible:bg-highlight focus-visible:text-highlight-fg focus-visible:outline-none;
+	}
+
+	a.c-menu__item {
+		@apply font-normal text-popover-fg no-underline;
+		@apply hover:bg-highlight hover:text-highlight-fg;
+	}
+
+	.c-menu__heading {
+		@apply py-text-y-xs px-input-x-md text-xs font-semibold text-muted;
+	}
+
+	.c-menu__group + .c-menu__group,
+	.c-menu__group + .c-menu__heading {
+		@apply mt-xs border-t-sm border-dynamic-card;
+	}
+
+	.c-menu__group + .c-menu__group {
+		@apply pt-xs;
+	}
+
+	/* Fix "divider" padding clobbering heading padding */
+	.c-menu__group + .c-menu__heading {
+		padding-top: calc(theme('padding.text-y-xs') + theme('spacing.xs'));
+	}
+
+	/* Fix heading padding conflicting with menu top padding */
+	.c-menu > .c-menu__heading:first-child {
+		padding-top: calc(theme('spacing.xs') - theme('padding.text-y-xs'));
+	}
+}
