@@ -91,6 +91,10 @@ export default {
 				DEFAULT: 'var(--popover)',
 				fg: 'var(--popover-fg)',
 			},
+			tooltip: {
+				DEFAULT: 'var(--tooltip)',
+				fg: 'var(--tooltip-fg)',
+			},
 			primary: {
 				DEFAULT: 'var(--primary)',
 				fg: 'var(--primary-fg)',
@@ -220,6 +224,11 @@ export default {
 				'input-x-sm': pxToRem((px.height.input.sm - px.fontSize.sm) / 2),
 				'input-x-md': pxToRem((px.height.input.md - px.fontSize.md) / 2),
 				'input-x-lg': pxToRem((px.height.input.lg - px.fontSize.lg) / 2),
+			},
+
+			size: {
+				// Tooltip arrow size
+				'tooltip-arrow': 'var(--tooltip-arrow-size)',
 			},
 
 			typography: {

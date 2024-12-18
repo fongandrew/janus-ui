@@ -15,6 +15,7 @@ import {
 	CardTitle,
 } from '~/shared/components/card';
 import { Checkbox } from '~/shared/components/checkbox';
+import { createTooltip } from '~/shared/components/create-tooltip';
 import { Grid } from '~/shared/components/grid';
 import { Group } from '~/shared/components/group';
 import { Input } from '~/shared/components/input';
@@ -24,27 +25,68 @@ import { Radio } from '~/shared/components/radio';
 import { RadioGroup } from '~/shared/components/radio-group';
 import { Stack } from '~/shared/components/stack';
 import { Textarea } from '~/shared/components/textarea';
+import { Tooltip } from '~/shared/components/tooltip';
 
 const RadioGroupDemo: Component = () => {
 	const [value, setValue] = createSignal('checked');
+
 	return (
-		<RadioGroup name="demo" value={value()} onChange={(event) => setValue(event.target.value)}>
-			<Stack>
-				<Label>Selected: {value()}</Label>
-				<Label>
-					<Radio value="default" /> Default Radio
-				</Label>
-				<Label>
-					<Radio value="checked" /> Checked Radio
-				</Label>
-				<Label>
-					<Radio value="error" aria-invalid /> Error State Radio
-				</Label>
-				<Label>
-					<Radio value="disabled" disabled /> Disabled Radio
-				</Label>
-			</Stack>
-		</RadioGroup>
+		<Card>
+			<CardHeader>
+				<CardTitle>Radio Buttons</CardTitle>
+				<CardDescription>Different radio states and variations</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<RadioGroup
+					name="demo"
+					value={value()}
+					onChange={(event) => setValue(event.target.value)}
+				>
+					<Stack>
+						<Label>Selected: {value()}</Label>
+						<Label>
+							<Radio value="default" /> Default Radio
+						</Label>
+						<Label>
+							<Radio value="checked" /> Checked Radio
+						</Label>
+						<Label>
+							<Radio value="error" aria-invalid /> Error State Radio
+						</Label>
+						<Label>
+							<Radio value="disabled" disabled /> Disabled Radio
+						</Label>
+					</Stack>
+				</RadioGroup>
+			</CardContent>
+		</Card>
+	);
+};
+
+const TooltipDemo: Component = () => {
+	const [topTrigger, topTooltip] = createTooltip('top');
+	const [bottomTrigger, bottomTooltip] = createTooltip('bottom');
+	const [leftTrigger, leftTooltip] = createTooltip('left');
+	const [rightTrigger, rightTooltip] = createTooltip('right');
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Tooltips</CardTitle>
+				<CardDescription>Tooltips on hover</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<Grid class="gap-sm">
+					<Button ref={topTrigger}>Top</Button>
+					<Tooltip ref={topTooltip}>Hello, I'm a tooltip</Tooltip>
+					<Button ref={bottomTrigger}>Bottom</Button>
+					<Tooltip ref={bottomTooltip}>Hello, I'm a tooltip</Tooltip>
+					<Button ref={leftTrigger}>Left</Button>
+					<Tooltip ref={leftTooltip}>Hello, I'm a tooltip</Tooltip>
+					<Button ref={rightTrigger}>Right</Button>
+					<Tooltip ref={rightTooltip}>Hello, I'm a tooltip</Tooltip>
+				</Grid>
+			</CardContent>
+		</Card>
 	);
 };
 
@@ -111,15 +153,9 @@ const App: Component = () => {
 					</CardContent>
 				</Card>
 
-				<Card>
-					<CardHeader>
-						<CardTitle>Radio Buttons</CardTitle>
-						<CardDescription>Different radio states and variations</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<RadioGroupDemo />
-					</CardContent>
-				</Card>
+				<RadioGroupDemo />
+
+				<TooltipDemo />
 
 				<Card>
 					<CardHeader>

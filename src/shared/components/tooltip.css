@@ -1,0 +1,11 @@
+@import '~/shared/style/helpers.css';
+
+@layer components {
+	.c-tooltip {
+		@apply pointer-events-none z-50 max-w-[20rem] rounded-sm bg-tooltip px-sm py-text-y-sm text-sm text-tooltip-fg;
+	}
+
+	.c-tooltip .c-tooltip__arrow {
+		@apply size-tooltip-arrow rotate-45 bg-tooltip;
+	}
+}

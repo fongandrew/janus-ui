@@ -17,6 +17,7 @@
 @import '~/shared/components/radio.css';
 @import '~/shared/components/stack.css';
 @import '~/shared/components/textarea.css';
+@import '~/shared/components/tooltip.css';
 
 @tailwind base;
 @tailwind components;
@@ -34,6 +35,8 @@
 		--code-fg: hsl(0deg 0% 3.9%);
 		--popover: hsl(0deg 0% 100%);
 		--popover-fg: hsl(0deg 0% 3.9%);
+		--tooltip: hsl(0deg 0% 3.9%);
+		--tooltip-fg: hsl(0deg 0% 98%);
 		--primary: hsl(0deg 0% 9%);
 		--primary-fg: hsl(0deg 0% 98%);
 		--secondary: hsl(0deg 0% 96.1%);
@@ -54,6 +57,7 @@
 
 		/* Misc */
 		--radius: 0.5rem;
+		--tooltip-arrow-size: 0.5rem;
 	}
 
 	/* Define dark color scheme variables once */
@@ -66,6 +70,8 @@
 		--code-fg: hsl(0deg 0% 3.9%);
 		--popover: hsl(0deg 0% 3.9%);
 		--popover-fg: hsl(0deg 0% 98%);
+		--tooltip: hsl(0deg 0% 3.9%);
+		--tooltip-fg: hsl(0deg 0% 98%);
 		--primary: hsl(0deg 0% 98%);
 		--primary-fg: hsl(0deg 0% 9%);
 		--secondary: hsl(0deg 0% 14.9%);
