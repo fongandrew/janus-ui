@@ -15,13 +15,14 @@ import {
 	CardTitle,
 } from '~/shared/components/card';
 import { Checkbox } from '~/shared/components/checkbox';
+import { createDropdown } from '~/shared/components/create-dropdown';
 import { createTooltip } from '~/shared/components/create-tooltip';
 import { Grid } from '~/shared/components/grid';
 import { Group } from '~/shared/components/group';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
-import { createDropdown, Menu, MenuGroup, MenuItem } from '~/shared/components/menu';
+import { Menu, MenuGroup, MenuItem, MenuItemLink } from '~/shared/components/menu';
 import { Radio } from '~/shared/components/radio';
 import { RadioGroup } from '~/shared/components/radio-group';
 import { Stack } from '~/shared/components/stack';
@@ -74,7 +75,7 @@ const MenuDemo: Component = () => {
 								</MenuItem>
 							</MenuGroup>
 							<MenuGroup>
-								<MenuItem href="https://example.com">Link to Site</MenuItem>
+								<MenuItemLink href="https://example.com">Link to Site</MenuItemLink>
 							</MenuGroup>
 						</Menu>
 					</Group>

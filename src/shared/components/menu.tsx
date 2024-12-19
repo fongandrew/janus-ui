@@ -1,11 +1,20 @@
 import cx from 'classix';
 import { type JSX, onMount, splitProps } from 'solid-js';
 
+import {
+	LIST_OPTION_VALUE_ATTR,
+	OptionList,
+	OptionListAnchor,
+	OptionListButton,
+	OptionListGroup,
+} from '~/shared/components/option-list';
+import {
+	createOptionListContextValue,
+	createOptionListTextMatcher,
+	OptionListContext,
+} from '~/shared/components/option-list-context';
+import { generateId } from '~/shared/utility/id-generator';
 import { nextIndex } from '~/shared/utility/next-index';
-
-export { createDropdown } from './create-dropdown';
-export { MenuGroup } from './menu-group';
-export { MenuItem } from './menu-item';
 
 export interface MenuProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
 	/** Ref returned by createDropdown */
@@ -30,6 +39,17 @@ export function Menu(props: MenuProps) {
 		menu = el;
 		props.ref(el);
 	};
+
+	// Menu doesn't need to retain active / selected state. There's no selection per se
+	// (or if there is, it's via aria checked states that the menu doesn't need to know
+	// about) and we can just rely on the focus state for selection.
+	const optionListContext = createOptionListContextValue(
+		() => undefined,
+		() => new Set(),
+	);
+
+	/** For matching user trying to type and match input */
+	const matchText = createOptionListTextMatcher(optionListContext);
 
 	onMount(() => {
 		if (!menu) {
@@ -58,7 +78,7 @@ export function Menu(props: MenuProps) {
 		const target = event.target as HTMLElement;
 		const menuItem = target.closest(menuItemsSelector) as HTMLElement | null;
 		if (menuItem) {
-			local.onSelect?.(event, menuItem.getAttribute(MENU_ITEM_VALUE_ATTR) ?? '');
+			local.onSelect?.(event, menuItem.getAttribute(LIST_OPTION_VALUE_ATTR) ?? '');
 			menu?.hidePopover();
 		}
 		const onClick = props.onClick;
@@ -93,7 +113,8 @@ export function Menu(props: MenuProps) {
 				event.preventDefault();
 				local.onSelect?.(
 					event,
-					(event.target as HTMLElement | null)?.getAttribute(MENU_ITEM_VALUE_ATTR) ?? '',
+					(event.target as HTMLElement | null)?.getAttribute(LIST_OPTION_VALUE_ATTR) ??
+						'',
 				);
 				menu.hidePopover();
 				break;
@@ -102,6 +123,17 @@ export function Menu(props: MenuProps) {
 				event.preventDefault();
 				menu.hidePopover();
 				break;
+			}
+			case 'Escape': {
+				// Let popover light dismiss do its thing
+				break;
+			}
+			default: {
+				// If here, check if we're typing a character to filter the list
+				if (event.key.length === 1) {
+					const [_value, elm] = matchText(event.key);
+					elm?.focus();
+				}
 			}
 		}
 
@@ -114,13 +146,45 @@ export function Menu(props: MenuProps) {
 	};
 
 	return (
-		<div
-			{...rest}
-			ref={(e) => ref(e)}
-			class={cx('c-menu', props.class)}
-			onFocusOut={handleBlur}
-			onClick={handleClick}
-			onKeyDown={handleKeyDown}
+		<OptionListContext.Provider value={optionListContext}>
+			<OptionList
+				{...rest}
+				role="menu"
+				ref={ref}
+				class={cx('c-dropdown', props.class)}
+				onFocusOut={handleBlur}
+				onClick={handleClick}
+				onKeyDown={handleKeyDown}
+			/>
+		</OptionListContext.Provider>
+	);
+}
+
+export interface MenuItemProps extends JSX.HTMLAttributes<HTMLButtonElement> {
+	/** URL for the menu item */
+	role?: 'menuitem' | 'menuitemcheckbox' | 'menuitemradio';
+	/**
+	 * Option value for this prop -- if not set, will be autoassigned one for
+	 * option list matching purposes
+	 */
+	value?: string;
+}
+
+/** A single menu item */
+export function MenuItem(props: MenuItemProps) {
+	return (
+		<OptionListButton
+			role="menuitem"
+			{...props}
+			value={props.value ?? generateId('menu-item')}
 		/>
 	);
 }
+
+/** Menu item variant that's a link */
+export function MenuItemLink(props: JSX.HTMLAttributes<HTMLAnchorElement> & { href: string }) {
+	return <OptionListAnchor role="menuitem" value={generateId('menu-item')} {...props} />;
+}
+
+/** No need for any changes to this. Just alias for use with menus */
+export { OptionListGroup as MenuGroup };
