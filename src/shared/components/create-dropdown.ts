@@ -12,8 +12,6 @@ import { createEffect, createSignal, onCleanup } from 'solid-js';
 
 import { generateId } from '~/shared/utility/id-generator';
 
-export const DROPDOWN_TRIGGER_ATTR = 'data-dropdown-trigger';
-
 /** Track which documents have our delegated handler on them */
 const didAttachToDocument = new WeakSet<Document>();
 
@@ -26,11 +24,27 @@ function handleToggleEvent(event: Event) {
 	menuMap.get(target)?.((event as ToggleEvent).newState === 'open');
 }
 
+function handleKeyDownEvent(event: KeyboardEvent) {
+	const target = event.target as HTMLElement;
+	if (!target) return;
+
+	// Down to open dropdowns
+	if (
+		event.key === 'ArrowDown' &&
+		(target.ariaHasPopup === 'menu' || target.ariaHasPopup === 'listbox')
+	) {
+		target.click();
+		// To prevent scrolling the page
+		event.preventDefault();
+	}
+}
+
 function attachToDocument(targetDocument = window.document) {
 	if (didAttachToDocument.has(targetDocument)) {
 		return;
 	}
 	targetDocument.addEventListener('beforetoggle', handleToggleEvent, true);
+	targetDocument.addEventListener('keydown', handleKeyDownEvent);
 	didAttachToDocument.add(targetDocument);
 }
 
@@ -76,12 +90,16 @@ export function createDropdown(
 		const menuElm = menuElement();
 		if (!menuElm) return;
 
-		// Hide menu when not visible
+		// Update ARIA visiblity
+		triggerElm.ariaExpanded = visible() ? 'true' : 'false';
+
+		// No need to do anything if not visible. Popover API should hide automatically.
 		if (!visible()) {
 			return;
 		}
 
-		// Menu is visible. Do initial position update
+		// Menu is visible. Do initial position update, then update automatically when
+		// scroll or resize events occur.
 		updatePosition(triggerElm, menuElm);
 		const cleanup = autoUpdate(triggerElm, menuElm, () => updatePosition(triggerElm, menuElm));
 		onCleanup(cleanup);
@@ -107,13 +125,14 @@ export function createDropdown(
 			triggerElm.id = triggerId;
 		}
 
-		triggerElm.setAttribute('aria-haspopup', 'true');
+		if (!triggerElm.ariaHasPopup) {
+			triggerElm.ariaHasPopup = 'menu';
+		}
 		triggerElm.setAttribute('popovertarget', menuId);
 		menuElm.setAttribute('aria-labelledby', triggerId);
 	});
 
 	const setTriggerElementAndInit = (el: HTMLElement) => {
-		el.setAttribute(DROPDOWN_TRIGGER_ATTR, '');
 		setTriggerElement(el);
 	};
 
