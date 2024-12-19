@@ -63,9 +63,16 @@ export function Menu(props: MenuProps) {
 		}
 	});
 
+	/** Track whether focus is visible (used for keyboard navigation) */
+	let isFocusVisible = false;
+	const handleFocus = () => {
+		isFocusVisible = !!menu?.ownerDocument.activeElement?.matches(':focus-visible');
+	};
+
 	const handleBlur = (event: FocusEvent) => {
 		const target = event.relatedTarget as HTMLElement;
 		if (!menu?.contains(target)) {
+			isFocusVisible = false;
 			menu?.hidePopover();
 		}
 		const onBlur = props.onBlur;
@@ -100,7 +107,18 @@ export function Menu(props: MenuProps) {
 		switch (event.key) {
 			case 'ArrowDown': {
 				event.preventDefault();
-				items[nextIndex(items, currentIndex)]?.focus();
+				// First item gets autofocused, but if focus isn't visible, this is
+				// a bit weird since it'll jump to the second item when you hit down.
+				// So explicitly focus it if not already visible
+				if (isFocusVisible) {
+					items[nextIndex(items, currentIndex)]?.focus();
+				} else {
+					// Manually setting `isFocusVisible` to true shouldn't be necessary
+					// since the blur handler will handle it, but doing it here just
+					// in case to avoid down-arrow behavior getting stuck
+					isFocusVisible = true;
+					items[0]?.focus();
+				}
 				break;
 			}
 			case 'ArrowUp': {
@@ -152,6 +170,7 @@ export function Menu(props: MenuProps) {
 				role="menu"
 				ref={ref}
 				class={cx('c-dropdown', props.class)}
+				onFocusIn={handleFocus}
 				onFocusOut={handleBlur}
 				onClick={handleClick}
 				onKeyDown={handleKeyDown}
