@@ -1,7 +1,7 @@
 @import '~/shared/style/helpers.css';
 
 @layer components {
-	.c-select.c-btn {
+	.c-select.c-button {
 		@apply t-with-disabled-input t-with-error-input t-input-size-md border-md bg-input-bg font-normal text-input-fg shadow-inner transition-colors border-dynamic-secondary;
 	}
 

@@ -5,12 +5,12 @@
 	by base / components / utilities, and we want these to be available for use in compnents.
 */
 @layer base {
-	.t-disabled-btn {
+	.t-disabled-button {
 		@apply pointer-events-none opacity-75;
 	}
 
-	.t-with-disabled-btn {
-		@apply disabled:t-disabled-btn;
+	.t-with-disabled-button {
+		@apply disabled:t-disabled-button;
 	}
 
 	.t-disabled-input {

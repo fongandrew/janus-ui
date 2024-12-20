@@ -1,44 +1,44 @@
 @import '~/shared/style/helpers.css';
 
 @layer components {
-	.c-btn {
-		@apply t-with-disabled-btn t-with-focus-ring inline-flex items-center justify-center whitespace-nowrap font-medium transition-[colors,shadow] hover:shadow-md hover:contrast-hover active:shadow-none [&_svg]:pointer-events-none [&_svg]:size-[1em] [&_svg]:shrink-0;
+	.c-button {
+		@apply t-with-disabled-button t-with-focus-ring inline-flex items-center justify-center whitespace-nowrap font-medium transition-[colors,shadow] hover:shadow-md hover:contrast-hover active:shadow-none [&_svg]:pointer-events-none [&_svg]:size-[1em] [&_svg]:shrink-0;
 
 		/* Secondary by default */
-		@apply border-dynamic-secondary border-md bg-secondary text-secondary-fg;
+		@apply border-md bg-secondary text-secondary-fg border-dynamic-secondary;
 
 		/* md by default */
-		@apply py-input-y-md gap-sm rounded-md px-md text-input-md;
+		@apply gap-sm rounded-md px-md py-input-y-md text-input-md;
 	}
 }
 
 @layer utilities {
 	/* Color variants */
 
-	.c-btn--primary {
-		@apply border-dynamic-primary bg-primary text-primary-fg;
+	.c-button--primary {
+		@apply bg-primary text-primary-fg border-dynamic-primary;
 	}
 
-	.c-btn--danger {
-		@apply border-dynamic-danger bg-danger text-danger-fg;
+	.c-button--danger {
+		@apply bg-danger text-danger-fg border-dynamic-danger;
 	}
 
-	.c-btn--ghost {
+	.c-button--ghost {
 		@apply border-transparent bg-transparent hover:border-secondary hover:bg-secondary hover:text-secondary-fg hover:shadow-none;
 	}
 
-	.c-btn--link {
+	.c-button--link {
 		@apply t-link-style inline border-0 bg-transparent p-0 hover:shadow-none;
 	}
 
 	/* Size variants */
 
-	.c-btn--sm {
-		@apply py-input-y-sm gap-xs rounded-sm px-sm text-input-sm hover:shadow-sm active:shadow-none;
+	.c-button--sm {
+		@apply gap-xs rounded-sm px-sm py-input-y-sm text-input-sm hover:shadow-sm active:shadow-none;
 	}
 
-	.c-btn--lg {
+	.c-button--lg {
 		/* Intentionally no shadow-lg */
-		@apply py-input-y-lg gap-sm rounded-lg px-lg text-input-lg;
+		@apply gap-sm rounded-lg px-lg py-input-y-lg text-input-lg;
 	}
 }

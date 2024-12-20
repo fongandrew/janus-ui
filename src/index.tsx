@@ -218,7 +218,7 @@ const ButtonsCard: Component = () => (
 		<CardContent>
 			<Stack>
 				<Group class="flex-wrap">
-					<Button class="c-btn--sm">
+					<Button class="c-button--sm">
 						<Settings /> Small Button
 					</Button>
 
@@ -226,16 +226,16 @@ const ButtonsCard: Component = () => (
 						<Settings /> Default Button
 					</Button>
 
-					<Button class="c-btn--lg">
+					<Button class="c-button--lg">
 						<Settings /> Large Button
 					</Button>
 				</Group>
 				<Group>
-					<Button class="c-btn--primary">Primary</Button>
-					<Button class="c-btn--danger">Danger</Button>
+					<Button class="c-button--primary">Primary</Button>
+					<Button class="c-button--danger">Danger</Button>
 					<Button disabled>Disabled</Button>
-					<Button class="c-btn--ghost">Ghost</Button>
-					<Button class="c-btn--link">Link</Button>
+					<Button class="c-button--ghost">Ghost</Button>
+					<Button class="c-button--link">Link</Button>
 				</Group>
 			</Stack>
 		</CardContent>
@@ -321,8 +321,8 @@ const FooterCard: Component = () => (
 			<p>The grid will adjust columns based on screen size.</p>
 		</CardContent>
 		<CardFooter>
-			<Button class="c-btn--ghost">Skip</Button>
-			<Button class="c-btn--primary">Continue</Button>
+			<Button class="c-button--ghost">Skip</Button>
+			<Button class="c-button--primary">Continue</Button>
 		</CardFooter>
 	</Card>
 );

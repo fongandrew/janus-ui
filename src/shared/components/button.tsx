@@ -7,5 +7,5 @@ export function Button(
 	props: JSX.IntrinsicAttributes & JSX.ButtonHTMLAttributes<HTMLButtonElement>,
 ) {
 	const rest = useFormControl(props);
-	return <button {...rest} class={cx('c-btn', props.class)} />;
+	return <button {...rest} class={cx('c-button', props.class)} />;
 }
