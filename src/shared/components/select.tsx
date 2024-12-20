@@ -1,12 +1,11 @@
 import { flip, offset, shift, size } from '@floating-ui/dom';
 import cx from 'classix';
-import { ChevronsUpDown } from 'lucide-solid';
 import { createMemo, createSignal, type JSX, splitProps } from 'solid-js';
 
-import { Button } from '~/shared/components/button';
 import { createDropdown } from '~/shared/components/create-dropdown';
 import { ListBox } from '~/shared/components/list-box';
 import { LIST_OPTION_VALUE_ATTR } from '~/shared/components/option-list';
+import { SelectButton } from '~/shared/components/select-button';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { createMountedSignal } from '~/shared/utility/solid/create-mounted-signal';
 import { createTappedRefSignal } from '~/shared/utility/solid/create-tapped-ref-signal';
@@ -28,6 +27,8 @@ export interface SelectProps
 	onChange?: (event: MouseEvent | KeyboardEvent, value: Set<string>) => void;
 	/** Whether multiple selection is allowed */
 	multiple?: boolean;
+	/** Disables clearing selection */
+	required?: boolean;
 	/** Make children required */
 	children: JSX.Element;
 }
@@ -39,6 +40,7 @@ export function Select(props: SelectProps) {
 		'defaultValues',
 		'onChange',
 		'multiple',
+		'required',
 		'aria-invalid',
 		'children',
 	]);
@@ -63,6 +65,9 @@ export function Select(props: SelectProps) {
 	const [uncontrolledValues, setUncontrolledValues] = createSignal<Set<string> | undefined>(
 		props.defaultValues,
 	);
+
+	const values = () => props.values ?? uncontrolledValues();
+
 	const handleChange = (event: MouseEvent | KeyboardEvent, values: Set<string>) => {
 		setUncontrolledValues(values);
 		props.onChange?.(event, values);
@@ -70,7 +75,10 @@ export function Select(props: SelectProps) {
 			content()?.hidePopover();
 		}
 	};
-	const values = () => props.values ?? uncontrolledValues();
+
+	const handleClear = (event: MouseEvent | KeyboardEvent) => {
+		handleChange(event, new Set());
+	};
 
 	// Generate content of trigger
 	const isMounted = createMountedSignal();
@@ -99,22 +107,33 @@ export function Select(props: SelectProps) {
 		return <span class="c-select__placeholder">{local.placeholder}</span>;
 	});
 
+	const showClear = createMemo(() => {
+		if (listBoxProps.required) return false;
+		const size = values()?.size;
+		return size && size > 0;
+	});
+
 	return (
 		<>
-			<Button
+			<SelectButton
 				{...buttonProps}
 				ref={combineRefs(setTrigger, props.ref)}
 				aria-invalid={props['aria-invalid']}
-				class={cx('c-select', props.class)}
+				onClear={showClear() ? handleClear : undefined}
 			>
-				<span class="flex-1 justify-start text-left">{selectionText()}</span>
-				<ChevronsUpDown class="shrink-0 grow-0" />
-			</Button>
+				{selectionText()}
+			</SelectButton>
 			<ListBox
 				{...listBoxProps}
 				ref={setContent}
 				class={cx('c-dropdown', props.class)}
 				onChange={handleChange}
+				// ListBox must be in controlled state for Select to clear
+				values={values() ?? new Set()}
+				// Don't allow toggling to clear selection if single (this maps
+				// to how a native select works -- we'll use the clear button
+				// to chandle this instead)
+				required={listBoxProps.required || !listBoxProps.multiple}
 				autofocus
 			/>
 		</>

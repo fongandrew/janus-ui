@@ -1,0 +1,27 @@
+@import '~/shared/style/helpers.css';
+
+@layer components {
+	.c-select-button.c-button {
+		@apply t-with-disabled-input t-with-error-input t-input-size-md w-full border-md bg-input-bg font-normal text-input-fg shadow-inner transition-colors border-dynamic-secondary;
+	}
+
+	.c-select-button__clear.c-button {
+		@apply w-input-md absolute inset-y-0 right-0 flex items-center justify-center border-0 bg-transparent p-0 text-input-fg hover:bg-transparent hover:shadow-none;
+	}
+
+	.c-select-button__content {
+		@apply flex-1 justify-start text-left;
+	}
+}
+
+@layer utilities {
+	/* State variants */
+
+	.c-select-button--disabled {
+		@apply t-disabled-input;
+	}
+
+	.c-select-button--error {
+		@apply t-error-input;
+	}
+}

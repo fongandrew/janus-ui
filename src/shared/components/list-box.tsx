@@ -14,21 +14,23 @@ import { nextIndex } from '~/shared/utility/next-index';
 
 export interface ListBoxProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onChange'> {
 	/** Ref must be callback if any */
-	ref?: (el: HTMLDivElement) => void;
+	ref?: ((el: HTMLDivElement) => void) | undefined;
 	/** Name for form submission */
-	name?: string;
+	name?: string | undefined;
 	/** Is listbox disabled? */
-	disabled?: boolean;
+	disabled?: boolean | undefined;
 	/** Currently selected values (controlled) */
-	values?: Set<string>;
+	values?: Set<string> | undefined;
 	/** Default selected values (uncontrolled) */
 	defaultValues?: Set<string>;
 	/** Called when selection changes */
 	onChange?: (event: MouseEvent | KeyboardEvent, value: Set<string>) => void;
-	/** Whether multiple selection is allowed */
-	multiple?: boolean;
+	/** Disables clearing selection */
+	required?: boolean | undefined;
 	/** Autofocus listbox? */
-	autofocus?: boolean;
+	autofocus?: boolean | undefined;
+	/** Whether multiple selection is allowed */
+	multiple?: boolean | undefined;
 	/** Make children required */
 	children: JSX.Element;
 }
@@ -44,6 +46,7 @@ export function ListBox(props: ListBoxProps) {
 		'values',
 		'onChange',
 		'multiple',
+		'required',
 	]);
 
 	// Track the currently highlighted (not selected) option
@@ -65,7 +68,8 @@ export function ListBox(props: ListBoxProps) {
 	const matchText = createTextMatcher(() => listBox?.querySelectorAll(optionsSelector));
 
 	const handleValueSelection = (event: MouseEvent | KeyboardEvent, value: string) => {
-		const newValues = new Set(getSelectedValues());
+		const oldValues = getSelectedValues();
+		const newValues = new Set(oldValues);
 		if (local.multiple) {
 			if (newValues.has(value)) {
 				newValues.delete(value);
@@ -78,6 +82,10 @@ export function ListBox(props: ListBoxProps) {
 			if (shouldAdd) {
 				newValues.add(value);
 			}
+		}
+		if (newValues.size === 0 && props.required) {
+			local.onChange?.(event, oldValues);
+			return;
 		}
 		local.onChange?.(event, newValues);
 		setUncontrolledValues(newValues);

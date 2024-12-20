@@ -217,7 +217,7 @@ const ButtonsCard: Component = () => (
 		</CardHeader>
 		<CardContent>
 			<Stack>
-				<Group class="flex-wrap">
+				<Group>
 					<Button class="c-button--sm">
 						<Settings /> Small Button
 					</Button>

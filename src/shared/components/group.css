@@ -2,7 +2,7 @@
 
 @layer components {
 	.c-group {
-		@apply flex items-center;
+		@apply flex flex-wrap items-center;
 
 		/* md by default */
 		@apply gap-md;

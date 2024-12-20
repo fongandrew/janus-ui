@@ -245,6 +245,13 @@ export default {
 				'tooltip-arrow': 'var(--tooltip-arrow-size)',
 			},
 
+			width: {
+				// Input sizes
+				'input-sm': pxToRem(px.height.input.sm),
+				'input-md': pxToRem(px.height.input.md),
+				'input-lg': pxToRem(px.height.input.lg),
+			},
+
 			typography: {
 				DEFAULT: {
 					css: {
