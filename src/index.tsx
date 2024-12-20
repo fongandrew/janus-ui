@@ -26,6 +26,7 @@ import { ListBox, ListBoxGroup, ListBoxItem } from '~/shared/components/list-box
 import { Menu, MenuGroup, MenuItem, MenuItemLink } from '~/shared/components/menu';
 import { Radio } from '~/shared/components/radio';
 import { RadioGroup } from '~/shared/components/radio-group';
+import { Select } from '~/shared/components/select';
 import { Stack } from '~/shared/components/stack';
 import { Textarea } from '~/shared/components/textarea';
 import { Tooltip } from '~/shared/components/tooltip';
@@ -308,6 +309,58 @@ const FooterCard: Component = () => (
 	</Card>
 );
 
+const SelectDemo: Component = () => {
+	const [value, setValue] = createSignal<Set<string>>(new Set());
+	const [multiValue, setMultiValue] = createSignal<Set<string>>(new Set());
+
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Select</CardTitle>
+				<CardDescription>
+					Dropdown select with single and multiple selection
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<Stack>
+					<LabelStack>
+						<Label>Single Selection</Label>
+						<p>Selected: {Array.from(value()).join(', ') || 'None'}</p>
+						<Select
+							placeholder="Select a fruit..."
+							values={value()}
+							onChange={(_e, values) => setValue(values)}
+						>
+							<ListBoxGroup>
+								<ListBoxItem value="apple">Apple</ListBoxItem>
+								<ListBoxItem value="banana">Banana</ListBoxItem>
+								<ListBoxItem value="orange">Orange</ListBoxItem>
+							</ListBoxGroup>
+						</Select>
+					</LabelStack>
+
+					<LabelStack>
+						<Label>Multiple Selection</Label>
+						<p>Selected: {Array.from(multiValue()).join(', ') || 'None'}</p>
+						<Select
+							placeholder="Select colors..."
+							values={multiValue()}
+							onChange={(_e, values) => setMultiValue(values)}
+							multiple
+						>
+							<ListBoxGroup>
+								<ListBoxItem value="red">Red</ListBoxItem>
+								<ListBoxItem value="green">Green</ListBoxItem>
+								<ListBoxItem value="blue">Blue</ListBoxItem>
+							</ListBoxGroup>
+						</Select>
+					</LabelStack>
+				</Stack>
+			</CardContent>
+		</Card>
+	);
+};
+
 const App: Component = () => {
 	return (
 		<Box>
@@ -320,6 +373,7 @@ const App: Component = () => {
 				<InputsCard />
 				<TextareasCard />
 				<ListBoxDemo />
+				<SelectDemo />
 				<FooterCard />
 			</Grid>
 		</Box>

@@ -1,7 +1,7 @@
 @import '~/shared/style/helpers.css';
 
 @layer components {
-	.c-list-box {
+	.c-list-box:not(.c-dropdown) {
 		@apply t-with-disabled-input t-with-focus-ring w-full px-0 py-xs shadow-inner transition-colors;
 
 		/* Base styles */

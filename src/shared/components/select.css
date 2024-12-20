@@ -1,0 +1,15 @@
+@import '~/shared/style/helpers.css';
+
+@layer components {
+	.c-select.c-btn {
+		@apply t-input-size-md border-md bg-input-bg font-normal text-input-fg shadow-inner transition-colors border-dynamic-secondary;
+	}
+
+	.c-select__placeholder {
+		@apply text-muted;
+	}
+
+	.c-select__list-box.c-list-box {
+		@apply shadow-md;
+	}
+}

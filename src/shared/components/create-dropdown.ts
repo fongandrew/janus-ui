@@ -5,7 +5,6 @@ import {
 	flip,
 	type Middleware,
 	offset,
-	type Placement,
 	shift,
 } from '@floating-ui/dom';
 import { createEffect, createSignal, onCleanup } from 'solid-js';
@@ -49,7 +48,14 @@ function attachToDocument(targetDocument = window.document) {
 }
 
 export function createDropdown(
-	defaultPlacements: Placement | Placement[] = ['bottom-start', 'bottom-end'],
+	middleware: Middleware[] = [
+		offset(4),
+		flip(),
+		shift({ padding: 4 }),
+		autoPlacement({
+			allowedPlacements: ['bottom-start', 'bottom-end'],
+		}),
+	],
 ) {
 	const [triggerElement, setTriggerElement] = createSignal<HTMLElement | null>(null);
 	const [menuElement, setMenuElement] = createSignal<HTMLElement | null>(null);
@@ -57,15 +63,6 @@ export function createDropdown(
 
 	// Callback for updating position
 	const updatePosition = async (triggerElm: HTMLElement, menuElm: HTMLElement) => {
-		const middleware: Middleware[] = [offset(8), flip(), shift({ padding: 8 })];
-		if (Array.isArray(defaultPlacements)) {
-			middleware.unshift(
-				autoPlacement({
-					allowedPlacements: defaultPlacements,
-				}),
-			);
-		}
-
 		const { x, y } = await computePosition(triggerElm, menuElm, {
 			...(typeof defaultPlacements === 'string'
 				? { placement: defaultPlacements }

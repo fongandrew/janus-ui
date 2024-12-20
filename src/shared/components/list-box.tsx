@@ -13,6 +13,8 @@ import { generateId } from '~/shared/utility/id-generator';
 import { nextIndex } from '~/shared/utility/next-index';
 
 export interface ListBoxProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+	/** Ref must be callback if any */
+	ref?: (el: HTMLDivElement) => void;
 	/** Name for form submission */
 	name?: string;
 	/** Is listbox disabled? */
@@ -25,6 +27,8 @@ export interface ListBoxProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, '
 	onChange?: (event: MouseEvent | KeyboardEvent, value: Set<string>) => void;
 	/** Whether multiple selection is allowed */
 	multiple?: boolean;
+	/** Autofocus listbox? */
+	autofocus?: boolean;
 	/** Make children required */
 	children: JSX.Element;
 }
@@ -52,6 +56,7 @@ export function ListBox(props: ListBoxProps) {
 	let listBox: HTMLElement | null = null;
 	const ref = (el: HTMLDivElement) => {
 		listBox = el;
+		props.ref?.(el);
 	};
 
 	/** For matching user trying to type and match input */
