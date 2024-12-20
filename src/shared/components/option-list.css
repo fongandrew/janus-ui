@@ -11,7 +11,7 @@
 
 	.c-option-list__item:hover,
 	.c-option-list__item:focus-visible,
-	.c-option-list__item[aria-selected='true'] {
+	:focus-visible .c-option-list__item[aria-current='true'] {
 		@apply bg-highlight text-highlight-fg outline-none;
 	}
 
@@ -21,7 +21,7 @@
 	}
 
 	.c-option-list__heading {
-		@apply py-text-y-xs px-input-x-md text-xs font-semibold text-muted;
+		@apply px-input-x-md py-text-y-xs text-xs font-semibold text-muted;
 	}
 
 	.c-option-list__group + .c-option-list__group,

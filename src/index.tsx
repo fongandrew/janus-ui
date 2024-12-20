@@ -22,12 +22,54 @@ import { Group } from '~/shared/components/group';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
+import { ListBox, ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
 import { Menu, MenuGroup, MenuItem, MenuItemLink } from '~/shared/components/menu';
 import { Radio } from '~/shared/components/radio';
 import { RadioGroup } from '~/shared/components/radio-group';
 import { Stack } from '~/shared/components/stack';
 import { Textarea } from '~/shared/components/textarea';
 import { Tooltip } from '~/shared/components/tooltip';
+
+const ListBoxDemo: Component = () => {
+	const [values, setValues] = createSignal<Set<string>>(new Set());
+	const [multiValues, setMultiValues] = createSignal<Set<string>>(new Set());
+
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>List Box</CardTitle>
+				<CardDescription>Single and multiple selection list boxes</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<Stack>
+					<LabelStack>
+						<Label>Single Selection</Label>
+						<p>Selected: {Array.from(values()).join(', ') || 'None'}</p>
+						<ListBox values={values()} onChange={setValues}>
+							<ListBoxGroup>
+								<ListBoxItem value="apple">Apple</ListBoxItem>
+								<ListBoxItem value="banana">Banana</ListBoxItem>
+								<ListBoxItem value="orange">Orange</ListBoxItem>
+							</ListBoxGroup>
+						</ListBox>
+					</LabelStack>
+
+					<LabelStack>
+						<Label>Multiple Selection</Label>
+						<p>Selected: {Array.from(multiValues()).join(', ') || 'None'}</p>
+						<ListBox values={multiValues()} onChange={setMultiValues} multiple>
+							<ListBoxGroup>
+								<ListBoxItem value="red">Red</ListBoxItem>
+								<ListBoxItem value="green">Green</ListBoxItem>
+								<ListBoxItem value="blue">Blue</ListBoxItem>
+							</ListBoxGroup>
+						</ListBox>
+					</LabelStack>
+				</Stack>
+			</CardContent>
+		</Card>
+	);
+};
 
 const MenuDemo: Component = () => {
 	const [selection, setSelection] = createSignal<string | null>(null);
@@ -277,6 +319,7 @@ const App: Component = () => {
 				<TooltipDemo />
 				<InputsCard />
 				<TextareasCard />
+				<ListBoxDemo />
 				<FooterCard />
 			</Grid>
 		</Box>

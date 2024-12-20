@@ -8,11 +8,7 @@ import {
 	OptionListButton,
 	OptionListGroup,
 } from '~/shared/components/option-list';
-import {
-	createOptionListContextValue,
-	createOptionListTextMatcher,
-	OptionListContext,
-} from '~/shared/components/option-list-context';
+import { createTextMatcher } from '~/shared/utility/create-text-matcher';
 import { generateId } from '~/shared/utility/id-generator';
 import { nextIndex } from '~/shared/utility/next-index';
 
@@ -40,16 +36,8 @@ export function Menu(props: MenuProps) {
 		props.ref(el);
 	};
 
-	// Menu doesn't need to retain active / selected state. There's no selection per se
-	// (or if there is, it's via aria checked states that the menu doesn't need to know
-	// about) and we can just rely on the focus state for selection.
-	const optionListContext = createOptionListContextValue(
-		() => undefined,
-		() => new Set(),
-	);
-
 	/** For matching user trying to type and match input */
-	const matchText = createOptionListTextMatcher(optionListContext);
+	const matchText = createTextMatcher(() => menu?.querySelectorAll(menuItemsSelector));
 
 	onMount(() => {
 		if (!menu) {
@@ -149,8 +137,8 @@ export function Menu(props: MenuProps) {
 			default: {
 				// If here, check if we're typing a character to filter the list
 				if (event.key.length === 1) {
-					const [_value, elm] = matchText(event.key);
-					elm?.focus();
+					const node = matchText(event.key);
+					node?.focus();
 				}
 			}
 		}
@@ -164,18 +152,16 @@ export function Menu(props: MenuProps) {
 	};
 
 	return (
-		<OptionListContext.Provider value={optionListContext}>
-			<OptionList
-				{...rest}
-				role="menu"
-				ref={ref}
-				class={cx('c-dropdown', props.class)}
-				onFocusIn={handleFocus}
-				onFocusOut={handleBlur}
-				onClick={handleClick}
-				onKeyDown={handleKeyDown}
-			/>
-		</OptionListContext.Provider>
+		<OptionList
+			{...rest}
+			role="menu"
+			ref={ref}
+			class={cx('c-dropdown', props.class)}
+			onFocusIn={handleFocus}
+			onFocusOut={handleBlur}
+			onClick={handleClick}
+			onKeyDown={handleKeyDown}
+		/>
 	);
 }
 

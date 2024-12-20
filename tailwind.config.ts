@@ -188,6 +188,11 @@ export default {
 			lg: pxToRem(px.spacing.lg),
 			xl: pxToRem(px.spacing.xl),
 			'2xl': pxToRem(px.spacing['2xl']),
+
+			// Some useful values that we don't want to have to use arbitrary value
+			// notation for
+			em: '1em',
+			lh: '1lh',
 		},
 
 		textUnderlineOffset: {
