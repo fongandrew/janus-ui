@@ -1,4 +1,5 @@
 @import '~/shared/style/helpers.css';
+@import '~/shared/components/button.css';
 
 @layer components {
 	.c-select-button.c-button {
@@ -17,11 +18,21 @@
 @layer utilities {
 	/* State variants */
 
-	.c-select-button--disabled {
+	.c-select-button--disabled.c-button {
 		@apply t-disabled-input;
 	}
 
-	.c-select-button--error {
+	.c-select-button--error.c-button {
 		@apply t-error-input;
+	}
+
+	/* Size variants */
+
+	.c-select-button--sm.c-button {
+		@apply c-button--sm;
+	}
+
+	.c-select-button--lg.c-button {
+		@apply c-button--lg;
 	}
 }
