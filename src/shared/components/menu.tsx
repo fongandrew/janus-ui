@@ -126,7 +126,10 @@ export function Menu(props: MenuProps) {
 				break;
 			}
 			case 'Tab': {
-				event.preventDefault();
+				// We're assuming menu is in a popover right after the trigger so the
+				// tab sequence will naturally go to the right thing. This might do
+				// weird things in a portal though. Consider passing a reference
+				// to the trigger to menu so we can correctly focus it.
 				menu.hidePopover();
 				break;
 			}

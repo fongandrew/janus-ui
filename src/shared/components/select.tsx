@@ -47,7 +47,7 @@ export function Select(props: SelectProps) {
 	const [local, buttonProps] = splitProps(rest, ['placeholder']);
 
 	// Refs to trigger and dropdown
-	const [setTrigger, setContentBase] = createDropdown([
+	const [setTriggerBase, setContentBase] = createDropdown([
 		offset(4),
 		size({
 			apply({ rects, elements }) {
@@ -59,6 +59,7 @@ export function Select(props: SelectProps) {
 		flip(),
 		shift({ padding: 4 }),
 	]);
+	const [trigger, setTrigger] = createTappedRefSignal(setTriggerBase);
 	const [content, setContent] = createTappedRefSignal(setContentBase);
 
 	// Reference to last change value (used for uncontrolled mode only)
@@ -78,6 +79,18 @@ export function Select(props: SelectProps) {
 
 	const handleClear = (event: MouseEvent | KeyboardEvent) => {
 		handleChange(event, new Set());
+	};
+
+	const handleKeyDown = (event: KeyboardEvent) => {
+		if (event.key === 'Tab') {
+			trigger()?.focus();
+		}
+	};
+
+	const handleBlur = (event: FocusEvent) => {
+		if (!content()?.contains(event.relatedTarget as Node)) {
+			content()?.hidePopover();
+		}
 	};
 
 	// Generate content of trigger
@@ -128,6 +141,8 @@ export function Select(props: SelectProps) {
 				ref={setContent}
 				class={cx('c-dropdown', props.class)}
 				onChange={handleChange}
+				onFocusOut={handleBlur}
+				onKeyDown={handleKeyDown}
 				// ListBox must be in controlled state for Select to clear
 				values={values() ?? new Set()}
 				// Don't allow toggling to clear selection if single (this maps
