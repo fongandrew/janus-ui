@@ -50,8 +50,10 @@ export function ListBox(props: ListBoxProps) {
 	const [activeId, setActiveId] = createSignal<string | undefined>();
 
 	// Track which items are selected
-	const [values, setValues] = createSignal<Set<string>>(props.defaultValues ?? new Set());
-	const getSelectedValues = () => props.values ?? values();
+	const [uncontrolledValues, setUncontrolledValues] = createSignal<Set<string>>(
+		props.defaultValues ?? new Set(),
+	);
+	const getSelectedValues = () => props.values ?? uncontrolledValues();
 
 	let listBox: HTMLElement | null = null;
 	const ref = (el: HTMLDivElement) => {
@@ -78,7 +80,7 @@ export function ListBox(props: ListBoxProps) {
 			}
 		}
 		local.onChange?.(event, newValues);
-		setValues(newValues);
+		setUncontrolledValues(newValues);
 	};
 
 	const handleKeyDown = (event: KeyboardEvent) => {
@@ -154,7 +156,7 @@ export function ListBox(props: ListBoxProps) {
 			role="listbox"
 			tabIndex={0}
 			activeId={activeId()}
-			selectedValues={values()}
+			selectedValues={getSelectedValues()}
 			aria-disabled={local.disabled}
 			aria-multiselectable={local.multiple}
 			aria-activedescendant={activeId()}
@@ -162,7 +164,7 @@ export function ListBox(props: ListBoxProps) {
 			onKeyDown={handleKeyDown}
 		>
 			{local.children}
-			{local.name && <ListBoxSelections name={local.name} values={values()} />}
+			{local.name && <ListBoxSelections name={local.name} values={getSelectedValues()} />}
 		</OptionList>
 	);
 }

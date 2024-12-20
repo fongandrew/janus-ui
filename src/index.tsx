@@ -46,24 +46,42 @@ const ListBoxDemo: Component = () => {
 					<LabelStack>
 						<Label>Single Selection</Label>
 						<p>Selected: {Array.from(values()).join(', ') || 'None'}</p>
-						<ListBox values={values()} onChange={(_e, values) => setValues(values)}>
-							<ListBoxGroup>
-								<ListBoxItem value="apple">Apple</ListBoxItem>
-								<ListBoxItem value="banana">Banana</ListBoxItem>
-								<ListBoxItem value="orange">Orange</ListBoxItem>
-							</ListBoxGroup>
+						<ListBox
+							name="single-listbox"
+							values={values()}
+							onChange={(_e, values) => setValues(values)}
+						>
+							<ListBoxItem value="apple">Apple</ListBoxItem>
+							<ListBoxItem value="banana">Banana</ListBoxItem>
+							<ListBoxItem value="orange">Orange</ListBoxItem>
 						</ListBox>
 					</LabelStack>
 
 					<LabelStack>
 						<Label>Multiple Selection</Label>
 						<p>Selected: {Array.from(multiValues()).join(', ') || 'None'}</p>
-						<ListBox values={multiValues()} onChange={setMultiValues} multiple>
-							<ListBoxGroup>
+						<ListBox
+							name="multi-listbox"
+							values={multiValues()}
+							onChange={(_e, values) => setMultiValues(values)}
+							multiple
+							aria-invalid={multiValues().has('red')}
+						>
+							<ListBoxGroup heading="Don't Pick These">
 								<ListBoxItem value="red">Red</ListBoxItem>
+							</ListBoxGroup>
+							<ListBoxGroup>
 								<ListBoxItem value="green">Green</ListBoxItem>
 								<ListBoxItem value="blue">Blue</ListBoxItem>
 							</ListBoxGroup>
+						</ListBox>
+					</LabelStack>
+
+					<LabelStack>
+						<Label>Disabled Selection</Label>
+						<ListBox disabled name="disabled-listbox" values={new Set(['fixed'])}>
+							<ListBoxItem value="fixed">Can't Change Me</ListBoxItem>
+							<ListBoxItem value="different">Can't Pick Me</ListBoxItem>
 						</ListBox>
 					</LabelStack>
 				</Stack>
@@ -331,11 +349,9 @@ const SelectDemo: Component = () => {
 							values={value()}
 							onChange={(_e, values) => setValue(values)}
 						>
-							<ListBoxGroup>
-								<ListBoxItem value="apple">Apple</ListBoxItem>
-								<ListBoxItem value="banana">Banana</ListBoxItem>
-								<ListBoxItem value="orange">Orange</ListBoxItem>
-							</ListBoxGroup>
+							<ListBoxItem value="apple">Apple</ListBoxItem>
+							<ListBoxItem value="banana">Banana</ListBoxItem>
+							<ListBoxItem value="orange">Orange</ListBoxItem>
 						</Select>
 					</LabelStack>
 
@@ -349,8 +365,10 @@ const SelectDemo: Component = () => {
 							onChange={(_e, values) => setMultiValue(values)}
 							multiple
 						>
+							<ListBoxGroup heading="Don't Pick These">
+								<ListBoxItem value="red">Red</ListBoxItem>
+							</ListBoxGroup>
 							<ListBoxGroup>
-								<ListBoxItem value="red">Red (don't pick me)</ListBoxItem>
 								<ListBoxItem value="green">Green</ListBoxItem>
 								<ListBoxItem value="blue">Blue</ListBoxItem>
 							</ListBoxGroup>
@@ -359,11 +377,9 @@ const SelectDemo: Component = () => {
 
 					<LabelStack>
 						<Label>Disabled Selection</Label>
-						<Select disabled values={new Set('fixed')}>
-							<ListBoxGroup>
-								<ListBoxItem value="fixed">Can't Change Me</ListBoxItem>
-								<ListBoxItem value="different">Can't Pick Me</ListBoxItem>
-							</ListBoxGroup>
+						<Select disabled values={new Set(['fixed'])}>
+							<ListBoxItem value="fixed">Can't Change Me</ListBoxItem>
+							<ListBoxItem value="different">Can't Pick Me</ListBoxItem>
 						</Select>
 					</LabelStack>
 				</Stack>

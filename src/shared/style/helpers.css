@@ -26,7 +26,7 @@
 	}
 
 	.t-with-error-input {
-		@apply aria-[invalid]:t-error-input;
+		@apply aria-[invalid="true"]:t-error-input;
 	}
 
 	.t-focus-ring {

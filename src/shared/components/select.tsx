@@ -104,7 +104,7 @@ export function Select(props: SelectProps) {
 			<Button
 				{...buttonProps}
 				ref={combineRefs(setTrigger, props.ref)}
-				aria-invalid={props['aria-invalid'] ? 'true' : undefined}
+				aria-invalid={props['aria-invalid']}
 				class={cx('c-select', props.class)}
 			>
 				<span class="flex-1 justify-start text-left">{selectionText()}</span>

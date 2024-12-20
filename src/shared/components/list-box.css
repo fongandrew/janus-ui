@@ -2,7 +2,7 @@
 
 @layer components {
 	.c-list-box:not(.c-dropdown) {
-		@apply t-with-disabled-input t-with-focus-ring w-full px-0 py-xs shadow-inner transition-colors;
+		@apply t-with-disabled-input t-with-error-input t-with-focus-ring w-full px-0 py-xs shadow-inner transition-colors;
 
 		/* Base styles */
 		@apply border-md bg-input-bg text-input-fg border-dynamic-secondary placeholder:text-muted;
@@ -23,5 +23,17 @@
 
 	.c-list-box__item[aria-selected='true'] .c-list-box__check-box svg {
 		display: block;
+	}
+}
+
+@layer utilities {
+	/* State variants */
+
+	.c-list-box--disabled {
+		@apply t-disabled-input;
+	}
+
+	.c-list-box--error {
+		@apply t-error-input;
 	}
 }
