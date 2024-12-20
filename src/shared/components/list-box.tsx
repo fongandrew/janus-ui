@@ -22,7 +22,7 @@ export interface ListBoxProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, '
 	/** Default selected values (uncontrolled) */
 	defaultValues?: Set<string>;
 	/** Called when selection changes */
-	onChange?: (value: Set<string>) => void;
+	onChange?: (event: MouseEvent | KeyboardEvent, value: Set<string>) => void;
 	/** Whether multiple selection is allowed */
 	multiple?: boolean;
 	/** Make children required */
@@ -57,7 +57,7 @@ export function ListBox(props: ListBoxProps) {
 	/** For matching user trying to type and match input */
 	const matchText = createTextMatcher(() => listBox?.querySelectorAll(optionsSelector));
 
-	const handleValueSelection = (value: string) => {
+	const handleValueSelection = (event: MouseEvent | KeyboardEvent, value: string) => {
 		const newValues = new Set(getSelectedValues());
 		if (local.multiple) {
 			if (newValues.has(value)) {
@@ -72,7 +72,7 @@ export function ListBox(props: ListBoxProps) {
 				newValues.add(value);
 			}
 		}
-		local.onChange?.(newValues);
+		local.onChange?.(event, newValues);
 		setValues(newValues);
 	};
 
@@ -102,7 +102,7 @@ export function ListBox(props: ListBoxProps) {
 				event.preventDefault();
 				const value = currentElement?.getAttribute(LIST_OPTION_VALUE_ATTR);
 				if (!value) return;
-				handleValueSelection(value);
+				handleValueSelection(event, value);
 				break;
 			}
 			default: {
@@ -130,7 +130,7 @@ export function ListBox(props: ListBoxProps) {
 		if (option) {
 			const value = option.getAttribute(LIST_OPTION_VALUE_ATTR);
 			if (!value) return;
-			handleValueSelection(value);
+			handleValueSelection(event, value);
 		}
 
 		const onClick = props.onClick;

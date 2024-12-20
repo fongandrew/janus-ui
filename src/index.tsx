@@ -45,7 +45,7 @@ const ListBoxDemo: Component = () => {
 					<LabelStack>
 						<Label>Single Selection</Label>
 						<p>Selected: {Array.from(values()).join(', ') || 'None'}</p>
-						<ListBox values={values()} onChange={setValues}>
+						<ListBox values={values()} onChange={(_e, values) => setValues(values)}>
 							<ListBoxGroup>
 								<ListBoxItem value="apple">Apple</ListBoxItem>
 								<ListBoxItem value="banana">Banana</ListBoxItem>
