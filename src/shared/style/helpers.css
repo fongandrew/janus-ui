@@ -5,12 +5,28 @@
 	by base / components / utilities, and we want these to be available for use in compnents.
 */
 @layer base {
+	.t-disabled-btn {
+		@apply pointer-events-none opacity-75;
+	}
+
 	.t-with-disabled-btn {
-		@apply disabled:pointer-events-none disabled:opacity-75 aria-disabled:pointer-events-none aria-disabled:opacity-75;
+		@apply disabled:t-disabled-btn;
+	}
+
+	.t-disabled-input {
+		@apply cursor-not-allowed bg-input-disabled;
 	}
 
 	.t-with-disabled-input {
-		@apply disabled:bg-input-disabled aria-disabled:bg-input-disabled;
+		@apply disabled:t-disabled-input aria-disabled:t-disabled-input;
+	}
+
+	.t-error-input {
+		@apply border-dynamic-danger;
+	}
+
+	.t-with-error-input {
+		@apply aria-[invalid]:t-error-input;
 	}
 
 	.t-focus-ring {

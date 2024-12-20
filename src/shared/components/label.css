@@ -8,12 +8,14 @@
 	}
 
 	.c-label:has([aria-invalid='true']),
-	.c-label:has(+ [aria-invalid='true']) {
+	.c-label:has(+ [aria-invalid='true']),
+	.c-label-stack:has([aria-invalid='true']) .c-label {
 		@apply text-danger;
 	}
 
-	.c-label:has(input[aria-disabled='true']),
-	.c-label:has(+ input[aria-disabled='true']) {
+	.c-label:has([aria-disabled='true']),
+	.c-label:has(+ [aria-disabled='true']),
+	.c-label-stack:has([aria-disabled='true']) .c-label {
 		@apply text-muted;
 	}
 }

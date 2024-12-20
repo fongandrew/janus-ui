@@ -343,15 +343,26 @@ const SelectDemo: Component = () => {
 						<Label>Multiple Selection</Label>
 						<p>Selected: {Array.from(multiValue()).join(', ') || 'None'}</p>
 						<Select
+							aria-invalid={multiValue().has('red')}
 							placeholder="Select colors..."
 							values={multiValue()}
 							onChange={(_e, values) => setMultiValue(values)}
 							multiple
 						>
 							<ListBoxGroup>
-								<ListBoxItem value="red">Red</ListBoxItem>
+								<ListBoxItem value="red">Red (don't pick me)</ListBoxItem>
 								<ListBoxItem value="green">Green</ListBoxItem>
 								<ListBoxItem value="blue">Blue</ListBoxItem>
+							</ListBoxGroup>
+						</Select>
+					</LabelStack>
+
+					<LabelStack>
+						<Label>Disabled Selection</Label>
+						<Select disabled values={new Set('fixed')}>
+							<ListBoxGroup>
+								<ListBoxItem value="fixed">Can't Change Me</ListBoxItem>
+								<ListBoxItem value="different">Can't Pick Me</ListBoxItem>
 							</ListBoxGroup>
 						</Select>
 					</LabelStack>

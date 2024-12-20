@@ -1,22 +1,48 @@
 import { flip, offset, shift, size } from '@floating-ui/dom';
 import cx from 'classix';
 import { ChevronsUpDown } from 'lucide-solid';
-import { createMemo, createSignal, splitProps } from 'solid-js';
+import { createMemo, createSignal, type JSX, splitProps } from 'solid-js';
 
 import { Button } from '~/shared/components/button';
 import { createDropdown } from '~/shared/components/create-dropdown';
-import { ListBox, type ListBoxProps } from '~/shared/components/list-box';
+import { ListBox } from '~/shared/components/list-box';
 import { LIST_OPTION_VALUE_ATTR } from '~/shared/components/option-list';
+import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { createMountedSignal } from '~/shared/utility/solid/create-mounted-signal';
 import { createTappedRefSignal } from '~/shared/utility/solid/create-tapped-ref-signal';
 
-export interface SelectProps extends Omit<ListBoxProps, 'ref'> {
+export interface SelectProps
+	extends Omit<JSX.IntrinsicAttributes, 'ref'>,
+		Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, 'onChange'> {
+	/** Ref must be callback */
+	ref?: (element: HTMLButtonElement) => void;
+	/** Name for form submission */
+	name?: string;
 	/** Placeholder text when no selection */
 	placeholder?: string;
+	/** Currently selected values (controlled) */
+	values?: Set<string>;
+	/** Default selected values (uncontrolled) */
+	defaultValues?: Set<string>;
+	/** Called when selection changes */
+	onChange?: (event: MouseEvent | KeyboardEvent, value: Set<string>) => void;
+	/** Whether multiple selection is allowed */
+	multiple?: boolean;
+	/** Make children required */
+	children: JSX.Element;
 }
 
 export function Select(props: SelectProps) {
-	const [local, listBoxProps] = splitProps(props, ['placeholder', 'class']);
+	const [listBoxProps, rest] = splitProps(props, [
+		'name',
+		'values',
+		'defaultValues',
+		'onChange',
+		'multiple',
+		'aria-invalid',
+		'children',
+	]);
+	const [local, buttonProps] = splitProps(rest, ['placeholder']);
 
 	// Refs to trigger and dropdown
 	const [setTrigger, setContentBase] = createDropdown([
@@ -75,7 +101,12 @@ export function Select(props: SelectProps) {
 
 	return (
 		<>
-			<Button ref={setTrigger} disabled={props.disabled} class={cx('c-select', props.class)}>
+			<Button
+				{...buttonProps}
+				ref={combineRefs(setTrigger, props.ref)}
+				aria-invalid={props['aria-invalid'] ? 'true' : undefined}
+				class={cx('c-select', props.class)}
+			>
 				<span class="flex-1 justify-start text-left">{selectionText()}</span>
 				<ChevronsUpDown class="shrink-0 grow-0" />
 			</Button>

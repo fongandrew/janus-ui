@@ -2,7 +2,7 @@
 
 @layer components {
 	.c-select.c-btn {
-		@apply t-input-size-md border-md bg-input-bg font-normal text-input-fg shadow-inner transition-colors border-dynamic-secondary;
+		@apply t-with-disabled-input t-with-error-input t-input-size-md border-md bg-input-bg font-normal text-input-fg shadow-inner transition-colors border-dynamic-secondary;
 	}
 
 	.c-select__placeholder {
@@ -11,5 +11,17 @@
 
 	.c-select__list-box.c-list-box {
 		@apply shadow-md;
+	}
+}
+
+@layer utilities {
+	/* State variants */
+
+	.c-select--disabled {
+		@apply t-disabled-input;
+	}
+
+	.c-select--error {
+		@apply t-error-input;
 	}
 }
