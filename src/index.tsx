@@ -80,8 +80,8 @@ const ListBoxDemo: Component = () => {
 					<LabelStack>
 						<Label>Disabled Selection</Label>
 						<ListBox disabled name="disabled-listbox" values={new Set(['fixed'])}>
-							<ListBoxItem value="fixed">Can't Change Me</ListBoxItem>
-							<ListBoxItem value="different">Can't Pick Me</ListBoxItem>
+							<ListBoxItem value="fixed">Can't change me</ListBoxItem>
+							<ListBoxItem value="different">Can't pick me</ListBoxItem>
 						</ListBox>
 					</LabelStack>
 				</Stack>
@@ -164,16 +164,16 @@ const RadioGroupDemo: Component = () => {
 					<Stack>
 						<Label>Selected: {value()}</Label>
 						<Label>
-							<Radio value="default" /> Default Radio
+							<Radio value="default" /> Default radio
 						</Label>
 						<Label>
-							<Radio value="checked" /> Checked Radio
+							<Radio value="checked" /> Checked radio
 						</Label>
 						<Label>
-							<Radio value="error" aria-invalid /> Error State Radio
+							<Radio value="error" aria-invalid /> Error state radio
 						</Label>
 						<Label>
-							<Radio value="disabled" disabled /> Disabled Radio
+							<Radio value="disabled" disabled /> Disabled radio
 						</Label>
 					</Stack>
 				</RadioGroup>
@@ -251,19 +251,19 @@ const CheckboxesCard: Component = () => (
 		<CardContent>
 			<Stack>
 				<Label>
-					<Checkbox /> Default Checkbox
+					<Checkbox /> Default checkbox
 				</Label>
 				<Label>
-					<Checkbox checked /> Checked Checkbox
+					<Checkbox checked /> Checked checkbox
 				</Label>
 				<Label>
-					<Checkbox indeterminate /> Indeterminate Checkbox
+					<Checkbox indeterminate /> Indeterminate checkbox
 				</Label>
 				<Label>
-					<Checkbox aria-invalid /> Error State Checkbox
+					<Checkbox aria-invalid /> Error state checkbox
 				</Label>
 				<Label>
-					<Checkbox disabled /> Disabled Checkbox
+					<Checkbox disabled /> Disabled checkbox
 				</Label>
 			</Stack>
 		</CardContent>
@@ -378,8 +378,8 @@ const SelectDemo: Component = () => {
 					<LabelStack>
 						<Label>Disabled Selection</Label>
 						<Select disabled values={new Set(['fixed'])}>
-							<ListBoxItem value="fixed">Can't Change Me</ListBoxItem>
-							<ListBoxItem value="different">Can't Pick Me</ListBoxItem>
+							<ListBoxItem value="fixed">Can't change me</ListBoxItem>
+							<ListBoxItem value="different">Can't pick me</ListBoxItem>
 						</Select>
 					</LabelStack>
 				</Stack>
