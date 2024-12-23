@@ -64,9 +64,7 @@ export function createDropdown(
 	// Callback for updating position
 	const updatePosition = async (triggerElm: HTMLElement, menuElm: HTMLElement) => {
 		const { x, y } = await computePosition(triggerElm, menuElm, {
-			...(typeof defaultPlacements === 'string'
-				? { placement: defaultPlacements }
-				: undefined),
+			placement: 'bottom',
 			middleware,
 			strategy: 'fixed',
 		});
