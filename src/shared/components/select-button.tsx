@@ -18,7 +18,7 @@ export function SelectButton(props: SelectProps) {
 
 	return (
 		<div class="relative">
-			<Button {...rest} class={cx('c-select-button', props.class)}>
+			<Button role="combobox" {...rest} class={cx('c-select-button', props.class)}>
 				<span class="c-select-button__content">{local.children}</span>
 				{/* Opacity 0 to hide chevron to prevent possible shifting */}
 				<ChevronsUpDown class={cx('shrink-0 grow-0', local.onClear && 'opacity-0')} />
