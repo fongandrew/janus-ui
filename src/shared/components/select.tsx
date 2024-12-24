@@ -1,14 +1,15 @@
 import { flip, offset, shift, size } from '@floating-ui/dom';
 import cx from 'classix';
-import { createMemo, createSignal, type JSX, splitProps } from 'solid-js';
+import { createMemo, type JSX, mergeProps, splitProps } from 'solid-js';
 
+import { createComboBoxControl } from '~/shared/components/create-combo-box-control';
 import { createDropdown } from '~/shared/components/create-dropdown';
-import { ListBox } from '~/shared/components/list-box';
-import { LIST_OPTION_VALUE_ATTR } from '~/shared/components/option-list';
+import { ListBoxSelections } from '~/shared/components/list-box';
+import { OptionList } from '~/shared/components/option-list';
 import { SelectButton } from '~/shared/components/select-button';
+import { createTextMatcher } from '~/shared/utility/create-text-matcher';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { createMountedSignal } from '~/shared/utility/solid/create-mounted-signal';
-import { createTappedRefSignal } from '~/shared/utility/solid/create-tapped-ref-signal';
 
 export interface SelectProps
 	extends Omit<JSX.IntrinsicAttributes, 'ref'>,
@@ -35,19 +36,17 @@ export interface SelectProps
 
 export function Select(props: SelectProps) {
 	const [listBoxProps, rest] = splitProps(props, [
-		'name',
+		'disabled',
 		'values',
 		'defaultValues',
 		'onChange',
 		'multiple',
 		'required',
-		'aria-invalid',
-		'children',
 	]);
-	const [local, buttonProps] = splitProps(rest, ['placeholder']);
+	const [local, buttonProps] = splitProps(rest, ['children', 'name', 'placeholder']);
 
 	// Refs to trigger and dropdown
-	const [setTriggerBase, setContentBase] = createDropdown([
+	const [setTrigger, setDropdown, dropdownControls] = createDropdown([
 		offset(4),
 		size({
 			apply({ rects, elements }) {
@@ -59,38 +58,38 @@ export function Select(props: SelectProps) {
 		flip(),
 		shift({ padding: 4 }),
 	]);
-	const [trigger, setTrigger] = createTappedRefSignal(setTriggerBase);
-	const [content, setContent] = createTappedRefSignal(setContentBase);
 
-	// Reference to last change value (used for uncontrolled mode only)
-	const [uncontrolledValues, setUncontrolledValues] = createSignal<Set<string> | undefined>(
-		props.defaultValues,
-	);
+	// Refs for input and list box
+	const comboBoxProps = mergeProps(listBoxProps, {
+		onChange: (event: MouseEvent | KeyboardEvent, value: Set<string>) => {
+			listBoxProps.onChange?.(event, value);
+			if (!props.multiple) {
+				dropdownControls.hidePopover();
+			}
+		},
+	});
+	const [setInput, setListBox, comboBoxControls] = createComboBoxControl(comboBoxProps);
 
-	const values = () => props.values ?? uncontrolledValues();
-
-	const handleChange = (event: MouseEvent | KeyboardEvent, values: Set<string>) => {
-		setUncontrolledValues(values);
-		props.onChange?.(event, values);
-		if (!props.multiple) {
-			content()?.hidePopover();
+	/** For matching user trying to type and match input */
+	const matchText = createTextMatcher(() => comboBoxControls.getItems());
+	const handleKeyDown = (event: KeyboardEvent) => {
+		// If here, check if we're typing a character to filter the list
+		if (event.key.length === 1) {
+			const node = matchText(event.key);
+			comboBoxControls.highlight(event, node);
 		}
 	};
 
 	const handleClear = (event: MouseEvent | KeyboardEvent) => {
-		handleChange(event, new Set());
-	};
-
-	const handleKeyDown = (event: KeyboardEvent) => {
-		if (event.key === 'Tab') {
-			trigger()?.focus();
-		}
+		comboBoxControls.setValues(event, new Set());
 	};
 
 	const handleBlur = (event: FocusEvent) => {
-		if (!content()?.contains(event.relatedTarget as Node)) {
-			content()?.hidePopover();
-		}
+		const relatedTarget = event.relatedTarget as HTMLElement | null;
+		if (!relatedTarget) return;
+		if (dropdownControls.getTriggerNode()?.contains(relatedTarget)) return;
+		if (dropdownControls.getMenuNode()?.contains(relatedTarget)) return;
+		dropdownControls.hidePopover();
 	};
 
 	// Generate content of trigger
@@ -98,15 +97,13 @@ export function Select(props: SelectProps) {
 	const selectionText = createMemo(() => {
 		if (!isMounted()) return;
 
-		const contentElm = content();
+		const contentElm = dropdownControls.getMenuNode();
 		if (!contentElm) return;
 
-		const valuesSet = values();
+		const valuesSet = comboBoxControls.values();
 		if (valuesSet?.size === 1) {
 			for (const value of valuesSet) {
-				const textContent = contentElm.querySelector(
-					`[${LIST_OPTION_VALUE_ATTR}="${value}"]`,
-				)?.textContent;
+				const textContent = comboBoxControls.getItemByValue(value)?.textContent;
 				if (textContent) {
 					return <>{textContent}</>;
 				}
@@ -121,8 +118,8 @@ export function Select(props: SelectProps) {
 	});
 
 	const showClear = createMemo(() => {
-		if (listBoxProps.required) return false;
-		const size = values()?.size;
+		if (comboBoxProps.required) return false;
+		const size = comboBoxControls.values()?.size;
 		return size && size > 0;
 	});
 
@@ -130,27 +127,24 @@ export function Select(props: SelectProps) {
 		<>
 			<SelectButton
 				{...buttonProps}
-				ref={combineRefs(setTrigger, props.ref)}
-				aria-invalid={props['aria-invalid']}
+				ref={combineRefs(setTrigger, setInput, props.ref)}
+				aria-haspopup="listbox"
 				onClear={showClear() ? handleClear : undefined}
+				onBlur={handleBlur}
+				onKeyDown={handleKeyDown}
 			>
 				{selectionText()}
 			</SelectButton>
-			<ListBox
-				{...listBoxProps}
-				ref={setContent}
+			<OptionList
+				ref={combineRefs(setDropdown, setListBox)}
+				role="listbox"
 				class={cx('c-dropdown', props.class)}
-				onChange={handleChange}
-				onFocusOut={handleBlur}
-				onKeyDown={handleKeyDown}
-				// ListBox must be in controlled state for Select to clear
-				values={values() ?? new Set()}
-				// Don't allow toggling to clear selection if single (this maps
-				// to how a native select works -- we'll use the clear button
-				// to chandle this instead)
-				required={listBoxProps.required || !listBoxProps.multiple}
-				autofocus
-			/>
+			>
+				{local.children}
+				{local.name && (
+					<ListBoxSelections name={local.name} values={comboBoxControls.values()} />
+				)}
+			</OptionList>
 		</>
 	);
 }

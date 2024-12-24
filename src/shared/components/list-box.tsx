@@ -1,16 +1,12 @@
 import cx from 'classix';
 import { Check } from 'lucide-solid';
-import { createSignal, For, type JSX, splitProps } from 'solid-js';
+import { For, type JSX, splitProps } from 'solid-js';
 
-import {
-	LIST_OPTION_VALUE_ATTR,
-	OptionList,
-	OptionListGroup,
-	OptionListItem,
-} from '~/shared/components/option-list';
+import { createListBoxControl } from '~/shared/components/create-list-box-control';
+import { OptionList, OptionListGroup, OptionListItem } from '~/shared/components/option-list';
 import { createTextMatcher } from '~/shared/utility/create-text-matcher';
 import { generateId } from '~/shared/utility/id-generator';
-import { nextIndex } from '~/shared/utility/next-index';
+import { combineRefs } from '~/shared/utility/solid/combine-refs';
 
 export interface ListBoxProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onChange'> {
 	/** Ref must be callback if any */
@@ -25,18 +21,16 @@ export interface ListBoxProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, '
 	defaultValues?: Set<string>;
 	/** Called when selection changes */
 	onChange?: (event: MouseEvent | KeyboardEvent, value: Set<string>) => void;
-	/** Disables clearing selection */
-	required?: boolean | undefined;
+
 	/** Autofocus listbox? */
 	autofocus?: boolean | undefined;
 	/** Whether multiple selection is allowed */
 	multiple?: boolean | undefined;
+	/** Disables clearing selection */
+	required?: boolean | undefined;
 	/** Make children required */
 	children: JSX.Element;
 }
-
-/** Selector for list box options */
-const optionsSelector = '[role="option"]';
 
 export function ListBox(props: ListBoxProps) {
 	const [local, rest] = splitProps(props, [
@@ -44,135 +38,37 @@ export function ListBox(props: ListBoxProps) {
 		'name',
 		'disabled',
 		'values',
+		'defaultValues',
 		'onChange',
 		'multiple',
 		'required',
 	]);
-
-	// Track the currently highlighted (not selected) option
-	const [activeId, setActiveId] = createSignal<string | undefined>();
-
-	// Track which items are selected
-	const [uncontrolledValues, setUncontrolledValues] = createSignal<Set<string>>(
-		props.defaultValues ?? new Set(),
-	);
-	const getSelectedValues = () => props.values ?? uncontrolledValues();
-
-	let listBox: HTMLElement | null = null;
-	const ref = (el: HTMLDivElement) => {
-		listBox = el;
-		props.ref?.(el);
-	};
+	const [setListBox, listBoxControls] = createListBoxControl(local);
 
 	/** For matching user trying to type and match input */
-	const matchText = createTextMatcher(() => listBox?.querySelectorAll(optionsSelector));
-
-	const handleValueSelection = (event: MouseEvent | KeyboardEvent, value: string) => {
-		const oldValues = getSelectedValues();
-		const newValues = new Set(oldValues);
-		if (local.multiple) {
-			if (newValues.has(value)) {
-				newValues.delete(value);
-			} else {
-				newValues.add(value);
-			}
-		} else {
-			const shouldAdd = !newValues.has(value);
-			newValues.clear();
-			if (shouldAdd) {
-				newValues.add(value);
-			}
-		}
-		if (newValues.size === 0 && props.required) {
-			local.onChange?.(event, oldValues);
-			return;
-		}
-		local.onChange?.(event, newValues);
-		setUncontrolledValues(newValues);
-	};
-
+	const matchText = createTextMatcher(() => listBoxControls.getItems());
 	const handleKeyDown = (event: KeyboardEvent) => {
-		if (!listBox) return;
-
-		const items = Array.from(listBox.querySelectorAll(optionsSelector)) as HTMLElement[];
-		const currentId = activeId();
-		const currentElement = currentId ? document.getElementById(currentId) : null;
-		const currentIndex = currentElement ? items.indexOf(currentElement) : -1;
-
-		switch (event.key) {
-			case 'ArrowDown': {
-				event.preventDefault();
-				const nextItem = items[nextIndex(items, currentIndex)];
-				setActiveId(nextItem?.id);
-				break;
-			}
-			case 'ArrowUp': {
-				event.preventDefault();
-				const prevItem = items[nextIndex(items, currentIndex, -1)];
-				setActiveId(prevItem?.id);
-				break;
-			}
-			case 'Enter':
-			case ' ': {
-				event.preventDefault();
-				const value = currentElement?.getAttribute(LIST_OPTION_VALUE_ATTR);
-				if (!value) return;
-				handleValueSelection(event, value);
-				break;
-			}
-			default: {
-				// If here, check if we're typing a character to filter the list
-				if (event.key.length === 1) {
-					const matchingId = matchText(event.key)?.id;
-					if (matchingId) {
-						setActiveId(matchingId);
-					}
-				}
-			}
-		}
-
-		const onKeyDown = props.onKeyDown;
-		if (typeof onKeyDown === 'function') {
-			onKeyDown(
-				event as KeyboardEvent & { currentTarget: HTMLDivElement; target: HTMLDivElement },
-			);
-		}
-	};
-
-	const handleClick = (event: MouseEvent) => {
-		const target = event.target as HTMLElement;
-		const option = target.closest(optionsSelector) as HTMLElement | null;
-		if (option) {
-			const value = option.getAttribute(LIST_OPTION_VALUE_ATTR);
-			if (!value) return;
-			handleValueSelection(event, value);
-		}
-
-		const onClick = props.onClick;
-		if (typeof onClick === 'function') {
-			onClick(
-				event as MouseEvent & { currentTarget: HTMLDivElement; target: HTMLDivElement },
-			);
+		// If here, check if we're typing a character to filter the list
+		if (event.key.length === 1) {
+			const node = matchText(event.key);
+			node?.focus();
 		}
 	};
 
 	return (
 		<OptionList
 			{...rest}
-			ref={ref}
+			ref={combineRefs(setListBox, rest.ref)}
 			class={cx('c-list-box', rest.class)}
 			role="listbox"
 			tabIndex={0}
-			activeId={activeId()}
-			selectedValues={getSelectedValues()}
 			aria-disabled={local.disabled}
-			aria-multiselectable={local.multiple}
-			aria-activedescendant={activeId()}
-			onClick={handleClick}
 			onKeyDown={handleKeyDown}
 		>
 			{local.children}
-			{local.name && <ListBoxSelections name={local.name} values={getSelectedValues()} />}
+			{local.name && (
+				<ListBoxSelections name={local.name} values={listBoxControls.values()} />
+			)}
 		</OptionList>
 	);
 }

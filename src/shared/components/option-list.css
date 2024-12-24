@@ -11,7 +11,8 @@
 
 	.c-option-list__item:hover,
 	.c-option-list__item:focus-visible,
-	:focus-visible .c-option-list__item[aria-current='true'] {
+	:focus-visible .c-option-list__item[aria-current='true'],
+	:popover-open .c-option-list__item[aria-current='true'] {
 		@apply bg-highlight text-highlight-fg outline-none;
 	}
 

@@ -5,7 +5,7 @@ import { normalizeText } from '~/shared/utility/normalize-text';
  * Characters typed within the delay period are appended to form a search string.
  * For performance, normalized versions of node text content are cached during the delay period.
  */
-export function createTextMatcher(getNodes: () => NodeList | null | undefined, delay = 500) {
+export function createTextMatcher(getNodes: () => Iterable<HTMLElement>, delay = 500) {
 	let current = '';
 	let lastMatchTime = 0;
 	const cachedNormalizedText = new Map<Node, string>();

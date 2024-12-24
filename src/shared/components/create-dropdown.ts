@@ -30,7 +30,8 @@ function handleKeyDownEvent(event: KeyboardEvent) {
 	// Down to open dropdowns
 	if (
 		event.key === 'ArrowDown' &&
-		(target.ariaHasPopup === 'menu' || target.ariaHasPopup === 'listbox')
+		(target.ariaHasPopup === 'menu' || target.ariaHasPopup === 'listbox') &&
+		target.ariaExpanded !== 'true'
 	) {
 		target.click();
 		// To prevent scrolling the page
@@ -142,5 +143,15 @@ export function createDropdown(
 		attachToDocument();
 	};
 
-	return [setTriggerElementAndInit, setMenuElementAndInit] as const;
+	return [
+		setTriggerElementAndInit,
+		setMenuElementAndInit,
+		{
+			getVisible: visible,
+			setVisible,
+			getTriggerNode: triggerElement,
+			getMenuNode: menuElement,
+			hidePopover: () => menuElement()?.hidePopover(),
+		},
+	] as const;
 }
