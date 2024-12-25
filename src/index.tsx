@@ -1,7 +1,7 @@
 import '~/shared/style/tailwind.css';
 
 import { Settings } from 'lucide-solid';
-import { type Component, createSignal } from 'solid-js';
+import { type Component, createMemo, createSignal, For, Show } from 'solid-js';
 import { render } from 'solid-js/web';
 
 import { Box } from '~/shared/components/box';
@@ -27,6 +27,7 @@ import { Menu, MenuGroup, MenuItem, MenuItemLink } from '~/shared/components/men
 import { Radio } from '~/shared/components/radio';
 import { RadioGroup } from '~/shared/components/radio-group';
 import { Select } from '~/shared/components/select';
+import { SelectTypeahead } from '~/shared/components/select-typeahead';
 import { Stack } from '~/shared/components/stack';
 import { Textarea } from '~/shared/components/textarea';
 import { Tooltip } from '~/shared/components/tooltip';
@@ -388,6 +389,85 @@ const SelectDemo: Component = () => {
 	);
 };
 
+const SelectTypeaheadDemo: Component = () => {
+	// Value selection
+	const [value, setValue] = createSignal<Set<string>>(new Set());
+	const [multiValue, setMultiValue] = createSignal<Set<string>>(new Set());
+
+	// Create values from typeaheads
+	const [query, setQuery] = createSignal('');
+	const parts = createMemo(() =>
+		query()
+			.split(/\s+/)
+			.map((word) => word.trim())
+			.filter((word) => word.length > 0),
+	);
+
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Typeahead</CardTitle>
+				<CardDescription>Search input with single and multiple selection</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<Stack>
+					<LabelStack>
+						<Label>Single Selection</Label>
+						<p>Selected: {Array.from(value()).join(', ') || 'None'}</p>
+						<SelectTypeahead
+							placeholder="Select a fruit..."
+							values={value()}
+							onChange={(_e, values) => setValue(values)}
+							onInput={(_e, value) => setQuery(value)}
+						>
+							<For each={parts()}>
+								{(part) => <ListBoxItem value={part}>{part}</ListBoxItem>}
+							</For>
+						</SelectTypeahead>
+					</LabelStack>
+
+					<LabelStack>
+						<Label>Multiple Selection</Label>
+						<p>Selected: {Array.from(multiValue()).join(', ') || 'None'}</p>
+						<SelectTypeahead
+							aria-invalid={multiValue().has('red')}
+							placeholder="Select colors..."
+							values={multiValue()}
+							onChange={(_e, values) => setMultiValue(values)}
+							onInput={(_e, value) => setQuery(value)}
+							multiple
+						>
+							<ListBoxGroup heading="Don't Pick This">
+								<ListBoxItem value="red">Red</ListBoxItem>
+							</ListBoxGroup>
+							<Show when={parts().length > 0}>
+								<ListBoxGroup>
+									<For each={parts()}>
+										{(part) => <ListBoxItem value={part}>{part}</ListBoxItem>}
+									</For>
+								</ListBoxGroup>
+							</Show>
+						</SelectTypeahead>
+					</LabelStack>
+
+					<LabelStack>
+						<Label>Disabled Selection</Label>
+						<SelectTypeahead disabled values={new Set(['fixed'])}>
+							<ListBoxItem value="fixed">Can't change me</ListBoxItem>
+							<ListBoxItem value="different">Can't pick me</ListBoxItem>
+						</SelectTypeahead>
+					</LabelStack>
+
+					<LabelStack>
+						<Label>Select With No Matches</Label>
+						<SelectTypeahead placeholder="Won't match" />
+					</LabelStack>
+				</Stack>
+			</CardContent>
+		</Card>
+	);
+};
+
 const App: Component = () => {
 	return (
 		<Box>
@@ -401,6 +481,7 @@ const App: Component = () => {
 				<TextareasCard />
 				<ListBoxDemo />
 				<SelectDemo />
+				<SelectTypeaheadDemo />
 				<FooterCard />
 			</Grid>
 		</Box>

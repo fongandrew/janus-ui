@@ -1,17 +1,18 @@
 import cx from 'classix';
-import { type JSX, splitProps } from 'solid-js';
+import { createSignal, type JSX, splitProps } from 'solid-js';
 
-import { Button } from '~/shared/components/button';
 import { createSelectControl } from '~/shared/components/create-select-control';
+import { Input } from '~/shared/components/input';
 import { SelectContainer } from '~/shared/components/select-container';
 import { SelectOptionList } from '~/shared/components/select-option-list';
 import { SelectText } from '~/shared/components/select-text';
-import { createTextMatcher } from '~/shared/utility/create-text-matcher';
+import { generateId } from '~/shared/utility/id-generator';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 
-export interface SelectProps extends Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, 'onChange'> {
+export interface SelectTypeaheadProps
+	extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'onInput'> {
 	/** Ref must be callback */
-	ref?: (element: HTMLButtonElement) => void;
+	ref?: (element: HTMLInputElement) => void;
 	/** Name for form submission */
 	name?: string;
 	/** Placeholder text when no selection */
@@ -22,15 +23,15 @@ export interface SelectProps extends Omit<JSX.ButtonHTMLAttributes<HTMLButtonEle
 	defaultValues?: Set<string>;
 	/** Called when selection changes */
 	onChange?: (event: MouseEvent | KeyboardEvent, value: Set<string>) => void;
+	/** Called when typing happens */
+	onInput?: (event: InputEvent, value: string) => void;
 	/** Whether multiple selection is allowed */
 	multiple?: boolean;
 	/** Disables clearing selection */
 	required?: boolean;
-	/** Make children required */
-	children: JSX.Element;
 }
 
-export function Select(props: SelectProps) {
+export function SelectTypeahead(props: SelectTypeaheadProps) {
 	const [listBoxProps, rest] = splitProps(props, [
 		'values',
 		'defaultValues',
@@ -41,37 +42,47 @@ export function Select(props: SelectProps) {
 	const [local, buttonProps] = splitProps(rest, ['children', 'name', 'placeholder']);
 	const [setControl, setListBox, selectControls] = createSelectControl(listBoxProps);
 
-	/** For matching user trying to type and match input */
-	const matchText = createTextMatcher(() => selectControls.getItems());
-	const handleKeyDown = (event: KeyboardEvent) => {
-		// If here, check if we're typing a character to filter the list
-		if (event.key.length === 1) {
-			const node = matchText(event.key);
-			selectControls.highlight(event, node);
-		}
+	const descriptionId = generateId('select-description');
+
+	const [input, setInput] = createSignal('');
+	const handleInput = (event: InputEvent) => {
+		const target = event.target as HTMLInputElement;
+		setInput(target.value);
+		props.onInput?.(event, target.value);
 	};
 
 	return (
 		<>
 			<SelectContainer onClear={selectControls.clear}>
-				<Button
+				<Input
 					{...buttonProps}
 					ref={combineRefs(setControl, props.ref)}
-					class={cx('c-select__button', props.class)}
+					class={cx('c-select__input', props.class)}
 					onBlur={selectControls.hideOnBlur}
-					onKeyDown={handleKeyDown}
+					onInput={handleInput}
+					aria-describedby={
+						buttonProps['aria-describedby']
+							? `${buttonProps['aria-describedby']} ${descriptionId}`
+							: descriptionId
+					}
 					aria-haspopup="listbox"
 					aria-required={props.required}
 					unstyled
-				>
+				/>
+				<div id={descriptionId} class="c-select__input_description">
 					<SelectText
 						placeholder={local.placeholder}
 						values={selectControls.values()}
 						getItemByValue={selectControls.getItemByValue}
 					/>
-				</Button>
+				</div>
 			</SelectContainer>
-			<SelectOptionList ref={setListBox} name={local.name} values={selectControls.values()}>
+			<SelectOptionList
+				ref={setListBox}
+				name={local.name}
+				input={input()}
+				values={selectControls.values()}
+			>
 				{local.children}
 			</SelectOptionList>
 		</>

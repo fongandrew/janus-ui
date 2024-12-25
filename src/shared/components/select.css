@@ -1,12 +1,73 @@
 @import '~/shared/style/helpers.css';
-@import '~/shared/components/select-button.css';
 
 @layer components {
+	.c-select__button,
+	.c-select__input,
+	.c-select__input_description {
+		@apply t-with-disabled-input t-with-error-input t-with-focus-ring t-input-size-md w-full rounded-md border-md bg-input-bg text-left font-normal text-input-fg shadow-inner transition-colors border-dynamic-secondary;
+	}
+
+	.c-select__input {
+		@apply opacity-0 focus:opacity-100;
+	}
+
+	.c-select__input_description {
+		@apply t-input-size-md pointer-events-none absolute inset-0;
+	}
+
+	.c-select__input:focus + .c-select__input_description {
+		@apply hidden;
+	}
+
+	:disabled + .c-select__input_description,
+	[aria-disabled='true'] + .c-select__input_description {
+		@apply t-disabled-input;
+	}
+
+	.c-select__chevron,
+	.c-select__clear {
+		@apply absolute inset-y-0 right-0 flex w-input-md items-center justify-center border-0 bg-transparent p-0 text-muted [&_svg]:size-em;
+	}
+
+	.c-select__container {
+		@apply relative;
+	}
+
+	.c-select__chevron {
+		@apply flex;
+	}
+
+	.c-select__clear {
+		@apply hidden;
+	}
+
+	/* Show clear button only is there's something to clear (and not required) */
+	.c-select__container:has(+ [role='listbox'] [aria-selected='true']):not(
+			:has([aria-required]:not([aria-required='false'])),
+			:has(:required)
+		)
+		.c-select__clear {
+		@apply flex;
+	}
+
+	/* Hide chevvron if clear button is shown */
+	.c-select__container:has(+ [role='listbox'] [aria-selected='true']):not(
+			:has([aria-required]:not([aria-required='false'])),
+			:has(:required)
+		)
+		.c-select__chevron {
+		@apply hidden;
+	}
+
 	.c-select__placeholder {
 		@apply text-muted;
 	}
 
-	.c-select__list-box.c-list-box {
-		@apply shadow-md;
+	.c-select__empty_state {
+		@apply block w-full overflow-hidden text-ellipsis px-input-x-md py-input-y-sm text-center text-input-sm text-muted;
+	}
+
+	* + .c-select__empty_state {
+		@apply hidden;
 	}
 }

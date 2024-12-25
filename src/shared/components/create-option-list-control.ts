@@ -89,9 +89,10 @@ export const useKeydown = createEventDelegate<'keydown', OptionListProps>('keydo
 		}
 		case 'Enter':
 		case ' ': {
-			event.preventDefault();
-			doSelect(event, highlighted);
-			break;
+			if (highlighted) {
+				event.preventDefault();
+				doSelect(event, highlighted);
+			}
 		}
 	}
 });

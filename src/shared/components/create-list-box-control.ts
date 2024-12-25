@@ -90,13 +90,15 @@ export function createListBoxControl(props: ListBoxProps) {
 
 	// Update ARIA selected state when values change
 	createEffect(() => {
+		// Calling `values()` here outside of for loop to ensure reactivity tracked
+		const currentValues = values();
 		const listBox = getListBox();
 		if (!listBox) return;
 
 		for (const option of listBox.querySelectorAll(`[${LIST_OPTION_VALUE_ATTR}]`)) {
 			const optionValue = option.getAttribute(LIST_OPTION_VALUE_ATTR);
 			if (optionValue) {
-				option.ariaSelected = String(values().has(optionValue));
+				option.ariaSelected = String(currentValues.has(optionValue));
 			}
 		}
 	});

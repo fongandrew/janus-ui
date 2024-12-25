@@ -10,22 +10,40 @@ import {
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 
 import { generateId } from '~/shared/utility/id-generator';
+import {
+	createEventDelegate,
+	type EventDelegateProps,
+} from '~/shared/utility/solid/create-event-delegate';
 
-/** Track which documents have our delegated handler on them */
-const didAttachToDocument = new WeakSet<Document>();
+const useBeforeToggle = createEventDelegate<
+	'beforetoggle',
+	{ setVisible: (open: boolean) => void }
+>(
+	'beforetoggle',
+	(event) => {
+		event.props.setVisible(
+			(event as ToggleEvent & EventDelegateProps<{ setVisible: (open: boolean) => void }>)
+				.newState === 'open',
+		);
+	},
+	true,
+);
 
-/** Map from trigger to signal setter for delegated handler */
-const menuMap = new Map<HTMLElement, (open: boolean) => void>();
+const useClick = createEventDelegate('click', (event) => {
+	// Open popover target. This shouldn't be necessary but popover does not open
+	// on non-button elements.
+	const targetId = event.target.getAttribute('popovertarget');
+	if (targetId) {
+		const target = document.getElementById(targetId);
+		if (target) {
+			target.togglePopover();
+			event.preventDefault();
+		}
+	}
+});
 
-function handleToggleEvent(event: Event) {
-	const target = event.target as HTMLElement;
-	if (!target) return;
-	menuMap.get(target)?.((event as ToggleEvent).newState === 'open');
-}
-
-function handleKeyDownEvent(event: KeyboardEvent) {
-	const target = event.target as HTMLElement;
-	if (!target) return;
+const useKeydown = createEventDelegate('keydown', (event) => {
+	const target = event.target;
 
 	// Down to open dropdowns
 	if (
@@ -37,16 +55,7 @@ function handleKeyDownEvent(event: KeyboardEvent) {
 		// To prevent scrolling the page
 		event.preventDefault();
 	}
-}
-
-function attachToDocument(targetDocument = window.document) {
-	if (didAttachToDocument.has(targetDocument)) {
-		return;
-	}
-	targetDocument.addEventListener('beforetoggle', handleToggleEvent, true);
-	targetDocument.addEventListener('keydown', handleKeyDownEvent);
-	didAttachToDocument.add(targetDocument);
-}
+});
 
 export function createDropdown(
 	middleware: Middleware[] = [
@@ -128,23 +137,17 @@ export function createDropdown(
 		menuElm.setAttribute('aria-labelledby', triggerId);
 	});
 
-	const setTriggerElementAndInit = (el: HTMLElement) => {
-		setTriggerElement(el);
-	};
+	useBeforeToggle(menuElement, { setVisible });
+	useClick(triggerElement);
+	useKeydown(triggerElement);
 
 	const setMenuElementAndInit = (el: HTMLElement) => {
-		menuMap.set(el, setVisible);
-		onCleanup(() => {
-			menuMap.delete(el);
-		});
-
 		el.popover = '';
 		setMenuElement(el);
-		attachToDocument();
 	};
 
 	return [
-		setTriggerElementAndInit,
+		setTriggerElement,
 		setMenuElementAndInit,
 		{
 			getVisible: visible,
