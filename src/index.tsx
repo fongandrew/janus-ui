@@ -19,7 +19,7 @@ import { createDropdown } from '~/shared/components/create-dropdown';
 import { createTooltip } from '~/shared/components/create-tooltip';
 import { Grid } from '~/shared/components/grid';
 import { Group } from '~/shared/components/group';
-import { Input } from '~/shared/components/input';
+import { Input, InputDate, InputTime } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
 import { ListBox, ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
@@ -294,6 +294,14 @@ const InputsCard: Component = () => (
 				<LabelStack>
 					<Label>Disabled Input</Label>
 					<Input disabled placeholder="Can't touch this" />
+				</LabelStack>
+				<LabelStack>
+					<Label>Date Input</Label>
+					<InputDate placeholder="Pick a date" value="2024-12-25" />
+				</LabelStack>
+				<LabelStack>
+					<Label>Time Input</Label>
+					<InputTime placeholder="Pick a time" value="13:15" />
 				</LabelStack>
 			</Stack>
 		</CardContent>

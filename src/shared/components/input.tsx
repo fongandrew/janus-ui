@@ -13,3 +13,11 @@ export function Input(props: InputProps) {
 	const formControlProps = useFormControl(rest);
 	return <input {...formControlProps} class={cx(!local.unstyled && 'c-input', props.class)} />;
 }
+
+export function InputDate(props: InputProps) {
+	return <Input {...props} type="date" />;
+}
+
+export function InputTime(props: InputProps) {
+	return <Input {...props} type="time" />;
+}
