@@ -30,6 +30,7 @@ import { Select } from '~/shared/components/select';
 import { SelectTypeahead } from '~/shared/components/select-typeahead';
 import { Stack } from '~/shared/components/stack';
 import { Textarea } from '~/shared/components/textarea';
+import { ToggleSwitch } from '~/shared/components/toggle-switch';
 import { Tooltip } from '~/shared/components/tooltip';
 
 const ListBoxDemo: Component = () => {
@@ -265,6 +266,9 @@ const CheckboxesCard: Component = () => (
 				</Label>
 				<Label>
 					<Checkbox disabled /> Disabled checkbox
+				</Label>
+				<Label>
+					Toggle switch <ToggleSwitch />
 				</Label>
 			</Stack>
 		</CardContent>

@@ -1,0 +1,38 @@
+@import '~/shared/style/helpers.css';
+
+@layer components {
+	.c-toggle-switch {
+		@apply relative inline-flex h-lh w-[2.75em] cursor-pointer items-center rounded-full border-md border-solid bg-input-bg shadow-inner transition-colors border-dynamic-secondary-fg;
+	}
+
+	.c-toggle-switch:has(input:checked) {
+		@apply bg-primary;
+	}
+
+	.c-toggle-switch input {
+		@apply sr-only;
+	}
+
+	.c-toggle-switch:has(input:focus-visible) {
+		@apply t-focus-ring;
+	}
+
+	.c-toggle-switch__thumb {
+		@apply absolute left-[0.125em] h-em w-em rounded-full bg-input-fg transition-transform;
+	}
+
+	.c-toggle-switch:has(input:checked) .c-toggle-switch__thumb {
+		@apply translate-x-[1.25em] bg-primary-fg;
+	}
+
+	@layer utilities {
+		.c-toggle-switch--error,
+		.c-toggle-switch:has([aria-invalid='true']) {
+			@apply border-dynamic-danger;
+		}
+
+		.c-toggle-switch:has([aria-disabled='true']) {
+			@apply cursor-not-allowed bg-input-disabled;
+		}
+	}
+}

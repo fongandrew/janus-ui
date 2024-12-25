@@ -19,6 +19,7 @@
 @import '~/shared/components/select.css';
 @import '~/shared/components/stack.css';
 @import '~/shared/components/textarea.css';
+@import '~/shared/components/toggle-switch.css';
 @import '~/shared/components/tooltip.css';
 
 @tailwind base;
