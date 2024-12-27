@@ -10,7 +10,7 @@
 	}
 
 	.t-with-disabled-button {
-		@apply disabled:t-disabled-button;
+		@apply disabled:t-disabled-button aria-disabled:t-disabled-button;
 	}
 
 	.t-disabled-input {

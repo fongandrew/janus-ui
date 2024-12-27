@@ -11,5 +11,10 @@ export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement>
 export function Button(props: ButtonProps) {
 	const [local, rest] = splitProps(props, ['unstyled']);
 	const formControlProps = useFormControl(rest);
-	return <button {...formControlProps} class={cx(!local.unstyled && 'c-button', props.class)} />;
+	return (
+		<button
+			{...formControlProps}
+			class={cx('c-button--unstyled', !local.unstyled && 'c-button', props.class)}
+		/>
+	);
 }

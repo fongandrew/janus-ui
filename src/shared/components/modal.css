@@ -1,0 +1,39 @@
+@layer components {
+	.c-modal {
+		@apply bg-transparent p-0 sm:p-sm md:p-md lg:p-lg;
+
+		max-width: 100vw;
+	}
+
+	.c-modal::backdrop {
+		@apply bg-backdrop backdrop-blur-sm;
+	}
+
+	/* Fullscreen on mobile */
+	.c-modal__body {
+		@apply bg-card text-card-fg;
+		@apply border-dynamic-card sm:border-md;
+		@apply shadow-lg outline-none;
+		@apply rounded-sm sm:rounded-md md:rounded-lg;
+		@apply sm:w-modal fixed inset-xs sm:relative sm:inset-auto sm:max-w-full;
+	}
+
+	.c-modal__content,
+	.c-modal__header {
+		@apply p-md;
+	}
+
+	* + .c-modal__content {
+		@apply pt-0;
+	}
+
+	.c-modal__title {
+		@apply flex-1 text-xl font-bold;
+	}
+
+	.c-modal__close {
+		@apply flex h-input-md w-input-md items-center justify-center rounded-md;
+		@apply text-input-md text-muted;
+		@apply hover:border-secondary hover:bg-secondary hover:text-secondary-fg hover:shadow-none;
+	}
+}

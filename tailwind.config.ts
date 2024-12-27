@@ -42,6 +42,9 @@ const px = {
 			lg: 36,
 		},
 	},
+	width: {
+		modal: 512,
+	},
 	lineHeight: {
 		xs: 18,
 		sm: 20,
@@ -120,6 +123,7 @@ export default {
 				fg: 'var(--input-fg)',
 				disabled: 'var(--input-disabled-bg)',
 			},
+			backdrop: 'var(--backdrop)',
 			muted: 'var(--muted)',
 			link: 'var(--link)',
 			border: 'var(--border)',
@@ -250,6 +254,9 @@ export default {
 				'input-sm': pxToRem(px.height.input.sm),
 				'input-md': pxToRem(px.height.input.md),
 				'input-lg': pxToRem(px.height.input.lg),
+
+				// Modal sizes
+				modal: pxToRem(px.width.modal),
 			},
 
 			typography: {

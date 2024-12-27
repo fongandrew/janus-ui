@@ -38,7 +38,7 @@
 	}
 
 	.c-select__clear {
-		@apply hidden;
+		@apply hidden rounded-md;
 	}
 
 	/* Show clear button only is there's something to clear (and not required) */

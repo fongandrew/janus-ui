@@ -24,6 +24,7 @@ import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
 import { ListBox, ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
 import { Menu, MenuGroup, MenuItem, MenuItemLink } from '~/shared/components/menu';
+import { Modal, ModalContent, ModalTitle } from '~/shared/components/modal';
 import { Radio } from '~/shared/components/radio';
 import { RadioGroup } from '~/shared/components/radio-group';
 import { Select } from '~/shared/components/select';
@@ -480,10 +481,35 @@ const SelectTypeaheadDemo: Component = () => {
 	);
 };
 
+const ModalDemo: Component = () => {
+	const [isOpen, setIsOpen] = createSignal(false);
+
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Modal</CardTitle>
+				<CardDescription>Modal dialog with backdrop</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<Stack>
+					<Button onClick={() => setIsOpen(true)}>Open Modal</Button>
+					<Modal open={isOpen()} onClose={() => setIsOpen(false)}>
+						<ModalTitle>Example Modal</ModalTitle>
+						<ModalContent>
+							<p>Click outside or the close button to dismiss</p>
+						</ModalContent>
+					</Modal>
+				</Stack>
+			</CardContent>
+		</Card>
+	);
+};
+
 const App: Component = () => {
 	return (
 		<Box>
 			<Grid>
+				<ModalDemo />
 				<ButtonsCard />
 				<MenuDemo />
 				<CheckboxesCard />

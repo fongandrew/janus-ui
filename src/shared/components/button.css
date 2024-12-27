@@ -1,8 +1,15 @@
 @import '~/shared/style/helpers.css';
 
+@layer base {
+	/* Not really unstyled, some basics */
+	.c-button--unstyled {
+		@apply t-with-disabled-button t-with-focus-ring;
+	}
+}
+
 @layer components {
 	.c-button {
-		@apply t-with-disabled-button t-with-focus-ring inline-flex items-center justify-center whitespace-nowrap font-medium transition-[colors,shadow] hover:shadow-md hover:contrast-hover active:shadow-none [&_svg]:pointer-events-none [&_svg]:size-[1em] [&_svg]:shrink-0;
+		@apply inline-flex items-center justify-center whitespace-nowrap font-medium transition-[colors,shadow] hover:shadow-md hover:contrast-hover active:shadow-none [&_svg]:pointer-events-none [&_svg]:size-[1em] [&_svg]:shrink-0;
 
 		/* Secondary by default */
 		@apply border-md bg-secondary text-secondary-fg border-dynamic-secondary;
