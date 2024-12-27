@@ -8,5 +8,7 @@ export default {
 		'declaration-block-no-redundant-longhand-properties': null,
 		'property-no-vendor-prefix': null,
 		'value-no-vendor-prefix': null,
+		// Tailwind media queries not handled here
+		'media-query-no-invalid': null,
 	},
 };

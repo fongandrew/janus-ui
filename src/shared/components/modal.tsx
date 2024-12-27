@@ -7,10 +7,12 @@ import {
 	type JSX,
 	onCleanup,
 	splitProps,
+	useContext,
 } from 'solid-js';
 
 import { Button } from '~/shared/components/button';
 import { Group } from '~/shared/components/group';
+import { ModalContext } from '~/shared/components/modal-context';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { createMountedSignal } from '~/shared/utility/solid/create-mounted-signal';
@@ -140,15 +142,17 @@ export const Modal: Component<DialogProps> = (props) => {
 	};
 
 	return (
-		<dialog
-			{...rest}
-			ref={combineRefs(setDialog, props.ref)}
-			class={cx('c-modal', props.class)}
-			onClick={handleClick}
-			onKeyDown={handleKeydown}
-		>
-			<div class="c-modal__body">{local.children}</div>
-		</dialog>
+		<ModalContext.Provider value={{ open: () => !!props.open }}>
+			<dialog
+				{...rest}
+				ref={combineRefs(setDialog, props.ref)}
+				class={cx('c-modal', props.class)}
+				onClick={handleClick}
+				onKeyDown={handleKeydown}
+			>
+				<div class="c-modal__body">{local.children}</div>
+			</dialog>
+		</ModalContext.Provider>
 	);
 };
 
@@ -176,6 +180,42 @@ export function ModalTitle(props: JSX.HTMLAttributes<HTMLDivElement>) {
 	);
 }
 
-export function ModalContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
-	return <div {...props} class={cx('c-modal__content', props.class)} />;
+export function ModalContent(
+	props: JSX.HTMLAttributes<HTMLDivElement> & { ref?: (elm: HTMLDivElement) => void },
+) {
+	const [ref, setRef] = createSignal<HTMLDivElement | null>(null);
+	const modalContext = useContext(ModalContext);
+
+	const [scrolledToTop, setScrolledToTop] = createSignal(true);
+	const [scrolledToBottom, setScrolledToBottom] = createSignal(false);
+
+	// Scroll handler
+	const onScroll = () => {
+		const content = ref();
+		if (!content) return;
+		setScrolledToTop(content.scrollTop === 0);
+		// 2px buffer to account for rounding errors and general weirdness
+		setScrolledToBottom(content.scrollHeight - content.scrollTop - 2 <= content.clientHeight);
+	};
+
+	createEffect(() => {
+		const content = ref();
+		if (!content) return;
+		if (!modalContext?.open?.()) return;
+		content.addEventListener('scroll', onScroll, { passive: true });
+		onCleanup(() => content.removeEventListener('scroll', onScroll));
+	});
+
+	return (
+		<div
+			{...props}
+			ref={combineRefs(setRef, props.ref)}
+			class={cx(
+				'c-modal__content',
+				scrolledToTop() && 'c-modal__content--scroll-top',
+				scrolledToBottom() && 'c-modal__content--scroll-bottom',
+				props.class,
+			)}
+		/>
+	);
 }

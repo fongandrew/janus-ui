@@ -484,6 +484,22 @@ const SelectTypeaheadDemo: Component = () => {
 const ModalDemo: Component = () => {
 	const [isOpen, setIsOpen] = createSignal(false);
 
+	const [isOpenLong, setIsOpenLong] = createSignal(false);
+	const manyParagraphs = [];
+	for (let i = 0; i < 20; i++) {
+		manyParagraphs.push(
+			<p>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eu porttitor
+				leo. Vestibulum in gravida felis. Nulla eleifend vel massa in vestibulum. Curabitur
+				nisl ex, venenatis ut tempus nec, rhoncus pretium neque. Nullam dictum, ligula ut
+				faucibus efficitur, lacus elit lobortis ante, eget volutpat ex felis vitae dolor.
+				Maecenas enim sapien, bibendum a porttitor cursus, pharetra eget sem. Nulla sed
+				tincidunt ligula. Maecenas in libero eget ligula tincidunt fermentum. Nunc arcu
+				nulla, congue sit amet ultricies ac, scelerisque eget enim. Sed id neque sem.
+			</p>,
+		);
+	}
+
 	return (
 		<Card>
 			<CardHeader>
@@ -491,7 +507,7 @@ const ModalDemo: Component = () => {
 				<CardDescription>Modal dialog with backdrop</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Stack>
+				<Group>
 					<Button onClick={() => setIsOpen(true)}>Open Modal</Button>
 					<Modal open={isOpen()} onClose={() => setIsOpen(false)}>
 						<ModalTitle>Example Modal</ModalTitle>
@@ -499,7 +515,13 @@ const ModalDemo: Component = () => {
 							<p>Click outside or the close button to dismiss</p>
 						</ModalContent>
 					</Modal>
-				</Stack>
+
+					<Button onClick={() => setIsOpenLong(true)}>Open Modal (Long)</Button>
+					<Modal open={isOpenLong()} onClose={() => setIsOpenLong(false)}>
+						<ModalTitle>Example Modal</ModalTitle>
+						<ModalContent>{manyParagraphs}</ModalContent>
+					</Modal>
+				</Group>
 			</CardContent>
 		</Card>
 	);
@@ -509,7 +531,6 @@ const App: Component = () => {
 	return (
 		<Box>
 			<Grid>
-				<ModalDemo />
 				<ButtonsCard />
 				<MenuDemo />
 				<CheckboxesCard />
@@ -520,6 +541,7 @@ const App: Component = () => {
 				<ListBoxDemo />
 				<SelectDemo />
 				<SelectTypeaheadDemo />
+				<ModalDemo />
 				<FooterCard />
 			</Grid>
 		</Box>
