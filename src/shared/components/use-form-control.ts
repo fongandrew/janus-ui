@@ -1,4 +1,6 @@
-import { createEffect, createMemo, mergeProps, splitProps } from 'solid-js';
+import { createMemo, mergeProps, splitProps } from 'solid-js';
+
+import { registerDocumentSetup } from '~/shared/utility/document-setup';
 
 /** Listener that selectively disables event propagation if aria-disabled */
 function preventDefaultIfAriaDisabled(event: Event) {
@@ -15,15 +17,7 @@ function preventDefaultIfAriaDisabled(event: Event) {
 	}
 }
 
-/** Track which documents we've already attached to */
-const didAttachToDocument = new WeakSet<Document>();
-
-/** Add our aria-disabled capture phase listener to document */
-function attachToDocument(targetDocument = window.document) {
-	if (didAttachToDocument.has(targetDocument)) {
-		return;
-	}
-
+registerDocumentSetup((document) => {
 	const relevantEvents = [
 		'click',
 		'dblclick',
@@ -36,11 +30,9 @@ function attachToDocument(targetDocument = window.document) {
 	];
 
 	relevantEvents.forEach((eventName) => {
-		targetDocument.addEventListener(eventName, preventDefaultIfAriaDisabled, true);
+		document.addEventListener(eventName, preventDefaultIfAriaDisabled, true);
 	});
-
-	didAttachToDocument.add(targetDocument);
-}
+});
 
 /** Solid JS hook to modify props for input elements and other form-like things */
 export function useFormControl<T extends { disabled?: boolean | undefined }>(props: T) {
@@ -51,7 +43,6 @@ export function useFormControl<T extends { disabled?: boolean | undefined }>(pro
 		});
 		return merged;
 	});
-	createEffect(() => attachToDocument());
 
 	return mergedProps;
 }
