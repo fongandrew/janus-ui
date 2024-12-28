@@ -6,7 +6,6 @@ import {
 	createSignal,
 	type JSX,
 	onCleanup,
-	onMount,
 	splitProps,
 	useContext,
 } from 'solid-js';
