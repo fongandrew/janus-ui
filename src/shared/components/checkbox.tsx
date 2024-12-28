@@ -2,7 +2,7 @@ import cx from 'classix';
 import { Check, Minus } from 'lucide-solid';
 import { type JSX, splitProps } from 'solid-js';
 
-import { useFormControl } from '~/shared/utility/use-form-control';
+import { useFormControl } from '~/shared/components/use-form-control';
 
 export interface CheckboxProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'> {
 	/**

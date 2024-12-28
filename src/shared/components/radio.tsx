@@ -2,7 +2,7 @@ import cx from 'classix';
 import { type JSX, splitProps, useContext } from 'solid-js';
 
 import { RadioGroupContext } from '~/shared/components/radio-group-context';
-import { useFormControl } from '~/shared/utility/use-form-control';
+import { useFormControl } from '~/shared/components/use-form-control';
 
 export type RadioProps = Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'>;
 

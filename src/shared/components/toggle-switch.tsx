@@ -1,7 +1,7 @@
 import cx from 'classix';
 import { type JSX, splitProps } from 'solid-js';
 
-import { useFormControl } from '~/shared/utility/use-form-control';
+import { useFormControl } from '~/shared/components/use-form-control';
 
 export type ToggleSwitchProps = Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'>;
 
