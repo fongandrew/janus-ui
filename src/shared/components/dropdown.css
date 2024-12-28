@@ -3,6 +3,6 @@
 @layer components {
 	.c-dropdown {
 		@apply rounded-md border-md bg-popover px-0 py-xs text-popover-fg shadow-lg border-dynamic-card;
-		@apply z-50 min-w-[180px];
+		@apply z-1 min-w-[180px];
 	}
 }

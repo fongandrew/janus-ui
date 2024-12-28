@@ -207,6 +207,16 @@ export default {
 			DEFAULT: '0.25rem',
 		},
 
+		zIndex: {
+			auto: 'auto',
+			'0': '0',
+
+			// All popovers just use this. We generally rely on HTML stacking
+			// (or the top layer with the dialog and popover APIs) to do the
+			// right thing, so we don't need to manage z-indexes.
+			'1': '1',
+		},
+
 		extend: {
 			contrast: {
 				hover: '.95',

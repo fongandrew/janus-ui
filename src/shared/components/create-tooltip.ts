@@ -12,64 +12,9 @@ import {
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 
 import { generateId } from '~/shared/utility/id-generator';
+import { createEventDelegate } from '~/shared/utility/solid/create-event-delegate';
 
-export const TOOLTIP_TRIGGER_ATTR = 'data-tooltip-trigger';
 export const TOOLTIP_ARROW_ATTR = 'data-tooltip-arrow';
-
-/** Track which documents have our delegated handler on them */
-const didAttachToDocument = new WeakSet<Document>();
-
-/** Map from trigger to signal setter for delegated handler */
-const triggerMap = new Map<HTMLElement, (over: boolean) => void>();
-
-/** Track active trigger for this document for ease of clearing stuck tooltips */
-const activeTriggerMap = new WeakMap<Document, HTMLElement>();
-
-function handleTooltipEvent(event: MouseEvent | FocusEvent) {
-	const target = event.target as HTMLElement;
-	if (!target) return;
-
-	const activeTrigger = activeTriggerMap.get(target.ownerDocument);
-	const triggerElement = target.closest(`[${TOOLTIP_TRIGGER_ATTR}]`) as HTMLElement | null;
-
-	if (event.type === 'mouseover' || event.type === 'focus') {
-		if (activeTrigger !== triggerElement) {
-			if (activeTrigger) {
-				triggerMap.get(activeTrigger)?.(false);
-				activeTriggerMap.delete(target.ownerDocument);
-			}
-			if (triggerElement) {
-				triggerMap.get(triggerElement)?.(true);
-				activeTriggerMap.set(target.ownerDocument, triggerElement);
-			}
-		}
-	} else if (
-		(event.type === 'mouseout' || event.type === 'blur') &&
-		// Don't hide tooltip if just moving from subelements within tooltip
-		(event.relatedTarget as HTMLElement | null)?.closest(`[${TOOLTIP_TRIGGER_ATTR}]`) !==
-			triggerElement
-	) {
-		if (triggerElement) {
-			triggerMap.get(triggerElement)?.(false);
-			activeTriggerMap.delete(target.ownerDocument);
-		}
-	}
-}
-
-function attachToDocument(targetDocument = window.document) {
-	if (didAttachToDocument.has(targetDocument)) {
-		return;
-	}
-
-	targetDocument.addEventListener('mouseover', handleTooltipEvent);
-	targetDocument.addEventListener('mouseout', handleTooltipEvent);
-
-	// Need capture phase for focus/blur events since they don't bubble
-	targetDocument.addEventListener('focus', handleTooltipEvent, true);
-	targetDocument.addEventListener('blur', handleTooltipEvent, true);
-
-	didAttachToDocument.add(targetDocument);
-}
 
 // Used below to position arrow
 const sideToStaticSide: Record<Side, Side> = {
@@ -79,6 +24,42 @@ const sideToStaticSide: Record<Side, Side> = {
 	right: 'left',
 };
 
+// Use mouseover instead of mouseenter since it this is a delegated event handler that lives
+// on the document. We prefer one event that bubbles instead of multiple events for each
+// containing element (which might be a bit much in deeply nested trees).
+const useMouseOver = createEventDelegate<'mouseover', { setVisible: (open: boolean) => void }>(
+	'mouseover',
+	(event) => {
+		event.props.setVisible(true);
+	},
+);
+
+// Prefer mouseout over mouseleave for the same reason as mouseover.
+const useMouseOut = createEventDelegate<'mouseout', { setVisible: (open: boolean) => void }>(
+	'mouseout',
+	(event) => {
+		// Ignore mouseout events that are still within the tooltip
+		if (event.delegateTarget.contains(event.relatedTarget as Node)) return;
+		event.props.setVisible(false);
+	},
+);
+
+const useFocus = createEventDelegate<'focus', { setVisible: (open: boolean) => void }>(
+	'focus',
+	(event) => {
+		event.props.setVisible(true);
+	},
+	true /* capture mode */,
+);
+
+const useBlur = createEventDelegate<'blur', { setVisible: (open: boolean) => void }>(
+	'blur',
+	(event) => {
+		event.props.setVisible(false);
+	},
+	true /* capture mode */,
+);
+
 export function createTooltip(defaultPlacement: Placement = 'top') {
 	const [triggerElement, setTriggerElement] = createSignal<HTMLElement | null>(null);
 	const [tooltipElement, setTooltipElement] = createSignal<HTMLElement | null>(null);
@@ -86,20 +67,22 @@ export function createTooltip(defaultPlacement: Placement = 'top') {
 
 	// Callback for updating position
 	const updatePosition = async (triggerElm: HTMLElement, tooltipElm: HTMLElement) => {
-		const middleware: Middleware[] = [offset(8), flip(), shift({ padding: 8 })];
+		const middleware: Middleware[] = [offset(8)];
 		const arrowElm = tooltipElm.querySelector(`[${TOOLTIP_ARROW_ATTR}]`) as HTMLElement | null;
 		if (arrowElm) {
 			middleware.push(arrow({ element: arrowElm }));
 		}
+		middleware.push(flip(), shift({ padding: 8 }));
 
 		const { x, y, placement, middlewareData } = await computePosition(triggerElm, tooltipElm, {
 			placement: defaultPlacement,
 			middleware,
 			strategy: 'fixed',
 		});
+
 		Object.assign(tooltipElm.style, {
-			display: 'block',
 			position: 'fixed',
+			inset: 'unset', // Clear popover positioning
 			left: `${x}px`,
 			top: `${y}px`,
 		});
@@ -116,7 +99,7 @@ export function createTooltip(defaultPlacement: Placement = 'top') {
 		}
 	};
 
-	// Update display and positioning on visibility change
+	// Update positioning on visibility change
 	createEffect(() => {
 		const triggerElm = triggerElement();
 		if (!triggerElm) return;
@@ -126,20 +109,26 @@ export function createTooltip(defaultPlacement: Placement = 'top') {
 
 		// Hide tooltip when not visible
 		if (!visible()) {
-			tooltipElm.style.display = 'none';
+			tooltipElm.hidePopover();
 			return;
 		}
 
-		// Tooltip is visible. Do initial position update
-		updatePosition(triggerElm, tooltipElm);
-
-		// Auto update while scrolling while visible
-		if (visible()) {
-			const cleanup = autoUpdate(triggerElm, tooltipElm, () =>
-				updatePosition(triggerElm, tooltipElm),
-			);
-			onCleanup(cleanup);
+		// Tooltip is visible. We allow only one tooltip at a time so check other
+		// stuck elements.
+		for (const otherTooltip of tooltipElm.ownerDocument.querySelectorAll(
+			'[role="tooltip"]:popover-open',
+		)) {
+			(otherTooltip as HTMLElement).hidePopover();
 		}
+
+		//  Do initial position update, then update automatically when
+		// scroll or resize events occur.
+		tooltipElm.showPopover();
+		updatePosition(triggerElm, tooltipElm);
+		const cleanup = autoUpdate(triggerElm, tooltipElm, () =>
+			updatePosition(triggerElm, tooltipElm),
+		);
+		onCleanup(cleanup);
 	});
 
 	// Assign ARIA attributes when both elements referenced
@@ -151,6 +140,7 @@ export function createTooltip(defaultPlacement: Placement = 'top') {
 		if (!tooltipElm) return;
 
 		tooltipElm.role ??= 'tooltip';
+		tooltipElm.popover = 'manual';
 
 		let id = tooltipElm.id;
 		if (!id) {
@@ -160,21 +150,15 @@ export function createTooltip(defaultPlacement: Placement = 'top') {
 		triggerElm.setAttribute('aria-describedby', id);
 	});
 
-	const setTriggerElementAndInit = (el: HTMLElement) => {
-		el.setAttribute(TOOLTIP_TRIGGER_ATTR, '');
-		setTriggerElement(el);
-		triggerMap.set(el, setVisible);
-		attachToDocument();
-
-		onCleanup(() => {
-			triggerMap.delete(el);
-		});
-	};
+	useMouseOver(triggerElement, { setVisible });
+	useMouseOut(triggerElement, { setVisible });
+	useFocus(triggerElement, { setVisible });
+	useBlur(triggerElement, { setVisible });
 
 	const setTooltipElementAndInit = (el: HTMLElement) => {
-		el.style.display = 'none'; // Hide by default
+		el.popover = 'manual';
 		setTooltipElement(el);
 	};
 
-	return [setTriggerElementAndInit, setTooltipElementAndInit] as const;
+	return [setTriggerElement, setTooltipElementAndInit] as const;
 }
