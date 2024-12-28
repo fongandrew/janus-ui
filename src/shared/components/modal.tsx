@@ -6,6 +6,7 @@ import {
 	createSignal,
 	type JSX,
 	onCleanup,
+	onMount,
 	splitProps,
 	useContext,
 } from 'solid-js';
@@ -187,10 +188,10 @@ export function ModalContent(
 	const modalContext = useContext(ModalContext);
 
 	const [scrolledToTop, setScrolledToTop] = createSignal(true);
-	const [scrolledToBottom, setScrolledToBottom] = createSignal(false);
+	const [scrolledToBottom, setScrolledToBottom] = createSignal(true);
 
 	// Scroll handler
-	const onScroll = () => {
+	const updateScrollState = () => {
 		const content = ref();
 		if (!content) return;
 		setScrolledToTop(content.scrollTop === 0);
@@ -202,8 +203,11 @@ export function ModalContent(
 		const content = ref();
 		if (!content) return;
 		if (!modalContext?.open?.()) return;
-		content.addEventListener('scroll', onScroll, { passive: true });
-		onCleanup(() => content.removeEventListener('scroll', onScroll));
+		content.addEventListener('scroll', updateScrollState, { passive: true });
+		onCleanup(() => content.removeEventListener('scroll', updateScrollState));
+
+		// Trigger once on mount in case there's nothing to scroll
+		updateScrollState();
 	});
 
 	return (
@@ -218,4 +222,8 @@ export function ModalContent(
 			)}
 		/>
 	);
+}
+
+export function ModalFooter(props: JSX.HTMLAttributes<HTMLDivElement>) {
+	return <div {...props} class={cx('c-modal__footer', props.class)} />;
 }

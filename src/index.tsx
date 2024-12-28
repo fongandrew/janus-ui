@@ -24,7 +24,7 @@ import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
 import { ListBox, ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
 import { Menu, MenuGroup, MenuItem, MenuItemLink } from '~/shared/components/menu';
-import { Modal, ModalContent, ModalTitle } from '~/shared/components/modal';
+import { Modal, ModalContent, ModalFooter, ModalTitle } from '~/shared/components/modal';
 import { Radio } from '~/shared/components/radio';
 import { RadioGroup } from '~/shared/components/radio-group';
 import { Select } from '~/shared/components/select';
@@ -514,12 +514,18 @@ const ModalDemo: Component = () => {
 						<ModalContent>
 							<p>Click outside or the close button to dismiss</p>
 						</ModalContent>
+						<ModalFooter>
+							<Button type="reset">Close</Button>
+						</ModalFooter>
 					</Modal>
 
 					<Button onClick={() => setIsOpenLong(true)}>Open Modal (Long)</Button>
 					<Modal open={isOpenLong()} onClose={() => setIsOpenLong(false)}>
 						<ModalTitle>Example Modal</ModalTitle>
 						<ModalContent>{manyParagraphs}</ModalContent>
+						<ModalFooter>
+							<Button type="reset">Close</Button>
+						</ModalFooter>
 					</Modal>
 				</Group>
 			</CardContent>

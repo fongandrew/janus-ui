@@ -53,6 +53,10 @@
 		@apply pt-0;
 	}
 
+	.c-modal__content:has(+ .c-modal__footer) {
+		@apply pb-0;
+	}
+
 	.c-modal__header {
 		@apply flex-none;
 	}
@@ -86,6 +90,6 @@
 	}
 
 	.c-modal__footer {
-		@apply flex flex-none items-center justify-end;
+		@apply flex flex-none items-center justify-end p-md;
 	}
 }
