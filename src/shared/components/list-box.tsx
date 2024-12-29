@@ -4,9 +4,9 @@ import { For, type JSX, splitProps } from 'solid-js';
 
 import { createListBoxControl } from '~/shared/components/create-list-box-control';
 import { OptionList, OptionListGroup, OptionListItem } from '~/shared/components/option-list';
+import { mergeFormControlProps } from '~/shared/components/merge-form-control-props';
 import { createTextMatcher } from '~/shared/utility/create-text-matcher';
 import { generateId } from '~/shared/utility/id-generator';
-import { combineRefs } from '~/shared/utility/solid/combine-refs';
 
 export interface ListBoxProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onChange'> {
 	/** Ref must be callback if any */
@@ -36,7 +36,6 @@ export function ListBox(props: ListBoxProps) {
 	const [local, rest] = splitProps(props, [
 		'children',
 		'name',
-		'disabled',
 		'values',
 		'defaultValues',
 		'onChange',
@@ -57,12 +56,10 @@ export function ListBox(props: ListBoxProps) {
 
 	return (
 		<OptionList
-			{...rest}
-			ref={combineRefs(setListBox, rest.ref)}
+			{...mergeFormControlProps(rest, setListBox)}
 			class={cx('c-list-box', rest.class)}
 			role="listbox"
 			tabIndex={0}
-			aria-disabled={local.disabled}
 			onKeyDown={handleKeyDown}
 		>
 			{local.children}

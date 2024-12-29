@@ -17,6 +17,8 @@ import {
 import { Checkbox } from '~/shared/components/checkbox';
 import { createDropdown } from '~/shared/components/create-dropdown';
 import { createTooltip } from '~/shared/components/create-tooltip';
+import { Description } from '~/shared/components/description';
+import { ErrorMessage } from '~/shared/components/error-message';
 import { Grid } from '~/shared/components/grid';
 import { Group } from '~/shared/components/group';
 import { Input, InputDate, InputTime } from '~/shared/components/input';
@@ -48,7 +50,9 @@ const ListBoxDemo: Component = () => {
 				<Stack>
 					<LabelStack>
 						<Label>Single Selection</Label>
-						<p>Selected: {Array.from(values()).join(', ') || 'None'}</p>
+						<Description>
+							Selected: {Array.from(values()).join(', ') || 'None'}
+						</Description>
 						<ListBox
 							name="single-listbox"
 							values={values()}
@@ -62,7 +66,9 @@ const ListBoxDemo: Component = () => {
 
 					<LabelStack>
 						<Label>Multiple Selection</Label>
-						<p>Selected: {Array.from(multiValues()).join(', ') || 'None'}</p>
+						<Description>
+							Selected: {Array.from(multiValues()).join(', ') || 'None'}
+						</Description>
 						<ListBox
 							name="multi-listbox"
 							values={multiValues()}
@@ -78,6 +84,9 @@ const ListBoxDemo: Component = () => {
 								<ListBoxItem value="blue">Blue</ListBoxItem>
 							</ListBoxGroup>
 						</ListBox>
+						<ErrorMessage>
+							{multiValues().has('red') ? "Don't pick red." : null}
+						</ErrorMessage>
 					</LabelStack>
 
 					<LabelStack>
@@ -109,7 +118,7 @@ const MenuDemo: Component = () => {
 			</CardHeader>
 			<CardContent>
 				<Stack class="gap-xs">
-					<p>Selected: {selection() ?? 'None'}</p>
+					<Description>Selected: {selection() ?? 'None'}</Description>
 					<Group>
 						<Button ref={simpleTrigger}>Simple Menu</Button>
 						<Menu ref={simpleMenu} onSelect={handleSelect}>
@@ -357,7 +366,9 @@ const SelectDemo: Component = () => {
 				<Stack>
 					<LabelStack>
 						<Label>Single Selection</Label>
-						<p>Selected: {Array.from(value()).join(', ') || 'None'}</p>
+						<Description>
+							Selected: {Array.from(value()).join(', ') || 'None'}
+						</Description>
 						<Select
 							placeholder="Select a fruit..."
 							values={value()}
@@ -371,7 +382,9 @@ const SelectDemo: Component = () => {
 
 					<LabelStack>
 						<Label>Multiple Selection</Label>
-						<p>Selected: {Array.from(multiValue()).join(', ') || 'None'}</p>
+						<Description>
+							Selected: {Array.from(multiValue()).join(', ') || 'None'}
+						</Description>
 						<Select
 							aria-invalid={multiValue().has('red')}
 							placeholder="Select colors..."
@@ -387,6 +400,9 @@ const SelectDemo: Component = () => {
 								<ListBoxItem value="blue">Blue</ListBoxItem>
 							</ListBoxGroup>
 						</Select>
+						<ErrorMessage>
+							{multiValue().has('red') ? "Don't pick red." : null}
+						</ErrorMessage>
 					</LabelStack>
 
 					<LabelStack>
@@ -426,7 +442,9 @@ const SelectTypeaheadDemo: Component = () => {
 				<Stack>
 					<LabelStack>
 						<Label>Single Selection</Label>
-						<p>Selected: {Array.from(value()).join(', ') || 'None'}</p>
+						<Description>
+							Selected: {Array.from(value()).join(', ') || 'None'}
+						</Description>
 						<SelectTypeahead
 							placeholder="Select a fruit..."
 							values={value()}
@@ -441,7 +459,9 @@ const SelectTypeaheadDemo: Component = () => {
 
 					<LabelStack>
 						<Label>Multiple Selection</Label>
-						<p>Selected: {Array.from(multiValue()).join(', ') || 'None'}</p>
+						<Description>
+							Selected: {Array.from(multiValue()).join(', ') || 'None'}
+						</Description>
 						<SelectTypeahead
 							aria-invalid={multiValue().has('red')}
 							placeholder="Select colors..."
@@ -461,6 +481,9 @@ const SelectTypeaheadDemo: Component = () => {
 								</ListBoxGroup>
 							</Show>
 						</SelectTypeahead>
+						<ErrorMessage>
+							{multiValue().has('red') ? "Don't pick red." : null}
+						</ErrorMessage>
 					</LabelStack>
 
 					<LabelStack>

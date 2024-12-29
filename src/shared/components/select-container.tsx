@@ -24,6 +24,7 @@ export function SelectContainer(props: SelectContainerProps) {
 				class="c-select__clear"
 				aria-label="Clear selection"
 				onClick={local.onClear}
+				unsetFormInput
 				unstyled
 			>
 				<X />

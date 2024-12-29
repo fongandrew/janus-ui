@@ -10,7 +10,7 @@ import {
 	useContext,
 } from 'solid-js';
 
-import { Button } from '~/shared/components/button';
+import { Button, type ButtonProps } from '~/shared/components/button';
 import { Group } from '~/shared/components/group';
 import { ModalContext } from '~/shared/components/modal-context';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
@@ -156,7 +156,7 @@ export const Modal: Component<DialogProps> = (props) => {
 	);
 };
 
-export function ModalCloseButton(props: JSX.DialogHtmlAttributes<HTMLButtonElement>) {
+export function ModalCloseButton(props: ButtonProps) {
 	return (
 		<Button
 			type="reset"

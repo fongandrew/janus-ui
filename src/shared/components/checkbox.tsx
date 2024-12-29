@@ -2,9 +2,11 @@ import cx from 'classix';
 import { Check, Minus } from 'lucide-solid';
 import { type JSX, splitProps } from 'solid-js';
 
-import { useFormControl } from '~/shared/components/use-form-control';
+import { mergeFormControlProps } from '~/shared/components/merge-form-control-props';
 
 export interface CheckboxProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'> {
+	/** Force callback ref */
+	ref?: (el: HTMLInputElement) => void;
 	/**
 	 * Whether the checkbox is in an indeterminate state
 	 */
@@ -13,7 +15,7 @@ export interface CheckboxProps extends Omit<JSX.InputHTMLAttributes<HTMLInputEle
 
 export function Checkbox(props: CheckboxProps) {
 	const [local, rest] = splitProps(props, ['indeterminate', 'checked', 'class']);
-	const formProps = useFormControl(rest);
+	const formProps = mergeFormControlProps(rest);
 
 	return (
 		<div class={cx('c-checkbox', local.class)}>

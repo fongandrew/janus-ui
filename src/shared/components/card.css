@@ -2,11 +2,11 @@
 
 @layer components {
 	.c-card {
-		@apply border-dynamic-card rounded-lg border-md bg-card text-card-fg shadow;
+		@apply rounded-lg border-md bg-card text-card-fg shadow border-dynamic-card;
 	}
 
 	.c-card__header {
-		@apply pt-text-y-md flex-col gap-sm px-md pb-0;
+		@apply px-md pb-0 pt-text-y-md;
 	}
 
 	.c-card__title {

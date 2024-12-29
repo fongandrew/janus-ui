@@ -1,0 +1,7 @@
+@import '~/shared/style/helpers.css';
+
+@layer components {
+	.c-description {
+		@apply text-sm text-muted;
+	}
+}

@@ -2,10 +2,20 @@
 
 @layer components {
 	.c-label-stack {
-		@apply flex flex-col gap-xs;
+		@apply flex flex-col;
 	}
 
-	.c-label-stack label {
+	.c-label-stack > * + * {
+		@apply mt-xs;
+	}
+
+	.c-label-stack > label,
+	.c-label-stack > .c-description,
+	.c-label-stack > .c-error-message {
 		@apply px-xs;
+	}
+
+	.c-label-stack > label + .c-description {
+		@apply mt-0;
 	}
 }
