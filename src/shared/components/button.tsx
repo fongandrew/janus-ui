@@ -21,8 +21,21 @@ export function Button(props: ButtonProps) {
 	const formControlProps = mergeFormControlProps(rest);
 	return (
 		<button
+			type="button"
 			{...formControlProps}
 			class={cx('c-button--unstyled', !local.unstyled && 'c-button', props.class)}
+		/>
+	);
+}
+
+export function IconButton(props: ButtonProps & { label: string }) {
+	const [local, rest] = splitProps(props, ['label']);
+	return (
+		<Button
+			aria-label={local.label}
+			{...rest}
+			class={cx('c-button--icon', props.class)}
+			unstyled
 		/>
 	);
 }

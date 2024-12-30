@@ -17,6 +17,11 @@
 		/* md by default */
 		@apply gap-sm rounded-md px-md py-input-y-md text-input-md;
 	}
+
+	.c-button--icon {
+		@apply flex h-input-md w-input-md items-center justify-center rounded-md border-transparent text-input-md [&_svg]:size-[1em] [&_svg]:shrink-0;
+		@apply hover:border-secondary hover:bg-secondary hover:text-secondary-fg;
+	}
 }
 
 @layer utilities {

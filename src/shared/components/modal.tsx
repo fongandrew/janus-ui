@@ -10,7 +10,7 @@ import {
 	useContext,
 } from 'solid-js';
 
-import { Button, type ButtonProps } from '~/shared/components/button';
+import { type ButtonProps, IconButton } from '~/shared/components/button';
 import { Group } from '~/shared/components/group';
 import { ModalContext } from '~/shared/components/modal-context';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
@@ -158,15 +158,9 @@ export const Modal: Component<DialogProps> = (props) => {
 
 export function ModalCloseButton(props: ButtonProps) {
 	return (
-		<Button
-			type="reset"
-			aria-label="Close"
-			{...props}
-			class={cx('c-modal__close', props.class)}
-			unstyled
-		>
+		<IconButton type="reset" label="Close" {...props} class={cx('text-muted', props.class)}>
 			<X />
-		</Button>
+		</IconButton>
 	);
 }
 

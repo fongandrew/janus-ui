@@ -1,11 +1,11 @@
 import '~/shared/style/tailwind.css';
 
-import { Settings } from 'lucide-solid';
+import { Ellipsis, Settings } from 'lucide-solid';
 import { type Component, createMemo, createSignal, For, Show } from 'solid-js';
 import { render } from 'solid-js/web';
 
 import { Box } from '~/shared/components/box';
-import { Button } from '~/shared/components/button';
+import { Button, IconButton } from '~/shared/components/button';
 import {
 	Card,
 	CardContent,
@@ -248,6 +248,12 @@ const ButtonsCard: Component = () => (
 					<Button disabled>Disabled</Button>
 					<Button class="c-button--ghost">Ghost</Button>
 					<Button class="c-button--link">Link</Button>
+					<IconButton label="Settings">
+						<Settings />
+					</IconButton>
+					<IconButton label="More options">
+						<Ellipsis />
+					</IconButton>
 				</Group>
 			</Stack>
 		</CardContent>

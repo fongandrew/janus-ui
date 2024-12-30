@@ -83,12 +83,6 @@
 		@apply flex-1 text-xl font-bold;
 	}
 
-	.c-modal__close {
-		@apply flex h-input-md w-input-md items-center justify-center rounded-md;
-		@apply text-input-md text-muted;
-		@apply hover:border-secondary hover:bg-secondary hover:text-secondary-fg hover:shadow-none;
-	}
-
 	.c-modal__footer {
 		@apply flex flex-none items-center justify-end p-md;
 	}
