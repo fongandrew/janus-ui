@@ -2,6 +2,6 @@
 
 @layer components {
 	.c-error-message {
-		@apply overflow-hidden text-ellipsis text-sm text-danger;
+		@apply overflow-x-hidden text-ellipsis text-sm text-danger;
 	}
 }

@@ -2,11 +2,11 @@
 
 @layer components {
 	.c-option-list {
-		@apply overflow-hidden text-sm;
+		@apply overflow-y-auto overflow-x-hidden text-sm;
 	}
 
 	.c-option-list__item {
-		@apply block w-full overflow-hidden text-ellipsis px-input-x-md py-input-y-sm text-left text-input-sm;
+		@apply block w-full overflow-x-hidden text-ellipsis px-input-x-md py-input-y-sm text-left text-input-sm;
 	}
 
 	.c-option-list__item:hover,

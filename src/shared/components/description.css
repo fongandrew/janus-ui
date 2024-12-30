@@ -2,6 +2,6 @@
 
 @layer components {
 	.c-description {
-		@apply overflow-hidden text-ellipsis text-sm text-muted;
+		@apply overflow-x-hidden text-ellipsis text-sm text-muted;
 	}
 }

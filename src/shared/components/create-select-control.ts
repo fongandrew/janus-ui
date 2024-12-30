@@ -17,16 +17,17 @@ export function createSelectControl(props: SelectControlProps) {
 	// Refs to trigger and dropdown
 	const [setTrigger, setDropdown, dropdownControls] = createDropdown([
 		offset(4),
+		flip(),
+		shift({ padding: 4 }),
 		size({
-			apply({ rects, elements }) {
+			apply({ rects, elements, availableHeight }) {
 				Object.assign(elements.floating.style, {
 					maxWidth: `${rects.reference.width}px`,
 					minWidth: `${rects.reference.width}px`,
+					maxHeight: `${Math.max(0, availableHeight - 8)}px`,
 				});
 			},
 		}),
-		flip(),
-		shift({ padding: 4 }),
 	]);
 
 	// Refs for input and list box

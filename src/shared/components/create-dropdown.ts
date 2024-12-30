@@ -6,6 +6,7 @@ import {
 	type Middleware,
 	offset,
 	shift,
+	size,
 } from '@floating-ui/dom';
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 
@@ -57,16 +58,7 @@ const useKeydown = createEventDelegate('keydown', (event) => {
 	}
 });
 
-export function createDropdown(
-	middleware: Middleware[] = [
-		offset(4),
-		flip(),
-		shift({ padding: 4 }),
-		autoPlacement({
-			allowedPlacements: ['bottom-start', 'bottom-end'],
-		}),
-	],
-) {
+export function createDropdown(middleware?: Middleware[]) {
 	const [triggerElement, setTriggerElement] = createSignal<HTMLElement | null>(null);
 	const [menuElement, setMenuElement] = createSignal<HTMLElement | null>(null);
 	const [visible, setVisible] = createSignal(false);
@@ -75,7 +67,22 @@ export function createDropdown(
 	const updatePosition = async (triggerElm: HTMLElement, menuElm: HTMLElement) => {
 		const { x, y } = await computePosition(triggerElm, menuElm, {
 			placement: 'bottom',
-			middleware,
+			middleware: middleware ?? [
+				autoPlacement({
+					allowedPlacements: ['bottom-start', 'bottom-end'],
+				}),
+				offset(4),
+				flip(),
+				shift({ padding: 4 }),
+				size({
+					apply({ availableWidth, availableHeight }) {
+						Object.assign(menuElm.style, {
+							maxWidth: `${Math.max(0, availableWidth - 8)}px`,
+							maxHeight: `${Math.max(0, availableHeight - 8)}px`,
+						});
+					},
+				}),
+			],
 			strategy: 'fixed',
 		});
 

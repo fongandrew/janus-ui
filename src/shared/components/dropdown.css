@@ -2,7 +2,7 @@
 
 @layer components {
 	.c-dropdown {
-		@apply rounded-md border-md bg-popover px-0 py-xs text-popover-fg shadow-lg border-dynamic-card;
+		@apply overflow-y-auto rounded-md border-md bg-popover px-0 py-xs text-popover-fg shadow-lg border-dynamic-card;
 		@apply z-1 min-w-[180px];
 	}
 }

@@ -4,7 +4,7 @@
 	.c-select__button,
 	.c-select__input,
 	.c-select__input_description {
-		@apply t-with-disabled-input t-with-error-input t-with-focus-ring w-full overflow-hidden text-ellipsis rounded-md border-md bg-input-bg py-input-y-md pl-input-x-md text-left text-input-md font-normal text-input-fg shadow-inner transition-colors border-dynamic-secondary;
+		@apply t-with-disabled-input t-with-error-input t-with-focus-ring w-full overflow-x-hidden text-ellipsis rounded-md border-md bg-input-bg py-input-y-md pl-input-x-md text-left text-input-md font-normal text-input-fg shadow-inner transition-colors border-dynamic-secondary;
 
 		/* To avoid overlap with the chevron or clear */
 		padding-right: theme('width.input-md');
@@ -67,7 +67,7 @@
 	}
 
 	.c-select__empty_state {
-		@apply block w-full overflow-hidden text-ellipsis px-input-x-md py-input-y-sm text-center text-input-sm text-muted;
+		@apply block w-full overflow-y-auto overflow-x-hidden text-ellipsis px-input-x-md py-input-y-sm text-center text-input-sm text-muted;
 	}
 
 	* + .c-select__empty_state {

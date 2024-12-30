@@ -18,7 +18,7 @@
 	}
 
 	.c-list-box__item_text {
-		@apply overflow-hidden text-ellipsis;
+		@apply overflow-x-hidden text-ellipsis;
 	}
 
 	.c-list-box__check-box svg {
