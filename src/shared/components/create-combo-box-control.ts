@@ -6,10 +6,37 @@ import {
 } from '~/shared/components/create-list-box-control';
 import { LIST_OPTION_VALUE_ATTR, useClick } from '~/shared/components/create-option-list-control';
 import { generateId } from '~/shared/utility/id-generator';
+import { createEventDelegate } from '~/shared/utility/solid/create-event-delegate';
 import { createMountedSignal } from '~/shared/utility/solid/create-mounted-signal';
 
 /** Base props for ComboBox are identical to ListBox for now */
 export type ComboBoxProps = ListBoxProps;
+
+/** Delegated key handler so escape key clears input */
+export const useEscKeydown = createEventDelegate('keydown', (event) => {
+	const target = event.target as HTMLElement;
+
+	// Esc key handling only
+	if (event.key !== 'Escape') return;
+
+	// Check that is an input element and not like a button or something
+	if (!(target instanceof HTMLInputElement)) return;
+	if (!target.value) return;
+	if (
+		['button', 'checkbox', 'file', 'hidden', 'image', 'radio', 'reset', 'submit'].includes(
+			target.type,
+		)
+	) {
+		return;
+	}
+
+	// If dropdown is open, then esc should close it first
+	if (target.getAttribute('aria-expanded') === 'true') return;
+
+	// If we get here, safe to clear
+	target.value = '';
+	target.dispatchEvent(new Event('input', { bubbles: true }));
+});
 
 /**
  * Returns refs to link inbox box and list box for combo box.
@@ -30,6 +57,7 @@ export function createComboBoxControl(props: ComboBoxProps) {
 			inputControls.select(event, element);
 		},
 	});
+	useEscKeydown(inputControls.getNode);
 
 	// Add attributes associating input and listbox
 	const isMounted = createMountedSignal();
