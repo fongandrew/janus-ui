@@ -1,6 +1,6 @@
 @layer components {
 	.c-label {
-		@apply inline-block text-input-md font-medium;
+		@apply inline-block overflow-hidden text-ellipsis text-input-md font-medium;
 	}
 
 	.c-label:has(input) {

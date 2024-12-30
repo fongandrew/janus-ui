@@ -7,7 +7,7 @@ import { generateId } from '~/shared/utility/id-generator';
 
 export interface OptionListProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	/** Force any refs to be callback refs */
-	ref?: (el: HTMLDivElement) => void;
+	ref?: ((el: HTMLDivElement) => void) | undefined;
 	/** Make role required */
 	role: 'listbox' | 'menu';
 	/** Make children required */

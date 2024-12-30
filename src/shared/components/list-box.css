@@ -17,6 +17,10 @@
 		@apply flex size-em items-center justify-center;
 	}
 
+	.c-list-box__item_text {
+		@apply overflow-hidden text-ellipsis;
+	}
+
 	.c-list-box__check-box svg {
 		display: none;
 	}

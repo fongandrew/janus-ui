@@ -3,8 +3,8 @@ import { Check } from 'lucide-solid';
 import { For, type JSX, splitProps } from 'solid-js';
 
 import { createListBoxControl } from '~/shared/components/create-list-box-control';
-import { OptionList, OptionListGroup, OptionListItem } from '~/shared/components/option-list';
 import { mergeFormControlProps } from '~/shared/components/merge-form-control-props';
+import { OptionList, OptionListGroup, OptionListItem } from '~/shared/components/option-list';
 import { createTextMatcher } from '~/shared/utility/create-text-matcher';
 import { generateId } from '~/shared/utility/id-generator';
 
@@ -89,7 +89,7 @@ export function ListBoxItem(props: ListBoxItemProps) {
 			<div role="presentation" class="c-list-box__check-box">
 				<Check />
 			</div>
-			{props.children}
+			<span class="c-list-box__item_text">{props.children}</span>
 		</OptionListItem>
 	);
 }

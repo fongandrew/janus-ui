@@ -4,7 +4,10 @@
 	.c-select__button,
 	.c-select__input,
 	.c-select__input_description {
-		@apply t-with-disabled-input t-with-error-input t-with-focus-ring t-input-size-md w-full rounded-md border-md bg-input-bg text-left font-normal text-input-fg shadow-inner transition-colors border-dynamic-secondary;
+		@apply t-with-disabled-input t-with-error-input t-with-focus-ring w-full overflow-hidden text-ellipsis rounded-md border-md bg-input-bg py-input-y-md pl-input-x-md text-left text-input-md font-normal text-input-fg shadow-inner transition-colors border-dynamic-secondary;
+
+		/* To avoid overlap with the chevron or clear */
+		padding-right: theme('width.input-md');
 	}
 
 	.c-select__input {
@@ -12,7 +15,7 @@
 	}
 
 	.c-select__input_description {
-		@apply t-input-size-md pointer-events-none absolute inset-0;
+		@apply pointer-events-none absolute inset-0;
 	}
 
 	.c-select__input:focus + .c-select__input_description {
