@@ -21,11 +21,18 @@ export function createSelectControl(props: SelectControlProps) {
 		shift({ padding: 4 }),
 		size({
 			apply({ rects, elements, availableHeight }) {
-				Object.assign(elements.floating.style, {
-					maxWidth: `${rects.reference.width}px`,
-					minWidth: `${rects.reference.width}px`,
-					maxHeight: `${Math.max(0, availableHeight - 8)}px`,
-				});
+				elements.floating.style.setProperty(
+					'--c-dropdown-max-width',
+					`${rects.reference.width}px`,
+				);
+				elements.floating.style.setProperty(
+					'--c-dropdown-min-width',
+					`${rects.reference.width}px`,
+				);
+				elements.floating.style.setProperty(
+					'--c-dropdown-max-height',
+					`${Math.max(0, availableHeight - 8)}px`,
+				);
 			},
 		}),
 	]);

@@ -1,8 +1,50 @@
 @import '~/shared/style/helpers.css';
 
+@layer base {
+	/* No scroll when dropdown open */
+	body:has(.c-dropdown:popover-open) {
+		overflow: hidden;
+	}
+
+	/* Dropdown backdrop -- use this instead of ::backdrop because this blocks click-through */
+	body:has(.c-dropdown:popover-open)::after {
+		content: ' ';
+
+		@apply fixed inset-0 block bg-backdrop backdrop-blur-sm;
+	}
+
+	/* Make backdrop transparent on larger screens */
+	@media screen(sm) {
+		body:has(.c-dropdown:popover-open)::after {
+			@apply bg-transparent backdrop-blur-none;
+		}
+	}
+}
+
 @layer components {
 	.c-dropdown {
-		@apply overflow-y-auto rounded-md border-md bg-popover px-0 py-xs text-popover-fg shadow-lg border-dynamic-card;
+		@apply fixed overflow-y-auto rounded-md border-md bg-popover px-0 py-xs text-popover-fg shadow-lg border-dynamic-card;
 		@apply z-1 min-w-[180px];
+
+		/* Mobile specific styling -- give it a bottom-sheet effect */
+		@apply inset-sm w-full;
+
+		max-height: calc(100vh - theme(spacing.xl));
+		max-width: calc(100vw - theme(spacing.xl));
+	}
+
+	/* Dynamically positioning dropdowns on smaller screens */
+	@media screen(sm) {
+		.c-dropdown {
+			inset: unset;
+			width: auto;
+
+			/* These are set via `create-dropdown.ts` */
+			left: var(--c-dropdown-left);
+			top: var(--c-dropdown-top);
+			max-height: var(--c-dropdown-max-height);
+			max-width: var(--c-dropdown-max-width);
+			min-width: var(--c-dropdown-min-width, 180px);
+		}
 	}
 }
