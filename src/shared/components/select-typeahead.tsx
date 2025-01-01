@@ -47,6 +47,13 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 	const [input, setInput] = createSignal('');
 	const handleInput = (event: InputEvent) => {
 		const target = event.target as HTMLInputElement;
+
+		// Force open if applicable
+		if (target.value) {
+			selectControls.getListBoxNode()?.showPopover();
+		}
+
+		// Update state callbacks
 		setInput(target.value);
 		props.onInput?.(event, target.value);
 	};

@@ -44,8 +44,9 @@ export function Select(props: SelectProps) {
 	/** For matching user trying to type and match input */
 	const matchText = createTextMatcher(() => selectControls.getItems());
 	const handleKeyDown = (event: KeyboardEvent) => {
-		// If here, check if we're typing a character to filter the list
+		// If here, check if we're typing a character to filter the list (force open too)
 		if (event.key.length === 1) {
+			selectControls.getListBoxNode()?.showPopover();
 			const node = matchText(event.key);
 			selectControls.highlight(event, node);
 		}
