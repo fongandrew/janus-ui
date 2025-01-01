@@ -10,11 +10,60 @@ import {
 } from '@floating-ui/dom';
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 
+import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { generateId } from '~/shared/utility/id-generator';
 import {
 	createEventDelegate,
 	type EventDelegateProps,
 } from '~/shared/utility/solid/create-event-delegate';
+
+const openDropdowns = new WeakMap<Document, Set<HTMLElement>>();
+
+registerDocumentSetup((document) => {
+	openDropdowns.set(document, new Set());
+
+	document.addEventListener('click', (event) => {
+		if (openDropdowns.get(document)?.size === 0) return;
+
+		const target = event.target as HTMLElement | null;
+
+		// This will land either on the popover itself (if click is inside
+		// the popover) or the nearest containing context (if outside)
+		const nearestRoot = target?.closest(':popover-open, :modal, body');
+		if (!nearestRoot) return;
+
+		// Closing all popovers within the nearest root effectively closes
+		// popovers when clicking outside of them (and respects popovers
+		// opened from inside modals + nested popovers)
+		let didHide = false;
+		for (const dropdown of openDropdowns.get(document) ?? []) {
+			if (nearestRoot.contains(dropdown)) {
+				dropdown.hidePopover();
+				didHide = true;
+			}
+		}
+
+		// Stop propagation and prevent default if we hid a popover to prevent
+		// clicks from going 'through' a backdrop and interacting with elements
+		if (didHide) {
+			event.stopPropagation();
+			event.preventDefault();
+		}
+	});
+
+	document.addEventListener('keydown', (event) => {
+		if (event.key !== 'Escape') return;
+
+		// Hide the last popover only (in practice should be only one popover
+		// dropdown open at a time)
+		let dropdown;
+		for (dropdown of openDropdowns.get(document) ?? []);
+		if (dropdown) {
+			dropdown.hidePopover();
+			event.preventDefault();
+		}
+	});
+});
 
 const useBeforeToggle = createEventDelegate<
 	'beforetoggle',
@@ -22,15 +71,26 @@ const useBeforeToggle = createEventDelegate<
 >(
 	'beforetoggle',
 	(event) => {
-		event.props.setVisible(
-			(event as ToggleEvent & EventDelegateProps<{ setVisible: (open: boolean) => void }>)
-				.newState === 'open',
-		);
+		const document = event.target.ownerDocument;
+		const typedEvent = event as ToggleEvent &
+			EventDelegateProps<{ setVisible: (open: boolean) => void }>;
+		if (typedEvent.newState === 'open') {
+			// Close any other open dropdowns
+			for (const openDropdown of openDropdowns.get(document) ?? []) {
+				if (openDropdown !== typedEvent.target) {
+					openDropdown.hidePopover();
+				}
+			}
+			openDropdowns.get(document)?.add(typedEvent.target);
+		} else {
+			openDropdowns.get(document)?.delete(typedEvent.target);
+		}
+		typedEvent.props.setVisible(typedEvent.newState === 'open');
 	},
 	true,
 );
 
-const useClick = createEventDelegate('click', (event) => {
+const useTriggerClick = createEventDelegate('click', (event) => {
 	// Open popover target. This shouldn't be necessary but popover does not open
 	// on non-button elements.
 	const targetId = event.target.getAttribute('popovertarget');
@@ -147,11 +207,22 @@ export function createDropdown(
 	});
 
 	useBeforeToggle(menuElement, { setVisible });
-	useClick(triggerElement);
+	useTriggerClick(triggerElement);
 	useKeydown(triggerElement);
 
 	const setMenuElementAndInit = (el: HTMLElement) => {
-		el.popover = '';
+		// The "light dismiss" with popover="auto" is a little buggy:
+		// - They don't on iOS Safari as of 18.3 (https://caniuse.com/?search=popover)
+		// - We can't block clicks through a backdrop element on Chrome Android (even if backdrop
+		//   is manually created -- we can't block clicks at all with the built-in backdrop),
+		//   although this is arguably correct and it's desktop that's wrong? Basically we use the
+		//   :popover-open CSS selector to display the backdrop, so if the backdrop disappears
+		//   as a result of the light dismiss but before the click fully resolves, the click
+		//   might "complete" on an element underneath the backdrop.
+		//
+		// So we're going to use a manual popover for now. This means we need to dismissal when
+		// clicks outside a popover happen (or if "esc" is pressed).
+		el.popover = 'manual';
 		setMenuElement(el);
 	};
 
