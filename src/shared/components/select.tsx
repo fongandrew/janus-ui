@@ -53,28 +53,26 @@ export function Select(props: SelectProps) {
 	};
 
 	return (
-		<>
-			<SelectContainer onClear={selectControls.clear}>
-				<Button
-					{...buttonProps}
-					ref={combineRefs(setControl, props.ref)}
-					class={cx('c-select__button', props.class)}
-					onBlur={selectControls.hideOnBlur}
-					onKeyDown={handleKeyDown}
-					aria-haspopup="listbox"
-					aria-required={props.required}
-					unstyled
-				>
-					<SelectText
-						placeholder={local.placeholder}
-						values={selectControls.values()}
-						getItemByValue={selectControls.getItemByValue}
-					/>
-				</Button>
-			</SelectContainer>
+		<SelectContainer onClear={selectControls.clear}>
+			<Button
+				{...buttonProps}
+				ref={combineRefs(setControl, props.ref)}
+				class={cx('c-select__button', props.class)}
+				onBlur={selectControls.hideOnBlur}
+				onKeyDown={handleKeyDown}
+				aria-haspopup="listbox"
+				aria-required={props.required}
+				unstyled
+			>
+				<SelectText
+					placeholder={local.placeholder}
+					values={selectControls.values()}
+					getItemByValue={selectControls.getItemByValue}
+				/>
+			</Button>
 			<SelectOptionList ref={setListBox} name={local.name} values={selectControls.values()}>
 				{local.children}
 			</SelectOptionList>
-		</>
+		</SelectContainer>
 	);
 }

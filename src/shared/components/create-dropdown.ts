@@ -37,7 +37,7 @@ registerDocumentSetup((document) => {
 		// opened from inside modals + nested popovers)
 		let didHide = false;
 		for (const dropdown of openDropdowns.get(document) ?? []) {
-			if (nearestRoot.contains(dropdown)) {
+			if (nearestRoot !== dropdown && nearestRoot.contains(dropdown)) {
 				dropdown.hidePopover();
 				didHide = true;
 			}
