@@ -95,7 +95,7 @@ const useTriggerClick = createEventDelegate('click', (event) => {
 	// on non-button elements.
 	const targetId = event.target.getAttribute('popovertarget');
 	if (targetId) {
-		const target = document.getElementById(targetId);
+		const target = event.target.ownerDocument.getElementById(targetId);
 		if (target) {
 			target.togglePopover();
 			event.preventDefault();
