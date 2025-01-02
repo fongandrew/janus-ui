@@ -10,30 +10,15 @@
 		padding-right: theme('width.input-md');
 	}
 
-	.c-select__input {
-		@apply opacity-0 focus:opacity-100;
-	}
+	/* Select container parts */
 
-	.c-select__input_description {
-		@apply pointer-events-none absolute inset-0;
-	}
-
-	.c-select__input:focus + .c-select__input_description {
-		@apply hidden;
-	}
-
-	:disabled + .c-select__input_description,
-	[aria-disabled='true'] + .c-select__input_description {
-		@apply t-disabled-input;
+	.c-select__container {
+		@apply relative;
 	}
 
 	.c-select__chevron,
 	.c-select__clear {
 		@apply absolute inset-y-0 right-0 flex w-input-md items-center justify-center border-0 bg-transparent p-0 text-muted [&_svg]:size-em;
-	}
-
-	.c-select__container {
-		@apply relative;
 	}
 
 	.c-select__chevron {
@@ -66,11 +51,59 @@
 		@apply text-muted;
 	}
 
+	/* Select dropdown empty state */
+
 	.c-select__empty_state {
 		@apply block w-full overflow-y-auto overflow-x-hidden text-ellipsis px-input-x-md py-input-y-sm text-center text-input-sm text-muted;
 	}
 
 	* + .c-select__empty_state {
 		@apply hidden;
+	}
+
+	/* Select typeahead */
+
+	.c-select__input {
+		@apply absolute inset-0 opacity-0 focus:opacity-100;
+	}
+
+	.c-select__input_description {
+		@apply pointer-events-none;
+	}
+
+	.c-select__container:has(:popover-open, :focus) .c-select__input {
+		@apply opacity-100;
+	}
+
+	.c-select__container:has(:popover-open, :focus) .c-select__input_description {
+		@apply opacity-0;
+	}
+
+	:disabled + .c-select__input_description,
+	[aria-disabled='true'] + .c-select__input_description {
+		@apply t-disabled-input;
+	}
+
+	/* Mobile-specific fixed positioning for input + dropdown */
+
+	.c-select__container:has(:popover-open) .c-select__input {
+		@apply fixed bottom-auto left-md right-md top-md z-1 w-auto;
+	}
+
+	.c-select__input ~ .c-dropdown {
+		top: calc(theme(height.input-md) + theme(spacing.md) * 2);
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+
+	/* Undo mobile-specific positioning */
+	@media screen(sm) {
+		.c-select__container:has(:popover-open) .c-select__input {
+			@apply absolute bottom-0 left-0 right-0 top-0 w-full;
+		}
+
+		.c-select__input ~ .c-dropdown {
+			top: var(--c-dropdown-top);
+		}
 	}
 }

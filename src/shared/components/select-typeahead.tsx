@@ -40,7 +40,10 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 		'required',
 	]);
 	const [local, buttonProps] = splitProps(rest, ['children', 'name', 'placeholder']);
-	const [setControl, setListBox, selectControls] = createSelectControl(listBoxProps);
+	const [setControl, setListBox, selectControls] = createSelectControl(listBoxProps, {
+		// Added offset to account for input focus rings
+		offset: 8,
+	});
 
 	const descriptionId = generateId('select-description');
 
@@ -59,31 +62,29 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 	};
 
 	return (
-		<>
-			<SelectContainer onClear={selectControls.clear}>
-				<Input
-					{...buttonProps}
-					ref={combineRefs(setControl, props.ref)}
-					class={cx('c-select__input', props.class)}
-					onBlur={selectControls.hideOnBlur}
-					onInput={handleInput}
-					aria-describedby={
-						buttonProps['aria-describedby']
-							? `${buttonProps['aria-describedby']} ${descriptionId}`
-							: descriptionId
-					}
-					aria-haspopup="listbox"
-					aria-required={props.required}
-					unstyled
+		<SelectContainer onClear={selectControls.clear}>
+			<Input
+				{...buttonProps}
+				ref={combineRefs(setControl, props.ref)}
+				class={cx('c-select__input', props.class)}
+				onBlur={selectControls.hideOnBlur}
+				onInput={handleInput}
+				aria-describedby={
+					buttonProps['aria-describedby']
+						? `${buttonProps['aria-describedby']} ${descriptionId}`
+						: descriptionId
+				}
+				aria-haspopup="listbox"
+				aria-required={props.required}
+				unstyled
+			/>
+			<div id={descriptionId} class="c-select__input_description">
+				<SelectText
+					placeholder={local.placeholder}
+					values={selectControls.values()}
+					getItemByValue={selectControls.getItemByValue}
 				/>
-				<div id={descriptionId} class="c-select__input_description">
-					<SelectText
-						placeholder={local.placeholder}
-						values={selectControls.values()}
-						getItemByValue={selectControls.getItemByValue}
-					/>
-				</div>
-			</SelectContainer>
+			</div>
 			<SelectOptionList
 				ref={setListBox}
 				name={local.name}
@@ -92,6 +93,6 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 			>
 				{local.children}
 			</SelectOptionList>
-		</>
+		</SelectContainer>
 	);
 }

@@ -13,10 +13,13 @@ export type SelectControlProps = ComboBoxProps;
 /**
  * A select control is jsut a combo box + a dropdown. This returns props for both.
  */
-export function createSelectControl(props: SelectControlProps) {
+export function createSelectControl(
+	props: SelectControlProps,
+	unreactiveOpts: { offset?: number } = {},
+) {
 	// Refs to trigger and dropdown
 	const [setTrigger, setDropdown, dropdownControls] = createDropdown([
-		offset(4),
+		offset(unreactiveOpts.offset ?? 4),
 		flip(),
 		shift({ padding: 4 }),
 		size({
