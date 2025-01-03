@@ -43,7 +43,9 @@ const px = {
 		},
 	},
 	width: {
+		dropdown: 184,
 		modal: 512,
+		tooltip: 240,
 	},
 	lineHeight: {
 		xs: 18,
@@ -274,13 +276,19 @@ export default {
 				'tooltip-arrow': 'var(--tooltip-arrow-size)',
 			},
 
+			maxWidth: {
+				tooltip: pxToRem(px.width.tooltip),
+			},
+
+			minWidth: {
+				dropdown: pxToRem(px.width.dropdown),
+			},
+
 			width: {
-				// Input sizes
+				// Component sizes
 				'input-sm': pxToRem(px.height.input.sm),
 				'input-md': pxToRem(px.height.input.md),
 				'input-lg': pxToRem(px.height.input.lg),
-
-				// Modal sizes
 				modal: pxToRem(px.width.modal),
 			},
 

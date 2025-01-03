@@ -2,7 +2,7 @@
 
 @layer components {
 	.c-tooltip {
-		@apply z-1 pointer-events-none max-w-[20rem] rounded-sm bg-tooltip px-sm py-text-y-sm text-sm text-tooltip-fg;
+		@apply max-w-tooltip pointer-events-none z-1 rounded-sm bg-tooltip px-sm py-text-y-sm text-sm text-tooltip-fg;
 
 		/* Popovers clip overflow by default which hide te arrow */
 		@apply overflow-visible;

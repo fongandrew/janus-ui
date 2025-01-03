@@ -26,7 +26,7 @@
 @layer components {
 	.c-dropdown {
 		@apply fixed mx-auto my-0 overflow-y-auto rounded-md border-md bg-popover px-0 py-xs text-popover-fg shadow-lg border-dynamic-card;
-		@apply z-above-backdrop min-w-[180px];
+		@apply z-above-backdrop min-w-dropdown;
 
 		/* Mobile specific styling */
 		@apply inset-md w-full;
