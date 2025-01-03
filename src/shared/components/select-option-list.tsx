@@ -14,7 +14,7 @@ export interface SelectOptionListProps extends Omit<OptionListProps, 'role'> {
 }
 
 export function SelectOptionList(props: SelectOptionListProps) {
-	const [local, rest] = splitProps(props, ['children', 'name', 'values']);
+	const [local, rest] = splitProps(props, ['children', 'input', 'name', 'values']);
 	return (
 		<>
 			<OptionList role="listbox" {...rest} class={cx('c-dropdown', props.class)}>
@@ -22,7 +22,7 @@ export function SelectOptionList(props: SelectOptionListProps) {
 				<div class="c-select__empty_state">
 					{props.input?.trim() ? (
 						<>
-							No matches found for <strong>{props.input}</strong>
+							No matches found for <strong>{local.input}</strong>
 						</>
 					) : (
 						<>Type something</>
