@@ -168,7 +168,7 @@ export default tseslint.config(
 	// Allow conosle log in logging
 	{
 		// Logging files
-		files: ['src/shared/utility/logging/**/*.{js,ts,jsx,tsx}'],
+		files: ['**/*logger*.{js,ts,jsx,tsx}', '**/*logging*.{js,ts,jsx,tsx}'],
 		rules: {
 			'no-console': 'off',
 		},
