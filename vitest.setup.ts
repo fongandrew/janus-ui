@@ -21,6 +21,26 @@ Object.defineProperty(window, 'matchMedia', {
 	})),
 });
 
+Object.defineProperty(window, 'requestIdleCallback', {
+	writable: true,
+	value: vi.fn().mockImplementation((callback) => {
+		const start = Date.now();
+		return setTimeout(() => {
+			callback({
+				didTimeout: false,
+				timeRemaining: () => Math.max(0, 50.0 - (Date.now() - start)),
+			});
+		}, 1);
+	}),
+});
+
+Object.defineProperty(window, 'cancelIdleCallback', {
+	writable: true,
+	value: vi.fn().mockImplementation((id) => {
+		clearTimeout(id);
+	}),
+});
+
 class ResizeObserver {
 	observe() {}
 	unobserve() {}
