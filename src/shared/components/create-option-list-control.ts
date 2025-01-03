@@ -8,7 +8,7 @@ import { createEventDelegate } from '~/shared/utility/solid/create-event-delegat
 /** Base props for different kinds of option lists (e.g. combobox, listbox, menu) */
 export interface OptionListProps {
 	/** Callback for when element is highlighted via arrow keys */
-	onHighlight: (event: KeyboardEvent, element: HTMLElement, value: string) => void;
+	onHighlight: (event: KeyboardEvent | null, element: HTMLElement, value: string) => void;
 	/** Callback for when element is selected */
 	onSelect: (event: KeyboardEvent | MouseEvent, element: HTMLElement, value: string) => void;
 }
@@ -173,7 +173,7 @@ export function createOptionListControl(props: OptionListProps) {
 					node.querySelectorAll(`[${LIST_OPTION_VALUE_ATTR}]`),
 				) as HTMLElement[];
 			},
-			highlight: (event: KeyboardEvent, highlightedElement: HTMLElement | null) => {
+			highlight: (event: KeyboardEvent | null, highlightedElement: HTMLElement | null) => {
 				if (!highlightedElement) return;
 				const value = highlightedElement?.getAttribute(LIST_OPTION_VALUE_ATTR);
 				if (typeof value !== 'string') return;

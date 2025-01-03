@@ -1,5 +1,5 @@
 import cx from 'classix';
-import { createSignal, type JSX, splitProps } from 'solid-js';
+import { createEffect, createSignal, type JSX, splitProps } from 'solid-js';
 
 import { createSelectControl } from '~/shared/components/create-select-control';
 import { Input } from '~/shared/components/input';
@@ -60,6 +60,19 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 		setInput(target.value);
 		props.onInput?.(event, target.value);
 	};
+
+	// Whenever input value changes, move selection back to first item
+	createEffect(() => {
+		if (!input()) return;
+
+		// Queue microtask to ensure highlight happens after list is updated
+		// from input() changes
+		queueMicrotask(() => {
+			const firstItem = selectControls.getFirstItem();
+			if (!firstItem) return;
+			selectControls.highlight(null, firstItem);
+		});
+	});
 
 	return (
 		<SelectContainer onClear={selectControls.clear}>

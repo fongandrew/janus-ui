@@ -16,7 +16,7 @@ export interface ListBoxProps {
 	/** Called when selection changes */
 	onChange?: (event: MouseEvent | KeyboardEvent, value: Set<string>) => void;
 	/** Called when highlight changes */
-	onHighlight?: (event: KeyboardEvent, elementId: string) => void;
+	onHighlight?: (event: KeyboardEvent | null, elementId: string) => void;
 	/** Disables clearing selection */
 	required?: boolean | undefined;
 	/** Whether multiple selection is allowed */
