@@ -1,8 +1,8 @@
 import cx from 'classix';
 import { type JSX, splitProps, useContext } from 'solid-js';
 
-import { RadioGroupContext } from '~/shared/components/radio-group-context';
 import { mergeFormControlProps } from '~/shared/components/merge-form-control-props';
+import { RadioGroupContext } from '~/shared/components/radio-group-context';
 
 export interface RadioProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'> {
 	/** Force callback ref */
