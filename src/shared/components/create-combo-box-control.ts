@@ -5,6 +5,7 @@ import {
 	type ListBoxProps,
 } from '~/shared/components/create-list-box-control';
 import { LIST_OPTION_VALUE_ATTR, useClick } from '~/shared/components/create-option-list-control';
+import { isTextInput } from '~/shared/utility/element-types';
 import { generateId } from '~/shared/utility/id-generator';
 import { createEventDelegate } from '~/shared/utility/solid/create-event-delegate';
 import { createMountedSignal } from '~/shared/utility/solid/create-mounted-signal';
@@ -20,15 +21,8 @@ export const useEscKeydown = createEventDelegate('keydown', (event) => {
 	if (event.key !== 'Escape') return;
 
 	// Check that is an input element and not like a button or something
-	if (!(target instanceof HTMLInputElement)) return;
+	if (!isTextInput(target)) return;
 	if (!target.value) return;
-	if (
-		['button', 'checkbox', 'file', 'hidden', 'image', 'radio', 'reset', 'submit'].includes(
-			target.type,
-		)
-	) {
-		return;
-	}
 
 	// If dropdown is open, then esc should close it first
 	if (target.getAttribute('aria-expanded') === 'true') return;

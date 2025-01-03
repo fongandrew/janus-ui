@@ -14,6 +14,7 @@ import { type ButtonProps, IconButton } from '~/shared/components/button';
 import { Group } from '~/shared/components/group';
 import { ModalContext } from '~/shared/components/modal-context';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
+import { isDialog } from '~/shared/utility/element-types';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { createMountedSignal } from '~/shared/utility/solid/create-mounted-signal';
 
@@ -38,7 +39,7 @@ registerDocumentSetup((document) => {
 		if (
 			target &&
 			target.hasAttribute('data-dialog-container') &&
-			target instanceof HTMLDialogElement &&
+			isDialog(target) &&
 			target.open
 		) {
 			target.close();
