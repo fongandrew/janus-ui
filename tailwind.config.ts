@@ -209,12 +209,23 @@ export default {
 
 		zIndex: {
 			auto: 'auto',
-			'0': '0',
 
-			// All popovers just use this. We generally rely on HTML stacking
-			// (or the top layer with the dialog and popover APIs) to do the
-			// right thing, so we don't need to manage z-indexes.
+			// Basic z-indicies for generic relative positioning (if needed)
+			'0': '0',
 			'1': '1',
+
+			// Overlay or backdrop needs a z-index since it generally doesn't go in the
+			// top-layer itself used by modals or popover (we could but the one we use
+			// is manually generated via the :after pseudo-elements on the body and modals
+			// to block click thoughts -- the native :backdrop pseudo-element doesn't let
+			// us do that.
+			backdrop: '10',
+
+			// Anything above a backdrop -- it isn't necessary for native popovers
+			// and modals that go in the top layer, but we sometimes elevate certain
+			// non-top-layer elements above the backdrop (like the input box for a
+			// typeahead select)
+			'above-backdrop': '20',
 		},
 
 		extend: {

@@ -87,7 +87,7 @@
 	/* Mobile-specific fixed positioning for input + dropdown */
 
 	.c-select__container:has(:popover-open) .c-select__input {
-		@apply fixed bottom-auto left-md right-md top-md z-1 w-auto;
+		@apply z-above-backdrop fixed bottom-auto left-md right-md top-md w-auto;
 	}
 
 	.c-select__input ~ .c-dropdown {
