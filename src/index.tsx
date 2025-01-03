@@ -412,6 +412,22 @@ const SelectDemo: Component = () => {
 					</LabelStack>
 
 					<LabelStack>
+						<Label>Long Selection List</Label>
+						<Description>
+							Selected: {Array.from(value()).join(', ') || 'None'}
+						</Description>
+						<Select
+							placeholder="Select an option..."
+							values={value()}
+							onChange={(_e, values) => setValue(values)}
+						>
+							<For each={[...Array(100).keys()]}>
+								{(i) => <ListBoxItem value={String(i)}>Option {i}</ListBoxItem>}
+							</For>
+						</Select>
+					</LabelStack>
+
+					<LabelStack>
 						<Label>Disabled Selection</Label>
 						<Select disabled values={new Set(['fixed'])}>
 							<ListBoxItem value="fixed">Can't change me</ListBoxItem>
@@ -497,6 +513,22 @@ const SelectTypeaheadDemo: Component = () => {
 						<SelectTypeahead disabled values={new Set(['fixed'])}>
 							<ListBoxItem value="fixed">Can't change me</ListBoxItem>
 							<ListBoxItem value="different">Can't pick me</ListBoxItem>
+						</SelectTypeahead>
+					</LabelStack>
+
+					<LabelStack>
+						<Label>Long Selection List</Label>
+						<Description>
+							Selected: {Array.from(value()).join(', ') || 'None'}
+						</Description>
+						<SelectTypeahead
+							placeholder="Select an option..."
+							values={value()}
+							onChange={(_e, values) => setValue(values)}
+						>
+							<For each={[...Array(100).keys()]}>
+								{(i) => <ListBoxItem value={String(i)}>Option {i}</ListBoxItem>}
+							</For>
 						</SelectTypeahead>
 					</LabelStack>
 

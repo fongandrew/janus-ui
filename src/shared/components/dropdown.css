@@ -23,14 +23,14 @@
 
 @layer components {
 	.c-dropdown {
-		@apply fixed overflow-y-auto rounded-md border-md bg-popover px-0 py-xs text-popover-fg shadow-lg border-dynamic-card;
+		@apply fixed mx-auto my-0 overflow-y-auto rounded-md border-md bg-popover px-0 py-xs text-popover-fg shadow-lg border-dynamic-card;
 		@apply z-1 min-w-[180px];
 
-		/* Mobile specific styling -- give it a bottom-sheet effect */
-		@apply inset-sm w-full;
+		/* Mobile specific styling */
+		@apply inset-md w-full;
 
-		max-height: calc(100vh - theme(spacing.xl));
-		max-width: calc(100vw - theme(spacing.xl));
+		max-height: calc(100vh - 2 * theme(spacing.md));
+		max-width: calc(100vw - 2 * theme(spacing.md));
 	}
 
 	/* Dynamically positioning dropdowns on smaller screens */

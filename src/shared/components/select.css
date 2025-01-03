@@ -94,6 +94,7 @@
 		top: calc(theme(height.input-md) + theme(spacing.md) * 2);
 		margin-top: 0;
 		margin-bottom: 0;
+		max-height: calc(100vh - 3 * theme(spacing.md) - theme(height.input-md));
 	}
 
 	/* Undo mobile-specific positioning */
@@ -104,6 +105,7 @@
 
 		.c-select__input ~ .c-dropdown {
 			top: var(--c-dropdown-top);
+			max-height: var(--c-dropdown-max-height);
 		}
 	}
 }
