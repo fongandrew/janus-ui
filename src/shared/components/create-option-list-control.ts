@@ -18,6 +18,14 @@ export interface OptionListProps {
  */
 export const LIST_OPTION_VALUE_ATTR = 'data-list-option-value';
 
+/**
+ * Data variable to identify a scrollable container
+ */
+export const SCROLL_CONTAINER_ATTR = 'data-scroll-container';
+
+/** WeakMap to store the last highlighted element for each container */
+const lastHighlightedElementMap = new WeakMap<HTMLElement, HTMLElement | null>();
+
 /** Helper to handle highlighting and value passing */
 function doHighlight(
 	event: KeyboardEvent & { props: OptionListProps },
@@ -27,6 +35,33 @@ function doHighlight(
 	const value = highlightedElement.getAttribute(LIST_OPTION_VALUE_ATTR);
 	if (typeof value !== 'string') return;
 	event.props.onHighlight(event, highlightedElement, value);
+
+	// Scroll adjustment logic
+	const window = highlightedElement.ownerDocument.defaultView;
+	const container = highlightedElement.closest(
+		`[${SCROLL_CONTAINER_ATTR}]`,
+	) as HTMLElement | null;
+	if (container) {
+		if (!lastHighlightedElementMap.has(container)) {
+			window?.requestAnimationFrame(() => {
+				const lastHighlightedElement = lastHighlightedElementMap.get(container);
+				if (lastHighlightedElement) {
+					const containerRect = container.getBoundingClientRect();
+					const elementRect = lastHighlightedElement.getBoundingClientRect();
+
+					if (elementRect.top < containerRect.top) {
+						// Element is above the visible area
+						container.scrollTop -= containerRect.top - elementRect.top;
+					} else if (elementRect.bottom > containerRect.bottom) {
+						// Element is below the visible area
+						container.scrollTop += elementRect.bottom - containerRect.bottom;
+					}
+				}
+				lastHighlightedElementMap.delete(container);
+			});
+		}
+		lastHighlightedElementMap.set(container, highlightedElement);
+	}
 }
 
 /** Helper to handle selection of value */

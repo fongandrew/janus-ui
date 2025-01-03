@@ -10,6 +10,7 @@ import {
 } from '@floating-ui/dom';
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 
+import { SCROLL_CONTAINER_ATTR } from '~/shared/components/create-option-list-control';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { generateId } from '~/shared/utility/id-generator';
 import {
@@ -223,6 +224,10 @@ export function createDropdown(
 		// So we're going to use a manual popover for now. This means we need to dismissal when
 		// clicks outside a popover happen (or if "esc" is pressed).
 		el.popover = 'manual';
+
+		// For automatic scrolling
+		el.setAttribute(SCROLL_CONTAINER_ATTR, 'true');
+
 		setMenuElement(el);
 	};
 
