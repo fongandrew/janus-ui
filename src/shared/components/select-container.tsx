@@ -3,6 +3,7 @@ import { ChevronsUpDown, X } from 'lucide-solid';
 import { type JSX, splitProps } from 'solid-js';
 
 import { Button } from '~/shared/components/button';
+import { t } from '~/shared/utility/text/t-tag';
 
 export interface SelectContainerProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	/** Hander for clearing selection */
@@ -22,7 +23,7 @@ export function SelectContainer(props: SelectContainerProps) {
 			</span>
 			<Button
 				class="c-select__clear"
-				aria-label="Clear selection"
+				aria-label={t`Clear selection`}
 				onClick={local.onClear}
 				unsetFormInput
 				unstyled

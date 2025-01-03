@@ -3,6 +3,7 @@ import { splitProps } from 'solid-js';
 
 import { ListBoxSelections } from '~/shared/components/list-box';
 import { OptionList, type OptionListProps } from '~/shared/components/option-list';
+import { T } from '~/shared/utility/text/t-components';
 
 export interface SelectOptionListProps extends Omit<OptionListProps, 'role'> {
 	/** Form input name */
@@ -21,11 +22,11 @@ export function SelectOptionList(props: SelectOptionListProps) {
 				{local.children}
 				<div class="c-select__empty_state">
 					{props.input?.trim() ? (
-						<>
+						<T>
 							No matches found for <strong>{local.input}</strong>
-						</>
+						</T>
 					) : (
-						<>Type something</>
+						<T>Type something</T>
 					)}
 				</div>
 			</OptionList>

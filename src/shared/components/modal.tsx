@@ -17,6 +17,7 @@ import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { isDialog } from '~/shared/utility/element-types';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { createMountedSignal } from '~/shared/utility/solid/create-mounted-signal';
+import { t } from '~/shared/utility/text/t-tag';
 
 export interface DialogProps extends JSX.DialogHtmlAttributes<HTMLDialogElement> {
 	/** Callback ref for the dialog element */
@@ -159,7 +160,7 @@ export const Modal: Component<DialogProps> = (props) => {
 
 export function ModalCloseButton(props: ButtonProps) {
 	return (
-		<IconButton type="reset" label="Close" {...props} class={cx('text-muted', props.class)}>
+		<IconButton type="reset" label={t`Close`} {...props} class={cx('text-muted', props.class)}>
 			<X />
 		</IconButton>
 	);
