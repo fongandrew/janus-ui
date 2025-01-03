@@ -1,5 +1,6 @@
 import { createSignal } from 'solid-js';
 
+import { isTextInput } from '~/shared/utility/element-types';
 import { isFocusVisible, setFocusVisible } from '~/shared/utility/is-focus-visible';
 import { nextIndex } from '~/shared/utility/next-index';
 import { createEventDelegate } from '~/shared/utility/solid/create-event-delegate';
@@ -124,10 +125,15 @@ export const useKeydown = createEventDelegate<'keydown', OptionListProps>('keydo
 		}
 		case 'Enter':
 		case ' ': {
+			// Don't count spaces for inputs since intent may be to type a space
+			if (event.key === ' ' && isTextInput(event.target)) {
+				break;
+			}
 			if (highlighted) {
 				event.preventDefault();
 				doSelect(event, highlighted);
 			}
+			break;
 		}
 	}
 });
