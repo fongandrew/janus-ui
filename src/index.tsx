@@ -16,7 +16,6 @@ import {
 } from '~/shared/components/card';
 import { Checkbox } from '~/shared/components/checkbox';
 import { createDropdown } from '~/shared/components/create-dropdown';
-import { createTooltip } from '~/shared/components/create-tooltip';
 import { Description } from '~/shared/components/description';
 import { ErrorMessage } from '~/shared/components/error-message';
 import { Grid } from '~/shared/components/grid';
@@ -195,10 +194,6 @@ const RadioGroupDemo: Component = () => {
 };
 
 const TooltipDemo: Component = () => {
-	const [topTrigger, topTooltip] = createTooltip('top');
-	const [bottomTrigger, bottomTooltip] = createTooltip('bottom');
-	const [leftTrigger, leftTooltip] = createTooltip('left');
-	const [rightTrigger, rightTooltip] = createTooltip('right');
 	return (
 		<Card>
 			<CardHeader>
@@ -207,14 +202,18 @@ const TooltipDemo: Component = () => {
 			</CardHeader>
 			<CardContent>
 				<Grid class="gap-sm">
-					<Button ref={topTrigger}>Top</Button>
-					<Tooltip ref={topTooltip}>Hello, I'm a tooltip</Tooltip>
-					<Button ref={bottomTrigger}>Bottom</Button>
-					<Tooltip ref={bottomTooltip}>Hello, I'm a tooltip</Tooltip>
-					<Button ref={leftTrigger}>Left</Button>
-					<Tooltip ref={leftTooltip}>Hello, I'm a tooltip</Tooltip>
-					<Button ref={rightTrigger}>Right</Button>
-					<Tooltip ref={rightTooltip}>Hello, I'm a tooltip</Tooltip>
+					<Tooltip tip="Hello, I'm a toolip" placement="top">
+						<Button>Top</Button>
+					</Tooltip>
+					<Tooltip tip="Hello, I'm a toolip" placement="bottom">
+						<Button>Bottom</Button>
+					</Tooltip>
+					<Tooltip tip="Hello, I'm a toolip" placement="left">
+						<Button>Left</Button>
+					</Tooltip>
+					<Tooltip tip="Hello, I'm a toolip" placement="right">
+						<Button>Right</Button>
+					</Tooltip>
 				</Grid>
 			</CardContent>
 		</Card>

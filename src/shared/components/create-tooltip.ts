@@ -60,7 +60,7 @@ const useBlur = createEventDelegate<'blur', { setVisible: (open: boolean) => voi
 	true /* capture mode */,
 );
 
-export function createTooltip(defaultPlacement: Placement = 'top') {
+export function createTooltip(props: { placement?: Placement | undefined } = {}) {
 	const [triggerElement, setTriggerElement] = createSignal<HTMLElement | null>(null);
 	const [tooltipElement, setTooltipElement] = createSignal<HTMLElement | null>(null);
 	const [visible, setVisible] = createSignal(false);
@@ -75,7 +75,7 @@ export function createTooltip(defaultPlacement: Placement = 'top') {
 		middleware.push(flip(), shift({ padding: 8 }));
 
 		const { x, y, placement, middlewareData } = await computePosition(triggerElm, tooltipElm, {
-			placement: defaultPlacement,
+			placement: props.placement ?? 'top',
 			middleware,
 			strategy: 'fixed',
 		});

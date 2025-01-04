@@ -1,6 +1,6 @@
 import { mergeProps, splitProps, useContext } from 'solid-js';
 
-import { FormControlContext } from '~/shared/components/form-control-context';
+import { FormControlRefContext } from '~/shared/components/form-control-ref-context';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 
@@ -56,7 +56,7 @@ export function mergeFormControlProps<T extends FormControlProps>(
 	props: T,
 	...extraRefs: ((element: any) => void)[]
 ) {
-	const formControlContext = useContext(FormControlContext);
+	const formControlRefContext = useContext(FormControlRefContext);
 
 	const [local, rest] = splitProps(props, ['disabled', 'ref', 'unsetFormInput']) as [
 		FormControlProps,
@@ -67,7 +67,7 @@ export function mergeFormControlProps<T extends FormControlProps>(
 		// Assign input to form control context if it exists
 		get ref() {
 			return combineRefs(
-				local.unsetFormInput ? undefined : formControlContext?.setInput,
+				...(local.unsetFormInput ? [] : (formControlRefContext?.cbs() ?? [])),
 				local.ref,
 				...extraRefs,
 			);
