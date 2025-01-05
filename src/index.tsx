@@ -15,8 +15,8 @@ import {
 	CardTitle,
 } from '~/shared/components/card';
 import { Checkbox } from '~/shared/components/checkbox';
-import { createDropdown } from '~/shared/components/create-dropdown';
 import { Description } from '~/shared/components/description';
+import { Dropdown } from '~/shared/components/dropdown';
 import { ErrorMessage } from '~/shared/components/error-message';
 import { Grid } from '~/shared/components/grid';
 import { Group } from '~/shared/components/group';
@@ -103,8 +103,6 @@ const ListBoxDemo: Component = () => {
 
 const MenuDemo: Component = () => {
 	const [selection, setSelection] = createSignal<string | null>(null);
-	const [simpleTrigger, simpleMenu] = createDropdown();
-	const [groupsTrigger, groupsMenu] = createDropdown();
 	const handleSelect = (_event: Event, value: string) => {
 		setSelection(value);
 	};
@@ -119,37 +117,43 @@ const MenuDemo: Component = () => {
 				<Stack class="gap-xs">
 					<Description>Selected: {selection() ?? 'None'}</Description>
 					<Group>
-						<Button ref={simpleTrigger}>Simple Menu</Button>
-						<Menu ref={simpleMenu} onSelect={handleSelect}>
-							<MenuItem value="a">Option A</MenuItem>
-							<MenuItem value="b">Option B</MenuItem>
-							<MenuItem value="c">Option C</MenuItem>
-						</Menu>
+						<Dropdown>
+							<Button>Simple Menu</Button>
+							<Menu onSelect={handleSelect}>
+								<MenuItem value="a">Option A</MenuItem>
+								<MenuItem value="b">Option B</MenuItem>
+								<MenuItem value="c">Option C</MenuItem>
+							</Menu>
+						</Dropdown>
 
-						<Button ref={groupsTrigger}>Menu with Groups</Button>
-						<Menu ref={groupsMenu} onSelect={handleSelect}>
-							<MenuGroup heading="File">
-								<MenuItem value="new">New File</MenuItem>
-								<MenuItem value="open">Open...</MenuItem>
-								<MenuItem value="save">Save</MenuItem>
-							</MenuGroup>
-							<MenuGroup heading="Edit">
-								<MenuItem value="cut">Cut</MenuItem>
-								<MenuItem value="copy">Copy</MenuItem>
-								<MenuItem value="paste">Paste</MenuItem>
-							</MenuGroup>
-							<MenuGroup>
-								<MenuItem role="menuitemcheckbox" value="sidebar">
-									Show Sidebar
-								</MenuItem>
-								<MenuItem role="menuitemcheckbox" value="status">
-									Show Status Bar
-								</MenuItem>
-							</MenuGroup>
-							<MenuGroup>
-								<MenuItemLink href="https://example.com">Link to Site</MenuItemLink>
-							</MenuGroup>
-						</Menu>
+						<Dropdown>
+							<Button>Menu with Groups</Button>
+							<Menu onSelect={handleSelect}>
+								<MenuGroup heading="File">
+									<MenuItem value="new">New File</MenuItem>
+									<MenuItem value="open">Open...</MenuItem>
+									<MenuItem value="save">Save</MenuItem>
+								</MenuGroup>
+								<MenuGroup heading="Edit">
+									<MenuItem value="cut">Cut</MenuItem>
+									<MenuItem value="copy">Copy</MenuItem>
+									<MenuItem value="paste">Paste</MenuItem>
+								</MenuGroup>
+								<MenuGroup>
+									<MenuItem role="menuitemcheckbox" value="sidebar">
+										Show Sidebar
+									</MenuItem>
+									<MenuItem role="menuitemcheckbox" value="status">
+										Show Status Bar
+									</MenuItem>
+								</MenuGroup>
+								<MenuGroup>
+									<MenuItemLink href="https://example.com">
+										Link to Site
+									</MenuItemLink>
+								</MenuGroup>
+							</Menu>
+						</Dropdown>
 					</Group>
 				</Stack>
 			</CardContent>

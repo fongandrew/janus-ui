@@ -1,20 +1,22 @@
 import cx from 'classix';
-import { type JSX, onMount, splitProps } from 'solid-js';
+import { type JSX, onMount, splitProps, useContext } from 'solid-js';
 
 import { createOptionListControl } from '~/shared/components/create-option-list-control';
+import { DROPDOWN_CONTENT_REF } from '~/shared/components/dropdown';
 import {
 	OptionList,
 	OptionListAnchor,
 	OptionListButton,
 	OptionListGroup,
 } from '~/shared/components/option-list';
+import { RefContext } from '~/shared/components/ref-context';
 import { createTextMatcher } from '~/shared/utility/create-text-matcher';
 import { generateId } from '~/shared/utility/id-generator';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 
 export interface MenuProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
 	/** Ref returned by createDropdown */
-	ref: (el: HTMLDivElement) => void;
+	ref?: (el: HTMLDivElement) => void;
 	/** Called when a menu item is selected */
 	onSelect?: (event: KeyboardEvent | MouseEvent, value: string) => void;
 	/** Require onClick to be functional */
@@ -80,10 +82,12 @@ export function Menu(props: MenuProps) {
 		}
 	};
 
+	const getRefs = useContext(RefContext);
+
 	return (
 		<OptionList
 			{...rest}
-			ref={combineRefs(setMenu, props.ref)}
+			ref={combineRefs(setMenu, ...getRefs(DROPDOWN_CONTENT_REF), props.ref)}
 			role="menu"
 			class={cx('c-dropdown', props.class)}
 			onKeyDown={handleKeyDown}

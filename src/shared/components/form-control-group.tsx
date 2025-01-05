@@ -4,7 +4,8 @@ import {
 	createFormControlContext,
 	FormControlContext,
 } from '~/shared/components/form-control-context';
-import { FormControlRef } from '~/shared/components/form-control-ref';
+import { FORM_CONTROL_REF } from '~/shared/components/merge-form-control-props';
+import { RefProvider } from '~/shared/components/ref-provider';
 
 /**
  * An FormControl is a way of grouping a label, an input element, and maybe a description
@@ -14,7 +15,9 @@ export function FormControlGroup(props: { children: JSX.Element }) {
 	const inputGroupContext = createFormControlContext();
 	return (
 		<FormControlContext.Provider value={inputGroupContext}>
-			<FormControlRef ref={inputGroupContext.setInput}>{props.children}</FormControlRef>
+			<RefProvider refs={{ [FORM_CONTROL_REF]: inputGroupContext.setInput }}>
+				{props.children}
+			</RefProvider>
 		</FormControlContext.Provider>
 	);
 }

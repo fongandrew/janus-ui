@@ -2,7 +2,8 @@ import { type Placement } from '@floating-ui/dom';
 import { type JSX, splitProps } from 'solid-js';
 
 import { createTooltip, TOOLTIP_ARROW_ATTR } from '~/shared/components/create-tooltip';
-import { FormControlRef } from '~/shared/components/form-control-ref';
+import { FORM_CONTROL_REF } from '~/shared/components/merge-form-control-props';
+import { RefProvider } from '~/shared/components/ref-provider';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 
 export interface TooltipContentProps extends JSX.HTMLAttributes<HTMLDivElement> {
@@ -37,7 +38,7 @@ export function Tooltip(props: TooltipProps) {
 	const [setTrigger, setContent] = createTooltip(props);
 	return (
 		<>
-			<FormControlRef ref={setTrigger}>{local.children}</FormControlRef>
+			<RefProvider refs={{ [FORM_CONTROL_REF]: setTrigger }}>{local.children}</RefProvider>
 			<TooltipContent {...rest} ref={combineRefs(setContent, rest.ref)}>
 				{local.tip}
 			</TooltipContent>

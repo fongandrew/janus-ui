@@ -18,27 +18,29 @@ export function createSelectControl(
 	unreactiveOpts: { offset?: number } = {},
 ) {
 	// Refs to trigger and dropdown
-	const [setTrigger, setDropdown, dropdownControls] = createDropdown([
-		offset(unreactiveOpts.offset ?? 4),
-		flip(),
-		shift({ padding: 4 }),
-		size({
-			apply({ rects, elements, availableHeight }) {
-				elements.floating.style.setProperty(
-					'--c-dropdown-max-width',
-					`${rects.reference.width}px`,
-				);
-				elements.floating.style.setProperty(
-					'--c-dropdown-min-width',
-					`${rects.reference.width}px`,
-				);
-				elements.floating.style.setProperty(
-					'--c-dropdown-max-height',
-					`${Math.max(0, availableHeight - 8)}px`,
-				);
-			},
-		}),
-	]);
+	const [setTrigger, setDropdown, dropdownControls] = createDropdown({
+		middleware: [
+			offset(unreactiveOpts.offset ?? 4),
+			flip(),
+			shift({ padding: 4 }),
+			size({
+				apply({ rects, elements, availableHeight }) {
+					elements.floating.style.setProperty(
+						'--c-dropdown-max-width',
+						`${rects.reference.width}px`,
+					);
+					elements.floating.style.setProperty(
+						'--c-dropdown-min-width',
+						`${rects.reference.width}px`,
+					);
+					elements.floating.style.setProperty(
+						'--c-dropdown-max-height',
+						`${Math.max(0, availableHeight - 8)}px`,
+					);
+				},
+			}),
+		],
+	});
 
 	// Refs for input and list box
 	const comboBoxProps = mergeProps(props, {

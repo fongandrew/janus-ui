@@ -120,26 +120,11 @@ const useKeydown = createEventDelegate('keydown', (event) => {
 });
 
 export function createDropdown(
-	middleware: Middleware[] = [
-		autoPlacement({
-			allowedPlacements: ['bottom-start', 'bottom-end'],
-		}),
-		offset(4),
-		flip(),
-		shift({ padding: 4 }),
-		size({
-			apply({ elements, availableWidth, availableHeight }) {
-				elements.floating.style.setProperty(
-					'--c-dropdown-max-width',
-					`${Math.max(0, availableWidth - 8)}px`,
-				);
-				elements.floating.style.setProperty(
-					'--c-dropdown-max-height',
-					`${Math.max(0, availableHeight - 8)}px`,
-				);
-			},
-		}),
-	],
+	props?:
+		| {
+				middleware?: Middleware[] | undefined;
+		  }
+		| undefined,
 ) {
 	const [triggerElement, setTriggerElement] = createSignal<HTMLElement | null>(null);
 	const [menuElement, setMenuElement] = createSignal<HTMLElement | null>(null);
@@ -149,7 +134,26 @@ export function createDropdown(
 	const updatePosition = async (triggerElm: HTMLElement, menuElm: HTMLElement) => {
 		const { x, y } = await computePosition(triggerElm, menuElm, {
 			placement: 'bottom',
-			middleware,
+			middleware: props?.middleware ?? [
+				autoPlacement({
+					allowedPlacements: ['bottom-start', 'bottom-end'],
+				}),
+				offset(4),
+				flip(),
+				shift({ padding: 4 }),
+				size({
+					apply({ elements, availableWidth, availableHeight }) {
+						elements.floating.style.setProperty(
+							'--c-dropdown-max-width',
+							`${Math.max(0, availableWidth - 8)}px`,
+						);
+						elements.floating.style.setProperty(
+							'--c-dropdown-max-height',
+							`${Math.max(0, availableHeight - 8)}px`,
+						);
+					},
+				}),
+			],
 			strategy: 'fixed',
 		});
 
@@ -176,6 +180,11 @@ export function createDropdown(
 		// Menu is visible. Do initial position update, then update automatically when
 		// scroll or resize events occur.
 		updatePosition(triggerElm, menuElm);
+		// Reactivity lint rule doesn't really apply here since we call updatePosition
+		// above so any reactive tracked changes will result in this effect re-running
+		// and recreating the autoUpdate (which is just there to track changes due to
+		// resize and scrolling).
+		// eslint-disable-next-line solid/reactivity
 		const cleanup = autoUpdate(triggerElm, menuElm, () => updatePosition(triggerElm, menuElm));
 		onCleanup(cleanup);
 	});
@@ -211,7 +220,9 @@ export function createDropdown(
 	useTriggerClick(triggerElement);
 	useKeydown(triggerElement);
 
-	const setMenuElementAndInit = (el: HTMLElement) => {
+	const setMenuElementAndInit = (el: HTMLElement | null) => {
+		if (!el) return;
+
 		// The "light dismiss" with popover="auto" is a little buggy:
 		// - They don't on iOS Safari as of 18.3 (https://caniuse.com/?search=popover)
 		// - We can't block clicks through a backdrop element on Chrome Android (even if backdrop

@@ -1,8 +1,11 @@
 import { mergeProps, splitProps, useContext } from 'solid-js';
 
-import { FormControlRefContext } from '~/shared/components/form-control-ref-context';
+import { RefContext } from '~/shared/components/ref-context';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
+
+/** RefProvider symbol form inputs and buttons that need to be labeled */
+export const FORM_CONTROL_REF = Symbol('form-control');
 
 /** Listener that selectively disables event propagation if aria-disabled */
 function preventDefaultIfAriaDisabled(event: Event) {
@@ -56,7 +59,7 @@ export function mergeFormControlProps<T extends FormControlProps>(
 	props: T,
 	...extraRefs: ((element: any) => void)[]
 ) {
-	const formControlRefContext = useContext(FormControlRefContext);
+	const getRefs = useContext(RefContext);
 
 	const [local, rest] = splitProps(props, ['disabled', 'ref', 'unsetFormInput']) as [
 		FormControlProps,
@@ -67,7 +70,7 @@ export function mergeFormControlProps<T extends FormControlProps>(
 		// Assign input to form control context if it exists
 		get ref() {
 			return combineRefs(
-				...(local.unsetFormInput ? [] : (formControlRefContext?.cbs() ?? [])),
+				...(local.unsetFormInput ? [] : getRefs(FORM_CONTROL_REF)),
 				local.ref,
 				...extraRefs,
 			);
