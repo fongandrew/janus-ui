@@ -14,8 +14,12 @@ function preventDefaultIfAriaDisabled(event: Event) {
 
 	const closestAriaDisabled = target.closest('[aria-disabled]');
 	if (closestAriaDisabled && closestAriaDisabled?.getAttribute('aria-disabled') !== 'false') {
-		if (event instanceof KeyboardEvent && event.key === 'Tab') {
-			return;
+		if (event instanceof KeyboardEvent) {
+			// Need to allow tabbing off disabled element
+			if (event.key === 'Tab') return;
+			// For toolbars + radios, arrow key allows moving selection
+			// Exception for aria-haspopup elements since arrow means "open popup"
+			if (event.key.startsWith('Arrow') && !closestAriaDisabled.ariaHasPopup) return;
 		}
 		event.preventDefault();
 		event.stopImmediatePropagation();
