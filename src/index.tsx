@@ -181,7 +181,7 @@ const RadioGroupDemo: Component = () => {
 					onChange={(event) => setValue(event.target.value)}
 				>
 					<Stack>
-						<Label>Selected: {value()}</Label>
+						<strong>Selected: {value()}</strong>
 						<Label>
 							<Radio value="default" /> Default radio
 						</Label>
@@ -280,26 +280,26 @@ const CheckboxesCard: Component = () => (
 		<CardContent>
 			<Stack>
 				<Label>
-					<Checkbox /> Default checkbox
+					<Checkbox name="default" /> Default checkbox
 				</Label>
 				<Label>
-					<Checkbox checked /> Checked checkbox
+					<Checkbox name="checked" checked /> Checked checkbox
 				</Label>
 				<Label>
-					<Checkbox indeterminate /> Indeterminate checkbox
+					<Checkbox name="indetermine" indeterminate /> Indeterminate checkbox
 				</Label>
 				<Label>
-					<Checkbox aria-invalid /> Error state checkbox
+					<Checkbox name="invalid" aria-invalid /> Error state checkbox
 				</Label>
 				<Label>
-					<Checkbox disabled /> Disabled checkbox
+					<Checkbox name="disabled" disabled /> Disabled checkbox
 				</Label>
 				<Label>
-					<Checkbox /> Long text:
+					<Checkbox name="long" /> Long text:
 					AAAAB3NzaC1yc2EAAAABJQAAAQB/nAmOjTmezNUDKYvEeIRf2YnwM9/uUG1d0BYsc8/tRtx+RGi7N2lUbp728MXGwdnL9od4cItzky/zVdLZE2cycOa18xBK9cOWmcKS0A8FYBxEQWJ/q9YVUgZbFKfYGaGQxsER+A0w/fX8ALuk78ktP31K69LcQgxIsl7rNzxsoOQKJ/CIxOGMMxczYTiEoLvQhapFQMs3FL96didKr/QbrfB1WT6s3838SEaXfgZvLef1YB2xmfhbT9OXFE3FXvh2UPBfN+ffE7iiayQf/2XR+8j4N4bW30DiPtOQLGUrH1y5X/rpNZNlWW2+jGIxqZtgWg7lTy3mXy5x836Sj/6L
 				</Label>
 				<Label>
-					Toggle switch <ToggleSwitch />
+					Toggle switch <ToggleSwitch name="toggle" />
 				</Label>
 			</Stack>
 		</CardContent>
@@ -347,9 +347,18 @@ const TextareasCard: Component = () => (
 		</CardHeader>
 		<CardContent>
 			<Stack>
-				<Textarea placeholder="Default (medium) textarea" />
-				<Textarea aria-invalid placeholder="Error state textarea" />
-				<Textarea disabled placeholder="Disabled textarea" />
+				<LabelStack>
+					<Label>Default</Label>
+					<Textarea placeholder="Default (medium) textarea" />
+				</LabelStack>
+				<LabelStack>
+					<Label>Error</Label>
+					<Textarea aria-invalid placeholder="Error state textarea" />
+				</LabelStack>
+				<LabelStack>
+					<Label>Disabled</Label>
+					<Textarea disabled placeholder="Disabled textarea" />
+				</LabelStack>
 			</Stack>
 		</CardContent>
 	</Card>

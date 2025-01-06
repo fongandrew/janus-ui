@@ -2,7 +2,7 @@
 
 @layer components {
 	.c-list-box:not(.c-dropdown__content) {
-		@apply t-with-disabled-input t-with-error-input t-with-focus-ring w-full px-0 py-xs shadow-inner transition-colors disabled:pointer-events-none disabled:cursor-not-allowed aria-disabled:pointer-events-none aria-disabled:cursor-not-allowed;
+		@apply t-with-disabled-input t-with-error-input t-with-focus-ring-always w-full px-0 py-xs shadow-inner transition-colors disabled:pointer-events-none disabled:cursor-not-allowed aria-disabled:pointer-events-none aria-disabled:cursor-not-allowed;
 
 		/* Base styles */
 		@apply border-md bg-input-bg text-input-fg border-dynamic-secondary placeholder:text-muted;

@@ -133,4 +133,9 @@
 	a {
 		@apply t-link-style;
 	}
+
+	b,
+	strong {
+		@apply font-semibold;
+	}
 }

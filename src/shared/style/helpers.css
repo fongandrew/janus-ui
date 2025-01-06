@@ -37,6 +37,11 @@
 		@apply focus-visible:t-focus-ring;
 	}
 
+	/* Focus ring if focused, even if not "focus-visible" */
+	.t-with-focus-ring-always {
+		@apply focus:t-focus-ring;
+	}
+
 	.t-input-pad-sm {
 		@apply px-input-x-sm py-input-y-sm;
 	}

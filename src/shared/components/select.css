@@ -10,6 +10,10 @@
 		padding-right: theme('width.input-md');
 	}
 
+	.c-select__button {
+		@apply t-with-focus-ring-always;
+	}
+
 	/* Select container parts */
 
 	.c-select__container {

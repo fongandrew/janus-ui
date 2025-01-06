@@ -9,7 +9,7 @@ export function updateAttributeList(
 	toRemove: string[] = [],
 ) {
 	const current = element.getAttribute(attribute) ?? '';
-	const currentSet = new Set(current.split(' '));
+	const currentSet = current ? new Set(current.split(' ')) : new Set<string>();
 	for (const item of toAdd) {
 		currentSet.add(item);
 	}

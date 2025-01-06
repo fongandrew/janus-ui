@@ -28,3 +28,11 @@ export function isTextInput(elm: Element | null): elm is HTMLInputElement {
 		)
 	);
 }
+
+/**
+ * Is element a form control? Used to determine if a label can refer to it with a `for`
+ * attribute.
+ */
+export function isFormControl(elm: Element | null) {
+	return ['INPUT', 'TEXTAREA', 'SELECT'].includes(elm?.tagName ?? '');
+}
