@@ -1,8 +1,9 @@
 import cx from 'classix';
-import { createEffect, createSignal, type JSX, useContext } from 'solid-js';
+import { children, createEffect, createSignal, type JSX, useContext } from 'solid-js';
 
 import { FormControlContext } from '~/shared/components/form-control-context';
 import { generateId } from '~/shared/utility/id-generator';
+import { spanify } from '~/shared/utility/solid/spanify';
 
 export function Label(props: JSX.LabelHTMLAttributes<HTMLLabelElement>) {
 	const [forId, setForId] = createSignal<string | undefined>();
@@ -22,5 +23,15 @@ export function Label(props: JSX.LabelHTMLAttributes<HTMLLabelElement>) {
 		setForId(id);
 	});
 
-	return <label for={forId()} {...props} class={cx('c-label', props.class)} />;
+	const resolved = children(() => props.children);
+
+	return (
+		<label for={forId()} {...props} class={cx('c-label', props.class)}>
+			{
+				// Wrap text nodes and strings in spans to make it easier to apply
+				// overflow in a way that doesn't result in focus ring clipping
+				spanify(resolved.toArray())
+			}
+		</label>
+	);
 }

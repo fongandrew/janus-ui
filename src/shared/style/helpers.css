@@ -30,7 +30,7 @@
 	}
 
 	.t-focus-ring {
-		@apply outline-none ring ring-ring ring-offset;
+		@apply outline-offset outline outline-ring;
 	}
 
 	.t-with-focus-ring {
@@ -62,6 +62,6 @@
 	}
 
 	.t-link-style {
-		@apply text-link underline underline-offset hover:contrast-hover hover:saturate-hover;
+		@apply text-link underline underline-offset hover:contrast-hover hover:saturate-hover focus-visible:decoration-double focus-visible:outline-none;
 	}
 }

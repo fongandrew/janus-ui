@@ -174,19 +174,24 @@ export default {
 			'input-lg': [pxToRem(px.fontSize.lg), { lineHeight: pxToRem(px.lineHeight.lg) }],
 		},
 
+		// No ring, prefer outlien
 		ringWidth: {
 			'0': '0',
-			DEFAULT: pxToRem(2),
 		},
-
 		ringOffsetWidth: {
 			'0': '0',
-			DEFAULT: pxToRem(2),
 		},
-
 		ringOpacity: {
 			'0': '0',
-			DEFAULT: '1',
+		},
+
+		outlineWidth: {
+			'0': '0',
+			DEFAULT: pxToRem(2),
+		},
+		outlineOffset: {
+			'0': '0',
+			DEFAULT: pxToRem(2),
 		},
 
 		spacing: {

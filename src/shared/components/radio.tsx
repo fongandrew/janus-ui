@@ -35,14 +35,16 @@ export function Radio(props: RadioProps) {
 
 	return (
 		<div class={cx('c-radio', local.class)}>
-			<input
-				type="radio"
-				checked={isChecked()}
-				name={group && 'name' in group ? group.name() : props.name}
-				onChange={handleChange}
-				{...formProps}
-			/>
-			<span class="c-radio__dot" />
+			<div class="c-radio__circle">
+				<input
+					type="radio"
+					checked={isChecked()}
+					name={group && 'name' in group ? group.name() : props.name}
+					onChange={handleChange}
+					{...formProps}
+				/>
+				<span class="c-radio__dot" />
+			</div>
 		</div>
 	);
 }
