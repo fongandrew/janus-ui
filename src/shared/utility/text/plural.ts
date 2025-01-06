@@ -1,4 +1,4 @@
-import { memoizeLRUSingleArg } from '~/shared/utility/memoize/memoize-lru';
+import { memoizeLast } from '~/shared/utility/memoize/memoize-last';
 import { formatInteger } from '~/shared/utility/text/number';
 
 /** Rules are something like "# books" */
@@ -11,9 +11,7 @@ export interface PluralRules {
 	other: string;
 }
 
-export const getPluralRules = memoizeLRUSingleArg(
-	(locale?: string) => new Intl.PluralRules(locale),
-);
+export const getPluralRules = memoizeLast((locale?: string) => new Intl.PluralRules(locale));
 
 export function plural(
 	count: number,

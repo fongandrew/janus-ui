@@ -1,13 +1,11 @@
-import { memoizeLRUMultiArg, memoizeLRUSingleArg } from '~/shared/utility/memoize/memoize-lru';
+import { memoizeLast } from '~/shared/utility/memoize/memoize-last';
 
-export const getIntegerFormat = memoizeLRUSingleArg(
-	(locale?: string) => new Intl.NumberFormat(locale),
-);
+export const getIntegerFormat = memoizeLast((locale?: string) => new Intl.NumberFormat(locale));
 
 export const formatInteger = (integer: number, locale?: string) =>
 	getIntegerFormat(locale).format(Math.round(integer));
 
-export const getCurrencyFormat = memoizeLRUMultiArg(
+export const getCurrencyFormat = memoizeLast(
 	(currency = 'USD', locale?: string) =>
 		new Intl.NumberFormat(locale, {
 			style: 'currency',
@@ -18,7 +16,7 @@ export const getCurrencyFormat = memoizeLRUMultiArg(
 export const formatCurrency = (value: number, currency = 'USD', locale = 'en-US') =>
 	getCurrencyFormat(currency, locale).format(value);
 
-export const getPercentageFormat = memoizeLRUSingleArg(
+export const getPercentageFormat = memoizeLast(
 	(locale?: string) =>
 		new Intl.NumberFormat(locale, {
 			style: 'percent',

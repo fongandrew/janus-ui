@@ -1,6 +1,6 @@
-import { memoizeLRUSingleArg } from '~/shared/utility/memoize/memoize-lru';
+import { memoizeLast } from '~/shared/utility/memoize/memoize-last';
 
-export const getConjunctionFormat = memoizeLRUSingleArg(
+export const getConjunctionFormat = memoizeLast(
 	(locale?: string) =>
 		new Intl.ListFormat(locale, {
 			style: 'long',
@@ -18,7 +18,7 @@ export const formatConjunctionParts = <T>(parts: T[], locale?: string): (T | str
 		.map(({ type, value }) => (type === 'element' ? (partsCopy.shift() ?? '') : value));
 };
 
-export const getDisjunctionFormat = memoizeLRUSingleArg(
+export const getDisjunctionFormat = memoizeLast(
 	(locale?: string) =>
 		new Intl.ListFormat(locale, {
 			style: 'long',

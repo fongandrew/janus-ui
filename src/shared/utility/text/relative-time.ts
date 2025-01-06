@@ -1,4 +1,4 @@
-import { memoizeLRUSingleArg } from '~/shared/utility/memoize/memoize-lru';
+import { memoizeLast } from '~/shared/utility/memoize/memoize-last';
 
 const UnitMilliseconds = {
 	YEAR: 365 * 24 * 60 * 60 * 1000,
@@ -27,7 +27,7 @@ function formatRelativeTimeCascade(time: number | Date, formatter: Intl.Relative
 	return formatter.format(Math.round(deltaInMs / UnitMilliseconds.SECOND), 'second');
 }
 
-export const getRelativeTimeFormatterLong = memoizeLRUSingleArg(
+export const getRelativeTimeFormatterLong = memoizeLast(
 	(locale?: string) => new Intl.RelativeTimeFormat(locale, { style: 'long', numeric: 'auto' }),
 );
 
@@ -37,7 +37,7 @@ export const formatRelativeTime = (time: number | Date, locale?: string) => {
 	return formatRelativeTimeCascade(time, formatter);
 };
 
-export const getRelativeTimeFormatterNarrow = memoizeLRUSingleArg(
+export const getRelativeTimeFormatterNarrow = memoizeLast(
 	(locale?: string) =>
 		new Intl.RelativeTimeFormat(locale, {
 			style: 'narrow',

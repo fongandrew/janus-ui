@@ -1,6 +1,6 @@
-import { memoizeLRUSingleArg } from '~/shared/utility/memoize/memoize-lru';
+import { memoizeLast } from '~/shared/utility/memoize/memoize-last';
 
-const getDateTimeFormat = memoizeLRUSingleArg(
+const getDateTimeFormat = memoizeLast(
 	(locale?: string) =>
 		new Intl.DateTimeFormat(locale, {
 			day: 'numeric',
@@ -15,7 +15,7 @@ const getDateTimeFormat = memoizeLRUSingleArg(
 export const formatDateTime = (dateTime: Date | number, locale?: string) =>
 	getDateTimeFormat(locale).format(dateTime);
 
-const getDateFormat = memoizeLRUSingleArg(
+const getDateFormat = memoizeLast(
 	(locale?: string) =>
 		new Intl.DateTimeFormat(locale, {
 			day: 'numeric',
@@ -28,7 +28,7 @@ const getDateFormat = memoizeLRUSingleArg(
 export const formatDate = (date: Date | number, locale?: string) =>
 	getDateFormat(locale).format(date);
 
-const getTimeFormat = memoizeLRUSingleArg(
+const getTimeFormat = memoizeLast(
 	(locale?: string) =>
 		new Intl.DateTimeFormat(locale, {
 			hour: 'numeric',
@@ -40,7 +40,7 @@ const getTimeFormat = memoizeLRUSingleArg(
 export const formatTime = (time: Date | number, locale?: string) =>
 	getTimeFormat(locale).format(time);
 
-const getMonthFormat = memoizeLRUSingleArg(
+const getMonthFormat = memoizeLast(
 	(locale?: string) =>
 		new Intl.DateTimeFormat(locale, {
 			month: 'long',
