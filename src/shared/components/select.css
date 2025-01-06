@@ -87,10 +87,10 @@
 	/* Mobile-specific fixed positioning for input + dropdown */
 
 	.c-select__container:has(:popover-open) .c-select__input {
-		@apply z-above-backdrop fixed bottom-auto left-md right-md top-md w-auto;
+		@apply fixed bottom-auto left-md right-md top-md z-above-backdrop w-auto;
 	}
 
-	.c-select__input ~ .c-dropdown {
+	.c-select__input ~ .c-dropdown__content {
 		top: calc(theme(height.input-md) + theme(spacing.md) * 2);
 		margin-top: 0;
 		margin-bottom: 0;
@@ -103,7 +103,7 @@
 			@apply absolute bottom-0 left-0 right-0 top-0 w-full;
 		}
 
-		.c-select__input ~ .c-dropdown {
+		.c-select__input ~ .c-dropdown__content {
 			top: var(--c-dropdown-top);
 			max-height: var(--c-dropdown-max-height);
 		}

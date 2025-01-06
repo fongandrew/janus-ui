@@ -1,15 +1,13 @@
-import cx from 'classix';
-import { type JSX, onMount, splitProps, useContext } from 'solid-js';
+import { type JSX, onMount, splitProps } from 'solid-js';
 
 import { createOptionListControl } from '~/shared/components/create-option-list-control';
-import { DROPDOWN_CONTENT_REF } from '~/shared/components/dropdown';
+import { DropdownContent } from '~/shared/components/dropdown';
 import {
 	OptionList,
 	OptionListAnchor,
 	OptionListButton,
 	OptionListGroup,
 } from '~/shared/components/option-list';
-import { RefContext } from '~/shared/components/ref-context';
 import { createTextMatcher } from '~/shared/utility/create-text-matcher';
 import { generateId } from '~/shared/utility/id-generator';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
@@ -26,7 +24,13 @@ export interface MenuProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onS
 }
 
 export function Menu(props: MenuProps) {
-	const [local, rest] = splitProps(props, ['onSelect']);
+	const [local, rest] = splitProps(props, ['children', 'onSelect']);
+
+	/** Refs for dropdown element (which may be container and not same as option list) */
+	let dropdownRef: HTMLDivElement | null = null;
+	const setDropdownRef = (el: HTMLDivElement) => {
+		dropdownRef = el;
+	};
 
 	/**
 	 * Set up the menu as an option list control. Main differences from standard
@@ -39,7 +43,7 @@ export function Menu(props: MenuProps) {
 		},
 		onSelect: (event, _elm, target) => {
 			local.onSelect?.(event, target);
-			optionListControls.getNode()?.hidePopover();
+			dropdownRef?.hidePopover();
 		},
 	});
 
@@ -69,7 +73,7 @@ export function Menu(props: MenuProps) {
 				// tab sequence will naturally go to the right thing. This might do
 				// weird things in a portal though. Consider passing a reference
 				// to the trigger to menu so we can correctly focus it.
-				optionListControls.getNode()?.hidePopover();
+				dropdownRef?.hidePopover();
 				break;
 			}
 			default: {
@@ -82,16 +86,12 @@ export function Menu(props: MenuProps) {
 		}
 	};
 
-	const getRefs = useContext(RefContext);
-
 	return (
-		<OptionList
-			{...rest}
-			ref={combineRefs(setMenu, ...getRefs(DROPDOWN_CONTENT_REF), props.ref)}
-			role="menu"
-			class={cx('c-dropdown', props.class)}
-			onKeyDown={handleKeyDown}
-		/>
+		<DropdownContent {...rest} ref={combineRefs(setDropdownRef, props.ref)}>
+			<OptionList ref={setMenu} role="menu" onKeyDown={handleKeyDown}>
+				{local.children}
+			</OptionList>
+		</DropdownContent>
 	);
 }
 

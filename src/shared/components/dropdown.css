@@ -2,30 +2,34 @@
 
 @layer base {
 	/* No scroll when dropdown open */
-	body:has(.c-dropdown:popover-open) {
+	body:has(.c-dropdown__content:popover-open) {
 		overflow: hidden;
 	}
 
 	/* Dropdown backdrop -- use this instead of ::backdrop because this blocks click-through */
-	body:has(.c-dropdown:popover-open)::after,
-	:modal:has(.c-dropdown:popover-open)::after {
+	body:has(.c-dropdown__content:popover-open)::after,
+	:modal:has(.c-dropdown__content:popover-open)::after {
 		content: ' ';
 
-		@apply z-backdrop fixed inset-0 block bg-backdrop backdrop-blur-sm;
+		@apply fixed inset-0 z-backdrop block bg-backdrop backdrop-blur-sm;
 	}
 
 	/* Make backdrop transparent on larger screens */
 	@media screen(sm) {
-		body:has(.c-dropdown:popover-open)::after,
-		:modal:has(.c-dropdown:popover-open)::after {
+		body:has(.c-dropdown__content:popover-open)::after,
+		:modal:has(.c-dropdown__content:popover-open)::after {
 			@apply bg-transparent backdrop-blur-none;
 		}
 	}
 }
 
 @layer components {
-	.c-dropdown {
-		@apply fixed mx-auto my-0 overflow-y-auto rounded-md border-md bg-popover px-0 py-xs text-popover-fg shadow-lg border-dynamic-card;
+	.c-dropdown__content:popover-open {
+		@apply flex;
+	}
+
+	.c-dropdown__content {
+		@apply fixed mx-auto my-0 flex-col overflow-hidden rounded-md border-md bg-popover px-0 py-xs text-popover-fg shadow-lg border-dynamic-card;
 		@apply z-above-backdrop min-w-dropdown;
 
 		/* Mobile specific styling */
@@ -35,9 +39,17 @@
 		max-width: calc(100vw - 2 * theme(spacing.md));
 	}
 
+	.c-dropdown__children {
+		@apply flex-1 overflow-y-auto;
+	}
+
+	.c-dropdown__footer {
+		@apply mt-xs flex flex-none justify-end border-t-sm px-input-x-md pb-0 pt-xs align-middle text-input-sm border-dynamic-card;
+	}
+
 	/* Dynamically positioning dropdowns on smaller screens */
 	@media screen(sm) {
-		.c-dropdown {
+		.c-dropdown__content {
 			inset: unset;
 			width: auto;
 
@@ -47,6 +59,10 @@
 			max-height: var(--c-dropdown-max-height);
 			max-width: var(--c-dropdown-max-width);
 			min-width: var(--c-dropdown-min-width, 180px);
+		}
+
+		.c-dropdown__footer {
+			@apply hidden;
 		}
 	}
 }

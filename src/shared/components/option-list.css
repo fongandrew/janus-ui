@@ -40,7 +40,7 @@
 	}
 
 	/* Fix heading padding conflicting with Dropdown top padding */
-	.c-dropdown > .c-option-list__heading:first-child {
+	.c-dropdown__content > .c-option-list__heading:first-child {
 		padding-top: calc(theme('spacing.xs') - theme('padding.text-y-xs'));
 	}
 }

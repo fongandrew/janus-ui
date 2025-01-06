@@ -118,41 +118,45 @@ const MenuDemo: Component = () => {
 					<Description>Selected: {selection() ?? 'None'}</Description>
 					<Group>
 						<Dropdown>
-							<Button>Simple Menu</Button>
-							<Menu onSelect={handleSelect}>
-								<MenuItem value="a">Option A</MenuItem>
-								<MenuItem value="b">Option B</MenuItem>
-								<MenuItem value="c">Option C</MenuItem>
-							</Menu>
+							{() => <Button>Simple Menu</Button>}
+							{() => (
+								<Menu onSelect={handleSelect}>
+									<MenuItem value="a">Option A</MenuItem>
+									<MenuItem value="b">Option B</MenuItem>
+									<MenuItem value="c">Option C</MenuItem>
+								</Menu>
+							)}
 						</Dropdown>
 
 						<Dropdown>
-							<Button>Menu with Groups</Button>
-							<Menu onSelect={handleSelect}>
-								<MenuGroup heading="File">
-									<MenuItem value="new">New File</MenuItem>
-									<MenuItem value="open">Open...</MenuItem>
-									<MenuItem value="save">Save</MenuItem>
-								</MenuGroup>
-								<MenuGroup heading="Edit">
-									<MenuItem value="cut">Cut</MenuItem>
-									<MenuItem value="copy">Copy</MenuItem>
-									<MenuItem value="paste">Paste</MenuItem>
-								</MenuGroup>
-								<MenuGroup>
-									<MenuItem role="menuitemcheckbox" value="sidebar">
-										Show Sidebar
-									</MenuItem>
-									<MenuItem role="menuitemcheckbox" value="status">
-										Show Status Bar
-									</MenuItem>
-								</MenuGroup>
-								<MenuGroup>
-									<MenuItemLink href="https://example.com">
-										Link to Site
-									</MenuItemLink>
-								</MenuGroup>
-							</Menu>
+							{() => <Button>Menu with Groups</Button>}
+							{() => (
+								<Menu onSelect={handleSelect}>
+									<MenuGroup heading="File">
+										<MenuItem value="new">New File</MenuItem>
+										<MenuItem value="open">Open...</MenuItem>
+										<MenuItem value="save">Save</MenuItem>
+									</MenuGroup>
+									<MenuGroup heading="Edit">
+										<MenuItem value="cut">Cut</MenuItem>
+										<MenuItem value="copy">Copy</MenuItem>
+										<MenuItem value="paste">Paste</MenuItem>
+									</MenuGroup>
+									<MenuGroup>
+										<MenuItem role="menuitemcheckbox" value="sidebar">
+											Show Sidebar
+										</MenuItem>
+										<MenuItem role="menuitemcheckbox" value="status">
+											Show Status Bar
+										</MenuItem>
+									</MenuGroup>
+									<MenuGroup>
+										<MenuItemLink href="https://example.com">
+											Link to Site
+										</MenuItemLink>
+									</MenuGroup>
+								</Menu>
+							)}
 						</Dropdown>
 					</Group>
 				</Stack>
