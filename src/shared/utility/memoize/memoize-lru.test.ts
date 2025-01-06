@@ -34,7 +34,7 @@ describe('memoizeLRUMultiArg', () => {
 
 	it('supports custom cache size', () => {
 		const addRandom = (a: number, b: number) => a + b + Math.random();
-		const memoizedAddRandom = memoizeLRUMultiArg(addRandom);
+		const memoizedAddRandom = memoizeLRUMultiArg(addRandom, { capacity: 2 });
 
 		const first = memoizedAddRandom(1, 2);
 		expect(memoizedAddRandom(1, 2)).toEqual(first);

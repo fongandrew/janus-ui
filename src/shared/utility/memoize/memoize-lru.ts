@@ -1,7 +1,7 @@
 import { LRUCache } from '~/shared/utility/lru-cache';
 import { memoizeFactory } from '~/shared/utility/memoize/memoize-factory';
 
-const DEFAULT_CAPACITY = 1;
+const DEFAULT_CAPACITY = 10;
 
 /**
  * Memoizer that takes multiple scalar values and stringifies them
