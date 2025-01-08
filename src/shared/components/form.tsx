@@ -1,8 +1,11 @@
 import { type JSX, splitProps, useContext } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
 import { createFormContext, FormContext } from '~/shared/components/form-context';
 import { RefContext } from '~/shared/components/ref-context';
+import { isFormControl } from '~/shared/utility/element-types';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
+import { T } from '~/shared/utility/text/t-components';
 
 /** RefProvider symbol for form elements */
 export const FORM_REF = Symbol('form');
@@ -48,8 +51,8 @@ export interface FormProps<TNames extends string>
 		event: Event & { elements: FormDataElement<TNames>[] },
 	) =>
 		| void
-		| Map<FormDataElement<TNames>, JSX.Element>
-		| Promise<void | Map<FormDataElement<TNames>, JSX.Element>>;
+		| Map<FormDataElement<TNames>, () => JSX.Element>
+		| Promise<void | Map<FormDataElement<TNames>, () => JSX.Element>>;
 }
 
 export function Form<TNames extends string>(props: FormProps<TNames>) {
@@ -65,18 +68,42 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 	/** Runs validation based on event, returns true if no errors */
 	const validate = async (event: Event) => {
 		const elements = formRef?.elements as FormDataElement<TNames>[] | undefined;
-		if (!elements || !elements.length) return;
+		if (!elements || !elements.length) return true;
 
 		formContext.clearErrors();
-		if (local.onValidate) {
-			const results = await local.onValidate?.(Object.assign(event, { elements }));
-			if (results) {
-				for (const [element, error] of results) {
-					formContext.setError(element, error);
-				}
+
+		// Built-in validation
+		for (const element of elements) {
+			if (!isFormControl(element)) continue;
+			if ((element.required || element.ariaRequired) && !element.value) {
+				const success = formContext.setError(element, () => (
+					<span>{element.validationMessage || <T>This field is required</T>}</span>
+				));
+				if (success) continue;
+				element.ariaInvalid = 'true';
 			}
 		}
+		if (formContext.hasErrors()) {
+			event.preventDefault();
+			return false;
+		}
 
+		// Custom form-wide validation
+		const resultMaybePromise = local.onValidate?.(Object.assign(event, { elements }));
+		if (
+			resultMaybePromise instanceof Promise ||
+			(resultMaybePromise && resultMaybePromise.size > 0)
+		) {
+			// Must synchronously prevent default if chance it could be error
+			event.preventDefault();
+		}
+
+		const results = await resultMaybePromise;
+		if (results) {
+			for (const [element, error] of results) {
+				formContext.setError(element, error);
+			}
+		}
 		return !formContext.hasErrors();
 	};
 
@@ -95,12 +122,16 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 
 		const data = new FormData(formRef);
 		local.onSubmit?.(Object.assign(event, { data }));
+		formRef.reset(); // Manually reset data
 	};
 
 	return (
 		<FormContext.Provider value={formContext}>
 			<form
 				ref={combineRefs(setRef, ...getRefs(FORM_REF), local.ref)}
+				// By default, don't use browser validation and use our own but can be
+				// forced on via a prop
+				noValidate={!isServer}
 				onChange={handleChange}
 				onSubmit={handleSubmit}
 				{...rest}

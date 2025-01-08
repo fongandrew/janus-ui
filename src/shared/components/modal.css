@@ -54,7 +54,7 @@
 	}
 
 	.c-modal__content:has(+ .c-modal__footer) {
-		@apply pb-0;
+		@apply pb-xs; /* Not zero -- leave some space for focus ring */
 	}
 
 	.c-modal__header {
@@ -84,6 +84,6 @@
 	}
 
 	.c-modal__footer {
-		@apply flex flex-none items-center justify-end p-md;
+		@apply flex flex-none items-center justify-end gap-md p-md;
 	}
 }

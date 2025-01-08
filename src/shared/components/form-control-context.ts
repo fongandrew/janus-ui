@@ -17,9 +17,9 @@ export interface FormControlContextValue {
 	/** Signal setter for input ref */
 	setInput: Setter<HTMLElement | undefined>;
 	/** Signal getter for error content */
-	error: Accessor<JSX.Element | undefined>;
+	error: Accessor<(() => JSX.Element) | null>;
 	/** Signal setter for error content */
-	setError: Setter<JSX.Element | undefined>;
+	setError: Setter<(() => JSX.Element) | null>;
 }
 
 export const FormControlContext = createContext<FormControlContextValue | undefined>(undefined);
@@ -29,8 +29,8 @@ export function createFormControlContext(): FormControlContextValue {
 
 	// Two error signals -- one for errors set locally by input itself and one by
 	// form-wide validation process
-	const [localError, setLocalError] = createSignal<JSX.Element | undefined>(undefined);
-	const [formError, setFormError] = createSignal<JSX.Element | undefined>(undefined);
+	const [localError, setLocalError] = createSignal<(() => JSX.Element) | null>(null);
+	const [formError, setFormError] = createSignal<(() => JSX.Element) | null>(null);
 	const error = () => localError() || formError();
 
 	const formContext = useContext(FormContext);

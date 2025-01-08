@@ -15,7 +15,7 @@ export interface FormContextValue {
 	 */
 	addElement: (
 		element: HTMLElement,
-		errorSignal: [Accessor<JSX.Element>, Setter<JSX.Element>],
+		errorSignal: [Accessor<(() => JSX.Element) | null>, Setter<(() => JSX.Element) | null>],
 	) => void;
 	/** Removes an element for this form */
 	removeElement: (element: HTMLElement) => void;
@@ -23,14 +23,17 @@ export interface FormContextValue {
 	clearErrors: () => void;
 	/** Checks if there are any errors */
 	hasErrors: () => boolean;
-	/** Sets new error for an element */
-	setError: (element: HTMLElement, error: JSX.Element) => void;
+	/** Sets new error for an element, returns true if successful */
+	setError: (element: HTMLElement, error: () => JSX.Element) => boolean;
 }
 
 export const FormContext = createContext<FormContextValue | undefined>(undefined);
 
 export function createFormContext(): FormContextValue {
-	const elements = new Map<HTMLElement, [Accessor<JSX.Element>, Setter<JSX.Element>]>();
+	const elements = new Map<
+		HTMLElement,
+		[Accessor<(() => JSX.Element) | null>, Setter<(() => JSX.Element) | null>]
+	>();
 
 	return {
 		addElement(element, errorSignal) {
@@ -51,7 +54,15 @@ export function createFormContext(): FormContextValue {
 			return false;
 		},
 		setError(element, error) {
-			elements.get(element)?.[1](error);
+			const signalTuple = elements.get(element);
+			if (!signalTuple) return false;
+
+			/**
+			 * Must use functional form when setting error because
+			 * store signal value is itself a function
+			 */
+			signalTuple[1](() => error);
+			return true;
 		},
 	};
 }
