@@ -1,7 +1,11 @@
-import { type JSX, splitProps } from 'solid-js';
+import { type JSX, splitProps, useContext } from 'solid-js';
 
 import { createFormContext, FormContext } from '~/shared/components/form-context';
+import { RefContext } from '~/shared/components/ref-context';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
+
+/** RefProvider symbol for form elements */
+export const FORM_REF = Symbol('form');
 
 /** Same as form data but the names are typed */
 export interface TypedFormData<TNames> {
@@ -51,6 +55,7 @@ export interface FormProps<TNames extends string>
 export function Form<TNames extends string>(props: FormProps<TNames>) {
 	const [local, rest] = splitProps(props, ['ref', 'names', 'onChange', 'onSubmit', 'onValidate']);
 	const formContext = createFormContext();
+	const getRefs = useContext(RefContext);
 
 	let formRef: HTMLFormElement | null = null;
 	const setRef = (el: HTMLFormElement) => {
@@ -95,7 +100,7 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 	return (
 		<FormContext.Provider value={formContext}>
 			<form
-				ref={combineRefs(local.ref, setRef)}
+				ref={combineRefs(setRef, ...getRefs(FORM_REF), local.ref)}
 				onChange={handleChange}
 				onSubmit={handleSubmit}
 				{...rest}

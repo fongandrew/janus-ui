@@ -11,8 +11,10 @@ import {
 } from 'solid-js';
 
 import { type ButtonProps, IconButton } from '~/shared/components/button';
+import { FORM_REF } from '~/shared/components/form';
 import { Group } from '~/shared/components/group';
 import { ModalContext } from '~/shared/components/modal-context';
+import { RefProvider } from '~/shared/components/ref-provider';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { isDialog } from '~/shared/utility/element-types';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
@@ -50,6 +52,7 @@ registerDocumentSetup((document) => {
 
 export const Modal: Component<DialogProps> = (props) => {
 	const [dialog, setDialog] = createSignal<HTMLDialogElement | null>(null);
+	const [form, setForm] = createSignal<HTMLFormElement | null>(null);
 	const isMounted = createMountedSignal();
 	const [local, rest] = splitProps(props, ['children', 'open']);
 
@@ -144,7 +147,7 @@ export const Modal: Component<DialogProps> = (props) => {
 	};
 
 	return (
-		<ModalContext.Provider value={{ open: () => !!props.open }}>
+		<ModalContext.Provider value={{ open: () => !!props.open, form, setForm }}>
 			<dialog
 				{...rest}
 				ref={combineRefs(setDialog, props.ref)}
@@ -152,7 +155,9 @@ export const Modal: Component<DialogProps> = (props) => {
 				onClick={handleClick}
 				onKeyDown={handleKeydown}
 			>
-				<div class="c-modal__body">{local.children}</div>
+				<RefProvider refs={{ [FORM_REF]: setForm }}>
+					<div class="c-modal__body">{local.children}</div>
+				</RefProvider>
 			</dialog>
 		</ModalContext.Provider>
 	);

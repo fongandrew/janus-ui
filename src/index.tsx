@@ -18,6 +18,7 @@ import { Checkbox } from '~/shared/components/checkbox';
 import { Description } from '~/shared/components/description';
 import { Dropdown } from '~/shared/components/dropdown';
 import { ErrorMessage } from '~/shared/components/error-message';
+import { type TypedFormData } from '~/shared/components/form';
 import { Grid } from '~/shared/components/grid';
 import { Group } from '~/shared/components/group';
 import { Input, InputDate, InputTime } from '~/shared/components/input';
@@ -26,6 +27,11 @@ import { LabelStack } from '~/shared/components/label-stack';
 import { ListBox, ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
 import { Menu, MenuGroup, MenuItem, MenuItemLink } from '~/shared/components/menu';
 import { Modal, ModalContent, ModalFooter, ModalTitle } from '~/shared/components/modal';
+import {
+	ModalCancelButton,
+	ModalFormContent,
+	ModalSubmitButton,
+} from '~/shared/components/modal-form';
 import { Radio } from '~/shared/components/radio';
 import { RadioGroup } from '~/shared/components/radio-group';
 import { Select } from '~/shared/components/select';
@@ -568,8 +574,14 @@ const SelectTypeaheadDemo: Component = () => {
 
 const ModalDemo: Component = () => {
 	const [isOpen, setIsOpen] = createSignal(false);
-
 	const [isOpenLong, setIsOpenLong] = createSignal(false);
+	const [isOpenForm, setIsOpenForm] = createSignal(false);
+	const [formData, setFormData] = createSignal<{
+		name: string;
+		email: string;
+		message: string;
+	} | null>(null);
+
 	const manyParagraphs = [];
 	for (let i = 0; i < 20; i++) {
 		manyParagraphs.push(
@@ -585,6 +597,23 @@ const ModalDemo: Component = () => {
 		);
 	}
 
+	const FormNames = {
+		name: 'name',
+		email: 'email',
+		message: 'message',
+	};
+
+	const handleSubmit = (e: SubmitEvent & { data: TypedFormData<string> }) => {
+		e.preventDefault();
+		const data = e.data;
+		setFormData({
+			name: data.get(FormNames.name) as string,
+			email: data.get(FormNames.email) as string,
+			message: data.get(FormNames.message) as string,
+		});
+		setIsOpenForm(false);
+	};
+
 	return (
 		<Card>
 			<CardHeader>
@@ -592,27 +621,79 @@ const ModalDemo: Component = () => {
 				<CardDescription>Modal dialog with backdrop</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Group>
-					<Button onClick={() => setIsOpen(true)}>Open Modal</Button>
-					<Modal open={isOpen()} onClose={() => setIsOpen(false)}>
-						<ModalTitle>Example Modal</ModalTitle>
-						<ModalContent>
-							<p>Click outside or the close button to dismiss</p>
-						</ModalContent>
-						<ModalFooter>
-							<Button type="reset">Close</Button>
-						</ModalFooter>
-					</Modal>
+				<Stack>
+					<Show when={formData()}>
+						<output>
+							<Card>
+								<CardHeader>
+									<CardTitle>Submitted Form Data</CardTitle>
+								</CardHeader>
+								<CardContent>
+									<Stack>
+										<LabelStack>
+											<Label>Name</Label>
+											<Description>{formData()?.name}</Description>
+										</LabelStack>
+										<LabelStack>
+											<Label>Email</Label>
+											<Description>{formData()?.email}</Description>
+										</LabelStack>
+										<LabelStack>
+											<Label>Message</Label>
+											<Description>{formData()?.message}</Description>
+										</LabelStack>
+									</Stack>
+								</CardContent>
+							</Card>
+						</output>
+					</Show>
+					<Group>
+						<Button onClick={() => setIsOpen(true)}>Open Modal</Button>
+						<Modal open={isOpen()} onClose={() => setIsOpen(false)}>
+							<ModalTitle>Example Modal</ModalTitle>
+							<ModalContent>
+								<p>Click outside or the close button to dismiss</p>
+							</ModalContent>
+							<ModalFooter>
+								<Button type="reset">Close</Button>
+							</ModalFooter>
+						</Modal>
 
-					<Button onClick={() => setIsOpenLong(true)}>Open Modal (Long)</Button>
-					<Modal open={isOpenLong()} onClose={() => setIsOpenLong(false)}>
-						<ModalTitle>Example Modal</ModalTitle>
-						<ModalContent>{manyParagraphs}</ModalContent>
-						<ModalFooter>
-							<Button type="reset">Close</Button>
-						</ModalFooter>
-					</Modal>
-				</Group>
+						<Button onClick={() => setIsOpenLong(true)}>Open Modal (Long)</Button>
+						<Modal open={isOpenLong()} onClose={() => setIsOpenLong(false)}>
+							<ModalTitle>Example Modal</ModalTitle>
+							<ModalContent>{manyParagraphs}</ModalContent>
+							<ModalFooter>
+								<Button type="reset">Close</Button>
+							</ModalFooter>
+						</Modal>
+
+						<Button onClick={() => setIsOpenForm(true)}>Open Form Modal</Button>
+						<Modal open={isOpenForm()} onClose={() => setIsOpenForm(false)}>
+							<ModalTitle>Form Example</ModalTitle>
+							<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
+								<Stack>
+									<LabelStack>
+										<Label>Name</Label>
+										<Input name={FormNames.name} required />
+									</LabelStack>
+									<LabelStack>
+										<Label>Email</Label>
+										<Input name={FormNames.email} type="email" required />
+									</LabelStack>
+									<LabelStack>
+										<Label>Message</Label>
+										<Textarea name={FormNames.message} required />
+									</LabelStack>
+								</Stack>
+							</ModalFormContent>
+							<ModalFooter>
+								<ModalCancelButton />
+								<ModalSubmitButton />
+							</ModalFooter>
+						</Modal>
+					</Group>
+				</Stack>
 			</CardContent>
 		</Card>
 	);
