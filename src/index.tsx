@@ -18,7 +18,8 @@ import { Checkbox } from '~/shared/components/checkbox';
 import { Description } from '~/shared/components/description';
 import { Dropdown } from '~/shared/components/dropdown';
 import { ErrorMessage } from '~/shared/components/error-message';
-import { type TypedFormData } from '~/shared/components/form';
+import { Form, type TypedFormData } from '~/shared/components/form';
+import { FormValidationGroup } from '~/shared/components/form-validation-group';
 import { Grid } from '~/shared/components/grid';
 import { Group } from '~/shared/components/group';
 import { Input, InputDate, InputTime } from '~/shared/components/input';
@@ -41,7 +42,132 @@ import { Stack } from '~/shared/components/stack';
 import { Textarea } from '~/shared/components/textarea';
 import { ToggleSwitch } from '~/shared/components/toggle-switch';
 import { Tooltip } from '~/shared/components/tooltip';
+import { generateId } from '~/shared/utility/id-generator';
 
+const FormValidationDemo: Component = () => {
+	const [formData, setFormData] = createSignal<{
+		username: string;
+		password: string;
+	} | null>(null);
+
+	const handleSubmit = (e: SubmitEvent) => {
+		e.preventDefault();
+		const form = e.currentTarget as HTMLFormElement;
+		const data = new FormData(form);
+		setFormData({
+			username: data.get('username') as string,
+			password: data.get('password') as string,
+		});
+	};
+
+	const handleReset = () => {
+		setFormData(null);
+	};
+
+	const FormNames = {
+		username: 'username',
+		password1: 'password1',
+		password2: 'password2',
+	};
+
+	const validateUserName = (e: Event & { delegateTarget: HTMLInputElement }) => {
+		if (e.delegateTarget.value?.includes(' ')) {
+			return () => 'Password cannot contain spaces';
+		}
+		return null;
+	};
+
+	const password1Id = generateId('password');
+	const matchesPassword1 = (e: Event & { delegateTarget: HTMLInputElement }) => {
+		const input = e.delegateTarget.ownerDocument.querySelector<HTMLInputElement>(password1Id);
+		if (!input) return null;
+		if (input.value !== e.delegateTarget.value) {
+			return () => 'Passwords do not match';
+		}
+		return null;
+	};
+
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Form Validation</CardTitle>
+				<CardDescription>Password validation with FormValidationGroup</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<Stack>
+					<Form names={FormNames} onSubmit={handleSubmit} onReset={handleReset}>
+						<Stack>
+							<LabelledControl label="Username">
+								<Input
+									name={FormNames.username}
+									onValidate={validateUserName}
+									autocomplete="username"
+									required
+								/>
+							</LabelledControl>
+
+							<FormValidationGroup>
+								<Stack>
+									<LabelledControl label="Password">
+										<Input
+											id={password1Id}
+											name={FormNames.password1}
+											type="password"
+											autocomplete="new-password"
+											required
+										/>
+									</LabelledControl>
+									<LabelledControl label="Confirm Password">
+										<Input
+											name={FormNames.password2}
+											type="password"
+											onValidate={matchesPassword1}
+											autocomplete="new-password"
+											required
+										/>
+									</LabelledControl>
+								</Stack>
+							</FormValidationGroup>
+
+							<Group>
+								<Button type="reset" class="c-button--ghost">
+									Reset
+								</Button>
+								<Button type="submit" class="c-button--primary">
+									Submit
+								</Button>
+							</Group>
+						</Stack>
+					</Form>
+
+					<Show when={formData()}>
+						<output>
+							<Card>
+								<CardHeader>
+									<CardTitle>Submitted Form Data</CardTitle>
+								</CardHeader>
+								<CardContent>
+									<Stack>
+										<LabelStack>
+											<Label>Username</Label>
+											<Description>{formData()?.username}</Description>
+										</LabelStack>
+										<LabelStack>
+											<Label>Password</Label>
+											<Description>{formData()?.password}</Description>
+										</LabelStack>
+									</Stack>
+								</CardContent>
+							</Card>
+						</output>
+					</Show>
+				</Stack>
+			</CardContent>
+		</Card>
+	);
+};
+
+// [Previous demo components remain unchanged...]
 const ListBoxDemo: Component = () => {
 	const [values, setValues] = createSignal<Set<string>>(new Set());
 	const [multiValues, setMultiValues] = createSignal<Set<string>>(new Set());
@@ -712,6 +838,7 @@ const App: Component = () => {
 				<SelectDemo />
 				<SelectTypeaheadDemo />
 				<ModalDemo />
+				<FormValidationDemo />
 				<FooterCard />
 			</Grid>
 		</Box>
