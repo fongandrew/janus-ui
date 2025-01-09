@@ -9,7 +9,7 @@ import {
 
 export interface CheckboxProps
 	extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'>,
-		FormControlProps {
+		FormControlProps<HTMLInputElement> {
 	/** Force callback ref */
 	ref?: (el: HTMLInputElement) => void;
 	/**
@@ -20,7 +20,7 @@ export interface CheckboxProps
 
 export function Checkbox(props: CheckboxProps) {
 	const [local, rest] = splitProps(props, ['indeterminate', 'checked', 'class']);
-	const formProps = mergeFormControlProps(rest);
+	const formProps = mergeFormControlProps<HTMLInputElement, typeof rest>(rest);
 
 	return (
 		<div class={cx('c-checkbox', local.class)}>
