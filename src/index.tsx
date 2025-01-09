@@ -24,6 +24,7 @@ import { Group } from '~/shared/components/group';
 import { Input, InputDate, InputTime } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
+import { LabelledControl } from '~/shared/components/labelled-control';
 import { ListBox, ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
 import { Menu, MenuGroup, MenuItem, MenuItemLink } from '~/shared/components/menu';
 import { Modal, ModalContent, ModalFooter, ModalTitle } from '~/shared/components/modal';
@@ -673,18 +674,15 @@ const ModalDemo: Component = () => {
 							<ModalTitle>Form Example</ModalTitle>
 							<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
 								<Stack>
-									<LabelStack>
-										<Label>Name</Label>
+									<LabelledControl label="Name">
 										<Input name={FormNames.name} required />
-									</LabelStack>
-									<LabelStack>
-										<Label>Email</Label>
+									</LabelledControl>
+									<LabelledControl label="Email">
 										<Input name={FormNames.email} type="email" required />
-									</LabelStack>
-									<LabelStack>
-										<Label>Message</Label>
+									</LabelledControl>
+									<LabelledControl label="Message">
 										<Textarea name={FormNames.message} required />
-									</LabelStack>
+									</LabelledControl>
 								</Stack>
 							</ModalFormContent>
 							<ModalFooter>

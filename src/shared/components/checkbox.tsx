@@ -2,9 +2,14 @@ import cx from 'classix';
 import { Check, Minus } from 'lucide-solid';
 import { type JSX, splitProps } from 'solid-js';
 
-import { mergeFormControlProps } from '~/shared/components/merge-form-control-props';
+import {
+	type FormControlProps,
+	mergeFormControlProps,
+} from '~/shared/components/merge-form-control-props';
 
-export interface CheckboxProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'> {
+export interface CheckboxProps
+	extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'>,
+		FormControlProps {
 	/** Force callback ref */
 	ref?: (el: HTMLInputElement) => void;
 	/**

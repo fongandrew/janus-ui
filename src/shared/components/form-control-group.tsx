@@ -1,9 +1,6 @@
-import { type JSX } from 'solid-js';
+import { createSignal, type JSX } from 'solid-js';
 
-import {
-	createFormControlContext,
-	FormControlContext,
-} from '~/shared/components/form-control-context';
+import { FormControlContext } from '~/shared/components/form-control-context';
 import { FORM_CONTROL_REF } from '~/shared/components/merge-form-control-props';
 import { RefProvider } from '~/shared/components/ref-provider';
 
@@ -12,12 +9,10 @@ import { RefProvider } from '~/shared/components/ref-provider';
  * and error message.
  */
 export function FormControlGroup(props: { children: JSX.Element }) {
-	const inputGroupContext = createFormControlContext();
+	const [input, setInput] = createSignal<HTMLElement | null>(null);
 	return (
-		<FormControlContext.Provider value={inputGroupContext}>
-			<RefProvider refs={{ [FORM_CONTROL_REF]: inputGroupContext.setInput }}>
-				{props.children}
-			</RefProvider>
+		<FormControlContext.Provider value={[input, setInput]}>
+			<RefProvider refs={{ [FORM_CONTROL_REF]: setInput }}>{props.children}</RefProvider>
 		</FormControlContext.Provider>
 	);
 }

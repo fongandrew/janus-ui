@@ -1,48 +1,17 @@
-import {
-	type Accessor,
-	createContext,
-	createEffect,
-	createSignal,
-	type JSX,
-	onCleanup,
-	type Setter,
-	useContext,
-} from 'solid-js';
+import { type Accessor, createContext, type Setter } from 'solid-js';
 
-import { FormContext } from '~/shared/components/form-context';
+/** Signal getter and setter for input ref */
+export type FormControlContextValue = [
+	Accessor<HTMLElement | null> & { isDefault?: true | undefined },
+	Setter<HTMLElement | null>,
+];
 
-export interface FormControlContextValue {
-	/** Signal getter for input ref */
-	input: Accessor<HTMLElement | undefined>;
-	/** Signal setter for input ref */
-	setInput: Setter<HTMLElement | undefined>;
-	/** Signal getter for error content */
-	error: Accessor<(() => JSX.Element) | null>;
-	/** Signal setter for error content */
-	setError: Setter<(() => JSX.Element) | null>;
+function defaultAccessor() {
+	return null;
 }
+defaultAccessor.isDefault = true as const;
 
-export const FormControlContext = createContext<FormControlContextValue | undefined>(undefined);
-
-export function createFormControlContext(): FormControlContextValue {
-	const [input, setInput] = createSignal<HTMLElement>();
-
-	// Two error signals -- one for errors set locally by input itself and one by
-	// form-wide validation process
-	const [localError, setLocalError] = createSignal<(() => JSX.Element) | null>(null);
-	const [formError, setFormError] = createSignal<(() => JSX.Element) | null>(null);
-	const error = () => localError() || formError();
-
-	const formContext = useContext(FormContext);
-	createEffect(() => {
-		if (!formContext) return;
-
-		const inputElm = input();
-		if (!inputElm) return;
-
-		formContext.addElement(inputElm, [error, setFormError]);
-		onCleanup(() => formContext.removeElement(inputElm));
-	});
-
-	return { input, setInput, error, setError: setLocalError };
-}
+export const FormControlContext = createContext<FormControlContextValue>([
+	defaultAccessor,
+	() => {},
+]);

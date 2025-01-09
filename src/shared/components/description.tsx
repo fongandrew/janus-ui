@@ -16,17 +16,17 @@ export function Description(props: DescriptionProps) {
 	const id = () => props.id || defaultId;
 
 	const isMounted = createMountedSignal();
-	const context = useContext(FormControlContext);
+	const [input] = useContext(FormControlContext);
 	createEffect(() => {
 		if (!isMounted()) return;
 
-		const input = context?.input();
-		if (!input) return;
+		const inputElm = input();
+		if (!inputElm) return;
 
 		const descriptionId = id();
-		updateAttributeList(input, 'aria-describedby', [descriptionId]);
+		updateAttributeList(inputElm, 'aria-describedby', [descriptionId]);
 		onCleanup(() => {
-			updateAttributeList(input, 'aria-describedby', [], [descriptionId]);
+			updateAttributeList(inputElm, 'aria-describedby', [], [descriptionId]);
 		});
 	});
 

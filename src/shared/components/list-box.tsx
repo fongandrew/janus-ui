@@ -3,12 +3,17 @@ import { Check } from 'lucide-solid';
 import { For, type JSX, splitProps } from 'solid-js';
 
 import { createListBoxControl } from '~/shared/components/create-list-box-control';
-import { mergeFormControlProps } from '~/shared/components/merge-form-control-props';
+import {
+	type FormControlProps,
+	mergeFormControlProps,
+} from '~/shared/components/merge-form-control-props';
 import { OptionList, OptionListGroup, OptionListItem } from '~/shared/components/option-list';
 import { createTextMatcher } from '~/shared/utility/create-text-matcher';
 import { generateId } from '~/shared/utility/id-generator';
 
-export interface ListBoxProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+export interface ListBoxProps
+	extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onChange'>,
+		FormControlProps<HTMLDivElement> {
 	/** Ref must be callback if any */
 	ref?: ((el: HTMLDivElement) => void) | undefined;
 	/** Name for form submission */
@@ -56,7 +61,7 @@ export function ListBox(props: ListBoxProps) {
 
 	return (
 		<OptionList
-			{...mergeFormControlProps(rest, setListBox)}
+			{...mergeFormControlProps<HTMLDivElement, typeof rest>(rest, setListBox)}
 			class={cx('c-list-box', rest.class)}
 			role="listbox"
 			tabIndex={0}

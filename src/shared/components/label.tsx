@@ -13,10 +13,10 @@ export function Label(props: JSX.LabelHTMLAttributes<HTMLLabelElement>) {
 	const [labelId, setLabelId] = createSignal<string | undefined>();
 	const id = () => props.id ?? labelId();
 
-	const context = useContext(FormControlContext);
+	const [input] = useContext(FormControlContext);
 	createEffect(() => {
-		const input = context?.input();
-		if (!input) {
+		const inputElm = input();
+		if (!inputElm) {
 			setForId(undefined);
 			return;
 		}
@@ -24,11 +24,11 @@ export function Label(props: JSX.LabelHTMLAttributes<HTMLLabelElement>) {
 		// Set for attribute if it's actually a form element. If it isn't (e.g. a
 		// div made to function like an input using ARIA attributes, then use
 		// aria-labelledby instead).
-		if (isFormControl(input)) {
-			let inputId = input.id;
+		if (isFormControl(inputElm)) {
+			let inputId = inputElm.id;
 			if (!inputId) {
 				inputId = generateId('input');
-				input.id = inputId;
+				inputElm.id = inputId;
 			}
 			setForId(inputId);
 		} else {
@@ -37,7 +37,7 @@ export function Label(props: JSX.LabelHTMLAttributes<HTMLLabelElement>) {
 				thisId = generateId('label');
 				setLabelId(thisId);
 			}
-			updateAttributeList(input, 'aria-labelledby', [thisId]);
+			updateAttributeList(inputElm, 'aria-labelledby', [thisId]);
 		}
 	});
 
@@ -68,7 +68,7 @@ export function Label(props: JSX.LabelHTMLAttributes<HTMLLabelElement>) {
 
 	return (
 		<Dynamic
-			component={forId() || !context ? 'label' : 'span'}
+			component={forId() || input.isDefault ? 'label' : 'span'}
 			for={forId()}
 			{...props}
 			id={id()}

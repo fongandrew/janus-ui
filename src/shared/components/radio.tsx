@@ -1,17 +1,22 @@
 import cx from 'classix';
 import { type JSX, splitProps, useContext } from 'solid-js';
 
-import { mergeFormControlProps } from '~/shared/components/merge-form-control-props';
+import {
+	type FormControlProps,
+	mergeFormControlProps,
+} from '~/shared/components/merge-form-control-props';
 import { RadioGroupContext } from '~/shared/components/radio-group-context';
 
-export interface RadioProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'> {
+export interface RadioProps
+	extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'>,
+		FormControlProps<HTMLInputElement> {
 	/** Force callback ref */
 	ref?: (el: HTMLInputElement) => void;
 }
 
 export function Radio(props: RadioProps) {
 	const [local, rest] = splitProps(props, ['checked', 'class', 'onChange']);
-	const formProps = mergeFormControlProps(rest);
+	const formProps = mergeFormControlProps<HTMLInputElement, typeof rest>(rest);
 	const group = useContext(RadioGroupContext);
 
 	const isChecked = () => {

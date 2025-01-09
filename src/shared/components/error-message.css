@@ -4,4 +4,8 @@
 	.c-error-message {
 		@apply overflow-x-hidden text-ellipsis text-sm text-danger;
 	}
+
+	.c-error-message:empty {
+		display: none;
+	}
 }

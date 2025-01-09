@@ -1,9 +1,12 @@
 import cx from 'classix';
 import { type JSX, splitProps } from 'solid-js';
 
-import { mergeFormControlProps } from '~/shared/components/merge-form-control-props';
+import {
+	type FormControlProps,
+	mergeFormControlProps,
+} from '~/shared/components/merge-form-control-props';
 
-export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement>, FormControlProps {
 	/** Force callback ref */
 	ref?: (el: HTMLButtonElement) => void;
 	/** Removes default styling */
