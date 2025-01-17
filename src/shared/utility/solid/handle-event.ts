@@ -14,7 +14,7 @@ export function handleEvent<
 	...rest: any[]
 ) {
 	if (typeof handler === 'function') {
-		handler.call(thisElm, event);
+		handler.call(thisElm, ...([event, ...rest] as Parameters<THandler>));
 	} else if (handler) {
 		handler[0].call(thisElm, handler[1], ...([event, ...rest] as Parameters<THandler>));
 	}
