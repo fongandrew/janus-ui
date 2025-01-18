@@ -152,6 +152,19 @@ export default tseslint.config(
 				},
 			],
 
+			// Custom reactive functions for Solid
+			'solid/reactivity': [
+				'warn',
+				{
+					customReactiveFunctions: [
+						'combineEventHandlers',
+						'setAttr',
+						'extAttr',
+						'handle',
+					],
+				},
+			],
+
 			// Tailwind styling overrides
 			'tailwindcss/no-arbitrary-value': 'warn',
 			'tailwindcss/no-custom-classname': 'error',
