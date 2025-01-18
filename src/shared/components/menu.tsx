@@ -1,6 +1,5 @@
 import { type JSX, onMount, splitProps } from 'solid-js';
 
-import { createOptionListControl } from '~/shared/components/create-option-list-control';
 import { DropdownContent } from '~/shared/components/dropdown';
 import {
 	OptionList,
@@ -8,15 +7,16 @@ import {
 	OptionListButton,
 	OptionListGroup,
 } from '~/shared/components/option-list';
+import { OptionListControl } from '~/shared/components/option-list-control';
 import { createTextMatcher } from '~/shared/utility/create-text-matcher';
 import { generateId } from '~/shared/utility/id-generator';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 
-export interface MenuProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
+export interface MenuProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	/** Ref returned by createDropdown */
 	ref?: (el: HTMLDivElement) => void;
 	/** Called when a menu item is selected */
-	onSelect?: (event: KeyboardEvent | MouseEvent, value: string) => void;
+	onValue?: (value: string, event: KeyboardEvent | MouseEvent) => void;
 	/** Require onClick to be functional */
 	onClick?: (event: KeyboardEvent | MouseEvent) => void;
 	/** Make children required */
@@ -24,7 +24,7 @@ export interface MenuProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onS
 }
 
 export function Menu(props: MenuProps) {
-	const [local, rest] = splitProps(props, ['children', 'onSelect']);
+	const [local, rest] = splitProps(props, ['children', 'onValue']);
 
 	/** Refs for dropdown element (which may be container and not same as option list) */
 	let dropdownRef: HTMLDivElement | null = null;
@@ -37,33 +37,33 @@ export function Menu(props: MenuProps) {
 	 * optionList -- focus to highlight, search on keypress, hide on tab, and
 	 * hide on escape.
 	 */
-	const [setMenu, optionListControls] = createOptionListControl({
-		onHighlight: (_event, elm) => {
+	const optionListControl = new OptionListControl({
+		onHighlight: (_val, elm) => {
 			elm.focus();
 		},
-		onSelect: (event, _elm, target) => {
-			local.onSelect?.(event, target);
+		onSelect: (val, _elm, event) => {
+			local.onValue?.(val, event);
 			dropdownRef?.hidePopover();
 		},
 	});
 
 	/** For matching user trying to type and match input */
-	const matchText = createTextMatcher(() => optionListControls.getItems());
+	const matchText = createTextMatcher(() => optionListControl.items());
 
 	onMount(() => {
-		const menu = optionListControls.getNode();
+		const menu = optionListControl.listElm();
 		if (!menu) {
 			return;
 		}
 		if (!menu.querySelector('[autofocus]')) {
-			const first = optionListControls.getFirstItem();
+			const first = optionListControl.items()[0];
 			if (first) {
 				first.autofocus = true;
 			}
 		}
 	});
 
-	const handleKeyDown = (event: KeyboardEvent) => {
+	optionListControl.handle('onKeyDown', (event: KeyboardEvent) => {
 		switch (event.key) {
 			// Arrow keys handled by createOptionListControl
 			// Escape key handled by poopver light dismiss
@@ -80,17 +80,15 @@ export function Menu(props: MenuProps) {
 				// If here, check if we're typing a character to filter the list
 				if (event.key.length === 1) {
 					const node = matchText(event.key);
-					optionListControls.highlight(event, node);
+					optionListControl.highlight(node, event);
 				}
 			}
 		}
-	};
+	});
 
 	return (
 		<DropdownContent {...rest} ref={combineRefs(setDropdownRef, props.ref)}>
-			<OptionList ref={setMenu} role="menu" onKeyDown={handleKeyDown}>
-				{local.children}
-			</OptionList>
+			<OptionList {...optionListControl.merge({ role: 'menu' })}>{local.children}</OptionList>
 		</DropdownContent>
 	);
 }

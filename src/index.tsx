@@ -236,10 +236,6 @@ const ListBoxDemo: Component = () => {
 
 const MenuDemo: Component = () => {
 	const [selection, setSelection] = createSignal<string | null>(null);
-	const handleSelect = (_event: Event, value: string) => {
-		setSelection(value);
-	};
-
 	return (
 		<Card>
 			<CardHeader>
@@ -253,7 +249,7 @@ const MenuDemo: Component = () => {
 						<Dropdown>
 							{() => <Button>Simple Menu</Button>}
 							{() => (
-								<Menu onSelect={handleSelect}>
+								<Menu onValue={setSelection}>
 									<MenuItem value="a">Option A</MenuItem>
 									<MenuItem value="b">Option B</MenuItem>
 									<MenuItem value="c">Option C</MenuItem>
@@ -264,7 +260,7 @@ const MenuDemo: Component = () => {
 						<Dropdown>
 							{() => <Button>Menu with Groups</Button>}
 							{() => (
-								<Menu onSelect={handleSelect}>
+								<Menu onValue={setSelection}>
 									<MenuGroup heading="File">
 										<MenuItem value="new">New File</MenuItem>
 										<MenuItem value="open">Open...</MenuItem>

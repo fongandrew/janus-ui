@@ -2,7 +2,7 @@
 import cx from 'classix';
 import { type JSX, splitProps } from 'solid-js';
 
-import { LIST_OPTION_VALUE_ATTR } from '~/shared/components/create-option-list-control';
+import { LIST_OPTION_VALUE_ATTR } from '~/shared/components/option-list-control';
 import { generateId } from '~/shared/utility/id-generator';
 
 export interface OptionListProps extends JSX.HTMLAttributes<HTMLDivElement> {

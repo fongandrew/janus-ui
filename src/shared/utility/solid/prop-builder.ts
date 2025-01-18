@@ -11,7 +11,7 @@ import { createIncrSignal } from '~/shared/utility/solid/create-incr-signal';
  * element to try and assign props, or if we want to refactor some prop logic
  * across multiple components.
  */
-export class PropBuilder<T extends HTMLElement> {
+export class PropBuilder<T extends HTMLElement = HTMLElement> {
 	// Disable linter below because it's complaining it wants the destructured values
 	// from `createSignal` but we know what we're doing here.
 	// eslint-disable-next-line solid/reactivity
