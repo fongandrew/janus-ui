@@ -2,7 +2,7 @@ import cx from 'classix';
 import { Check } from 'lucide-solid';
 import { For, type JSX, splitProps } from 'solid-js';
 
-import { createListBoxControl } from '~/shared/components/create-list-box-control';
+import { ListBoxControl } from '~/shared/components/list-box-control';
 import {
 	type FormControlProps,
 	mergeFormControlProps,
@@ -25,8 +25,7 @@ export interface ListBoxProps
 	/** Default selected values (uncontrolled) */
 	defaultValues?: Set<string>;
 	/** Called when selection changes */
-	onChange?: (event: MouseEvent | KeyboardEvent, value: Set<string>) => void;
-
+	onValues?: (values: Set<string>, event: MouseEvent | KeyboardEvent) => void;
 	/** Autofocus listbox? */
 	autofocus?: boolean | undefined;
 	/** Whether multiple selection is allowed */
@@ -43,34 +42,31 @@ export function ListBox(props: ListBoxProps) {
 		'name',
 		'values',
 		'defaultValues',
-		'onChange',
+		'onValues',
 		'multiple',
 		'required',
 	]);
-	const [setListBox, listBoxControls] = createListBoxControl(local);
+	const listBoxControl = new ListBoxControl<HTMLDivElement>(local);
 
 	/** For matching user trying to type and match input */
-	const matchText = createTextMatcher(() => listBoxControls.getItems());
-	const handleKeyDown = (event: KeyboardEvent) => {
-		// If here, check if we're typing a character to filter the list
+	const matchText = createTextMatcher(() => listBoxControl.items());
+	listBoxControl.handle('onKeyDown', (event: KeyboardEvent) => {
+		// Check if we're typing a character to filter the list
 		if (event.key.length === 1) {
 			const node = matchText(event.key);
 			node?.focus();
 		}
-	};
+	});
 
 	return (
 		<OptionList
-			{...mergeFormControlProps<HTMLDivElement, typeof rest>(rest, setListBox)}
-			class={cx('c-list-box', rest.class)}
+			{...mergeFormControlProps<HTMLDivElement, typeof rest>(listBoxControl.merge(rest))}
 			role="listbox"
 			tabIndex={0}
-			onKeyDown={handleKeyDown}
+			class={cx('c-list-box', rest.class)}
 		>
 			{local.children}
-			{local.name && (
-				<ListBoxSelections name={local.name} values={listBoxControls.values()} />
-			)}
+			{local.name && <ListBoxSelections name={local.name} values={listBoxControl.values()} />}
 		</OptionList>
 	);
 }

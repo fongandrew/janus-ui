@@ -185,11 +185,7 @@ const ListBoxDemo: Component = () => {
 						<Description>
 							Selected: {Array.from(values()).join(', ') || 'None'}
 						</Description>
-						<ListBox
-							name="single-listbox"
-							values={values()}
-							onChange={(_e, values) => setValues(values)}
-						>
+						<ListBox name="single-listbox" values={values()} onValues={setValues}>
 							<ListBoxItem value="apple">Apple</ListBoxItem>
 							<ListBoxItem value="banana">Banana</ListBoxItem>
 							<ListBoxItem value="orange">Orange</ListBoxItem>
@@ -204,7 +200,7 @@ const ListBoxDemo: Component = () => {
 						<ListBox
 							name="multi-listbox"
 							values={multiValues()}
-							onChange={(_e, values) => setMultiValues(values)}
+							onValues={setMultiValues}
 							multiple
 							aria-invalid={multiValues().has('red')}
 						>
