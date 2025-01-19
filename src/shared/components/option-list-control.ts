@@ -90,6 +90,9 @@ export function handleClick(ctrl: OptionListControl, event: MouseEvent | Keyboar
 	);
 }
 
+/**
+ * PropBuilder presentation of a list of options that can be navigated with arrow keys
+ */
 export class OptionListControl<T extends HTMLElement = HTMLElement> extends PropBuilder<T> {
 	constructor(protected props: OptionListProps) {
 		super();

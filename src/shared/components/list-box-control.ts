@@ -22,6 +22,10 @@ export interface ListBoxProps extends OptionListProps {
 	multiple?: boolean | undefined;
 }
 
+/**
+ * PropBuilder presentation of something matching the ListBox role. Adds effects
+ * and aria- props.
+ */
 export class ListBoxControl<T extends HTMLElement> extends OptionListControl<T> {
 	/** Get ID of currently highlighted element (if not set via props) */
 	private readonly unctrlCurrentId: Accessor<string | null>;
