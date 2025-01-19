@@ -1,6 +1,6 @@
 /** A group */
 import cx from 'classix';
-import { type JSX, splitProps } from 'solid-js';
+import { createMemo, type JSX, splitProps } from 'solid-js';
 
 import { LIST_OPTION_VALUE_ATTR } from '~/shared/components/option-list-control';
 import { generateId } from '~/shared/utility/id-generator';
@@ -38,10 +38,10 @@ export interface OptionListItemProps<TElement> extends JSX.HTMLAttributes<TEleme
 /** Option list item, meant for use in Listbox-like components */
 export function OptionListItem(props: OptionListItemProps<HTMLDivElement>) {
 	const [local, rest] = splitProps(props, ['value']);
-	const defaultId = generateId('option');
+	const id = createMemo(() => props.id || generateId('option'));
 	return (
 		<div
-			{...useOptionListItemProps(props.id || defaultId, local.value)}
+			{...useOptionListItemProps(id(), local.value)}
 			{...rest}
 			class={cx('c-option-list__item', props.class)}
 		/>
@@ -51,10 +51,10 @@ export function OptionListItem(props: OptionListItemProps<HTMLDivElement>) {
 /** Button list item, meant for use in Menu-like components */
 export function OptionListButton(props: OptionListItemProps<HTMLButtonElement>) {
 	const [local, rest] = splitProps(props, ['value']);
-	const defaultId = generateId('option');
+	const id = createMemo(() => props.id || generateId('option'));
 	return (
 		<button
-			{...useOptionListItemProps(props.id || defaultId, local.value)}
+			{...useOptionListItemProps(id(), local.value)}
 			{...rest}
 			class={cx('c-option-list__item', props.class)}
 		/>
@@ -64,10 +64,10 @@ export function OptionListButton(props: OptionListItemProps<HTMLButtonElement>) 
 /** Anchor link list item, meant for use in Menu-like components */
 export function OptionListAnchor(props: OptionListItemProps<HTMLAnchorElement> & { href: string }) {
 	const [local, rest] = splitProps(props, ['value']);
-	const defaultId = generateId('option');
+	const id = createMemo(() => props.id || generateId('option'));
 	return (
 		<a
-			{...useOptionListItemProps(props.id || defaultId, local.value)}
+			{...useOptionListItemProps(id(), local.value)}
 			{...rest}
 			class={cx('c-option-list__item', props.class)}
 		/>

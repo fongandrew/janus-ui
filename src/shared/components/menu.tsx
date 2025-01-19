@@ -38,7 +38,7 @@ export function Menu(props: MenuProps) {
 	 * hide on escape.
 	 */
 	const optionListControl = new OptionListControl({
-		onHighlight: (_val, elm) => {
+		onHighlight: (_id, elm) => {
 			elm.focus();
 		},
 		onSelect: (val, _elm, event) => {
