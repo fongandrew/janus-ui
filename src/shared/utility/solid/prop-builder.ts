@@ -31,11 +31,14 @@ export class PropBuilder<
 	/** Extra ref assignment callbacks */
 	private readonly refCbs: ((val: TElement) => void)[] = [];
 	/** Callbacks that return a non-exclusive list item to a prop */
-	private readonly attrListVals: Record<string, (string | (() => string | undefined))[]> = {};
+	private readonly attrListVals: Record<
+		string,
+		(string | undefined | (() => string | undefined))[]
+	> = {};
 	/** Callbacks that exclusively set the value of a prop */
 	private readonly attrVals: Record<
 		string,
-		(string | boolean | number | (() => string | boolean | number | undefined))[]
+		(string | boolean | number | undefined | (() => string | boolean | number | undefined))[]
 	> = {};
 	/** Event handler callbacks */
 	private readonly evtCbs: Record<string, JSX.EventHandlerUnion<TElement, Event>[]> = {};
@@ -101,6 +104,14 @@ export class PropBuilder<
 		const list = (this.attrVals[attr] ??= []);
 		list.push(value);
 		onCleanup(() => pullLast(list, value));
+	}
+
+	/**
+	 * Add a prop remover -- more loosely typed since it's used to remove non-standard
+	 * HTML attributes and props
+	 */
+	rmAttr(attr: string) {
+		this.setAttr(attr as any, undefined);
 	}
 
 	/** Add to a callback prop like onClick */

@@ -85,8 +85,8 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 	const [unsetFormInput] = unreactivePropAccess(props, ['unsetFormInput']);
 	const control = (unsetFormInput ? useFormElement() : null) ?? new FormElementControl();
 
-	// Remove unsetFormInput
-	control.setAttr('unsetFormInput' as any, () => undefined);
+	// Remove non-standard DOM attribute
+	control.rmAttr('unsetFormInput');
 
 	// Switch disabled to aria-disabled if it exists (and we're on the client)
 	// so screen reader can still get useful info about the disabled component
@@ -103,13 +103,13 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 	control.setAttr('aria-required', () => props.required);
 
 	// Replace non-standard `invalid` attribute with `aria-invalid` if it exists
-	control.setAttr('invalid' as any, () => undefined);
+	control.rmAttr('invalid');
 	control.setAttr('aria-invalid', () => props.invalid);
 
 	// Set validation (and remove from props)
 	createRenderEffect(() => {
 		control.onValidate(props.onValidate as Validator<HTMLElement>);
-		control.setAttr(props.onValidate as any, () => undefined);
+		control.rmAttr('onValidate');
 	});
 
 	return control.merge(props as any) as JSX.HTMLElementTags[TTag];
