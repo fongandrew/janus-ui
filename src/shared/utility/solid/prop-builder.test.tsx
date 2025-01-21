@@ -262,6 +262,121 @@ describe('PropBuilder', () => {
 		expect(clicked.value).toBe(true);
 	});
 
+	it('should set default attributes when no prop is provided', () => {
+		const builder = new PropBuilder<'div'>();
+
+		const Parent: Component = () => {
+			builder.defaultAttr('aria-label', 'default label');
+			return <Child />;
+		};
+
+		const Child: Component = () => {
+			return <div {...builder.merge({ 'data-testid': 'test-div' })}>Test</div>;
+		};
+
+		render(() => <Parent />);
+		const div = screen.getByTestId('test-div');
+
+		expect(div.getAttribute('aria-label')).toBe('default label');
+	});
+
+	it('should not override props with default attributes', () => {
+		const builder = new PropBuilder<'div'>();
+
+		const Parent: Component = () => {
+			builder.defaultAttr('aria-label', 'default label');
+			return <Child />;
+		};
+
+		const Child: Component = () => {
+			return (
+				<div
+					{...builder.merge({
+						'aria-label': 'prop label',
+						'data-testid': 'test-div',
+					})}
+				>
+					Test
+				</div>
+			);
+		};
+
+		render(() => <Parent />);
+		const div = screen.getByTestId('test-div');
+
+		expect(div.getAttribute('aria-label')).toBe('prop label');
+	});
+
+	it('should give default props lower precedence than setAttr', () => {
+		const builder = new PropBuilder<'div'>();
+
+		const Parent: Component = () => {
+			builder.defaultAttr('aria-label', 'default label');
+			builder.setAttr('aria-label', 'set label');
+			return <Child />;
+		};
+
+		const Child: Component = () => {
+			return (
+				<div
+					{...builder.merge({
+						'aria-label': 'prop label',
+						'data-testid': 'test-div',
+					})}
+				>
+					Test
+				</div>
+			);
+		};
+
+		render(() => <Parent />);
+		const div = screen.getByTestId('test-div');
+
+		expect(div.getAttribute('aria-label')).toBe('set label');
+	});
+
+	it('should track reactivity for default attributes', () => {
+		const builder = new PropBuilder<'div'>();
+		const [defaultLabel, setDefaultLabel] = createSignal('default label');
+		const [propLabel, setPropLabel] = createSignal<string | undefined>(undefined);
+
+		const Parent: Component = () => {
+			builder.defaultAttr('aria-label', () => defaultLabel());
+			return <Child ariaLabel={propLabel()} />;
+		};
+
+		const Child: Component<{ ariaLabel?: string | undefined }> = (props) => {
+			return (
+				<div
+					{...builder.merge({
+						'aria-label': props.ariaLabel,
+						'data-testid': 'test-div',
+					})}
+				>
+					Test
+				</div>
+			);
+		};
+
+		render(() => <Parent />);
+		const div = screen.getByTestId('test-div');
+
+		// Should use default when no prop
+		expect(div.getAttribute('aria-label')).toBe('default label');
+
+		// Should update default value
+		setDefaultLabel('new default');
+		expect(div.getAttribute('aria-label')).toBe('new default');
+
+		// Should switch to prop when provided
+		setPropLabel('prop label');
+		expect(div.getAttribute('aria-label')).toBe('prop label');
+
+		// Should switch back to default when prop removed
+		setPropLabel(undefined);
+		expect(div.getAttribute('aria-label')).toBe('new default');
+	});
+
 	it('should update sibling components previously rendered with the same builder', () => {
 		const builder = new PropBuilder<'div'>();
 

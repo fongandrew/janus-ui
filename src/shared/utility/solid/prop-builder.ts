@@ -158,6 +158,8 @@ export class PropBuilder<
 	private readonly attrListVals = new AttrMap<string | undefined>();
 	/** Callbacks that exclusively set the value of a prop */
 	private readonly attrVals = new AttrMap<string | boolean | number | undefined>();
+	/** Callbacks that set default values for props */
+	private readonly defaultAttrVals = new AttrMap<string | boolean | number | undefined>();
 	/** Event handler callbacks */
 	private readonly evtCbs = new AttrMap<JSX.EventHandlerUnion<TElement, Event>>();
 
@@ -173,6 +175,34 @@ export class PropBuilder<
 			this.refCbs.push(callback as (val: TElement) => void);
 		}
 		return this;
+	}
+
+	/** Set a default attribute value that only applies if no prop value is provided */
+	defaultAttr(
+		attr: `data-${string}`,
+		value: string | undefined | (() => string | undefined),
+	): void;
+	defaultAttr<TAttr extends keyof TAttributes>(
+		attr: TAttr &
+			(TAttributes[TAttr] extends boolean | number | string | undefined ? TAttr : never),
+		callback: TAttributes[TAttr] | (() => TAttributes[TAttr]),
+	): void;
+	// Should be unnecessary but TypeScript doesn't reliably infer with generics
+	defaultAttr<TAttr extends keyof JSX.HTMLElementTags[keyof JSX.HTMLElementTags]>(
+		attr: TAttr &
+			(JSX.HTMLElementTags[keyof JSX.HTMLElementTags][TAttr] extends
+				| boolean
+				| number
+				| string
+				| undefined
+				? TAttr
+				: never),
+		callback:
+			| JSX.HTMLElementTags[keyof JSX.HTMLElementTags][TAttr]
+			| (() => JSX.HTMLElementTags[keyof JSX.HTMLElementTags][TAttr]),
+	): void;
+	defaultAttr(attr: any, value: any) {
+		this.defaultAttrVals.effect(attr, value, true);
 	}
 
 	/** Add a string ID to an attribute that is a list of IDs */
@@ -311,15 +341,31 @@ export class PropBuilder<
 			),
 		);
 
-		// Merge attributes
+		// Merge attributes and default attributes
 		createRenderEffect(
 			mapArray(
-				() => this.attrVals.attrs(),
+				() => [...new Set([...this.attrVals.attrs(), ...this.defaultAttrVals.attrs()])],
 				(attr) =>
 					createRenderEffect(() => {
+						// Check for explicitly set attributes first
 						const values = Array.from(this.attrVals.values(attr));
-						if (!values.length) return;
-						update(attr, values[values.length - 1]);
+						if (values.length) {
+							update(attr, values[values.length - 1]);
+							return;
+						}
+
+						// If no explicit value, use prop value if it exists
+						const propValue = props[attr as keyof typeof props];
+						if (propValue !== undefined) {
+							update(attr, propValue);
+							return;
+						}
+
+						// Finally fall back to default values
+						const defaultValues = Array.from(this.defaultAttrVals.values(attr));
+						if (defaultValues.length) {
+							update(attr, defaultValues[defaultValues.length - 1]);
+						}
 					}),
 			),
 		);

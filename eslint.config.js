@@ -160,6 +160,7 @@ export default tseslint.config(
 						'combineEventHandlers',
 						'setAttr',
 						'extAttr',
+						'defaultAttr',
 						'handle',
 					],
 				},
