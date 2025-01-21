@@ -12,10 +12,8 @@ import { createTextMatcher } from '~/shared/utility/create-text-matcher';
 import { generateId } from '~/shared/utility/id-generator';
 
 export interface ListBoxProps
-	extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onChange'>,
+	extends JSX.HTMLAttributes<HTMLDivElement>,
 		FormControlProps<HTMLDivElement> {
-	/** Ref must be callback if any */
-	ref?: ((el: HTMLDivElement) => void) | undefined;
 	/** Name for form submission */
 	name?: string | undefined;
 	/** Is listbox disabled? */
@@ -46,7 +44,7 @@ export function ListBox(props: ListBoxProps) {
 		'multiple',
 		'required',
 	]);
-	const listBoxControl = new ListBoxControl<HTMLDivElement>(local);
+	const listBoxControl = new ListBoxControl(local);
 
 	/** For matching user trying to type and match input */
 	const matchText = createTextMatcher(() => listBoxControl.items());
@@ -60,7 +58,9 @@ export function ListBox(props: ListBoxProps) {
 
 	return (
 		<OptionList
-			{...mergeFormControlProps<HTMLDivElement, typeof rest>(listBoxControl.merge(rest))}
+			{...mergeFormControlProps<HTMLDivElement, typeof rest>(
+				listBoxControl.merge<JSX.HTMLAttributes<HTMLDivElement>>(rest),
+			)}
 			role="listbox"
 			tabIndex={0}
 			class={cx('c-list-box', rest.class)}

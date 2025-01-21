@@ -1,3 +1,5 @@
+import { type JSX } from 'solid-js';
+
 import { isTextInput } from '~/shared/utility/element-types';
 import { isFocusVisible, setFocusVisible } from '~/shared/utility/is-focus-visible';
 import { evtDoc } from '~/shared/utility/multi-view';
@@ -93,7 +95,9 @@ export function handleClick(ctrl: OptionListControl, event: MouseEvent | Keyboar
 /**
  * PropBuilder presentation of a list of options that can be navigated with arrow keys
  */
-export class OptionListControl<T extends HTMLElement = HTMLElement> extends PropBuilder<T> {
+export class OptionListControl<
+	TTag extends keyof JSX.HTMLElementTags = keyof JSX.HTMLElementTags,
+> extends PropBuilder<TTag> {
 	constructor(protected props: OptionListProps) {
 		super();
 		this.handle('onClick', [handleClick, this]);

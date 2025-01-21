@@ -1,4 +1,4 @@
-import { type Accessor, createRenderEffect, createSignal, type Setter } from 'solid-js';
+import { type Accessor, createRenderEffect, createSignal, type JSX, type Setter } from 'solid-js';
 
 import {
 	LIST_OPTION_VALUE_ATTR,
@@ -26,7 +26,9 @@ export interface ListBoxProps extends OptionListProps {
  * PropBuilder presentation of something matching the ListBox role. Adds effects
  * and aria- props.
  */
-export class ListBoxControl<T extends HTMLElement> extends OptionListControl<T> {
+export class ListBoxControl<
+	TTag extends keyof JSX.HTMLElementTags = keyof JSX.HTMLElementTags,
+> extends OptionListControl<TTag> {
 	/** Get ID of currently highlighted element (if not set via props) */
 	private readonly unctrlCurrentId: Accessor<string | null>;
 	/** Set ID of currently highlighted element (if not set via props) */
