@@ -115,7 +115,7 @@ export class PropBuilder<
 			id?: string | undefined;
 			ref?: any | ((el: any) => void) | undefined;
 		},
-	>(props: TProps & Record<`data-${string}`, string>): TProps {
+	>(props: TProps & Record<`data-${string}`, string | undefined>): TProps {
 		if (this.ref()) {
 			useLogger().warn('PropBuilder should only be used for a single component at a time');
 			return props;
@@ -125,7 +125,10 @@ export class PropBuilder<
 		const ret = {} as Record<string, unknown> & Record<`data-${string}`, string>;
 		const update = (key: string, value: unknown) => {
 			if (ret[key] !== value) {
-				ret[key] = value;
+				// Solid intentionally does not override undefined props with mergeProps
+				// (https://github.com/solidjs/solid/issues/1383), so switch to null
+				// If this ever breaks, we move to something using `splitProps`
+				ret[key] = value ?? null;
 				signalUpdate();
 			}
 		};
