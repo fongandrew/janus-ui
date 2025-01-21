@@ -1,14 +1,12 @@
 import cx from 'classix';
-import { type JSX, splitProps } from 'solid-js';
+import { splitProps } from 'solid-js';
 
 import {
-	type FormControlProps,
-	mergeFormControlProps,
-} from '~/shared/components/merge-form-control-props';
+	type FormElementProps,
+	mergeFormElementProps,
+} from '~/shared/components/form-element-props';
 
-export interface InputProps
-	extends JSX.InputHTMLAttributes<HTMLInputElement>,
-		FormControlProps<HTMLInputElement> {
+export interface InputProps extends FormElementProps<'input'> {
 	/** Force callback ref */
 	ref?: (el: HTMLInputElement) => void;
 	/** Removes default styling */
@@ -17,7 +15,7 @@ export interface InputProps
 
 export function Input(props: InputProps) {
 	const [local, rest] = splitProps(props, ['unstyled']);
-	const formControlProps = mergeFormControlProps<HTMLInputElement, InputProps>(rest);
+	const formControlProps = mergeFormElementProps<'input'>(rest);
 	return <input {...formControlProps} class={cx(!local.unstyled && 'c-input', props.class)} />;
 }
 

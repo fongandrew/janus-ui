@@ -1,14 +1,12 @@
 import cx from 'classix';
-import { type JSX, splitProps } from 'solid-js';
+import { splitProps } from 'solid-js';
 
 import {
-	type FormControlProps,
-	mergeFormControlProps,
-} from '~/shared/components/merge-form-control-props';
+	type FormElementProps,
+	mergeFormElementProps,
+} from '~/shared/components/form-element-props';
 
-export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement>, FormControlProps {
-	/** Force callback ref */
-	ref?: (el: HTMLButtonElement) => void;
+export interface ButtonProps extends FormElementProps<'button'> {
 	/** Removes default styling */
 	unstyled?: boolean | undefined;
 	/**
@@ -21,11 +19,11 @@ export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement>
 
 export function Button(props: ButtonProps) {
 	const [local, rest] = splitProps(props, ['unstyled']);
-	const formControlProps = mergeFormControlProps(rest);
+	const formElementProps = mergeFormElementProps<'button'>(rest);
 	return (
 		<button
 			type="button"
-			{...formControlProps}
+			{...formElementProps}
 			class={cx('c-button--unstyled', !local.unstyled && 'c-button', props.class)}
 		/>
 	);

@@ -1,21 +1,16 @@
 import cx from 'classix';
-import { type JSX, splitProps } from 'solid-js';
+import { splitProps } from 'solid-js';
 
 import {
-	type FormControlProps,
-	mergeFormControlProps,
-} from '~/shared/components/merge-form-control-props';
+	type FormElementProps,
+	mergeFormElementProps,
+} from '~/shared/components/form-element-props';
 
-export interface ToggleSwitchProps
-	extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'>,
-		FormControlProps<HTMLInputElement> {
-	/** Force callback ref */
-	ref?: (el: HTMLInputElement) => void;
-}
+export interface ToggleSwitchProps extends Omit<FormElementProps<'input'>, 'type'> {}
 
 export function ToggleSwitch(props: ToggleSwitchProps) {
 	const [local, rest] = splitProps(props, ['class']);
-	const formProps = mergeFormControlProps<HTMLInputElement, typeof rest>(rest);
+	const formProps = mergeFormElementProps<'input'>(rest);
 
 	// Enter conflicts with form submit but toggle generally isn't used in forms
 	// and treated more like a button

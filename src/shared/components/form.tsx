@@ -1,10 +1,8 @@
 import { type JSX, splitProps, useContext } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
-import {
-	errorValidationMap,
-	FORM_CONTROL_ATTR,
-} from '~/shared/components/merge-form-control-props';
+import { FORM_CONTROL_ATTR } from '~/shared/components/form-element-control';
+import { errorValidationMap } from '~/shared/components/merge-form-control-props';
 import { RefContext } from '~/shared/components/ref-context';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 

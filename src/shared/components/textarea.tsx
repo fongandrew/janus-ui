@@ -1,19 +1,13 @@
 import cx from 'classix';
-import { type JSX } from 'solid-js';
 
 import {
-	type FormControlProps,
-	mergeFormControlProps,
-} from '~/shared/components/merge-form-control-props';
+	type FormElementProps,
+	mergeFormElementProps,
+} from '~/shared/components/form-element-props';
 
-export interface TextareaProps
-	extends JSX.TextareaHTMLAttributes<HTMLTextAreaElement>,
-		FormControlProps<HTMLTextAreaElement> {
-	/** Force callback ref */
-	ref?: (el: HTMLTextAreaElement) => void;
-}
+export interface TextareaProps extends Omit<FormElementProps<'textarea'>, 'type'> {}
 
 export function Textarea(props: TextareaProps) {
-	const rest = mergeFormControlProps<HTMLTextAreaElement, TextareaProps>(props);
+	const rest = mergeFormElementProps<'textarea'>(props);
 	return <textarea {...rest} class={cx('c-textarea', props.class)} />;
 }

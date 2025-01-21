@@ -2,18 +2,16 @@ import cx from 'classix';
 import { Check } from 'lucide-solid';
 import { For, type JSX, splitProps } from 'solid-js';
 
-import { ListBoxControl } from '~/shared/components/list-box-control';
 import {
-	type FormControlProps,
-	mergeFormControlProps,
-} from '~/shared/components/merge-form-control-props';
+	type FormElementProps,
+	mergeFormElementProps,
+} from '~/shared/components/form-element-props';
+import { ListBoxControl } from '~/shared/components/list-box-control';
 import { OptionList, OptionListGroup, OptionListItem } from '~/shared/components/option-list';
 import { createTextMatcher } from '~/shared/utility/create-text-matcher';
 import { generateId } from '~/shared/utility/id-generator';
 
-export interface ListBoxProps
-	extends JSX.HTMLAttributes<HTMLDivElement>,
-		FormControlProps<HTMLDivElement> {
+export interface ListBoxProps extends FormElementProps<'div'> {
 	/** Name for form submission */
 	name?: string | undefined;
 	/** Is listbox disabled? */
@@ -58,9 +56,7 @@ export function ListBox(props: ListBoxProps) {
 
 	return (
 		<OptionList
-			{...mergeFormControlProps<HTMLDivElement, typeof rest>(
-				listBoxControl.merge<JSX.HTMLAttributes<HTMLDivElement>>(rest),
-			)}
+			{...mergeFormElementProps<'div'>(listBoxControl.merge(rest))}
 			role="listbox"
 			tabIndex={0}
 			class={cx('c-list-box', rest.class)}
