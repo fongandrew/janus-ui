@@ -229,9 +229,9 @@ export class PropBuilder<
 	}
 
 	/** Add to a callback prop like onClick */
-	handle<TProp extends keyof JSX.CustomEventHandlersCamelCase<TElement>>(
+	handle<TProp extends `on${string}` & keyof JSX.DOMAttributes<TElement>>(
 		prop: TProp,
-		handler: JSX.CustomEventHandlersCamelCase<TElement>[TProp],
+		handler: JSX.DOMAttributes<TElement>[TProp],
 	) {
 		this.evtCbs.effect(prop, handler as JSX.EventHandlerUnion<TElement, Event>, false);
 	}
