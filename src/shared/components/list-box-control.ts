@@ -51,7 +51,7 @@ export class ListBoxControl<
 		this.unctrlValues = unctrlValues;
 		this.setUnctrlValues = setUnctrlValues;
 
-		this.setAttr('role', () => 'listbox' as const);
+		this.setAttr('role', 'listbox');
 		this.setAttr('aria-activedescendant', () => this.currentId() ?? undefined);
 		this.setAttr('aria-multiselectable', () => this.props.multiple);
 		this.setAttr('aria-required', () => this.props.required);

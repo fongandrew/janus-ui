@@ -1,9 +1,8 @@
-import { type JSX, splitProps, useContext } from 'solid-js';
+import { type JSX, splitProps } from 'solid-js';
 
-import { DROPDOWN_CONTENT_REF, DropdownContent } from '~/shared/components/dropdown';
+import { DropdownContent } from '~/shared/components/dropdown';
 import { ListBoxSelections } from '~/shared/components/list-box';
 import { OptionList } from '~/shared/components/option-list';
-import { RefContext } from '~/shared/components/ref-context';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { T } from '~/shared/utility/text/t-components';
 
@@ -21,13 +20,13 @@ export interface SelectOptionListProps extends JSX.HTMLAttributes<HTMLDivElement
 }
 
 export function SelectOptionList(props: SelectOptionListProps) {
-	const getRefs = useContext(RefContext);
+	// const getRefs = useContext(RefContext);
 	const [local, rest] = splitProps(props, ['children', 'input', 'listRef', 'name', 'values']);
 	return (
 		<DropdownContent {...rest}>
 			<OptionList
 				role="listbox"
-				ref={combineRefs(...getRefs(DROPDOWN_CONTENT_REF), local.listRef)}
+				ref={combineRefs(/* ...getRefs(DROPDOWN_CONTENT_REF), */ local.listRef)}
 			>
 				{local.children}
 				<div class="c-select__empty_state">
