@@ -13,9 +13,8 @@ import { PropBuilder } from '~/shared/utility/solid/prop-builder';
 
 /** A validator is just a callback that can set an error based on an event. */
 export type Validator<T = HTMLElement> = (
-	this: T,
-	event: Event | SubmitEvent,
-	setError?: (err: string) => void,
+	event: Event & { delegateTarget: T },
+	setError: (err: string) => void,
 ) => void | Promise<void>;
 
 /** Magic data attribute used to identify control elements */
@@ -39,6 +38,9 @@ export class FormElementControl<
 	error: Accessor<string | null>;
 	/** Signal setter for error message */
 	setError: Setter<string | null>;
+
+	/** Public attr to mark something as having been previously validated */
+	touched = false;
 
 	constructor() {
 		super();
@@ -84,7 +86,13 @@ export class FormElementControl<
 		const target = this.ref();
 		if (!target) return false;
 
+		// The act of validating (via submit or change) indicates this element
+		// has been touched and should subsequently be revalidated on change
+		this.touched = true;
+
 		// Built-in validation
+		// First unset any custom error message so it doesn't override built-ins
+		(this.ref() as HTMLInputElement)?.setCustomValidity?.('');
 		if ((target as Partial<HTMLInputElement>).checkValidity?.() === false) {
 			this.setError((target as HTMLInputElement).validationMessage);
 			return false;
@@ -92,8 +100,11 @@ export class FormElementControl<
 
 		// Custom validation
 		this.didErr = false;
+		const eventWithDelegate = Object.assign(event, { delegateTarget: target }) as Event & {
+			delegateTarget: TElement;
+		};
 		for (const fn of this.validators) {
-			const res = fn.call(target as TElement, event, this.setErr);
+			const res = fn.call(target as TElement, eventWithDelegate, this.setErr);
 			if (res instanceof Promise) await res;
 			if (this.didErr) return false;
 		}
@@ -103,9 +114,24 @@ export class FormElementControl<
 	}
 }
 
+/** Reset touched and error state for control */
+export function resetControl(elm: HTMLElement) {
+	const control = validationMap.get(elm);
+	if (!control) return;
+	control.touched = false;
+	control.setError(null);
+}
+
 /** Validate a given element, including error, and set validitity state. */
 export function validate(event: Event, target: HTMLElement) {
-	return validationMap.get(target)?.validate(event);
+	const control = validationMap.get(target);
+	return control?.validate(event);
+}
+
+export function validateIfTouched(event: Event, target: HTMLElement) {
+	const control = validationMap.get(target);
+	if (!control?.touched) return;
+	return control.validate(event);
 }
 
 /** Event listener for change events to revalidate the target element */

@@ -4,6 +4,7 @@ import { isServer } from 'solid-js/web';
 import { useFormElement } from '~/shared/components/form-element-context';
 import { FormElementControl, type Validator } from '~/shared/components/form-element-control';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
+import { generateId } from '~/shared/utility/id-generator';
 import { unreactivePropAccess } from '~/shared/utility/solid/unreactive-prop-access';
 
 export type FormElementProps<
@@ -83,17 +84,24 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 	props: FormElementProps<TTag>,
 ) {
 	const [unsetFormInput] = unreactivePropAccess(props, ['unsetFormInput']);
-	const control = (unsetFormInput ? useFormElement() : null) ?? new FormElementControl();
+
+	// Control might not be an input element but treat it as one to keep TypeScript from
+	// complaining about accessing props like trying to set or unset props like `disabled`
+	// on the element. Generally safe to assign or unassign these props to any element.
+	// They just have no effect if the element doesn't support them.
+	const control = ((unsetFormInput ? null : useFormElement()) ??
+		new FormElementControl()) as FormElementControl<'input'>;
 
 	// Remove non-standard DOM attribute
 	control.rmAttr('unsetFormInput');
 
+	// Default ID
+	control.setAttr('id', () => props.id ?? generateId('form-elm'));
+
 	// Switch disabled to aria-disabled if it exists (and we're on the client)
 	// so screen reader can still get useful info about the disabled component
 	// while tabbing around
-	(control as FormElementControl<'input'>).setAttr('disabled', () =>
-		props.disabled && !isServer ? false : undefined,
-	);
+	control.setAttr('disabled', () => (props.disabled && !isServer ? false : undefined));
 	control.setAttr('aria-disabled', () => props.disabled);
 
 	// Add aria version of required if applicable. We can leave required as is.
