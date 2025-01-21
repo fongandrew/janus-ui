@@ -53,7 +53,7 @@
 			inset: unset;
 			width: auto;
 
-			/* These are set via `create-dropdown.ts` */
+			/* These are set via `dropdown.tsx` */
 			left: var(--c-dropdown-left);
 			top: var(--c-dropdown-top);
 			max-height: var(--c-dropdown-max-height);
