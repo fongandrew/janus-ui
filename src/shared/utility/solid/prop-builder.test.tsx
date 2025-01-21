@@ -4,7 +4,7 @@ import { type Component, createSignal } from 'solid-js';
 import { PropBuilder } from '~/shared/utility/solid/prop-builder';
 
 describe('PropBuilder', () => {
-	it('should merge refs', async () => {
+	it('should merge refs', () => {
 		const builder = new PropBuilder<'div'>();
 		let refValue: HTMLDivElement | undefined;
 
@@ -185,21 +185,35 @@ describe('PropBuilder', () => {
 		expect(clicks).toEqual([1, 2, 3]);
 	});
 
-	it('should track id changes', () => {
+	it('should track ID assigned via prop', () => {
+		const builder = new PropBuilder<'div'>();
+		const TestComponent: Component<{ id: string }> = (props) => {
+			return <div {...builder.merge({ id: props.id })}>Test</div>;
+		};
+
+		const [id, setId] = createSignal('initial');
+		render(() => <TestComponent id={id()} />);
+
+		const div = screen.getByText('Test');
+		expect(div.id).toBe('initial');
+		expect(builder.id()).toBe('initial');
+
+		setId('updated');
+		expect(div.id).toBe('updated');
+		expect(builder.id()).toBe('updated');
+	});
+
+	it('should track ID assigned via builder', () => {
 		const builder = new PropBuilder<'div'>();
 		const [id, setId] = createSignal('initial');
-
-		const Parent: Component = () => {
-			return <Child />;
+		const TestComponent: Component = () => {
+			builder.setAttr('id', () => id());
+			return <div {...builder.merge({})}>Test</div>;
 		};
 
-		const Child: Component = () => {
-			return <div {...builder.merge({ id: id(), 'data-testid': 'test-div' })}>Test</div>;
-		};
+		render(() => <TestComponent />);
 
-		render(() => <Parent />);
-		const div = screen.getByTestId('test-div');
-
+		const div = screen.getByText('Test');
 		expect(div.id).toBe('initial');
 		expect(builder.id()).toBe('initial');
 
@@ -246,5 +260,28 @@ describe('PropBuilder', () => {
 
 		fireEvent.click(div);
 		expect(clicked.value).toBe(true);
+	});
+
+	it('should update sibling components previously rendered with the same builder', () => {
+		const builder = new PropBuilder<'div'>();
+
+		const Child1: Component = () => {
+			builder.extAttr('class', 'ext-class-1');
+			return <div {...builder.merge({ 'data-testid': 'test1' })}>Test 1</div>;
+		};
+
+		const Child2: Component = () => {
+			builder.extAttr('class', 'ext-class-2');
+			return <div>Test 2</div>;
+		};
+
+		render(() => (
+			<>
+				<Child1 />
+				<Child2 />
+			</>
+		));
+		const div1 = screen.getByTestId('test1');
+		expect(div1.className).toBe('ext-class-1 ext-class-2');
 	});
 });

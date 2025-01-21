@@ -1,10 +1,132 @@
-import { createRenderEffect, createSignal, type JSX, mergeProps, onCleanup } from 'solid-js';
+import {
+	createRenderEffect,
+	createSignal,
+	type JSX,
+	mapArray,
+	mergeProps,
+	onCleanup,
+} from 'solid-js';
 
-import { pullLast } from '~/shared/utility/list';
 import { useLogger } from '~/shared/utility/logger';
-import { bindProp, combineEventHandlers } from '~/shared/utility/solid/combine-event-handlers';
+import { combineEventHandlers } from '~/shared/utility/solid/combine-event-handlers';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { createIncrSignal } from '~/shared/utility/solid/create-incr-signal';
+
+/**
+ * Helper class that maps attributes to a list of items for that attribute
+ * that should be merged into a single item.
+ */
+class AttrMap<TValue> {
+	/** Internal counter for unique-ish IDs */
+	private count = 0;
+	/**
+	 * Record that maps attr strings to a map of IDs to values -- we use ID on the latter
+	 * because we care about the order in which an item is inserted *and* want an easy way
+	 * to look up and modify that item.
+	 */
+	private readonly maps: Record<string, Map<number, TValue>> = {};
+	/**
+	 * Record of signals for each attribute that fire when the attribute is updated.
+	 */
+	private readonly sigs: Record<string, ReturnType<typeof createIncrSignal>> = {};
+	/**
+	 * Signal when new attrs are added or removed.
+	 */
+	private readonly attrSig = createIncrSignal();
+
+	/**
+	 * Helper method to get or create map for attribute.
+	 */
+	private getMap(attr: string) {
+		return (this.maps[attr] ??= new Map<number, TValue>());
+	}
+
+	/**
+	 * Helper method to get or create signal for attribute.
+	 */
+	private getSig(attr: string) {
+		if (this.sigs[attr]) {
+			return this.sigs[attr];
+		}
+		const ret = createIncrSignal();
+		this.sigs[attr] = ret;
+		this.attrSig[1]();
+		return ret;
+	}
+
+	/**
+	 * Add a new value to an attribute list.
+	 */
+	add(attr: string, value: TValue) {
+		const id = this.count++;
+		this.set(attr, id, value);
+		return id;
+	}
+
+	/**
+	 * Remove a value from an attribute list.
+	 */
+	rm(attr: string, id: number) {
+		this.maps[attr]?.delete(id);
+		this.sigs[attr]?.[1]();
+	}
+
+	/**
+	 * Update a value in an attribute list.
+	 */
+	set(attr: string, id: number, value: TValue) {
+		const map = this.getMap(attr);
+		map.set(id, value);
+		this.getSig(attr)[1]();
+	}
+
+	/**
+	 * Reactive accessor for an array of all attrs associated with this map
+	 */
+	attrs() {
+		this.attrSig[0]();
+		return Object.keys(this.maps);
+	}
+
+	/**
+	 * Reactive accessor for an iterable of all values associated with an attribute.
+	 */
+	values(attr: string) {
+		this.getSig(attr)[0]();
+		return this.getMap(attr).values();
+	}
+
+	/**
+	 * Create an effect to add and update a value for an attribute. Set `unwrap=true` if
+	 * passing an accessor that should be called (but do not do this if the value itself
+	 * is a function, like an event handler).
+	 */
+	effect(attr: string, value: TValue, unwrap?: false): void;
+	effect(attr: string, value: TValue | (() => TValue), unwrap: true): void;
+	effect(attr: string, value: TValue | (() => TValue), unwrap = false) {
+		let id: number | undefined;
+		createRenderEffect(() => {
+			const resolved =
+				unwrap && typeof value === 'function'
+					? (value as () => TValue)()
+					: (value as TValue);
+			if (id !== undefined) {
+				this.set(attr, id, resolved);
+			} else {
+				id = this.add(attr, resolved);
+			}
+		});
+
+		// This clean up goes here instead of inside the effect because we want to
+		// remove the value when the effect is disposed (i.e. component is unmounted),
+		// not when the value changes.
+		onCleanup(() => {
+			if (id !== undefined) {
+				this.rm(attr, id);
+			}
+		});
+	}
+}
 
 /**
  * A class used to additively declare props that should be merged onto a given
@@ -24,24 +146,20 @@ export class PropBuilder<
 	// Disable linter below because it's complaining it wants the destructured values
 	// from `createSignal` but we know what we're doing here.
 	/* eslint-disable solid/reactivity */
+	/** Signal for ID of element */
 	private readonly idSig = createSignal<string>();
+	/** Signal for ref to element */
 	private readonly refSig = createSignal<TElement>();
 	/* eslint-enable solid/reactivity */
 
 	/** Extra ref assignment callbacks */
 	private readonly refCbs: ((val: TElement) => void)[] = [];
 	/** Callbacks that return a non-exclusive list item to a prop */
-	private readonly attrListVals: Record<
-		string,
-		(string | undefined | (() => string | undefined))[]
-	> = {};
+	private readonly attrListVals = new AttrMap<string | undefined>();
 	/** Callbacks that exclusively set the value of a prop */
-	private readonly attrVals: Record<
-		string,
-		(string | boolean | number | undefined | (() => string | boolean | number | undefined))[]
-	> = {};
+	private readonly attrVals = new AttrMap<string | boolean | number | undefined>();
 	/** Event handler callbacks */
-	private readonly evtCbs: Record<string, JSX.EventHandlerUnion<TElement, Event>[]> = {};
+	private readonly evtCbs = new AttrMap<JSX.EventHandlerUnion<TElement, Event>>();
 
 	/** Signal accessor that updates when the prop ID changes */
 	id = this.idSig[0];
@@ -74,9 +192,7 @@ export class PropBuilder<
 			| (() => JSX.HTMLElementTags[keyof JSX.HTMLElementTags][TAttr]),
 	): void;
 	extAttr(attr: any, value: any) {
-		const list = (this.attrListVals[attr] ??= []);
-		list.push(value);
-		onCleanup(() => pullLast(list, value));
+		this.attrListVals.effect(attr, value, true);
 	}
 
 	/** Assign a string attribute to an element */
@@ -101,9 +217,7 @@ export class PropBuilder<
 			| (() => JSX.HTMLElementTags[keyof JSX.HTMLElementTags][TAttr]),
 	): void;
 	setAttr(attr: any, value: any) {
-		const list = (this.attrVals[attr] ??= []);
-		list.push(value);
-		onCleanup(() => pullLast(list, value));
+		this.attrVals.effect(attr, value, true);
 	}
 
 	/**
@@ -119,10 +233,7 @@ export class PropBuilder<
 		prop: TProp,
 		handler: JSX.CustomEventHandlersCamelCase<TElement>[TProp],
 	) {
-		if (!handler) return;
-		const list = (this.evtCbs[prop] ??= []);
-		list.push(handler as JSX.EventHandlerUnion<TElement, Event>);
-		onCleanup(() => pullLast(list, handler as JSX.EventHandlerUnion<TElement, Event>));
+		this.evtCbs.effect(prop, handler as JSX.EventHandlerUnion<TElement, Event>, false);
 	}
 
 	/**
@@ -171,12 +282,6 @@ export class PropBuilder<
 			(props as any).ref,
 		);
 
-		// Update ID signal when ID changes
-		createRenderEffect(() => {
-			const [, setId] = this.idSig;
-			setId((props as any).id);
-		});
-
 		// Unset ID and ref on unmount. PropBuilder may exist longer than the element
 		// (e.g. via a parent component that conditionally renders the element) and
 		// we don't want to keep stale references.
@@ -189,38 +294,54 @@ export class PropBuilder<
 		});
 
 		// Merge attribute lists
-		for (const [attr, vals] of Object.entries(this.attrListVals)) {
-			createRenderEffect(() => {
-				const propValue = props[attr as keyof typeof props] as string | undefined;
-				const values: string[] = propValue ? [propValue] : [];
-				for (const val of vals) {
-					const ret = typeof val === 'function' ? val() : val;
-					if (ret) {
-						values.push(ret);
-					}
-				}
-				update(attr, values.join(' '));
-			});
-		}
+		createRenderEffect(
+			mapArray(
+				() => this.attrListVals.attrs(),
+				(attr) =>
+					createRenderEffect(() => {
+						const propValue = props[attr as keyof typeof props] as string | undefined;
+						const values: string[] = propValue ? [propValue] : [];
+						for (const val of this.attrListVals.values(attr)) {
+							if (val) {
+								values.push(val);
+							}
+						}
+						update(attr, values.join(' '));
+					}),
+			),
+		);
 
 		// Merge attributes
-		for (const [attr, vals] of Object.entries(this.attrVals)) {
-			createRenderEffect(() => {
-				const last = vals[vals.length - 1];
-				update(attr, typeof last === 'function' ? last() : last);
-			});
-		}
+		createRenderEffect(
+			mapArray(
+				() => this.attrVals.attrs(),
+				(attr) =>
+					createRenderEffect(() => {
+						const values = Array.from(this.attrVals.values(attr));
+						if (!values.length) return;
+						update(attr, values[values.length - 1]);
+					}),
+			),
+		);
 
 		// Merge event handlers
-		for (const [prop, handlers] of Object.entries(this.evtCbs)) {
-			ret[prop] = combineEventHandlers(
-				...handlers,
-				bindProp(props, prop as keyof typeof props) as JSX.EventHandlerUnion<
-					TElement,
-					Event
-				>,
-			);
-		}
+		createRenderEffect(
+			mapArray(
+				() => this.evtCbs.attrs(),
+				(prop) =>
+					createRenderEffect(() => {
+						const handlers = Array.from(this.evtCbs.values(prop));
+						const combinedHandler = combineEventHandlers(
+							...handlers,
+							props[prop as keyof typeof props] as JSX.EventHandlerUnion<
+								TElement,
+								Event
+							>,
+						);
+						update(prop, combinedHandler);
+					}),
+			),
+		);
 
 		this.merged = true;
 		const merged = mergeProps(props, () => {
@@ -228,6 +349,13 @@ export class PropBuilder<
 			// Spread object to ensure we're returning a new object
 			return { ...(ret as TProps) };
 		});
+
+		// Update ID signal when ID changes
+		createRenderEffect(() => {
+			const [, setId] = this.idSig;
+			setId((merged as any).id);
+		});
+
 		return merged as TProps;
 	}
 }
