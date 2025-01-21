@@ -19,6 +19,7 @@ import { Description } from '~/shared/components/description';
 import { Dropdown } from '~/shared/components/dropdown';
 import { ErrorMessage } from '~/shared/components/error-message';
 import { Form, type TypedFormData } from '~/shared/components/form';
+import { type Validator } from '~/shared/components/form-element-control';
 import { FormValidationGroup } from '~/shared/components/form-validation-group';
 import { Grid } from '~/shared/components/grid';
 import { Group } from '~/shared/components/group';
@@ -70,21 +71,19 @@ const FormValidationDemo: Component = () => {
 		password2: 'password2',
 	};
 
-	const validateUserName = (e: Event & { delegateTarget: HTMLInputElement }) => {
+	const validateUserName: Validator<HTMLInputElement> = (e, setError) => {
 		if (e.delegateTarget.value?.includes(' ')) {
-			return () => 'Password cannot contain spaces';
+			return setError('Username cannot contain spaces');
 		}
-		return null;
 	};
 
 	const password1Id = generateId('password');
-	const matchesPassword1 = (e: Event & { delegateTarget: HTMLInputElement }) => {
-		const input = e.delegateTarget.ownerDocument.querySelector<HTMLInputElement>(password1Id);
-		if (!input) return null;
-		if (input.value !== e.delegateTarget.value) {
-			return () => 'Passwords do not match';
+	const matchesPassword1: Validator<HTMLInputElement> = (e, setError) => {
+		const input = e.delegateTarget.ownerDocument.getElementById(password1Id);
+		if (!input) return;
+		if ((input as HTMLInputElement).value !== e.delegateTarget.value) {
+			return setError('Passwords do not match');
 		}
-		return null;
 	};
 
 	return (

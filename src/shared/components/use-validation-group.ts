@@ -1,7 +1,8 @@
 import {
-	errorValidationMap,
 	FORM_CONTROL_ATTR,
-} from '~/shared/components/merge-form-control-props';
+	validate,
+	validateIfTouched,
+} from '~/shared/components/form-element-control';
 import { createEventDelegate } from '~/shared/utility/solid/create-event-delegate';
 
 export interface ValidationGroupProps {
@@ -18,13 +19,9 @@ export interface ValidationGroupProps {
 export const useValidationGroup = createEventDelegate<'change', ValidationGroupProps>(
 	'change',
 	(event) => {
-		const { props } = event;
+		const touchedOnly = event.props.touchedOnly ?? true;
 		for (const formControl of event.delegateTarget.querySelectorAll(`[${FORM_CONTROL_ATTR}]`)) {
-			const errorValidationProps = errorValidationMap.get(formControl as HTMLElement);
-			if (props.touchedOnly !== false && !errorValidationProps?.touched()) {
-				continue;
-			}
-			errorValidationProps?.revalidate(event);
+			(touchedOnly ? validateIfTouched : validate)(event, formControl as HTMLElement);
 		}
 	},
 );

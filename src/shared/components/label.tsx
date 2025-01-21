@@ -1,51 +1,32 @@
 import cx from 'classix';
-import { children, createEffect, createSignal, type JSX, useContext } from 'solid-js';
+import { children, createMemo, createRenderEffect, createSignal, type JSX } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 
-import { FormControlContext } from '~/shared/components/form-control-context';
-import { updateAttributeList } from '~/shared/utility/attribute-list';
+import { useFormElement } from '~/shared/components/form-element-context';
 import { isFormControl } from '~/shared/utility/element-types';
 import { generateId } from '~/shared/utility/id-generator';
 import { spanify } from '~/shared/utility/solid/spanify';
 
 export function Label(props: JSX.LabelHTMLAttributes<HTMLLabelElement>) {
-	const [forId, setForId] = createSignal<string | undefined>();
-	const [labelId, setLabelId] = createSignal<string | undefined>();
-	const id = () => props.id ?? labelId();
+	const formElement = useFormElement();
+	const id = createMemo(() => props.id ?? generateId('label'));
 
-	const [input] = useContext(FormControlContext);
-	createEffect(() => {
-		const inputElm = input();
-		if (!inputElm) {
-			setForId(undefined);
-			return;
-		}
-
-		// Set for attribute if it's actually a form element. If it isn't (e.g. a
-		// div made to function like an input using ARIA attributes, then use
-		// aria-labelledby instead).
-		if (isFormControl(inputElm)) {
-			let inputId = inputElm.id;
-			if (!inputId) {
-				inputId = generateId('input');
-				inputElm.id = inputId;
-			}
-			setForId(inputId);
-		} else {
-			let thisId = id();
-			if (!thisId) {
-				thisId = generateId('label');
-				setLabelId(thisId);
-			}
-			updateAttributeList(inputElm, 'aria-labelledby', [thisId]);
-		}
+	// Two modes: Render an actual `label` element with a `for` attribute, or a
+	// `span` element with an `aria-labelledby` attribute. The latter is used when
+	// the input is not a real input element (e.g. a div with ARIA attributes to
+	// simulate an input).
+	const [mode, setMode] = createSignal<'label' | 'span'>('label');
+	createRenderEffect(() => {
+		const inputElm = formElement?.ref();
+		if (!inputElm) return;
+		setMode(isFormControl(inputElm) ? 'label' : 'span');
 	});
 
+	formElement?.setAttr('aria-labelledby', () => (mode() === 'span' ? id() : undefined));
 	const resolved = children(() => props.children);
-
 	const maybeFocusInput = (event: Event) => {
-		// If `for` already set, use native behavior
-		if (forId()) return;
+		// If we're in <label> mode, use native behavior with `for`
+		if (mode() === 'label') return;
 
 		const thisId = id();
 		if (!thisId) return;
@@ -68,9 +49,9 @@ export function Label(props: JSX.LabelHTMLAttributes<HTMLLabelElement>) {
 
 	return (
 		<Dynamic
-			component={forId() || input.isDefault ? 'label' : 'span'}
-			for={forId()}
 			{...props}
+			component={mode()}
+			for={formElement?.id()}
 			id={id()}
 			class={cx('c-label', props.class)}
 			onClick={maybeFocusInput}

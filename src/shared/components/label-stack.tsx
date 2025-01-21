@@ -1,12 +1,12 @@
 import cx from 'classix';
 import { type JSX } from 'solid-js';
 
-import { FormControlGroup } from '~/shared/components/form-control-group';
+import { FormElementProvider } from '~/shared/components/form-element-provider';
 
 export function LabelStack(props: JSX.HTMLAttributes<HTMLDivElement>) {
 	return (
-		<FormControlGroup>
+		<FormElementProvider>
 			<div {...props} class={cx('c-label-stack', props.class)} />
-		</FormControlGroup>
+		</FormElementProvider>
 	);
 }

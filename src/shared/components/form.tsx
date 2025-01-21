@@ -1,8 +1,11 @@
 import { type JSX, splitProps, useContext } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
-import { FORM_CONTROL_ATTR } from '~/shared/components/form-element-control';
-import { errorValidationMap } from '~/shared/components/merge-form-control-props';
+import {
+	FORM_CONTROL_ATTR,
+	resetControl,
+	validate,
+} from '~/shared/components/form-element-control';
 import { RefContext } from '~/shared/components/ref-context';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 
@@ -52,8 +55,7 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 		// Reset touched state in all controls in form
 		const controls = getControls(form);
 		for (const control of controls) {
-			errorValidationMap.get(control)?.setTouched(false);
-			errorValidationMap.get(control)?.setError(null);
+			resetControl(control);
 		}
 
 		local.onReset?.(event);
@@ -65,15 +67,11 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 
 		// Revalidate all controls in the form. Validation may be async so need
 		// special handling for that scenario.
-		const validationPromises: Promise<(() => JSX.Element) | null>[] = [];
+		const validationPromises: Promise<boolean>[] = [];
 		for (const control of controls) {
-			const validationResult = errorValidationMap.get(control)?.revalidate(event);
+			const validationResult = validate(event, control);
 			if (validationResult instanceof Promise) {
 				validationPromises.push(validationResult);
-			} else if (validationResult) {
-				// Synchronous error
-				event.preventDefault();
-				return;
 			}
 		}
 
@@ -86,7 +84,7 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 		// Wait for validation and if any errors, stop submission
 		const results = await Promise.all(validationPromises);
 		for (const result of results) {
-			if (result) {
+			if (result === false) {
 				return;
 			}
 		}
