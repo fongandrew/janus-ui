@@ -5,7 +5,7 @@ import { PropBuilder } from '~/shared/utility/solid/prop-builder';
 
 describe('PropBuilder', () => {
 	it('should merge refs', async () => {
-		const builder = new PropBuilder<HTMLDivElement>();
+		const builder = new PropBuilder<'div'>();
 		let refValue: HTMLDivElement | undefined;
 
 		const Parent: Component = () => {
@@ -26,8 +26,30 @@ describe('PropBuilder', () => {
 		expect(builder.ref()).toBe(div);
 	});
 
+	it('should extend attributes', () => {
+		const builder = new PropBuilder<'div'>();
+
+		const Parent: Component = () => {
+			builder.extAttr('class', 'ext-class');
+			return <Child />;
+		};
+
+		const Child: Component = () => {
+			return (
+				<div {...builder.merge({ class: 'another-class', 'data-testid': 'test-div' })}>
+					Test
+				</div>
+			);
+		};
+
+		render(() => <Parent />);
+		const div = screen.getByTestId('test-div');
+
+		expect(div.className).toBe('another-class ext-class');
+	});
+
 	it('should extend attributes and track reactivity', () => {
-		const builder = new PropBuilder<HTMLDivElement>();
+		const builder = new PropBuilder<'div'>();
 
 		const [dynamicClass, setDynamicClass] = createSignal('test-class');
 		const [baseClass, setBaseClass] = createSignal('base-class');
@@ -58,8 +80,45 @@ describe('PropBuilder', () => {
 		expect(div.className).toBe('new-base-class updated-class another-class');
 	});
 
+	it('should set attributes', () => {
+		const builder = new PropBuilder<'div'>();
+
+		const Parent: Component = () => {
+			builder.setAttr('aria-label', 'test label');
+			return <Child />;
+		};
+
+		const Child: Component = () => {
+			return <div {...builder.merge({ 'data-testid': 'test-div' })}>Test</div>;
+		};
+
+		render(() => <Parent />);
+		const div = screen.getByTestId('test-div');
+
+		expect(div.getAttribute('aria-label')).toBe('test label');
+	});
+
+	it('should unset attributes', () => {
+		const builder = new PropBuilder<'div'>();
+
+		const Parent: Component = () => {
+			builder.setAttr('aria-label', 'test label');
+			return <Child />;
+		};
+
+		const Child: Component = () => {
+			builder.setAttr('aria-label', undefined);
+			return <div {...builder.merge({ 'data-testid': 'test-div' })}>Test</div>;
+		};
+
+		render(() => <Parent />);
+		const div = screen.getByTestId('test-div');
+
+		expect(div.getAttribute('aria-label')).toBe(null);
+	});
+
 	it('should set attributes and track reactivity', () => {
-		const builder = new PropBuilder<HTMLDivElement>();
+		const builder = new PropBuilder<'div'>();
 
 		const [label, setLabel] = createSignal('test label');
 		const [childLabel, setChildLabel] = createSignal('child label');
@@ -97,7 +156,7 @@ describe('PropBuilder', () => {
 	});
 
 	it('should handle events', () => {
-		const builder = new PropBuilder<HTMLDivElement>();
+		const builder = new PropBuilder<'div'>();
 		const clicks: number[] = [];
 
 		const Parent: Component = () => {
@@ -127,7 +186,7 @@ describe('PropBuilder', () => {
 	});
 
 	it('should track id changes', () => {
-		const builder = new PropBuilder<HTMLDivElement>();
+		const builder = new PropBuilder<'div'>();
 		const [id, setId] = createSignal('initial');
 
 		const Parent: Component = () => {
@@ -150,7 +209,7 @@ describe('PropBuilder', () => {
 	});
 
 	it('should merge all props together', () => {
-		const builder = new PropBuilder<HTMLDivElement>();
+		const builder = new PropBuilder<'div'>();
 		const clicked = { value: false };
 
 		const Parent: Component = () => {

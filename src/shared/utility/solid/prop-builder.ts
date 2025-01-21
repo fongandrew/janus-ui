@@ -31,9 +31,12 @@ export class PropBuilder<
 	/** Extra ref assignment callbacks */
 	private readonly refCbs: ((val: TElement) => void)[] = [];
 	/** Callbacks that return a non-exclusive list item to a prop */
-	private readonly attrListCbs: Record<string, (() => string | undefined)[]> = {};
+	private readonly attrListVals: Record<string, (string | (() => string | undefined))[]> = {};
 	/** Callbacks that exclusively set the value of a prop */
-	private readonly attrCbs: Record<string, (() => string | boolean | number | undefined)[]> = {};
+	private readonly attrVals: Record<
+		string,
+		(string | boolean | number | (() => string | boolean | number | undefined))[]
+	> = {};
 	/** Event handler callbacks */
 	private readonly evtCbs: Record<string, JSX.EventHandlerUnion<TElement, Event>[]> = {};
 
@@ -52,10 +55,10 @@ export class PropBuilder<
 	}
 
 	/** Add a string ID to an attribute that is a list of IDs */
-	extAttr(attr: `data-${string}`, callback: () => string | undefined): void;
+	extAttr(attr: `data-${string}`, value: string | (() => string | undefined)): void;
 	extAttr<TAttr extends keyof TAttributes>(
 		attr: TAttr & (TAttributes[TAttr] extends string | undefined ? TAttr : never),
-		callback: () => TAttributes[TAttr],
+		value: TAttributes[TAttr] | (() => TAttributes[TAttr]),
 	): void;
 	// Should be unnecessary but TypeScript doesn't reliably infer with generics
 	extAttr<TAttr extends keyof JSX.HTMLElementTags[keyof JSX.HTMLElementTags]>(
@@ -63,20 +66,22 @@ export class PropBuilder<
 			(JSX.HTMLElementTags[keyof JSX.HTMLElementTags][TAttr] extends string | undefined
 				? TAttr
 				: never),
-		callback: () => JSX.HTMLElementTags[keyof JSX.HTMLElementTags][TAttr],
+		value:
+			| JSX.HTMLElementTags[keyof JSX.HTMLElementTags][TAttr]
+			| (() => JSX.HTMLElementTags[keyof JSX.HTMLElementTags][TAttr]),
 	): void;
-	extAttr(attr: any, callback: () => any) {
-		const list = (this.attrListCbs[attr] ??= []);
-		list.push(callback);
-		onCleanup(() => pullLast(list, callback));
+	extAttr(attr: any, value: any) {
+		const list = (this.attrListVals[attr] ??= []);
+		list.push(value);
+		onCleanup(() => pullLast(list, value));
 	}
 
 	/** Assign a string attribute to an element */
-	setAttr(attr: `data-${string}`, callback: () => string | undefined): void;
+	setAttr(attr: `data-${string}`, value: string | undefined | (() => string | undefined)): void;
 	setAttr<TAttr extends keyof TAttributes>(
 		attr: TAttr &
 			(TAttributes[TAttr] extends boolean | number | string | undefined ? TAttr : never),
-		callback: () => TAttributes[TAttr],
+		callback: TAttributes[TAttr] | (() => TAttributes[TAttr]),
 	): void;
 	// Should be unnecessary but TypeScript doesn't reliably infer with generics
 	setAttr<TAttr extends keyof JSX.HTMLElementTags[keyof JSX.HTMLElementTags]>(
@@ -88,12 +93,14 @@ export class PropBuilder<
 				| undefined
 				? TAttr
 				: never),
-		callback: () => JSX.HTMLElementTags[keyof JSX.HTMLElementTags][TAttr],
+		callback:
+			| JSX.HTMLElementTags[keyof JSX.HTMLElementTags][TAttr]
+			| (() => JSX.HTMLElementTags[keyof JSX.HTMLElementTags][TAttr]),
 	): void;
-	setAttr(attr: any, callback: () => any) {
-		const list = (this.attrCbs[attr] ??= []);
-		list.push(callback);
-		onCleanup(() => pullLast(list, callback));
+	setAttr(attr: any, value: any) {
+		const list = (this.attrVals[attr] ??= []);
+		list.push(value);
+		onCleanup(() => pullLast(list, value));
 	}
 
 	/** Add to a callback prop like onClick */
@@ -108,15 +115,18 @@ export class PropBuilder<
 	}
 
 	/**
+	 * (Non-reactive) variable for tracking whether merge has already been called within
+	 * the curren scope.
+	 */
+	private merged = false;
+
+	/**
 	 * Merge props based on all the extensions that have been added.
 	 */
-	merge<
-		TProps extends {
-			id?: string | undefined;
-			ref?: any | ((el: any) => void) | undefined;
-		},
-	>(props: TProps & Record<`data-${string}`, string | undefined>): TProps {
-		if (this.ref()) {
+	merge<TProps extends TAttributes>(
+		props: TProps & Record<`data-${string}`, string | undefined>,
+	): TProps {
+		if (this.merged) {
 			useLogger().warn('PropBuilder should only be used for a single component at a time');
 			return props;
 		}
@@ -124,11 +134,12 @@ export class PropBuilder<
 		const [track, signalUpdate] = createIncrSignal();
 		const ret = {} as Record<string, unknown> & Record<`data-${string}`, string>;
 		const update = (key: string, value: unknown) => {
-			if (ret[key] !== value) {
-				// Solid intentionally does not override undefined props with mergeProps
-				// (https://github.com/solidjs/solid/issues/1383), so switch to null
-				// If this ever breaks, we move to something using `splitProps`
-				ret[key] = value ?? null;
+			// Solid intentionally does not override undefined props with mergeProps
+			// (https://github.com/solidjs/solid/issues/1383), so switch to null
+			// If this ever breaks, we move to something using `splitProps`
+			const next = value ?? null;
+			if (ret[key] !== next) {
+				ret[key] = next;
 				signalUpdate();
 			}
 		};
@@ -146,20 +157,20 @@ export class PropBuilder<
 			// Uh, just don't change the ref prop. We can do something hacky if needed
 			// but honestly it's a bit of hassle and overhead and all of the overhead
 			// for this could live in the ref itself if need be.
-			// eslint-disable-next-line solid/reactivity
-			props.ref,
+			(props as any).ref,
 		);
 
 		// Update ID signal when ID changes
 		createRenderEffect(() => {
 			const [, setId] = this.idSig;
-			setId(props.id);
+			setId((props as any).id);
 		});
 
 		// Unset ID and ref on unmount. PropBuilder may exist longer than the element
 		// (e.g. via a parent component that conditionally renders the element) and
 		// we don't want to keep stale references.
 		onCleanup(() => {
+			this.merged = false;
 			const [, setRef] = this.refSig;
 			setRef(undefined);
 			const [, setId] = this.idSig;
@@ -167,12 +178,12 @@ export class PropBuilder<
 		});
 
 		// Merge attribute lists
-		for (const [attr, callbacks] of Object.entries(this.attrListCbs)) {
+		for (const [attr, vals] of Object.entries(this.attrListVals)) {
 			createRenderEffect(() => {
 				const propValue = props[attr as keyof typeof props] as string | undefined;
 				const values: string[] = propValue ? [propValue] : [];
-				for (const callback of callbacks) {
-					const ret = callback();
+				for (const val of vals) {
+					const ret = typeof val === 'function' ? val() : val;
 					if (ret) {
 						values.push(ret);
 					}
@@ -182,10 +193,10 @@ export class PropBuilder<
 		}
 
 		// Merge attributes
-		for (const [attr, callbacks] of Object.entries(this.attrCbs)) {
+		for (const [attr, vals] of Object.entries(this.attrVals)) {
 			createRenderEffect(() => {
-				const last = callbacks[callbacks.length - 1];
-				update(attr, last?.());
+				const last = vals[vals.length - 1];
+				update(attr, typeof last === 'function' ? last() : last);
 			});
 		}
 
@@ -200,6 +211,7 @@ export class PropBuilder<
 			);
 		}
 
+		this.merged = true;
 		const merged = mergeProps(props, () => {
 			track();
 			// Spread object to ensure we're returning a new object
