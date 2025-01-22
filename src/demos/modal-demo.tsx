@@ -1,4 +1,4 @@
-import { type Component, createSignal, Show } from 'solid-js';
+import { createSignal } from 'solid-js';
 
 import { Button } from '~/shared/components/button';
 import {
@@ -24,15 +24,26 @@ import {
 import { Stack } from '~/shared/components/stack';
 import { Textarea } from '~/shared/components/textarea';
 
-const ModalDemo: Component = () => {
+function SimpleModal() {
 	const [isOpen, setIsOpen] = createSignal(false);
-	const [isOpenLong, setIsOpenLong] = createSignal(false);
-	const [isOpenForm, setIsOpenForm] = createSignal(false);
-	const [formData, setFormData] = createSignal<{
-		name: string;
-		email: string;
-		message: string;
-	} | null>(null);
+	return (
+		<>
+			<Button onClick={() => setIsOpen(true)}>Open Modal</Button>
+			<Modal open={isOpen()} onClose={() => setIsOpen(false)}>
+				<ModalTitle>Example Modal</ModalTitle>
+				<ModalContent>
+					<p>Click outside or the close button to dismiss</p>
+				</ModalContent>
+				<ModalFooter>
+					<Button type="reset">Close</Button>
+				</ModalFooter>
+			</Modal>
+		</>
+	);
+}
+
+function LongModal() {
+	const [isOpen, setIsOpen] = createSignal(false);
 
 	const manyParagraphs = [];
 	for (let i = 0; i < 20; i++) {
@@ -49,23 +60,141 @@ const ModalDemo: Component = () => {
 		);
 	}
 
+	return (
+		<>
+			<Button onClick={() => setIsOpen(true)}>Open Modal (Long)</Button>
+			<Modal open={isOpen()} onClose={() => setIsOpen(false)}>
+				<ModalTitle>Example Modal</ModalTitle>
+				<ModalContent>{manyParagraphs}</ModalContent>
+				<ModalFooter>
+					<Button type="reset">Close</Button>
+				</ModalFooter>
+			</Modal>
+		</>
+	);
+}
+
+function FormModal() {
+	const [isFormOpen, setIsFormOpen] = createSignal(false);
+	const [isResultsOpen, setIsResultsOpen] = createSignal(false);
+
 	const FormNames = {
-		name: 'name',
-		email: 'email',
-		message: 'message',
+		name: 'name' as const,
+		email: 'email' as const,
+		message: 'message' as const,
 	};
 
-	const handleSubmit = (e: SubmitEvent & { data: TypedFormData<string> }) => {
+	const [formData, setFormData] = createSignal<Record<keyof typeof FormNames, string> | null>(
+		null,
+	);
+	const handleSubmit = (e: SubmitEvent & { data: TypedFormData<keyof typeof FormNames> }) => {
 		e.preventDefault();
 		const data = e.data;
 		setFormData({
-			name: data.get(FormNames.name) as string,
-			email: data.get(FormNames.email) as string,
-			message: data.get(FormNames.message) as string,
+			name: data.get('name') as string,
+			email: data.get('email') as string,
+			message: data.get('message') as string,
 		});
-		setIsOpenForm(false);
+		setIsFormOpen(false);
+		setIsResultsOpen(true);
 	};
 
+	return (
+		<>
+			<Button onClick={() => setIsFormOpen(true)}>Open Form Modal</Button>
+			<Modal open={isFormOpen()} onClose={() => setIsFormOpen(false)}>
+				<ModalTitle>Form Example</ModalTitle>
+				<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
+					<Stack>
+						<LabelledControl label="Name">
+							<Input name={FormNames.name} required />
+						</LabelledControl>
+						<LabelledControl label="Email">
+							<Input name={FormNames.email} type="email" required />
+						</LabelledControl>
+						<LabelledControl label="Message">
+							<Textarea name={FormNames.message} required />
+						</LabelledControl>
+					</Stack>
+				</ModalFormContent>
+				<ModalFooter>
+					<ModalCancelButton />
+					<ModalSubmitButton />
+				</ModalFooter>
+			</Modal>
+			<Modal open={isResultsOpen()} onClose={() => setIsResultsOpen(false)}>
+				<ModalTitle>Form Results</ModalTitle>
+				<ModalContent>
+					<output>
+						<Card>
+							<CardHeader>
+								<CardTitle>Submitted Form Data</CardTitle>
+							</CardHeader>
+							<CardContent>
+								<Stack>
+									<LabelStack>
+										<Label>Name</Label>
+										<Description>{formData()?.name}</Description>
+									</LabelStack>
+									<LabelStack>
+										<Label>Email</Label>
+										<Description>{formData()?.email}</Description>
+									</LabelStack>
+									<LabelStack>
+										<Label>Message</Label>
+										<Description>{formData()?.message}</Description>
+									</LabelStack>
+								</Stack>
+							</CardContent>
+						</Card>
+					</output>
+				</ModalContent>
+			</Modal>
+		</>
+	);
+}
+
+function ScrollableForm() {
+	const [isFormOpen, setIsFormOpen] = createSignal(false);
+
+	const FormNames = {
+		field1: 'field1' as const,
+		field2: 'field2' as const,
+	};
+
+	const handleSubmit = (e: SubmitEvent & { data: TypedFormData<keyof typeof FormNames> }) => {
+		e.preventDefault();
+		setIsFormOpen(false);
+	};
+
+	return (
+		<>
+			<Button onClick={() => setIsFormOpen(true)}>Open Form Modal (Scrollable)</Button>
+			<Modal open={isFormOpen()} onClose={() => setIsFormOpen(false)}>
+				<ModalTitle>Form Example</ModalTitle>
+				<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
+					<Stack>
+						<LabelledControl label="First">
+							<Input name={FormNames.field1} required />
+						</LabelledControl>
+						<div style={{ height: '3000px' }}>
+							A big block that takes up lots of space to force scrolling
+						</div>
+						<LabelledControl label="Last">
+							<Input name={FormNames.field2} required />
+						</LabelledControl>
+					</Stack>
+				</ModalFormContent>
+				<ModalFooter>
+					<ModalCancelButton />
+					<ModalSubmitButton />
+				</ModalFooter>
+			</Modal>
+		</>
+	);
+}
+
+function ModalDemo() {
 	return (
 		<Card>
 			<CardHeader>
@@ -73,79 +202,15 @@ const ModalDemo: Component = () => {
 				<CardDescription>Modal dialog with backdrop</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Stack>
-					<Show when={formData()}>
-						<output>
-							<Card>
-								<CardHeader>
-									<CardTitle>Submitted Form Data</CardTitle>
-								</CardHeader>
-								<CardContent>
-									<Stack>
-										<LabelStack>
-											<Label>Name</Label>
-											<Description>{formData()?.name}</Description>
-										</LabelStack>
-										<LabelStack>
-											<Label>Email</Label>
-											<Description>{formData()?.email}</Description>
-										</LabelStack>
-										<LabelStack>
-											<Label>Message</Label>
-											<Description>{formData()?.message}</Description>
-										</LabelStack>
-									</Stack>
-								</CardContent>
-							</Card>
-						</output>
-					</Show>
-					<Group>
-						<Button onClick={() => setIsOpen(true)}>Open Modal</Button>
-						<Modal open={isOpen()} onClose={() => setIsOpen(false)}>
-							<ModalTitle>Example Modal</ModalTitle>
-							<ModalContent>
-								<p>Click outside or the close button to dismiss</p>
-							</ModalContent>
-							<ModalFooter>
-								<Button type="reset">Close</Button>
-							</ModalFooter>
-						</Modal>
-
-						<Button onClick={() => setIsOpenLong(true)}>Open Modal (Long)</Button>
-						<Modal open={isOpenLong()} onClose={() => setIsOpenLong(false)}>
-							<ModalTitle>Example Modal</ModalTitle>
-							<ModalContent>{manyParagraphs}</ModalContent>
-							<ModalFooter>
-								<Button type="reset">Close</Button>
-							</ModalFooter>
-						</Modal>
-
-						<Button onClick={() => setIsOpenForm(true)}>Open Form Modal</Button>
-						<Modal open={isOpenForm()} onClose={() => setIsOpenForm(false)}>
-							<ModalTitle>Form Example</ModalTitle>
-							<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
-								<Stack>
-									<LabelledControl label="Name">
-										<Input name={FormNames.name} required />
-									</LabelledControl>
-									<LabelledControl label="Email">
-										<Input name={FormNames.email} type="email" required />
-									</LabelledControl>
-									<LabelledControl label="Message">
-										<Textarea name={FormNames.message} required />
-									</LabelledControl>
-								</Stack>
-							</ModalFormContent>
-							<ModalFooter>
-								<ModalCancelButton />
-								<ModalSubmitButton />
-							</ModalFooter>
-						</Modal>
-					</Group>
-				</Stack>
+				<Group>
+					<SimpleModal />
+					<LongModal />
+					<FormModal />
+					<ScrollableForm />
+				</Group>
 			</CardContent>
 		</Card>
 	);
-};
+}
 
 export { ModalDemo };
