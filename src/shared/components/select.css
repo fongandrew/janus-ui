@@ -4,7 +4,7 @@
 	.c-select__button,
 	.c-select__input,
 	.c-select__input_description {
-		@apply t-with-disabled-input t-with-error-input t-with-focus-ring w-full overflow-x-hidden text-ellipsis rounded-md border-md bg-input-bg py-input-y-md pl-input-x-md text-left text-input-md font-normal text-input-fg shadow-inner transition-colors border-dynamic-secondary;
+		@apply t-with-disabled-input t-with-error-input t-with-focus-ring min-h-input-md w-full overflow-x-hidden text-ellipsis rounded-md border-md bg-input-bg py-input-y-md pl-input-x-md text-left text-input-md font-normal text-input-fg shadow-inner transition-colors border-dynamic-secondary;
 
 		/* To avoid overlap with the chevron or clear */
 		padding-right: theme('width.input-md');
@@ -72,7 +72,7 @@
 	}
 
 	.c-select__input_description {
-		@apply min-h-input-md pointer-events-none;
+		@apply pointer-events-none;
 	}
 
 	.c-select__container:has(:popover-open, :focus) .c-select__input {
