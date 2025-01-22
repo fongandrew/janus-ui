@@ -15,7 +15,6 @@ import { createEffect, createSignal, onCleanup } from 'solid-js';
 import { Button } from '~/shared/components/button';
 import { type FormElementControl } from '~/shared/components/form-element-control';
 import { FormElementProvider } from '~/shared/components/form-element-provider';
-import { SCROLL_CONTAINER_ATTR } from '~/shared/components/option-list-control';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { generateId } from '~/shared/utility/id-generator';
 import { evtWin } from '~/shared/utility/multi-view';
@@ -134,7 +133,6 @@ export function DropdownContent(props: DropdownContentProps) {
 
 	const propBuilder = useContext(DropdownContentContext) ?? new PropBuilder<'div'>();
 	propBuilder.setAttr('id', () => props.id ?? generateId('dropdown'));
-	propBuilder.setAttr(SCROLL_CONTAINER_ATTR, 'true');
 
 	return (
 		<div

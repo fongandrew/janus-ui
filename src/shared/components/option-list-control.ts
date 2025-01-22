@@ -24,14 +24,6 @@ export interface OptionListProps {
  */
 export const LIST_OPTION_VALUE_ATTR = 'data-list-option-value';
 
-/**
- * Data variable to identify a scrollable container
- */
-export const SCROLL_CONTAINER_ATTR = 'data-scroll-container';
-
-/** WeakMap to store the last highlighted element for each container */
-const lastHighlightedElementMap = new WeakMap<HTMLElement, HTMLElement | null>();
-
 /** Delegated keydown handler, meant to be bound to props */
 export function handleKeyDown(ctrl: OptionListControl, event: KeyboardEvent) {
 	const document = evtDoc(event);
@@ -145,29 +137,7 @@ export class OptionListControl<
 		this.props.onHighlight?.(id, element, event);
 
 		// Scroll adjustment logic
-		const window = element.ownerDocument.defaultView;
-		const container = element.closest(`[${SCROLL_CONTAINER_ATTR}]`) as HTMLElement | null;
-		if (container) {
-			if (!lastHighlightedElementMap.has(container)) {
-				window?.requestAnimationFrame(() => {
-					const lastHighlightedElement = lastHighlightedElementMap.get(container);
-					if (lastHighlightedElement) {
-						const containerRect = container.getBoundingClientRect();
-						const elementRect = lastHighlightedElement.getBoundingClientRect();
-
-						if (elementRect.top < containerRect.top) {
-							// Element is above the visible area
-							container.scrollTop -= containerRect.top - elementRect.top;
-						} else if (elementRect.bottom > containerRect.bottom) {
-							// Element is below the visible area
-							container.scrollTop += elementRect.bottom - containerRect.bottom;
-						}
-					}
-					lastHighlightedElementMap.delete(container);
-				});
-			}
-			lastHighlightedElementMap.set(container, element);
-		}
+		element.scrollIntoView({ block: 'nearest' });
 	}
 
 	select(element: HTMLElement | null, event: KeyboardEvent | MouseEvent) {
