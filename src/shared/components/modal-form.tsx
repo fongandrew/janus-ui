@@ -1,10 +1,10 @@
 import cx from 'classix';
-import { createEffect, createSignal, splitProps, useContext } from 'solid-js';
+import { splitProps, useContext } from 'solid-js';
 
 import { Button, type ButtonProps } from '~/shared/components/button';
 import { Form, type FormProps } from '~/shared/components/form';
+import { FormContext } from '~/shared/components/form-context';
 import { ModalContent } from '~/shared/components/modal';
-import { ModalContext } from '~/shared/components/modal-context';
 import { generateId } from '~/shared/utility/id-generator';
 import { T } from '~/shared/utility/text/t-components';
 
@@ -33,26 +33,13 @@ export function ModalCancelButton(props: ButtonProps) {
 }
 
 export function ModalSubmitButton(props: ButtonProps) {
-	const modalContext = useContext(ModalContext);
-	const [formId, setFormId] = createSignal<string | undefined>();
-
-	createEffect(() => {
-		const form = modalContext?.form?.();
-		if (!form) return;
-
-		let formId = form.id;
-		if (!formId) {
-			formId = generateId('modal-form');
-			form.id = formId;
-		}
-		setFormId(formId);
-	});
+	const formContext = useContext(FormContext);
 
 	return (
 		<Button
 			{...props}
 			type="submit"
-			form={props.form || formId()}
+			form={props.form || formContext.id()}
 			class={cx('c-button--primary', props.class)}
 		>
 			{props.children ?? <T>Submit</T>}

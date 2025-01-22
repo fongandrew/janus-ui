@@ -51,7 +51,6 @@ registerDocumentSetup((document) => {
 
 export const Modal: Component<DialogProps> = (props) => {
 	const [dialog, setDialog] = createSignal<HTMLDialogElement | null>(null);
-	const [form, setForm] = createSignal<HTMLFormElement | null>(null);
 	const isMounted = createMountedSignal();
 	const [local, rest] = splitProps(props, ['children', 'open']);
 
@@ -146,7 +145,7 @@ export const Modal: Component<DialogProps> = (props) => {
 	};
 
 	return (
-		<ModalContext.Provider value={{ open: () => !!props.open, form, setForm }}>
+		<ModalContext.Provider value={{ open: () => !!props.open }}>
 			<dialog
 				{...rest}
 				ref={combineRefs(setDialog, props.ref)}
