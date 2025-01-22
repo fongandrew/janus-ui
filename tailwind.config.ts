@@ -251,6 +251,20 @@ export default {
 				'input-lg': pxToRem(px.height.input.lg),
 			},
 
+			minHeight: {
+				// Input sizes
+				'input-sm': pxToRem(px.height.input.sm),
+				'input-md': pxToRem(px.height.input.md),
+				'input-lg': pxToRem(px.height.input.lg),
+			},
+
+			maxHeight: {
+				// Input sizes
+				'input-sm': pxToRem(px.height.input.sm),
+				'input-md': pxToRem(px.height.input.md),
+				'input-lg': pxToRem(px.height.input.lg),
+			},
+
 			padding: {
 				// These are useful as a way to get an even vertical padding that
 				// accounts for text line height
