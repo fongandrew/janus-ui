@@ -2,15 +2,14 @@ import cx from 'classix';
 import { type JSX, splitProps } from 'solid-js';
 
 import { Button } from '~/shared/components/button';
+import { type FormElementProps } from '~/shared/components/form-element-props';
 import { SelectContainer } from '~/shared/components/select-container';
 import { SelectControl } from '~/shared/components/select-control';
 import { SelectOptionList } from '~/shared/components/select-option-list';
 import { SelectText } from '~/shared/components/select-text';
 import { createTextMatcher } from '~/shared/utility/create-text-matcher';
 
-export interface SelectProps extends Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, 'onChange'> {
-	/** Ref must be callback */
-	ref?: (element: HTMLButtonElement) => void;
+export interface SelectProps extends Omit<FormElementProps<'button'>, 'onValidate'> {
 	/** Name for form submission */
 	name?: string;
 	/** Placeholder text when no selection */
@@ -27,12 +26,17 @@ export interface SelectProps extends Omit<JSX.ButtonHTMLAttributes<HTMLButtonEle
 	required?: boolean;
 	/** Make children required */
 	children: JSX.Element;
+	/** Custom validation function for this element */
+	onValidate?: (
+		values: Set<string>,
+		event: Event & { delegateTarget: HTMLElement },
+	) => string | undefined | null | Promise<string | undefined | null>;
 }
 
 export function Select(props: SelectProps) {
 	const [listBoxProps, local, buttonProps] = splitProps(
 		props,
-		['values', 'defaultValues', 'onValues', 'multiple', 'required'],
+		['values', 'defaultValues', 'onValues', 'onValidate', 'multiple', 'required'],
 		['children', 'name', 'placeholder'],
 	);
 	const selectControl = new SelectControl(listBoxProps);
@@ -48,11 +52,15 @@ export function Select(props: SelectProps) {
 		}
 	});
 
+	// Transform Set<string> validator to string validator for underlying control
+	const handleValidate = (_value: string, event: Event & { delegateTarget: HTMLElement }) =>
+		listBoxProps.onValidate?.(selectControl.values(), event);
+
 	return (
 		<SelectContainer onClear={selectControl.clear.bind(selectControl)}>
 			{() => (
 				<Button
-					{...selectControl.merge(buttonProps)}
+					{...selectControl.merge({ ...buttonProps, onValidate: handleValidate })}
 					class={cx('c-select__button', props.class)}
 					unstyled
 				>

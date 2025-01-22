@@ -46,19 +46,21 @@ export const FormValidationGroupDemo: Component = () => {
 		password2: 'password2',
 	};
 
-	const validateUserName: Validator<HTMLInputElement> = (e, setError) => {
-		if (e.delegateTarget.value?.includes(' ')) {
-			return setError('Username cannot contain spaces');
+	const validateUserName: Validator<HTMLInputElement> = (value) => {
+		if (value.includes(' ')) {
+			return 'Username cannot contain spaces';
 		}
+		return null;
 	};
 
 	const password1Id = generateId('password');
-	const matchesPassword1: Validator<HTMLInputElement> = (e, setError) => {
-		const input = e.delegateTarget.ownerDocument.getElementById(password1Id);
-		if (!input) return;
-		if ((input as HTMLInputElement).value !== e.delegateTarget.value) {
-			return setError('Passwords do not match');
+	const matchesPassword1: Validator<HTMLInputElement> = (value, event) => {
+		const input = event.delegateTarget.ownerDocument.getElementById(password1Id);
+		if (!input) return null;
+		if ((input as HTMLInputElement).value !== value) {
+			return 'Passwords do not match';
 		}
+		return null;
 	};
 
 	return (

@@ -11,7 +11,7 @@ import { OptionList, OptionListGroup, OptionListItem } from '~/shared/components
 import { createTextMatcher } from '~/shared/utility/create-text-matcher';
 import { generateId } from '~/shared/utility/id-generator';
 
-export interface ListBoxProps extends FormElementProps<'div'> {
+export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'> {
 	/** Name for form submission */
 	name?: string | undefined;
 	/** Is listbox disabled? */
@@ -30,6 +30,11 @@ export interface ListBoxProps extends FormElementProps<'div'> {
 	required?: boolean | undefined;
 	/** Make children required */
 	children: JSX.Element;
+	/** Custom validation function for this element */
+	onValidate?: (
+		values: Set<string>,
+		event: Event & { delegateTarget: HTMLElement },
+	) => string | undefined | null | Promise<string | undefined | null>;
 }
 
 export function ListBox(props: ListBoxProps) {
@@ -39,6 +44,7 @@ export function ListBox(props: ListBoxProps) {
 		'values',
 		'defaultValues',
 		'onValues',
+		'onValidate',
 		'multiple',
 		'required',
 	]);
@@ -54,9 +60,15 @@ export function ListBox(props: ListBoxProps) {
 		}
 	});
 
+	// Transform Set<string> validator to string validator for underlying control
+	const handleValidate = (_value: string, event: Event & { delegateTarget: HTMLElement }) =>
+		local.onValidate?.(listBoxControl.values(), event);
+
 	return (
 		<OptionList
-			{...mergeFormElementProps<'div'>(listBoxControl.merge(rest))}
+			{...mergeFormElementProps<'div'>(
+				listBoxControl.merge({ ...rest, onValidate: handleValidate }),
+			)}
 			role="listbox"
 			tabIndex={0}
 			class={cx('c-list-box', rest.class)}

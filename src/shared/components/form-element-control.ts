@@ -11,11 +11,11 @@ import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { pullLast } from '~/shared/utility/list';
 import { PropBuilder } from '~/shared/utility/solid/prop-builder';
 
-/** A validator is just a callback that can set an error based on an event. */
+/** A validator function that returns an error message if validation fails */
 export type Validator<T = HTMLElement> = (
+	value: string,
 	event: Event & { delegateTarget: T },
-	setError: (err: string) => void,
-) => void | Promise<void>;
+) => string | undefined | null | Promise<string | undefined | null>;
 
 /** Magic data attribute used to identify control elements */
 export const FORM_CONTROL_ATTR = 'data-form-control';
@@ -73,15 +73,6 @@ export class FormElementControl<
 		onCleanup(() => pullLast(list, fn));
 	}
 
-	/** Callback to pass to validators in validate function below */
-	private setErr = (msg: string) => {
-		this.didErr = true;
-		this.setCustomErr(msg);
-	};
-
-	/** Flag to track whether error was set during this validation run */
-	private didErr = false;
-
 	/** Validate the element, returns promise resolving to true if valid */
 	async validate(event: Event) {
 		const target = this.ref();
@@ -100,14 +91,19 @@ export class FormElementControl<
 		}
 
 		// Custom validation
-		this.didErr = false;
 		const eventWithDelegate = Object.assign(event, { delegateTarget: target }) as Event & {
 			delegateTarget: TElement;
 		};
+		const value = (target as HTMLInputElement).value ?? '';
+
 		for (const fn of this.validators) {
-			const res = fn.call(target as TElement, eventWithDelegate, this.setErr);
-			if (res instanceof Promise) await res;
-			if (this.didErr) return false;
+			const res = await Promise.resolve(
+				fn.call(target as TElement, value, eventWithDelegate),
+			);
+			if (res) {
+				this.setCustomErr(res);
+				return false;
+			}
 		}
 
 		this.setCustomErr(null);

@@ -7,8 +7,6 @@ import {
 } from '~/shared/components/form-element-props';
 
 export interface InputProps extends FormElementProps<'input'> {
-	/** Force callback ref */
-	ref?: (el: HTMLInputElement) => void;
 	/** Removes default styling */
 	unstyled?: boolean | undefined;
 }

@@ -14,6 +14,7 @@ import { ModalDemo } from '~/demos/modal-demo';
 import { RadioGroupDemo } from '~/demos/radio-group-demo';
 import { SelectDemo } from '~/demos/select-demo';
 import { SelectTypeaheadDemo } from '~/demos/select-typeahead-demo';
+import { SelectionValidationDemo } from '~/demos/selection-validation-demo';
 import { TextareasDemo } from '~/demos/textareas-demo';
 import { TooltipDemo } from '~/demos/tooltip-demo';
 import { Box } from '~/shared/components/box';
@@ -35,6 +36,7 @@ const App: Component = () => {
 				<SelectTypeaheadDemo />
 				<ModalDemo />
 				<FormValidationGroupDemo />
+				<SelectionValidationDemo />
 				<FooterCard />
 			</Grid>
 		</Box>
