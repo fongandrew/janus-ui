@@ -18,7 +18,6 @@ export interface SelectOptionListProps extends JSX.HTMLAttributes<HTMLDivElement
 }
 
 export function SelectOptionList(props: SelectOptionListProps) {
-	// const getRefs = useContext(RefContext);
 	const [local, rest] = splitProps(props, ['children', 'input', 'listCtrl', 'name', 'values']);
 	return (
 		<DropdownContent {...rest}>

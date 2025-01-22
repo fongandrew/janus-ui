@@ -1,16 +1,13 @@
-import { type JSX, splitProps, useContext } from 'solid-js';
+import { createMemo, createRenderEffect, type JSX, splitProps, useContext } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
+import { FormContext } from '~/shared/components/form-context';
 import {
 	FORM_CONTROL_ATTR,
 	resetControl,
 	validate,
 } from '~/shared/components/form-element-control';
-import { RefContext } from '~/shared/components/ref-context';
-import { combineRefs } from '~/shared/utility/solid/combine-refs';
-
-/** RefProvider symbol for form elements */
-export const FORM_REF = Symbol('form');
+import { generateId } from '~/shared/utility/id-generator';
 
 /** Same as form data but the names are typed */
 export interface TypedFormData<TNames> {
@@ -26,8 +23,6 @@ export interface TypedFormData<TNames> {
 
 export interface FormProps<TNames extends string>
 	extends Omit<JSX.FormHTMLAttributes<HTMLFormElement>, 'onReset' | 'onSubmit'> {
-	/** Require callback ref if any */
-	ref?: (element: HTMLFormElement) => void;
 	/** This prop is unused but just used to infer and type-check form names */
 	names: Record<string, TNames>;
 	/** Default reset handler */
@@ -46,8 +41,13 @@ function getControls(form: HTMLFormElement) {
 }
 
 export function Form<TNames extends string>(props: FormProps<TNames>) {
-	const [local, rest] = splitProps(props, ['ref', 'names', 'onReset', 'onSubmit']);
-	const getRefs = useContext(RefContext);
+	const [local, rest] = splitProps(props, ['names', 'onReset', 'onSubmit']);
+
+	const context = useContext(FormContext);
+	const id = createMemo(() => props.id ?? generateId('form'));
+	createRenderEffect(() => {
+		context.setId(id());
+	});
 
 	const handleReset = async (event: Event) => {
 		const form = event.target as HTMLFormElement;
@@ -96,7 +96,6 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 
 	return (
 		<form
-			ref={combineRefs(...getRefs(FORM_REF), local.ref)}
 			// By default, don't use browser validation and use our own but can be
 			// forced on via a prop
 			noValidate={!isServer}

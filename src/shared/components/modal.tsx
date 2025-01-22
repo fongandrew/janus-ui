@@ -11,10 +11,9 @@ import {
 } from 'solid-js';
 
 import { type ButtonProps, IconButton } from '~/shared/components/button';
-import { FORM_REF } from '~/shared/components/form';
+import { FormContextProvider } from '~/shared/components/form-context-provider';
 import { Group } from '~/shared/components/group';
 import { ModalContext } from '~/shared/components/modal-context';
-import { RefProvider } from '~/shared/components/ref-provider';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { isDialog } from '~/shared/utility/element-types';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
@@ -155,9 +154,9 @@ export const Modal: Component<DialogProps> = (props) => {
 				onClick={handleClick}
 				onKeyDown={handleKeydown}
 			>
-				<RefProvider refs={{ [FORM_REF]: setForm }}>
+				<FormContextProvider>
 					<div class="c-modal__body">{local.children}</div>
-				</RefProvider>
+				</FormContextProvider>
 			</dialog>
 		</ModalContext.Provider>
 	);
