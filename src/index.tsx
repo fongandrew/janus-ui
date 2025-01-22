@@ -45,7 +45,7 @@ import { ToggleSwitch } from '~/shared/components/toggle-switch';
 import { Tooltip } from '~/shared/components/tooltip';
 import { generateId } from '~/shared/utility/id-generator';
 
-const FormValidationDemo: Component = () => {
+const FormValidationGroupDemo: Component = () => {
 	const [formData, setFormData] = createSignal<{
 		username: string;
 		password: string;
@@ -89,7 +89,7 @@ const FormValidationDemo: Component = () => {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Form Validation</CardTitle>
+				<CardTitle>Form Validation (Inputs)</CardTitle>
 				<CardDescription>Password validation with FormValidationGroup</CardDescription>
 			</CardHeader>
 			<CardContent>
@@ -829,7 +829,7 @@ const App: Component = () => {
 				<SelectDemo />
 				<SelectTypeaheadDemo />
 				<ModalDemo />
-				<FormValidationDemo />
+				<FormValidationGroupDemo />
 				<FooterCard />
 			</Grid>
 		</Box>
