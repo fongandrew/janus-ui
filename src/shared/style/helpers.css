@@ -5,8 +5,12 @@
 	by base / components / utilities, and we want these to be available for use in compnents.
 */
 @layer base {
+	.t-disabled-button-appearance {
+		@apply opacity-50;
+	}
+
 	.t-disabled-button {
-		@apply pointer-events-none opacity-75;
+		@apply t-disabled-button-appearance pointer-events-none;
 	}
 
 	.t-with-disabled-button {
@@ -30,7 +34,7 @@
 	}
 
 	.t-focus-ring {
-		@apply outline-offset outline outline-ring;
+		@apply outline outline-offset outline-ring;
 	}
 
 	.t-with-focus-ring {

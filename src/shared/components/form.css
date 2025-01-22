@@ -1,0 +1,12 @@
+@import '~/shared/style/helpers.css';
+
+@layer base {
+	form:has(:invalid) [type='submit'] {
+		/*
+			This only visually disables buttons but this is a good thing because clicking on the
+            disabled button lets us shift focus to the first invalid element (especially useful
+            with screenreaders).
+		 */
+		@apply t-disabled-button-appearance;
+	}
+}

@@ -10,6 +10,7 @@
 @import '~/shared/components/description.css';
 @import '~/shared/components/dropdown.css';
 @import '~/shared/components/error-message.css';
+@import '~/shared/components/form.css';
 @import '~/shared/components/grid.css';
 @import '~/shared/components/group.css';
 @import '~/shared/components/input.css';
@@ -17,6 +18,7 @@
 @import '~/shared/components/label-stack.css';
 @import '~/shared/components/list-box.css';
 @import '~/shared/components/modal.css';
+@import '~/shared/components/modal-form.css';
 @import '~/shared/components/option-list.css';
 @import '~/shared/components/radio.css';
 @import '~/shared/components/select.css';
