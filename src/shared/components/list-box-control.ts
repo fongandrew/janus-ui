@@ -70,10 +70,13 @@ export class ListBoxControl<
 
 		// Update ARIA current state when currentId changes
 		createRenderEffect(() => {
+			// Call this first to ensure reactivity is tracked since this.listElm()
+			// is not reactive
+			const nextId = this.currentId();
+
 			const listBox = this.listElm();
 			if (!listBox) return;
 
-			const nextId = this.currentId();
 			const next = nextId && listBox.ownerDocument.getElementById(nextId);
 			const prev = listBox.querySelector('[aria-current="true"]');
 			if (prev && prev !== next) {
