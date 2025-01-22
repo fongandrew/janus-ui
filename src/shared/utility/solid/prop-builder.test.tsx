@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@solidjs/testing-library';
-import { type Component, createSignal } from 'solid-js';
+import { type Component, createSignal, mergeProps } from 'solid-js';
 
 import { PropBuilder } from '~/shared/utility/solid/prop-builder';
 
@@ -398,5 +398,28 @@ describe('PropBuilder', () => {
 		));
 		const div1 = screen.getByTestId('test1');
 		expect(div1.className).toBe('ext-class-1 ext-class-2');
+	});
+
+	it('supports prop mods with reactivity', () => {
+		const builder = new PropBuilder<'div'>();
+		const [label, setLabel] = createSignal('test label');
+
+		const Test: Component = () => {
+			builder.setAttr('aria-label', label);
+			builder.mod((props) => {
+				const merged = mergeProps(props, { 'aria-description': 'test description' });
+				return merged;
+			});
+			return <div {...builder.merge({})} data-testid="test-div" />;
+		};
+
+		render(() => <Test />);
+		const div = screen.getByTestId('test-div');
+		expect(div.getAttribute('aria-label')).toBe('test label');
+		expect(div.getAttribute('aria-description')).toBe('test description');
+
+		setLabel('updated label');
+		expect(div.getAttribute('aria-label')).toBe('updated label');
+		expect(div.getAttribute('aria-description')).toBe('test description');
 	});
 });

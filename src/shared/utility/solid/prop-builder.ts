@@ -162,6 +162,8 @@ export class PropBuilder<
 	private readonly defaultAttrVals = new AttrMap<string | boolean | number | undefined>();
 	/** Event handler callbacks */
 	private readonly evtCbs = new AttrMap<JSX.EventHandlerUnion<TElement, Event>>();
+	/** Extra functions for modifying props after merge */
+	private readonly mods: (<TProps extends TAttributes>(props: TProps) => Partial<TProps>)[] = [];
 
 	/** Signal accessor that updates when the prop ID changes */
 	id = this.idSig[0];
@@ -264,6 +266,13 @@ export class PropBuilder<
 		handler: JSX.DOMAttributes<TElement>[TProp],
 	) {
 		this.evtCbs.effect(prop, handler as JSX.EventHandlerUnion<TElement, Event>, false);
+	}
+
+	/** Add an extra callback for modifying props after merge */
+	mod<TProps extends TAttributes>(
+		mod: (props: TProps & Record<`data-${string}`, string | undefined>) => Partial<TProps>,
+	) {
+		this.mods.push(mod as any);
 	}
 
 	/**
@@ -390,11 +399,18 @@ export class PropBuilder<
 		);
 
 		this.merged = true;
-		const merged = mergeProps(props, () => {
+		let merged = mergeProps(props, () => {
 			track();
 			// Spread object to ensure we're returning a new object
 			return { ...(ret as TProps) };
 		});
+
+		for (const mod of this.mods) {
+			// This is fine. We're basically just wrapping `mergeProps` with potentially
+			// more `mergeProps`.
+			// eslint-disable-next-line solid/reactivity
+			merged = mod(merged as TProps) as typeof merged;
+		}
 
 		// Update ID signal when ID changes
 		createRenderEffect(() => {
