@@ -32,6 +32,7 @@ export class FormElementControl<
 		? T & HTMLElement
 		: HTMLElement,
 > extends PropBuilder<TTag> {
+	/** Validation functions */
 	private validators: Validator<TElement>[] = [];
 
 	/** Signal accessor for error message */

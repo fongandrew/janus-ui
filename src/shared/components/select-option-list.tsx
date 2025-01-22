@@ -3,14 +3,12 @@ import { type JSX, splitProps } from 'solid-js';
 import { DropdownContent } from '~/shared/components/dropdown';
 import { ListBoxSelections } from '~/shared/components/list-box';
 import { OptionList } from '~/shared/components/option-list';
-import { combineRefs } from '~/shared/utility/solid/combine-refs';
+import { type OptionListControl } from '~/shared/components/option-list-control';
 import { T } from '~/shared/utility/text/t-components';
 
 export interface SelectOptionListProps extends JSX.HTMLAttributes<HTMLDivElement> {
-	/** Force ref to be callback, if any */
-	ref?: ((el: HTMLDivElement) => void) | undefined;
-	/** Callback ref for option list */
-	listRef?: ((el: HTMLDivElement) => void) | undefined;
+	/** ListBox control */
+	listCtrl?: OptionListControl;
 	/** Form input name */
 	name?: string | undefined;
 	/** Current input value, if any */
@@ -21,13 +19,10 @@ export interface SelectOptionListProps extends JSX.HTMLAttributes<HTMLDivElement
 
 export function SelectOptionList(props: SelectOptionListProps) {
 	// const getRefs = useContext(RefContext);
-	const [local, rest] = splitProps(props, ['children', 'input', 'listRef', 'name', 'values']);
+	const [local, rest] = splitProps(props, ['children', 'input', 'listCtrl', 'name', 'values']);
 	return (
 		<DropdownContent {...rest}>
-			<OptionList
-				role="listbox"
-				ref={combineRefs(/* ...getRefs(DROPDOWN_CONTENT_REF), */ local.listRef)}
-			>
+			<OptionList role="listbox" {...local.listCtrl?.merge()}>
 				{local.children}
 				<div class="c-select__empty_state">
 					{props.input?.trim() ? (

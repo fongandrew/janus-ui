@@ -9,7 +9,11 @@ import { PropBuilder } from '~/shared/utility/solid/prop-builder';
 /** Base props for different kinds of option lists (e.g. combobox, listbox, menu) */
 export interface OptionListProps {
 	/** Callback for when element is highlighted via arrow keys */
-	onHighlight?: (id: string | null, element: HTMLElement, event: KeyboardEvent | null) => void;
+	onHighlight?: (
+		id: string | null,
+		element: HTMLElement,
+		event: KeyboardEvent | InputEvent | null,
+	) => void;
 	/** Callback for when element is selected */
 	onSelect?: (value: string, element: HTMLElement, event: KeyboardEvent | MouseEvent) => void;
 }
@@ -135,7 +139,7 @@ export class OptionListControl<
 			null) as HTMLElement | null;
 	}
 
-	highlight(element: HTMLElement | null, event: KeyboardEvent) {
+	highlight(element: HTMLElement | null, event: KeyboardEvent | InputEvent) {
 		const id = element?.id;
 		if (!id) return;
 		this.props.onHighlight?.(id, element, event);

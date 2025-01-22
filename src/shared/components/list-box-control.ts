@@ -15,7 +15,7 @@ export interface ListBoxProps extends OptionListProps {
 	/** Active higlight ID (controlled) */
 	currentId?: string | null | undefined;
 	/** Called when selection changes */
-	onValues?: (value: Set<string>, event: MouseEvent | KeyboardEvent) => void;
+	onValues?: ((value: Set<string>, event: MouseEvent | KeyboardEvent) => void) | undefined;
 	/** Disables clearing selection */
 	required?: boolean | undefined;
 	/** Whether multiple selection is allowed */
@@ -98,7 +98,11 @@ export class ListBoxControl<
 		this.setUnctrlValues(newValues);
 	}
 
-	override highlight(element: HTMLElement | null, event: KeyboardEvent): void {
+	clear(event: MouseEvent | KeyboardEvent) {
+		this.setValues(new Set<string>(), event);
+	}
+
+	override highlight(element: HTMLElement | null, event: KeyboardEvent | InputEvent): void {
 		this.setUnctrlCurrentId(element?.id ?? null);
 		super.highlight(element, event);
 	}
@@ -129,7 +133,7 @@ export class ListBoxControl<
 			return;
 		}
 
-		this.listElm()?.dispatchEvent(new Event('change'));
 		this.setValues(newValues, event);
+		this.listElm()?.dispatchEvent(new Event('change'));
 	}
 }

@@ -285,11 +285,11 @@ export class PropBuilder<
 	 * Merge props based on all the extensions that have been added.
 	 */
 	merge<TProps extends TAttributes>(
-		props: TProps & Record<`data-${string}`, string | undefined>,
+		props?: TProps & Record<`data-${string}`, string | undefined>,
 	): TProps {
 		if (this.merged) {
 			useLogger().warn('PropBuilder should only be used for a single component at a time');
-			return props;
+			return props ?? ({} as TProps);
 		}
 
 		const [track, signalUpdate] = createIncrSignal();
@@ -318,7 +318,7 @@ export class PropBuilder<
 			// Uh, just don't change the ref prop. We can do something hacky if needed
 			// but honestly it's a bit of hassle and overhead and all of the overhead
 			// for this could live in the ref itself if need be.
-			(props as any).ref,
+			(props as any)?.ref,
 		);
 
 		// Unset ID and ref on unmount. PropBuilder may exist longer than the element
@@ -338,7 +338,7 @@ export class PropBuilder<
 				() => this.attrListVals.attrs(),
 				(attr) =>
 					createRenderEffect(() => {
-						const propValue = props[attr as keyof typeof props] as string | undefined;
+						const propValue = props?.[attr as keyof typeof props] as string | undefined;
 						const values: string[] = propValue ? [propValue] : [];
 						for (const val of this.attrListVals.values(attr)) {
 							if (val) {
@@ -364,7 +364,7 @@ export class PropBuilder<
 						}
 
 						// If no explicit value, use prop value if it exists
-						const propValue = props[attr as keyof typeof props];
+						const propValue = props?.[attr as keyof typeof props];
 						if (propValue !== undefined) {
 							update(attr, propValue);
 							return;
@@ -388,10 +388,9 @@ export class PropBuilder<
 						const handlers = Array.from(this.evtCbs.values(prop));
 						const combinedHandler = combineEventHandlers(
 							...handlers,
-							props[prop as keyof typeof props] as JSX.EventHandlerUnion<
-								TElement,
-								Event
-							>,
+							props?.[prop as keyof typeof props] as
+								| JSX.EventHandlerUnion<TElement, Event>
+								| undefined,
 						);
 						update(prop, combinedHandler);
 					}),

@@ -54,4 +54,15 @@ export class ComboBoxControl<
 		this.setAttr('aria-controls', () => this.listCtrl.id() ?? undefined);
 		this.handle('onKeyDown', handleEscKeyDown);
 	}
+
+	override select(element: HTMLElement, event: MouseEvent | KeyboardEvent) {
+		const oldValues = this.values();
+		super.select(element, event);
+
+		// ListBox will trigger the change event on the ListBox element but we
+		// want to trigger it on the ComboBox element as well validation
+		if (this.values() !== oldValues) {
+			this.ref()?.dispatchEvent(new Event('change'));
+		}
+	}
 }

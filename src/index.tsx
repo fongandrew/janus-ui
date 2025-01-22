@@ -526,7 +526,7 @@ const SelectDemo: Component = () => {
 						<Select
 							placeholder="Select a fruit..."
 							values={value()}
-							onChange={(_e, values) => setValue(values)}
+							onValues={setValue}
 						>
 							<ListBoxItem value="apple">Apple</ListBoxItem>
 							<ListBoxItem value="banana">Banana</ListBoxItem>
@@ -543,7 +543,7 @@ const SelectDemo: Component = () => {
 							aria-invalid={multiValue().has('red')}
 							placeholder="Select colors..."
 							values={multiValue()}
-							onChange={(_e, values) => setMultiValue(values)}
+							onValues={setMultiValue}
 							multiple
 						>
 							<ListBoxGroup heading="Don't Pick These">
@@ -567,7 +567,7 @@ const SelectDemo: Component = () => {
 						<Select
 							placeholder="Select an option..."
 							values={value()}
-							onChange={(_e, values) => setValue(values)}
+							onValues={setValue}
 						>
 							<For each={[...Array(100).keys()]}>
 								{(i) => <ListBoxItem value={String(i)}>Option {i}</ListBoxItem>}
@@ -618,8 +618,8 @@ const SelectTypeaheadDemo: Component = () => {
 						<SelectTypeahead
 							placeholder="Select a fruit..."
 							values={value()}
-							onChange={(_e, values) => setValue(values)}
-							onInput={(_e, value) => setQuery(value)}
+							onValues={setValue}
+							onValueInput={setQuery}
 						>
 							<For each={parts()}>
 								{(part) => <ListBoxItem value={part}>{part}</ListBoxItem>}
@@ -636,8 +636,8 @@ const SelectTypeaheadDemo: Component = () => {
 							aria-invalid={multiValue().has('red')}
 							placeholder="Select colors..."
 							values={multiValue()}
-							onChange={(_e, values) => setMultiValue(values)}
-							onInput={(_e, value) => setQuery(value)}
+							onValues={setMultiValue}
+							onValueInput={setQuery}
 							multiple
 						>
 							<ListBoxGroup heading="Don't Pick This">
@@ -672,7 +672,7 @@ const SelectTypeaheadDemo: Component = () => {
 						<SelectTypeahead
 							placeholder="Select an option..."
 							values={value()}
-							onChange={(_e, values) => setValue(values)}
+							onValues={setValue}
 						>
 							<For each={[...Array(100).keys()]}>
 								{(i) => <ListBoxItem value={String(i)}>Option {i}</ListBoxItem>}

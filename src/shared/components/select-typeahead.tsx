@@ -1,16 +1,14 @@
 import cx from 'classix';
-import { createEffect, createSignal, type JSX, splitProps } from 'solid-js';
+import { createSignal, type JSX, splitProps } from 'solid-js';
 
-import { createSelectControl } from '~/shared/components/create-select-control';
 import { Input } from '~/shared/components/input';
 import { SelectContainer } from '~/shared/components/select-container';
+import { SelectControl } from '~/shared/components/select-control';
 import { SelectOptionList } from '~/shared/components/select-option-list';
 import { SelectText } from '~/shared/components/select-text';
 import { generateId } from '~/shared/utility/id-generator';
-import { combineRefs } from '~/shared/utility/solid/combine-refs';
 
-export interface SelectTypeaheadProps
-	extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'onInput'> {
+export interface SelectTypeaheadProps extends JSX.InputHTMLAttributes<HTMLInputElement> {
 	/** Ref must be callback */
 	ref?: (element: HTMLInputElement) => void;
 	/** Name for form submission */
@@ -22,9 +20,9 @@ export interface SelectTypeaheadProps
 	/** Default selected values (uncontrolled) */
 	defaultValues?: Set<string>;
 	/** Called when selection changes */
-	onChange?: (event: MouseEvent | KeyboardEvent, value: Set<string>) => void;
+	onValues?: (value: Set<string>, event: MouseEvent | KeyboardEvent) => void;
 	/** Called when typing happens */
-	onInput?: (event: InputEvent, value: string) => void;
+	onValueInput?: (value: string, event: InputEvent) => void;
 	/** Whether multiple selection is allowed */
 	multiple?: boolean;
 	/** Disables clearing selection */
@@ -32,20 +30,15 @@ export interface SelectTypeaheadProps
 }
 
 export function SelectTypeahead(props: SelectTypeaheadProps) {
-	const [listBoxProps, rest] = splitProps(props, [
-		'values',
-		'defaultValues',
-		'onChange',
-		'multiple',
-		'required',
-	]);
-	const [local, buttonProps] = splitProps(rest, ['children', 'name', 'placeholder']);
-	const [setControl, setListBox, selectControls] = createSelectControl(listBoxProps, {
-		// Added offset to account for input focus rings
-		offset: 8,
-	});
+	const [listBoxProps, local, buttonProps] = splitProps(
+		props,
+		['values', 'defaultValues', 'onValues', 'multiple', 'required'],
+		['children', 'name', 'onValueInput', 'placeholder'],
+	);
+	const selectControl = new SelectControl(listBoxProps);
 
 	const descriptionId = generateId('select-description');
+	selectControl.extAttr('aria-describedby', descriptionId);
 
 	const [input, setInput] = createSignal('');
 	const handleInput = (event: InputEvent) => {
@@ -53,59 +46,55 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 
 		// Force open if applicable
 		if (target.value) {
-			selectControls.getListBoxNode()?.showPopover();
+			selectControl.show();
 		}
 
 		// Update state callbacks
 		setInput(target.value);
-		props.onInput?.(event, target.value);
-	};
-
-	// Whenever input value changes, move selection back to first item
-	createEffect(() => {
-		if (!input()) return;
+		props.onValueInput?.(target.value, event);
 
 		// Queue microtask to ensure highlight happens after list is updated
 		// from input() changes
 		queueMicrotask(() => {
-			const firstItem = selectControls.getFirstItem();
+			const firstItem = selectControl.items()[0];
 			if (!firstItem) return;
-			selectControls.highlight(null, firstItem);
+			selectControl.highlight(firstItem, event);
 		});
-	});
+	};
+	selectControl.handle('onInput', handleInput);
 
 	return (
-		<SelectContainer onClear={selectControls.clear}>
-			<Input
-				{...buttonProps}
-				ref={combineRefs(setControl, props.ref)}
-				class={cx('c-select__input', props.class)}
-				onBlur={selectControls.hideOnBlur}
-				onInput={handleInput}
-				aria-describedby={
-					buttonProps['aria-describedby']
-						? `${buttonProps['aria-describedby']} ${descriptionId}`
-						: descriptionId
-				}
-				aria-haspopup="listbox"
-				aria-required={props.required}
-				unstyled
-			/>
-			<div id={descriptionId} class="c-select__input_description">
-				<SelectText
-					placeholder={local.placeholder}
-					values={selectControls.values()}
-					getItemByValue={selectControls.getItemByValue}
-				/>
-			</div>
-			<SelectOptionList
-				ref={setListBox}
-				name={local.name}
-				input={input()}
-				values={selectControls.values()}
-			>
-				{local.children}
-			</SelectOptionList>
+		<SelectContainer
+			onClear={selectControl.clear.bind(selectControl)}
+			// Added offset to account for input focus rings
+			dropdownOffset={8}
+		>
+			{() => (
+				<>
+					<Input
+						{...selectControl.merge(buttonProps)}
+						class={cx('c-select__input', props.class)}
+						unstyled
+					/>
+					<div id={descriptionId} class="c-select__input_description">
+						<SelectText
+							placeholder={local.placeholder}
+							values={selectControl.values()}
+							getItemByValue={selectControl.item.bind(selectControl)}
+						/>
+					</div>
+				</>
+			)}
+			{() => (
+				<SelectOptionList
+					name={local.name}
+					input={input()}
+					values={selectControl.values()}
+					listCtrl={selectControl.listCtrl}
+				>
+					{local.children}
+				</SelectOptionList>
+			)}
 		</SelectContainer>
 	);
 }
