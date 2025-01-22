@@ -85,6 +85,13 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 		const results = await Promise.all(validationPromises);
 		for (const result of results) {
 			if (result === false) {
+				// Focus first invalid control
+				for (const control of controls) {
+					if (control.matches(':invalid, [aria-invalid="true"]')) {
+						control.focus?.();
+						break;
+					}
+				}
 				return;
 			}
 		}
