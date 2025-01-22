@@ -36,5 +36,10 @@
 			"~/*": ["src/*"],
 		}
 	},
-	"include": ["src", "vitest.setup.ts"]
+	"include": ["src", "vitest.setup.ts"],
+	"exclude": [
+		"node_modules",
+		// This is annoying since it breaks type refs to the solid-js equivalents
+		"solid-js/types/server",
+	]
 }
