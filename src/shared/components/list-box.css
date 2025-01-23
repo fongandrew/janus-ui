@@ -2,11 +2,18 @@
 
 @layer components {
 	.c-list-box:not(.c-dropdown__content) {
-		@apply t-with-disabled-input t-with-error-input t-with-focus-ring-always w-full px-0 py-xs shadow-inner transition-colors disabled:pointer-events-none disabled:cursor-not-allowed aria-disabled:pointer-events-none aria-disabled:cursor-not-allowed;
+		@apply t-with-disabled-input t-with-error-input t-with-focus-ring-always w-full px-0 py-xs transition-colors disabled:pointer-events-none disabled:cursor-not-allowed aria-disabled:pointer-events-none aria-disabled:cursor-not-allowed;
 
 		/* Base styles */
-		@apply border-md bg-input-bg text-input-fg border-dynamic-secondary placeholder:text-muted;
+		@apply border-0 bg-input-bg text-input-fg placeholder:text-muted;
 		@apply rounded-md;
+
+		/*
+			Border looks weird with highlighting but is necessary to distinguish listbox from
+			identically colored background, so use this "shadow border" (along with another
+			inner border to give depth effect)
+		*/
+		box-shadow: theme('boxShadow.innerBorder'), theme('boxShadow.inner');
 	}
 
 	.c-list-box__item.c-option-list__item {

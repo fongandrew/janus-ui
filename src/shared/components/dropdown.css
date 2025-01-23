@@ -29,7 +29,7 @@
 	}
 
 	.c-dropdown__content {
-		@apply fixed mx-auto my-0 flex-col overflow-hidden rounded-md border-md bg-popover px-0 py-xs text-popover-fg shadow-lg border-dynamic-card;
+		@apply fixed mx-auto my-0 flex-col overflow-hidden rounded-md border-0 bg-popover px-0 py-xs text-popover-fg;
 		@apply z-above-backdrop min-w-dropdown;
 
 		/* Mobile specific styling */
@@ -37,6 +37,12 @@
 
 		max-height: calc(100vh - 2 * theme(spacing.md));
 		max-width: calc(100vw - 2 * theme(spacing.md));
+
+		/*
+			Border looks weird with highlighting but is necessary to distinguish card from
+			identically colored background, so use this "shadow border"
+		*/
+		box-shadow: theme('boxShadow.lg'), theme('boxShadow.innerBorder');
 	}
 
 	.c-dropdown__children {
