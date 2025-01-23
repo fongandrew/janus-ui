@@ -2,7 +2,7 @@
 
 @layer components {
 	.c-card {
-		@apply rounded-lg border-md bg-card text-card-fg shadow border-dynamic-card;
+		@apply flex flex-col rounded-lg border-md bg-card text-card-fg shadow border-dynamic-card;
 	}
 
 	.c-card__header {
@@ -18,7 +18,7 @@
 	}
 
 	.c-card__content {
-		@apply p-md;
+		@apply flex-grow p-md;
 	}
 
 	.c-card__footer {
