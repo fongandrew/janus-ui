@@ -60,10 +60,11 @@ export class ListBoxControl<
 		createRenderEffect(() => {
 			// Calling `values()` here outside of for loop to ensure reactivity tracked
 			const currentValues = this.values();
+			console.log({ currentValues });
 			for (const option of this.items()) {
 				const optionValue = option.getAttribute(LIST_OPTION_VALUE_ATTR);
 				if (optionValue) {
-					option.ariaSelected = String(currentValues.has(optionValue));
+					option.ariaChecked = String(currentValues.has(optionValue));
 				}
 			}
 		});
@@ -78,12 +79,12 @@ export class ListBoxControl<
 			if (!listBox) return;
 
 			const next = nextId && listBox.ownerDocument.getElementById(nextId);
-			const prev = listBox.querySelector('[aria-current="true"]');
+			const prev = listBox.querySelector('[aria-selected="true"]');
 			if (prev && prev !== next) {
-				prev.ariaCurrent = null;
+				prev.ariaSelected = null;
 			}
 			if (next) {
-				next.ariaCurrent = 'true';
+				next.ariaSelected = 'true';
 			}
 		});
 	}

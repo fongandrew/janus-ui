@@ -34,7 +34,7 @@
 	}
 
 	/* Show clear button only is there's something to clear (and not required) */
-	.c-select__container:has(+ [role='listbox'] [aria-selected='true']):not(
+	.c-select__container:has(+ [role='listbox'] [aria-checked='true']):not(
 			:has([aria-required]:not([aria-required='false'])),
 			:has(:required)
 		)
@@ -43,7 +43,7 @@
 	}
 
 	/* Hide chevvron if clear button is shown */
-	.c-select__container:has(+ [role='listbox'] [aria-selected='true']):not(
+	.c-select__container:has(+ [role='listbox'] [aria-checked='true']):not(
 			:has([aria-required]:not([aria-required='false'])),
 			:has(:required)
 		)
