@@ -104,7 +104,7 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 	// so screen reader can still get useful info about the disabled component
 	// while tabbing around
 	control.setAttr('disabled', () => (props.disabled && !isServer ? false : undefined));
-	control.setAttr('aria-disabled', () => props.disabled || formContext?.submittingSig[0]());
+	control.setAttr('aria-disabled', () => props.disabled || formContext?.busySig[0]());
 
 	// Add aria version of required if applicable. We can leave required as is.
 	// It's kind of annoying to the extent it blocks form submission and we

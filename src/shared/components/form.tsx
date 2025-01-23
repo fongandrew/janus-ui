@@ -113,14 +113,14 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 		// completes very quickly (possible if promise immediately resolves)
 		const setSubmittingReq = window.requestAnimationFrame(() => {
 			// Set form as busy
-			context.submittingSig[1](true);
+			context.busySig[1](true);
 		});
 
 		try {
 			return await doSubmit(event);
 		} finally {
 			// Clear form busy state
-			context.submittingSig[1](false);
+			context.busySig[1](false);
 			window.cancelAnimationFrame(setSubmittingReq);
 		}
 	};
@@ -134,6 +134,7 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 				onSubmit={handleSubmit}
 				onReset={handleReset}
 				id={id()}
+				aria-busy={context.busySig[0]()}
 				{...rest}
 			/>
 		</FormContext.Provider>

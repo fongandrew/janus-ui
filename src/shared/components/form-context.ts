@@ -8,7 +8,7 @@ export interface FormContextShape {
 	/** Signal for form ID */
 	idSig: [Accessor<string | undefined>, Setter<string | undefined>];
 	/** Signal for whether form is busy (submitting) */
-	submittingSig: [Accessor<boolean>, Setter<boolean>];
+	busySig: [Accessor<boolean>, Setter<boolean>];
 }
 
 /**
@@ -21,9 +21,9 @@ export const FormContext = createContext<FormContextShape | undefined>();
  */
 export function createFormContext(): FormContextShape {
 	const [id, setId] = createSignal<string | undefined>(undefined);
-	const [submitting, setSubmitting] = createSignal(false);
+	const [busy, setBusy] = createSignal(false);
 	return {
 		idSig: [id, setId],
-		submittingSig: [submitting, setSubmitting],
+		busySig: [busy, setBusy],
 	};
 }
