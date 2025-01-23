@@ -14,12 +14,19 @@ export interface CheckboxProps extends Omit<FormElementProps<'input'>, 'type'> {
 	indeterminate?: boolean;
 }
 
+/** Propagate click to actual input (screenreaders will do this automatically) */
+const handleClick = (e: MouseEvent) => {
+	if (e.target instanceof HTMLInputElement) return;
+	e.stopImmediatePropagation();
+	(e.currentTarget as HTMLElement).querySelector('input')?.click();
+};
+
 export function Checkbox(props: CheckboxProps) {
 	const [local, rest] = splitProps(props, ['indeterminate', 'checked', 'class']);
 	const formProps = mergeFormElementProps<'input'>(rest);
 
 	return (
-		<div class={cx('c-checkbox', local.class)}>
+		<div class={cx('c-checkbox', local.class)} onClick={handleClick}>
 			<div class="c-checkbox__box">
 				<input
 					type="checkbox"
