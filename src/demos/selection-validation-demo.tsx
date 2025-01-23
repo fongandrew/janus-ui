@@ -1,16 +1,16 @@
 import { type Component, createSignal, Show } from 'solid-js';
 
-import { Button } from '~/shared/components/button';
 import {
 	Card,
 	CardContent,
 	CardDescription,
+	CardFooter,
 	CardHeader,
 	CardTitle,
 } from '~/shared/components/card';
 import { Description } from '~/shared/components/description';
 import { Form } from '~/shared/components/form';
-import { Group } from '~/shared/components/group';
+import { ResetButton, SubmitButton } from '~/shared/components/form-buttons';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
 import { LabelledControl } from '~/shared/components/labelled-control';
@@ -92,15 +92,6 @@ export const SelectionValidationDemo: Component = () => {
 									<ListBoxItem value="purple">Purple</ListBoxItem>
 								</Select>
 							</LabelledControl>
-
-							<Group>
-								<Button type="reset" class="c-button--ghost">
-									Reset
-								</Button>
-								<Button type="submit" class="c-button--primary">
-									Submit
-								</Button>
-							</Group>
 						</Stack>
 					</Form>
 
@@ -131,6 +122,10 @@ export const SelectionValidationDemo: Component = () => {
 					</Show>
 				</Stack>
 			</CardContent>
+			<CardFooter>
+				<ResetButton />
+				<SubmitButton />
+			</CardFooter>
 		</Card>
 	);
 };

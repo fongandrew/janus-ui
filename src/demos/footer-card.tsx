@@ -20,7 +20,7 @@ const FooterCard: Component = () => (
 			<p>The grid will adjust columns based on screen size.</p>
 		</CardContent>
 		<CardFooter>
-			<Button class="c-button--ghost">Skip</Button>
+			<Button>Skip</Button>
 			<Button class="c-button--primary">Continue</Button>
 		</CardFooter>
 	</Card>

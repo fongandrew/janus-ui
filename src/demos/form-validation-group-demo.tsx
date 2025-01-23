@@ -1,18 +1,18 @@
 import { type Component, createSignal, Show } from 'solid-js';
 
-import { Button } from '~/shared/components/button';
 import {
 	Card,
 	CardContent,
 	CardDescription,
+	CardFooter,
 	CardHeader,
 	CardTitle,
 } from '~/shared/components/card';
 import { Description } from '~/shared/components/description';
 import { Form } from '~/shared/components/form';
+import { ResetButton, SubmitButton } from '~/shared/components/form-buttons';
 import { type Validator } from '~/shared/components/form-element-control';
 import { FormValidationGroup } from '~/shared/components/form-validation-group';
-import { Group } from '~/shared/components/group';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
@@ -104,15 +104,6 @@ export const FormValidationGroupDemo: Component = () => {
 									</LabelledControl>
 								</Stack>
 							</FormValidationGroup>
-
-							<Group>
-								<Button type="reset" class="c-button--ghost">
-									Reset
-								</Button>
-								<Button type="submit" class="c-button--primary">
-									Submit
-								</Button>
-							</Group>
 						</Stack>
 					</Form>
 
@@ -139,6 +130,10 @@ export const FormValidationGroupDemo: Component = () => {
 					</Show>
 				</Stack>
 			</CardContent>
+			<CardFooter>
+				<ResetButton />
+				<SubmitButton />
+			</CardFooter>
 		</Card>
 	);
 };

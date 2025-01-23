@@ -2,6 +2,8 @@ import cx from 'classix';
 import { type JSX, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 
+import { FormContextProvider } from '~/shared/components/form-context-provider';
+
 export type CardProps = JSX.IntrinsicAttributes &
 	JSX.HTMLAttributes<HTMLDivElement> & {
 		as?: 'article' | 'div' | 'section';
@@ -16,7 +18,11 @@ export type CardFooterProps = JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTMLD
 
 export function Card(props: CardProps) {
 	const [local, rest] = splitProps(props, ['as']);
-	return <Dynamic component={local.as || 'div'} {...rest} class={cx('c-card', props.class)} />;
+	return (
+		<Dynamic component={local.as || 'div'} {...rest} class={cx('c-card', props.class)}>
+			<FormContextProvider>{props.children}</FormContextProvider>
+		</Dynamic>
+	);
 }
 
 export function CardHeader(props: CardHeaderProps) {

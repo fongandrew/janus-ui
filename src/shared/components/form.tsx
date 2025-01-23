@@ -97,7 +97,7 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 		}
 
 		const data = new FormData(form);
-		local.onSubmit?.(Object.assign(event, { data }));
+		await local.onSubmit?.(Object.assign(event, { data }));
 		form.reset(); // Manually reset data
 	};
 
@@ -108,6 +108,7 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 			noValidate={!isServer}
 			onSubmit={handleSubmit}
 			onReset={handleReset}
+			id={id()}
 			{...rest}
 		/>
 	);
