@@ -1,9 +1,8 @@
-import cx from 'classix';
-import { splitProps, useContext } from 'solid-js';
+import { splitProps } from 'solid-js';
 
 import { Button, type ButtonProps } from '~/shared/components/button';
 import { Form, type FormProps } from '~/shared/components/form';
-import { FormContext } from '~/shared/components/form-context';
+import { SubmitButton } from '~/shared/components/form-buttons';
 import { ModalContent } from '~/shared/components/modal';
 import { generateId } from '~/shared/utility/id-generator';
 import { T } from '~/shared/utility/text/t-components';
@@ -33,16 +32,5 @@ export function ModalCancelButton(props: ButtonProps) {
 }
 
 export function ModalSubmitButton(props: ButtonProps) {
-	const formContext = useContext(FormContext);
-
-	return (
-		<Button
-			{...props}
-			type="submit"
-			form={props.form || formContext.id()}
-			class={cx('c-button--primary', props.class)}
-		>
-			{props.children ?? <T>Submit</T>}
-		</Button>
-	);
+	return <SubmitButton {...props} />;
 }

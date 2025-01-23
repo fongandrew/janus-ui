@@ -1,6 +1,7 @@
-import { createRenderEffect, type JSX } from 'solid-js';
+import { createRenderEffect, type JSX, useContext } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
+import { FormContext } from '~/shared/components/form-context';
 import { useFormElement } from '~/shared/components/form-element-context';
 import { FormElementControl, type Validator } from '~/shared/components/form-element-control';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
@@ -83,6 +84,7 @@ registerDocumentSetup((document) => {
 export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 	props: FormElementProps<TTag>,
 ) {
+	const formContext = useContext(FormContext);
 	const [unsetFormInput] = unreactivePropAccess(props, ['unsetFormInput']);
 
 	// Control might not be an input element but treat it as one to keep TypeScript from
@@ -102,7 +104,7 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 	// so screen reader can still get useful info about the disabled component
 	// while tabbing around
 	control.setAttr('disabled', () => (props.disabled && !isServer ? false : undefined));
-	control.setAttr('aria-disabled', () => props.disabled);
+	control.setAttr('aria-disabled', () => props.disabled || formContext?.submittingSig[0]());
 
 	// Add aria version of required if applicable. We can leave required as is.
 	// It's kind of annoying to the extent it blocks form submission and we

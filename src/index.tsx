@@ -3,6 +3,7 @@ import '~/shared/style/tailwind.css';
 import { type Component } from 'solid-js';
 import { render } from 'solid-js/web';
 
+import { AsyncFormDemo } from '~/demos/async-form-demo';
 import { ButtonsCard } from '~/demos/buttons-card';
 import { CheckboxesCard } from '~/demos/checkboxes-card';
 import { FooterCard } from '~/demos/footer-card';
@@ -35,6 +36,7 @@ const App: Component = () => {
 				<SelectDemo />
 				<SelectTypeaheadDemo />
 				<ModalDemo />
+				<AsyncFormDemo />
 				<FormValidationGroupDemo />
 				<SelectionValidationDemo />
 				<FooterCard />
