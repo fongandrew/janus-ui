@@ -5,11 +5,11 @@ import { render } from 'solid-js/web';
 
 import { AlertsDemo } from '~/demos/alerts-demo';
 import { AsyncFormDemo } from '~/demos/async-form-demo';
-import { ButtonsCard } from '~/demos/buttons-card';
-import { CheckboxesCard } from '~/demos/checkboxes-card';
-import { FooterCard } from '~/demos/footer-card';
+import { ButtonsDemo } from '~/demos/buttons-demo';
+import { CheckboxesDemo } from '~/demos/checkboxes-demo';
+import { FooterDemo } from '~/demos/footer-demo';
 import { FormValidationGroupDemo } from '~/demos/form-validation-group-demo';
-import { InputsCard } from '~/demos/inputs-card';
+import { InputsDemo } from '~/demos/inputs-demo';
 import { ListBoxDemo } from '~/demos/list-box-demo';
 import { MenuDemo } from '~/demos/menu-demo';
 import { ModalDemo } from '~/demos/modal-demo';
@@ -26,13 +26,13 @@ const App: Component = () => {
 	return (
 		<Box>
 			<Grid>
-				<ButtonsCard />
+				<ButtonsDemo />
 				<AlertsDemo />
 				<MenuDemo />
-				<CheckboxesCard />
+				<CheckboxesDemo />
 				<RadioGroupDemo />
 				<TooltipDemo />
-				<InputsCard />
+				<InputsDemo />
 				<TextareasDemo />
 				<ListBoxDemo />
 				<SelectDemo />
@@ -41,7 +41,7 @@ const App: Component = () => {
 				<AsyncFormDemo />
 				<FormValidationGroupDemo />
 				<SelectionValidationDemo />
-				<FooterCard />
+				<FooterDemo />
 			</Grid>
 		</Box>
 	);

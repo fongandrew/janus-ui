@@ -12,7 +12,7 @@ import {
 import { Group } from '~/shared/components/group';
 import { Stack } from '~/shared/components/stack';
 
-const ButtonsCard: Component = () => (
+export const ButtonsDemo: Component = () => (
 	<Card class="col-span-full">
 		<CardHeader>
 			<CardTitle>Buttons</CardTitle>
@@ -50,5 +50,3 @@ const ButtonsCard: Component = () => (
 		</CardContent>
 	</Card>
 );
-
-export { ButtonsCard };

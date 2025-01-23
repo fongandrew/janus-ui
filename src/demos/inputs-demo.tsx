@@ -12,7 +12,7 @@ import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
 import { Stack } from '~/shared/components/stack';
 
-const InputsCard: Component = () => (
+export const InputsDemo: Component = () => (
 	<Card>
 		<CardHeader>
 			<CardTitle>Inputs</CardTitle>
@@ -44,5 +44,3 @@ const InputsCard: Component = () => (
 		</CardContent>
 	</Card>
 );
-
-export { InputsCard };

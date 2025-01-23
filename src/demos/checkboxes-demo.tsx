@@ -12,7 +12,7 @@ import { Label } from '~/shared/components/label';
 import { Stack } from '~/shared/components/stack';
 import { ToggleSwitch } from '~/shared/components/toggle-switch';
 
-const CheckboxesCard: Component = () => (
+export const CheckboxesDemo: Component = () => (
 	<Card>
 		<CardHeader>
 			<CardTitle>Checkboxes</CardTitle>
@@ -46,5 +46,3 @@ const CheckboxesCard: Component = () => (
 		</CardContent>
 	</Card>
 );
-
-export { CheckboxesCard };

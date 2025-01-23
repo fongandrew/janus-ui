@@ -10,7 +10,7 @@ import {
 	CardTitle,
 } from '~/shared/components/card';
 
-const FooterCard: Component = () => (
+export const FooterDemo: Component = () => (
 	<Card>
 		<CardHeader>
 			<CardTitle>Card with a footer</CardTitle>
@@ -25,5 +25,3 @@ const FooterCard: Component = () => (
 		</CardFooter>
 	</Card>
 );
-
-export { FooterCard };
