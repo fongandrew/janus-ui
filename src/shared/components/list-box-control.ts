@@ -60,7 +60,6 @@ export class ListBoxControl<
 		createRenderEffect(() => {
 			// Calling `values()` here outside of for loop to ensure reactivity tracked
 			const currentValues = this.values();
-			console.log({ currentValues });
 			for (const option of this.items()) {
 				const optionValue = option.getAttribute(LIST_OPTION_VALUE_ATTR);
 				if (optionValue) {
