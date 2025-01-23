@@ -121,6 +121,14 @@ export default {
 				DEFAULT: 'var(--callout)',
 				fg: 'var(--callout-fg)',
 			},
+			success: {
+				DEFAULT: 'var(--success)',
+				fg: 'var(--success-fg)',
+			},
+			warning: {
+				DEFAULT: 'var(--warning)',
+				fg: 'var(--warning-fg)',
+			},
 			danger: {
 				DEFAULT: 'var(--danger)',
 				fg: 'var(--danger-fg)',

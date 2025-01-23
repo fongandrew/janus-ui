@@ -3,6 +3,7 @@ import '~/shared/style/tailwind.css';
 import { type Component } from 'solid-js';
 import { render } from 'solid-js/web';
 
+import { AlertsDemo } from '~/demos/alerts-demo';
 import { AsyncFormDemo } from '~/demos/async-form-demo';
 import { ButtonsCard } from '~/demos/buttons-card';
 import { CheckboxesCard } from '~/demos/checkboxes-card';
@@ -26,6 +27,7 @@ const App: Component = () => {
 		<Box>
 			<Grid>
 				<ButtonsCard />
+				<AlertsDemo />
 				<MenuDemo />
 				<CheckboxesCard />
 				<RadioGroupDemo />

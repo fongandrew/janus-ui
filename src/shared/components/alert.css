@@ -1,0 +1,33 @@
+@import '~/shared/style/helpers.css';
+
+@layer components {
+	.c-alert {
+		@apply flex items-center gap-sm rounded-md border-md;
+
+		/* Default variant (info, uses secondary styling) */
+		@apply bg-callout text-callout-fg border-dynamic-callout;
+	}
+
+	.c-alert__icon {
+		@apply flex-none [&_svg]:size-[1em];
+	}
+
+	.c-alert__content {
+		@apply flex-1 overflow-hidden;
+	}
+}
+
+@layer utilities {
+	/* Color variants */
+	.c-alert--success {
+		@apply bg-success text-success-fg border-dynamic-success;
+	}
+
+	.c-alert--warning {
+		@apply bg-warning text-warning-fg border-dynamic-warning;
+	}
+
+	.c-alert--danger {
+		@apply bg-danger text-danger-fg border-dynamic-danger;
+	}
+}

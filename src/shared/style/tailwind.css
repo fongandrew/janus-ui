@@ -3,6 +3,7 @@
 	TODO: Switch to module imports and rely on @layer to handle ordering with Tailwind v4
 */
 @import '~/shared/style/helpers.css';
+@import '~/shared/components/alert.css';
 @import '~/shared/components/button.css';
 @import '~/shared/components/box.css';
 @import '~/shared/components/card.css';
@@ -53,6 +54,10 @@
 		--highlight-fg: hsl(0deg 0% 98%);
 		--callout: hsl(0deg 0% 96.1%);
 		--callout-fg: hsl(0deg 0% 9%);
+		--success: hsl(120deg 80% 30%);
+		--success-fg: hsl(0deg 0% 98%);
+		--warning: hsl(50deg 85% 75%);
+		--warning-fg: hsl(0deg 0% 0%);
 		--danger: hsl(0deg 84.2% 60.2%);
 		--danger-fg: hsl(0deg 0% 98%);
 		--input-bg: hsl(0deg 0% 100%);
@@ -91,6 +96,10 @@
 		--highlight-fg: hsl(0deg 0% 9%);
 		--callout: hsl(0deg 0% 14.9%);
 		--callout-fg: hsl(0deg 0% 98%);
+		--success: hsl(120deg 80% 30%);
+		--success-fg: hsl(0deg 0% 98%);
+		--warning: hsl(50deg 85% 75%);
+		--warning-fg: hsl(0deg 0% 0%);
 		--danger: hsl(0deg 66% 50%);
 		--danger-fg: hsl(0deg 0% 98%);
 		--input-bg: hsl(0deg 0% 3.9%);
