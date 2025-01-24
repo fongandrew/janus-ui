@@ -12,6 +12,7 @@ import { Checkbox } from '~/shared/components/checkbox';
 import { Description } from '~/shared/components/description';
 import { Form, type TypedSubmitEvent } from '~/shared/components/form';
 import { ResetButton, SubmitButton } from '~/shared/components/form-buttons';
+import { FormError } from '~/shared/components/form-error';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
@@ -58,6 +59,7 @@ export const AsyncFormDemo: Component = () => {
 				<Stack>
 					<Form names={FormNames} onSubmit={handleSubmit}>
 						<Stack>
+							<FormError />
 							<LabelledControl label="Name">
 								<Input name={FormNames.name} />
 							</LabelledControl>

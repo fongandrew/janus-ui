@@ -85,6 +85,7 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 		}
 
 		// Wait for validation and if any errors, stop submission
+		context.errorSig[1](null);
 		const results = await Promise.all(validationPromises);
 		for (const result of results) {
 			if (result === false) {
@@ -100,9 +101,22 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 		}
 
 		const data = new FormData(form);
-		const success = await local.onSubmit?.(Object.assign(event, { data }));
-		form.reset(); // Manually reset data
-		return success;
+		try {
+			const result = await local.onSubmit?.(Object.assign(event, { data }));
+			if (result === false) {
+				context.errorSig[1]('Form submission failed');
+				return false;
+			}
+			if (typeof result === 'string') {
+				context.errorSig[1](result);
+				return false;
+			}
+			form.reset(); // Manually reset data
+			return true;
+		} catch (error) {
+			context.errorSig[1](error instanceof Error ? error.message : String(error));
+			return false;
+		}
 	};
 
 	const handleSubmit = async (event: SubmitEvent) => {

@@ -9,6 +9,8 @@ export interface FormContextShape {
 	idSig: [Accessor<string | undefined>, Setter<string | undefined>];
 	/** Signal for whether form is busy (submitting) */
 	busySig: [Accessor<boolean>, Setter<boolean>];
+	/** Signal for form error message */
+	errorSig: [Accessor<string | null>, Setter<string | null>];
 }
 
 /**
@@ -22,8 +24,10 @@ export const FormContext = createContext<FormContextShape | undefined>();
 export function createFormContext(): FormContextShape {
 	const [id, setId] = createSignal<string | undefined>(undefined);
 	const [busy, setBusy] = createSignal(false);
+	const [error, setError] = createSignal<string | null>(null);
 	return {
 		idSig: [id, setId],
 		busySig: [busy, setBusy],
+		errorSig: [error, setError],
 	};
 }

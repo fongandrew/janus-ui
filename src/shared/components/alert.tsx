@@ -13,12 +13,12 @@ type AlertBaseProps = BoxProps & {
 
 /** Base alert component used by specific variants */
 function AlertBase(props: AlertBaseProps & { defaultIcon: typeof Info }) {
-	const [local, rest] = splitProps(props, ['icon', 'children']);
+	const [local, rest] = splitProps(props, ['icon', 'children', 'defaultIcon']);
 
 	return (
-		<Box {...rest} class={cx('c-alert', props.class)}>
+		<Box role="alert" aria-live="assertive" {...rest} class={cx('c-alert', props.class)}>
 			<span class="c-alert__icon">
-				<Dynamic component={local.icon ?? props.defaultIcon} aria-hidden="true" />
+				<Dynamic component={local.icon ?? local.defaultIcon} aria-hidden="true" />
 			</span>
 			<div class="c-alert__content">{local.children}</div>
 		</Box>
@@ -27,16 +27,21 @@ function AlertBase(props: AlertBaseProps & { defaultIcon: typeof Info }) {
 
 /** Info alert for general information */
 export function InfoAlert(props: AlertBaseProps) {
-	return <AlertBase {...props} defaultIcon={Info} />;
+	return <AlertBase defaultIcon={Info} aria-live="polite" {...props} />;
+}
+
+/** Callout if an info alert that isn't treated that way for ARIA purposes */
+export function Callout(props: AlertBaseProps) {
+	return <InfoAlert role="note" aria-live="off" {...props} />;
 }
 
 /** Success alert for positive messages */
 export function SuccessAlert(props: AlertBaseProps) {
 	return (
 		<AlertBase
+			defaultIcon={CheckCircle}
 			{...props}
 			class={cx(props.class, 'c-alert--success')}
-			defaultIcon={CheckCircle}
 		/>
 	);
 }
@@ -45,9 +50,9 @@ export function SuccessAlert(props: AlertBaseProps) {
 export function WarningAlert(props: AlertBaseProps) {
 	return (
 		<AlertBase
+			defaultIcon={AlertTriangle}
 			{...props}
 			class={cx(props.class, 'c-alert--warning')}
-			defaultIcon={AlertTriangle}
 		/>
 	);
 }
@@ -56,9 +61,9 @@ export function WarningAlert(props: AlertBaseProps) {
 export function DangerAlert(props: AlertBaseProps) {
 	return (
 		<AlertBase
+			defaultIcon={AlertCircle}
 			{...props}
 			class={cx(props.class, 'c-alert--danger')}
-			defaultIcon={AlertCircle}
 		/>
 	);
 }

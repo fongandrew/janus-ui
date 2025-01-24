@@ -21,8 +21,6 @@ import { createMountedSignal } from '~/shared/utility/solid/create-mounted-signa
 import { t } from '~/shared/utility/text/t-tag';
 
 export interface DialogProps extends JSX.DialogHtmlAttributes<HTMLDialogElement> {
-	/** Callback ref for the dialog element */
-	ref?: (element: HTMLDialogElement) => void;
 	/** Controls whether the dialog is shown */
 	open?: boolean;
 	/** Callback for modal being closed */
@@ -48,6 +46,8 @@ registerDocumentSetup((document) => {
 		}
 	});
 });
+
+const FORM_CLOSE_ATTR = 'data-dialog-close';
 
 export const Modal: Component<DialogProps> = (props) => {
 	const [dialog, setDialog] = createSignal<HTMLDialogElement | null>(null);

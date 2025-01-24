@@ -1,8 +1,26 @@
-import { DangerAlert, InfoAlert, SuccessAlert, WarningAlert } from '~/shared/components/alert';
+import { createSignal } from 'solid-js';
+
+import {
+	Callout,
+	DangerAlert,
+	InfoAlert,
+	SuccessAlert,
+	WarningAlert,
+} from '~/shared/components/alert';
+import { Button } from '~/shared/components/button';
 import { Card, CardContent, CardHeader, CardTitle } from '~/shared/components/card';
+import { Group } from '~/shared/components/group';
 import { Stack } from '~/shared/components/stack';
 
+const toggle = (value: boolean) => !value;
+
 export function AlertsDemo() {
+	const [showInfo, setShowInfo] = createSignal(false);
+	const [showCallout, setShowCallout] = createSignal(false);
+	const [showSuccess, setShowSuccess] = createSignal(false);
+	const [showWarning, setShowWarning] = createSignal(false);
+	const [showDanger, setShowDanger] = createSignal(false);
+
 	return (
 		<Card>
 			<CardHeader>
@@ -10,10 +28,29 @@ export function AlertsDemo() {
 			</CardHeader>
 			<CardContent>
 				<Stack>
-					<InfoAlert>This is an info alert with useful information</InfoAlert>
-					<SuccessAlert>Operation completed successfully</SuccessAlert>
-					<WarningAlert>Please review your input before proceeding</WarningAlert>
-					<DangerAlert>An error occurred while processing your request</DangerAlert>
+					{showInfo() && (
+						<InfoAlert>This is an info alert with useful information</InfoAlert>
+					)}
+					{showCallout() && (
+						<Callout>
+							This is a callout with useful information that does not trigger ARIA
+							alerts
+						</Callout>
+					)}
+					{showSuccess() && <SuccessAlert>Operation completed successfully</SuccessAlert>}
+					{showWarning() && (
+						<WarningAlert>Please review your input before proceeding</WarningAlert>
+					)}
+					{showDanger() && (
+						<DangerAlert>An error occurred while processing your request</DangerAlert>
+					)}
+					<Group>
+						<Button onClick={() => setShowInfo(toggle)}>Toggle Info Alert</Button>
+						<Button onClick={() => setShowCallout(toggle)}>Toggle Callout</Button>
+						<Button onClick={() => setShowSuccess(toggle)}>Toggle Success Alert</Button>
+						<Button onClick={() => setShowWarning(toggle)}>Toggle Warning Alert</Button>
+						<Button onClick={() => setShowDanger(toggle)}>Toggle Danger Alert</Button>
+					</Group>
 				</Stack>
 			</CardContent>
 		</Card>
