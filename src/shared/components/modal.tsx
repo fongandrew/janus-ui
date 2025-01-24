@@ -14,8 +14,6 @@ import { type ButtonProps, IconButton } from '~/shared/components/button';
 import { FormContextProvider } from '~/shared/components/form-context-provider';
 import { Group } from '~/shared/components/group';
 import { ModalContext } from '~/shared/components/modal-context';
-import { registerDocumentSetup } from '~/shared/utility/document-setup';
-import { isDialog } from '~/shared/utility/element-types';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { createMountedSignal } from '~/shared/utility/solid/create-mounted-signal';
 import { t } from '~/shared/utility/text/t-tag';
@@ -29,30 +27,15 @@ export interface DialogProps extends JSX.DialogHtmlAttributes<HTMLDialogElement>
 	children: JSX.Element;
 }
 
-// If dialog backdrop is closed, trigger close event
-registerDocumentSetup((document) => {
-	document.addEventListener('click', (event) => {
-		const target = event.target as HTMLElement;
-
-		// Close any clicks that land on data-dialog-container. Clicks on the dialog content
-		// itself should land on data-dialog-content, so we can ignore those.
-		if (
-			target &&
-			target.hasAttribute('data-dialog-container') &&
-			isDialog(target) &&
-			target.open
-		) {
-			target.close();
-		}
-	});
-});
-
-const FORM_CLOSE_ATTR = 'data-dialog-close';
-
 export const Modal: Component<DialogProps> = (props) => {
 	const [dialog, setDialog] = createSignal<HTMLDialogElement | null>(null);
 	const isMounted = createMountedSignal();
 	const [local, rest] = splitProps(props, ['children', 'open']);
+
+	let initialClickTarget: HTMLElement | null = null;
+	const setInitialClickTarget = (target: HTMLElement | null) => {
+		initialClickTarget = target;
+	};
 
 	// Handle open state changes after mount
 	createEffect(() => {
@@ -107,7 +90,7 @@ export const Modal: Component<DialogProps> = (props) => {
 		// Clicking the backdrop should close it. This should not fire if clicking
 		// the dialog body itself since target will be the dialog content element
 		// or a child of it.
-		if (target === dialog()) {
+		if (target === dialog() && initialClickTarget === dialog()) {
 			maybeCloseDialog(e);
 			return;
 		}
@@ -135,6 +118,11 @@ export const Modal: Component<DialogProps> = (props) => {
 		}
 	};
 
+	/** Handle the mouse down event to track initial click target */
+	const handleMouseDown = (e: MouseEvent) => {
+		setInitialClickTarget(e.target as HTMLElement);
+	};
+
 	/** Handle the escape key */
 	const handleKeydown = (e: KeyboardEvent) => {
 		// Don't auto close on escape if popover is open (escape should close
@@ -151,6 +139,7 @@ export const Modal: Component<DialogProps> = (props) => {
 				ref={combineRefs(setDialog, props.ref)}
 				class={cx('c-modal', props.class)}
 				onClick={handleClick}
+				onMouseDown={handleMouseDown}
 				onKeyDown={handleKeydown}
 			>
 				<FormContextProvider>
