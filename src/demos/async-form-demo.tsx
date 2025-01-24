@@ -61,7 +61,7 @@ export const AsyncFormDemo: Component = () => {
 						<Stack>
 							<FormError />
 							<LabelledControl label="Name">
-								<Input name={FormNames.name} />
+								<Input name={FormNames.name} autocomplete="none" />
 							</LabelledControl>
 							<LabelledControl label="Message">
 								<Textarea name={FormNames.message} />

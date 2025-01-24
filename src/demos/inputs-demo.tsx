@@ -5,6 +5,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '~/shared/components/card';
+import { Form } from '~/shared/components/form';
 import {
 	Input,
 	InputDate,
@@ -85,26 +86,28 @@ function TextInputVariations() {
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Stack>
-					<LabelledControl label="Email Input">
-						<Input type="email" />
-					</LabelledControl>
-					<LabelledControl label="Number Input">
-						<Input type="number" />
-					</LabelledControl>
-					<LabelledControl label="Password Input">
-						<Input type="password" />
-					</LabelledControl>
-					<LabelledControl label="Search Input">
-						<Input type="search" />
-					</LabelledControl>
-					<LabelledControl label="Telephone Input">
-						<Input type="tel" />
-					</LabelledControl>
-					<LabelledControl label="URL Input">
-						<Input type="url" />
-					</LabelledControl>
-				</Stack>
+				<Form names={{}} onSubmit={() => {}}>
+					<Stack>
+						<LabelledControl label="Email Input">
+							<Input type="email" autocomplete="email" />
+						</LabelledControl>
+						<LabelledControl label="Number Input">
+							<Input type="number" />
+						</LabelledControl>
+						<LabelledControl label="Password Input">
+							<Input type="password" autocomplete="current-password" />
+						</LabelledControl>
+						<LabelledControl label="Search Input">
+							<Input type="search" />
+						</LabelledControl>
+						<LabelledControl label="Telephone Input">
+							<Input type="tel" />
+						</LabelledControl>
+						<LabelledControl label="URL Input">
+							<Input type="url" />
+						</LabelledControl>
+					</Stack>
+				</Form>
 			</CardContent>
 		</Card>
 	);
