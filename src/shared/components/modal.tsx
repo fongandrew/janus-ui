@@ -7,14 +7,17 @@ import {
 	createSignal,
 	type JSX,
 	onCleanup,
+	Show,
 	splitProps,
 	useContext,
 } from 'solid-js';
 
 import { Button, type ButtonProps, IconButton } from '~/shared/components/button';
 import { FormContextProvider } from '~/shared/components/form-context-provider';
+import { FORM_CONTROL_ATTR } from '~/shared/components/form-element-control';
 import { Group } from '~/shared/components/group';
 import { ModalContext, type ModalContextValue } from '~/shared/components/modal-context';
+import { focusables } from '~/shared/utility/focusables';
 import { generateId } from '~/shared/utility/id-generator';
 import { pullLast } from '~/shared/utility/list';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
@@ -53,6 +56,43 @@ export const FORM_REQUEST_CLOSE_ATTR = 'data-dialog-cancel';
  */
 export const FORM_CLOSE_ATTR = 'data-dialog-close';
 
+/**
+ * Set an autofocus attribute on the first focusable element in the modal if none
+ * there to ensure focus moves into the modal from the trigger.
+ */
+export function setAutofocus(dialog: HTMLDialogElement) {
+	if (dialog.querySelector('[autofocus]')) return;
+
+	let firstElm: HTMLElement | undefined;
+	let firstNonCloseElm: HTMLElement | undefined;
+
+	const list = focusables(dialog);
+	for (const elm of list) {
+		firstElm ??= elm;
+
+		// Prefer focusable that isn't a close button
+		if (elm.hasAttribute(FORM_REQUEST_CLOSE_ATTR) || elm.hasAttribute(FORM_CLOSE_ATTR)) {
+			continue;
+		}
+
+		// Prefer focusable that is form control
+		if (!elm.hasAttribute(FORM_CONTROL_ATTR)) {
+			firstNonCloseElm ??= elm;
+			continue;
+		}
+
+		elm.autofocus = true;
+		return;
+	}
+
+	// If no better focusable elements, set autofocus on what we have
+	if (firstNonCloseElm) {
+		firstNonCloseElm.autofocus = true;
+	} else if (firstElm) {
+		firstElm.autofocus = true;
+	}
+}
+
 export const Modal: Component<DialogProps> = (props) => {
 	const [dialog, setDialog] = createSignal<HTMLDialogElement | null>(null);
 	const isMounted = createMountedSignal();
@@ -80,6 +120,7 @@ export const Modal: Component<DialogProps> = (props) => {
 		if (!isMounted() || !dialogElm) return;
 
 		if (local.open) {
+			setAutofocus(dialogElm);
 			dialogElm.showModal();
 		} else if (dialogElm.open) {
 			dialogElm.close();
@@ -172,21 +213,23 @@ export const Modal: Component<DialogProps> = (props) => {
 	};
 
 	return (
-		<ModalContext.Provider value={modalContext}>
-			<dialog
-				{...rest}
-				id={id()}
-				ref={combineRefs(setDialog, props.ref)}
-				class={cx('c-modal', props.class)}
-				onClick={handleClick}
-				onMouseDown={handleMouseDown}
-				onKeyDown={handleKeydown}
-			>
-				<FormContextProvider>
-					<div class="c-modal__body">{local.children}</div>
-				</FormContextProvider>
-			</dialog>
-		</ModalContext.Provider>
+		<Show when={local.open}>
+			<ModalContext.Provider value={modalContext}>
+				<dialog
+					{...rest}
+					id={id()}
+					ref={combineRefs(setDialog, props.ref)}
+					class={cx('c-modal', props.class)}
+					onClick={handleClick}
+					onMouseDown={handleMouseDown}
+					onKeyDown={handleKeydown}
+				>
+					<FormContextProvider>
+						<div class="c-modal__body">{local.children}</div>
+					</FormContextProvider>
+				</dialog>
+			</ModalContext.Provider>
+		</Show>
 	);
 };
 
