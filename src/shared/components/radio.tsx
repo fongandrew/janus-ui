@@ -6,6 +6,7 @@ import {
 	mergeFormElementProps,
 } from '~/shared/components/form-element-props';
 import { RadioGroupContext } from '~/shared/components/radio-group-context';
+import { handleEvent } from '~/shared/utility/solid/handle-event';
 
 export interface RadioProps extends Omit<FormElementProps<'input'>, 'type'> {}
 
@@ -22,11 +23,9 @@ export function Radio(props: RadioProps) {
 	};
 
 	const handleChange: JSX.ChangeEventHandler<HTMLInputElement, Event> = (event) => {
-		if (typeof local.onChange === 'function') {
-			local.onChange(event);
-			if (event.defaultPrevented) {
-				return;
-			}
+		handleEvent(event.target as HTMLInputElement, local.onChange, event);
+		if (event.defaultPrevented) {
+			return;
 		}
 		if (group && 'onChange' in group) {
 			group.onChange(event);
