@@ -14,11 +14,21 @@ export interface CheckboxProps extends Omit<FormElementProps<'input'>, 'type'> {
 	indeterminate?: boolean;
 }
 
-/** Propagate click to actual input (screenreaders will do this automatically) */
+/** Update checked state on click (screenreaders will do this automatically) */
 const handleClick = (e: MouseEvent) => {
 	if (e.target instanceof HTMLInputElement) return;
-	e.stopImmediatePropagation();
-	(e.currentTarget as HTMLElement).querySelector('input')?.click();
+
+	const input = (e.currentTarget as HTMLElement).querySelector('input');
+	if (input) {
+		const prevState = input.checked;
+		// setTimeout in case click event triggers something further down
+		// the propagation chain that would change the input.checked value
+		// (like if it's inside a label)
+		setTimeout(() => {
+			input.indeterminate = false;
+			input.checked = !prevState;
+		}, 0);
+	}
 };
 
 export function Checkbox(props: CheckboxProps) {
