@@ -11,10 +11,7 @@ import { combineRefs } from '~/shared/utility/solid/combine-refs';
  */
 export interface FormValidationGroupProps
 	extends ValidationGroupProps,
-		JSX.HTMLAttributes<HTMLDivElement> {
-	/** Force ref to be callback, if any */
-	ref?: (element: HTMLDivElement) => void;
-}
+		JSX.HTMLAttributes<HTMLDivElement> {}
 
 export function FormValidationGroup(props: FormValidationGroupProps) {
 	const [validationGroup, setValidationGroup] = createSignal<HTMLDivElement | null>(null);

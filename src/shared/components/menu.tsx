@@ -13,8 +13,6 @@ import { generateId } from '~/shared/utility/id-generator';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 
 export interface MenuProps extends JSX.HTMLAttributes<HTMLDivElement> {
-	/** Ref returned by createDropdown */
-	ref?: (el: HTMLDivElement) => void;
 	/** Called when a menu item is selected */
 	onValue?: (value: string, event: KeyboardEvent | MouseEvent) => void;
 	/** Require onClick to be functional */

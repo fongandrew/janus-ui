@@ -235,9 +235,7 @@ export function ModalTitle(props: JSX.HTMLAttributes<HTMLDivElement>) {
 	);
 }
 
-export function ModalContent(
-	props: JSX.HTMLAttributes<HTMLDivElement> & { ref?: (elm: HTMLDivElement) => void },
-) {
+export function ModalContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
 	const [ref, setRef] = createSignal<HTMLDivElement | null>(null);
 	const modalContext = useContext(ModalContext);
 
