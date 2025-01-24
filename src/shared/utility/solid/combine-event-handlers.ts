@@ -8,7 +8,7 @@ import { handleEvent } from '~/shared/utility/solid/handle-event';
  */
 function handleEvents<TTarget extends HTMLElement, TEvent extends Event>(
 	this: TTarget | null,
-	handlers: (JSX.EventHandlerUnion<TTarget, TEvent> | undefined)[],
+	handlers: (JSX.EventHandlerUnion<TTarget, TEvent> | undefined | null | false | 0)[],
 	event: TEvent,
 ) {
 	const originalStopImmediatePropagation = event.stopImmediatePropagation;
@@ -31,7 +31,7 @@ function handleEvents<TTarget extends HTMLElement, TEvent extends Event>(
  * stopImmediatePropagation to prevent calling.
  */
 export function combineEventHandlers<TTarget extends HTMLElement, TEvent extends Event>(
-	...handlers: (JSX.EventHandlerUnion<TTarget, TEvent> | undefined)[]
+	...handlers: (JSX.EventHandlerUnion<TTarget, TEvent> | undefined | null | false | 0)[]
 ): JSX.BoundEventHandler<TTarget, TEvent> {
 	return [handleEvents, handlers];
 }

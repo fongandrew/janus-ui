@@ -9,7 +9,7 @@ export function handleEvent<
 	THandler extends JSX.EventHandler<T, any> = JSX.EventHandler<T, TEvent>,
 >(
 	thisElm: HTMLElement | null,
-	handler: JSX.EventHandlerUnion<T, TEvent, THandler> | undefined,
+	handler: JSX.EventHandlerUnion<T, TEvent, THandler> | undefined | null | false | 0,
 	event: TEvent,
 	...rest: any[]
 ) {

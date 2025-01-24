@@ -10,12 +10,13 @@ import {
 	useContext,
 } from 'solid-js';
 
-import { type ButtonProps, IconButton } from '~/shared/components/button';
+import { Button, type ButtonProps, IconButton } from '~/shared/components/button';
 import { FormContextProvider } from '~/shared/components/form-context-provider';
 import { Group } from '~/shared/components/group';
 import { ModalContext } from '~/shared/components/modal-context';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { createMountedSignal } from '~/shared/utility/solid/create-mounted-signal';
+import { T } from '~/shared/utility/text/t-components';
 import { t } from '~/shared/utility/text/t-tag';
 
 export interface DialogProps extends JSX.DialogHtmlAttributes<HTMLDialogElement> {
@@ -26,6 +27,12 @@ export interface DialogProps extends JSX.DialogHtmlAttributes<HTMLDialogElement>
 	/** Require children */
 	children: JSX.Element;
 }
+
+/** Magic attribute for button that requests form close */
+export const FORM_REQUEST_CLOSE_ATTR = 'data-dialog-cancel';
+
+/** Magic attribute for button that closes the form for real */
+export const FORM_CLOSE_ATTR = 'data-dialog-close';
 
 export const Modal: Component<DialogProps> = (props) => {
 	const [dialog, setDialog] = createSignal<HTMLDialogElement | null>(null);
@@ -95,24 +102,14 @@ export const Modal: Component<DialogProps> = (props) => {
 			return;
 		}
 
-		// If target is submit inside a form with method="dialog", check if we should close.
-		// This is meant to maybe override the defualt behavior of closing the form on submit.
-		const submitTarget = target.closest('[type="submit"]') as
-			| HTMLButtonElement
-			| HTMLInputElement
-			| null;
-		if (submitTarget && submitTarget.form?.method === 'dialog') {
-			maybeCloseDialog(e);
+		// Force close and don't allow for speedbump / interruption
+		if (target.closest('[' + FORM_CLOSE_ATTR + '="true"]')) {
+			dialog()?.close();
 			return;
 		}
 
-		// If target is a button with type="reset" not attached to a form, maybe close the
-		// dialog. This is also meant to override default behavior.
-		const resetTarget = target.closest('[type="reset"]') as
-			| HTMLButtonElement
-			| HTMLInputElement
-			| null;
-		if (resetTarget && !resetTarget.form) {
+		//  Request close but allow for speedbump / interruption
+		if (target.closest('[' + FORM_REQUEST_CLOSE_ATTR + '="true"]')) {
 			maybeCloseDialog(e);
 			return;
 		}
@@ -150,11 +147,31 @@ export const Modal: Component<DialogProps> = (props) => {
 	);
 };
 
-export function ModalCloseButton(props: ButtonProps) {
+export function ModalXButton(props: ButtonProps) {
 	return (
-		<IconButton type="reset" label={t`Close`} {...props} class={cx('text-muted', props.class)}>
+		<IconButton
+			type="reset"
+			label={t`Close`}
+			{...{ [FORM_REQUEST_CLOSE_ATTR]: 'true' }}
+			{...props}
+			class={cx('text-muted', props.class)}
+		>
 			<X />
 		</IconButton>
+	);
+}
+
+export function ModalCloseButton(props: ButtonProps & { force?: boolean | undefined }) {
+	return (
+		<Button
+			{...props}
+			{...{
+				[FORM_REQUEST_CLOSE_ATTR]: props.force ? undefined : 'true',
+				[FORM_CLOSE_ATTR]: props.force ? 'true' : undefined,
+			}}
+		>
+			{props.children ?? <T>Close</T>}
+		</Button>
 	);
 }
 
@@ -163,7 +180,7 @@ export function ModalTitle(props: JSX.HTMLAttributes<HTMLDivElement>) {
 	return (
 		<Group {...rest} class={cx('c-modal__header', rest.class)}>
 			<h2 class="c-modal__title">{local.children}</h2>
-			<ModalCloseButton />
+			<ModalXButton />
 		</Group>
 	);
 }

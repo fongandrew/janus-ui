@@ -8,6 +8,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '~/shared/components/card';
+import { Checkbox } from '~/shared/components/checkbox';
 import { Description } from '~/shared/components/description';
 import { type TypedFormData } from '~/shared/components/form';
 import { Group } from '~/shared/components/group';
@@ -15,7 +16,13 @@ import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
 import { LabelledControl } from '~/shared/components/labelled-control';
-import { Modal, ModalContent, ModalFooter, ModalTitle } from '~/shared/components/modal';
+import {
+	Modal,
+	ModalCloseButton,
+	ModalContent,
+	ModalFooter,
+	ModalTitle,
+} from '~/shared/components/modal';
 import {
 	ModalCancelButton,
 	ModalFormContent,
@@ -35,7 +42,7 @@ function SimpleModal() {
 					<p>Click outside or the close button to dismiss</p>
 				</ModalContent>
 				<ModalFooter>
-					<Button type="reset">Close</Button>
+					<ModalCloseButton />
 				</ModalFooter>
 			</Modal>
 		</>
@@ -67,7 +74,7 @@ function LongModal() {
 				<ModalTitle>Example Modal</ModalTitle>
 				<ModalContent>{manyParagraphs}</ModalContent>
 				<ModalFooter>
-					<Button type="reset">Close</Button>
+					<ModalCloseButton />
 				</ModalFooter>
 			</Modal>
 		</>
@@ -95,16 +102,18 @@ function FormModal() {
 			email: data.get('email') as string,
 			message: data.get('message') as string,
 		});
-		setIsFormOpen(false);
-		setIsResultsOpen(true);
 	};
 
 	return (
 		<>
-			<Button onClick={() => setIsFormOpen(true)}>Open Form Modal</Button>
-			<Modal open={isFormOpen()} onClose={() => setIsFormOpen(false)}>
+			<Button onClick={[setIsFormOpen, true]}>Open Form Modal</Button>
+			<Modal open={isFormOpen()} onClose={[setIsFormOpen, false]}>
 				<ModalTitle>Form Example</ModalTitle>
-				<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
+				<ModalFormContent
+					names={FormNames}
+					onSubmit={handleSubmit}
+					onSubmitSuccess={[setIsResultsOpen, true]}
+				>
 					<Stack>
 						<LabelledControl label="Name">
 							<Input name={FormNames.name} required />
@@ -122,7 +131,7 @@ function FormModal() {
 					<ModalSubmitButton />
 				</ModalFooter>
 			</Modal>
-			<Modal open={isResultsOpen()} onClose={() => setIsResultsOpen(false)}>
+			<Modal open={isResultsOpen()} onClose={[setIsResultsOpen, false]}>
 				<ModalTitle>Form Results</ModalTitle>
 				<ModalContent>
 					<output>
@@ -169,8 +178,8 @@ function ScrollableForm() {
 
 	return (
 		<>
-			<Button onClick={() => setIsFormOpen(true)}>Open Form Modal (Scrollable)</Button>
-			<Modal open={isFormOpen()} onClose={() => setIsFormOpen(false)}>
+			<Button onClick={[setIsFormOpen, true]}>Open Form Modal (Scrollable)</Button>
+			<Modal open={isFormOpen()} onClose={[setIsFormOpen, false]}>
 				<ModalTitle>Form Example</ModalTitle>
 				<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
 					<Stack>
@@ -183,6 +192,53 @@ function ScrollableForm() {
 						<LabelledControl label="Last">
 							<Input name={FormNames.field2} required />
 						</LabelledControl>
+					</Stack>
+				</ModalFormContent>
+				<ModalFooter>
+					<ModalCancelButton />
+					<ModalSubmitButton />
+				</ModalFooter>
+			</Modal>
+		</>
+	);
+}
+
+function AsyncForm() {
+	const [isFormOpen, setIsFormOpen] = createSignal(false);
+
+	const FormNames = {
+		name: 'name' as const,
+		message: 'message' as const,
+		shouldError: 'shouldError' as const,
+	};
+
+	const handleSubmit = async (
+		e: SubmitEvent & { data: TypedFormData<keyof typeof FormNames> },
+	) => {
+		e.preventDefault();
+		await new Promise((resolve) => setTimeout(resolve, 2500));
+		if (e.data.get('shouldError')) {
+			throw new Error('Forced error');
+		}
+	};
+
+	return (
+		<>
+			<Button onClick={[setIsFormOpen, true]}>Open Form Modal (Async)</Button>
+			<Modal open={isFormOpen()} onClose={[setIsFormOpen, false]}>
+				<ModalTitle>Async Form Example</ModalTitle>
+				<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
+					<Stack>
+						<LabelledControl label="Name">
+							<Input name={FormNames.name} />
+						</LabelledControl>
+						<LabelledControl label="Message">
+							<Textarea name={FormNames.message} />
+						</LabelledControl>
+						<Label>
+							<Checkbox name={FormNames.shouldError} />
+							Should error
+						</Label>
 					</Stack>
 				</ModalFormContent>
 				<ModalFooter>
@@ -207,6 +263,7 @@ function ModalDemo() {
 					<LongModal />
 					<FormModal />
 					<ScrollableForm />
+					<AsyncForm />
 				</Group>
 			</CardContent>
 		</Card>

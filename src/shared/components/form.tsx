@@ -7,8 +7,10 @@ import {
 	resetControl,
 	validate,
 } from '~/shared/components/form-element-control';
+import { type BoundCallbackUnion, callBound } from '~/shared/utility/bound-callbacks';
 import { generateId } from '~/shared/utility/id-generator';
 import { evtWin } from '~/shared/utility/multi-view';
+import { handleEvent } from '~/shared/utility/solid/handle-event';
 
 /** Same as form data but the names are typed */
 export interface TypedFormData<TNames> {
@@ -29,9 +31,15 @@ export interface FormProps<TNames extends string>
 	/** This prop is unused but just used to infer and type-check form names */
 	names: Record<string, TNames>;
 	/** Form reset handler */
-	onReset?: (event: Event) => void | Promise<void>;
+	onReset?: ((event: Event) => void | Promise<void>) | undefined;
 	/** Form submit handler -- handler should return false or throw to indicate submission error */
-	onSubmit?: (event: TypedSubmitEvent<TNames>) => boolean | void | Promise<boolean | void>;
+	onSubmit?:
+		| ((event: TypedSubmitEvent<TNames>) => boolean | void | Promise<boolean | void>)
+		| undefined;
+	/** Handler for submit success */
+	onSubmitSuccess?: JSX.EventHandlerUnion<HTMLFormElement, TypedSubmitEvent<TNames>> | undefined;
+	/** Handler for submit error */
+	onSubmitError?: BoundCallbackUnion<void, [string, TypedSubmitEvent<TNames>]> | undefined;
 }
 
 /**
@@ -62,6 +70,12 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 		}
 
 		local.onReset?.(event);
+	};
+
+	const handleError = (error: Error | string, event: TypedSubmitEvent<TNames>) => {
+		const errStr = typeof error === 'string' ? error : (error?.message ?? String(error));
+		context.errorSig[1](errStr);
+		callBound(props.onSubmitError, errStr, event);
 	};
 
 	const doSubmit = async (event: SubmitEvent) => {
@@ -101,20 +115,22 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 		}
 
 		const data = new FormData(form);
+		const typedEvent = Object.assign(event, { data });
 		try {
-			const result = await local.onSubmit?.(Object.assign(event, { data }));
+			const result = await local.onSubmit?.(typedEvent);
 			if (result === false) {
-				context.errorSig[1]('Form submission failed');
+				handleError('Form submission failed', typedEvent);
 				return false;
 			}
 			if (typeof result === 'string') {
-				context.errorSig[1](result);
+				handleError(result, typedEvent);
 				return false;
 			}
 			form.reset(); // Manually reset data
+			handleEvent(form, props.onSubmitSuccess, typedEvent);
 			return true;
 		} catch (error) {
-			context.errorSig[1](error instanceof Error ? error.message : String(error));
+			handleError(error as Error, typedEvent);
 			return false;
 		}
 	};
