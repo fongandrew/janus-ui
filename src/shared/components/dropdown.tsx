@@ -231,9 +231,22 @@ export function Dropdown(props: DropdownProps) {
 			evtWin(e)?.requestAnimationFrame(openDropdown);
 		});
 		control.handle('onKeyDown', (e) => {
-			if (e.key === 'ArrowDown' && !visible()) {
+			if (!visible() && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
 				openDropdown();
 				e.preventDefault();
+
+				// For menu, move focus into menu
+				const trigger = e.target as HTMLElement;
+				if (trigger.ariaHasPopup === 'menu') {
+					const items = dropdownContentCtrl
+						.ref()
+						?.querySelectorAll('[role="menuitem"]') as NodeListOf<HTMLElement>;
+					if (e.key === 'ArrowDown') {
+						items?.[0]?.focus();
+					} else {
+						items?.[items.length - 1]?.focus();
+					}
+				}
 			}
 		});
 	};

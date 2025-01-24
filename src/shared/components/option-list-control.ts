@@ -48,19 +48,19 @@ export function handleKeyDown(ctrl: OptionListControl, event: KeyboardEvent) {
 			// First item gets autofocused, but if focus isn't visible, this is
 			// a bit weird since it'll jump to the second item when you hit down.
 			// So explicitly select it if not already visible
-			if (isFocusVisible()) {
-				ctrl.highlight(items[nextIndex(items, currentIndex)] ?? null, event);
-			} else {
+			if (highlighted?.autofocus && !isFocusVisible()) {
 				ctrl.highlight(items[0] ?? null, event);
 				// Indicate that focus is visible now so we don't get stuck
 				// in a stuck state
 				setFocusVisible(true);
+			} else {
+				ctrl.highlight(items[nextIndex(items, currentIndex, 1, true)] ?? null, event);
 			}
 			break;
 		}
 		case 'ArrowUp': {
 			event.preventDefault();
-			ctrl.highlight(items[nextIndex(items, currentIndex, -1)] ?? null, event);
+			ctrl.highlight(items[nextIndex(items, currentIndex, -1, true)] ?? null, event);
 			break;
 		}
 		case 'Enter':

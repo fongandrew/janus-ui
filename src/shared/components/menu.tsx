@@ -63,7 +63,7 @@ export function Menu(props: MenuProps) {
 
 	optionListControl.handle('onKeyDown', (event: KeyboardEvent) => {
 		switch (event.key) {
-			// Arrow keys handled by createOptionListControl
+			// Arrow keys handled by OptionListControl
 			// Escape key handled by poopver light dismiss
 
 			case 'Tab': {
