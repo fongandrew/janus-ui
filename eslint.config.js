@@ -162,6 +162,7 @@ export default tseslint.config(
 						'extAttr',
 						'defaultAttr',
 						'handle',
+						'onRequestClose'
 					],
 				},
 			],

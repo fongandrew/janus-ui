@@ -3,6 +3,7 @@ import { X } from 'lucide-solid';
 import {
 	type Component,
 	createEffect,
+	createMemo,
 	createSignal,
 	type JSX,
 	onCleanup,
@@ -13,7 +14,9 @@ import {
 import { Button, type ButtonProps, IconButton } from '~/shared/components/button';
 import { FormContextProvider } from '~/shared/components/form-context-provider';
 import { Group } from '~/shared/components/group';
-import { ModalContext } from '~/shared/components/modal-context';
+import { ModalContext, type ModalContextValue } from '~/shared/components/modal-context';
+import { generateId } from '~/shared/utility/id-generator';
+import { pullLast } from '~/shared/utility/list';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { createMountedSignal } from '~/shared/utility/solid/create-mounted-signal';
 import { T } from '~/shared/utility/text/t-components';
@@ -21,27 +24,54 @@ import { t } from '~/shared/utility/text/t-tag';
 
 export interface DialogProps extends JSX.DialogHtmlAttributes<HTMLDialogElement> {
 	/** Controls whether the dialog is shown */
-	open?: boolean;
-	/** Callback for modal being closed */
-	onRequestClose?: (e: KeyboardEvent | MouseEvent) => boolean | Promise<boolean>;
+	open: boolean;
+	/**
+	 * Callback when dialog is closed. This is required because the "open" state of
+	 * a modal has to be managed externally (i.e. it's a controlled component) and
+	 * logic within the modal needs to be able to trigger the close. Without this,
+	 * the prop and the actual state of the dialog could end up out of sync.
+	 */
+	onClose: JSX.EventHandlerUnion<HTMLDialogElement, Event>;
+	/**
+	 * Callback for when closing the dialog is requested. Return false to prevent
+	 * the dialog from closing. This is useful for speed bumps or other confirmations.
+	 */
+	onRequestClose?: (() => boolean | void) | undefined;
 	/** Require children */
 	children: JSX.Element;
 }
 
-/** Magic attribute for button that requests form close */
+/**
+ * Magic attribute for button that requests form close -- should reference the ID of
+ * the modal being closed
+ */
 export const FORM_REQUEST_CLOSE_ATTR = 'data-dialog-cancel';
 
-/** Magic attribute for button that closes the form for real */
+/**
+ * Magic attribute for button that closes the form for real (used by speed bump).
+ * Should also reference the ID of the modal being closed.
+ */
 export const FORM_CLOSE_ATTR = 'data-dialog-close';
 
 export const Modal: Component<DialogProps> = (props) => {
 	const [dialog, setDialog] = createSignal<HTMLDialogElement | null>(null);
 	const isMounted = createMountedSignal();
-	const [local, rest] = splitProps(props, ['children', 'open']);
+	const [local, rest] = splitProps(props, ['children', 'id', 'open']);
 
-	let initialClickTarget: HTMLElement | null = null;
-	const setInitialClickTarget = (target: HTMLElement | null) => {
-		initialClickTarget = target;
+	// Auto-generate ID if needed
+	const id = createMemo(() => local.id ?? generateId('modal'));
+
+	// Modal context that'll be accessible to child components
+	const requestCloseCallbacks: DialogProps['onRequestClose'][] = [];
+	const modalContext: ModalContextValue = {
+		id,
+		open: () => !!local.open,
+		onRequestClose: (callback) => {
+			requestCloseCallbacks.push(callback);
+			onCleanup(() => {
+				pullLast(requestCloseCallbacks, callback);
+			});
+		},
 	};
 
 	// Handle open state changes after mount
@@ -73,20 +103,28 @@ export const Modal: Component<DialogProps> = (props) => {
 		const dialogElm = dialog();
 		if (!dialogElm?.open) return;
 
-		// Prevent default since we'll be manually closing dialog (if applicable)
+		// Prevent default (dialog closing if this is triggered via form method="dialog"
+		// submit) since we'll be manually closing dialog (if applicable)
 		e.preventDefault();
 
-		if (!props.onRequestClose) {
-			dialogElm.close();
-			return;
+		for (const callback of [...requestCloseCallbacks, props.onRequestClose]) {
+			const ret = callback?.();
+			if (ret === false) return;
 		}
 
-		const result = props.onRequestClose(e);
-		if (result instanceof Promise) {
-			result.then((shouldClose) => shouldClose && dialogElm.close());
-		} else if (result) {
-			dialog()?.close();
-		}
+		dialog()?.close();
+	};
+
+	/** Whether mousedown target is this dialog */
+	let initialClickTargetIsDialog = false;
+
+	/**
+	 * Handle the mouse down event to track initial click target. This is necessary
+	 * because we don't want a click that starts on the dialog but moves outside to the
+	 * backdrop to close the dialog (as is sometimes the case when selecting text).
+	 */
+	const handleMouseDown = (e: MouseEvent) => {
+		initialClickTargetIsDialog = e.target === dialog();
 	};
 
 	/** Click handler for things that might close the modal */
@@ -97,27 +135,31 @@ export const Modal: Component<DialogProps> = (props) => {
 		// Clicking the backdrop should close it. This should not fire if clicking
 		// the dialog body itself since target will be the dialog content element
 		// or a child of it.
-		if (target === dialog() && initialClickTarget === dialog()) {
+		if (target === dialog() && initialClickTargetIsDialog) {
 			maybeCloseDialog(e);
 			return;
 		}
 
 		// Force close and don't allow for speedbump / interruption
-		if (target.closest('[' + FORM_CLOSE_ATTR + '="true"]')) {
+		if (target.closest('[' + FORM_CLOSE_ATTR + ']')?.getAttribute(FORM_CLOSE_ATTR) === id()) {
+			// Close any child dialogs before closing this one (to trigger close events and
+			// signal bookkeeping)
+			for (const childDialog of dialog()?.querySelectorAll(':modal') ?? []) {
+				(childDialog as HTMLDialogElement).close();
+			}
 			dialog()?.close();
 			return;
 		}
 
 		//  Request close but allow for speedbump / interruption
-		if (target.closest('[' + FORM_REQUEST_CLOSE_ATTR + '="true"]')) {
+		if (
+			target
+				.closest('[' + FORM_REQUEST_CLOSE_ATTR + ']')
+				?.getAttribute(FORM_REQUEST_CLOSE_ATTR) === id()
+		) {
 			maybeCloseDialog(e);
 			return;
 		}
-	};
-
-	/** Handle the mouse down event to track initial click target */
-	const handleMouseDown = (e: MouseEvent) => {
-		setInitialClickTarget(e.target as HTMLElement);
 	};
 
 	/** Handle the escape key */
@@ -130,9 +172,10 @@ export const Modal: Component<DialogProps> = (props) => {
 	};
 
 	return (
-		<ModalContext.Provider value={{ open: () => !!props.open }}>
+		<ModalContext.Provider value={modalContext}>
 			<dialog
 				{...rest}
+				id={id()}
 				ref={combineRefs(setDialog, props.ref)}
 				class={cx('c-modal', props.class)}
 				onClick={handleClick}
@@ -147,12 +190,14 @@ export const Modal: Component<DialogProps> = (props) => {
 	);
 };
 
+/** X button in corner of modal */
 export function ModalXButton(props: ButtonProps) {
+	const modalContext = useContext(ModalContext);
 	return (
 		<IconButton
 			type="reset"
 			label={t`Close`}
-			{...{ [FORM_REQUEST_CLOSE_ATTR]: 'true' }}
+			{...{ [FORM_REQUEST_CLOSE_ATTR]: modalContext?.id() }}
 			{...props}
 			class={cx('text-muted', props.class)}
 		>
@@ -161,13 +206,18 @@ export function ModalXButton(props: ButtonProps) {
 	);
 }
 
-export function ModalCloseButton(props: ButtonProps & { force?: boolean | undefined }) {
+/** Generic button for closing current modal */
+export function ModalCloseButton(
+	props: ButtonProps & { force?: boolean | undefined; targetId?: string | undefined } = {},
+) {
+	const modalContext = useContext(ModalContext);
+	const targetId = () => props.targetId ?? modalContext?.id();
 	return (
 		<Button
 			{...props}
 			{...{
-				[FORM_REQUEST_CLOSE_ATTR]: props.force ? undefined : 'true',
-				[FORM_CLOSE_ATTR]: props.force ? 'true' : undefined,
+				[FORM_REQUEST_CLOSE_ATTR]: props.force ? undefined : targetId(),
+				[FORM_CLOSE_ATTR]: props.force ? targetId() : undefined,
 			}}
 		>
 			{props.children ?? <T>Close</T>}

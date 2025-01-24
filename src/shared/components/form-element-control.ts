@@ -138,6 +138,22 @@ export function validateOnChange(event: Event) {
 	return validate(event, target);
 }
 
+/**
+ * Get all controls in a form. This is not the same as form.elements since it only gets
+ * form controls identified with our special attribute. It may include pseudo-form elements
+ * like our ListBox element and will exclude any associated <input type="hidden"> elements.
+ */
+export function getControlElements(form: HTMLFormElement) {
+	return form.querySelectorAll(`[${FORM_CONTROL_ATTR}]`) as Iterable<HTMLElement>;
+}
+
+/**
+ * Returns true if a control has been touched
+ */
+export function isTouched(control: HTMLElement) {
+	return validationMap.get(control)?.touched ?? false;
+}
+
 registerDocumentSetup((document) => {
 	document.addEventListener('change', validateOnChange, true);
 });

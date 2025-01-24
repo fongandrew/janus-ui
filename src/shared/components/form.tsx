@@ -3,7 +3,7 @@ import { isServer } from 'solid-js/web';
 
 import { createFormContext, FormContext } from '~/shared/components/form-context';
 import {
-	FORM_CONTROL_ATTR,
+	getControlElements,
 	resetControl,
 	validate,
 } from '~/shared/components/form-element-control';
@@ -42,15 +42,6 @@ export interface FormProps<TNames extends string>
 	onSubmitError?: BoundCallbackUnion<void, [string, TypedSubmitEvent<TNames>]> | undefined;
 }
 
-/**
- * Get all controls in the form. This is not the same as form.elements since it only gets
- * form controls identified with our special attribute. It may include pseudo-form elements
- * like our ListBox element and will exclude any associated <input type="hidden"> elements.
- */
-function getControls(form: HTMLFormElement) {
-	return form.querySelectorAll(`[${FORM_CONTROL_ATTR}]`) as Iterable<HTMLElement>;
-}
-
 export function Form<TNames extends string>(props: FormProps<TNames>) {
 	const [local, rest] = splitProps(props, ['names', 'onReset', 'onSubmit']);
 
@@ -64,7 +55,7 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 		const form = event.target as HTMLFormElement;
 
 		// Reset touched state in all controls in form
-		const controls = getControls(form);
+		const controls = getControlElements(form);
 		for (const control of controls) {
 			resetControl(control);
 		}
@@ -80,7 +71,7 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 
 	const doSubmit = async (event: SubmitEvent) => {
 		const form = event.target as HTMLFormElement;
-		const controls = getControls(form);
+		const controls = getControlElements(form);
 
 		// Revalidate all controls in the form. Validation may be async so need
 		// special handling for that scenario.

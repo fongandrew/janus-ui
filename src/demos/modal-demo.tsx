@@ -106,7 +106,7 @@ function FormModal() {
 
 	return (
 		<>
-			<Button onClick={[setIsFormOpen, true]}>Open Form Modal</Button>
+			<Button onClick={[setIsFormOpen, true]}>Open Modal (Form)</Button>
 			<Modal open={isFormOpen()} onClose={[setIsFormOpen, false]}>
 				<ModalTitle>Form Example</ModalTitle>
 				<ModalFormContent
@@ -224,7 +224,7 @@ function AsyncForm() {
 
 	return (
 		<>
-			<Button onClick={[setIsFormOpen, true]}>Open Form Modal (Async)</Button>
+			<Button onClick={[setIsFormOpen, true]}>Open Modal (Async Form)</Button>
 			<Modal open={isFormOpen()} onClose={[setIsFormOpen, false]}>
 				<ModalTitle>Async Form Example</ModalTitle>
 				<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
