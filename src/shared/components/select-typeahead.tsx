@@ -1,15 +1,14 @@
 import cx from 'classix';
 import { createSignal, splitProps } from 'solid-js';
 
-import { type FormElementProps } from '~/shared/components/form-element-props';
-import { Input } from '~/shared/components/input';
+import { Input, type InputProps } from '~/shared/components/input';
 import { SelectContainer } from '~/shared/components/select-container';
 import { SelectControl } from '~/shared/components/select-control';
 import { SelectOptionList } from '~/shared/components/select-option-list';
 import { SelectText } from '~/shared/components/select-text';
 import { generateId } from '~/shared/utility/id-generator';
 
-export interface SelectTypeaheadProps extends Omit<FormElementProps<'input'>, 'onValidate'> {
+export interface SelectTypeaheadProps extends Omit<InputProps, 'onValidate'> {
 	/** Name for form submission */
 	name?: string;
 	/** Placeholder text when no selection */
