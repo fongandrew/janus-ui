@@ -117,7 +117,10 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 
 	// Replace non-standard `invalid` attribute with `aria-invalid` if it exists
 	control.rmAttr('invalid');
-	control.setAttr('aria-invalid', () => props.invalid ?? props['aria-invalid']);
+	control.setAttr(
+		'aria-invalid',
+		() => props.invalid ?? props['aria-invalid'] ?? !!control.error(),
+	);
 
 	// Set validation (and remove from props)
 	createRenderEffect(() => {
