@@ -72,11 +72,7 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 	};
 
 	return (
-		<SelectContainer
-			onClear={selectControl.clear.bind(selectControl)}
-			// Added offset to account for input focus rings
-			dropdownOffset={8}
-		>
+		<SelectContainer onClear={selectControl.clear.bind(selectControl)}>
 			{() => (
 				<>
 					<Input
