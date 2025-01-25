@@ -17,7 +17,6 @@ export interface InputProps extends Omit<FormElementProps<'input'>, 'type'> {
 		| 'month'
 		| 'number'
 		| 'password'
-		| 'range'
 		| 'search'
 		| 'tel'
 		| 'text'

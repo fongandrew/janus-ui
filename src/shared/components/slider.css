@@ -1,0 +1,47 @@
+@import '~/shared/style/helpers.css';
+
+.c-slider {
+	@apply flex gap-sm;
+}
+
+.c-slider__range {
+	@apply flex-grow;
+}
+
+.c-slider__number {
+	@apply border-0 bg-transparent text-right outline-none;
+
+	/* Hide arrows since slider is there */
+
+	/* Firefox */
+	-moz-appearance: textfield;
+}
+
+/* Chrome, Safari, Edge, Opera */
+.c-slider__number::-webkit-outer-spin-button,
+.c-slider__number::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+.c-slider__input {
+	@apply flex gap-xs;
+	@apply flex-shrink;
+	@apply t-input-size-md min-h-input-md overflow-x-hidden rounded-md border-md bg-input-bg text-right font-normal text-input-fg shadow-inner transition-colors border-dynamic-secondary;
+}
+
+.c-slider__input:has(:focus-visible) {
+	@apply t-focus-ring;
+}
+
+.c-slider__input:has(:invalid, [aria-invalid='true']) {
+	@apply t-error-input;
+}
+
+.c-slider__input:has(:disabled, [aria-disabled='true']) {
+	@apply t-disabled-input;
+}
+
+.c-slider__unit {
+	@apply text-muted;
+}

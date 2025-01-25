@@ -17,6 +17,7 @@ import {
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
 import { LabelledControl } from '~/shared/components/labelled-control';
+import { Slider } from '~/shared/components/slider';
 import { Stack } from '~/shared/components/stack';
 
 function InputStates() {
@@ -132,8 +133,13 @@ function MiscInputVariations() {
 					</LabelStack>
 
 					<LabelStack>
-						<Label>Range Input</Label>
-						<Input type="range" />
+						<Label>Range/Number Input</Label>
+						<Slider unit="%" />
+					</LabelStack>
+
+					<LabelStack>
+						<Label>Range/Number Input (disabled)</Label>
+						<Slider unit="%" disabled />
 					</LabelStack>
 				</Stack>
 			</CardContent>
