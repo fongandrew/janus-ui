@@ -20,11 +20,9 @@ const activeDocuments = new Set<Document>([window.document]);
 export const registerDocumentSetup = (setup: DocumentSetupFunction) => {
 	if (!setupFunctions.has(setup)) {
 		setupFunctions.add(setup);
-		requestIdleCallback(() => {
-			for (const document of activeDocuments) {
-				setup(document);
-			}
-		});
+		for (const document of activeDocuments) {
+			setup(document);
+		}
 	}
 };
 
