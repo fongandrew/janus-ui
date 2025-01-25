@@ -149,7 +149,7 @@ export function Tooltip(props: TooltipProps) {
 	return (
 		<FormElementProvider ctrlRef={triggerCtrlRef}>
 			{local.children}
-			<TooltipContent {...rest} ref={combineRefs(setTooltip, rest.ref)}>
+			<TooltipContent {...rest} ref={combineRefs(setTooltip, rest.ref)} id={tooltipId()}>
 				{local.tip}
 			</TooltipContent>
 		</FormElementProvider>
