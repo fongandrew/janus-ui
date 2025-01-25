@@ -14,6 +14,7 @@ import {
 	InputTime,
 	InputWeek,
 } from '~/shared/components/input';
+import { InputColor } from '~/shared/components/input-color';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
 import { LabelledControl } from '~/shared/components/labelled-control';
@@ -125,7 +126,7 @@ function MiscInputVariations() {
 				<Stack>
 					<LabelStack>
 						<Label>Color Input</Label>
-						<Input type="color" />
+						<InputColor />
 					</LabelStack>
 					<LabelStack>
 						<Label>File Input</Label>

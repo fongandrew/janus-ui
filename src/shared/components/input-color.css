@@ -1,0 +1,34 @@
+@import '~/shared/style/helpers.css';
+
+@layer components {
+	.c-input-color {
+		@apply relative;
+		@apply flex gap-sm;
+		@apply t-input-size-md min-h-input-md overflow-x-hidden rounded-md border-md bg-input-bg text-right font-normal text-input-fg shadow-inner transition-colors border-dynamic-secondary;
+	}
+
+	.c-input-color__swatch {
+		@apply h-lh w-lh rounded-sm shadow-sm;
+	}
+
+	.c-input-color__value {
+		@apply text-muted;
+	}
+
+	.c-input-color__input {
+		/* Input floats on top of the entire pseudo-input and intercepts clicks */
+		@apply absolute inset-0 h-full w-full cursor-pointer opacity-0 outline-none;
+	}
+
+	.c-input-color:has(:focus-visible) {
+		@apply t-focus-ring;
+	}
+
+	.c-input-color:has(:invalid, [aria-invalid='true']) {
+		@apply t-error-input;
+	}
+
+	.c-input-color:has(:disabled, [aria-disabled='true']) {
+		@apply t-disabled-input;
+	}
+}
