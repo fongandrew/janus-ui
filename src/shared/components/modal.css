@@ -62,7 +62,7 @@
 	}
 
 	.c-modal__content {
-		@apply relative flex-1 overflow-auto;
+		@apply relative flex-grow overflow-auto;
 	}
 
 	.c-modal__content:not(.c-modal__content--scroll-top) {
@@ -80,7 +80,7 @@
 	}
 
 	.c-modal__title {
-		@apply flex-1 text-xl font-bold;
+		@apply flex-grow text-xl font-bold;
 	}
 
 	.c-modal__footer {

@@ -46,7 +46,7 @@
 	}
 
 	.c-dropdown__children {
-		@apply flex-1 overflow-y-auto;
+		@apply flex-grow overflow-y-auto;
 	}
 
 	.c-dropdown__footer {

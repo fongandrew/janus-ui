@@ -42,7 +42,7 @@
 		@apply flex;
 	}
 
-	/* Hide chevvron if clear button is shown */
+	/* Hide chevron if clear button is shown */
 	.c-select__container:has(+ [role='listbox'] [aria-checked='true']):not(
 			:has([aria-required]:not([aria-required='false'])),
 			:has(:required)

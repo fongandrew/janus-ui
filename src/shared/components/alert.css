@@ -13,7 +13,7 @@
 	}
 
 	.c-alert__content {
-		@apply flex-1 overflow-hidden;
+		@apply flex-grow overflow-hidden;
 	}
 }
 
