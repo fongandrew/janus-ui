@@ -1,0 +1,23 @@
+@import '~/shared/style/helpers.css';
+
+@layer components {
+	.c-details {
+		@apply w-full rounded-lg border-md bg-callout text-callout-fg border-dynamic-callout;
+	}
+
+	.c-details:has(.c-details__summary:hover) {
+		@apply contrast-hover saturate-hover;
+	}
+
+	.c-details:has(.c-details__summary:focus-visible) {
+		@apply t-focus-ring;
+	}
+
+	.c-details__summary {
+		@apply t-input-size-md cursor-pointer rounded-lg px-md py-text-y-md font-medium focus-visible:outline-none;
+	}
+
+	.c-details__content {
+		@apply px-md pb-text-y-md text-input-md;
+	}
+}

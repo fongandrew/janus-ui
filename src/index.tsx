@@ -7,6 +7,7 @@ import { AlertsDemo } from '~/demos/alerts-demo';
 import { AsyncFormDemo } from '~/demos/async-form-demo';
 import { ButtonsDemo } from '~/demos/buttons-demo';
 import { CheckboxesDemo } from '~/demos/checkboxes-demo';
+import { DetailsDemo } from '~/demos/details-demo';
 import { FooterDemo } from '~/demos/footer-demo';
 import { FormValidationGroupDemo } from '~/demos/form-validation-group-demo';
 import { InputsDemo } from '~/demos/inputs-demo';
@@ -28,6 +29,7 @@ const App: Component = () => {
 			<Grid>
 				<ButtonsDemo />
 				<AlertsDemo />
+				<DetailsDemo />
 				<MenuDemo />
 				<CheckboxesDemo />
 				<RadioGroupDemo />
