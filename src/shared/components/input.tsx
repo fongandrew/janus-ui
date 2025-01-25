@@ -38,7 +38,7 @@ export function Input(props: InputProps) {
 
 /**
  * Just a wrapper around existing input but it's a separate component in case we want to
- * do something behond the default date picker
+ * do something beyond the default date picker
  */
 export function InputDate(props: InputProps) {
 	return <Input {...props} type="date" />;
@@ -46,7 +46,7 @@ export function InputDate(props: InputProps) {
 
 /**
  * Just a wrapper around existing input but it's a separate component in case we want to
- * do something behond the default time picker
+ * do something beyond the default time picker
  */
 export function InputTime(props: InputProps) {
 	return <Input {...props} type="time" />;
@@ -54,7 +54,7 @@ export function InputTime(props: InputProps) {
 
 /**
  * Just a wrapper around existing input but it's a separate component in case we want to
- * do something behond the default datetime picker
+ * do something beyond the default datetime picker
  */
 export function InputDateTime(props: InputProps) {
 	return <Input {...props} type="datetime-local" />;
@@ -62,7 +62,7 @@ export function InputDateTime(props: InputProps) {
 
 /**
  * Just a wrapper around existing input but it's a separate component in case we want to
- * do something behond the default month picker
+ * do something beyond the default month picker
  */
 export function InputMonth(props: InputProps) {
 	return <Input {...props} type="month" />;
@@ -70,7 +70,7 @@ export function InputMonth(props: InputProps) {
 
 /**
  * Just a wrapper around existing input but it's a separate component in case we want to
- * do something behond the default week picker
+ * do something beyond the default week picker
  */
 export function InputWeek(props: InputProps) {
 	return <Input {...props} type="week" />;
