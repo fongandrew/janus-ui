@@ -82,7 +82,7 @@ export default {
 			inner: 'inset 0 1px 2px 0 rgb(0 0 0 / 0.05)',
 			innerTop: 'inset 0 2px 3px 0 rgb(0 0 0 / 0.1)',
 			innerBottom: 'inset 0 -2px 3px 0 rgb(0 0 0 / 0.1)',
-			innerBorder: 'inset 0 0 0px 1px rgb(0 0 0 / 0.2)',
+			innerBorder: 'inset 0 0 0px 1px var(--inner-border-color, rgb(0 0 0 / 0.2))',
 		},
 
 		colors: {

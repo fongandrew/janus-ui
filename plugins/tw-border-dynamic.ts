@@ -45,6 +45,7 @@ export const twBorderDynamicPlugin = plugin(({ addUtilities, theme }) => {
 		addUtilities({
 			[`.border-dynamic-${key}`]: {
 				'border-color': `color-mix(in hsl, ${base} ${mix}, ${value})`,
+				'--inner-border-color': `color-mix(in hsl, ${base} ${mix}, ${value})`,
 			},
 		});
 	}
