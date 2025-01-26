@@ -11,7 +11,6 @@ import {
 import { Checkbox } from '~/shared/components/checkbox';
 import { Description } from '~/shared/components/description';
 import { type TypedFormData } from '~/shared/components/form';
-import { FormError } from '~/shared/components/form-error';
 import { Group } from '~/shared/components/group';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
@@ -117,20 +116,18 @@ function FormModal() {
 					onSubmit={handleSubmit}
 					onSubmitSuccess={[setIsResultsOpen, true]}
 				>
-					<Stack>
-						<LabelledInput label="Name">
-							<Input name={FormNames.name} required />
-						</LabelledInput>
-						<LabelledInput label="Email">
-							<Input name={FormNames.email} type="email" required />
-						</LabelledInput>
-						<LabelledInput label="Message">
-							<Textarea name={FormNames.message} required />
-						</LabelledInput>
-						<LabelledInline label="Agree to the terms of service?">
-							<Checkbox name={FormNames.terms} required />
-						</LabelledInline>
-					</Stack>
+					<LabelledInput label="Name">
+						<Input name={FormNames.name} required />
+					</LabelledInput>
+					<LabelledInput label="Email">
+						<Input name={FormNames.email} type="email" required />
+					</LabelledInput>
+					<LabelledInput label="Message">
+						<Textarea name={FormNames.message} required />
+					</LabelledInput>
+					<LabelledInline label="Agree to the terms of service?">
+						<Checkbox name={FormNames.terms} required />
+					</LabelledInline>
 				</ModalFormContent>
 				<ModalFooter>
 					<ModalCancelButton />
@@ -188,17 +185,15 @@ function ScrollableForm() {
 			<Modal open={isFormOpen()} onClose={[setIsFormOpen, false]}>
 				<ModalTitle>Form Example</ModalTitle>
 				<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
-					<Stack>
-						<LabelledInput label="First">
-							<Input name={FormNames.field1} required />
-						</LabelledInput>
-						<div style={{ height: '3000px' }}>
-							A big block that takes up lots of space to force scrolling
-						</div>
-						<LabelledInput label="Last">
-							<Input name={FormNames.field2} required />
-						</LabelledInput>
-					</Stack>
+					<LabelledInput label="First">
+						<Input name={FormNames.field1} required />
+					</LabelledInput>
+					<div style={{ height: '3000px' }}>
+						A big block that takes up lots of space to force scrolling
+					</div>
+					<LabelledInput label="Last">
+						<Input name={FormNames.field2} required />
+					</LabelledInput>
 				</ModalFormContent>
 				<ModalFooter>
 					<ModalCancelButton />
@@ -234,18 +229,15 @@ function AsyncForm() {
 			<Modal open={isFormOpen()} onClose={[setIsFormOpen, false]}>
 				<ModalTitle>Async Form Example</ModalTitle>
 				<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
-					<Stack>
-						<FormError />
-						<LabelledInput label="Name">
-							<Input name={FormNames.name} />
-						</LabelledInput>
-						<LabelledInput label="Message">
-							<Textarea name={FormNames.message} />
-						</LabelledInput>
-						<LabelledInline label="Should error">
-							<Checkbox name={FormNames.shouldError} />
-						</LabelledInline>
-					</Stack>
+					<LabelledInput label="Name">
+						<Input name={FormNames.name} />
+					</LabelledInput>
+					<LabelledInput label="Message">
+						<Textarea name={FormNames.message} />
+					</LabelledInput>
+					<LabelledInline label="Should error">
+						<Checkbox name={FormNames.shouldError} />
+					</LabelledInline>
 				</ModalFormContent>
 				<ModalFooter>
 					<ModalCancelButton />

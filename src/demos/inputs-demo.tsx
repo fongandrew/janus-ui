@@ -85,26 +85,24 @@ function TextInputVariations() {
 			</CardHeader>
 			<CardContent>
 				<Form names={{}} onSubmit={() => {}}>
-					<Stack>
-						<LabelledInput label="Email input">
-							<Input type="email" autocomplete="email" />
-						</LabelledInput>
-						<LabelledInput label="Number input">
-							<Input type="number" />
-						</LabelledInput>
-						<LabelledInput label="Password input">
-							<Password autocomplete="current-password" />
-						</LabelledInput>
-						<LabelledInput label="Search input">
-							<Input type="search" />
-						</LabelledInput>
-						<LabelledInput label="Telephone input">
-							<Input type="tel" />
-						</LabelledInput>
-						<LabelledInput label="URL input">
-							<Input type="url" />
-						</LabelledInput>
-					</Stack>
+					<LabelledInput label="Email input">
+						<Input type="email" autocomplete="email" />
+					</LabelledInput>
+					<LabelledInput label="Number input">
+						<Input type="number" />
+					</LabelledInput>
+					<LabelledInput label="Password input">
+						<Password autocomplete="current-password" />
+					</LabelledInput>
+					<LabelledInput label="Search input">
+						<Input type="search" />
+					</LabelledInput>
+					<LabelledInput label="Telephone input">
+						<Input type="tel" />
+					</LabelledInput>
+					<LabelledInput label="URL input">
+						<Input type="url" />
+					</LabelledInput>
 				</Form>
 			</CardContent>
 		</Card>

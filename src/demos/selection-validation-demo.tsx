@@ -62,37 +62,35 @@ export const SelectionValidationDemo: Component = () => {
 			<CardContent>
 				<Stack>
 					<Form onSubmit={handleSubmit} onReset={handleReset} names={FormNames}>
-						<Stack>
-							<LabelledInput label="Select Fruits (2-3)">
-								<ListBox
-									name={FormNames.fruits}
-									multiple
-									onValidate={validateMultiple}
-									required
-								>
-									<ListBoxItem value="apple">Apple</ListBoxItem>
-									<ListBoxItem value="banana">Banana</ListBoxItem>
-									<ListBoxItem value="orange">Orange</ListBoxItem>
-									<ListBoxItem value="grape">Grape</ListBoxItem>
-									<ListBoxItem value="kiwi">Kiwi</ListBoxItem>
-								</ListBox>
-							</LabelledInput>
+						<LabelledInput label="Select Fruits (2-3)">
+							<ListBox
+								name={FormNames.fruits}
+								multiple
+								onValidate={validateMultiple}
+								required
+							>
+								<ListBoxItem value="apple">Apple</ListBoxItem>
+								<ListBoxItem value="banana">Banana</ListBoxItem>
+								<ListBoxItem value="orange">Orange</ListBoxItem>
+								<ListBoxItem value="grape">Grape</ListBoxItem>
+								<ListBoxItem value="kiwi">Kiwi</ListBoxItem>
+							</ListBox>
+						</LabelledInput>
 
-							<LabelledInput label="Select Colors (2-3)">
-								<Select
-									name={FormNames.colors}
-									multiple
-									onValidate={validateMultiple}
-									required
-								>
-									<ListBoxItem value="red">Red</ListBoxItem>
-									<ListBoxItem value="blue">Blue</ListBoxItem>
-									<ListBoxItem value="green">Green</ListBoxItem>
-									<ListBoxItem value="yellow">Yellow</ListBoxItem>
-									<ListBoxItem value="purple">Purple</ListBoxItem>
-								</Select>
-							</LabelledInput>
-						</Stack>
+						<LabelledInput label="Select Colors (2-3)">
+							<Select
+								name={FormNames.colors}
+								multiple
+								onValidate={validateMultiple}
+								required
+							>
+								<ListBoxItem value="red">Red</ListBoxItem>
+								<ListBoxItem value="blue">Blue</ListBoxItem>
+								<ListBoxItem value="green">Green</ListBoxItem>
+								<ListBoxItem value="yellow">Yellow</ListBoxItem>
+								<ListBoxItem value="purple">Purple</ListBoxItem>
+							</Select>
+						</LabelledInput>
 					</Form>
 
 					<Show when={formData()}>

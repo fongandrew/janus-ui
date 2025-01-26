@@ -12,7 +12,6 @@ import { Checkbox } from '~/shared/components/checkbox';
 import { Description } from '~/shared/components/description';
 import { Form, type TypedSubmitEvent } from '~/shared/components/form';
 import { ResetButton, SubmitButton } from '~/shared/components/form-buttons';
-import { FormError } from '~/shared/components/form-error';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
@@ -58,18 +57,15 @@ export const AsyncFormDemo: Component = () => {
 			<CardContent>
 				<Stack>
 					<Form names={FormNames} onSubmit={handleSubmit}>
-						<Stack>
-							<FormError />
-							<LabelledInput label="Name">
-								<Input name={FormNames.name} autocomplete="none" />
-							</LabelledInput>
-							<LabelledInput label="Message">
-								<Textarea name={FormNames.message} />
-							</LabelledInput>
-							<LabelledInline label="Force Error">
-								<Checkbox name={FormNames.shouldError} />
-							</LabelledInline>
-						</Stack>
+						<LabelledInput label="Name">
+							<Input name={FormNames.name} autocomplete="none" />
+						</LabelledInput>
+						<LabelledInput label="Message">
+							<Textarea name={FormNames.message} />
+						</LabelledInput>
+						<LabelledInline label="Force Error">
+							<Checkbox name={FormNames.shouldError} />
+						</LabelledInline>
 					</Form>
 
 					<Show when={formData()}>

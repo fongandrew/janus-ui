@@ -34,7 +34,8 @@ export function LabelledInline(props: Omit<LabelledInputProps, 'description'>) {
 	return (
 		<LabelStack {...rest}>
 			<Label>
-				{local.children} {local.label}
+				{local.children}
+				{local.label}
 			</Label>
 			<ErrorMessage>{local.errorMessage}</ErrorMessage>
 		</LabelStack>

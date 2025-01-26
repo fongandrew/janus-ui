@@ -73,37 +73,35 @@ export const FormValidationGroupDemo: Component = () => {
 			<CardContent>
 				<Stack>
 					<Form names={FormNames} onSubmit={handleSubmit} onReset={handleReset}>
-						<Stack>
-							<LabelledInput label="Username">
-								<Input
-									name={FormNames.username}
-									onValidate={validateUserName}
-									autocomplete="username"
-									required
-								/>
-							</LabelledInput>
+						<LabelledInput label="Username">
+							<Input
+								name={FormNames.username}
+								onValidate={validateUserName}
+								autocomplete="username"
+								required
+							/>
+						</LabelledInput>
 
-							<FormValidationGroup>
-								<Stack>
-									<LabelledInput label="Password">
-										<Password
-											id={password1Id}
-											name={FormNames.password1}
-											autocomplete="new-password"
-											required
-										/>
-									</LabelledInput>
-									<LabelledInput label="Confirm Password">
-										<Password
-											name={FormNames.password2}
-											onValidate={matchesPassword1}
-											autocomplete="new-password"
-											required
-										/>
-									</LabelledInput>
-								</Stack>
-							</FormValidationGroup>
-						</Stack>
+						<FormValidationGroup>
+							<Stack>
+								<LabelledInput label="Password">
+									<Password
+										id={password1Id}
+										name={FormNames.password1}
+										autocomplete="new-password"
+										required
+									/>
+								</LabelledInput>
+								<LabelledInput label="Confirm Password">
+									<Password
+										name={FormNames.password2}
+										onValidate={matchesPassword1}
+										autocomplete="new-password"
+										required
+									/>
+								</LabelledInput>
+							</Stack>
+						</FormValidationGroup>
 					</Form>
 
 					<Show when={formData()}>
