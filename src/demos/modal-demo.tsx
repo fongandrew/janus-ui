@@ -11,6 +11,7 @@ import {
 import { Checkbox } from '~/shared/components/checkbox';
 import { Description } from '~/shared/components/description';
 import { type TypedFormData } from '~/shared/components/form';
+import { FormError } from '~/shared/components/form-error';
 import { Group } from '~/shared/components/group';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
@@ -234,6 +235,7 @@ function AsyncForm() {
 				<ModalTitle>Async Form Example</ModalTitle>
 				<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
 					<Stack>
+						<FormError />
 						<LabelledInput label="Name">
 							<Input name={FormNames.name} />
 						</LabelledInput>
