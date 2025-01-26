@@ -22,15 +22,15 @@ export const ButtonsDemo: Component = () => (
 			<Stack>
 				<Group>
 					<Button class="c-button--sm">
-						<Settings /> Small Button
+						<Settings /> Small button
 					</Button>
 
 					<Button>
-						<Settings /> Default Button
+						<Settings /> Default button
 					</Button>
 
 					<Button class="c-button--lg">
-						<Settings /> Large Button
+						<Settings /> Large button
 					</Button>
 				</Group>
 				<Group>

@@ -15,7 +15,7 @@ export interface CheckboxProps extends Omit<FormElementProps<'input'>, 'type'> {
 }
 
 /** Update checked state on click (screenreaders will do this automatically) */
-const handleClick = (e: MouseEvent) => {
+export const handleClick = (e: MouseEvent) => {
 	if (e.target instanceof HTMLInputElement) return;
 
 	const input = (e.currentTarget as HTMLElement).querySelector('input');

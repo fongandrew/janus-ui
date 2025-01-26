@@ -16,7 +16,7 @@ import { FormValidationGroup } from '~/shared/components/form-validation-group';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
-import { LabelledControl } from '~/shared/components/labelled-control';
+import { LabelledInput } from '~/shared/components/labelled-control';
 import { Password } from '~/shared/components/password';
 import { Stack } from '~/shared/components/stack';
 import { generateId } from '~/shared/utility/id-generator';
@@ -67,40 +67,40 @@ export const FormValidationGroupDemo: Component = () => {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Form Validation (Inputs)</CardTitle>
+				<CardTitle>Form validation (inputs)</CardTitle>
 				<CardDescription>Password validation with FormValidationGroup</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<Stack>
 					<Form names={FormNames} onSubmit={handleSubmit} onReset={handleReset}>
 						<Stack>
-							<LabelledControl label="Username">
+							<LabelledInput label="Username">
 								<Input
 									name={FormNames.username}
 									onValidate={validateUserName}
 									autocomplete="username"
 									required
 								/>
-							</LabelledControl>
+							</LabelledInput>
 
 							<FormValidationGroup>
 								<Stack>
-									<LabelledControl label="Password">
+									<LabelledInput label="Password">
 										<Password
 											id={password1Id}
 											name={FormNames.password1}
 											autocomplete="new-password"
 											required
 										/>
-									</LabelledControl>
-									<LabelledControl label="Confirm Password">
+									</LabelledInput>
+									<LabelledInput label="Confirm Password">
 										<Password
 											name={FormNames.password2}
 											onValidate={matchesPassword1}
 											autocomplete="new-password"
 											required
 										/>
-									</LabelledControl>
+									</LabelledInput>
 								</Stack>
 							</FormValidationGroup>
 						</Stack>
@@ -110,7 +110,7 @@ export const FormValidationGroupDemo: Component = () => {
 						<output>
 							<Card>
 								<CardHeader>
-									<CardTitle>Submitted Form Data</CardTitle>
+									<CardTitle>Submitted form data</CardTitle>
 								</CardHeader>
 								<CardContent>
 									<Stack>

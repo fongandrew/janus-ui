@@ -21,13 +21,13 @@ const ListBoxDemo: Component = () => {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>List Box</CardTitle>
+				<CardTitle>List box</CardTitle>
 				<CardDescription>Single and multiple selection list boxes</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<Stack>
 					<LabelStack>
-						<Label>Single Selection</Label>
+						<Label>Single selection</Label>
 						<Description>
 							Selected: {Array.from(values()).join(', ') || 'None'}
 						</Description>
@@ -39,7 +39,7 @@ const ListBoxDemo: Component = () => {
 					</LabelStack>
 
 					<LabelStack>
-						<Label>Multiple Selection</Label>
+						<Label>Multiple selection</Label>
 						<Description>
 							Selected: {Array.from(multiValues()).join(', ') || 'None'}
 						</Description>
@@ -64,7 +64,7 @@ const ListBoxDemo: Component = () => {
 					</LabelStack>
 
 					<LabelStack>
-						<Label>Disabled Selection</Label>
+						<Label>Disabled selection</Label>
 						<ListBox disabled name="disabled-listbox" values={new Set(['fixed'])}>
 							<ListBoxItem value="fixed">Can't change me</ListBoxItem>
 							<ListBoxItem value="different">Can't pick me</ListBoxItem>

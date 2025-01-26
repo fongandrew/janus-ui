@@ -15,7 +15,7 @@ import { Group } from '~/shared/components/group';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
-import { LabelledControl } from '~/shared/components/labelled-control';
+import { LabelledInline, LabelledInput } from '~/shared/components/labelled-control';
 import {
 	Modal,
 	ModalCloseButton,
@@ -89,6 +89,7 @@ function FormModal() {
 		name: 'name' as const,
 		email: 'email' as const,
 		message: 'message' as const,
+		terms: 'terms' as const,
 	};
 
 	const [formData, setFormData] = createSignal<Record<keyof typeof FormNames, string> | null>(
@@ -101,6 +102,7 @@ function FormModal() {
 			name: data.get('name') as string,
 			email: data.get('email') as string,
 			message: data.get('message') as string,
+			terms: data.get('terms') as string,
 		});
 	};
 
@@ -115,15 +117,18 @@ function FormModal() {
 					onSubmitSuccess={[setIsResultsOpen, true]}
 				>
 					<Stack>
-						<LabelledControl label="Name">
+						<LabelledInput label="Name">
 							<Input name={FormNames.name} required />
-						</LabelledControl>
-						<LabelledControl label="Email">
+						</LabelledInput>
+						<LabelledInput label="Email">
 							<Input name={FormNames.email} type="email" required />
-						</LabelledControl>
-						<LabelledControl label="Message">
+						</LabelledInput>
+						<LabelledInput label="Message">
 							<Textarea name={FormNames.message} required />
-						</LabelledControl>
+						</LabelledInput>
+						<LabelledInline label="Agree to the terms of service?">
+							<Checkbox name={FormNames.terms} required />
+						</LabelledInline>
 					</Stack>
 				</ModalFormContent>
 				<ModalFooter>
@@ -183,15 +188,15 @@ function ScrollableForm() {
 				<ModalTitle>Form Example</ModalTitle>
 				<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
 					<Stack>
-						<LabelledControl label="First">
+						<LabelledInput label="First">
 							<Input name={FormNames.field1} required />
-						</LabelledControl>
+						</LabelledInput>
 						<div style={{ height: '3000px' }}>
 							A big block that takes up lots of space to force scrolling
 						</div>
-						<LabelledControl label="Last">
+						<LabelledInput label="Last">
 							<Input name={FormNames.field2} required />
-						</LabelledControl>
+						</LabelledInput>
 					</Stack>
 				</ModalFormContent>
 				<ModalFooter>
@@ -229,16 +234,15 @@ function AsyncForm() {
 				<ModalTitle>Async Form Example</ModalTitle>
 				<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
 					<Stack>
-						<LabelledControl label="Name">
+						<LabelledInput label="Name">
 							<Input name={FormNames.name} />
-						</LabelledControl>
-						<LabelledControl label="Message">
+						</LabelledInput>
+						<LabelledInput label="Message">
 							<Textarea name={FormNames.message} />
-						</LabelledControl>
-						<Label>
+						</LabelledInput>
+						<LabelledInline label="Should error">
 							<Checkbox name={FormNames.shouldError} />
-							Should error
-						</Label>
+						</LabelledInline>
 					</Stack>
 				</ModalFormContent>
 				<ModalFooter>

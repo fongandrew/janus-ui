@@ -42,7 +42,7 @@ const MenuDemo: Component = () => {
 							{() => (
 								<Menu onValue={setSelection}>
 									<MenuGroup heading="File">
-										<MenuItem value="new">New File</MenuItem>
+										<MenuItem value="new">New file</MenuItem>
 										<MenuItem value="open">Open...</MenuItem>
 										<MenuItem value="save">Save</MenuItem>
 									</MenuGroup>
@@ -53,15 +53,15 @@ const MenuDemo: Component = () => {
 									</MenuGroup>
 									<MenuGroup>
 										<MenuItem role="menuitemcheckbox" value="sidebar">
-											Show Sidebar
+											Show sidebar
 										</MenuItem>
 										<MenuItem role="menuitemcheckbox" value="status">
-											Show Status Bar
+											Show status bar
 										</MenuItem>
 									</MenuGroup>
 									<MenuGroup>
 										<MenuItemLink href="https://example.com">
-											Link to Site
+											Link to site
 										</MenuItemLink>
 									</MenuGroup>
 								</Menu>

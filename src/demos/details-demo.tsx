@@ -6,7 +6,7 @@ export function DetailsDemo() {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Details Component Demo</CardTitle>
+				<CardTitle>Details component</CardTitle>
 			</CardHeader>
 			<CardContent>
 				<Stack>

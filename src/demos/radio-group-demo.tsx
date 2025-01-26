@@ -18,7 +18,7 @@ const RadioGroupDemo: Component = () => {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Radio Buttons</CardTitle>
+				<CardTitle>Radio buttons</CardTitle>
 				<CardDescription>Different radio states and variations</CardDescription>
 			</CardHeader>
 			<CardContent>

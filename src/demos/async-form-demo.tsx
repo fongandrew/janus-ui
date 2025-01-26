@@ -16,7 +16,7 @@ import { FormError } from '~/shared/components/form-error';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
-import { LabelledControl } from '~/shared/components/labelled-control';
+import { LabelledInline, LabelledInput } from '~/shared/components/labelled-control';
 import { Stack } from '~/shared/components/stack';
 import { Textarea } from '~/shared/components/textarea';
 
@@ -60,15 +60,15 @@ export const AsyncFormDemo: Component = () => {
 					<Form names={FormNames} onSubmit={handleSubmit}>
 						<Stack>
 							<FormError />
-							<LabelledControl label="Name">
+							<LabelledInput label="Name">
 								<Input name={FormNames.name} autocomplete="none" />
-							</LabelledControl>
-							<LabelledControl label="Message">
+							</LabelledInput>
+							<LabelledInput label="Message">
 								<Textarea name={FormNames.message} />
-							</LabelledControl>
-							<Label>
-								<Checkbox name={FormNames.shouldError} /> Force Error
-							</Label>
+							</LabelledInput>
+							<LabelledInline label="Force Error">
+								<Checkbox name={FormNames.shouldError} />
+							</LabelledInline>
 						</Stack>
 					</Form>
 

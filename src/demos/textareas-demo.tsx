@@ -7,8 +7,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '~/shared/components/card';
-import { Label } from '~/shared/components/label';
-import { LabelStack } from '~/shared/components/label-stack';
+import { LabelledInput } from '~/shared/components/labelled-control';
 import { Stack } from '~/shared/components/stack';
 import { Textarea } from '~/shared/components/textarea';
 
@@ -20,18 +19,15 @@ const TextareasDemo: Component = () => (
 		</CardHeader>
 		<CardContent>
 			<Stack>
-				<LabelStack>
-					<Label>Default</Label>
+				<LabelledInput label="Default">
 					<Textarea placeholder="Default (medium) textarea" />
-				</LabelStack>
-				<LabelStack>
-					<Label>Error</Label>
+				</LabelledInput>
+				<LabelledInput label="Error">
 					<Textarea aria-invalid placeholder="Error state textarea" />
-				</LabelStack>
-				<LabelStack>
-					<Label>Disabled</Label>
+				</LabelledInput>
+				<LabelledInput label="Disabled">
 					<Textarea disabled placeholder="Disabled textarea" />
-				</LabelStack>
+				</LabelledInput>
 			</Stack>
 		</CardContent>
 	</Card>

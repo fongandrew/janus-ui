@@ -1,6 +1,7 @@
 import cx from 'classix';
 import { splitProps } from 'solid-js';
 
+import { handleClick } from '~/shared/components/checkbox';
 import {
 	type FormElementProps,
 	mergeFormElementProps,
@@ -21,7 +22,7 @@ export function ToggleSwitch(props: ToggleSwitchProps) {
 	};
 
 	return (
-		<div class={cx('c-toggle-switch', local.class)}>
+		<div class={cx('c-toggle-switch', local.class)} onClick={handleClick}>
 			<input
 				type="checkbox"
 				role="switch"

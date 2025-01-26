@@ -38,7 +38,7 @@ const SelectTypeaheadDemo: Component = () => {
 			<CardContent>
 				<Stack>
 					<LabelStack>
-						<Label>Single Selection</Label>
+						<Label>Single selection</Label>
 						<Description>
 							Selected: {Array.from(value()).join(', ') || 'None'}
 						</Description>
@@ -55,7 +55,7 @@ const SelectTypeaheadDemo: Component = () => {
 					</LabelStack>
 
 					<LabelStack>
-						<Label>Multiple Selection</Label>
+						<Label>Multiple selection</Label>
 						<Description>
 							Selected: {Array.from(multiValue()).join(', ') || 'None'}
 						</Description>
@@ -84,7 +84,7 @@ const SelectTypeaheadDemo: Component = () => {
 					</LabelStack>
 
 					<LabelStack>
-						<Label>Disabled Selection</Label>
+						<Label>Disabled selection</Label>
 						<SelectTypeahead disabled values={new Set(['fixed'])}>
 							<ListBoxItem value="fixed">Can't change me</ListBoxItem>
 							<ListBoxItem value="different">Can't pick me</ListBoxItem>
@@ -92,7 +92,7 @@ const SelectTypeaheadDemo: Component = () => {
 					</LabelStack>
 
 					<LabelStack>
-						<Label>Long Selection List</Label>
+						<Label>Long selection list</Label>
 						<Description>
 							Selected: {Array.from(value()).join(', ') || 'None'}
 						</Description>
@@ -108,7 +108,7 @@ const SelectTypeaheadDemo: Component = () => {
 					</LabelStack>
 
 					<LabelStack>
-						<Label>Select With No Matches</Label>
+						<Label>Select with no matches</Label>
 						<SelectTypeahead placeholder="Won't match" />
 					</LabelStack>
 				</Stack>

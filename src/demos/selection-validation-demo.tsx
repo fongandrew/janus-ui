@@ -13,7 +13,7 @@ import { Form } from '~/shared/components/form';
 import { ResetButton, SubmitButton } from '~/shared/components/form-buttons';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
-import { LabelledControl } from '~/shared/components/labelled-control';
+import { LabelledInput } from '~/shared/components/labelled-control';
 import { ListBox, ListBoxItem } from '~/shared/components/list-box';
 import { Select } from '~/shared/components/select';
 import { Stack } from '~/shared/components/stack';
@@ -56,14 +56,14 @@ export const SelectionValidationDemo: Component = () => {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Selection Validation</CardTitle>
+				<CardTitle>Selection validation</CardTitle>
 				<CardDescription>Validation with ListBox and Select components</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<Stack>
 					<Form onSubmit={handleSubmit} onReset={handleReset} names={FormNames}>
 						<Stack>
-							<LabelledControl label="Select Fruits (2-3)">
+							<LabelledInput label="Select Fruits (2-3)">
 								<ListBox
 									name={FormNames.fruits}
 									multiple
@@ -76,9 +76,9 @@ export const SelectionValidationDemo: Component = () => {
 									<ListBoxItem value="grape">Grape</ListBoxItem>
 									<ListBoxItem value="kiwi">Kiwi</ListBoxItem>
 								</ListBox>
-							</LabelledControl>
+							</LabelledInput>
 
-							<LabelledControl label="Select Colors (2-3)">
+							<LabelledInput label="Select Colors (2-3)">
 								<Select
 									name={FormNames.colors}
 									multiple
@@ -91,7 +91,7 @@ export const SelectionValidationDemo: Component = () => {
 									<ListBoxItem value="yellow">Yellow</ListBoxItem>
 									<ListBoxItem value="purple">Purple</ListBoxItem>
 								</Select>
-							</LabelledControl>
+							</LabelledInput>
 						</Stack>
 					</Form>
 
@@ -99,18 +99,18 @@ export const SelectionValidationDemo: Component = () => {
 						<output>
 							<Card>
 								<CardHeader>
-									<CardTitle>Submitted Form Data</CardTitle>
+									<CardTitle>Submitted form data</CardTitle>
 								</CardHeader>
 								<CardContent>
 									<Stack>
 										<LabelStack>
-											<Label>Selected Fruits</Label>
+											<Label>Selected fruits</Label>
 											<Description>
 												{formData()?.fruits.join(', ')}
 											</Description>
 										</LabelStack>
 										<LabelStack>
-											<Label>Selected Colors</Label>
+											<Label>Selected colors</Label>
 											<Description>
 												{formData()?.colors.join(', ')}
 											</Description>

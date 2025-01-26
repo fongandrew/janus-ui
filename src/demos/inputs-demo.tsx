@@ -15,9 +15,7 @@ import {
 } from '~/shared/components/date-time-picker';
 import { Form } from '~/shared/components/form';
 import { Input } from '~/shared/components/input';
-import { Label } from '~/shared/components/label';
-import { LabelStack } from '~/shared/components/label-stack';
-import { LabelledControl } from '~/shared/components/labelled-control';
+import { LabelledInput } from '~/shared/components/labelled-control';
 import { Password } from '~/shared/components/password';
 import { Slider } from '~/shared/components/slider';
 import { Stack } from '~/shared/components/stack';
@@ -26,23 +24,20 @@ function InputStates() {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Input States</CardTitle>
+				<CardTitle>Input states</CardTitle>
 				<CardDescription>Text input fields in different states</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<Stack>
-					<LabelStack>
-						<Label>Default Input</Label>
+					<LabelledInput label="Default input">
 						<Input placeholder="Placeholder content" />
-					</LabelStack>
-					<LabelStack>
-						<Label>Error State Input</Label>
+					</LabelledInput>
+					<LabelledInput label="Error state input">
 						<Input aria-invalid="true" placeholder="Some wrong value" />
-					</LabelStack>
-					<LabelStack>
-						<Label>Disabled Input</Label>
+					</LabelledInput>
+					<LabelledInput label="Disabled input">
 						<Input disabled placeholder="Can't touch this" />
-					</LabelStack>
+					</LabelledInput>
 				</Stack>
 			</CardContent>
 		</Card>
@@ -53,26 +48,26 @@ function DateTimeInputs() {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Date/Time Inputs</CardTitle>
+				<CardTitle>Date / time inputs</CardTitle>
 				<CardDescription>Text input fields for selecting dates and times</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<Stack>
-					<LabelledControl label="Date Input">
+					<LabelledInput label="Date input">
 						<DatePicker placeholder="Pick a date" value="2024-12-25" />
-					</LabelledControl>
-					<LabelledControl label="Time Input">
+					</LabelledInput>
+					<LabelledInput label="Time input">
 						<TimePicker placeholder="Pick a time" value="13:15" />
-					</LabelledControl>
-					<LabelledControl label="Date Time Input">
+					</LabelledInput>
+					<LabelledInput label="Date time input">
 						<DateTimePicker placeholder="Pick a date" value="2024-12-25T13:15" />
-					</LabelledControl>
-					<LabelledControl label="Week Input">
+					</LabelledInput>
+					<LabelledInput label="Week input">
 						<WeekPicker placeholder="Pick a week" value="2024-W52" />
-					</LabelledControl>
-					<LabelledControl label="Month Input">
+					</LabelledInput>
+					<LabelledInput label="Month input">
 						<MonthPicker placeholder="Pick a month" value="2024-12" />
-					</LabelledControl>
+					</LabelledInput>
 				</Stack>
 			</CardContent>
 		</Card>
@@ -91,24 +86,24 @@ function TextInputVariations() {
 			<CardContent>
 				<Form names={{}} onSubmit={() => {}}>
 					<Stack>
-						<LabelledControl label="Email Input">
+						<LabelledInput label="Email input">
 							<Input type="email" autocomplete="email" />
-						</LabelledControl>
-						<LabelledControl label="Number Input">
+						</LabelledInput>
+						<LabelledInput label="Number input">
 							<Input type="number" />
-						</LabelledControl>
-						<LabelledControl label="Password Input">
+						</LabelledInput>
+						<LabelledInput label="Password input">
 							<Password autocomplete="current-password" />
-						</LabelledControl>
-						<LabelledControl label="Search Input">
+						</LabelledInput>
+						<LabelledInput label="Search input">
 							<Input type="search" />
-						</LabelledControl>
-						<LabelledControl label="Telephone Input">
+						</LabelledInput>
+						<LabelledInput label="Telephone input">
 							<Input type="tel" />
-						</LabelledControl>
-						<LabelledControl label="URL Input">
+						</LabelledInput>
+						<LabelledInput label="URL input">
 							<Input type="url" />
-						</LabelledControl>
+						</LabelledInput>
 					</Stack>
 				</Form>
 			</CardContent>
@@ -120,38 +115,31 @@ function MiscInputVariations() {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Miscellaneous Inputs</CardTitle>
-				<CardDescription>Non-Textual Inputs</CardDescription>
+				<CardTitle>Miscellaneous inputs</CardTitle>
+				<CardDescription>Non-textual inputs</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<Stack>
-					<LabelStack>
-						<Label>Color Input</Label>
+					<LabelledInput label="Color input">
 						<ColorPicker />
-					</LabelStack>
-					<LabelStack>
-						<Label>Color Input (disabled)</Label>
+					</LabelledInput>
+					<LabelledInput label="Color input (disabled)">
 						<ColorPicker disabled />
-					</LabelStack>
+					</LabelledInput>
 
-					<LabelStack>
-						<Label>File Input</Label>
+					<LabelledInput label="File input">
 						<Input type="file" />
-					</LabelStack>
-					<LabelStack>
-						<Label>File Input (disabled)</Label>
-						<Input type="file" />
-					</LabelStack>
+					</LabelledInput>
+					<LabelledInput label="File input (disabled)">
+						<Input type="file" disabled />
+					</LabelledInput>
 
-					<LabelStack>
-						<Label>Range/Number Input</Label>
+					<LabelledInput label="Range / slider input">
 						<Slider unit="%" />
-					</LabelStack>
-
-					<LabelStack>
-						<Label>Range/Number Input (disabled)</Label>
+					</LabelledInput>
+					<LabelledInput label="Range / slider input (disabled)">
 						<Slider unit="%" disabled />
-					</LabelStack>
+					</LabelledInput>
 				</Stack>
 			</CardContent>
 		</Card>
