@@ -8,6 +8,7 @@
 @import '~/shared/components/box.css';
 @import '~/shared/components/card.css';
 @import '~/shared/components/checkbox.css';
+@import '~/shared/components/color-picker.css';
 @import '~/shared/components/description.css';
 @import '~/shared/components/details.css';
 @import '~/shared/components/dropdown.css';
@@ -16,7 +17,6 @@
 @import '~/shared/components/grid.css';
 @import '~/shared/components/group.css';
 @import '~/shared/components/input.css';
-@import '~/shared/components/input-color.css';
 @import '~/shared/components/label.css';
 @import '~/shared/components/label-stack.css';
 @import '~/shared/components/list-box.css';

@@ -5,6 +5,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '~/shared/components/card';
+import { ColorPicker } from '~/shared/components/color-picker';
 import { Form } from '~/shared/components/form';
 import {
 	Input,
@@ -14,7 +15,6 @@ import {
 	InputTime,
 	InputWeek,
 } from '~/shared/components/input';
-import { InputColor } from '~/shared/components/input-color';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
 import { LabelledControl } from '~/shared/components/labelled-control';
@@ -126,10 +126,19 @@ function MiscInputVariations() {
 				<Stack>
 					<LabelStack>
 						<Label>Color Input</Label>
-						<InputColor />
+						<ColorPicker />
 					</LabelStack>
 					<LabelStack>
+						<Label>Color Input (disabled)</Label>
+						<ColorPicker disabled />
+					</LabelStack>
+
+					<LabelStack>
 						<Label>File Input</Label>
+						<Input type="file" />
+					</LabelStack>
+					<LabelStack>
+						<Label>File Input (disabled)</Label>
 						<Input type="file" />
 					</LabelStack>
 

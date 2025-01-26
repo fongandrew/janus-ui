@@ -6,7 +6,7 @@ import {
 } from '~/shared/components/form-element-props';
 import { handleEvent } from '~/shared/utility/solid/handle-event';
 
-export interface InputColorProps extends Omit<FormElementProps<'input'>, 'type'> {
+export interface ColorPickerProps extends Omit<FormElementProps<'input'>, 'type'> {
 	/** Default uncontrolled value */
 	defaultValue?: string | undefined;
 	/** Value must be in string form */
@@ -16,7 +16,7 @@ export interface InputColorProps extends Omit<FormElementProps<'input'>, 'type'>
 /**
  * Wrapper around a color input
  */
-export function InputColor(props: InputColorProps) {
+export function ColorPicker(props: ColorPickerProps) {
 	const [uncontrolledValue, setUncontrolledValue] = createSignal<string | undefined>(
 		props.defaultValue,
 	);
@@ -30,13 +30,13 @@ export function InputColor(props: InputColorProps) {
 
 	const formControlProps = mergeFormElementProps<'input'>(props);
 	return (
-		<div class="c-input-color">
-			<span style={{ background: value() }} class="c-input-color__swatch" />
-			<span class="c-input-color__value">{value() ?? ''}</span>
+		<div class="c-color-picker">
+			<span style={{ background: value() }} class="c-color-picker__swatch" />
+			<span class="c-color-picker__value">{value() ?? ''}</span>
 			<input
 				{...formControlProps}
 				type="color"
-				class="c-input-color__input"
+				class="c-color-picker__input"
 				value={value()}
 				onChange={handleChange}
 			/>
