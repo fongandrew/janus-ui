@@ -6,18 +6,19 @@ import {
 	CardTitle,
 } from '~/shared/components/card';
 import { ColorPicker } from '~/shared/components/color-picker';
-import { Form } from '~/shared/components/form';
 import {
-	Input,
-	InputDate,
-	InputDateTime,
-	InputMonth,
-	InputTime,
-	InputWeek,
-} from '~/shared/components/input';
+	DatePicker,
+	DateTimePicker,
+	MonthPicker,
+	TimePicker,
+	WeekPicker,
+} from '~/shared/components/date-time-picker';
+import { Form } from '~/shared/components/form';
+import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
 import { LabelledControl } from '~/shared/components/labelled-control';
+import { Password } from '~/shared/components/password';
 import { Slider } from '~/shared/components/slider';
 import { Stack } from '~/shared/components/stack';
 
@@ -58,19 +59,19 @@ function DateTimeInputs() {
 			<CardContent>
 				<Stack>
 					<LabelledControl label="Date Input">
-						<InputDate placeholder="Pick a date" value="2024-12-25" />
+						<DatePicker placeholder="Pick a date" value="2024-12-25" />
 					</LabelledControl>
 					<LabelledControl label="Time Input">
-						<InputTime placeholder="Pick a time" value="13:15" />
+						<TimePicker placeholder="Pick a time" value="13:15" />
 					</LabelledControl>
 					<LabelledControl label="Date Time Input">
-						<InputDateTime placeholder="Pick a date" value="2024-12-25T13:15" />
+						<DateTimePicker placeholder="Pick a date" value="2024-12-25T13:15" />
 					</LabelledControl>
 					<LabelledControl label="Week Input">
-						<InputWeek placeholder="Pick a week" value="2024-W52" />
+						<WeekPicker placeholder="Pick a week" value="2024-W52" />
 					</LabelledControl>
 					<LabelledControl label="Month Input">
-						<InputMonth placeholder="Pick a month" value="2024-12" />
+						<MonthPicker placeholder="Pick a month" value="2024-12" />
 					</LabelledControl>
 				</Stack>
 			</CardContent>
@@ -97,7 +98,7 @@ function TextInputVariations() {
 							<Input type="number" />
 						</LabelledControl>
 						<LabelledControl label="Password Input">
-							<Input type="password" autocomplete="current-password" />
+							<Password autocomplete="current-password" />
 						</LabelledControl>
 						<LabelledControl label="Search Input">
 							<Input type="search" />

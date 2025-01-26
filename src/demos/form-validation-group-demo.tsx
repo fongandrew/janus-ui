@@ -17,6 +17,7 @@ import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
 import { LabelledControl } from '~/shared/components/labelled-control';
+import { Password } from '~/shared/components/password';
 import { Stack } from '~/shared/components/stack';
 import { generateId } from '~/shared/utility/id-generator';
 
@@ -85,18 +86,16 @@ export const FormValidationGroupDemo: Component = () => {
 							<FormValidationGroup>
 								<Stack>
 									<LabelledControl label="Password">
-										<Input
+										<Password
 											id={password1Id}
 											name={FormNames.password1}
-											type="password"
 											autocomplete="new-password"
 											required
 										/>
 									</LabelledControl>
 									<LabelledControl label="Confirm Password">
-										<Input
+										<Password
 											name={FormNames.password2}
-											type="password"
 											onValidate={matchesPassword1}
 											autocomplete="new-password"
 											required
