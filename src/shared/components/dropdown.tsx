@@ -1,10 +1,10 @@
 import {
-	autoPlacement,
 	autoUpdate,
 	computePosition,
 	flip,
 	type Middleware,
 	offset,
+	type Placement,
 	shift,
 	size,
 } from '@floating-ui/dom';
@@ -110,7 +110,9 @@ export interface DropdownContentProps extends JSX.HTMLAttributes<HTMLDivElement>
 
 export interface DropdownProps {
 	/** Positioning middleware */
-	middleware?: Middleware[];
+	middleware?: Middleware[] | undefined;
+	/** Placement of dropdown */
+	placement?: Placement | undefined;
 	/**
 	 * Two children required -- context and menu. And must be render funcs
 	 * for us to set context properly.
@@ -165,13 +167,15 @@ export function Dropdown(props: DropdownProps) {
 		if (!menuElm) return;
 
 		const { x, y } = await computePosition(triggerElm, menuElm, {
-			placement: 'bottom',
+			placement: props.placement ?? 'bottom-start',
 			middleware: props?.middleware ?? [
-				autoPlacement({
-					allowedPlacements: ['bottom-start', 'bottom-end'],
-				}),
 				offset(4),
-				flip(),
+				flip({
+					// Somewhat large padding for flip because dropdown content is resizable
+					// (overflow: auto) and will technically "fit" in smaller spaces but look
+					// really squished / require excessive scrolling
+					padding: 100,
+				}),
 				shift({ padding: 4 }),
 				size({
 					apply({ elements, availableWidth, availableHeight }) {
