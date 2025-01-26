@@ -17,7 +17,7 @@ import { FormContextProvider } from '~/shared/components/form-context-provider';
 import { FORM_CONTROL_ATTR } from '~/shared/components/form-element-control';
 import { Group } from '~/shared/components/group';
 import { ModalContext, type ModalContextValue } from '~/shared/components/modal-context';
-import { focusables } from '~/shared/utility/focusables';
+import { firstFocusable } from '~/shared/utility/focusables';
 import { generateId } from '~/shared/utility/id-generator';
 import { pullLast } from '~/shared/utility/list';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
@@ -51,6 +51,16 @@ export interface DialogProps extends JSX.DialogHtmlAttributes<HTMLDialogElement>
 export const FORM_REQUEST_CLOSE_ATTR = 'data-dialog-cancel';
 
 /**
+ * Magic attribute to identify modal content (used to find focusable elements)
+ */
+export const MODAL_CONTENT_ATTR = 'data-dialog-content';
+
+/**
+ * Magic attribute to identify modal footer (used to find focusable elements)
+ */
+export const MODAL_FOOTER_ATTR = 'data-dialog-footer';
+
+/**
  * Magic attribute for button that closes the form for real (used by speed bump).
  * Should also reference the ID of the modal being closed.
  */
@@ -63,33 +73,41 @@ export const FORM_CLOSE_ATTR = 'data-dialog-close';
 export function setAutofocus(dialog: HTMLDialogElement) {
 	if (dialog.querySelector('[autofocus]')) return;
 
-	let firstElm: HTMLElement | undefined;
-	let firstNonCloseElm: HTMLElement | undefined;
-
-	const list = focusables(dialog);
-	for (const elm of list) {
-		firstElm ??= elm;
-
-		// Prefer focusable that isn't a close button
-		if (elm.hasAttribute(FORM_REQUEST_CLOSE_ATTR) || elm.hasAttribute(FORM_CLOSE_ATTR)) {
-			continue;
-		}
-
-		// Prefer focusable that is form control
-		if (!elm.hasAttribute(FORM_CONTROL_ATTR)) {
-			firstNonCloseElm ??= elm;
-			continue;
-		}
-
-		elm.autofocus = true;
+	// Prefer form control element that is not the close button (input)
+	let target: HTMLElement | null | undefined = dialog.querySelector<HTMLElement>(
+		'[' +
+			FORM_CONTROL_ATTR +
+			']:not([' +
+			FORM_CLOSE_ATTR +
+			']):not([' +
+			FORM_REQUEST_CLOSE_ATTR +
+			'])',
+	);
+	if (target) {
+		target.autofocus = true;
 		return;
 	}
 
-	// If no better focusable elements, set autofocus on what we have
-	if (firstNonCloseElm) {
-		firstNonCloseElm.autofocus = true;
-	} else if (firstElm) {
-		firstElm.autofocus = true;
+	// Prefer focusable in content
+	const content = dialog.querySelector<HTMLElement>('[' + MODAL_CONTENT_ATTR + ']');
+	target = content ? firstFocusable(content) : undefined;
+	if (target) {
+		target.autofocus = true;
+		return;
+	}
+
+	// If no content, look in footer
+	const footer = dialog.querySelector<HTMLElement>('[' + MODAL_FOOTER_ATTR + ']');
+	target = footer ? firstFocusable(footer) : undefined;
+	if (target) {
+		target.autofocus = true;
+		return;
+	}
+
+	// Else just autofocus the first focusable in the dialog
+	target = firstFocusable(dialog);
+	if (target) {
+		target.autofocus = true;
 	}
 }
 
@@ -238,7 +256,6 @@ export function ModalXButton(props: ButtonProps) {
 	const modalContext = useContext(ModalContext);
 	return (
 		<IconButton
-			type="reset"
 			label={t`Close`}
 			{...{ [FORM_REQUEST_CLOSE_ATTR]: modalContext?.id() }}
 			{...props}
@@ -308,6 +325,7 @@ export function ModalContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
 	return (
 		<div
 			{...props}
+			{...{ [MODAL_CONTENT_ATTR]: '' }}
 			ref={combineRefs(setRef, props.ref)}
 			class={cx(
 				'c-modal__content',
@@ -320,5 +338,11 @@ export function ModalContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
 }
 
 export function ModalFooter(props: JSX.HTMLAttributes<HTMLDivElement>) {
-	return <div {...props} class={cx('c-modal__footer', props.class)} />;
+	return (
+		<div
+			{...props}
+			{...{ [MODAL_FOOTER_ATTR]: '' }}
+			class={cx('c-modal__footer', props.class)}
+		/>
+	);
 }

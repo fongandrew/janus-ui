@@ -18,6 +18,6 @@ export function focusables(element: HTMLElement): Iterable<HTMLElement> {
 /**
  * Returns the first focusable element within a given element
  */
-export function firstFocusable(element: HTMLElement) {
+export function firstFocusable(element: HTMLElement): HTMLElement | null {
 	return element.querySelector(FOCUSABLE_SELECTOR);
 }
