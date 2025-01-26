@@ -1,12 +1,10 @@
 import cx from 'classix';
 import { AlertCircle, AlertTriangle, CheckCircle, Info, type LucideProps } from 'lucide-solid';
-import { type Component, splitProps } from 'solid-js';
+import { type Component, type JSX, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 
-import { Box, type BoxProps } from '~/shared/components/box';
-
 /** Base alert props shared by all alert variants */
-type AlertBaseProps = BoxProps & {
+type AlertBaseProps = JSX.HTMLAttributes<HTMLDivElement> & {
 	/** Optional icon override */
 	icon?: Component<LucideProps>;
 };
@@ -16,12 +14,12 @@ function AlertBase(props: AlertBaseProps & { defaultIcon: typeof Info }) {
 	const [local, rest] = splitProps(props, ['icon', 'children', 'defaultIcon']);
 
 	return (
-		<Box role="alert" aria-live="assertive" {...rest} class={cx('c-alert', props.class)}>
+		<div role="alert" aria-live="assertive" {...rest} class={cx('c-alert', props.class)}>
 			<span class="c-alert__icon">
 				<Dynamic component={local.icon ?? local.defaultIcon} aria-hidden="true" />
 			</span>
 			<div class="c-alert__content">{local.children}</div>
-		</Box>
+		</div>
 	);
 }
 

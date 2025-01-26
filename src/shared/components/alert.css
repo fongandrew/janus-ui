@@ -2,7 +2,7 @@
 
 @layer components {
 	.c-alert {
-		@apply flex items-center gap-sm rounded-md border-md;
+		@apply flex items-center gap-sm rounded-md border-md px-md py-text-y-md;
 
 		/* Default variant (info, uses secondary styling) */
 		@apply bg-callout text-callout-fg border-dynamic-callout;
