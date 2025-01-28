@@ -45,11 +45,11 @@ export function AlertsDemo() {
 						<DangerAlert>An error occurred while processing your request</DangerAlert>
 					)}
 					<Group>
-						<Button onClick={() => setShowInfo(toggle)}>Toggle info alert</Button>
-						<Button onClick={() => setShowCallout(toggle)}>Toggle callout</Button>
-						<Button onClick={() => setShowSuccess(toggle)}>Toggle success alert</Button>
-						<Button onClick={() => setShowWarning(toggle)}>Toggle warning alert</Button>
-						<Button onClick={() => setShowDanger(toggle)}>Toggle danger alert</Button>
+						<Button onClick={() => setShowInfo(toggle)}>Toggle Info Alert</Button>
+						<Button onClick={() => setShowCallout(toggle)}>Toggle Callout</Button>
+						<Button onClick={() => setShowSuccess(toggle)}>Toggle Success Alert</Button>
+						<Button onClick={() => setShowWarning(toggle)}>Toggle Warning Alert</Button>
+						<Button onClick={() => setShowDanger(toggle)}>Toggle Danger Alert</Button>
 					</Group>
 				</Stack>
 			</CardContent>
