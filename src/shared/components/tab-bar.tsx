@@ -1,3 +1,4 @@
+import cx from 'classix';
 import { type JSX } from 'solid-js';
 
 import { type TabContextValue, useTabContext } from '~/shared/components/tab-context';
@@ -52,6 +53,14 @@ function handleKeyDown([context, props]: [TabContextValue, TabBarProps], event: 
 	}
 }
 
+function handleClick(context: TabContextValue, event: MouseEvent) {
+	const target = event.target as HTMLElement;
+	const tab = target.closest('[role="tab"]') as HTMLElement | null;
+	const tabId = tab?.getAttribute('aria-controls');
+	if (!tabId) return;
+	context.setActive(tabId);
+}
+
 export function TabBar(props: TabBarProps) {
 	const context = useTabContext();
 	return (
@@ -59,6 +68,11 @@ export function TabBar(props: TabBarProps) {
 			role="tablist"
 			aria-orientation={props['aria-orientation'] ?? props.orientation}
 			{...props}
+			class={cx('c-tabs__bar', props.class)}
+			onClick={combineEventHandlers(
+				bindCallback(handleClick, context),
+				bindProp(props, 'onClick'),
+			)}
 			onKeyDown={combineEventHandlers(
 				bindCallback(handleKeyDown, [context, props]),
 				bindProp(props, 'onKeyDown'),

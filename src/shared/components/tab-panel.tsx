@@ -42,7 +42,7 @@ export const TabPanel: Component<TabPanelProps> = (props) => {
 				{...props}
 				id={props.id}
 				aria-labelledby={attrs(props['aria-labelledby'], context.btnId(props.id))}
-				class={cx(props.class, !visible() && 'hidden')}
+				class={cx('c-tabs__panel', props.class, !visible() && 'hidden')}
 				tabIndex={0}
 			>
 				{props.children}

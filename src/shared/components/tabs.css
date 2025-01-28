@@ -1,0 +1,22 @@
+@import '~/shared/style/helpers.css';
+
+@layer components {
+	.c-tabs__bar {
+		@apply flex gap-sm border-b-md border-muted;
+	}
+
+	.c-tabs__button {
+		@apply t-with-disabled-button t-with-focus-ring border-b-lg border-transparent;
+		@apply t-input-size-md font-medium text-muted transition-colors;
+		@apply hover:text-foreground focus-visible:text-foreground;
+
+		/* Active state */
+		&[aria-selected='true'] {
+			@apply border-primary text-foreground;
+		}
+	}
+
+	.c-tabs__panel {
+		@apply t-with-focus-ring outline-none;
+	}
+}

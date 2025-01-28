@@ -58,17 +58,21 @@ export function Tabs(props: TabsProps) {
 	const context = [tabList, { add, rm }] as const;
 
 	return (
-		<TabsContextProvider>
-			<TabListContext.Provider value={context}>
-				{/*
-                Although children are `Tab` component, render within bar since the `Tab`
-                component renders buttons. Also makes it simple to add additional elements
-                to beginning or end of tab list.
-            */}
-				<TabBar>{props.children}</TabBar>
-				{mapArray(tabList, (tab) => tab())()}
-			</TabListContext.Provider>
-		</TabsContextProvider>
+		<div {...props}>
+			<TabsContextProvider>
+				<TabListContext.Provider value={context}>
+					<TabBar>
+						{/*
+                            Although children are `Tab` component, render within bar since the
+                            `Tab` component renders buttons. Also makes it simple to add
+                            additional elements to beginning or end of tab list.
+                        */}
+						{props.children}
+					</TabBar>
+					{mapArray(tabList, (tab) => tab())()}
+				</TabListContext.Provider>
+			</TabsContextProvider>
+		</div>
 	);
 }
 

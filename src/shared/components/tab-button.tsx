@@ -1,3 +1,4 @@
+import cx from 'classix';
 import { createRenderEffect, type JSX } from 'solid-js';
 
 import { useTabContext } from '~/shared/components/tab-context';
@@ -27,6 +28,7 @@ export function TabButton(props: TabButtonProps) {
 			aria-controls={props.tabId}
 			aria-selected={isSelected()}
 			tabIndex={isSelected() ? 0 : -1}
+			class={cx('c-tabs__button', props.class)}
 		>
 			{props.children}
 		</button>

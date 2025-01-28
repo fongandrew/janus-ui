@@ -5,6 +5,19 @@
 		/* md by default */
 		@apply p-md;
 	}
+
+	/*
+		Variant focused on text padding. This has smaller vertical padding to account
+		for the line height of the text.
+	 */
+	.c-text-box {
+		@apply t-input-pad-md;
+	}
+
+	/** Vertical padding only */
+	.c-text-box--v {
+		@apply py-text-y-md text-input-md;
+	}
 }
 
 @layer utilities {
@@ -16,5 +29,21 @@
 
 	.c-box--lg {
 		@apply p-lg;
+	}
+
+	.c-text-box--sm {
+		@apply t-input-pad-sm;
+	}
+
+	.c-text-box--v-sm {
+		@apply py-text-y-sm text-input-sm;
+	}
+
+	.c-text-box--lg {
+		@apply t-input-pad-lg;
+	}
+
+	.c-text-box--v-lg {
+		@apply py-text-y-lg text-input-lg;
 	}
 }
