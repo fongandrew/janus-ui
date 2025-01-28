@@ -15,7 +15,12 @@ import { TabPanel, type TabPanelProps } from '~/shared/components/tab-panel';
 import { TabsContextProvider } from '~/shared/components/tab-provider';
 import { createAutoId } from '~/shared/utility/solid/auto-prop';
 
-export interface TabsProps extends JSX.HTMLAttributes<HTMLDivElement> {}
+export interface TabsProps {
+	/** Whether to enable tab content persistence */
+	persist?: boolean | undefined;
+	/** Children (should be Tabs and things in tabs bar) */
+	children: JSX.Element;
+}
 
 export interface TabProps extends Omit<TabPanelProps, 'id'> {
 	/** ID is optional here since component represents both tab and button */
@@ -58,21 +63,19 @@ export function Tabs(props: TabsProps) {
 	const context = [tabList, { add, rm }] as const;
 
 	return (
-		<div {...props}>
-			<TabsContextProvider>
-				<TabListContext.Provider value={context}>
-					<TabBar>
-						{/*
+		<TabsContextProvider persist={props.persist}>
+			<TabListContext.Provider value={context}>
+				<TabBar>
+					{/*
                             Although children are `Tab` component, render within bar since the
                             `Tab` component renders buttons. Also makes it simple to add
                             additional elements to beginning or end of tab list.
                         */}
-						{props.children}
-					</TabBar>
-					{mapArray(tabList, (tab) => tab())()}
-				</TabListContext.Provider>
-			</TabsContextProvider>
-		</div>
+					{props.children}
+				</TabBar>
+				{mapArray(tabList, (tab) => tab())()}
+			</TabListContext.Provider>
+		</TabsContextProvider>
 	);
 }
 

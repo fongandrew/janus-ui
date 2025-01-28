@@ -1,5 +1,6 @@
 import { type Component } from 'solid-js';
 
+import { TextBox } from '~/shared/components/box';
 import {
 	Card,
 	CardContent,
@@ -19,17 +20,33 @@ export const TabsDemo: Component = () => {
 			</CardHeader>
 			<CardContent>
 				<Stack>
-					<Tabs>
-						<Tab label="Tab 1" class="c-text-box">
-							Content of Tab 1
-						</Tab>
-						<Tab label="Tab 2" class="c-text-box">
-							Content of Tab 2
-						</Tab>
-						<Tab label="Tab 3" class="c-text-box">
-							Content of Tab 3
-						</Tab>
-					</Tabs>
+					<div>
+						<Tabs>
+							<Tab label="Tab 1">
+								<TextBox>Content of Tab 1</TextBox>
+							</Tab>
+							<Tab label="Tab 2">
+								<TextBox>Content of Tab 2</TextBox>
+							</Tab>
+							<Tab label="Tab 3">
+								<TextBox>Content of Tab 3</TextBox>
+							</Tab>
+						</Tabs>
+					</div>
+
+					<Card>
+						<Tabs>
+							<Tab label="Tab with a very long long long long name">
+								<TextBox>Content of Tab 1</TextBox>
+							</Tab>
+							<Tab label="Short tab">
+								<TextBox>Content of Tab 2</TextBox>
+							</Tab>
+							<Tab label="Another tab with a fairly long name">
+								<TextBox>Content of Tab 3</TextBox>
+							</Tab>
+						</Tabs>
+					</Card>
 				</Stack>
 			</CardContent>
 		</Card>
