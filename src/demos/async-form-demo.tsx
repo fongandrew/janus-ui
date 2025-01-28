@@ -51,7 +51,7 @@ export const AsyncFormDemo: Component = () => {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Async Form</CardTitle>
+				<CardTitle>Async form</CardTitle>
 				<CardDescription>Form with async submission and loading state</CardDescription>
 			</CardHeader>
 			<CardContent>
@@ -63,7 +63,7 @@ export const AsyncFormDemo: Component = () => {
 						<LabelledInput label="Message">
 							<Textarea name={FormNames.message} />
 						</LabelledInput>
-						<LabelledInline label="Force Error">
+						<LabelledInline label="Force error">
 							<Checkbox name={FormNames.shouldError} />
 						</LabelledInline>
 					</Form>
@@ -72,7 +72,7 @@ export const AsyncFormDemo: Component = () => {
 						<output>
 							<Card>
 								<CardHeader>
-									<CardTitle>Submitted Form Data</CardTitle>
+									<CardTitle>Submitted form data</CardTitle>
 								</CardHeader>
 								<CardContent>
 									<Stack>
