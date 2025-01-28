@@ -1,6 +1,5 @@
 import '~/shared/style/tailwind.css';
 
-import { type Component } from 'solid-js';
 import { render } from 'solid-js/web';
 
 import { AlertsDemo } from '~/demos/alerts-demo';
@@ -26,7 +25,7 @@ import { TooltipDemo } from '~/demos/tooltip-demo';
 import { Box } from '~/shared/components/box';
 import { Grid } from '~/shared/components/grid';
 
-const App: Component = () => {
+function App() {
 	return (
 		<Box>
 			<Grid>
@@ -53,7 +52,7 @@ const App: Component = () => {
 			</Grid>
 		</Box>
 	);
-};
+}
 
 const root = document.getElementById('root');
 

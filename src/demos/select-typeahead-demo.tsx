@@ -1,4 +1,4 @@
-import { type Component, createMemo, createSignal, For, Show } from 'solid-js';
+import { createMemo, createSignal, For, Show } from 'solid-js';
 
 import {
 	Card,
@@ -15,7 +15,7 @@ import { ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
 import { SelectTypeahead } from '~/shared/components/select-typeahead';
 import { Stack } from '~/shared/components/stack';
 
-const SelectTypeaheadDemo: Component = () => {
+function SelectTypeaheadDemo() {
 	// Value selection
 	const [value, setValue] = createSignal<Set<string>>(new Set());
 	const [multiValue, setMultiValue] = createSignal<Set<string>>(new Set());
@@ -115,6 +115,6 @@ const SelectTypeaheadDemo: Component = () => {
 			</CardContent>
 		</Card>
 	);
-};
+}
 
 export { SelectTypeaheadDemo };

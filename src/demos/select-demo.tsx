@@ -1,4 +1,4 @@
-import { type Component, createSignal, For } from 'solid-js';
+import { createSignal, For } from 'solid-js';
 
 import {
 	Card,
@@ -15,7 +15,7 @@ import { ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
 import { Select } from '~/shared/components/select';
 import { Stack } from '~/shared/components/stack';
 
-const SelectDemo: Component = () => {
+function SelectDemo() {
 	const [value, setValue] = createSignal<Set<string>>(new Set());
 	const [multiValue, setMultiValue] = createSignal<Set<string>>(new Set());
 
@@ -97,6 +97,6 @@ const SelectDemo: Component = () => {
 			</CardContent>
 		</Card>
 	);
-};
+}
 
 export { SelectDemo };

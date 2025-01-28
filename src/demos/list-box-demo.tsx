@@ -1,4 +1,4 @@
-import { type Component, createSignal } from 'solid-js';
+import { createSignal } from 'solid-js';
 
 import {
 	Card,
@@ -14,7 +14,7 @@ import { LabelStack } from '~/shared/components/label-stack';
 import { ListBox, ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
 import { Stack } from '~/shared/components/stack';
 
-const ListBoxDemo: Component = () => {
+function ListBoxDemo() {
 	const [values, setValues] = createSignal<Set<string>>(new Set());
 	const [multiValues, setMultiValues] = createSignal<Set<string>>(new Set());
 
@@ -74,6 +74,6 @@ const ListBoxDemo: Component = () => {
 			</CardContent>
 		</Card>
 	);
-};
+}
 
 export { ListBoxDemo };

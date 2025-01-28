@@ -1,4 +1,4 @@
-import { type Component, createSignal } from 'solid-js';
+import { createSignal } from 'solid-js';
 
 import {
 	Card,
@@ -12,7 +12,7 @@ import { Radio } from '~/shared/components/radio';
 import { RadioGroup } from '~/shared/components/radio-group';
 import { Stack } from '~/shared/components/stack';
 
-const RadioGroupDemo: Component = () => {
+function RadioGroupDemo() {
 	const [value, setValue] = createSignal('checked');
 
 	return (
@@ -50,6 +50,6 @@ const RadioGroupDemo: Component = () => {
 			</CardContent>
 		</Card>
 	);
-};
+}
 
 export { RadioGroupDemo };

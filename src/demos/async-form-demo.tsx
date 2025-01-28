@@ -1,4 +1,4 @@
-import { type Component, createSignal, Show } from 'solid-js';
+import { createSignal, Show } from 'solid-js';
 
 import {
 	Card,
@@ -19,7 +19,7 @@ import { LabelledInline, LabelledInput } from '~/shared/components/labelled-cont
 import { Stack } from '~/shared/components/stack';
 import { Textarea } from '~/shared/components/textarea';
 
-export const AsyncFormDemo: Component = () => {
+export function AsyncFormDemo() {
 	enum FormNames {
 		name = 'name',
 		message = 'message',
@@ -69,7 +69,7 @@ export const AsyncFormDemo: Component = () => {
 					</Form>
 
 					<Show when={formData()}>
-						<output>
+						<o>
 							<Card>
 								<CardHeader>
 									<CardTitle>Submitted form data</CardTitle>
@@ -87,7 +87,7 @@ export const AsyncFormDemo: Component = () => {
 									</Stack>
 								</CardContent>
 							</Card>
-						</output>
+						</o>
 					</Show>
 				</Stack>
 			</CardContent>
@@ -97,4 +97,4 @@ export const AsyncFormDemo: Component = () => {
 			</CardFooter>
 		</Card>
 	);
-};
+}

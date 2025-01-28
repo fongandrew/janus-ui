@@ -1,7 +1,6 @@
 import cx from 'classix';
 import { X } from 'lucide-solid';
 import {
-	type Component,
 	createEffect,
 	createMemo,
 	createSignal,
@@ -111,7 +110,7 @@ export function setAutofocus(dialog: HTMLDialogElement) {
 	}
 }
 
-export const Modal: Component<DialogProps> = (props) => {
+export function Modal(props: DialogProps) {
 	const [dialog, setDialog] = createSignal<HTMLDialogElement | null>(null);
 	const isMounted = createMountedSignal();
 	const [local, rest] = splitProps(props, ['children', 'id', 'open']);
@@ -249,7 +248,7 @@ export const Modal: Component<DialogProps> = (props) => {
 			</ModalContext.Provider>
 		</Show>
 	);
-};
+}
 
 /** X button in corner of modal */
 export function ModalXButton(props: ButtonProps) {

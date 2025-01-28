@@ -1,4 +1,4 @@
-import { type Component, type JSX, splitProps, useContext } from 'solid-js';
+import { type JSX, splitProps, useContext } from 'solid-js';
 
 import {
 	type DialogProps,
@@ -22,7 +22,7 @@ export interface ModalSpeedBumpProps extends Omit<DialogProps, 'children'> {
 	children?: JSX.Element;
 }
 
-export const ModalSpeedBump: Component<ModalSpeedBumpProps> = (props) => {
+export function ModalSpeedBump(props: ModalSpeedBumpProps) {
 	const modalContext = useContext(ModalContext);
 	if (!modalContext) {
 		throw new Error('ModalSpeedBump must be used within a Modal');
@@ -35,7 +35,7 @@ export const ModalSpeedBump: Component<ModalSpeedBumpProps> = (props) => {
 			<ModalContent>
 				{local.children ?? (
 					<T>
-						Are you sure you want to close this? You may lose any data you’ve entered.
+						Are you sure you want to close this? You may lose any data you've entered.
 					</T>
 				)}
 			</ModalContent>
@@ -47,4 +47,4 @@ export const ModalSpeedBump: Component<ModalSpeedBumpProps> = (props) => {
 			</ModalFooter>
 		</Modal>
 	);
-};
+}

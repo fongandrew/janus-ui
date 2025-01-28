@@ -1,5 +1,3 @@
-import { type Component } from 'solid-js';
-
 import {
 	Card,
 	CardContent,
@@ -13,7 +11,7 @@ import { LabelledInput } from '~/shared/components/labelled-control';
 import { Stack } from '~/shared/components/stack';
 import { Tab, Tabs } from '~/shared/components/tabs';
 
-export const TabsPersistDemo: Component = () => {
+export function TabsPersistDemo() {
 	return (
 		<Card>
 			<CardHeader>
@@ -48,4 +46,4 @@ export const TabsPersistDemo: Component = () => {
 			</CardContent>
 		</Card>
 	);
-};
+}

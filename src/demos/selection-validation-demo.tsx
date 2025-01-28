@@ -1,4 +1,4 @@
-import { type Component, createSignal, Show } from 'solid-js';
+import { createSignal, Show } from 'solid-js';
 
 import {
 	Card,
@@ -18,7 +18,7 @@ import { ListBox, ListBoxItem } from '~/shared/components/list-box';
 import { Select } from '~/shared/components/select';
 import { Stack } from '~/shared/components/stack';
 
-export const SelectionValidationDemo: Component = () => {
+export function SelectionValidationDemo() {
 	const [formData, setFormData] = createSignal<{
 		fruits: string[];
 		colors: string[];
@@ -94,7 +94,7 @@ export const SelectionValidationDemo: Component = () => {
 					</Form>
 
 					<Show when={formData()}>
-						<output>
+						<o>
 							<Card>
 								<CardHeader>
 									<CardTitle>Submitted form data</CardTitle>
@@ -116,7 +116,7 @@ export const SelectionValidationDemo: Component = () => {
 									</Stack>
 								</CardContent>
 							</Card>
-						</output>
+						</o>
 					</Show>
 				</Stack>
 			</CardContent>
@@ -126,4 +126,4 @@ export const SelectionValidationDemo: Component = () => {
 			</CardFooter>
 		</Card>
 	);
-};
+}

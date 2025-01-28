@@ -1,5 +1,3 @@
-import { type Component } from 'solid-js';
-
 import { Button } from '~/shared/components/button';
 import {
 	Card,
@@ -11,7 +9,7 @@ import {
 import { Grid } from '~/shared/components/grid';
 import { Tooltip } from '~/shared/components/tooltip';
 
-const TooltipDemo: Component = () => {
+function TooltipDemo() {
 	return (
 		<Card>
 			<CardHeader>
@@ -36,6 +34,6 @@ const TooltipDemo: Component = () => {
 			</CardContent>
 		</Card>
 	);
-};
+}
 
 export { TooltipDemo };

@@ -1,12 +1,5 @@
 import cx from 'classix';
-import {
-	type Component,
-	createMemo,
-	createRenderEffect,
-	type JSX,
-	onCleanup,
-	Show,
-} from 'solid-js';
+import { createMemo, createRenderEffect, type JSX, onCleanup, Show } from 'solid-js';
 
 import { useTabContext } from '~/shared/components/tab-context';
 import { attrs } from '~/shared/utility/attribute-list';
@@ -21,7 +14,7 @@ export interface TabPanelProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	persist?: boolean | undefined;
 }
 
-export const TabPanel: Component<TabPanelProps> = (props) => {
+export function TabPanel(props: TabPanelProps) {
 	const context = useTabContext();
 	const visible = () => context.active() === props.id;
 	const persist = () => props.persist ?? context.persist() ?? true;
@@ -49,4 +42,4 @@ export const TabPanel: Component<TabPanelProps> = (props) => {
 			</div>
 		</Show>
 	);
-};
+}

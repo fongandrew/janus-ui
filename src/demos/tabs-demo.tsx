@@ -1,5 +1,3 @@
-import { type Component } from 'solid-js';
-
 import { TextBox } from '~/shared/components/box';
 import {
 	Card,
@@ -11,7 +9,7 @@ import {
 import { Stack } from '~/shared/components/stack';
 import { Tab, Tabs } from '~/shared/components/tabs';
 
-export const TabsDemo: Component = () => {
+export function TabsDemo() {
 	return (
 		<Card>
 			<CardHeader>
@@ -51,4 +49,4 @@ export const TabsDemo: Component = () => {
 			</CardContent>
 		</Card>
 	);
-};
+}

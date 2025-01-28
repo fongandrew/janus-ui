@@ -1,4 +1,4 @@
-import { type Component, createSignal } from 'solid-js';
+import { createSignal } from 'solid-js';
 
 import { Button } from '~/shared/components/button';
 import {
@@ -14,7 +14,7 @@ import { Group } from '~/shared/components/group';
 import { Menu, MenuGroup, MenuItem, MenuItemLink } from '~/shared/components/menu';
 import { Stack } from '~/shared/components/stack';
 
-const MenuDemo: Component = () => {
+function MenuDemo() {
 	const [selection, setSelection] = createSignal<string | null>(null);
 	return (
 		<Card>
@@ -72,6 +72,6 @@ const MenuDemo: Component = () => {
 			</CardContent>
 		</Card>
 	);
-};
+}
 
 export { MenuDemo };

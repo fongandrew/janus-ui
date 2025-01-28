@@ -1,4 +1,4 @@
-import { type Component, createSignal, Show } from 'solid-js';
+import { createSignal, Show } from 'solid-js';
 
 import {
 	Card,
@@ -21,7 +21,7 @@ import { Password } from '~/shared/components/password';
 import { Stack } from '~/shared/components/stack';
 import { generateId } from '~/shared/utility/id-generator';
 
-export const FormValidationGroupDemo: Component = () => {
+export function FormValidationGroupDemo() {
 	const [formData, setFormData] = createSignal<{
 		username: string;
 		password: string;
@@ -105,7 +105,7 @@ export const FormValidationGroupDemo: Component = () => {
 					</Form>
 
 					<Show when={formData()}>
-						<output>
+						<o>
 							<Card>
 								<CardHeader>
 									<CardTitle>Submitted form data</CardTitle>
@@ -123,7 +123,7 @@ export const FormValidationGroupDemo: Component = () => {
 									</Stack>
 								</CardContent>
 							</Card>
-						</output>
+						</o>
 					</Show>
 				</Stack>
 			</CardContent>
@@ -133,4 +133,4 @@ export const FormValidationGroupDemo: Component = () => {
 			</CardFooter>
 		</Card>
 	);
-};
+}
