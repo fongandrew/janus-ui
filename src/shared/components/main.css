@@ -1,0 +1,7 @@
+@import '~/shared/style/helpers.css';
+
+@layer components {
+	.c-main {
+		@apply flex-grow overflow-auto;
+	}
+}

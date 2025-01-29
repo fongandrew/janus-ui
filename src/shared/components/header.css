@@ -1,0 +1,7 @@
+@import '~/shared/style/helpers.css';
+
+@layer components {
+	.c-header {
+		@apply flex items-center gap-sm px-input-x-md py-input-y-md text-xl font-medium;
+	}
+}

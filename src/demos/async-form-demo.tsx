@@ -69,7 +69,7 @@ export function AsyncFormDemo() {
 					</Form>
 
 					<Show when={formData()}>
-						<o>
+						<output>
 							<Card>
 								<CardHeader>
 									<CardTitle>Submitted form data</CardTitle>
@@ -87,7 +87,7 @@ export function AsyncFormDemo() {
 									</Stack>
 								</CardContent>
 							</Card>
-						</o>
+						</output>
 					</Show>
 				</Stack>
 			</CardContent>

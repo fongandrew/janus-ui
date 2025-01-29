@@ -105,7 +105,7 @@ export function FormValidationGroupDemo() {
 					</Form>
 
 					<Show when={formData()}>
-						<o>
+						<output>
 							<Card>
 								<CardHeader>
 									<CardTitle>Submitted form data</CardTitle>
@@ -123,7 +123,7 @@ export function FormValidationGroupDemo() {
 									</Stack>
 								</CardContent>
 							</Card>
-						</o>
+						</output>
 					</Show>
 				</Stack>
 			</CardContent>

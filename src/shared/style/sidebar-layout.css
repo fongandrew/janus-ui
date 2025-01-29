@@ -1,11 +1,11 @@
 @layer components {
 	/* Default closed on mobile */
 	.c-sidebar {
-		@apply hidden border-r-md bg-card text-card-fg shadow border-dynamic-card;
+		@apply hidden overflow-auto border-r-md bg-card text-card-fg shadow border-dynamic-card;
 	}
 
 	.c-sidebar-layout--open .c-sidebar {
-		@apply max-w-sidebar fixed bottom-0 left-0 top-0 z-above-backdrop block w-[90vw];
+		@apply fixed bottom-0 left-0 top-0 z-above-backdrop block w-[90vw] max-w-sidebar;
 	}
 
 	.c-sidebar__overlay {
@@ -18,13 +18,13 @@
 
 	@media screen(sm) {
 		.c-sidebar-layout {
-			@apply flex;
+			@apply flex h-[100vh] w-[100vw] overflow-hidden;
 		}
 
 		/* Default open on desktop */
 		.c-sidebar,
 		.c-sidebar-layout--open .c-sidebar {
-			@apply w-sidebar relative block flex-shrink-0;
+			@apply relative block w-sidebar flex-shrink-0;
 		}
 
 		.c-sidebar__overlay,
@@ -47,7 +47,7 @@
 		}
 
 		.c-sidebar-layout--closed .c-sidebar__open-button {
-			@apply inline-block;
+			@apply inline-flex;
 		}
 
 		.c-sidebar__close-button {

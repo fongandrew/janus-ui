@@ -6,7 +6,7 @@
 	}
 
 	.c-checkbox__box {
-		@apply inline-flex h-em w-em items-center justify-center rounded-sm border-md border-solid bg-input-bg text-input-md shadow-inner transition-colors border-dynamic-secondary-fg;
+		@apply relative inline-flex h-em w-em items-center justify-center rounded-sm border-md border-solid bg-input-bg text-input-md shadow-inner transition-colors border-dynamic-secondary-fg;
 	}
 
 	.c-checkbox__box:has(input:checked) {
