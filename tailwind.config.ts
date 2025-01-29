@@ -46,6 +46,7 @@ const px = {
 		dropdown: 184,
 		modal: 512,
 		tooltip: 240,
+		sidebar: 256,
 	},
 	lineHeight: {
 		xs: 18,
@@ -305,6 +306,7 @@ export default {
 			},
 
 			maxWidth: {
+				sidebar: pxToRem(px.width.sidebar),
 				tooltip: pxToRem(px.width.tooltip),
 			},
 
@@ -318,6 +320,7 @@ export default {
 				'input-md': pxToRem(px.height.input.md),
 				'input-lg': pxToRem(px.height.input.lg),
 				modal: pxToRem(px.width.modal),
+				sidebar: pxToRem(px.width.sidebar),
 			},
 
 			typography: {

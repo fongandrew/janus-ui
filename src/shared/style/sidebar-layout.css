@@ -1,0 +1,57 @@
+@layer components {
+	/* Default closed on mobile */
+	.c-sidebar {
+		@apply hidden border-r-md bg-card text-card-fg shadow border-dynamic-card;
+	}
+
+	.c-sidebar-layout--open .c-sidebar {
+		@apply max-w-sidebar fixed bottom-0 left-0 top-0 z-above-backdrop block w-[90vw];
+	}
+
+	.c-sidebar__overlay {
+		@apply fixed inset-0 z-backdrop hidden bg-backdrop;
+	}
+
+	.c-sidebar-layout--open .c-sidebar__overlay {
+		@apply block;
+	}
+
+	@media screen(sm) {
+		.c-sidebar-layout {
+			@apply flex;
+		}
+
+		/* Default open on desktop */
+		.c-sidebar,
+		.c-sidebar-layout--open .c-sidebar {
+			@apply w-sidebar relative block flex-shrink-0;
+		}
+
+		.c-sidebar__overlay,
+		.c-sidebar-layout--open .c-sidebar__overlay {
+			@apply hidden;
+		}
+
+		/* Can be explicitly closed on desktop */
+		.c-sidebar-layout--closed .c-sidebar {
+			@apply hidden;
+		}
+
+		/*
+            Open button is conditionally visible on desktop. Not really relevant on
+            mobile or for close button since those get automatically shown / hidden
+            based on sidebar visibility.
+        */
+		.c-sidebar__open-button {
+			@apply hidden;
+		}
+
+		.c-sidebar-layout--closed .c-sidebar__open-button {
+			@apply inline-block;
+		}
+
+		.c-sidebar__close-button {
+			/* noop, just here to appease linter for now */
+		}
+	}
+}

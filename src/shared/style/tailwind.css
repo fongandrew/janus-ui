@@ -32,6 +32,7 @@
 @import '~/shared/components/toggle-switch.css';
 @import '~/shared/components/tooltip.css';
 @import '~/shared/components/tabs.css';
+@import '~/shared/style/sidebar-layout.css';
 
 @tailwind base;
 @tailwind components;

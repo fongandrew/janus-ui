@@ -24,33 +24,49 @@ import { TextareasDemo } from '~/demos/textareas-demo';
 import { TooltipDemo } from '~/demos/tooltip-demo';
 import { Box } from '~/shared/components/box';
 import { Grid } from '~/shared/components/grid';
+import {
+	Sidebar,
+	SidebarCloseButton,
+	SidebarLayout,
+	SidebarOpenButton,
+} from '~/shared/components/sidebar-layout';
 
 function App() {
 	return (
-		<Box>
-			<Grid>
-				<ButtonsDemo />
-				<AlertsDemo />
-				<DetailsDemo />
-				<MenuDemo />
-				<CheckboxesDemo />
-				<RadioGroupDemo />
-				<TooltipDemo />
-				<InputsDemo />
-				<LabelledActionDemo />
-				<TextareasDemo />
-				<ListBoxDemo />
-				<SelectDemo />
-				<SelectTypeaheadDemo />
-				<ModalDemo />
-				<AsyncFormDemo />
-				<FormValidationGroupDemo />
-				<SelectionValidationDemo />
-				<FooterDemo />
-				<TabsDemo />
-				<TabsPersistDemo />
-			</Grid>
-		</Box>
+		<SidebarLayout>
+			<Sidebar>
+				<SidebarCloseButton />
+				{/* Add sidebar content here */}
+			</Sidebar>
+			<Box>
+				<header>
+					<SidebarOpenButton />
+					<h1>Solid Base</h1>
+				</header>
+				<Grid>
+					<ButtonsDemo />
+					<AlertsDemo />
+					<DetailsDemo />
+					<MenuDemo />
+					<CheckboxesDemo />
+					<RadioGroupDemo />
+					<TooltipDemo />
+					<InputsDemo />
+					<LabelledActionDemo />
+					<TextareasDemo />
+					<ListBoxDemo />
+					<SelectDemo />
+					<SelectTypeaheadDemo />
+					<ModalDemo />
+					<AsyncFormDemo />
+					<FormValidationGroupDemo />
+					<SelectionValidationDemo />
+					<FooterDemo />
+					<TabsDemo />
+					<TabsPersistDemo />
+				</Grid>
+			</Box>
+		</SidebarLayout>
 	);
 }
 
