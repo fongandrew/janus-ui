@@ -86,6 +86,10 @@
 		flex: none;
 	}
 
+	.c-modal__x {
+		color: var(--muted);
+	}
+
 	.c-modal__content:not(.c-modal__content--scroll-top) {
 		box-shadow: var(--shadow-inner-top);
 	}

@@ -1,13 +1,17 @@
 /* Transition helpers */
 @define-mixin transition-timings {
-	--transition-duration: 150ms;
-	--transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	transition-duration: 150ms;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@define-mixin transition $properties {
+	@mixin transition-timings;
+
+	transition-property: $(properties);
 }
 
 @define-mixin transition-color {
-	@mixin transition-timings;
-
-	transition-property: color, background-color, border-color;
+	@mixin transition single-arg(color, background-color, border-color);
 }
 
 /* Dynamic border just means using an X% darker version of background as border */

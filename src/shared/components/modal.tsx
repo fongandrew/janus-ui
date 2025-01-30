@@ -258,7 +258,7 @@ export function ModalXButton(props: ButtonProps) {
 			label={t`Close`}
 			{...{ [FORM_REQUEST_CLOSE_ATTR]: modalContext?.id() }}
 			{...props}
-			class={cx('text-muted', props.class)}
+			class={cx('c-modal__x', props.class)}
 		>
 			<X />
 		</IconButton>
