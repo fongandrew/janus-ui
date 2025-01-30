@@ -22,6 +22,12 @@
 	--font-size-xl: 1.25rem;
 	--font-size-2xl: 1.5rem;
 
+	/* Font Weights */
+	--font-weight-normal: 400;
+	--font-weight-medium: 500;
+	--font-weight-semibold: 600;
+	--font-weight-bold: 700;
+
 	/* Line Heights */
 	--line-height-xs: 1.125rem;
 	--line-height-sm: 1.25rem;
@@ -77,6 +83,29 @@
 	--dropdown-width: 11.5rem;
 	--tooltip-width: 15rem;
 	--tooltip-arrow-size: 0.5rem;
+
+	/*
+		These are useful as a way to get an even vertical padding that
+		accounts for text line height
+	*/
+	--text-y-xs: calc(var(--space-xs) - (var(--line-height-xs) - var(--font-size-xs)) / 2);
+	--text-y-sm: calc(var(--space-sm) - (var(--line-height-sm) - var(--font-size-sm)) / 2);
+	--text-y-md: calc(var(--space-md) - (var(--line-height-md) - var(--font-size-md)) / 2);
+	--text-y-lg: calc(var(--space-lg) - (var(--line-height-lg) - var(--font-size-lg)) / 2);
+	--text-y-xl: calc(var(--space-xl) - (var(--line-height-xl) - var(--font-size-xl)) / 2);
+	--text-y-2xl: calc(var(--space-2xl) - (var(--line-height-2xl) - var(--font-size-2xl)) / 2);
+
+	/*
+		These are useful as a way to get an element to the sought after
+		height in the one-line case while still leaving it flexible
+		if more lines show up
+	*/
+	--input-y-sm: calc((var(--input-height-sm) - var(--line-height-sm)) / 2);
+	--input-y-md: calc((var(--input-height-md) - var(--line-height-md)) / 2);
+	--input-y-lg: calc((var(--input-height-lg) - var(--line-height-lg)) / 2);
+	--input-x-sm: calc((var(--input-height-sm) - var(--font-size-sm)) / 2);
+	--input-x-md: calc((var(--input-height-md) - var(--font-size-md)) / 2);
+	--input-x-lg: calc((var(--input-height-lg) - var(--font-size-lg)) / 2);
 
 	/* Colors (Light Theme) */
 	--background: hsl(0deg 0% 99%);
