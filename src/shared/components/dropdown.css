@@ -53,7 +53,7 @@
 			Border looks weird with highlighting but is necessary to distinguish card from
 			identically colored background, so use this "shadow border"
 		*/
-		box-shadow: var(--shadow-lg), var(--shadow-inner-border);
+		@mixin border-inner var(--shadow-lg);
 	}
 
 	.c-dropdown__content:popover-open {

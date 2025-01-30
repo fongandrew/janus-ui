@@ -30,7 +30,7 @@
 			identically colored background, so use this "shadow border" (along with another
 			inner border to give depth effect)
 		*/
-		box-shadow: var(--shadow-inner-border), var(--shadow-inner);
+		@mixin border-inner var(--shadow-inner);
 	}
 
 	.c-list-box__item.c-option-list__item {

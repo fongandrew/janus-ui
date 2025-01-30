@@ -26,6 +26,14 @@
 	border-color: var(--border-color);
 }
 
+/* Use inner shadow for border color */
+@define-mixin border-inner $extras: 0 0 {
+	box-shadow:
+		inset 0 0 0 var(--border-width, var(--border-width-md))
+			var(--border-color, rgb(0 0 0 / 20%)),
+		$(extras);
+}
+
 /* Button States */
 @define-mixin disabled-button-appearance {
 	opacity: 0.5;
