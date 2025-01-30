@@ -1,31 +1,53 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-card {
-		@apply flex flex-col rounded-lg border-md bg-card text-card-fg shadow border-dynamic-card;
+		display: flex;
+		flex-direction: column;
+		border-radius: var(--radius-lg);
+		border-width: var(--border-width-md);
+		border-style: solid;
+		background-color: var(--card);
+		color: var(--card-fg);
+		box-shadow: var(--shadow-md);
+
+		@mixin border-dynamic var(--card);
 	}
 
 	.c-card__header {
-		@apply px-md pb-0 pt-text-y-md;
+		padding-left: var(--space-md);
+		padding-right: var(--space-md);
+		padding-bottom: 0;
+		padding-top: var(--text-y-md);
 	}
 
 	.c-card__title {
-		@apply font-semibold;
+		font-weight: var(--font-weight-semibold);
 	}
 
 	.c-card__description {
-		@apply text-sm text-muted;
+		font: var(--text-sm);
+		color: var(--muted);
 	}
 
 	.c-card__content {
-		@apply flex-grow p-md;
+		flex-grow: 1;
+		padding: var(--space-md);
 	}
 
 	.c-card__footer {
-		@apply flex items-center justify-between gap-sm px-md pb-md pt-0;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-sm);
+		padding-left: var(--space-md);
+		padding-right: var(--space-md);
+		padding-bottom: var(--space-md);
+		padding-top: 0;
 	}
 
 	.c-card__footer > :only-child {
-		@apply ml-auto;
+		margin-left: auto;
 	}
 }

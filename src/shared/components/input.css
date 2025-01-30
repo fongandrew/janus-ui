@@ -1,24 +1,36 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-input {
-		@apply t-with-disabled-input t-with-error-input t-with-focus-ring t-with-error-input w-full shadow-inner transition-colors;
+		width: 100%;
+		border-width: var(--border-width-md);
+		border-style: solid;
+		border-radius: var(--radius-md);
+		background-color: var(--input-bg);
+		color: var(--input-fg);
+		box-shadow: var(--shadow-inner);
 
-		/* Base styles */
-		@apply border-md bg-input-bg text-input-fg border-dynamic-secondary placeholder:text-muted;
+		@mixin transition-color;
+		@mixin border-dynamic var(--secondary);
+		@mixin with-disabled-input;
+		@mixin with-error-input;
+		@mixin with-focus-ring;
+		@mixin input-size-md;
 
-		/* md by default */
-		@apply t-input-size-md rounded-md;
+		&::placeholder {
+			color: var(--muted);
+		}
 	}
 }
 
 @layer utilities {
 	/* State variants */
 	.c-input--disabled {
-		@apply t-disabled-input;
+		@mixin disabled-input;
 	}
 
 	.c-input--error {
-		@apply t-error-input;
+		@mixin error-input;
 	}
 }

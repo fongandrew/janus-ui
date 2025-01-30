@@ -1,14 +1,27 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-textarea {
-		@apply t-with-disabled-input t-with-focus-ring min-h-[6em] w-full resize-y shadow-inner transition-colors;
+		min-height: 6em;
+		width: 100%;
+		resize: vertical;
+		border-width: var(--border-width-md);
+		border-style: solid;
+		border-radius: var(--radius-md);
+		background-color: var(--input-bg);
+		color: var(--foreground);
+		box-shadow: var(--shadow-inner);
 
-		/* Base styles */
-		@apply border-md bg-input-bg text-foreground border-dynamic-secondary placeholder:text-muted;
+		@mixin transition-color;
+		@mixin with-disabled-input;
+		@mixin with-focus-ring;
+		@mixin border-dynamic var(--secondary);
+		@mixin input-size-md;
 
-		/* md by default */
-		@apply t-input-size-md rounded-md;
+		&::placeholder {
+			color: var(--muted);
+		}
 	}
 }
 
@@ -16,10 +29,10 @@
 	/* State variants */
 	.c-textarea--error,
 	.c-textarea[aria-invalid='true'] {
-		@apply border-dynamic-danger;
+		@mixin border-dynamic var(--danger);
 	}
 
 	.c-textarea[aria-disabled='true'] {
-		@apply bg-input-disabled;
+		background-color: var(--input-disabled-bg);
 	}
 }

@@ -1,23 +1,46 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-details {
-		@apply w-full rounded-lg border-md bg-callout text-callout-fg border-dynamic-callout;
+		width: 100%;
+		border-radius: var(--radius-lg);
+		border-width: var(--border-width-md);
+		border-style: solid;
+		background-color: var(--callout);
+		color: var(--callout-fg);
+
+		@mixin border-dynamic var(--callout);
 	}
 
 	.c-details:has(.c-details__summary:hover) {
-		@apply contrast-hover saturate-hover;
+		@mixin hover-effect;
 	}
 
 	.c-details:has(.c-details__summary:focus-visible) {
-		@apply t-focus-ring;
+		@mixin focus-ring;
 	}
 
 	.c-details__summary {
-		@apply t-input-size-md cursor-pointer rounded-lg px-md py-text-y-md font-medium focus-visible:outline-none;
+		cursor: pointer;
+		border-radius: var(--radius-lg);
+		padding-left: var(--space-md);
+		padding-right: var(--space-md);
+		padding-top: var(--text-y-md);
+		padding-bottom: var(--text-y-md);
+		font-weight: var(--font-weight-medium);
+		font-size: var(--font-size-md);
+		line-height: var(--line-height-md);
+
+		&:focus-visible {
+			outline: none;
+		}
 	}
 
 	.c-details__content {
-		@apply px-md pb-text-y-md text-input-md;
+		padding-left: var(--space-md);
+		padding-right: var(--space-md);
+		padding-bottom: var(--text-y-md);
+		font: var(--text-md);
 	}
 }

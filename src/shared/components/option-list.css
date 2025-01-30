@@ -1,46 +1,70 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-option-list {
-		@apply overflow-y-auto overflow-x-hidden text-sm;
+		overflow-y: auto;
+		overflow-x: hidden;
+		font: var(--text-sm);
 	}
 
 	.c-option-list__item {
-		@apply block w-full overflow-x-hidden text-ellipsis px-input-x-md py-input-y-sm text-left text-input-sm;
+		display: block;
+		width: 100%;
+		overflow-x: hidden;
+		text-overflow: ellipsis;
+		padding: var(--input-y-sm) var(--input-x-md);
+		text-align: left;
+		font: var(--text-sm);
 	}
 
 	.c-option-list__item:hover,
 	.c-option-list__item:focus-visible,
 	:focus-visible .c-option-list__item[aria-selected='true'],
 	:popover-open .c-option-list__item[aria-selected='true'] {
-		@apply bg-highlight text-highlight-fg outline-none;
+		background-color: var(--highlight);
+		color: var(--highlight-fg);
+		outline: none;
 	}
 
 	a.c-option-list__item {
-		@apply font-normal text-popover-fg no-underline;
-		@apply hover:bg-highlight hover:text-highlight-fg;
+		font-weight: var(--font-weight-normal);
+		color: var(--popover-fg);
+		text-decoration: none;
+
+		&:hover {
+			background-color: var(--highlight);
+			color: var(--highlight-fg);
+		}
 	}
 
 	.c-option-list__heading {
-		@apply px-input-x-md py-text-y-xs text-xs font-semibold text-muted;
+		padding: var(--text-y-xs) var(--input-x-md);
+		font: var(--text-xs);
+		font-weight: var(--font-weight-semibold);
+		color: var(--muted);
 	}
 
 	.c-option-list__group + .c-option-list__group,
 	.c-option-list__group + .c-option-list__heading {
-		@apply mt-xs border-t-sm border-dynamic-card;
+		margin-top: var(--space-xs);
+		border-top-width: var(--border-width-sm);
+		border-top-style: solid;
+
+		@mixin border-dynamic var(--card);
 	}
 
 	.c-option-list__group + .c-option-list__group {
-		@apply pt-xs;
+		padding-top: var(--space-xs);
 	}
 
 	/* Fix "divider" padding clobbering heading padding */
 	.c-option-list__group + .c-option-list__heading {
-		padding-top: calc(theme('padding.text-y-xs') + theme('spacing.xs'));
+		padding-top: calc(var(--text-y-xs) + var(--space-xs));
 	}
 
 	/* Fix heading padding conflicting with Dropdown top padding */
 	.c-dropdown__content > .c-option-list__heading:first-child {
-		padding-top: calc(theme('spacing.xs') - theme('padding.text-y-xs'));
+		padding-top: calc(var(--space-xs) - var(--text-y-xs));
 	}
 }

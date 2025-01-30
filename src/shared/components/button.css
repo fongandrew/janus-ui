@@ -1,26 +1,81 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer base {
-	/* Not really unstyled, some basics */
 	.c-button--unstyled {
-		@apply t-with-disabled-button t-with-focus-ring;
+		@mixin with-disabled-button;
+		@mixin with-focus-ring;
 	}
 }
 
 @layer components {
 	.c-button {
-		@apply inline-flex items-center justify-center whitespace-nowrap font-medium transition-[colors,shadow] hover:shadow-md hover:contrast-hover active:shadow-none [&_svg]:pointer-events-none [&_svg]:size-[1em] [&_svg]:shrink-0;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		white-space: nowrap;
+		font-weight: var(--font-weight-medium);
+
+		@mixin transition-timings;
+
+		transition-property: color, background-color, border-color, box-shadow;
 
 		/* Secondary by default */
-		@apply border-md bg-secondary text-secondary-fg border-dynamic-secondary;
+		background-color: var(--secondary);
+		color: var(--secondary-fg);
+		border-width: var(--border-width-md);
+		border-style: solid;
+
+		@mixin border-dynamic var(--secondary);
 
 		/* md by default */
-		@apply gap-sm rounded-md px-md py-input-y-md text-input-md;
+		gap: var(--space-sm);
+		border-radius: var(--radius-md);
+		padding: var(--input-y-md) var(--space-md);
+		font-size: var(--font-size-md);
+		line-height: var(--line-height-md);
+
+		/* Hover/active states */
+		&:hover {
+			box-shadow: var(--shadow-md);
+
+			@mixin hover-effect;
+		}
+
+		&:active {
+			box-shadow: none;
+		}
+
+		/* Icon styles */
+		& svg {
+			pointer-events: none;
+			height: 1em;
+			width: 1em;
+			flex-shrink: 0;
+		}
 	}
 
 	.c-button--icon {
-		@apply flex h-input-md w-input-md items-center justify-center rounded-md border-transparent text-input-md [&_svg]:size-[1em] [&_svg]:shrink-0;
-		@apply hover:border-secondary hover:bg-secondary hover:text-secondary-fg;
+		display: flex;
+		height: var(--input-height-md);
+		width: var(--input-height-md);
+		align-items: center;
+		justify-content: center;
+		border-radius: var(--radius-md);
+		border-color: transparent;
+		font-size: var(--font-size-md);
+
+		& svg {
+			height: 1em;
+			width: 1em;
+			flex-shrink: 0;
+		}
+
+		&:hover {
+			border-color: var(--secondary);
+			background-color: var(--secondary);
+			color: var(--secondary-fg);
+		}
 
 		font-size: inherit;
 	}
@@ -28,31 +83,67 @@
 
 @layer utilities {
 	/* Color variants */
-
 	.c-button--primary {
-		@apply bg-primary text-primary-fg border-dynamic-primary;
+		background-color: var(--primary);
+		color: var(--primary-fg);
+
+		@mixin border-dynamic var(--primary);
 	}
 
 	.c-button--danger {
-		@apply bg-danger text-danger-fg border-dynamic-danger;
+		background-color: var(--danger);
+		color: var(--danger-fg);
+
+		@mixin border-dynamic var(--danger);
 	}
 
 	.c-button--ghost {
-		@apply border-transparent bg-transparent hover:border-secondary hover:bg-secondary hover:text-secondary-fg hover:shadow-none;
+		border-color: transparent;
+		background-color: transparent;
+
+		&:hover {
+			border-color: var(--secondary);
+			background-color: var(--secondary);
+			color: var(--secondary-fg);
+			box-shadow: none;
+		}
 	}
 
 	.c-button--link {
-		@apply t-link-style inline border-0 bg-transparent p-0 hover:shadow-none;
+		@mixin link-style;
+
+		display: inline;
+		border: 0;
+		background-color: transparent;
+		padding: 0;
+
+		&:hover {
+			box-shadow: none;
+		}
 	}
 
 	/* Size variants */
-
 	.c-button--sm {
-		@apply gap-xs rounded-sm px-sm py-input-y-sm text-input-sm hover:shadow-sm active:shadow-none;
+		gap: var(--space-xs);
+		border-radius: var(--radius-sm);
+		padding: var(--input-y-sm) var(--space-sm);
+		font-size: var(--font-size-sm);
+		line-height: var(--line-height-sm);
+
+		&:hover {
+			box-shadow: var(--shadow-sm);
+		}
+
+		&:active {
+			box-shadow: none;
+		}
 	}
 
 	.c-button--lg {
-		/* Intentionally no shadow-lg */
-		@apply gap-sm rounded-lg px-lg py-input-y-lg text-input-lg;
+		gap: var(--space-sm);
+		border-radius: var(--radius-lg);
+		padding: var(--input-y-lg) var(--space-lg);
+		font-size: var(--font-size-lg);
+		line-height: var(--line-height-lg);
 	}
 }

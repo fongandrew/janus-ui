@@ -1,31 +1,56 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-list-box:not(.c-dropdown__content) {
-		@apply t-with-disabled-input t-with-error-input t-with-focus-ring-always w-full px-0 py-xs transition-colors disabled:pointer-events-none disabled:cursor-not-allowed aria-disabled:pointer-events-none aria-disabled:cursor-not-allowed;
+		width: 100%;
+		padding: var(--space-xs) 0;
+		border: 0;
+		border-radius: var(--radius-md);
+		background-color: var(--input-bg);
+		color: var(--input-fg);
 
-		/* Base styles */
-		@apply border-0 bg-input-bg text-input-fg placeholder:text-muted;
-		@apply rounded-md;
+		@mixin transition-color;
+		@mixin with-disabled-input;
+		@mixin with-error-input;
+		@mixin with-focus-ring-always;
+
+		&::placeholder {
+			color: var(--muted);
+		}
+
+		&:disabled,
+		&[aria-disabled='true'] {
+			pointer-events: none;
+			cursor: not-allowed;
+		}
 
 		/*
 			Border looks weird with highlighting but is necessary to distinguish listbox from
 			identically colored background, so use this "shadow border" (along with another
 			inner border to give depth effect)
 		*/
-		box-shadow: theme('boxShadow.innerBorder'), theme('boxShadow.inner');
+		box-shadow: var(--shadow-inner-border), var(--shadow-inner);
 	}
 
 	.c-list-box__item.c-option-list__item {
-		@apply flex cursor-pointer items-center gap-xs;
+		display: flex;
+		cursor: pointer;
+		align-items: center;
+		gap: var(--space-xs);
 	}
 
 	.c-list-box__check-box {
-		@apply flex size-em items-center justify-center;
+		display: flex;
+		height: 1em;
+		width: 1em;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.c-list-box__item_text {
-		@apply overflow-x-hidden text-ellipsis;
+		overflow-x: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.c-list-box__check-box svg {
@@ -39,12 +64,14 @@
 
 @layer utilities {
 	/* State variants */
-
 	.c-list-box--disabled {
-		@apply t-disabled-input pointer-events-none cursor-not-allowed;
+		pointer-events: none;
+		cursor: not-allowed;
+
+		@mixin disabled-input;
 	}
 
 	.c-list-box--error {
-		@apply t-error-input;
+		@mixin error-input;
 	}
 }

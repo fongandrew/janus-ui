@@ -1,36 +1,61 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-tabs__bar {
-		@apply flex overflow-auto border-b-md border-muted;
+		display: flex;
+		overflow: auto;
+		border-bottom-width: var(--border-width-md);
+		border-bottom-style: solid;
+		border-color: var(--muted);
 	}
 
-	@media screen(sm) {
+	@media (width >= 640px) {
 		.c-tabs__bar {
-			@apply gap-sm;
+			gap: var(--space-sm);
 		}
 	}
 
 	.c-tabs__button {
-		@apply t-with-disabled-button t-with-focus-ring border-b-lg border-transparent;
-		@apply t-input-size-md font-medium text-muted transition-colors;
-		@apply flex-grow basis-0 overflow-hidden text-ellipsis whitespace-nowrap;
-		@apply hover:text-foreground focus-visible:text-foreground;
+		border-bottom-width: var(--border-width-lg);
+		border-bottom-style: solid;
+		border-color: transparent;
+		font-weight: var(--font-weight-medium);
+		color: var(--muted);
+		flex-grow: 1;
+		flex-basis: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+
+		@mixin transition-color;
+		@mixin with-disabled-button;
+		@mixin with-focus-ring;
+		@mixin input-size-md;
+
+		&:hover,
+		&:focus-visible {
+			color: var(--foreground);
+		}
 
 		/* Active state */
 		&[aria-selected='true'] {
-			@apply border-primary text-foreground;
+			border-color: var(--primary);
+			color: var(--foreground);
 		}
 	}
 
 	/* Desktop - tabs can be different sizes */
-	@media screen(sm) {
+	@media (width >= 640px) {
 		.c-tabs__button {
-			@apply flex-grow-0 basis-auto;
+			flex-grow: 0;
+			flex-basis: auto;
 		}
 	}
 
 	.c-tabs__panel {
-		@apply t-with-focus-ring outline-none;
+		outline: none;
+
+		@mixin with-focus-ring;
 	}
 }

@@ -1,38 +1,70 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-toggle-switch {
-		@apply relative inline-flex h-lh w-[2.75em] cursor-pointer items-center rounded-full border-md border-solid bg-input-bg shadow-inner transition-colors border-dynamic-secondary-fg;
+		position: relative;
+		display: inline-flex;
+		height: 1lh;
+		width: 2.75em;
+		cursor: pointer;
+		align-items: center;
+		border-radius: var(--radius-full);
+		border-width: var(--border-width-md);
+		border-style: solid;
+		background-color: var(--input-bg);
+		box-shadow: var(--shadow-inner);
+
+		@mixin transition-color;
+		@mixin border-dynamic var(--secondary-fg);
 	}
 
 	.c-toggle-switch:has(input:checked) {
-		@apply bg-primary;
+		background-color: var(--primary);
 	}
 
 	.c-toggle-switch input {
-		@apply sr-only;
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border-width: 0;
 	}
 
 	.c-toggle-switch:has(input:focus-visible) {
-		@apply t-focus-ring;
+		@mixin focus-ring;
 	}
 
 	.c-toggle-switch__thumb {
-		@apply absolute left-[0.125em] h-em w-em rounded-full bg-input-fg transition-transform;
+		position: absolute;
+		left: 0.125em;
+		height: 1em;
+		width: 1em;
+		border-radius: var(--radius-full);
+		background-color: var(--input-fg);
+		transition-property: transform;
+		transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+		transition-duration: 150ms;
 	}
 
 	.c-toggle-switch:has(input:checked) .c-toggle-switch__thumb {
-		@apply translate-x-[1.25em] bg-primary-fg;
+		transform: translateX(1.25em);
+		background-color: var(--primary-fg);
 	}
 
 	@layer utilities {
 		.c-toggle-switch--error,
 		.c-toggle-switch:has([aria-invalid='true']) {
-			@apply border-dynamic-danger;
+			@mixin border-dynamic var(--danger);
 		}
 
 		.c-toggle-switch:has([aria-disabled='true']) {
-			@apply cursor-not-allowed bg-input-disabled;
+			cursor: not-allowed;
+			background-color: var(--input-disabled-bg);
 		}
 	}
 }

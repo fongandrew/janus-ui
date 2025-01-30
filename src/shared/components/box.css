@@ -1,9 +1,10 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-box {
 		/* md by default */
-		@apply p-md;
+		padding: var(--space-md);
 	}
 
 	/*
@@ -11,39 +12,44 @@
 		for the line height of the text.
 	 */
 	.c-text-box {
-		@apply t-input-pad-md;
+		@mixin input-pad-md;
 	}
 
 	/** Vertical padding only */
 	.c-text-box--v {
-		@apply py-text-y-md text-input-md;
+		padding-top: var(--text-y-md);
+		padding-bottom: var(--text-y-md);
+		font: var(--text-md);
 	}
 }
 
 @layer utilities {
 	/* Size variants */
-
 	.c-box--sm {
-		@apply p-sm;
+		padding: var(--space-sm);
 	}
 
 	.c-box--lg {
-		@apply p-lg;
+		padding: var(--space-lg);
 	}
 
 	.c-text-box--sm {
-		@apply t-input-pad-sm;
+		@mixin input-pad-sm;
 	}
 
 	.c-text-box--v-sm {
-		@apply py-text-y-sm text-input-sm;
+		padding-top: var(--text-y-sm);
+		padding-bottom: var(--text-y-sm);
+		font: var(--text-sm);
 	}
 
 	.c-text-box--lg {
-		@apply t-input-pad-lg;
+		@mixin input-pad-lg;
 	}
 
 	.c-text-box--v-lg {
-		@apply py-text-y-lg text-input-lg;
+		padding-top: var(--text-y-lg);
+		padding-bottom: var(--text-y-lg);
+		font: var(--text-lg);
 	}
 }

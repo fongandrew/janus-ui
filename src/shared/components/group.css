@@ -1,22 +1,24 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-group {
-		@apply flex flex-wrap items-center;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
 
 		/* md by default */
-		@apply gap-md;
+		gap: var(--space-md);
 	}
 }
 
 @layer utilities {
 	/* Size variants */
-
 	.c-group--sm {
-		@apply gap-sm;
+		gap: var(--space-sm);
 	}
 
 	.c-group--lg {
-		@apply gap-lg;
+		gap: var(--space-lg);
 	}
 }

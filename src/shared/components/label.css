@@ -1,6 +1,13 @@
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
+
 @layer components {
 	.c-label {
-		@apply inline-block cursor-pointer text-input-md font-medium;
+		display: inline-block;
+		cursor: pointer;
+		font-size: var(--font-size-md);
+		line-height: var(--line-height-md);
+		font-weight: var(--font-weight-medium);
 	}
 
 	/*
@@ -8,32 +15,42 @@
 		and radio buttons and we don't want to clip focus rings.
 	*/
 	.c-label > span {
-		@apply overflow-x-hidden text-ellipsis;
+		overflow-x: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.c-label:has(input) {
-		@apply inline-flex items-start gap-sm font-normal;
-	}
-
-	.c-label:has([aria-invalid='true']),
-	.c-label:has(+ [aria-invalid='true']),
-	.c-label-stack:has([aria-invalid='true']) .c-label {
-		@apply text-danger;
+		display: inline-flex;
+		align-items: flex-start;
+		gap: var(--space-sm);
+		font-weight: var(--font-weight-normal);
 	}
 
 	.c-label:has([aria-disabled='true']),
-	.c-label:has(+ [aria-disabled='true']),
+	.c-label:has(+ [aria-disabled='true']) {
+		color: var(--muted);
+	}
+
+	.c-label:has([aria-invalid='true']),
+	.c-label:has(+ [aria-invalid='true']) {
+		color: var(--danger);
+	}
+
+	.c-label-stack:has([aria-invalid='true']) .c-label {
+		color: var(--danger);
+	}
+
 	.c-label-stack:has([aria-disabled='true']) .c-label {
-		@apply text-muted;
+		color: var(--muted);
 	}
 }
 
 @layer utilities {
 	.c-label--error {
-		@apply text-danger;
+		color: var(--danger);
 	}
 
 	.c-label--disabled {
-		@apply text-muted;
+		color: var(--muted);
 	}
 }

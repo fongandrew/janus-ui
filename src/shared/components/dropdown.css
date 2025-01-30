@@ -1,4 +1,5 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer base {
 	/* No scroll when dropdown open */
@@ -10,65 +11,95 @@
 	body:has(.c-dropdown__content:popover-open)::after,
 	:modal:has(.c-dropdown__content:popover-open)::after {
 		content: ' ';
-
-		@apply fixed inset-0 z-backdrop block bg-backdrop backdrop-blur-sm;
+		position: fixed;
+		inset: 0;
+		z-index: var(--z-backdrop);
+		display: block;
+		background-color: var(--backdrop);
+		backdrop-filter: blur(4px);
 	}
 
 	/* Make backdrop transparent on larger screens */
-	@media screen(sm) {
+	@media (width >= 640px) {
 		body:has(.c-dropdown__content:popover-open)::after,
 		:modal:has(.c-dropdown__content:popover-open)::after {
-			@apply bg-transparent backdrop-blur-none;
+			background-color: transparent;
+			backdrop-filter: none;
 		}
 	}
 }
 
 @layer components {
-	.c-dropdown__content:popover-open {
-		@apply flex;
-	}
-
 	.c-dropdown__content {
-		@apply fixed mx-auto my-0 flex-col overflow-hidden rounded-md border-0 bg-popover px-0 py-xs text-popover-fg;
-		@apply z-above-backdrop min-w-dropdown;
+		position: fixed;
+		margin: 0 auto;
+		flex-direction: column;
+		overflow: hidden;
+		border-radius: var(--radius-md);
+		border: 0;
+		background-color: var(--popover);
+		padding: var(--space-xs) 0;
+		color: var(--popover-fg);
+		z-index: var(--z-above-backdrop);
+		min-width: var(--dropdown-width);
 
 		/* Mobile specific styling */
-		@apply inset-md w-full;
-
-		max-height: calc(100vh - 2 * theme(spacing.md));
-		max-width: calc(100vw - 2 * theme(spacing.md));
+		inset: var(--space-md);
+		width: 100%;
+		max-height: calc(100vh - 2 * var(--space-md));
+		max-width: calc(100vw - 2 * var(--space-md));
 
 		/*
 			Border looks weird with highlighting but is necessary to distinguish card from
 			identically colored background, so use this "shadow border"
 		*/
-		box-shadow: theme('boxShadow.lg'), theme('boxShadow.innerBorder');
+		box-shadow: var(--shadow-lg), var(--shadow-inner-border);
+	}
+
+	.c-dropdown__content:popover-open {
+		display: flex;
 	}
 
 	.c-dropdown__children {
-		@apply flex-grow overflow-y-auto;
+		flex-grow: 1;
+		overflow-y: auto;
 	}
 
 	.c-dropdown__footer {
-		@apply mt-xs flex flex-none justify-end border-t-sm px-input-x-md pb-0 pt-xs align-middle text-input-sm border-dynamic-card;
+		margin-top: var(--space-xs);
+		display: flex;
+		flex: none;
+		justify-content: flex-end;
+		border-top-width: var(--border-width-sm);
+		border-top-style: solid;
+		padding: var(--space-xs) var(--input-x-md) 0;
+		vertical-align: middle;
+		font: var(--text-sm);
+
+		@mixin border-dynamic var(--card);
 	}
 
 	/* Dynamically positioning dropdowns on smaller screens */
-	@media screen(sm) {
+	@media (width >= 640px) {
 		.c-dropdown__content {
 			inset: unset;
 			width: auto;
 
 			/* These are set via `dropdown.tsx` */
+			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
 			left: var(--c-dropdown-left);
+			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
 			top: var(--c-dropdown-top);
+			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
 			max-height: var(--c-dropdown-max-height);
+			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
 			max-width: var(--c-dropdown-max-width);
+			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
 			min-width: var(--c-dropdown-min-width, 180px);
 		}
 
 		.c-dropdown__footer {
-			@apply hidden;
+			display: none;
 		}
 	}
 }

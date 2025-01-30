@@ -1,14 +1,25 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-tooltip {
-		@apply max-w-tooltip pointer-events-none z-1 rounded-sm bg-tooltip px-sm py-text-y-sm text-sm text-tooltip-fg;
+		max-width: var(--tooltip-width);
+		pointer-events: none;
+		z-index: 1;
+		border-radius: var(--radius-sm);
+		background-color: var(--tooltip);
+		padding: var(--text-y-sm) var(--space-sm);
+		font: var(--text-sm);
+		color: var(--tooltip-fg);
 
-		/* Popovers clip overflow by default which hide te arrow */
-		@apply overflow-visible;
+		/* Popovers clip overflow by default which hide the arrow */
+		overflow: visible;
 	}
 
 	.c-tooltip .c-tooltip__arrow {
-		@apply size-tooltip-arrow rotate-45 bg-tooltip;
+		height: var(--tooltip-arrow-size);
+		width: var(--tooltip-arrow-size);
+		transform: rotate(45deg);
+		background-color: var(--tooltip);
 	}
 }

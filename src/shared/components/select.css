@@ -1,36 +1,73 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-select__button,
 	.c-select__input,
 	.c-select__input_description {
-		@apply t-with-disabled-input t-with-error-input t-with-focus-ring min-h-input-md w-full overflow-x-hidden text-ellipsis rounded-md border-md bg-input-bg py-input-y-md pl-input-x-md text-left text-input-md font-normal text-input-fg shadow-inner transition-colors border-dynamic-secondary;
+		min-height: var(--input-height-md);
+		width: 100%;
+		overflow-x: hidden;
+		text-overflow: ellipsis;
+		border-radius: var(--radius-md);
+		border-width: var(--border-width-md);
+		border-style: solid;
+		background-color: var(--input-bg);
+		padding: var(--input-y-md) var(--input-x-md);
+		text-align: left;
+		font-size: var(--font-size-md);
+		line-height: var(--line-height-md);
+		font-weight: var(--font-weight-normal);
+		color: var(--input-fg);
+		box-shadow: var(--shadow-inner);
+
+		@mixin transition-color;
+		@mixin with-disabled-input;
+		@mixin with-error-input;
+		@mixin with-focus-ring;
+		@mixin border-dynamic var(--secondary);
 
 		/* To avoid overlap with the chevron or clear */
-		padding-right: theme('width.input-md');
+		padding-right: var(--input-height-md);
 	}
 
 	.c-select__button {
-		@apply t-with-focus-ring-always;
+		@mixin with-focus-ring-always;
 	}
 
 	/* Select container parts */
-
 	.c-select__container {
-		@apply relative;
+		position: relative;
 	}
 
 	.c-select__chevron,
 	.c-select__clear {
-		@apply absolute inset-y-0 right-0 flex w-input-md items-center justify-center border-0 bg-transparent p-0 text-muted [&_svg]:size-em;
+		position: absolute;
+		inset-block: 0;
+		right: 0;
+		display: flex;
+		width: var(--input-height-md);
+		align-items: center;
+		justify-content: center;
+		border: 0;
+		background-color: transparent;
+		padding: 0;
+		color: var(--muted);
+	}
+
+	.c-select__chevron svg,
+	.c-select__clear svg {
+		height: 1em;
+		width: 1em;
 	}
 
 	.c-select__chevron {
-		@apply flex;
+		display: flex;
 	}
 
 	.c-select__clear {
-		@apply hidden rounded-md;
+		display: none;
+		border-radius: var(--radius-md);
 	}
 
 	/* Show clear button only is there's something to clear (and not required) */
@@ -39,7 +76,7 @@
 			:has(:required)
 		)
 		.c-select__clear {
-		@apply flex;
+		display: flex;
 	}
 
 	/* Hide chevron if clear button is shown */
@@ -48,67 +85,88 @@
 			:has(:required)
 		)
 		.c-select__chevron {
-		@apply hidden;
+		display: none;
 	}
 
 	.c-select__placeholder {
-		@apply text-muted;
+		color: var(--muted);
 	}
 
 	/* Select dropdown empty state */
-
 	.c-select__empty_state {
-		@apply block w-full overflow-y-auto overflow-x-hidden text-ellipsis px-input-x-md py-input-y-sm text-center text-input-sm text-muted;
+		display: block;
+		width: 100%;
+		overflow-y: auto;
+		overflow-x: hidden;
+		text-overflow: ellipsis;
+		padding: var(--input-y-sm) var(--input-x-md);
+		text-align: center;
+		font: var(--text-sm);
+		color: var(--muted);
 	}
 
 	* + .c-select__empty_state {
-		@apply hidden;
+		display: none;
 	}
 
 	/* Select typeahead */
-
 	.c-select__input {
-		@apply absolute inset-0 opacity-0 focus:opacity-100;
+		position: absolute;
+		inset: 0;
+		opacity: 0;
+
+		&:focus {
+			opacity: 1;
+		}
 	}
 
 	.c-select__input_description {
-		@apply pointer-events-none;
+		pointer-events: none;
 	}
 
 	.c-select__container:has(:popover-open, :focus) .c-select__input {
-		@apply opacity-100;
+		opacity: 1;
 	}
 
 	.c-select__container:has(:popover-open, :focus) .c-select__input_description {
-		@apply opacity-0;
+		opacity: 0;
 	}
 
 	:disabled + .c-select__input_description,
 	[aria-disabled='true'] + .c-select__input_description {
-		@apply t-disabled-input;
+		@mixin disabled-input;
 	}
 
 	/* Mobile-specific fixed positioning for input + dropdown */
-
 	.c-select__container:has(:popover-open) .c-select__input {
-		@apply fixed bottom-auto left-md right-md top-md z-above-backdrop w-auto;
+		position: fixed;
+		bottom: auto;
+		left: var(--space-md);
+		right: var(--space-md);
+		top: var(--space-md);
+		z-index: var(--z-above-backdrop);
+		width: auto;
 	}
 
 	.c-select__input ~ .c-dropdown__content {
-		top: calc(theme(height.input-md) + theme(spacing.md) * 2);
+		top: calc(var(--input-height-md) + 2 * var(--space-md));
 		margin-top: 0;
 		margin-bottom: 0;
-		max-height: calc(100vh - 3 * theme(spacing.md) - theme(height.input-md));
+		max-height: calc(100vh - 3 * var(--space-md) - var(--input-height-md));
 	}
 
 	/* Undo mobile-specific positioning */
-	@media screen(sm) {
+	@media (width >= 640px) {
 		.c-select__container:has(:popover-open) .c-select__input {
-			@apply absolute bottom-0 left-0 right-0 top-0 w-full;
+			position: absolute;
+			inset: 0;
+			width: 100%;
 		}
 
 		.c-select__input ~ .c-dropdown__content {
+			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
 			top: var(--c-dropdown-top);
+			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
 			max-height: var(--c-dropdown-max-height);
 		}
 	}

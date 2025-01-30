@@ -1,33 +1,58 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-alert {
-		@apply flex items-center gap-sm rounded-md border-md px-md py-text-y-md;
+		display: flex;
+		align-items: center;
+		gap: var(--space-sm);
+		border-radius: var(--radius-md);
+		border-width: var(--border-width-md);
+		border-style: solid;
+		padding: var(--text-y-md) var(--space-md);
 
 		/* Default variant (info, uses secondary styling) */
-		@apply bg-callout text-callout-fg border-dynamic-callout;
+		background-color: var(--callout);
+		color: var(--callout-fg);
+
+		@mixin border-dynamic var(--callout);
 	}
 
 	.c-alert__icon {
-		@apply flex-none [&_svg]:size-[1em];
+		flex: none;
+	}
+
+	.c-alert__icon svg {
+		height: 1em;
+		width: 1em;
 	}
 
 	.c-alert__content {
-		@apply flex-grow overflow-hidden;
+		flex-grow: 1;
+		overflow: hidden;
 	}
 }
 
 @layer utilities {
 	/* Color variants */
 	.c-alert--success {
-		@apply bg-success text-success-fg border-dynamic-success;
+		background-color: var(--success);
+		color: var(--success-fg);
+
+		@mixin border-dynamic var(--success);
 	}
 
 	.c-alert--warning {
-		@apply bg-warning text-warning-fg border-dynamic-warning;
+		background-color: var(--warning);
+		color: var(--warning-fg);
+
+		@mixin border-dynamic var(--warning);
 	}
 
 	.c-alert--danger {
-		@apply bg-danger text-danger-fg border-dynamic-danger;
+		background-color: var(--danger);
+		color: var(--danger-fg);
+
+		@mixin border-dynamic var(--danger);
 	}
 }

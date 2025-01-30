@@ -1,8 +1,12 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-error-message {
-		@apply overflow-x-hidden text-ellipsis text-sm text-danger;
+		overflow-x: hidden;
+		text-overflow: ellipsis;
+		font: var(--text-sm);
+		color: var(--danger);
 	}
 
 	.c-error-message:empty {

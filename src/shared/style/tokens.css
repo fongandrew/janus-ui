@@ -57,7 +57,7 @@
 	--shadow-inner: inset 0 1px 2px 0 rgb(0 0 0 / 10%);
 	--shadow-inner-top: inset 0 2px 3px 0 rgb(0 0 0 / 10%);
 	--shadow-inner-bottom: inset 0 -2px 3px 0 rgb(0 0 0 / 10%);
-	--shadow-inner-border: inset 0 0 0px 1px var(--inner-border-color, rgb(0 0 0 / 20%));
+	--shadow-inner-border: inset 0 0 0px 1px var(--border-color, rgb(0 0 0 / 20%));
 
 	/* Z-Index */
 	--z-backdrop: 10;
@@ -68,8 +68,7 @@
 	--outline-offset: 0.0625rem;
 
 	/* For styling hover options */
-	--contrast-hover: contrast(0.95);
-	--saturate-hover: saturate(1.15);
+	--hover-effect: contrast(0.95) saturate(1.15);
 
 	/* Text formatting */
 	--underline-offset: 0.25rem;

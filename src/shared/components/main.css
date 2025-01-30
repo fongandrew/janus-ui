@@ -1,7 +1,9 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-main {
-		@apply flex-grow overflow-auto;
+		flex-grow: 1;
+		overflow: auto;
 	}
 }

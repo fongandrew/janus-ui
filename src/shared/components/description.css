@@ -1,7 +1,11 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-description {
-		@apply overflow-x-hidden text-ellipsis text-sm text-muted;
+		overflow-x: hidden;
+		text-overflow: ellipsis;
+		font: var(--text-sm);
+		color: var(--muted);
 	}
 }

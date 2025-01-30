@@ -1,13 +1,14 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer base {
 	/* Show disabled state on footer buttons if form in body has invalid fields */
 	.c-modal:has(:invalid) .c-modal__footer [type='submit'] {
 		/*
 			This only visually disables buttons but this is a good thing because clicking on the
-            disabled button lets us shift focus to the first invalid element (especially useful
-            with screenreaders).
-		 */
-		@apply t-disabled-button-appearance;
+			disabled button lets us shift focus to the first invalid element (especially useful
+			with screenreaders).
+		*/
+		@mixin disabled-button-appearance;
 	}
 }

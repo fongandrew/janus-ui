@@ -1,15 +1,20 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-labelled-action {
-		@apply flex items-center;
+		display: flex;
+		align-items: center;
+		gap: var(--space-sm);
 	}
 
 	.c-labelled-action__label {
-		@apply flex-shrink flex-grow;
+		flex-shrink: 1;
+		flex-grow: 1;
 	}
 
 	.c-labelled-action__control + * {
-		@apply flex-shrink-0 flex-grow-0;
+		flex-shrink: 0;
+		flex-grow: 0;
 	}
 }

@@ -1,15 +1,20 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 .c-slider {
-	@apply flex gap-sm;
+	display: flex;
+	gap: var(--space-sm);
 }
 
 .c-slider__range {
-	@apply flex-grow;
+	flex-grow: 1;
 }
 
 .c-slider__number {
-	@apply border-0 bg-transparent text-right outline-none;
+	border: 0;
+	background-color: transparent;
+	text-align: right;
+	outline: none;
 
 	/* Hide arrows since slider is there */
 
@@ -25,23 +30,37 @@
 }
 
 .c-slider__input {
-	@apply flex gap-xs;
-	@apply flex-shrink;
-	@apply t-input-size-md min-h-input-md overflow-x-hidden rounded-md border-md bg-input-bg text-right font-normal text-input-fg shadow-inner transition-colors border-dynamic-secondary;
+	display: flex;
+	gap: var(--space-xs);
+	flex-shrink: 1;
+	min-height: var(--input-height-md);
+	overflow-x: hidden;
+	border-radius: var(--radius-md);
+	border-width: var(--border-width-md);
+	border-style: solid;
+	background-color: var(--input-bg);
+	text-align: right;
+	font-weight: var(--font-weight-normal);
+	color: var(--input-fg);
+	box-shadow: var(--shadow-inner);
+
+	@mixin transition-color;
+	@mixin border-dynamic var(--secondary);
+	@mixin input-size-md;
 }
 
 .c-slider__input:has(:focus-visible) {
-	@apply t-focus-ring;
+	@mixin focus-ring;
 }
 
 .c-slider__input:has(:invalid, [aria-invalid='true']) {
-	@apply t-error-input;
+	@mixin error-input;
 }
 
 .c-slider__input:has(:disabled, [aria-disabled='true']) {
-	@apply t-disabled-input;
+	@mixin disabled-input;
 }
 
 .c-slider__unit {
-	@apply text-muted;
+	color: var(--muted);
 }

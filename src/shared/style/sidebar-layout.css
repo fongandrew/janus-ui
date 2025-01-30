@@ -1,53 +1,81 @@
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
+
 @layer components {
 	/* Default closed on mobile */
 	.c-sidebar {
-		@apply hidden overflow-auto border-r-md bg-card text-card-fg shadow border-dynamic-card;
+		display: none;
+		overflow: auto;
+		border-right-width: var(--border-width-md);
+		border-right-style: solid;
+		background-color: var(--card);
+		color: var(--card-fg);
+		box-shadow: var(--shadow-md);
+
+		@mixin border-dynamic var(--card);
 	}
 
 	.c-sidebar-layout--open .c-sidebar {
-		@apply fixed bottom-0 left-0 top-0 z-above-backdrop block w-[90vw] max-w-sidebar;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		top: 0;
+		z-index: var(--z-above-backdrop);
+		display: block;
+		width: 90vw;
+		max-width: var(--sidebar-width);
 	}
 
 	.c-sidebar__overlay {
-		@apply fixed inset-0 z-backdrop hidden bg-backdrop;
+		position: fixed;
+		inset: 0;
+		z-index: var(--z-backdrop);
+		display: none;
+		background-color: var(--backdrop);
 	}
 
 	.c-sidebar-layout--open .c-sidebar__overlay {
-		@apply block;
+		display: block;
 	}
 
-	@media screen(sm) {
+	@media (width >= 640px) {
 		.c-sidebar-layout {
-			@apply flex h-[100vh] w-[100vw] overflow-hidden;
+			display: flex;
+			height: 100vh;
+			width: 100vw;
+			overflow: hidden;
 		}
 
 		/* Default open on desktop */
 		.c-sidebar,
 		.c-sidebar-layout--open .c-sidebar {
-			@apply relative block w-sidebar flex-shrink-0;
+			position: relative;
+			display: block;
+			width: var(--sidebar-width);
+			flex-shrink: 0;
 		}
 
 		.c-sidebar__overlay,
 		.c-sidebar-layout--open .c-sidebar__overlay {
-			@apply hidden;
+			display: none;
 		}
 
 		/* Can be explicitly closed on desktop */
 		.c-sidebar-layout--closed .c-sidebar {
-			@apply hidden;
+			display: none;
 		}
 
 		/*
-            Open button is conditionally visible on desktop. Not really relevant on
-            mobile or for close button since those get automatically shown / hidden
-            based on sidebar visibility.
-        */
+			Open button is conditionally visible on desktop. Not really relevant on
+			mobile or for close button since those get automatically shown / hidden
+			based on sidebar visibility.
+		*/
 		.c-sidebar__open-button {
-			@apply hidden;
+			display: none;
 		}
 
 		.c-sidebar-layout--closed .c-sidebar__open-button {
-			@apply inline-flex;
+			display: inline-flex;
 		}
 
 		.c-sidebar__close-button {

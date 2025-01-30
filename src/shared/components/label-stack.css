@@ -1,21 +1,24 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-label-stack {
-		@apply flex flex-col;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.c-label-stack > * + * {
-		@apply mt-xs;
+		margin-top: var(--space-xs);
 	}
 
 	.c-label-stack > label,
 	.c-label-stack > .c-description,
 	.c-label-stack > .c-error-message {
-		@apply px-xs;
+		padding-left: var(--space-xs);
+		padding-right: var(--space-xs);
 	}
 
 	.c-label-stack > label + .c-description {
-		@apply mt-0;
+		margin-top: 0;
 	}
 }

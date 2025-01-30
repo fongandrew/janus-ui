@@ -1,25 +1,34 @@
-@import '~/shared/style/helpers.css';
+@import '~/shared/style/tokens.css';
+@import '~/shared/style/mixins.css';
 
 @layer components {
 	.c-grid {
-		@apply grid;
+		display: grid;
+		grid-template-columns: repeat(1, minmax(0, 1fr));
+		gap: var(--space-md);
+	}
 
-		/* Responsive grid columns: 1 col mobile, 2 cols tablet, 3 cols desktop */
-		@apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+	/* Responsive grid columns: 1 col mobile, 2 cols tablet, 3 cols desktop */
+	@media (width >= 640px) {
+		.c-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
 
-		/* md gap by default */
-		@apply gap-md;
+	@media (width >= 1024px) {
+		.c-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
 	}
 }
 
 @layer utilities {
 	/* Size variants */
-
 	.c-grid--sm {
-		@apply gap-sm;
+		gap: var(--space-sm);
 	}
 
 	.c-grid--lg {
-		@apply gap-lg;
+		gap: var(--space-lg);
 	}
 }
