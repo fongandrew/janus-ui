@@ -5,7 +5,8 @@
 	.c-option-list {
 		overflow-y: auto;
 		overflow-x: hidden;
-		font: var(--text-sm);
+		font-size: var(--font-size-sm);
+		line-height: var(--line-height-sm);
 	}
 
 	.c-option-list__item {
@@ -15,7 +16,8 @@
 		text-overflow: ellipsis;
 		padding: var(--input-y-sm) var(--input-x-md);
 		text-align: left;
-		font: var(--text-sm);
+		font-size: var(--font-size-sm);
+		line-height: var(--line-height-sm);
 	}
 
 	.c-option-list__item:hover,
@@ -40,7 +42,8 @@
 
 	.c-option-list__heading {
 		padding: var(--text-y-xs) var(--input-x-md);
-		font: var(--text-xs);
+		font-size: var(--font-size-xs);
+		line-height: var(--line-height-xs);
 		font-weight: var(--font-weight-semibold);
 		color: var(--muted);
 	}

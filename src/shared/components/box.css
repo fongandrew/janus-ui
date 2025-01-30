@@ -19,7 +19,8 @@
 	.c-text-box--v {
 		padding-top: var(--text-y-md);
 		padding-bottom: var(--text-y-md);
-		font: var(--text-md);
+		font-size: var(--font-size-md);
+		line-height: var(--line-height-md);
 	}
 }
 
@@ -40,7 +41,8 @@
 	.c-text-box--v-sm {
 		padding-top: var(--text-y-sm);
 		padding-bottom: var(--text-y-sm);
-		font: var(--text-sm);
+		font-size: var(--font-size-sm);
+		line-height: var(--line-height-sm);
 	}
 
 	.c-text-box--lg {
@@ -50,6 +52,7 @@
 	.c-text-box--v-lg {
 		padding-top: var(--text-y-lg);
 		padding-bottom: var(--text-y-lg);
-		font: var(--text-lg);
+		font-size: var(--font-size-lg);
+		line-height: var(--line-height-lg);
 	}
 }

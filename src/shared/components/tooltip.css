@@ -9,7 +9,8 @@
 		border-radius: var(--radius-sm);
 		background-color: var(--tooltip);
 		padding: var(--text-y-sm) var(--space-sm);
-		font: var(--text-sm);
+		font-size: var(--font-size-sm);
+		line-height: var(--line-height-sm);
 		color: var(--tooltip-fg);
 
 		/* Popovers clip overflow by default which hide the arrow */

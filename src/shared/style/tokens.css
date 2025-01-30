@@ -36,14 +36,6 @@
 	--line-height-xl: 1.75rem;
 	--line-height-2xl: 2rem;
 
-	/* Typography Pairs (size + line-height) */
-	--text-xs: var(--font-size-xs) / var(--line-height-xs);
-	--text-sm: var(--font-size-sm) / var(--line-height-sm);
-	--text-md: var(--font-size-md) / var(--line-height-md);
-	--text-lg: var(--font-size-lg) / var(--line-height-lg);
-	--text-xl: var(--font-size-xl) / var(--line-height-xl);
-	--text-2xl: var(--font-size-2xl) / var(--line-height-2xl);
-
 	/* Borders */
 	--border-width-sm: 1px;
 	--border-width-md: 0.0625rem;

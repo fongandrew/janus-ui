@@ -41,6 +41,7 @@
 		padding-left: var(--space-md);
 		padding-right: var(--space-md);
 		padding-bottom: var(--text-y-md);
-		font: var(--text-md);
+		font-size: var(--font-size-md);
+		line-height: var(--line-height-md);
 	}
 }

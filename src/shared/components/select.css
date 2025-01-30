@@ -101,7 +101,8 @@
 		text-overflow: ellipsis;
 		padding: var(--input-y-sm) var(--input-x-md);
 		text-align: center;
-		font: var(--text-sm);
+		font-size: var(--font-size-sm);
+		line-height: var(--line-height-sm);
 		color: var(--muted);
 	}
 

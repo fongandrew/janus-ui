@@ -74,7 +74,8 @@
 		border-top-style: solid;
 		padding: var(--space-xs) var(--input-x-md) 0;
 		vertical-align: middle;
-		font: var(--text-sm);
+		font-size: var(--font-size-sm);
+		line-height: var(--line-height-sm);
 
 		@mixin border-dynamic var(--card);
 	}

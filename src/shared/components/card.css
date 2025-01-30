@@ -27,7 +27,8 @@
 	}
 
 	.c-card__description {
-		font: var(--text-sm);
+		font-size: var(--font-size-sm);
+		line-height: var(--line-height-sm);
 		color: var(--muted);
 	}
 

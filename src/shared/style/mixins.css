@@ -87,24 +87,15 @@
 
 /* Input Padding */
 @define-mixin input-pad-sm {
-	padding-left: calc((var(--input-height-sm) - var(--font-size-sm)) / 2);
-	padding-right: calc((var(--input-height-sm) - var(--font-size-sm)) / 2);
-	padding-top: calc((var(--input-height-sm) - var(--line-height-sm)) / 2);
-	padding-bottom: calc((var(--input-height-sm) - var(--line-height-sm)) / 2);
+	padding: var(--input-y-sm) var(--input-x-sm);
 }
 
 @define-mixin input-pad-md {
-	padding-left: calc((var(--input-height-md) - var(--font-size-md)) / 2);
-	padding-right: calc((var(--input-height-md) - var(--font-size-md)) / 2);
-	padding-top: calc((var(--input-height-md) - var(--line-height-md)) / 2);
-	padding-bottom: calc((var(--input-height-md) - var(--line-height-md)) / 2);
+	padding: var(--input-y-md) var(--input-x-md);
 }
 
 @define-mixin input-pad-lg {
-	padding-left: calc((var(--input-height-lg) - var(--font-size-lg)) / 2);
-	padding-right: calc((var(--input-height-lg) - var(--font-size-lg)) / 2);
-	padding-top: calc((var(--input-height-lg) - var(--line-height-lg)) / 2);
-	padding-bottom: calc((var(--input-height-lg) - var(--line-height-lg)) / 2);
+	padding: var(--input-y-lg) var(--input-x-lg);
 }
 
 /* Input Sizes */
