@@ -2,6 +2,8 @@
 	Manually importing all our component styles here to avoid ordering issues
 	TODO: Switch to module imports and rely on @layer to handle ordering with Tailwind v4
 */
+@import '~/shared/style/breakpoints.css';
+@import '~/shared/style/utilities.css';
 @import '~/shared/style/helpers.css';
 @import '~/shared/components/alert.css';
 @import '~/shared/components/button.css';
@@ -35,7 +37,6 @@
 @import '~/shared/components/toggle-switch.css';
 @import '~/shared/components/tooltip.css';
 @import '~/shared/components/tabs.css';
-@import '~/shared/style/utilities.css';
 
 @tailwind base;
 @tailwind components;

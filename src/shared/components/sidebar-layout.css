@@ -38,7 +38,7 @@
 		display: block;
 	}
 
-	@media (width >= 640px) {
+	@media (width >= $breakpoint-tablet-wide) {
 		.c-sidebar-layout {
 			display: flex;
 			height: 100vh;

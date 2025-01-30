@@ -8,14 +8,13 @@
 		gap: var(--space-md);
 	}
 
-	/* Responsive grid columns: 1 col mobile, 2 cols tablet, 3 cols desktop */
-	@media (width >= 640px) {
+	@media (width >= $breakpoint-tablet) {
 		.c-grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 	}
 
-	@media (width >= 1024px) {
+	@media (width >= $breakpoint-tablet-wide) {
 		.c-grid {
 			grid-template-columns: repeat(3, minmax(0, 1fr));
 		}

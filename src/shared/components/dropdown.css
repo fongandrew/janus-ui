@@ -20,7 +20,7 @@
 	}
 
 	/* Make backdrop transparent on larger screens */
-	@media (width >= 640px) {
+	@media (width >= $breakpoint-tablet) {
 		body:has(.c-dropdown__content:popover-open)::after,
 		:modal:has(.c-dropdown__content:popover-open)::after {
 			background-color: transparent;
@@ -80,8 +80,8 @@
 		@mixin border-dynamic var(--card);
 	}
 
-	/* Dynamically positioning dropdowns on smaller screens */
-	@media (width >= 640px) {
+	/* Dropdown positioning only on larger screens */
+	@media (width >= $breakpoint-tablet) {
 		.c-dropdown__content {
 			inset: unset;
 			width: auto;

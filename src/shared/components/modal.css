@@ -35,7 +35,7 @@
 		@mixin border-dynamic var(--card);
 	}
 
-	@media (width >= 640px) {
+	@media (width >= $breakpoint-tablet) {
 		.c-modal__body {
 			inset: auto;
 			left: 50%;
@@ -50,14 +50,14 @@
 		}
 	}
 
-	@media (width >= 768px) {
+	@media (width >= $breakpoint-tablet-wide) {
 		.c-modal__body {
 			max-height: calc(100vh - var(--space-md));
 			border-radius: var(--radius-lg);
 		}
 	}
 
-	@media (width >= 1024px) {
+	@media (width >= $breakpoint-desktop) {
 		.c-modal__body {
 			max-height: calc(100vh - var(--space-lg));
 		}

@@ -10,7 +10,7 @@
 		border-color: var(--muted);
 	}
 
-	@media (width >= 640px) {
+	@media (width >= $breakpoint-tablet) {
 		.c-tabs__bar {
 			gap: var(--space-sm);
 		}
@@ -45,8 +45,8 @@
 		}
 	}
 
-	/* Desktop - tabs can be different sizes */
-	@media (width >= 640px) {
+	/* Tablet and up - tabs can be different sizes */
+	@media (width >= $breakpoint-tablet) {
 		.c-tabs__button {
 			flex-grow: 0;
 			flex-basis: auto;

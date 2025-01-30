@@ -1,0 +1,8 @@
+/*
+    Breakpoint names refer to the potrait width of the screen (if applicable), and
+    *-wide variants refer to landscape mode.
+*/
+$breakpoint-mobile-wide: 640px;
+$breakpoint-tablet: 768px;
+$breakpoint-tablet-wide: 1024px;
+$breakpoint-desktop: 1200px;
