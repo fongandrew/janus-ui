@@ -1,15 +1,13 @@
 /** @type {import('stylelint').Config} */
 export default {
-	extends: ['stylelint-config-standard', 'stylelint-config-tailwindcss'],
+	extends: ['stylelint-config-standard'],
 	plugins: ['stylelint-value-no-unknown-custom-properties'],
 	rules: {
+		// So we can import without URL notation
 		'import-notation': null,
+		// This doesn't like BEM
 		'selector-class-pattern': null,
-		'custom-property-pattern': null,
-		'declaration-block-no-redundant-longhand-properties': null,
-		'property-no-vendor-prefix': null,
-		'value-no-vendor-prefix': null,
-		// Tailwind media queries not handled here
+		// Doesn't play nice with breakpoint vars
 		'media-query-no-invalid': null,
 
 		'at-rule-no-unknown': [

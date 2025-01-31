@@ -19,13 +19,13 @@
 	/* Hide arrows since slider is there */
 
 	/* Firefox */
-	-moz-appearance: textfield;
+	appearance: textfield;
 }
 
 /* Chrome, Safari, Edge, Opera */
 .c-slider__number::-webkit-outer-spin-button,
 .c-slider__number::-webkit-inner-spin-button {
-	-webkit-appearance: none;
+	appearance: none;
 	margin: 0;
 }
 

@@ -6,7 +6,6 @@ import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths';
 import prettierPlugin from 'eslint-plugin-prettier';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import solid from 'eslint-plugin-solid';
-import tailwind from 'eslint-plugin-tailwindcss';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -38,7 +37,6 @@ export default tseslint.config(
 	// Ye-olde plugins
 	eslintConfigPrettier,
 	solid.configs['flat/typescript'],
-	tailwind.configs['flat/recommended'],
 
 	// Base config for all files
 	{
@@ -162,21 +160,10 @@ export default tseslint.config(
 						'extAttr',
 						'defaultAttr',
 						'handle',
-						'onRequestClose'
+						'onRequestClose',
 					],
 				},
 			],
-
-			// Tailwind styling overrides
-			'tailwindcss/no-arbitrary-value': 'warn',
-			'tailwindcss/no-custom-classname': 'error',
-		},
-
-		settings: {
-			tailwindcss: {
-				callees: ['classnames', 'clsx', 'cx'],
-				classRegex: '^class(List|Name)?$',
-			},
 		},
 	},
 

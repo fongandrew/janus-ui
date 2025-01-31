@@ -10,6 +10,10 @@ export default defineConfig({
 			variables: true,
 			keyframes: true,
 			fontFace: true,
+
+			// Needed to keep nested selectors from getting purged
+			// https://github.com/FullHuman/purgecss/issues/1153#issuecomment-2626375284
+			safelist: ['&'],
 		}),
 	],
 	css: {

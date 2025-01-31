@@ -24,10 +24,7 @@
 	.c-details__summary {
 		cursor: pointer;
 		border-radius: var(--radius-lg);
-		padding-left: var(--space-md);
-		padding-right: var(--space-md);
-		padding-top: var(--text-y-md);
-		padding-bottom: var(--text-y-md);
+		padding: var(--text-y-md) var(--space-md) var(--text-y-md) var(--space-md);
 		font-weight: var(--font-weight-medium);
 		font-size: var(--font-size-md);
 		line-height: var(--line-height-md);

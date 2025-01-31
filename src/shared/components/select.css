@@ -96,8 +96,7 @@
 	.c-select__empty_state {
 		display: block;
 		width: 100%;
-		overflow-y: auto;
-		overflow-x: hidden;
+		overflow: hidden auto;
 		text-overflow: ellipsis;
 		padding: var(--input-y-sm) var(--input-x-md);
 		text-align: center;
@@ -141,10 +140,7 @@
 	/* Mobile-specific fixed positioning for input + dropdown */
 	.c-select__container:has(:popover-open) .c-select__input {
 		position: fixed;
-		bottom: auto;
-		left: var(--space-md);
-		right: var(--space-md);
-		top: var(--space-md);
+		inset: var(--space-md) var(--space-md) auto var(--space-md);
 		z-index: var(--z-above-backdrop);
 		width: auto;
 	}

@@ -3,8 +3,7 @@
 
 @layer components {
 	.c-option-list {
-		overflow-y: auto;
-		overflow-x: hidden;
+		overflow: hidden auto;
 		font-size: var(--font-size-sm);
 		line-height: var(--line-height-sm);
 	}

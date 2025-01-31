@@ -16,10 +16,7 @@
 	}
 
 	.c-card__header {
-		padding-left: var(--space-md);
-		padding-right: var(--space-md);
-		padding-bottom: 0;
-		padding-top: var(--text-y-md);
+		padding: var(--text-y-md) var(--space-md) 0 var(--space-md);
 	}
 
 	.c-card__title {
@@ -42,10 +39,7 @@
 		align-items: center;
 		justify-content: space-between;
 		gap: var(--space-sm);
-		padding-left: var(--space-md);
-		padding-right: var(--space-md);
-		padding-bottom: var(--space-md);
-		padding-top: 0;
+		padding: 0 var(--space-md) var(--space-md) var(--space-md);
 	}
 
 	.c-card__footer > :only-child {
