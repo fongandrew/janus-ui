@@ -9,6 +9,7 @@
 
 	.c-option-list__item {
 		display: block;
+		cursor: pointer;
 		width: 100%;
 		overflow-x: hidden;
 		text-overflow: ellipsis;
