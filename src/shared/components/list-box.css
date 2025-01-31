@@ -1,7 +1,7 @@
 @import '~/shared/style/common.css';
 
 @layer components {
-	.c-list-box:not(.c-dropdown__content) {
+	.c-list-box {
 		width: 100%;
 		padding: var(--space-xs) 0;
 		border: 0;
