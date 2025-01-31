@@ -1,31 +1,30 @@
 @layer reset, base, components, utilities;
 
 @import '~/shared/style/reset.css';
-@import '~/shared/style/breakpoints.css';
 @import '~/shared/style/common.css';
 @import '~/shared/style/utilities.css';
 
 /* Defaults */
 @layer base {
 	* {
-		@apply border-border;
+		border-color: var(--border);
 	}
 
 	body {
-		@apply text-base text-foreground;
-		@apply underline-offset;
-
+		font-size: var(--font-size-md);
+		color: var(--foreground);
+		text-underline-offset: var(--underline-offset);
 		background: linear-gradient(102deg, hsl(0deg 0% 100% / 0%), rgb(255 204 0 / 5%)),
 			linear-gradient(12deg, rgb(33 37 41 / 5%), hsl(0deg 0% 100% / 0%)), var(--background);
 		min-height: 100vh;
 	}
 
 	a {
-		@apply t-link-style;
+		@mixin link-style;
 	}
 
 	b,
 	strong {
-		@apply font-semibold;
+		font-weight: var(--font-weight-semibold);
 	}
 }
