@@ -26,6 +26,15 @@
 		@mixin border-dynamic var(--secondary-fg);
 	}
 
+	.c-radio__circle:has([aria-disabled='true']) {
+		cursor: not-allowed;
+		background-color: var(--input-disabled-bg);
+	}
+
+	.c-radio__circle:has([aria-invalid='true']) {
+		@mixin border-dynamic var(--danger);
+	}
+
 	.c-radio__circle:has(input:checked) {
 		background-color: var(--primary);
 		color: var(--primary-fg);
@@ -57,17 +66,5 @@
 		width: 66.6667%;
 		border-radius: var(--radius-full);
 		background-color: var(--primary-fg);
-	}
-}
-
-@layer utilities {
-	.c-radio--error .c-radio__circle,
-	.c-radio__circle:has([aria-invalid='true']) {
-		@mixin border-dynamic var(--danger);
-	}
-
-	.c-radio__circle:has([aria-disabled='true']) {
-		cursor: not-allowed;
-		background-color: var(--input-disabled-bg);
 	}
 }

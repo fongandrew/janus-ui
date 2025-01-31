@@ -29,9 +29,8 @@
 	}
 
 	/* State-based styles for the box */
-	.c-checkbox--error .c-checkbox__box,
 	.c-checkbox__box:has([aria-invalid='true']) {
-		border-color: color-mix(in srgb, var(--danger) var(--border-dynamic-mix), transparent);
+		@mixin border-dynamic var(--danger);
 	}
 
 	.c-checkbox__box:has([aria-disabled='true']) {
@@ -84,17 +83,5 @@
 
 	.c-checkbox input:indeterminate ~ .c-checkbox__indeterminate {
 		display: block;
-	}
-}
-
-@layer util {
-	.c-checkbox--error .c-checkbox__box,
-	.c-checkbox__box:has([aria-invalid='true']) {
-		@mixin border-dynamic var(--danger);
-	}
-
-	.c-checkbox__box:has([aria-disabled='true']) {
-		cursor: not-allowed;
-		background-color: var(--input-disabled-bg);
 	}
 }
