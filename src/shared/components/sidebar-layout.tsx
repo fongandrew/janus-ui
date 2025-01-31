@@ -1,3 +1,5 @@
+import '~/shared/components/sidebar-layout.css';
+
 import cx from 'classix';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-solid';
 import { createSignal, type JSX } from 'solid-js';

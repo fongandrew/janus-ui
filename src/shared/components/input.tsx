@@ -1,3 +1,5 @@
+import '~/shared/components/input.css';
+
 import cx from 'classix';
 import { type Component, splitProps } from 'solid-js';
 

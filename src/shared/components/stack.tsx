@@ -1,3 +1,5 @@
+import '~/shared/components/stack.css';
+
 import cx from 'classix';
 import { type JSX } from 'solid-js';
 

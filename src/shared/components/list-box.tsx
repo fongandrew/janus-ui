@@ -1,3 +1,5 @@
+import '~/shared/components/list-box.css';
+
 import cx from 'classix';
 import { Check } from 'lucide-solid';
 import { For, type JSX, splitProps } from 'solid-js';

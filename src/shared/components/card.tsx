@@ -1,3 +1,5 @@
+import '~/shared/components/card.css';
+
 import cx from 'classix';
 import { type JSX, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';

@@ -2,46 +2,8 @@
 
 @import '~/shared/style/reset.css';
 @import '~/shared/style/breakpoints.css';
-@import '~/shared/style/tokens.css';
-@import '~/shared/style/mixins.css';
+@import '~/shared/style/common.css';
 @import '~/shared/style/utilities.css';
-
-/*
-	Manually importing all our component styles here to avoid ordering issues
-	TODO: Switch to module imports?
-*/
-@import '~/shared/components/alert.css';
-@import '~/shared/components/button.css';
-@import '~/shared/components/box.css';
-@import '~/shared/components/card.css';
-@import '~/shared/components/checkbox.css';
-@import '~/shared/components/color-picker.css';
-@import '~/shared/components/description.css';
-@import '~/shared/components/details.css';
-@import '~/shared/components/dropdown.css';
-@import '~/shared/components/error-message.css';
-@import '~/shared/components/form.css';
-@import '~/shared/components/grid.css';
-@import '~/shared/components/group.css';
-@import '~/shared/components/header.css';
-@import '~/shared/components/input.css';
-@import '~/shared/components/label.css';
-@import '~/shared/components/labelled-action.css';
-@import '~/shared/components/label-stack.css';
-@import '~/shared/components/list-box.css';
-@import '~/shared/components/main.css';
-@import '~/shared/components/modal.css';
-@import '~/shared/components/modal-form.css';
-@import '~/shared/components/option-list.css';
-@import '~/shared/components/radio.css';
-@import '~/shared/components/select.css';
-@import '~/shared/components/sidebar-layout.css';
-@import '~/shared/components/slider.css';
-@import '~/shared/components/stack.css';
-@import '~/shared/components/textarea.css';
-@import '~/shared/components/toggle-switch.css';
-@import '~/shared/components/tooltip.css';
-@import '~/shared/components/tabs.css';
 
 /* Defaults */
 @layer base {

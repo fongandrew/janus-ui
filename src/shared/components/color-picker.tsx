@@ -1,3 +1,5 @@
+import '~/shared/components/color-picker.css';
+
 import { createSignal } from 'solid-js';
 
 import {

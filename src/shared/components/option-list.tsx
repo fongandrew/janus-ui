@@ -1,4 +1,6 @@
 /** A group */
+import '~/shared/components/option-list.css';
+
 import cx from 'classix';
 import { createMemo, type JSX, splitProps } from 'solid-js';
 

@@ -1,3 +1,5 @@
+import '~/shared/components/form.css';
+
 import { createMemo, createRenderEffect, type JSX, splitProps, useContext } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
@@ -13,7 +15,6 @@ import { type BoundCallbackUnion, callBound } from '~/shared/utility/bound-callb
 import { generateId } from '~/shared/utility/id-generator';
 import { evtWin } from '~/shared/utility/multi-view';
 import { handleEvent } from '~/shared/utility/solid/handle-event';
-
 /** Same as form data but the names are typed */
 export interface TypedFormData<TNames> {
 	append(key: TNames, value: string | Blob): void;

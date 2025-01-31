@@ -1,5 +1,7 @@
 // import '~/shared/components/box.css';
 
+import '~/shared/components/box.css';
+
 import cx from 'classix';
 import { type JSX, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';

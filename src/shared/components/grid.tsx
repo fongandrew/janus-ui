@@ -1,3 +1,5 @@
+import '~/shared/components/grid.css';
+
 import cx from 'classix';
 import { type JSX } from 'solid-js';
 

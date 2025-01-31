@@ -1,5 +1,4 @@
-@import '~/shared/style/tokens.css';
-@import '~/shared/style/mixins.css';
+@import '~/shared/style/common.css';
 
 @layer components {
 	.c-toggle-switch {

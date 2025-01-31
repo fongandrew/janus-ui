@@ -1,3 +1,5 @@
+import '~/shared/components/labelled-action.css';
+
 import cx from 'classix';
 import { splitProps } from 'solid-js';
 
@@ -7,7 +9,6 @@ import { ErrorMessage } from '~/shared/components/error-message';
 import { FormElementProvider } from '~/shared/components/form-element-provider';
 import { Label } from '~/shared/components/label';
 import { type LabelledInputProps } from '~/shared/components/labelled-control';
-
 /** Label + squarish action trigger (like button or toggle) */
 export function LabelledAction(props: LabelledInputProps) {
 	const [local, rest] = splitProps(props, ['label', 'description', 'errorMessage', 'children']);

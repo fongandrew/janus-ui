@@ -1,3 +1,5 @@
+import '~/shared/components/dropdown.css';
+
 import {
 	autoUpdate,
 	computePosition,
@@ -24,7 +26,6 @@ import {
 } from '~/shared/utility/solid/create-event-delegate';
 import { PropBuilder } from '~/shared/utility/solid/prop-builder';
 import { T } from '~/shared/utility/text/t-components';
-
 /** Track all open dropdowns so easier to close */
 const openDropdowns = new WeakMap<Document, Set<HTMLElement>>();
 

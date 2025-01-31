@@ -1,3 +1,5 @@
+import '~/shared/components/button.css';
+
 import cx from 'classix';
 import { splitProps } from 'solid-js';
 

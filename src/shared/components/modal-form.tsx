@@ -1,3 +1,5 @@
+import '~/shared/components/modal-form.css';
+
 import { createEffect, createSignal, type JSX, Show, splitProps, useContext } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 

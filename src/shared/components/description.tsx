@@ -1,3 +1,5 @@
+import '~/shared/components/description.css';
+
 import cx from 'classix';
 import { createMemo, type JSX } from 'solid-js';
 

@@ -1,5 +1,4 @@
-@import '~/shared/style/tokens.css';
-@import '~/shared/style/mixins.css';
+@import '~/shared/style/common.css';
 
 @layer base {
 	/* Show disabled state on footer buttons if form in body has invalid fields */

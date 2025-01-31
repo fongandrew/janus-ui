@@ -1,8 +1,9 @@
+import '~/shared/components/alert.css';
+
 import cx from 'classix';
 import { AlertCircle, AlertTriangle, CheckCircle, Info, type LucideProps } from 'lucide-solid';
 import { type Component, type JSX, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
-
 /** Base alert props shared by all alert variants */
 type AlertBaseProps = JSX.HTMLAttributes<HTMLDivElement> & {
 	/** Optional icon override */
