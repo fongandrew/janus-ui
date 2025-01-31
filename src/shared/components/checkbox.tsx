@@ -4,7 +4,10 @@ import cx from 'classix';
 import { Check, Minus } from 'lucide-solid';
 import { splitProps } from 'solid-js';
 
-import { mergeFormElementProps } from '~/shared/components/form-element-props';
+import {
+	type FormElementProps,
+	mergeFormElementProps,
+} from '~/shared/components/form-element-props';
 
 export interface CheckboxProps extends Omit<FormElementProps<'input'>, 'type'> {
 	/**

@@ -2,7 +2,10 @@ import '~/shared/components/textarea.css';
 
 import cx from 'classix';
 
-import { mergeFormElementProps } from '~/shared/components/form-element-props';
+import {
+	type FormElementProps,
+	mergeFormElementProps,
+} from '~/shared/components/form-element-props';
 
 export interface TextareaProps extends Omit<FormElementProps<'textarea'>, 'type'> {}
 

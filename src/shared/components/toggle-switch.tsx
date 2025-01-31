@@ -4,7 +4,10 @@ import cx from 'classix';
 import { splitProps } from 'solid-js';
 
 import { handleClick } from '~/shared/components/checkbox';
-import { mergeFormElementProps } from '~/shared/components/form-element-props';
+import {
+	type FormElementProps,
+	mergeFormElementProps,
+} from '~/shared/components/form-element-props';
 
 export interface ToggleSwitchProps extends Omit<FormElementProps<'input'>, 'type'> {}
 
