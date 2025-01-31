@@ -60,17 +60,3 @@
 		display: block;
 	}
 }
-
-@layer utilities {
-	/* State variants */
-	.c-list-box--disabled {
-		pointer-events: none;
-		cursor: not-allowed;
-
-		@mixin disabled-input;
-	}
-
-	.c-list-box--error {
-		@mixin error-input;
-	}
-}
