@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "eslint": "eslint --report-unused-disable-directives --max-warnings 0",
-    "eslint:fix": "eslint . --ext ts,tsx --fix",
+    "eslint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "lint": "npm run eslint && npm run stylelint",
     "stylelint": "stylelint \"src/**/*.css\"",
