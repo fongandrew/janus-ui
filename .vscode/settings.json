@@ -1,15 +1,5 @@
 {
     "typescript.tsdk": "node_modules/typescript/lib",
-    "tailwindCSS.classAttributes": [
-        "class",
-        "className",
-        "ngClass",
-        "class:list",
-        "classList"
-    ],
-    "tailwindCSS.experimental.classRegex": [
-        "cx\\(['\"]([^'\"]*)"
-    ],
     "files.exclude": {
         "dist": true
     }
