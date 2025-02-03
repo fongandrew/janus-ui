@@ -43,6 +43,9 @@
 			height: 100vh;
 			width: 100vw;
 			overflow: hidden;
+
+			/* This is needed to keep absolute positioned children from doing dumb things */
+			position: relative;
 		}
 
 		/* Default open on desktop */
