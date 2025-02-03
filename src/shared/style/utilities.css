@@ -1,9 +1,14 @@
+@import './mixins.css';
 @import './tokens.css';
 
 @layer utilities {
 	/* Visibility */
 	.hidden {
 		display: none;
+	}
+
+	.sr-only {
+		@mixin sr-only;
 	}
 
 	/* Padding - all sides */
@@ -491,5 +496,25 @@
 
 	.gap-2xl {
 		gap: var(--space-2xl);
+	}
+
+	/* Grid */
+	.col-auto {
+		grid-column: auto;
+	}
+
+	.col-span-full {
+		grid-column: 1 / -1;
+	}
+
+	/* Basic animation */
+	@keyframes t-spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	.animate-spin {
+		animation: t-spin 1s linear infinite;
 	}
 }
