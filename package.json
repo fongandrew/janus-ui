@@ -28,6 +28,7 @@
     "eslint": "^9.16.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.7.0",
+    "eslint-plugin-css-class-usage": "github:fongandrew/eslint-plugin-css-class-usage",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-no-relative-import-paths": "^1.5.5",
     "eslint-plugin-prettier": "^5.2.1",

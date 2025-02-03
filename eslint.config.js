@@ -1,6 +1,7 @@
 import eslint from '@eslint/js';
 import * as tsParser from '@typescript-eslint/parser';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import cssClassUsagePlugin from 'eslint-plugin-css-class-usage';
 import importPlugin from 'eslint-plugin-import';
 import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths';
 import prettierPlugin from 'eslint-plugin-prettier';
@@ -37,6 +38,14 @@ export default tseslint.config(
 	// Ye-olde plugins
 	eslintConfigPrettier,
 	solid.configs['flat/typescript'],
+	{
+		plugins: {
+			'css-class-usage': cssClassUsagePlugin,
+		},
+		rules: {
+			'css-class-usage/no-unknown-classes': 'error',
+		},
+	},
 
 	// Base config for all files
 	{
