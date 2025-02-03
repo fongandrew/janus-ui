@@ -2,5 +2,8 @@
     "typescript.tsdk": "node_modules/typescript/lib",
     "files.exclude": {
         "dist": true
-    }
+    },
+    "css.customData": [
+        "./.vscode/mixins.css-data.json"
+    ]
 }

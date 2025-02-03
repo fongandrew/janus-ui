@@ -1,0 +1,11 @@
+
+{
+    "version": 1.1,
+    "properties": [],
+    "atDirectives": [
+        { "name": "@mixin", "description": "PostCSS mixin" },
+        { "name": "@define-mixin", "description": "Define PostCSS mixin" }
+    ],
+    "pseudoClasses": [],
+    "pseudoElements": []
+}
