@@ -2,9 +2,9 @@ import '~/shared/components/sidebar-layout.css';
 
 import cx from 'classix';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-solid';
-import { createSignal, type JSX } from 'solid-js';
+import { createSignal, createUniqueId, type JSX, splitProps } from 'solid-js';
 
-import { IconButton } from '~/shared/components/button';
+import { Button, IconButton } from '~/shared/components/button';
 import { SidebarContext, useSidebar } from '~/shared/components/sidebar-context';
 import { t } from '~/shared/utility/text/t-tag';
 
@@ -32,13 +32,13 @@ export function SidebarLayout(props: JSX.HTMLAttributes<HTMLDivElement>) {
 /**
  * A sidebar component that uses the sidebar context to determine its visibility.
  */
-export function Sidebar(props: JSX.HTMLAttributes<HTMLDivElement>) {
+export function Sidebar(props: JSX.HTMLAttributes<HTMLElement>) {
 	const [, setOpen] = useSidebar();
 	return (
 		<>
-			<div {...props} class="c-sidebar">
+			<nav {...props} class="c-sidebar">
 				{props.children}
-			</div>
+			</nav>
 			<div class="c-sidebar__overlay" onClick={[setOpen, false]} />
 		</>
 	);
@@ -75,5 +75,108 @@ export function SidebarCloseButton() {
 		>
 			<PanelLeftClose />
 		</IconButton>
+	);
+}
+
+/**
+ * A header component for the sidebar. Statically sized.
+ */
+export function SidebarHeader(props: JSX.HTMLAttributes<HTMLElement>) {
+	return (
+		<header {...props} class={cx('c-sidebar__header', props.class)}>
+			{props.children}
+		</header>
+	);
+}
+
+/**
+ * A footer component for the sidebar. Statically sized.
+ */
+export function SidebarFooter(props: JSX.HTMLAttributes<HTMLElement>) {
+	return (
+		<footer {...props} class={cx('c-sidebar__footer', props.class)}>
+			{props.children}
+		</footer>
+	);
+}
+
+/**
+ * A content component for the sidebar. Resizes and scrolls as needed.
+ */
+export function SidebarContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
+	return (
+		<div {...props} class={cx('c-sidebar__content', props.class)}>
+			{props.children}
+		</div>
+	);
+}
+
+/**
+ * A navigation component for the sidebar. An unordered list of links.
+ */
+export function SidebarList(props: JSX.HTMLAttributes<HTMLUListElement>) {
+	return (
+		<ul {...props} class={cx('c-sidebar__list', props.class)}>
+			{props.children}
+		</ul>
+	);
+}
+
+/**
+ * Nav item for sidebar navigation.
+ */
+export function SidebarListItem(props: JSX.HTMLAttributes<HTMLLIElement>) {
+	return (
+		<li {...props} class={cx('c-sidebar__list-item', props.class)}>
+			{props.children}
+		</li>
+	);
+}
+
+/**
+ * Nav item that is a button
+ */
+export function SidebarListButton(props: JSX.ButtonHTMLAttributes<HTMLButtonElement>) {
+	return (
+		<SidebarListItem>
+			<Button {...props} class={cx('c-sidebar__list-button', props.class)} unstyled>
+				{props.children}
+			</Button>
+		</SidebarListItem>
+	);
+}
+
+/**
+ * Nav item that is a link
+ */
+export function SidebarListLink(props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) {
+	return (
+		<SidebarListItem>
+			<a {...props} class={cx('c-sidebar__list-link', props.class)}>
+				{props.children}
+			</a>
+		</SidebarListItem>
+	);
+}
+
+/**
+ * Group links together
+ */
+export function SidebarListGroup(
+	props: JSX.HTMLAttributes<HTMLLIElement> & { heading: JSX.Element },
+) {
+	const headingId = createUniqueId();
+	const [local, rest] = splitProps(props, ['heading']);
+	return (
+		<SidebarListItem {...rest}>
+			{props.heading && (
+				<div class="c-sidebar-list__heading" id={headingId}>
+					{local.heading}
+				</div>
+			)}
+			<SidebarList role="group" aria-labelledby={headingId}>
+				{props.children}
+			</SidebarList>
+		</SidebarListItem>
 	);
 }

@@ -3,7 +3,7 @@
 @layer components {
 	.c-alert {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		gap: var(--space-sm);
 		border-radius: var(--radius-md);
 		border-width: var(--border-width-md);
@@ -22,7 +22,7 @@
 	}
 
 	.c-alert__icon svg {
-		height: 1em;
+		height: 1lh;
 		width: 1em;
 	}
 

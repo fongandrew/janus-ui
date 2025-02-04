@@ -10,10 +10,11 @@
 @layer components {
 	.c-button {
 		display: inline-flex;
-		align-items: center;
+		align-items: flex-start;
 		justify-content: center;
 		white-space: nowrap;
 		font-weight: var(--font-weight-medium);
+		cursor: pointer;
 
 		@mixin transition single-arg(color, background-color, border-color, box-shadow);
 
@@ -46,7 +47,7 @@
 		/* Icon styles */
 		& svg {
 			pointer-events: none;
-			height: 1em;
+			height: 1lh;
 			width: 1em;
 			flex-shrink: 0;
 		}
@@ -60,7 +61,8 @@
 		justify-content: center;
 		border-radius: var(--radius-md);
 		border-color: transparent;
-		font-size: var(--font-size-md);
+		font-size: inherit;
+		cursor: pointer;
 
 		& svg {
 			height: 1em;
@@ -73,8 +75,6 @@
 			background-color: var(--secondary);
 			color: var(--secondary-fg);
 		}
-
-		font-size: inherit;
 	}
 }
 

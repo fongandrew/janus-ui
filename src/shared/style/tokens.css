@@ -97,6 +97,17 @@
 	--input-x-md: calc((var(--input-height-md) - var(--font-size-md)) / 2);
 	--input-x-lg: calc((var(--input-height-lg) - var(--font-size-lg)) / 2);
 
+	/*
+		These fill in the gap between "input" padding and normal spacing. Use these
+		to line up content padded with text padding and input padding + border.
+	*/
+	--input-gap-y-sm: calc(var(--space-sm) - var(--input-y-sm) - var(--border-width-sm));
+	--input-gap-y-md: calc(var(--space-md) - var(--input-y-md) - var(--border-width-md));
+	--input-gap-y-lg: calc(var(--space-lg) - var(--input-y-lg) - var(--border-width-lg));
+	--input-gap-x-sm: calc(var(--space-sm) - var(--input-x-sm) - var(--border-width-sm));
+	--input-gap-x-md: calc(var(--space-md) - var(--input-x-md) - var(--border-width-md));
+	--input-gap-x-lg: calc(var(--space-lg) - var(--input-x-lg) - var(--border-width-lg));
+
 	/* Colors (Light Theme) */
 	--background: hsl(0deg 0% 99%);
 	--foreground: hsl(0deg 0% 3.9%);

@@ -1,5 +1,6 @@
 import '~/shared/style/index.css';
 
+import { AlertTriangle, Home, Info, Settings } from 'lucide-solid';
 import { render } from 'solid-js/web';
 
 import { AlertsDemo } from '~/demos/alerts-demo';
@@ -29,7 +30,14 @@ import { Main } from '~/shared/components/main';
 import {
 	Sidebar,
 	SidebarCloseButton,
+	SidebarContent,
+	SidebarFooter,
+	SidebarHeader,
 	SidebarLayout,
+	SidebarList,
+	SidebarListButton,
+	SidebarListGroup,
+	SidebarListLink,
 	SidebarOpenButton,
 } from '~/shared/components/sidebar-layout';
 
@@ -37,8 +45,39 @@ function App() {
 	return (
 		<SidebarLayout>
 			<Sidebar>
-				<SidebarCloseButton />
-				{/* Add sidebar content here */}
+				<SidebarHeader>
+					<h2>Sidebar Header</h2>
+					<SidebarCloseButton />
+				</SidebarHeader>
+				<SidebarContent>
+					<SidebarList>
+						<SidebarListLink href="#" aria-current="page">
+							<Home />
+							Pretend this is selected
+						</SidebarListLink>
+						<SidebarListLink href="#">
+							<Info />
+							Here is another link
+						</SidebarListLink>
+						<SidebarListGroup heading="Group Name">
+							<SidebarListLink href="#">
+								<AlertTriangle />
+								Some other stuff and this label is quite long for whatever reason
+							</SidebarListLink>
+							<SidebarListLink href="#">
+								<Info />
+								Here is another link
+							</SidebarListLink>
+							<SidebarListButton>
+								<Settings />
+								Button goes here
+							</SidebarListButton>
+						</SidebarListGroup>
+					</SidebarList>
+				</SidebarContent>
+				<SidebarFooter>
+					<p>Sidebar Footer</p>
+				</SidebarFooter>
 			</Sidebar>
 			<Main>
 				<Box class="pt-0">
