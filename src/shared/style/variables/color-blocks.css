@@ -1,0 +1,192 @@
+/*
+	Color blocks are particular combinations of colors that reflect a particular status
+    or theme. They typically reflect black or white text on a colorful (or greyscale)
+    background.
+*/
+@define-mixin v-color-block {
+	background: var(--v-bg);
+	color: var(--v-fg);
+
+	/*
+        Dynamic borders are borders that are colored based on the background color of the
+        element they are applied to. This mixin is used to define the border color based on
+        the background color.
+    */
+	--v-border-color: color-mix(
+		in hsl,
+		var(--v-border-dynamic-base) var(--v-border-dynamic-mix),
+		var(--v-bg)
+	);
+
+	border-color: var(--v-border-color);
+}
+
+/* Le default */
+@define-mixin v-default-colors {
+	@mixin v-base-colors;
+	@mixin v-color-block;
+}
+
+/* Cards are used to create sectioned content in the "main" UI */
+@define-mixin v-card-colors {
+	--v-bg: var(--v-card-bg);
+	--v-fg: var(--v-card-fg);
+
+	@mixin v-color-block;
+}
+
+/* Code block */
+@define-mixin v-code-colors {
+	--v-bg: var(--v-code-bg);
+	--v-fg: var(--v-code-fg);
+
+	@mixin v-color-block;
+}
+
+/* Menu and dropdowns colors */
+@define-mixin v-popover-colors {
+	--v-bg: var(--v-popover-bg);
+	--v-fg: var(--v-popover-fg);
+
+	@mixin v-color-block;
+}
+
+/* Hovering tooltip colors */
+@define-mixin v-tooltip-colors {
+	--v-bg: var(--v-tooltip-bg);
+	--v-fg: var(--v-tooltip-fg);
+
+	@mixin v-color-block;
+}
+
+/* Primary colors are used for submit buttons and other "main" actions */
+@define-mixin v-primary-colors {
+	--v-bg: var(--v-primary-bg);
+	--v-fg: var(--v-primary-fg);
+
+	@mixin v-color-block;
+}
+
+/* Secondary colors are used for secondary actions like reset or cancel */
+@define-mixin v-secondary-colors {
+	--v-bg: var(--v-secondary-bg);
+	--v-fg: var(--v-secondary-fg);
+
+	@mixin v-color-block;
+}
+
+/*
+    Callout colors are used for callout boxes and asides to draw attention
+    in what is otherwise a wall of text
+ */
+@define-mixin v-callout-colors {
+	--v-bg: var(--v-callout-bg);
+	--v-fg: var(--v-callout-fg);
+
+	@mixin v-color-block;
+}
+
+/* Highlight colors are used for highlighting text (e.g. in a menu) */
+@define-mixin v-highlight-colors {
+	--v-bg: var(--v-highlight-bg);
+	--v-fg: var(--v-highlight-fg);
+
+	@mixin v-color-block;
+}
+
+/* Color for input elements */
+@define-mixin v-input-colors {
+	--v-bg: var(--v-input-bg);
+	--v-fg: var(--v-input-fg);
+
+	@mixin v-color-block;
+}
+
+/* Color to provide feedback for successful actions */
+@define-mixin v-success-colors {
+	--v-bg: var(--v-success-bg);
+	--v-fg: var(--v-success-fg);
+
+	@mixin v-color-block;
+}
+
+/* Color to provide feedback that something is maybe wrong but still permissible */
+@define-mixin v-warning-colors {
+	--v-bg: var(--v-warning-bg);
+	--v-fg: var(--v-warning-fg);
+
+	@mixin v-color-block;
+}
+
+/* Color to provide feedback that something is wrong and not permissible */
+@define-mixin v-danger-colors {
+	--v-bg: var(--v-danger-bg);
+	--v-fg: var(--v-danger-fg);
+
+	@mixin v-color-block;
+}
+
+/*
+	Le default -- defined last because otherwise my VSCode extension uses the last
+	defined variable definition for highlgihting.
+*/
+@define-mixin v-default-colors {
+	--v-bg: var(--v-default-bg);
+	--v-fg: var(--v-default-fg);
+
+	@mixin v-color-block;
+}
+
+@layer variables {
+	.v-default-colors {
+		@mixin v-default-colors;
+	}
+
+	.v-card-colors {
+		@mixin v-card-colors;
+	}
+
+	.v-code-colors {
+		@mixin v-code-colors;
+	}
+
+	.v-popover-colors {
+		@mixin v-popover-colors;
+	}
+
+	.v-tooltip-colors {
+		@mixin v-tooltip-colors;
+	}
+
+	.v-primary-colors {
+		@mixin v-primary-colors;
+	}
+
+	.v-secondary-colors {
+		@mixin v-secondary-colors;
+	}
+
+	.v-callout-colors {
+		@mixin v-callout-colors;
+	}
+
+	.v-highlight-colors {
+		@mixin v-highlight-colors;
+	}
+
+	.v-input-colors {
+		@mixin v-input-colors;
+	}
+
+	.v-success-colors {
+		@mixin v-success-colors;
+	}
+
+	.v-warning-colors {
+		@mixin v-warning-colors;
+	}
+
+	.v-danger-colors {
+		@mixin v-danger-colors;
+	}
+}

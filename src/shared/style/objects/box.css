@@ -1,0 +1,45 @@
+@import '~/shared/style/variables/index.css';
+
+/* Default box is just a container with evenly spaced padding  */
+@define-mixin o-box {
+	padding: var(--v-block-padding);
+}
+
+/* Variant of box with adjusted vertical padding to account for line height */
+@define-mixin o-text-box {
+	padding: var(--v-text-y-padding) var(--v-block-padding);
+}
+
+/* Variant of box with adjusted padding to match target height for input element */
+@define-mixin o-input-box {
+	padding: var(--v-input-y-padding) var(--v-input-x-padding);
+	border-width: var(--v-border-width);
+}
+
+/*
+	Variant of box that contains input boxes and fills in back to original block padding.
+	This is useful if you're trying to line up text inside a text box and a "ghost"
+	input box.
+*/
+@define-mixin o-input-container-box {
+	padding: calc(var(--v-block-padding) - var(--v-input-y-padding) - var(--v-border-width))
+		calc(var(--v-block-padding) - var(--v-input-x-padding) - var(--v-border-width));
+}
+
+@layer objects {
+	.o-box {
+		@mixin o-box;
+	}
+
+	.o-text-box {
+		@mixin o-text-box;
+	}
+
+	.o-input-box {
+		@mixin o-input-box;
+	}
+
+	.o-input-container-box {
+		@mixin o-input-container-box;
+	}
+}

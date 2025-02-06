@@ -1,0 +1,14 @@
+@import '~/shared/style/variables/index.css';
+
+/* A stack is a vertical collection of items */
+@define-mixin o-stack {
+	display: flex;
+	flex-direction: column;
+	gap: var(--v-block-padding);
+}
+
+@layer objects {
+	.o-stack {
+		@mixin o-stack;
+	}
+}

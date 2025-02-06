@@ -1,0 +1,16 @@
+/* Transition helpers */
+
+@define-mixin t-transition-timings {
+	transition-duration: 150ms;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@define-mixin t-transition $properties {
+	@mixin t-transition-timings;
+
+	transition-property: $(properties);
+}
+
+@define-mixin t-transition-color {
+	@mixin t-transition single-arg(color, background-color, border-color);
+}

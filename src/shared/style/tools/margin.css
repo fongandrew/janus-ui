@@ -1,0 +1,90 @@
+/*
+    Utility classes for adding margins to things
+*/
+@layer tools {
+	.t-margin {
+		margin: var(--v-block-padding);
+	}
+
+	.t-margin-0 {
+		margin: 0;
+	}
+
+	.t-mx {
+		margin-left: var(--v-block-padding);
+		margin-right: var(--v-block-padding);
+	}
+
+	.t-my {
+		margin-top: var(--v-block-padding);
+		margin-bottom: var(--v-block-padding);
+	}
+
+	.t-mx-0 {
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.t-my-0 {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+
+	.t-mx-auto {
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.t-my-auto {
+		margin-top: auto;
+		margin-bottom: auto;
+	}
+
+	.t-mt {
+		margin-top: var(--v-block-padding);
+	}
+
+	.t-mr {
+		margin-right: var(--v-block-padding);
+	}
+
+	.t-mb {
+		margin-bottom: var(--v-block-padding);
+	}
+
+	.t-ml {
+		margin-left: var(--v-block-padding);
+	}
+
+	.t-mt-0 {
+		margin-top: 0;
+	}
+
+	.t-mr-0 {
+		margin-right: 0;
+	}
+
+	.t-mb-0 {
+		margin-bottom: 0;
+	}
+
+	.t-ml-0 {
+		margin-left: 0;
+	}
+
+	.t-mt-auto {
+		margin-top: auto;
+	}
+
+	.t-mr-auto {
+		margin-right: auto;
+	}
+
+	.t-mb-auto {
+		margin-bottom: auto;
+	}
+
+	.t-ml-auto {
+		margin-left: auto;
+	}
+}

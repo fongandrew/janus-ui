@@ -1,30 +1,25 @@
-@layer reset, base, components, utilities;
+/*
+	Layering is ITCSS-like but differs in some important regards:
+	* reset - Global resets
+	* base - Default styles for elements
+	* components - Reusable components
+	* variables - CSS variables + variable overrides. This is probably closest to
+	  "settings" in traditionaly CSS but when used as a class (rather than a mixin),
+	  the intent is closer to it being used like a utility (e.g. a component may
+	  define a base font size via a mixin that can be overridden with a class).
+	* objects - Layout objects. In traditional ITCSS, these go before components
+	  because components should be able to do component-specific layout things.
+	  But our objects CSS exports both classes and mixins. Components should
+	  generally just use the mixins. If a class is used, that implies it's
+	  an override (i.e. being used like a utility).
+	* tools - Utility classes. These are used to override other styles. Traditional
+	  ITCSS differentiates between "tools" (lowest precedence) and "utilities" (highest),
+	  but we just stick them together with the understanding that mixins have lowest
+	  precedence (they don't get emitted) and classes with the same name have highest.
+*/
+@layer reset, base, components, variables, objects, tools;
 
 @import '~/shared/style/reset.css';
 @import '~/shared/style/common.css';
-@import '~/shared/style/utilities.css';
-
-/* Defaults */
-@layer base {
-	* {
-		border-color: var(--border);
-	}
-
-	body {
-		font-size: var(--font-size-md);
-		color: var(--foreground);
-		text-underline-offset: var(--underline-offset);
-		background: linear-gradient(102deg, hsl(0deg 0% 100% / 0%), rgb(255 204 0 / 5%)),
-			linear-gradient(12deg, rgb(33 37 41 / 5%), hsl(0deg 0% 100% / 0%)), var(--background);
-		min-height: 100vh;
-	}
-
-	a {
-		@mixin link-style;
-	}
-
-	b,
-	strong {
-		font-weight: var(--font-weight-semibold);
-	}
-}
+@import '~/shared/style/base.css';
+@import '~/shared/style/overrides.css';

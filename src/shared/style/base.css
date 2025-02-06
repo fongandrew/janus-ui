@@ -1,0 +1,58 @@
+@import '~/shared/style/common.css';
+
+/* Defaults for a bunch of things */
+@layer base {
+	body {
+		@mixin v-default-colors;
+		@mixin v-md;
+
+		background: linear-gradient(102deg, hsl(0deg 0% 100% / 0%), rgb(255 204 0 / 5%)),
+			linear-gradient(12deg, rgb(33 37 41 / 5%), hsl(0deg 0% 100% / 0%)), var(--v-bg);
+		min-height: 100vh;
+	}
+
+	a[href] {
+		@mixin t-link-style;
+	}
+
+	b,
+	strong {
+		font-weight: var(--v-font-weight-semibold);
+	}
+
+	/* Button-like things */
+	button,
+	input[type='button'],
+	input[type='submit'],
+	input[type='reset'] {
+		&:hover {
+			@mixin t-hover;
+		}
+
+		&:disabled,
+		&[aria-disabled='true'] {
+			@mixin t-disabled-button;
+		}
+	}
+
+	/* Input-like things */
+	input:not([type='button'], [type='submit'], [type='reset']),
+	textarea,
+	select,
+	[role='listbox'] {
+		&:disabled,
+		&[aria-disabled='true'] {
+			@mixin t-disabled-input;
+		}
+	}
+
+	/* Both button + input-like things */
+	button,
+	input,
+	textarea,
+	select {
+		&:focus-visible {
+			@mixin t-focus-ring;
+		}
+	}
+}

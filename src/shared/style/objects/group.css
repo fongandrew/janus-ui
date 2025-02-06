@@ -1,0 +1,18 @@
+@import '~/shared/style/variables/index.css';
+
+/* A group is a horizontal collection of items */
+@define-mixin o-group {
+	display: flex;
+	gap: var(--v-inline-gap);
+	align-items: flex-start;
+
+	> * {
+		min-height: 1lh;
+	}
+}
+
+@layer objects {
+	.o-group {
+		@mixin o-group;
+	}
+}

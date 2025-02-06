@@ -1,0 +1,15 @@
+@keyframes t-spin-animation {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@define-mixin t-spin {
+	animation: t-spin-animation 1s linear infinite;
+}
+
+@layer tools {
+	.t-spin {
+		@mixin t-spin;
+	}
+}

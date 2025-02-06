@@ -1,0 +1,108 @@
+/*
+    Light and dark mode colors
+*/
+@define-mixin v-dark {
+	--v-default-bg: hsl(0deg 0% 1.9%);
+	--v-default-fg: hsl(0deg 0% 98%);
+	--v-card-bg: hsl(0deg 0% 15%);
+	--v-card-fg: hsl(0deg 0% 98%);
+	--v-code-bg: hsl(0deg 0% 98%);
+	--v-code-fg: hsl(0deg 0% 3.9%);
+	--v-popover-bg: hsl(0deg 0% 3.9%);
+	--v-popover-fg: hsl(0deg 0% 98%);
+	--v-tooltip-bg: hsl(0deg 0% 3.9%);
+	--v-tooltip-fg: hsl(0deg 0% 98%);
+	--v-primary-bg: hsl(0deg 0% 98%);
+	--v-primary-fg: hsl(0deg 0% 9%);
+	--v-secondary-bg: hsl(0deg 0% 14.9%);
+	--v-secondary-fg: hsl(0deg 0% 98%);
+	--v-callout-bg: hsl(0deg 0% 14.9%);
+	--v-callout-fg: hsl(0deg 0% 98%);
+	--v-highlight-bg: hsl(210deg 80% 80%);
+	--v-highlight-fg: hsl(0deg 0% 9%);
+	--v-input-bg: hsl(0deg 0% 3.9%);
+	--v-input-fg: hsl(0deg 0% 98%);
+	--v-success-bg: hsl(120deg 80% 30%);
+	--v-success-fg: hsl(0deg 0% 98%);
+	--v-warning-bg: hsl(50deg 85% 75%);
+	--v-warning-fg: hsl(0deg 0% 0%);
+	--v-danger-bg: hsl(0deg 66% 50%);
+	--v-danger-fg: hsl(0deg 0% 98%);
+	--v-input-disabled-bg: hsl(0deg 0% 14.9%);
+	--v-backdrop: hsla(0deg 0% 0% / 50%);
+	--v-muted: hsl(0deg 0% 54.9%);
+	--v-link: hsl(210deg 80% 80%);
+	--v-ring: hsl(0deg 0% 83.1%);
+	--v-border-dynamic-base: white;
+	--v-border-dynamic-mix: 25%;
+}
+
+/*
+    Defining light second simply because this is the "default" theme and the VSCode
+    extension I use for CSS variables prefers later mentions of a variable.
+*/
+@define-mixin v-light {
+	--v-default-bg: hsl(0deg 0% 99%);
+	--v-default-fg: hsl(0deg 0% 3.9%);
+	--v-card-bg: hsl(0deg 0% 100%);
+	--v-card-fg: hsl(0deg 0% 3.9%);
+	--v-code-bg: hsl(0deg 0% 100%);
+	--v-code-fg: hsl(0deg 0% 3.9%);
+	--v-popover-bg: hsl(0deg 0% 100%);
+	--v-popover-fg: hsl(0deg 0% 3.9%);
+	--v-tooltip-bg: hsl(0deg 0% 3.9%);
+	--v-tooltip-fg: hsl(0deg 0% 98%);
+	--v-primary-bg: hsl(0deg 0% 9%);
+	--v-primary-fg: hsl(0deg 0% 98%);
+	--v-secondary-bg: hsl(0deg 0% 96.1%);
+	--v-secondary-fg: hsl(0deg 0% 9%);
+	--v-callout-bg: hsl(0deg 0% 96.1%);
+	--v-callout-fg: hsl(0deg 0% 9%);
+	--v-highlight-bg: hsl(210deg 80% 20%);
+	--v-highlight-fg: hsl(0deg 0% 98%);
+	--v-input-bg: hsl(0deg 0% 100%);
+	--v-input-fg: hsl(0deg 0% 3.9%);
+	--v-success-bg: hsl(120deg 80% 30%);
+	--v-success-fg: hsl(0deg 0% 98%);
+	--v-warning-bg: hsl(50deg 85% 75%);
+	--v-warning-fg: hsl(0deg 0% 0%);
+	--v-danger-bg: hsl(0deg 84.2% 60.2%);
+	--v-danger-fg: hsl(0deg 0% 98%);
+	--v-input-disabled-bg: hsl(0deg 0% 96.1%);
+	--v-backdrop: hsla(0deg 0% 0% / 50%);
+	--v-muted: hsl(0deg 0% 45.1%);
+	--v-link: hsl(210deg 80% 20%);
+	--v-ring: hsl(0deg 0% 3.9%);
+	--v-border-dynamic-base: black;
+	--v-border-dynamic-mix: 15%;
+}
+
+@layer variables {
+	:root {
+		@mixin v-light;
+	}
+
+	.v-inverted {
+		@mixin v-dark;
+	}
+
+	/* System Dark Mode */
+	@media (prefers-color-scheme: dark) {
+		:root:not([data-color-scheme='light']) {
+			@mixin v-dark;
+
+			.v-inverted {
+				@mixin v-light;
+			}
+		}
+	}
+
+	/* Explicit Dark Mode */
+	:root[data-color-scheme='dark'] {
+		@mixin v-dark;
+
+		.v-inverted {
+			@mixin v-light;
+		}
+	}
+}

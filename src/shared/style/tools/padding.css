@@ -1,0 +1,32 @@
+/*
+    Utility classes for overriding default padding. Default padding should be applied
+    via .o-box and friends. These classes are for one-off overrides, which is why we
+    only include zero variants.
+*/
+@layer tools {
+	.t-px-0 {
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	.t-py-0 {
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+
+	.t-pt-0 {
+		padding-top: 0;
+	}
+
+	.t-pr-0 {
+		padding-right: 0;
+	}
+
+	.t-pb-0 {
+		padding-bottom: 0;
+	}
+
+	.t-pl-0 {
+		padding-left: 0;
+	}
+}

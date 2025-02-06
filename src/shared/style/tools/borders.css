@@ -1,0 +1,72 @@
+/* Use inner shadow for border color, accepts extra shadows */
+@define-mixin t-inner-border $extras: 0 0 {
+	box-shadow:
+		inset 0 0 0 var(--v-border-width) var(--v-border-color),
+		$(extras);
+}
+
+@layer tools {
+	.t-inner-border {
+		@mixin t-inner-border;
+	}
+
+	.t-border {
+		border: var(--v-border-width) solid var(--v-border-color);
+	}
+
+	.t-border-0 {
+		border-width: 0;
+	}
+
+	.t-bx {
+		border-left-width: var(--v-border-width);
+		border-right-width: var(--v-border-width);
+	}
+
+	.t-by {
+		border-top-width: var(--v-border-width);
+		border-bottom-width: var(--v-border-width);
+	}
+
+	.t-bx-0 {
+		border-left-width: 0;
+		border-right-width: 0;
+	}
+
+	.t-by-0 {
+		border-top-width: 0;
+		border-bottom-width: 0;
+	}
+
+	.t-bt {
+		border-top-width: var(--v-border-width);
+	}
+
+	.t-br {
+		border-right-width: var(--v-border-width);
+	}
+
+	.t-bb {
+		border-bottom-width: var(--v-border-width);
+	}
+
+	.t-bl {
+		border-left-width: var(--v-border-width);
+	}
+
+	.t-bt-0 {
+		border-top-width: 0;
+	}
+
+	.t-br-0 {
+		border-right-width: 0;
+	}
+
+	.t-bb-0 {
+		border-bottom-width: 0;
+	}
+
+	.t-bl-0 {
+		border-left-width: 0;
+	}
+}

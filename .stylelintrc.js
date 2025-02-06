@@ -20,7 +20,7 @@ export default {
 		'csstools/value-no-unknown-custom-properties': [
 			true,
 			{
-				importFrom: ['src/shared/style/tokens.css'],
+				importFrom: ['src/shared/style/tokens.css', 'src/shared/style/variables/index.css'],
 			},
 		],
 	},

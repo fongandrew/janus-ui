@@ -1,0 +1,19 @@
+/* CSS grid helpers */
+
+@define-mixin t-col-auto {
+	grid-column: auto;
+}
+
+@define-mixin t-col-span-full {
+	grid-column: 1 / -1;
+}
+
+@layer tools {
+	.t-col-auto {
+		@mixin t-col-auto;
+	}
+
+	.t-col-span-full {
+		@mixin t-col-span-full;
+	}
+}
