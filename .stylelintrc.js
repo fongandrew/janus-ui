@@ -1,6 +1,6 @@
 /** @type {import('stylelint').Config} */
 export default {
-	extends: ['stylelint-config-standard'],
+	extends: ['stylelint-config-standard', 'stylelint-prettier/recommended'],
 	plugins: ['stylelint-value-no-unknown-custom-properties'],
 	rules: {
 		// So we can import without URL notation
