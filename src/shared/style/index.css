@@ -29,8 +29,9 @@
 
 /* Components */
 @import '~/shared/components/alert.css';
+@import '~/shared/components/button.css';
 
-/* @import '~/shared/components/button.css';
+/*
 @import '~/shared/components/card.css';
 @import '~/shared/components/checkbox.css';
 @import '~/shared/components/color-picker.css';

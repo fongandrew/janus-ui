@@ -1,5 +1,3 @@
-import '~/shared/components/button.css';
-
 import cx from 'classix';
 import { splitProps } from 'solid-js';
 
@@ -26,9 +24,17 @@ export function Button(props: ButtonProps) {
 		<button
 			type="button"
 			{...formElementProps}
-			class={cx('c-button--unstyled', !local.unstyled && 'c-button', props.class)}
+			class={cx(!local.unstyled && 'c-button', props.class)}
 		/>
 	);
+}
+
+export function GhostButton(props: ButtonProps) {
+	return <Button {...props} class={cx('c-button--ghost', props.class)} />;
+}
+
+export function LinkButton(props: ButtonProps) {
+	return <Button {...props} class={cx('c-button--link', props.class)} />;
 }
 
 export function IconButton(props: ButtonProps & { label: string }) {

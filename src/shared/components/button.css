@@ -1,74 +1,43 @@
 @import '~/shared/style/common.css';
 
-@layer base {
-	.c-button--unstyled {
-		@mixin with-disabled-button;
-		@mixin with-focus-ring;
-	}
-}
-
 @layer components {
 	.c-button {
+		@mixin v-input-spacing-md;
+		@mixin v-secondary-colors;
+		@mixin t-rounded;
+		@mixin t-border;
+		@mixin t-transition single-arg(color, background-color, border-color, box-shadow);
+
 		display: inline-flex;
 		align-items: flex-start;
 		justify-content: center;
 		white-space: nowrap;
-		font-weight: var(--font-weight-medium);
+		gap: var(--v-inline-gap);
 		cursor: pointer;
-
-		@mixin transition single-arg(color, background-color, border-color, box-shadow);
-
-		/* Secondary by default */
-		background-color: var(--secondary);
-		color: var(--secondary-fg);
-		border-width: var(--border-width-md);
-		border-style: solid;
-
-		@mixin border-dynamic var(--secondary);
-
-		/* md by default */
-		gap: var(--space-sm);
-		border-radius: var(--radius-md);
-		padding: var(--input-y-md) var(--space-md);
-		font-size: var(--font-size-md);
-		line-height: var(--line-height-md);
+		font-weight: var(--v-font-weight-medium);
 
 		/* Hover/active states */
 		&:hover {
-			box-shadow: var(--shadow-md);
-
-			@mixin hover-effect;
+			box-shadow: var(--v-shadow-md);
 		}
 
 		&:active {
 			box-shadow: none;
 		}
-
-		/* Icon styles */
-		& svg {
-			pointer-events: none;
-			height: 1lh;
-			width: 1em;
-			flex-shrink: 0;
-		}
 	}
 
 	.c-button--icon {
-		display: flex;
-		height: var(--input-height-md);
-		width: var(--input-height-md);
+		@mixin v-input-spacing-md;
+		@mixin t-rounded;
+		@mixin t-border;
+
+		display: inline-flex;
 		align-items: center;
 		justify-content: center;
 		border-radius: var(--radius-md);
 		border-color: transparent;
 		font-size: inherit;
 		cursor: pointer;
-
-		& svg {
-			height: 1em;
-			width: 1em;
-			flex-shrink: 0;
-		}
 
 		&:hover {
 			border-color: var(--secondary);
@@ -79,21 +48,6 @@
 }
 
 @layer utilities {
-	/* Color variants */
-	.c-button--primary {
-		background-color: var(--primary);
-		color: var(--primary-fg);
-
-		@mixin border-dynamic var(--primary);
-	}
-
-	.c-button--danger {
-		background-color: var(--danger);
-		color: var(--danger-fg);
-
-		@mixin border-dynamic var(--danger);
-	}
-
 	.c-button--ghost {
 		border-color: transparent;
 		background-color: transparent;
@@ -107,7 +61,7 @@
 	}
 
 	.c-button--link {
-		@mixin link-style;
+		@mixin t-link-style;
 
 		align-self: center;
 		display: inline;
@@ -118,30 +72,5 @@
 		&:hover {
 			box-shadow: none;
 		}
-	}
-
-	/* Size variants */
-	.c-button--sm {
-		gap: var(--space-xs);
-		border-radius: var(--radius-sm);
-		padding: var(--input-y-sm) var(--space-sm);
-		font-size: var(--font-size-sm);
-		line-height: var(--line-height-sm);
-
-		&:hover {
-			box-shadow: var(--shadow-sm);
-		}
-
-		&:active {
-			box-shadow: none;
-		}
-	}
-
-	.c-button--lg {
-		gap: var(--space-sm);
-		border-radius: var(--radius-lg);
-		padding: var(--input-y-lg) var(--space-lg);
-		font-size: var(--font-size-lg);
-		line-height: var(--line-height-lg);
 	}
 }

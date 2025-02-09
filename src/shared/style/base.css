@@ -57,5 +57,6 @@
 	.lucide {
 		height: 1lh;
 		width: 1em;
+		flex-shrink: 0;
 	}
 }

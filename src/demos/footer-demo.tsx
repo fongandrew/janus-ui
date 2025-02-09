@@ -20,7 +20,7 @@ export function FooterDemo() {
 			</CardContent>
 			<CardFooter>
 				<Button>Skip</Button>
-				<Button class="c-button--primary">Continue</Button>
+				<Button class="v-primary-colors">Continue</Button>
 			</CardFooter>
 		</Card>
 	);

@@ -4,3 +4,6 @@
 @import './composition.css';
 @import './spacing.css';
 @import './text.css';
+
+/* These mixins depend on other mixins so define them later */
+@import './input-size.css';

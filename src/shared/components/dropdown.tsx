@@ -14,7 +14,7 @@ import cx from 'classix';
 import { createContext, type JSX, splitProps, useContext } from 'solid-js';
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 
-import { Button } from '~/shared/components/button';
+import { GhostButton } from '~/shared/components/button';
 import { type FormElementControl } from '~/shared/components/form-element-control';
 import { FormElementProvider } from '~/shared/components/form-element-provider';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
@@ -145,9 +145,9 @@ export function DropdownContent(props: DropdownContentProps) {
 		>
 			<div class="c-dropdown__children">{local.children}</div>
 			<div class="c-dropdown__footer">
-				<Button class="c-button--ghost c-button--sm" onClick={closePopover} unsetFormInput>
+				<GhostButton class="v-input-spacing-sm" onClick={closePopover} unsetFormInput>
 					<T>Close</T>
-				</Button>
+				</GhostButton>
 			</div>
 		</div>
 	);

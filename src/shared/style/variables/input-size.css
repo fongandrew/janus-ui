@@ -1,0 +1,29 @@
+/* Convenience helpers grouping spacing + text size */
+@define-mixin v-input-sm {
+	@mixin v-text-sm;
+	@mixin v-input-spacing-sm;
+}
+
+@define-mixin v-input-md {
+	@mixin v-text-md;
+	@mixin v-input-spacing-md;
+}
+
+@define-mixin v-input-lg {
+	@mixin v-text-lg;
+	@mixin v-input-spacing-lg;
+}
+
+@layer variables {
+	.v-input-sm {
+		@mixin v-input-sm;
+	}
+
+	.v-input-md {
+		@mixin v-input-md;
+	}
+
+	.v-input-lg {
+		@mixin v-input-lg;
+	}
+}

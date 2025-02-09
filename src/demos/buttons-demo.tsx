@@ -1,6 +1,6 @@
 import { Ellipsis, Settings } from 'lucide-solid';
 
-import { Button, IconButton } from '~/shared/components/button';
+import { Button, GhostButton, IconButton, LinkButton } from '~/shared/components/button';
 import {
 	Card,
 	CardContent,
@@ -20,7 +20,7 @@ export function ButtonsDemo() {
 			<CardContent>
 				<Stack>
 					<div class="o-group">
-						<Button class="c-button--sm">
+						<Button class="v-input-sm">
 							<Settings /> Small Button
 						</Button>
 
@@ -28,16 +28,16 @@ export function ButtonsDemo() {
 							<Settings /> Default Button
 						</Button>
 
-						<Button class="c-button--lg">
+						<Button class="v-input-lg">
 							<Settings /> Large Button
 						</Button>
 					</div>
 					<div class="o-group">
-						<Button class="c-button--primary">Primary</Button>
-						<Button class="c-button--danger">Danger</Button>
+						<Button class="v-primary-colors">Primary</Button>
+						<Button class="v-danger-colors">Danger</Button>
 						<Button disabled>Disabled</Button>
-						<Button class="c-button--ghost">Ghost</Button>
-						<Button class="c-button--link">Link</Button>
+						<GhostButton>Ghost</GhostButton>
+						<LinkButton>Link</LinkButton>
 						<IconButton label="Settings">
 							<Settings />
 						</IconButton>
