@@ -1,0 +1,127 @@
+/* Assign default spacing variables that objects can work with */
+
+/* Normal spacing variants */
+@define-mixin v-spacing-base $spacing, $border-width {
+	--v-spacing: $(spacing);
+	--v-border-width: $(border-width);
+
+	/* Reduced padding to account for padding */
+	--v-spacing-text-y: calc($(spacing) - (1lh - 1em) / 2);
+
+	/* Radius is like text, padding size but reduced to account for line height */
+	--v-radius: calc($(spacing) - (1lh - 1em) / 2);
+}
+
+@define-mixin v-spacing-sm {
+	@mixin v-spacing-base var(--v-space-sm), var(--v-border-width-sm);
+}
+
+@define-mixin v-spacing-md {
+	@mixin v-spacing-base var(--v-space-md), var(--v-border-width-md);
+}
+
+@define-mixin v-spacing-lg {
+	@mixin v-spacing-base var(--v-space-lg), var(--v-border-width-lg);
+}
+
+/*
+	Input variants use same sm / md / lg sizing but are smaller and aim to target a particular
+	height (in the single-line case) rather than a particular padding size
+*/
+@define-mixin v-input-spacing-base $input-height, $border-width {
+	--v-spacing: calc(($(input-height) - 1em) / 2);
+	--v-spacing-text-y: calc(($(input-height) - 1lh) / 2);
+	--v-border-width: $(border-width);
+	--v-radius: var(--v-spacing-text-y);
+}
+
+@define-mixin v-input-spacing-sm {
+	@mixin v-input-spacing-base var(--v-input-height-sm), var(--v-border-width-sm);
+}
+
+@define-mixin v-input-spacing-md {
+	@mixin v-input-spacing-base var(--v-input-height-md), var(--v-border-width-md);
+}
+
+@define-mixin v-input-spacing-lg {
+	@mixin v-input-spacing-base var(--v-input-height-lg), var(--v-border-width-lg);
+}
+
+/*
+	Input container spacing covers the gap between input boxes and an evenly spaced container
+	of the same size. This is useful for lining up text inside a text box and a "ghost" input box.
+*/
+@define-mixin v-input-container-spacing-base $spacing, $input-height, $border-width {
+	--v-spacing: calc($(spacing) - $(border-width) - ($(input-height) - 1em) / 2);
+	--v-spacing-text-y: calc($(spacing) - $(border-width) - ($(input-height) - 1lh) / 2);
+	--v-border-width: $(border-width);
+
+	/* Same as evenly spaced radius */
+	--v-radius: calc($(spacing) - (1lh - 1em) / 2);
+}
+
+@define-mixin v-input-container-spacing-sm {
+	@mixin v-input-container-spacing-base var(--v-space-sm), var(--v-input-height-sm),
+		var(--v-border-width-sm);
+}
+
+@define-mixin v-input-container-spacing-md {
+	@mixin v-input-container-spacing-base var(--v-space-md), var(--v-input-height-md),
+		var(--v-border-width-md);
+}
+
+@define-mixin v-input-container-spacing-lg {
+	@mixin v-input-container-spacing-base var(--v-space-lg), var(--v-input-height-lg),
+		var(--v-border-width-lg);
+}
+
+/*
+	Utility classes for manually overriding from JSX/TSX/HTML
+*/
+
+@layer variables {
+	:root {
+		@mixin v-spacing-md;
+
+		/* Some shared stuff that's fixed for now, but maybe override in the future? */
+
+		/* This is the gap between elements like an icon and label */
+		--v-inline-gap: 0.5em;
+	}
+
+	.v-spacing-sm {
+		@mixin v-spacing-sm;
+	}
+
+	.v-spacing-md {
+		@mixin v-spacing-md;
+	}
+
+	.v-spacing-lg {
+		@mixin v-spacing-lg;
+	}
+
+	.v-input-spacing-sm {
+		@mixin v-input-spacing-sm;
+	}
+
+	.v-input-spacing-md {
+		@mixin v-input-spacing-md;
+	}
+
+	.v-input-spacing-lg {
+		@mixin v-input-spacing-lg;
+	}
+
+	.v-input-container-spacing-sm {
+		@mixin v-input-container-spacing-sm;
+	}
+
+	.v-input-container-spacing-md {
+		@mixin v-input-container-spacing-md;
+	}
+
+	.v-input-container-spacing-lg {
+		@mixin v-input-container-spacing-lg;
+	}
+}

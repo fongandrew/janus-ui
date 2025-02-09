@@ -1,0 +1,73 @@
+/*
+    Defines our basic layout tokens -- these are t-shirt size tokens used to
+    build up more complex tokens plus various styling and typography tokens.
+
+    Colors should go in `color-schemes.css`.
+*/
+:root {
+	/* Border Radius */
+	--v-radius-sm: 0.25rem;
+	--v-radius-md: 0.375rem;
+	--v-radius-lg: 0.5rem;
+	--v-radius-full: 9999px;
+
+	/* Spacing */
+	--v-space-xs: 0.25rem;
+	--v-space-sm: 0.5rem;
+	--v-space-md: 1rem;
+	--v-space-lg: 1.5rem;
+	--v-space-xl: 2rem;
+	--v-space-2xl: 2.5rem;
+
+	/* Typography */
+	--v-font-size-xs: 0.8125rem;
+	--v-font-size-sm: 0.875rem;
+	--v-font-size-md: 0.9375rem;
+	--v-font-size-lg: 1rem;
+	--v-font-size-xl: 1.25rem;
+	--v-font-size-2xl: 1.5rem;
+
+	/* Font Weights */
+	--v-font-weight-normal: 400;
+	--v-font-weight-medium: 500;
+	--v-font-weight-semibold: 600;
+	--v-font-weight-bold: 700;
+
+	/* Line Heights */
+	--v-line-height-xs: 1.125rem;
+	--v-line-height-sm: 1.25rem;
+	--v-line-height-md: 1.375rem;
+	--v-line-height-lg: 1.5rem;
+	--v-line-height-xl: 1.75rem;
+	--v-line-height-2xl: 2rem;
+
+	/* Borders */
+	--v-border-width-sm: 1px;
+	--v-border-width-md: 0.0625rem;
+	--v-border-width-lg: 0.125rem;
+
+	/* Shadows */
+	--v-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 10%);
+	--v-shadow-md: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
+	--v-shadow-lg: 0 6px 9px -2px rgb(0 0 0 / 10%), 0 3px 5px -3px rgb(0 0 0 / 10%);
+	--v-shadow-xl: 0 12px 18px -4px rgb(0 0 0 / 10%);
+	--v-shadow-inner: inset 0 1px 2px 0 rgb(0 0 0 / 10%);
+	--v-shadow-inner-top: inset 0 2px 3px 0 rgb(0 0 0 / 10%);
+	--v-shadow-inner-bottom: inset 0 -2px 3px 0 rgb(0 0 0 / 10%);
+
+	/* Z-Index */
+	--v-z-backdrop: 10;
+	--v-z-above-backdrop: 20;
+
+	/* Outline */
+	--v-outline-width: 0.0625rem;
+	--v-outline-offset: 0.0625rem;
+
+	/* Text formatting */
+	--v-underline-offset: 0.25rem;
+
+	/* Component Specific */
+	--v-input-height-sm: 1.75rem;
+	--v-input-height-md: 2rem;
+	--v-input-height-lg: 2.25rem;
+}

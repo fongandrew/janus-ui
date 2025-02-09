@@ -138,6 +138,7 @@
 }
 
 @layer variables {
+	:root,
 	.v-default-colors {
 		@mixin v-default-colors;
 	}

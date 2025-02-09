@@ -1,40 +1,6 @@
+@import './breakpoints.css';
 @import './color-schemes.css';
 @import './color-blocks.css';
-@import './sizes.css';
-
-/* Misc variables that don't fit above */
-:root {
-	/* Font Weights */
-	--v-font-weight-normal: 400;
-	--v-font-weight-medium: 500;
-	--v-font-weight-semibold: 600;
-	--v-font-weight-bold: 700;
-
-	/*
-		Shadows. It's tempting to group these by size but it doesn't compose as well
-		with descendants as something like padding. That is, you very rearely stick
-		something with large padding inside something with small padding. But it's
-		common to stick something with a small shadow inside something with a large
-		shadow (like a dropdown on top of a modal).
-	*/
-	--v-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 10%);
-	--v-shadow-md: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
-	--v-shadow-lg: 0 6px 9px -2px rgb(0 0 0 / 10%), 0 3px 5px -3px rgb(0 0 0 / 10%);
-	--v-shadow-inner: inset 0 1px 2px 0 rgb(0 0 0 / 10%);
-	--v-shadow-inner-top: inset 0 2px 3px 0 rgb(0 0 0 / 10%);
-	--v-shadow-inner-bottom: inset 0 -2px 3px 0 rgb(0 0 0 / 10%);
-
-	/* Z-index */
-	--v-z-backdrop: 10;
-	--v-z-above-backdrop: 20;
-
-	/* Outline */
-	--v-outline-width: 0.0625rem;
-	--v-outline-offset: 0.0625rem;
-
-	/* For styling hover options */
-	--v-hover-effect: contrast(0.95) saturate(1.15);
-
-	/* Text formatting */
-	--v-underline-offset: 0.25rem;
-}
+@import './composition.css';
+@import './spacing.css';
+@import './text.css';

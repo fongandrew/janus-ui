@@ -1,8 +1,6 @@
 /*
     Mixins for styling both generic elements and things we want to look like generic elements
 */
-@import '~/shared/style/variables/index.css';
-
 @define-mixin t-link-style {
 	color: var(--v-link);
 	text-decoration-line: underline;

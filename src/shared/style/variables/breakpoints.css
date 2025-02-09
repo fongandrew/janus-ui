@@ -1,0 +1,27 @@
+/*
+    Breakpoint names refer to the potrait width of the screen (if applicable), and
+    *-wide variants refer to landscape mode.
+*/
+@define-mixin v-breakpoint-mobile-wide {
+	@media (width >= 640px) {
+		@mixin-content;
+	}
+}
+
+@define-mixin v-breakpoint-tablet {
+	@media (width >= 768px) {
+		@mixin-content;
+	}
+}
+
+@define-mixin v-breakpoint-tablet-wide {
+	@media (width >= 1024px) {
+		@mixin-content;
+	}
+}
+
+@define-mixin v-breakpoint-desktop {
+	@media (width >= 1200px) {
+		@mixin-content;
+	}
+}

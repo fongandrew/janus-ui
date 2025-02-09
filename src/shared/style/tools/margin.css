@@ -3,7 +3,7 @@
 */
 @layer tools {
 	.t-margin {
-		margin: var(--v-block-padding);
+		margin: var(--v-spacing);
 	}
 
 	.t-margin-0 {
@@ -11,13 +11,13 @@
 	}
 
 	.t-mx {
-		margin-left: var(--v-block-padding);
-		margin-right: var(--v-block-padding);
+		margin-left: var(--v-spacing);
+		margin-right: var(--v-spacing);
 	}
 
 	.t-my {
-		margin-top: var(--v-block-padding);
-		margin-bottom: var(--v-block-padding);
+		margin-top: var(--v-spacing);
+		margin-bottom: var(--v-spacing);
 	}
 
 	.t-mx-0 {
@@ -41,19 +41,19 @@
 	}
 
 	.t-mt {
-		margin-top: var(--v-block-padding);
+		margin-top: var(--v-spacing);
 	}
 
 	.t-mr {
-		margin-right: var(--v-block-padding);
+		margin-right: var(--v-spacing);
 	}
 
 	.t-mb {
-		margin-bottom: var(--v-block-padding);
+		margin-bottom: var(--v-spacing);
 	}
 
 	.t-ml {
-		margin-left: var(--v-block-padding);
+		margin-left: var(--v-spacing);
 	}
 
 	.t-mt-0 {

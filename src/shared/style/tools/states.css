@@ -1,8 +1,6 @@
 /*
     Styles for different states of an input element.
 */
-@import '~/shared/style/variables/index.css';
-
 @define-mixin t-disabled-button {
 	pointer-events: none;
 	opacity: 0.5;

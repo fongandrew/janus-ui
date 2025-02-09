@@ -3,9 +3,6 @@
 /* Defaults for a bunch of things */
 @layer base {
 	body {
-		@mixin v-default-colors;
-		@mixin v-md;
-
 		background: linear-gradient(102deg, hsl(0deg 0% 100% / 0%), rgb(255 204 0 / 5%)),
 			linear-gradient(12deg, rgb(33 37 41 / 5%), hsl(0deg 0% 100% / 0%)), var(--v-bg);
 		min-height: 100vh;
@@ -54,5 +51,11 @@
 		&:focus-visible {
 			@mixin t-focus-ring;
 		}
+	}
+
+	/* Icons defaults */
+	.lucide {
+		height: 1lh;
+		width: 1em;
 	}
 }

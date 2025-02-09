@@ -1,0 +1,65 @@
+/*
+    These are just utils to set font size and line height together. They function equivalently to
+    other variable-defining mixins (which is why they're here), but there's no need to define
+    variables since 1em and 1lh are things.
+*/
+
+@define-mixin v-text-xs {
+	font-size: var(--v-font-size-xs);
+	line-height: var(--v-line-height-xs);
+}
+
+@define-mixin v-text-sm {
+	font-size: var(--v-font-size-sm);
+	line-height: var(--v-line-height-sm);
+}
+
+@define-mixin v-text-md {
+	font-size: var(--v-font-size-md);
+	line-height: var(--v-line-height-md);
+}
+
+@define-mixin v-text-lg {
+	font-size: var(--v-font-size-lg);
+	line-height: var(--v-line-height-lg);
+}
+
+@define-mixin v-text-xl {
+	font-size: var(--v-font-size-xl);
+	line-height: var(--v-line-height-xl);
+}
+
+@define-mixin v-text-2xl {
+	font-size: var(--v-font-size-2xl);
+	line-height: var(--v-line-height-2xl);
+}
+
+@layer variables {
+	:root {
+		@mixin v-text-md;
+	}
+
+	.v-text-xs {
+		@mixin v-text-xs;
+	}
+
+	.v-text-sm {
+		@mixin v-text-sm;
+	}
+
+	.v-text-md {
+		@mixin v-text-md;
+	}
+
+	.v-text-lg {
+		@mixin v-text-lg;
+	}
+
+	.v-text-xl {
+		@mixin v-text-xl;
+	}
+
+	.v-text-2xl {
+		@mixin v-text-2xl;
+	}
+}

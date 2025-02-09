@@ -16,9 +16,9 @@
 
 	/* Typography */
 	--font-size-xs: 0.8125rem;
-	--font-size-sm: 0.875rem;
-	--font-size-md: 0.9375rem;
-	--font-size-lg: 1rem;
+	--font-size-sm: 0.875rem; /* 14 px */
+	--font-size-md: 0.9375rem; /* 15 px */
+	--font-size-lg: 1rem; /* 16 px */
 	--font-size-xl: 1.25rem;
 	--font-size-2xl: 1.5rem;
 
@@ -30,9 +30,9 @@
 
 	/* Line Heights */
 	--line-height-xs: 1.125rem;
-	--line-height-sm: 1.25rem;
-	--line-height-md: 1.375rem;
-	--line-height-lg: 1.5rem;
+	--line-height-sm: 1.25rem; /* 20 px */
+	--line-height-md: 1.375rem; /* 22 px */
+	--line-height-lg: 1.5rem; /* 24 px */
 	--line-height-xl: 1.75rem;
 	--line-height-2xl: 2rem;
 
@@ -65,9 +65,9 @@
 	--underline-offset: 0.25rem;
 
 	/* Component Specific */
-	--input-height-sm: 1.75rem;
-	--input-height-md: 2rem;
-	--input-height-lg: 2.25rem;
+	--input-height-sm: 1.75rem; /* 28 px */
+	--input-height-md: 2rem; /* 32 px */
+	--input-height-lg: 2.25rem; /* 36 px */
 	--sidebar-width: 16rem;
 	--modal-width: 32rem;
 	--dropdown-width: 11.5rem;

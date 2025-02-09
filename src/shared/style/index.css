@@ -21,5 +21,37 @@
 
 @import '~/shared/style/reset.css';
 @import '~/shared/style/common.css';
-@import '~/shared/style/base.css';
 @import '~/shared/style/overrides.css';
+@import '~/shared/style/variables/index.css';
+@import '~/shared/style/tools/index.css';
+@import '~/shared/style/objects/index.css';
+@import '~/shared/style/base.css';
+
+/* Components */
+@import '~/shared/components/alert.css';
+
+/* @import '~/shared/components/button.css';
+@import '~/shared/components/card.css';
+@import '~/shared/components/checkbox.css';
+@import '~/shared/components/color-picker.css';
+@import '~/shared/components/description.css';
+@import '~/shared/components/details.css';
+@import '~/shared/components/dropdown.css';
+@import '~/shared/components/error-message.css';
+@import '~/shared/components/form.css';
+@import '~/shared/components/input.css';
+@import '~/shared/components/label-stack.css';
+@import '~/shared/components/label.css';
+@import '~/shared/components/labelled-action.css';
+@import '~/shared/components/list-box.css';
+@import '~/shared/components/modal-form.css';
+@import '~/shared/components/modal.css';
+@import '~/shared/components/option-list.css';
+@import '~/shared/components/radio.css';
+@import '~/shared/components/select.css';
+@import '~/shared/components/sidebar-layout.css';
+@import '~/shared/components/slider.css';
+@import '~/shared/components/tabs.css';
+@import '~/shared/components/textarea.css';
+@import '~/shared/components/toggle-switch.css';
+@import '~/shared/components/tooltip.css'; */

@@ -5,13 +5,17 @@
 		$(extras);
 }
 
+@define-mixin t-border {
+	border: var(--v-border-width) solid var(--v-border-color);
+}
+
 @layer tools {
 	.t-inner-border {
 		@mixin t-inner-border;
 	}
 
 	.t-border {
-		border: var(--v-border-width) solid var(--v-border-color);
+		@mixin t-border;
 	}
 
 	.t-border-0 {

@@ -1,5 +1,3 @@
-@import '~/shared/style/variables/index.css';
-
 /* A group is a horizontal collection of items */
 @define-mixin o-group {
 	display: flex;

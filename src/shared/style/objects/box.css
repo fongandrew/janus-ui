@@ -1,29 +1,21 @@
-@import '~/shared/style/variables/index.css';
-
-/* Default box is just a container with evenly spaced padding  */
+/* Default box is just a container with set padding  */
 @define-mixin o-box {
-	padding: var(--v-block-padding);
+	padding: var(--v-spacing);
 }
 
-/* Variant of box with adjusted vertical padding to account for line height */
+/* Text variant uses reduced padding on y-axis to account for line height */
 @define-mixin o-text-box {
-	padding: var(--v-text-y-padding) var(--v-block-padding);
-}
+	padding: var(--v-spacing-text-y) var(--v-spacing);
 
-/* Variant of box with adjusted padding to match target height for input element */
-@define-mixin o-input-box {
-	padding: var(--v-input-y-padding) var(--v-input-x-padding);
-	border-width: var(--v-border-width);
-}
+	/* Some default text overflow handling */
 
-/*
-	Variant of box that contains input boxes and fills in back to original block padding.
-	This is useful if you're trying to line up text inside a text box and a "ghost"
-	input box.
-*/
-@define-mixin o-input-container-box {
-	padding: calc(var(--v-block-padding) - var(--v-input-y-padding) - var(--v-border-width))
-		calc(var(--v-block-padding) - var(--v-input-x-padding) - var(--v-border-width));
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+
+	* {
+		overflow-x: hidden;
+		text-overflow: ellipsis;
+	}
 }
 
 @layer objects {
@@ -33,13 +25,5 @@
 
 	.o-text-box {
 		@mixin o-text-box;
-	}
-
-	.o-input-box {
-		@mixin o-input-box;
-	}
-
-	.o-input-container-box {
-		@mixin o-input-container-box;
 	}
 }
