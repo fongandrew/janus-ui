@@ -10,7 +10,6 @@ import {
 } from '~/shared/components/card';
 import { Description } from '~/shared/components/description';
 import { Dropdown } from '~/shared/components/dropdown';
-import { Group } from '~/shared/components/group';
 import { Menu, MenuGroup, MenuItem, MenuItemLink } from '~/shared/components/menu';
 import { Stack } from '~/shared/components/stack';
 
@@ -25,7 +24,7 @@ function MenuDemo() {
 			<CardContent>
 				<Stack class="gap-xs">
 					<Description>Selected: {selection() ?? 'None'}</Description>
-					<Group>
+					<div class="o-group">
 						<Dropdown>
 							{() => <Button>Simple Menu</Button>}
 							{() => (
@@ -67,7 +66,7 @@ function MenuDemo() {
 								</Menu>
 							)}
 						</Dropdown>
-					</Group>
+					</div>
 				</Stack>
 			</CardContent>
 		</Card>

@@ -16,7 +16,6 @@ import {
 import { Button, type ButtonProps, IconButton } from '~/shared/components/button';
 import { FormContextProvider } from '~/shared/components/form-context-provider';
 import { FORM_CONTROL_ATTR } from '~/shared/components/form-element-control';
-import { Group } from '~/shared/components/group';
 import { ModalContext, type ModalContextValue } from '~/shared/components/modal-context';
 import { firstFocusable } from '~/shared/utility/focusables';
 import { generateId } from '~/shared/utility/id-generator';
@@ -289,10 +288,10 @@ export function ModalCloseButton(
 export function ModalTitle(props: JSX.HTMLAttributes<HTMLDivElement>) {
 	const [local, rest] = splitProps(props, ['children']);
 	return (
-		<Group {...rest} class={cx('c-modal__header', rest.class)}>
+		<div {...rest} class={cx('o-group', 'c-modal__header', rest.class)}>
 			<h2 class="c-modal__title">{local.children}</h2>
 			<ModalXButton />
-		</Group>
+		</div>
 	);
 }
 

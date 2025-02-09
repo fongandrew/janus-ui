@@ -17,7 +17,7 @@ function AlertBase(props: AlertBaseProps & { defaultIcon: typeof Info }) {
 			<span class="t-flex-static">
 				<Dynamic component={local.icon ?? local.defaultIcon} aria-hidden="true" />
 			</span>
-			<div class="t-flex-auto">{local.children}</div>
+			<div class="t-flex-fill">{local.children}</div>
 		</div>
 	);
 }

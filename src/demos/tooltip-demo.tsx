@@ -6,7 +6,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from '~/shared/components/card';
-import { Grid } from '~/shared/components/grid';
 import { Tooltip } from '~/shared/components/tooltip';
 
 function TooltipDemo() {
@@ -17,7 +16,7 @@ function TooltipDemo() {
 				<CardDescription>Tooltips on hover</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Grid class="gap-sm">
+				<div class="o-grid v-spacing-sm">
 					<Tooltip tip="Hello, I'm a toolip" placement="top">
 						<Button>Top</Button>
 					</Tooltip>
@@ -30,7 +29,7 @@ function TooltipDemo() {
 					<Tooltip tip="Hello, I'm a toolip" placement="right">
 						<Button>Right</Button>
 					</Tooltip>
-				</Grid>
+				</div>
 			</CardContent>
 		</Card>
 	);

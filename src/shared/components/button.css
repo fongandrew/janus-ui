@@ -109,6 +109,7 @@
 	.c-button--link {
 		@mixin link-style;
 
+		align-self: center;
 		display: inline;
 		border: 0;
 		background-color: transparent;

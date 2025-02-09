@@ -8,7 +8,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from '~/shared/components/card';
-import { Group } from '~/shared/components/group';
 import { Stack } from '~/shared/components/stack';
 
 export function ButtonsDemo() {
@@ -20,7 +19,7 @@ export function ButtonsDemo() {
 			</CardHeader>
 			<CardContent>
 				<Stack>
-					<Group>
+					<div class="o-group">
 						<Button class="c-button--sm">
 							<Settings /> Small Button
 						</Button>
@@ -32,8 +31,8 @@ export function ButtonsDemo() {
 						<Button class="c-button--lg">
 							<Settings /> Large Button
 						</Button>
-					</Group>
-					<Group>
+					</div>
+					<div class="o-group">
 						<Button class="c-button--primary">Primary</Button>
 						<Button class="c-button--danger">Danger</Button>
 						<Button disabled>Disabled</Button>
@@ -45,7 +44,7 @@ export function ButtonsDemo() {
 						<IconButton label="More options">
 							<Ellipsis />
 						</IconButton>
-					</Group>
+					</div>
 				</Stack>
 			</CardContent>
 		</Card>

@@ -23,8 +23,6 @@ import { TabsDemo } from '~/demos/tabs-demo';
 import { TabsPersistDemo } from '~/demos/tabs-persist-demo';
 import { TextareasDemo } from '~/demos/textareas-demo';
 import { TooltipDemo } from '~/demos/tooltip-demo';
-import { Box } from '~/shared/components/box';
-import { Grid } from '~/shared/components/grid';
 import { Header } from '~/shared/components/header';
 import { Main } from '~/shared/components/main';
 import {
@@ -80,12 +78,12 @@ function App() {
 				</SidebarFooter>
 			</Sidebar>
 			<Main>
-				<Box class="pt-0">
+				<div class="o-box t-pt-0">
 					<Header>
 						<SidebarOpenButton />
 						<h1>Solid Base</h1>
 					</Header>
-					<Grid>
+					<div class="o-grid">
 						<ButtonsDemo />
 						<AlertsDemo />
 						<DetailsDemo />
@@ -106,8 +104,8 @@ function App() {
 						<FooterDemo />
 						<TabsDemo />
 						<TabsPersistDemo />
-					</Grid>
-				</Box>
+					</div>
+				</div>
 			</Main>
 		</SidebarLayout>
 	);

@@ -1,4 +1,3 @@
-import { TextBox } from '~/shared/components/box';
 import {
 	Card,
 	CardContent,
@@ -21,13 +20,13 @@ export function TabsDemo() {
 					<div>
 						<Tabs>
 							<Tab label="Tab 1">
-								<TextBox>Content of Tab 1</TextBox>
+								<div class="o-text-box">Content of Tab 1</div>
 							</Tab>
 							<Tab label="Tab 2">
-								<TextBox>Content of Tab 2</TextBox>
+								<div class="o-text-box">Content of Tab 2</div>
 							</Tab>
 							<Tab label="Tab 3">
-								<TextBox>Content of Tab 3</TextBox>
+								<div class="o-text-box">Content of Tab 3</div>
 							</Tab>
 						</Tabs>
 					</div>
@@ -35,13 +34,13 @@ export function TabsDemo() {
 					<Card>
 						<Tabs>
 							<Tab label="Tab with a very long long long long name">
-								<TextBox>Content of Tab 1</TextBox>
+								<div class="o-text-box">Content of Tab 1</div>
 							</Tab>
 							<Tab label="Short tab">
-								<TextBox>Content of Tab 2</TextBox>
+								<div class="o-text-box">Content of Tab 2</div>
 							</Tab>
 							<Tab label="Another tab with a fairly long name">
-								<TextBox>Content of Tab 3</TextBox>
+								<div class="o-text-box">Content of Tab 3</div>
 							</Tab>
 						</Tabs>
 					</Card>

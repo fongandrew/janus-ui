@@ -4,7 +4,7 @@
 	flex: 0 0 auto;
 }
 
-@define-mixin t-flex-even {
+@define-mixin t-flex-fill {
 	flex: 1 1 1em;
 }
 
@@ -12,32 +12,16 @@
 	flex: 1 1 auto;
 }
 
-@define-mixin t-flex-grow {
-	flex-grow: 1;
-}
-
-@define-mixin t-flex-shrink {
-	flex-shrink: 1;
-}
-
 @layer tools {
 	.t-flex-static {
 		@mixin t-flex-static;
 	}
 
-	.t-flex-even {
-		@mixin t-flex-even;
+	.t-flex-fill {
+		@mixin t-flex-fill;
 	}
 
 	.t-flex-auto {
 		@mixin t-flex-auto;
-	}
-
-	.t-flex-grow {
-		@mixin t-flex-grow;
-	}
-
-	.t-flex-shrink {
-		@mixin t-flex-shrink;
 	}
 }

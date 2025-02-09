@@ -11,7 +11,6 @@ import {
 import { Checkbox } from '~/shared/components/checkbox';
 import { Description } from '~/shared/components/description';
 import { type TypedFormData } from '~/shared/components/form';
-import { Group } from '~/shared/components/group';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
@@ -255,14 +254,12 @@ function ModalDemo() {
 				<CardTitle>Modal</CardTitle>
 				<CardDescription>Modal dialog with backdrop</CardDescription>
 			</CardHeader>
-			<CardContent>
-				<Group>
-					<SimpleModal />
-					<LongModal />
-					<FormModal />
-					<ScrollableForm />
-					<AsyncForm />
-				</Group>
+			<CardContent class="o-group">
+				<SimpleModal />
+				<LongModal />
+				<FormModal />
+				<ScrollableForm />
+				<AsyncForm />
 			</CardContent>
 		</Card>
 	);

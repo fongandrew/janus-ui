@@ -9,7 +9,6 @@ import {
 } from '~/shared/components/alert';
 import { Button } from '~/shared/components/button';
 import { Card, CardContent, CardHeader, CardTitle } from '~/shared/components/card';
-import { Group } from '~/shared/components/group';
 import { Stack } from '~/shared/components/stack';
 
 const toggle = (value: boolean) => !value;
@@ -44,13 +43,13 @@ export function AlertsDemo() {
 					{showDanger() && (
 						<DangerAlert>An error occurred while processing your request</DangerAlert>
 					)}
-					<Group>
+					<div class="o-group">
 						<Button onClick={() => setShowInfo(toggle)}>Toggle Info Alert</Button>
 						<Button onClick={() => setShowCallout(toggle)}>Toggle Callout</Button>
 						<Button onClick={() => setShowSuccess(toggle)}>Toggle Success Alert</Button>
 						<Button onClick={() => setShowWarning(toggle)}>Toggle Warning Alert</Button>
 						<Button onClick={() => setShowDanger(toggle)}>Toggle Danger Alert</Button>
-					</Group>
+					</div>
 				</Stack>
 			</CardContent>
 		</Card>
