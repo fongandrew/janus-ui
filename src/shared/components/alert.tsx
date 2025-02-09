@@ -1,5 +1,3 @@
-import '~/shared/components/alert.css';
-
 import cx from 'classix';
 import { AlertCircle, AlertTriangle, CheckCircle, Info, type LucideProps } from 'lucide-solid';
 import { type Component, type JSX, splitProps } from 'solid-js';
@@ -16,10 +14,10 @@ function AlertBase(props: AlertBaseProps & { defaultIcon: typeof Info }) {
 
 	return (
 		<div role="alert" aria-live="assertive" {...rest} class={cx('c-alert', props.class)}>
-			<span class="c-alert__icon">
+			<span class="t-flex-static">
 				<Dynamic component={local.icon ?? local.defaultIcon} aria-hidden="true" />
 			</span>
-			<div class="c-alert__content">{local.children}</div>
+			<div class="t-flex-auto">{local.children}</div>
 		</div>
 	);
 }
@@ -40,7 +38,7 @@ export function SuccessAlert(props: AlertBaseProps) {
 		<AlertBase
 			defaultIcon={CheckCircle}
 			{...props}
-			class={cx(props.class, 'c-alert--success')}
+			class={cx(props.class, 'v-success-colors')}
 		/>
 	);
 }
@@ -51,7 +49,7 @@ export function WarningAlert(props: AlertBaseProps) {
 		<AlertBase
 			defaultIcon={AlertTriangle}
 			{...props}
-			class={cx(props.class, 'c-alert--warning')}
+			class={cx(props.class, 'v-warning-colors')}
 		/>
 	);
 }
@@ -62,7 +60,7 @@ export function DangerAlert(props: AlertBaseProps) {
 		<AlertBase
 			defaultIcon={AlertCircle}
 			{...props}
-			class={cx(props.class, 'c-alert--danger')}
+			class={cx(props.class, 'v-danger-colors')}
 		/>
 	);
 }

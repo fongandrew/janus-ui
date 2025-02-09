@@ -1,57 +1,9 @@
-@import '~/shared/style/common.css';
-
 @layer components {
 	.c-alert {
-		display: flex;
-		align-items: flex-start;
-		gap: var(--space-sm);
-		border-radius: var(--radius-md);
-		border-width: var(--border-width-md);
-		border-style: solid;
-		padding: var(--text-y-md) var(--space-md);
-
-		/* Default variant (info, uses secondary styling) */
-		background-color: var(--callout);
-		color: var(--callout-fg);
-
-		@mixin border-dynamic var(--callout);
-	}
-
-	.c-alert__icon {
-		flex: none;
-	}
-
-	.c-alert__icon svg {
-		height: 1lh;
-		width: 1em;
-	}
-
-	.c-alert__content {
-		flex-grow: 1;
-		overflow: hidden;
-	}
-}
-
-@layer utilities {
-	/* Color variants */
-	.c-alert--success {
-		background-color: var(--success);
-		color: var(--success-fg);
-
-		@mixin border-dynamic var(--success);
-	}
-
-	.c-alert--warning {
-		background-color: var(--warning);
-		color: var(--warning-fg);
-
-		@mixin border-dynamic var(--warning);
-	}
-
-	.c-alert--danger {
-		background-color: var(--danger);
-		color: var(--danger-fg);
-
-		@mixin border-dynamic var(--danger);
+		@mixin o-text-box;
+		@mixin o-group;
+		@mixin t-border;
+		@mixin t-rounded;
+		@mixin v-callout-colors;
 	}
 }
