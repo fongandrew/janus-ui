@@ -10,9 +10,9 @@
 	.c-checkbox__box {
 		@mixin v-input-colors;
 		@mixin t-border;
-		@mixin t-inner-radius;
 		@mixin t-transition-color;
 
+		border-radius: var(--space-xs);
 		position: relative;
 		display: inline-flex;
 		height: 1em;
@@ -20,6 +20,10 @@
 		align-items: center;
 		justify-content: center;
 		box-shadow: var(--v-shadow-inner);
+
+		svg {
+			font-size: 0.85em;
+		}
 	}
 
 	/* State-based styles for the box */

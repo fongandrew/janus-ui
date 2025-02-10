@@ -16,10 +16,10 @@
 	}
 
 	.c-color-picker__swatch {
-		@mixin t-inner-radius;
-
+		border-radius: var(--space-xs);
 		height: 1lh;
 		width: 1lh;
+		margin-left: calc((1em - 1lh) / 2);
 		box-shadow: var(--v-shadow-sm);
 	}
 
