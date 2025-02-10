@@ -1,5 +1,3 @@
-@import '~/shared/style/common.css';
-
 @layer base {
 	form:has(:invalid) [type='submit'] {
 		/*

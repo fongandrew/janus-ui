@@ -1,5 +1,3 @@
-import '~/shared/components/form.css';
-
 import { createMemo, createRenderEffect, type JSX, splitProps, useContext } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
