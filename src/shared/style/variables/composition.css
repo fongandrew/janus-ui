@@ -43,7 +43,7 @@
 
 	/* Borders */
 	--v-border-width-sm: 1px;
-	--v-border-width-md: 0.0625rem;
+	--v-border-width-md: max(0.0625rem, 1px);
 	--v-border-width-lg: 0.125rem;
 
 	/* Shadows */

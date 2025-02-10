@@ -1,9 +1,9 @@
 @layer components {
 	.c-alert {
+		@mixin v-callout-colors;
 		@mixin o-text-box;
 		@mixin o-group;
 		@mixin t-border;
-		@mixin t-rounded;
-		@mixin v-callout-colors;
+		@mixin t-inner-radius;
 	}
 }

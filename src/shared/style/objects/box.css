@@ -5,7 +5,7 @@
 
 /* Text variant uses reduced padding on y-axis to account for line height */
 @define-mixin o-text-box {
-	padding: var(--v-spacing-text-y) var(--v-spacing);
+	padding: calc(var(--v-spacing) - (1lh - 1em) / 2) var(--v-spacing);
 
 	/* Some default text overflow handling */
 
@@ -18,6 +18,21 @@
 	}
 }
 
+/* Padding for input boxes use the target input height to calculate padding */
+@define-mixin o-input-box {
+	padding: calc((var(--v-input-height) - 1lh) / 2) calc((var(--v-input-height) - 1em) / 2);
+	border-width: var(--v-border-width);
+}
+
+/*
+	Remainder padding between an input box and a container, meant to be used for lining
+	up text inside an evenly spaced container box and a "ghost" input box.
+*/
+@define-mixin o-input-container-box {
+	padding: calc(var(--v-spacing) - var(--v-border-width) - (var(--v-input-height) - 1lh) / 2)
+		calc(var(--v-spacing) - var(--v-border-width) - (var(--v-input-height) - 1em) / 2);
+}
+
 @layer objects {
 	.o-box {
 		@mixin o-box;
@@ -25,5 +40,13 @@
 
 	.o-text-box {
 		@mixin o-text-box;
+	}
+
+	.o-input-box {
+		@mixin o-input-box;
+	}
+
+	.o-input-container-box {
+		@mixin o-input-container-box;
 	}
 }

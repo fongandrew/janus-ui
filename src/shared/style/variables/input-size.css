@@ -1,20 +1,32 @@
-/* Convenience helpers grouping spacing + text size */
+/*
+	Some padding is built around a target height for a button or input in the
+	single line case (but we use padding rather than something like align-items
+	so it works for the multi-line case as well.
+*/
+
 @define-mixin v-input-sm {
+	--v-input-height: var(--v-input-height-sm);
+
 	@mixin v-text-sm;
-	@mixin v-input-spacing-sm;
 }
 
 @define-mixin v-input-md {
+	--v-input-height: var(--v-input-height-md);
+
 	@mixin v-text-md;
-	@mixin v-input-spacing-md;
 }
 
 @define-mixin v-input-lg {
+	--v-input-height: var(--v-input-height-lg);
+
 	@mixin v-text-lg;
-	@mixin v-input-spacing-lg;
 }
 
 @layer variables {
+	:root {
+		@mixin v-input-md;
+	}
+
 	.v-input-sm {
 		@mixin v-input-sm;
 	}

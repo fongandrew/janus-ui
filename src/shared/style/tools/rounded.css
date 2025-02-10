@@ -1,9 +1,0 @@
-@define-mixin t-rounded {
-	border-radius: var(--v-radius);
-}
-
-@layer tools {
-	.t-rounded {
-		@mixin t-rounded;
-	}
-}

@@ -1,0 +1,19 @@
+/** Border radius for container elements / cards / etc. */
+@define-mixin t-outer-radius {
+	border-radius: calc(var(--v-spacing) - (1lh - 1em) / 2);
+}
+
+/* Smaller radius for things inside containers, inputs, etc. */
+@define-mixin t-inner-radius {
+	border-radius: calc((var(--v-input-height) - 1lh) / 2);
+}
+
+@layer tools {
+	.t-outer-radius {
+		@mixin t-outer-radius;
+	}
+
+	.t-inner-radius {
+		@mixin t-inner-radius;
+	}
+}

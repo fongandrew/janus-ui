@@ -2,9 +2,9 @@
 
 @layer components {
 	.c-button {
-		@mixin v-input-spacing-md;
 		@mixin v-secondary-colors;
-		@mixin t-rounded;
+		@mixin o-input-box;
+		@mixin t-inner-radius;
 		@mixin t-border;
 		@mixin t-transition single-arg(color, background-color, border-color, box-shadow);
 
@@ -15,6 +15,7 @@
 		gap: var(--v-inline-gap);
 		cursor: pointer;
 		font-weight: var(--v-font-weight-medium);
+		padding-inline: var(--v-spacing);
 
 		/* Hover/active states */
 		&:hover {
@@ -27,8 +28,8 @@
 	}
 
 	.c-button--icon {
-		@mixin v-input-spacing-md;
-		@mixin t-rounded;
+		@mixin o-input-box;
+		@mixin t-inner-radius;
 		@mixin t-border;
 
 		display: inline-flex;
