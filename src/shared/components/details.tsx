@@ -1,5 +1,3 @@
-import '~/shared/components/details.css';
-
 import cx from 'classix';
 import { type JSX, splitProps } from 'solid-js';
 
