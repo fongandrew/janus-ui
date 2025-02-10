@@ -1,5 +1,3 @@
-import '~/shared/components/label.css';
-
 import cx from 'classix';
 import { children, createMemo, createRenderEffect, createSignal, type JSX } from 'solid-js';
 import { Dynamic } from 'solid-js/web';

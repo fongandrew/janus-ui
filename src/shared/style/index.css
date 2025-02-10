@@ -40,10 +40,10 @@
 @import '~/shared/components/form.css';
 @import '~/shared/components/input.css';
 @import '~/shared/components/label-stack.css';
+@import '~/shared/components/label.css';
 
 /*
 ';
-@import '~/shared/components/label.css';
 @import '~/shared/components/labelled-action.css';
 @import '~/shared/components/list-box.css';
 @import '~/shared/components/modal-form.css';

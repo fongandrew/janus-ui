@@ -1,55 +1,32 @@
-@import '~/shared/style/common.css';
-
 @layer components {
 	.c-label {
 		display: inline-block;
 		cursor: pointer;
-		font-size: var(--font-size-md);
-		line-height: var(--line-height-md);
-		font-weight: var(--font-weight-medium);
-	}
-
-	/*
-		Apply overflow to spans instead of label since label sometimes has checkboxes
-		and radio buttons and we don't want to clip focus rings.
-	*/
-	.c-label > span {
-		overflow-x: hidden;
-		text-overflow: ellipsis;
+		font-weight: var(--v-font-weight-medium);
 	}
 
 	.c-label:has(input) {
 		display: inline-flex;
 		align-items: flex-start;
-		gap: var(--space-sm);
-		font-weight: var(--font-weight-normal);
+		gap: var(--v-inline-gap);
+		font-weight: var(--v-font-weight-normal);
 	}
 
 	.c-label:has([aria-disabled='true']),
 	.c-label:has(+ [aria-disabled='true']) {
-		color: var(--muted);
+		color: var(--v-muted);
 	}
 
 	.c-label:has([aria-invalid='true']),
 	.c-label:has(+ [aria-invalid='true']) {
-		color: var(--danger);
+		color: var(--v-danger-bg);
 	}
 
 	.c-label-stack:has([aria-invalid='true']) .c-label {
-		color: var(--danger);
+		color: var(--v-danger-bg);
 	}
 
 	.c-label-stack:has([aria-disabled='true']) .c-label {
-		color: var(--muted);
-	}
-}
-
-@layer utilities {
-	.c-label--error {
-		color: var(--danger);
-	}
-
-	.c-label--disabled {
-		color: var(--muted);
+		color: var(--v-muted);
 	}
 }
