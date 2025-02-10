@@ -1,35 +1,19 @@
-@import '~/shared/style/common.css';
-
 @layer components {
 	.c-list-box {
-		width: 100%;
-		padding: var(--space-xs) 0;
-		border: 0;
-		border-radius: var(--radius-md);
-		background-color: var(--input-bg);
-		color: var(--input-fg);
+		@mixin v-input-colors;
+		@mixin o-input-box;
+		@mixin t-inner-radius;
+		@mixin t-transition-color;
 
-		@mixin transition-color;
-		@mixin with-disabled-input;
-		@mixin with-error-input;
-		@mixin with-focus-ring-always;
+		width: 100%;
+		padding: var(--v-inner-radius) 0;
 
 		/*
 			Border looks weird with highlighting but is necessary to distinguish listbox from
 			identically colored background, so use this "shadow border" (along with another
 			inner border to give depth effect)
 		*/
-		@mixin border-inner var(--shadow-inner);
-
-		&::placeholder {
-			color: var(--muted);
-		}
-
-		&:disabled,
-		&[aria-disabled='true'] {
-			pointer-events: none;
-			cursor: not-allowed;
-		}
+		@mixin t-inner-border var(--v-shadow-inner);
 	}
 
 	.c-list-box__item.c-option-list__item {
@@ -45,11 +29,6 @@
 		width: 1em;
 		align-items: center;
 		justify-content: center;
-	}
-
-	.c-list-box__item_text {
-		overflow-x: hidden;
-		text-overflow: ellipsis;
 	}
 
 	.c-list-box__check-box svg {

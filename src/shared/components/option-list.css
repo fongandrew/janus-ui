@@ -1,72 +1,66 @@
-@import '~/shared/style/common.css';
-
 @layer components {
 	.c-option-list {
+		@mixin v-text-sm;
+
 		overflow: hidden auto;
-		font-size: var(--font-size-sm);
-		line-height: var(--line-height-sm);
+	}
+
+	.c-option-list__heading,
+	.c-option-list__item {
+		@mixin v-spacing-sm;
+		@mixin o-text-box;
+
+		display: block;
+		overflow-x: hidden;
+		padding-inline: calc(var(--v-spacing) + var(--v-inner-radius));
+		text-align: left;
+		text-overflow: ellipsis;
+		width: 100%;
 	}
 
 	.c-option-list__item {
-		display: block;
-		cursor: pointer;
-		width: 100%;
-		overflow-x: hidden;
-		text-overflow: ellipsis;
-		padding: var(--input-y-sm) var(--input-x-md);
-		text-align: left;
-		font-size: var(--font-size-sm);
-		line-height: var(--line-height-sm);
-	}
+		@mixin v-text-sm;
 
-	.c-option-list__item:hover,
-	.c-option-list__item:focus-visible,
-	:focus-visible .c-option-list__item[aria-selected='true'],
-	:popover-open .c-option-list__item[aria-selected='true'] {
-		background-color: var(--highlight);
-		color: var(--highlight-fg);
-		outline: none;
+		cursor: pointer;
 	}
 
 	a.c-option-list__item {
-		font-weight: var(--font-weight-normal);
-		color: var(--popover-fg);
+		font-weight: var(--v-font-weight-normal);
+		color: var(--v-popover-fg);
 		text-decoration: none;
+	}
 
-		&:hover {
-			background-color: var(--highlight);
-			color: var(--highlight-fg);
-		}
+	.c-option-list__item:hover,
+	a.c-option-list__item:hover,
+	.c-option-list__item:focus-visible,
+	:focus-visible .c-option-list__item[aria-selected='true'],
+	:popover-open .c-option-list__item[aria-selected='true'] {
+		@mixin v-highlight-colors;
+
+		outline: none;
 	}
 
 	.c-option-list__heading {
-		padding: var(--text-y-xs) var(--input-x-md);
-		font-size: var(--font-size-xs);
-		line-height: var(--line-height-xs);
-		font-weight: var(--font-weight-semibold);
-		color: var(--muted);
+		@mixin v-text-xs;
+
+		font-weight: var(--v-font-weight-semibold);
+		color: var(--v-muted);
+		padding-bottom: var(--v-space-xs);
 	}
 
 	.c-option-list__group + .c-option-list__group,
 	.c-option-list__group + .c-option-list__heading {
-		margin-top: var(--space-xs);
-		border-top-width: var(--border-width-sm);
-		border-top-style: solid;
+		@mixin t-border-top;
 
-		@mixin border-dynamic var(--card);
+		margin-top: var(--v-space-xs);
 	}
 
 	.c-option-list__group + .c-option-list__group {
-		padding-top: var(--space-xs);
+		padding-top: var(--v-space-xs);
 	}
 
 	/* Fix "divider" padding clobbering heading padding */
 	.c-option-list__group + .c-option-list__heading {
-		padding-top: calc(var(--text-y-xs) + var(--space-xs));
-	}
-
-	/* Fix heading padding conflicting with Dropdown top padding */
-	.c-dropdown__content > .c-option-list__heading:first-child {
-		padding-top: calc(var(--space-xs) - var(--text-y-xs));
+		padding-top: calc(var(--v-spacing) - (1lh - 1em) / 2 + var(--v-space-xs));
 	}
 }

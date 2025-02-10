@@ -1,5 +1,3 @@
-import '~/shared/components/list-box.css';
-
 import cx from 'classix';
 import { Check } from 'lucide-solid';
 import { For, type JSX, splitProps } from 'solid-js';
@@ -100,7 +98,7 @@ export function ListBoxItem(props: ListBoxItemProps) {
 			<div role="presentation" class="c-list-box__check-box">
 				<Check />
 			</div>
-			<span class="c-list-box__item_text">{props.children}</span>
+			<span>{props.children}</span>
 		</OptionListItem>
 	);
 }

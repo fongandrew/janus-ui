@@ -37,7 +37,7 @@
 		@mixin v-popover-colors;
 		@mixin t-inner-radius;
 
-		--v-dropdown-spacing: calc(var(--v-space-xs) + var(--v-border-width));
+		--v-dropdown-spacing: var(--v-inner-radius);
 
 		position: fixed;
 		margin: 0 auto;
