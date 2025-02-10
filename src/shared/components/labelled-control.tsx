@@ -24,6 +24,7 @@ export function LabelledInput(props: LabelledInputProps) {
 			<Label>{local.label}</Label>
 			{local.description ? <Description>{local.description}</Description> : null}
 			{local.children}
+			<ErrorMessage>{local.errorMessage}</ErrorMessage>
 		</LabelStack>
 	);
 }
