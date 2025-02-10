@@ -79,7 +79,7 @@ export function Slider(props: SliderProps) {
 				<input
 					{...formControlProps}
 					type="number"
-					class="c-slider__number"
+					class="c-slider__number t-unstyled"
 					value={value()}
 					onInput={handleInput}
 					size={3}

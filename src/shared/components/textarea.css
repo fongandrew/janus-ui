@@ -17,10 +17,6 @@
 		@mixin with-focus-ring;
 		@mixin border-dynamic var(--secondary);
 		@mixin input-size-md;
-
-		&::placeholder {
-			color: var(--muted);
-		}
 	}
 }
 
