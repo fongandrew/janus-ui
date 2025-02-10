@@ -16,7 +16,7 @@
 }
 
 @define-mixin t-focus-ring {
-	outline: var(--v-outline-width) solid var(--ring);
+	outline: var(--v-outline-width) solid var(--v-ring);
 	outline-offset: var(--v-outline-offset);
 }
 

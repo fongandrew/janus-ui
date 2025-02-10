@@ -60,8 +60,8 @@
 	--v-z-above-backdrop: 20;
 
 	/* Outline */
-	--v-outline-width: 0.0625rem;
-	--v-outline-offset: 0.0625rem;
+	--v-outline-width: 0.125rem;
+	--v-outline-offset: 0.125rem;
 
 	/* Text formatting */
 	--v-underline-offset: 0.25rem;
