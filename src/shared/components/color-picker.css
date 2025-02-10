@@ -1,35 +1,30 @@
-@import '~/shared/style/common.css';
-
 @layer components {
 	.c-color-picker {
+		@mixin v-input-colors;
+		@mixin o-input-box;
+		@mixin t-inner-radius;
+		@mixin t-transition-color;
+
 		position: relative;
 		display: flex;
-		gap: var(--space-sm);
-		min-height: var(--input-height-md);
+		gap: var(--v-inline-gap);
+		min-height: var(--v-input-height);
 		overflow-x: hidden;
-		border-radius: var(--radius-md);
-		border-width: var(--border-width-md);
-		border-style: solid;
-		background-color: var(--input-bg);
 		text-align: right;
-		font-weight: var(--font-weight-normal);
-		color: var(--input-fg);
-		box-shadow: var(--shadow-inner);
-
-		@mixin transition-color;
-		@mixin border-dynamic var(--secondary);
-		@mixin input-size-md;
+		font-weight: var(--v-font-weight-normal);
+		box-shadow: var(--v-shadow-inner);
 	}
 
 	.c-color-picker__swatch {
+		@mixin t-inner-radius;
+
 		height: 1lh;
 		width: 1lh;
-		border-radius: var(--radius-sm);
-		box-shadow: var(--shadow-sm);
+		box-shadow: var(--v-shadow-sm);
 	}
 
 	.c-color-picker__value {
-		color: var(--muted);
+		color: var(--v-muted);
 	}
 
 	.c-color-picker__input {
@@ -44,14 +39,14 @@
 	}
 
 	.c-color-picker:has(:focus-visible) {
-		@mixin focus-ring;
+		@mixin t-focus-ring;
 	}
 
 	.c-color-picker:has(:invalid, [aria-invalid='true']) {
-		@mixin error-input;
+		@mixin t-error;
 	}
 
 	.c-color-picker:has(:disabled, [aria-disabled='true']) {
-		@mixin disabled-input;
+		@mixin t-disabled-input;
 	}
 }
