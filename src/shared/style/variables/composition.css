@@ -46,12 +46,6 @@
 	--v-border-width-md: max(0.0625rem, 1px);
 	--v-border-width-lg: 0.125rem;
 
-	/*
-		Outer border radius is dynamic based on padding but inner border radius is
-		fixed-ish for now (still relative based on em but not padding)
-	*/
-	--v-inner-radius: 0.3em;
-
 	/* Shadows */
 	--v-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 10%);
 	--v-shadow-md: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
