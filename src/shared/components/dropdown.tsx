@@ -1,5 +1,3 @@
-import '~/shared/components/dropdown.css';
-
 import {
 	autoUpdate,
 	computePosition,
