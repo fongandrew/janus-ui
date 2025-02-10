@@ -1,5 +1,3 @@
-import '~/shared/components/checkbox.css';
-
 import cx from 'classix';
 import { Check, Minus } from 'lucide-solid';
 import { splitProps } from 'solid-js';

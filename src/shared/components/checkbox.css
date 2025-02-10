@@ -1,5 +1,3 @@
-@import '~/shared/style/common.css';
-
 @layer components {
 	.c-checkbox {
 		display: inline-flex;
@@ -10,54 +8,40 @@
 	}
 
 	.c-checkbox__box {
+		@mixin v-input-colors;
+		@mixin t-border;
+		@mixin t-inner-radius;
+		@mixin t-transition-color;
+
 		position: relative;
 		display: inline-flex;
 		height: 1em;
 		width: 1em;
 		align-items: center;
 		justify-content: center;
-		border-radius: var(--radius-sm);
-		border-width: var(--border-width-md);
-		border-style: solid;
-		background-color: var(--input-bg);
-		font-size: var(--font-size-md);
-		line-height: var(--line-height-md);
 		box-shadow: var(--shadow-inner);
-
-		@mixin border-dynamic var(--secondary);
-		@mixin transition-color;
 	}
 
 	/* State-based styles for the box */
 	.c-checkbox__box:has([aria-invalid='true']) {
-		@mixin border-dynamic var(--danger);
+		@mixin t-error;
 	}
 
 	.c-checkbox__box:has([aria-disabled='true']) {
-		cursor: not-allowed;
-		background-color: var(--input-disabled-bg);
+		@mixin t-disabled-input;
 	}
 
 	.c-checkbox__box:has(input:checked) {
-		background-color: var(--primary);
-		border-color: var(--primary);
-		color: var(--primary-fg);
+		@mixin v-primary-colors;
 	}
 
 	.c-checkbox__box:has(input:focus-visible) {
-		outline: var(--border-width-lg) solid var(--ring);
-		outline-offset: var(--border-width-lg);
+		@mixin t-focus-ring;
 	}
 
 	/* Input styling */
 	.c-checkbox input {
-		@mixin sr-only;
-	}
-
-	/* Icon styling */
-	.c-checkbox svg {
-		height: 1em;
-		width: 1em;
+		@mixin t-sr-only;
 	}
 
 	/* Check/indeterminate states */
