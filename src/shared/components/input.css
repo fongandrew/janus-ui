@@ -1,35 +1,15 @@
-@import '~/shared/style/common.css';
-
 @layer components {
 	.c-input {
+		@mixin v-input-colors;
+		@mixin o-input-box;
+		@mixin t-inner-radius;
+		@mixin t-transition-color;
+
 		width: 100%;
-		border-width: var(--border-width-md);
-		border-style: solid;
-		border-radius: var(--radius-md);
-		background-color: var(--input-bg);
-		color: var(--input-fg);
 		box-shadow: var(--shadow-inner);
 
-		@mixin transition-color;
-		@mixin border-dynamic var(--secondary);
-		@mixin with-disabled-input;
-		@mixin with-error-input;
-		@mixin with-focus-ring;
-		@mixin input-size-md;
-
 		&::placeholder {
-			color: var(--muted);
+			color: var(--v-muted);
 		}
-	}
-}
-
-@layer utilities {
-	/* State variants */
-	.c-input--disabled {
-		@mixin disabled-input;
-	}
-
-	.c-input--error {
-		@mixin error-input;
 	}
 }
