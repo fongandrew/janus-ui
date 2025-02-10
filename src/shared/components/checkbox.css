@@ -19,7 +19,7 @@
 		width: 1em;
 		align-items: center;
 		justify-content: center;
-		box-shadow: var(--shadow-inner);
+		box-shadow: var(--v-shadow-inner);
 	}
 
 	/* State-based styles for the box */

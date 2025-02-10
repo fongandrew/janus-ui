@@ -1,6 +1,17 @@
 /*
     Mixins for styling both generic elements and things we want to look like generic elements
 */
+
+@define-mixin t-text {
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+
+	* {
+		overflow-x: hidden;
+		text-overflow: ellipsis;
+	}
+}
+
 @define-mixin t-link-style {
 	color: var(--v-link);
 	text-decoration-line: underline;
@@ -13,5 +24,11 @@
 	&:focus-visible {
 		text-decoration-style: double;
 		outline: none;
+	}
+}
+
+@layer tools {
+	.t-text {
+		@mixin t-text;
 	}
 }

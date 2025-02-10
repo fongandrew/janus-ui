@@ -1,5 +1,3 @@
-import '~/shared/components/radio.css';
-
 import cx from 'classix';
 import { type JSX, splitProps, useContext } from 'solid-js';
 

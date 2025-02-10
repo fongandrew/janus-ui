@@ -4,48 +4,44 @@
 	.c-radio {
 		display: inline-flex;
 		height: 1lh;
+		flex-shrink: 0;
 		cursor: pointer;
 		align-items: center;
 	}
 
 	.c-radio__circle {
+		@mixin v-input-colors;
+		@mixin t-border;
+		@mixin t-transition-color;
+
+		position: relative;
 		display: inline-flex;
 		height: 1em;
 		width: 1em;
 		align-items: center;
 		justify-content: center;
-		border-radius: var(--radius-full);
-		border-width: var(--border-width-md);
-		border-style: solid;
-		background-color: var(--input-bg);
-		font-size: var(--font-size-md);
-		line-height: var(--line-height-md);
-		box-shadow: var(--shadow-inner);
-
-		@mixin transition-color;
-		@mixin border-dynamic var(--secondary-fg);
+		border-radius: 100%;
+		box-shadow: var(--v-shadow-inner);
 	}
 
 	.c-radio__circle:has([aria-disabled='true']) {
-		cursor: not-allowed;
-		background-color: var(--input-disabled-bg);
+		@mixin t-disabled-input;
 	}
 
 	.c-radio__circle:has([aria-invalid='true']) {
-		@mixin border-dynamic var(--danger);
+		@mixin t-error;
 	}
 
 	.c-radio__circle:has(input:checked) {
-		background-color: var(--primary);
-		color: var(--primary-fg);
+		@mixin v-primary-colors;
 	}
 
 	.c-radio input {
-		@mixin sr-only;
+		@mixin t-sr-only;
 	}
 
 	.c-radio__circle:has(input:focus-visible) {
-		@mixin focus-ring;
+		@mixin t-focus-ring;
 	}
 
 	.c-radio .c-radio__dot {
@@ -56,7 +52,7 @@
 		display: block;
 		height: 66.6667%;
 		width: 66.6667%;
-		border-radius: var(--radius-full);
-		background-color: var(--primary-fg);
+		border-radius: 100%;
+		background-color: var(--v-primary-fg);
 	}
 }
