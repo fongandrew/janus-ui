@@ -1,44 +1,41 @@
-@import '~/shared/style/common.css';
-
 @layer components {
 	.c-card {
-		display: flex;
-		flex-direction: column;
-		border-radius: var(--radius-lg);
-		border-width: var(--border-width-md);
-		border-style: solid;
-		background-color: var(--card);
-		color: var(--card-fg);
-		box-shadow: var(--shadow-md);
+		@mixin v-card-colors;
+		@mixin t-border;
+		@mixin t-outer-radius;
 
-		@mixin border-dynamic var(--card);
+		box-shadow: var(--v-shadow-md);
 	}
 
 	.c-card__header {
-		padding: var(--text-y-md) var(--space-md) 0 var(--space-md);
+		@mixin o-text-box;
+
+		padding-bottom: 0;
 	}
 
 	.c-card__title {
-		font-weight: var(--font-weight-semibold);
+		font-weight: var(--v-font-weight-semibold);
 	}
 
 	.c-card__description {
-		font-size: var(--font-size-sm);
-		line-height: var(--line-height-sm);
-		color: var(--muted);
+		@mixin v-text-sm;
+
+		color: var(--v-muted);
 	}
 
 	.c-card__content {
-		flex-grow: 1;
-		padding: var(--space-md);
+		@mixin o-box;
+		@mixin t-flex-fill;
 	}
 
 	.c-card__footer {
+		@mixin o-box;
+
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: var(--space-sm);
-		padding: 0 var(--space-md) var(--space-md) var(--space-md);
+		gap: var(--v-inline-gap);
+		padding-top: 0;
 	}
 
 	.c-card__footer > :only-child {
