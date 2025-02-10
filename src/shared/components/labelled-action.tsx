@@ -1,5 +1,3 @@
-import '~/shared/components/labelled-action.css';
-
 import cx from 'classix';
 import { splitProps } from 'solid-js';
 
