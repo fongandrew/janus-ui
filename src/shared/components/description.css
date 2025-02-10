@@ -2,10 +2,8 @@
 
 @layer components {
 	.c-description {
-		overflow-x: hidden;
-		text-overflow: ellipsis;
-		font-size: var(--font-size-sm);
-		line-height: var(--line-height-sm);
-		color: var(--muted);
+		@mixin v-text-sm;
+
+		color: var(--v-muted);
 	}
 }

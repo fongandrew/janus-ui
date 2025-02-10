@@ -6,16 +6,6 @@
 /* Text variant uses reduced padding on y-axis to account for line height */
 @define-mixin o-text-box {
 	padding: calc(var(--v-spacing) - (1lh - 1em) / 2) var(--v-spacing);
-
-	/* Some default text overflow handling */
-
-	overflow-x: hidden;
-	text-overflow: ellipsis;
-
-	* {
-		overflow-x: hidden;
-		text-overflow: ellipsis;
-	}
 }
 
 /* Padding for input boxes use the target input height to calculate padding */
