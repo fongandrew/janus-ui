@@ -5,7 +5,7 @@
 
 /* Smaller radius for things inside containers, inputs, etc. */
 @define-mixin t-inner-radius {
-	border-radius: 0.25em;
+	border-radius: var(--v-inner-radius);
 }
 
 @layer tools {
