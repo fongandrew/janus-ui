@@ -2,11 +2,6 @@
 
 /* Defaults for a bunch of things */
 @layer base {
-	* {
-		overflow-x: hidden;
-		text-overflow: ellipsis;
-	}
-
 	body {
 		background: linear-gradient(102deg, hsl(0deg 0% 100% / 0%), rgb(255 204 0 / 5%)),
 			linear-gradient(12deg, rgb(33 37 41 / 5%), hsl(0deg 0% 100% / 0%)), var(--v-bg);
@@ -20,6 +15,28 @@
 	b,
 	strong {
 		font-weight: var(--v-font-weight-semibold);
+	}
+
+	/*
+		Truncate overflow on pretty much all text and inline elements by default.
+		It's pretty annoying otherwise because every child needs the
+		overflow set for the ellipsis treatment to work properly.
+	*/
+	a,
+	aside,
+	b,
+	blockquote,
+	em,
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	p,
+	span,
+	strong {
+		@mixin t-text;
 	}
 
 	/* Button-like things */
