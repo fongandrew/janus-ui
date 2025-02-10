@@ -1,5 +1,3 @@
-import '~/shared/components/error-message.css';
-
 import cx from 'classix';
 import { children, createMemo, type JSX } from 'solid-js';
 

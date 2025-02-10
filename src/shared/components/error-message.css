@@ -1,11 +1,8 @@
-@import '~/shared/style/common.css';
-
 @layer components {
 	.c-error-message {
-		overflow-x: hidden;
-		text-overflow: ellipsis;
-		font-size: var(--font-size-sm);
-		line-height: var(--line-height-sm);
+		@mixin v-text-sm;
+		@mixin t-text;
+
 		color: var(--danger);
 	}
 
