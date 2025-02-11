@@ -5,6 +5,8 @@
 		@mixin t-outer-radius;
 
 		box-shadow: var(--v-shadow-md);
+		display: flex;
+		flex-direction: column;
 	}
 
 	.c-card__header {
