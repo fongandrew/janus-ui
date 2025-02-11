@@ -53,7 +53,4 @@
 @import '~/shared/components/tabs.css';
 @import '~/shared/components/textarea.css';
 @import '~/shared/components/toggle-switch.css';
-
-/*
-';
-@import '~/shared/components/tooltip.css'; */
+@import '~/shared/components/tooltip.css';

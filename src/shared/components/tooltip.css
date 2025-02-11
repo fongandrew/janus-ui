@@ -1,25 +1,31 @@
 @import '~/shared/style/common.css';
 
+@layer variables {
+	:root {
+		--v-tooltip-width: 15rem;
+		--v-tooltip-arrow-size: 0.5rem;
+	}
+}
+
 @layer components {
 	.c-tooltip {
-		max-width: var(--tooltip-width);
+		@mixin v-text-sm;
+		@mixin v-tooltip-colors;
+		@mixin o-text-box;
+		@mixin t-inner-radius;
+
+		max-width: var(--v-tooltip-width);
 		pointer-events: none;
 		z-index: 1;
-		border-radius: var(--radius-sm);
-		background-color: var(--tooltip);
-		padding: var(--text-y-sm) var(--space-sm);
-		font-size: var(--font-size-sm);
-		line-height: var(--line-height-sm);
-		color: var(--tooltip-fg);
 
 		/* Popovers clip overflow by default which hide the arrow */
 		overflow: visible;
 	}
 
 	.c-tooltip .c-tooltip__arrow {
-		height: var(--tooltip-arrow-size);
-		width: var(--tooltip-arrow-size);
+		height: var(--v-tooltip-arrow-size);
+		width: var(--v-tooltip-arrow-size);
 		transform: rotate(45deg);
-		background-color: var(--tooltip);
+		background-color: var(--v-tooltip-bg);
 	}
 }

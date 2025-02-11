@@ -1,5 +1,3 @@
-import '~/shared/components/tooltip.css';
-
 import {
 	arrow,
 	autoUpdate,
