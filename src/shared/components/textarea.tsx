@@ -1,5 +1,3 @@
-import '~/shared/components/textarea.css';
-
 import cx from 'classix';
 
 import {

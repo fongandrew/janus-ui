@@ -2,32 +2,15 @@
 
 @layer components {
 	.c-textarea {
+		@mixin v-input-colors;
+		@mixin o-input-box;
+		@mixin t-border;
+		@mixin t-inner-radius;
+		@mixin t-transition-color;
+
 		min-height: 6em;
 		width: 100%;
 		resize: vertical;
-		border-width: var(--border-width-md);
-		border-style: solid;
-		border-radius: var(--radius-md);
-		background-color: var(--input-bg);
-		color: var(--foreground);
-		box-shadow: var(--shadow-inner);
-
-		@mixin transition-color;
-		@mixin with-disabled-input;
-		@mixin with-focus-ring;
-		@mixin border-dynamic var(--secondary);
-		@mixin input-size-md;
-	}
-}
-
-@layer utilities {
-	/* State variants */
-	.c-textarea--error,
-	.c-textarea[aria-invalid='true'] {
-		@mixin border-dynamic var(--danger);
-	}
-
-	.c-textarea[aria-disabled='true'] {
-		background-color: var(--input-disabled-bg);
+		box-shadow: var(--v-shadow-inner);
 	}
 }
