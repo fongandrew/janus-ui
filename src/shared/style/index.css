@@ -21,10 +21,6 @@
 
 @import '~/shared/style/reset.css';
 @import '~/shared/style/common.css';
-@import '~/shared/style/overrides.css';
-@import '~/shared/style/variables/index.css';
-@import '~/shared/style/tools/index.css';
-@import '~/shared/style/objects/index.css';
 @import '~/shared/style/base.css';
 
 /* Components */

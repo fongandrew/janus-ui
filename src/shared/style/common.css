@@ -1,4 +1,4 @@
 /* Bundle a bunch of common shared theme + helper stuff to component files only need one import */
-@import '~/shared/style/breakpoints.css';
-@import '~/shared/style/tokens.css';
-@import '~/shared/style/mixins.css';
+@import '~/shared/style/variables/index.css';
+@import '~/shared/style/tools/index.css';
+@import '~/shared/style/objects/index.css';

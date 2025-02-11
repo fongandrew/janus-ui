@@ -1,10 +1,13 @@
+@import '~/shared/style/common.css';
+
 @layer base {
 	form:has(:invalid) [type='submit'] {
+		@mixin t-disabled-button;
+
 		/*
-			This only visually disables buttons but this is a good thing because clicking on the
-			disabled button lets us shift focus to the first invalid element (especially useful
-			with screenreaders).
+			Visually disable buttons only so clicking on the disabled button lets us shift focus
+			to the first invalid element (especially useful with screenreaders).
 		*/
-		@mixin disabled-button-appearance;
+		pointer-events: unset;
 	}
 }

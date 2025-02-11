@@ -1,3 +1,5 @@
+@import '~/shared/style/common.css';
+
 @layer components {
 	.c-card {
 		@mixin v-card-colors;

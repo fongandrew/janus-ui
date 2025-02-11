@@ -1,3 +1,5 @@
+@import '~/shared/style/common.css';
+
 @layer base {
 	/* Stop scrolling when modal open */
 	body:has(:modal) {

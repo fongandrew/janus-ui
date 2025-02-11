@@ -1,3 +1,5 @@
+@import '~/shared/style/common.css';
+
 @layer base {
 	/* Show disabled state on footer buttons if form in body has invalid fields */
 	.c-modal:has(:invalid) .c-modal__footer [type='submit'] {

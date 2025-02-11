@@ -23,7 +23,6 @@ import { TabsDemo } from '~/demos/tabs-demo';
 import { TabsPersistDemo } from '~/demos/tabs-persist-demo';
 import { TextareasDemo } from '~/demos/textareas-demo';
 import { TooltipDemo } from '~/demos/tooltip-demo';
-import { Header } from '~/shared/components/header';
 import {
 	Sidebar,
 	SidebarCloseButton,
@@ -78,10 +77,10 @@ function App() {
 			</Sidebar>
 			<main>
 				<div class="o-box t-pt-0">
-					<Header>
+					<header class="o-text-box o-group v-text-xl">
 						<SidebarOpenButton />
 						<h1>Solid Base</h1>
-					</Header>
+					</header>
 					<div class="o-grid">
 						<ButtonsDemo />
 						<AlertsDemo />

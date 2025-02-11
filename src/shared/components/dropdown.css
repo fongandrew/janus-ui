@@ -1,3 +1,5 @@
+@import '~/shared/style/common.css';
+
 @layer base {
 	/* No scroll when dropdown open */
 	body:has(.c-dropdown__content:popover-open) {

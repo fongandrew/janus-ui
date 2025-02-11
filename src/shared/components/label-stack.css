@@ -1,3 +1,5 @@
+@import '~/shared/style/common.css';
+
 @layer components {
 	.c-label-stack {
 		display: flex;

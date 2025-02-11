@@ -1,3 +1,5 @@
+@import '~/shared/style/common.css';
+
 @layer components {
 	.c-option-list {
 		@mixin v-text-sm;
