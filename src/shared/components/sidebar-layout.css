@@ -57,13 +57,17 @@
 			flex: 0 0 auto;
 		}
 
-		> h1, > h2, > h3 {
+		> h1,
+		> h2,
+		> h3 {
 			flex: 1 1 auto;
 			overflow-x: hidden;
 			text-overflow: ellipsis;
 		}
 
-		h1, h2, h3 {
+		h1,
+		h2,
+		h3 {
 			font-size: var(--font-size-lg);
 			line-height: var(--line-height-lg);
 			font-weight: var(--font-weight-medium);
@@ -156,6 +160,11 @@
 		.c-sidebar__overlay,
 		.c-sidebar-layout--open .c-sidebar__overlay {
 			display: none;
+		}
+
+		.c-sidebar ~ *:not(.c-sidebar__overlay) {
+			flex: 1 1 auto;
+			overflow: auto;
 		}
 
 		/* Can be explicitly closed on desktop */

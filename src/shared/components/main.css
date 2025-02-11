@@ -1,8 +1,0 @@
-@import '~/shared/style/common.css';
-
-@layer components {
-	.c-main {
-		flex-grow: 1;
-		overflow: auto;
-	}
-}

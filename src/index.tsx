@@ -24,7 +24,6 @@ import { TabsPersistDemo } from '~/demos/tabs-persist-demo';
 import { TextareasDemo } from '~/demos/textareas-demo';
 import { TooltipDemo } from '~/demos/tooltip-demo';
 import { Header } from '~/shared/components/header';
-import { Main } from '~/shared/components/main';
 import {
 	Sidebar,
 	SidebarCloseButton,
@@ -77,7 +76,7 @@ function App() {
 					<p>Sidebar Footer</p>
 				</SidebarFooter>
 			</Sidebar>
-			<Main>
+			<main>
 				<div class="o-box t-pt-0">
 					<Header>
 						<SidebarOpenButton />
@@ -106,7 +105,7 @@ function App() {
 						<TabsPersistDemo />
 					</div>
 				</div>
-			</Main>
+			</main>
 		</SidebarLayout>
 	);
 }
