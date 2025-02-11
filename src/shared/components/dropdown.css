@@ -28,7 +28,7 @@
 
 @layer variables {
 	:root {
-		--v-dropdown-width: 11.5rem;
+		--c-dropdown__width: 11.5rem;
 	}
 }
 
@@ -37,15 +37,15 @@
 		@mixin v-popover-colors;
 		@mixin t-inner-radius;
 
-		--v-dropdown-spacing: var(--v-inner-radius);
+		--c-dropdown__spacing: var(--v-inner-radius);
 
 		position: fixed;
 		margin: 0 auto;
 		flex-direction: column;
 		overflow: hidden;
-		padding-top: var(--v-dropdown-spacing);
+		padding-top: var(--c-dropdown__spacing);
 		z-index: var(--v-z-above-backdrop);
-		min-width: var(--v-dropdown-width);
+		min-width: var(--c-dropdown__width);
 
 		/* Mobile specific styling */
 		inset: var(--v-spacing);
@@ -74,7 +74,7 @@
 		@mixin v-text-sm;
 		@mixin o-input-box;
 
-		margin-top: var(--v-dropdown-spacing);
+		margin-top: var(--c-dropdown__spacing);
 		display: flex;
 		flex: none;
 		justify-content: flex-end;
@@ -89,7 +89,7 @@
 		.c-dropdown__content {
 			inset: unset;
 			width: auto;
-			padding-bottom: var(--v-dropdown-spacing);
+			padding-bottom: var(--c-dropdown__spacing);
 
 			/* These are set via `dropdown.tsx` */
 			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */

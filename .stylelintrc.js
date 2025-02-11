@@ -9,6 +9,8 @@ export default {
 		'selector-class-pattern': null,
 		// Doesn't play nice with breakpoint vars
 		'media-query-no-invalid': null,
+		// Allow more flexibility with custom property names (e.g. BEM-ish names)
+		'custom-property-pattern': null,
 
 		'at-rule-no-unknown': [
 			true,

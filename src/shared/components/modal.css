@@ -1,9 +1,13 @@
-@import '~/shared/style/common.css';
-
 @layer base {
 	/* Stop scrolling when modal open */
 	body:has(:modal) {
 		overflow: hidden;
+	}
+}
+
+@layer variables {
+	:root {
+		--c-modal__width: 32rem;
 	}
 }
 
@@ -20,54 +24,54 @@
 
 	/* Fullscreen on mobile */
 	.c-modal__body {
+		@mixin v-card-colors;
+		@mixin t-border;
+		@mixin t-outer-radius;
+
+		--c-modal__inset: var(--v-space-xs);
+
+		inset: var(--c-modal__inset);
 		position: fixed;
-		inset: var(--space-xs);
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
-		background-color: var(--card);
-		color: var(--card-fg);
-		box-shadow: var(--shadow-lg);
-		outline: none;
-		border-radius: var(--radius-sm);
-
-		@mixin border-dynamic var(--card);
 	}
 
-	@media (width >= $breakpoint-tablet) {
+	@mixin v-breakpoint-tablet {
 		.c-modal__body {
+			--c-modal__inset: var(--v-space-sm);
+
 			inset: auto;
 			left: 50%;
 			top: 50%;
-			max-height: calc(100vh - var(--space-sm));
-			width: var(--modal-width);
-			max-width: 100%;
 			transform: translate(-50%, -50%);
-			border-width: var(--border-width-md);
-			border-style: solid;
-			border-radius: var(--radius-md);
+			max-height: calc(100vh - var(--c-modal__inset));
+			max-width: 100%;
+			width: var(--c-modal__width);
 		}
 	}
 
-	@media (width >= $breakpoint-tablet-wide) {
+	@mixin v-breakpoint-tablet-wide {
 		.c-modal__body {
-			max-height: calc(100vh - var(--space-md));
-			border-radius: var(--radius-lg);
+			--c-modal__inset: var(--v-space-md);
 		}
 	}
 
-	@media (width >= $breakpoint-desktop) {
+	@mixin v-breakpoint-desktop {
 		.c-modal__body {
-			max-height: calc(100vh - var(--space-lg));
+			--c-modal__inset: var(--v-space-lg);
 		}
 	}
 
-	.c-modal__content,
 	.c-modal__header {
-		padding: var(--space-md);
+		@mixin o-text-box;
+
+		flex: none;
 	}
 
 	.c-modal__content {
+		@mixin o-box;
+
 		position: relative;
 		flex-grow: 1;
 		overflow: auto;
@@ -78,44 +82,41 @@
 	}
 
 	.c-modal__content:has(+ .c-modal__footer) {
-		padding-bottom: var(--space-xs); /* Not zero -- leave some space for focus ring */
-	}
-
-	.c-modal__header {
-		flex: none;
+		padding-bottom: var(--v-space-xs); /* Not zero -- leave some space for focus ring */
 	}
 
 	.c-modal__x {
-		color: var(--muted);
+		color: var(--v-muted);
 	}
 
 	.c-modal__content:not(.c-modal__content--scroll-top) {
-		box-shadow: var(--shadow-inner-top);
+		box-shadow: var(--v-shadow-inner-top);
 	}
 
 	.c-modal__content:not(.c-modal__content--scroll-bottom):has(+ .c-modal__footer) {
-		box-shadow: var(--shadow-inner-bottom);
+		box-shadow: var(--v-shadow-inner-bottom);
 	}
 
 	.c-modal__content:not(.c-modal__content--scroll-top, .c-modal__content--scroll-bottom):has(
 			+ .c-modal__footer
 		) {
-		box-shadow: var(--shadow-inner-top), var(--shadow-inner-bottom);
+		box-shadow: var(--v-shadow-inner-top), var(--v-shadow-inner-bottom);
 	}
 
 	.c-modal__title {
+		@mixin v-text-xl;
+
 		flex-grow: 1;
-		font-size: var(--font-size-xl);
-		line-height: var(--line-height-xl);
-		font-weight: var(--font-weight-bold);
+		font-weight: var(--v-font-weight-bold);
 	}
 
 	.c-modal__footer {
+		@mixin o-box;
+
 		display: flex;
 		flex: none;
 		align-items: center;
 		justify-content: flex-end;
-		gap: var(--space-md);
-		padding: var(--space-md);
+		gap: var(--v-inline-gap);
 	}
 }

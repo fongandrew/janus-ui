@@ -1,5 +1,3 @@
-import '~/shared/components/modal.css';
-
 import cx from 'classix';
 import { X } from 'lucide-solid';
 import {
