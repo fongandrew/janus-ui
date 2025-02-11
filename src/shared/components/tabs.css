@@ -1,60 +1,60 @@
 @import '~/shared/style/common.css';
 
+@layer variables {
+	:root {
+		--c-tabs__max-width: 16em;
+	}
+}
+
 @layer components {
 	.c-tabs__bar {
+		@mixin t-border-bottom;
+
 		display: flex;
 		overflow: auto;
-		border-bottom-width: var(--border-width-md);
-		border-bottom-style: solid;
-		border-color: var(--muted);
-	}
-
-	@media (width >= $breakpoint-tablet) {
-		.c-tabs__bar {
-			gap: var(--space-sm);
-		}
 	}
 
 	.c-tabs__button {
-		border-bottom-width: var(--border-width-lg);
-		border-bottom-style: solid;
+		@mixin o-input-box;
+		@mixin t-transition-color;
+
+		border-width: 0 0 var(--border-width-lg) 0;
 		border-color: transparent;
-		font-weight: var(--font-weight-medium);
-		color: var(--muted);
+		cursor: pointer;
+		color: var(--v-muted);
 		flex-grow: 1;
 		flex-basis: 0;
+		font-weight: var(--v-font-weight-medium);
+		max-width: var(--c-tabs__max-width);
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 
-		@mixin transition-color;
-		@mixin with-disabled-button;
-		@mixin with-focus-ring;
-		@mixin input-size-md;
-
 		&:hover,
 		&:focus-visible {
-			color: var(--foreground);
+			color: var(--v-fg);
 		}
 
 		/* Active state */
 		&[aria-selected='true'] {
-			border-color: var(--primary);
-			color: var(--foreground);
+			border-color: var(--v-primary-bg);
+			color: var(--v-fg);
 		}
-	}
 
-	/* Tablet and up - tabs can be different sizes */
-	@media (width >= $breakpoint-tablet) {
-		.c-tabs__button {
-			flex-grow: 0;
-			flex-basis: auto;
+		&:first-child {
+			padding-left: var(--v-spacing);
+		}
+
+		&:last-child {
+			padding-right: var(--v-spacing);
 		}
 	}
 
 	.c-tabs__panel {
 		outline: none;
 
-		@mixin with-focus-ring;
+		&:focus {
+			@mixin t-focus-ring;
+		}
 	}
 }

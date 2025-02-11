@@ -1,5 +1,3 @@
-import '~/shared/components/tabs.css';
-
 import {
 	type Accessor,
 	createContext,
