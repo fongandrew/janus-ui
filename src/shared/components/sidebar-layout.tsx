@@ -1,5 +1,3 @@
-import '~/shared/components/sidebar-layout.css';
-
 import cx from 'classix';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-solid';
 import { createSignal, createUniqueId, type JSX, splitProps } from 'solid-js';
@@ -68,11 +66,7 @@ export function SidebarOpenButton() {
 export function SidebarCloseButton() {
 	const [, setOpen] = useSidebar();
 	return (
-		<IconButton
-			onClick={[setOpen, false]}
-			label={t`Close Sidebar`}
-			class="c-sidebar__close-button"
-		>
+		<IconButton onClick={[setOpen, false]} label={t`Close Sidebar`}>
 			<PanelLeftClose />
 		</IconButton>
 	);
