@@ -254,12 +254,14 @@ function ModalDemo() {
 				<CardTitle>Modal</CardTitle>
 				<CardDescription>Modal dialog with backdrop</CardDescription>
 			</CardHeader>
-			<CardContent class="o-group">
-				<SimpleModal />
-				<LongModal />
-				<FormModal />
-				<ScrollableForm />
-				<AsyncForm />
+			<CardContent>
+				<div class="o-group">
+					<SimpleModal />
+					<LongModal />
+					<FormModal />
+					<ScrollableForm />
+					<AsyncForm />
+				</div>
 			</CardContent>
 		</Card>
 	);
