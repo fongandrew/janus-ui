@@ -2,32 +2,30 @@
 
 @layer components {
 	.c-toggle-switch {
+		@mixin v-input-colors;
+		@mixin t-border;
+		@mixin t-transition-color;
+
 		position: relative;
 		display: inline-flex;
 		height: 1lh;
 		width: 2.75em;
 		cursor: pointer;
 		align-items: center;
-		border-radius: var(--radius-full);
-		border-width: var(--border-width-md);
-		border-style: solid;
-		background-color: var(--input-bg);
-		box-shadow: var(--shadow-inner);
-
-		@mixin transition-color;
-		@mixin border-dynamic var(--secondary-fg);
+		border-radius: 9999em;
+		box-shadow: var(--v-shadow-inner);
 	}
 
 	.c-toggle-switch:has(input:checked) {
-		background-color: var(--primary);
+		background-color: var(--v-primary-bg);
 	}
 
 	.c-toggle-switch input {
-		@mixin sr-only;
+		@mixin t-sr-only;
 	}
 
 	.c-toggle-switch:has(input:focus-visible) {
-		@mixin focus-ring;
+		@mixin t-focus-ring;
 	}
 
 	.c-toggle-switch__thumb {
@@ -35,26 +33,22 @@
 		left: 0.125em;
 		height: 1em;
 		width: 1em;
-		border-radius: var(--radius-full);
-		background-color: var(--input-fg);
+		border-radius: 9999em;
+		background-color: var(--v-input-fg);
 
-		@mixin transition transform;
+		@mixin t-transition transform;
 	}
 
 	.c-toggle-switch:has(input:checked) .c-toggle-switch__thumb {
-		transform: translateX(1.25em);
-		background-color: var(--primary-fg);
+		transform: translateX(1.375em);
+		background-color: var(--v-primary-fg);
 	}
 
-	@layer utilities {
-		.c-toggle-switch--error,
-		.c-toggle-switch:has([aria-invalid='true']) {
-			@mixin border-dynamic var(--danger);
-		}
+	.c-toggle-switch:has([aria-invalid='true']) {
+		@mixin t-error;
+	}
 
-		.c-toggle-switch:has([aria-disabled='true']) {
-			cursor: not-allowed;
-			background-color: var(--input-disabled-bg);
-		}
+	.c-toggle-switch:has([aria-disabled='true']) {
+		@mixin t-disabled-input;
 	}
 }
