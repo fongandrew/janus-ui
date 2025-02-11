@@ -43,10 +43,10 @@
 @import '~/shared/components/label.css';
 @import '~/shared/components/labelled-action.css';
 @import '~/shared/components/list-box.css';
+@import '~/shared/components/modal-form.css';
 
 /*
 ';
-@import '~/shared/components/modal-form.css';
 @import '~/shared/components/modal.css';
 @import '~/shared/components/select.css';
 @import '~/shared/components/sidebar-layout.css';
