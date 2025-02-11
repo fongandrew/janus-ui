@@ -6,7 +6,6 @@ import {
 	CardTitle,
 } from '~/shared/components/card';
 import { LabelledInput } from '~/shared/components/labelled-control';
-import { Stack } from '~/shared/components/stack';
 import { Textarea } from '~/shared/components/textarea';
 
 function TextareasDemo() {
@@ -17,7 +16,7 @@ function TextareasDemo() {
 				<CardDescription>Larger input areas</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Stack>
+				<div class="o-stack">
 					<LabelledInput label="Default">
 						<Textarea placeholder="Default (medium) textarea" />
 					</LabelledInput>
@@ -27,7 +26,7 @@ function TextareasDemo() {
 					<LabelledInput label="Disabled">
 						<Textarea disabled placeholder="Disabled textarea" />
 					</LabelledInput>
-				</Stack>
+				</div>
 			</CardContent>
 		</Card>
 	);

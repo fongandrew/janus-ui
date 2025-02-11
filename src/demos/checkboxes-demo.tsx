@@ -7,7 +7,6 @@ import {
 } from '~/shared/components/card';
 import { Checkbox } from '~/shared/components/checkbox';
 import { Label } from '~/shared/components/label';
-import { Stack } from '~/shared/components/stack';
 import { ToggleSwitch } from '~/shared/components/toggle-switch';
 
 export function CheckboxesDemo() {
@@ -18,7 +17,7 @@ export function CheckboxesDemo() {
 				<CardDescription>Different checkbox states and variations</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Stack>
+				<div class="o-stack">
 					<Label>
 						<Checkbox name="default" /> Default checkbox
 					</Label>
@@ -41,7 +40,7 @@ export function CheckboxesDemo() {
 					<Label>
 						Toggle switch <ToggleSwitch name="toggle" />
 					</Label>
-				</Stack>
+				</div>
 			</CardContent>
 		</Card>
 	);

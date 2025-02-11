@@ -18,7 +18,6 @@ import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
 import { LabelledInput } from '~/shared/components/labelled-control';
 import { Password } from '~/shared/components/password';
-import { Stack } from '~/shared/components/stack';
 import { generateId } from '~/shared/utility/id-generator';
 
 export function FormValidationGroupDemo() {
@@ -71,7 +70,7 @@ export function FormValidationGroupDemo() {
 				<CardDescription>Password validation with FormValidationGroup</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Stack>
+				<div class="o-stack">
 					<Form names={FormNames} onSubmit={handleSubmit} onReset={handleReset}>
 						<LabelledInput label="Username">
 							<Input
@@ -83,7 +82,7 @@ export function FormValidationGroupDemo() {
 						</LabelledInput>
 
 						<FormValidationGroup>
-							<Stack>
+							<div class="o-stack">
 								<LabelledInput label="Password">
 									<Password
 										id={password1Id}
@@ -100,7 +99,7 @@ export function FormValidationGroupDemo() {
 										required
 									/>
 								</LabelledInput>
-							</Stack>
+							</div>
 						</FormValidationGroup>
 					</Form>
 
@@ -111,7 +110,7 @@ export function FormValidationGroupDemo() {
 									<CardTitle>Submitted form data</CardTitle>
 								</CardHeader>
 								<CardContent>
-									<Stack>
+									<div class="o-stack">
 										<LabelStack>
 											<Label>Username</Label>
 											<Description>{formData()?.username}</Description>
@@ -120,12 +119,12 @@ export function FormValidationGroupDemo() {
 											<Label>Password</Label>
 											<Description>{formData()?.password}</Description>
 										</LabelStack>
-									</Stack>
+									</div>
 								</CardContent>
 							</Card>
 						</output>
 					</Show>
-				</Stack>
+				</div>
 			</CardContent>
 			<CardFooter>
 				<ResetButton />

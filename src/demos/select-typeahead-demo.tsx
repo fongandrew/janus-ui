@@ -13,7 +13,6 @@ import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
 import { ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
 import { SelectTypeahead } from '~/shared/components/select-typeahead';
-import { Stack } from '~/shared/components/stack';
 
 function SelectTypeaheadDemo() {
 	// Value selection
@@ -36,7 +35,7 @@ function SelectTypeaheadDemo() {
 				<CardDescription>Search input with single and multiple selection</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Stack>
+				<div class="o-stack">
 					<LabelStack>
 						<Label>Single selection</Label>
 						<Description>
@@ -111,7 +110,7 @@ function SelectTypeaheadDemo() {
 						<Label>Select with no matches</Label>
 						<SelectTypeahead placeholder="Won't match" />
 					</LabelStack>
-				</Stack>
+				</div>
 			</CardContent>
 		</Card>
 	);

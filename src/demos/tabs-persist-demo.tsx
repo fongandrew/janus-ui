@@ -8,7 +8,6 @@ import {
 import { Form } from '~/shared/components/form';
 import { Input } from '~/shared/components/input';
 import { LabelledInput } from '~/shared/components/labelled-control';
-import { Stack } from '~/shared/components/stack';
 import { Tab, Tabs } from '~/shared/components/tabs';
 
 export function TabsPersistDemo() {
@@ -19,7 +18,7 @@ export function TabsPersistDemo() {
 				<CardDescription>Persist elements inside tab</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Stack>
+				<div class="o-stack">
 					<Tabs persist>
 						<Tab label="Persist">
 							<Form names={{}}>
@@ -42,7 +41,7 @@ export function TabsPersistDemo() {
 							</Form>
 						</Tab>
 					</Tabs>
-				</Stack>
+				</div>
 			</CardContent>
 		</Card>
 	);

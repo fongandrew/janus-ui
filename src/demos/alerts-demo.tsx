@@ -9,7 +9,6 @@ import {
 } from '~/shared/components/alert';
 import { Button } from '~/shared/components/button';
 import { Card, CardContent, CardHeader, CardTitle } from '~/shared/components/card';
-import { Stack } from '~/shared/components/stack';
 
 const toggle = (value: boolean) => !value;
 
@@ -26,7 +25,7 @@ export function AlertsDemo() {
 				<CardTitle>Alerts</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<Stack>
+				<div class="o-stack">
 					{showInfo() && (
 						<InfoAlert>This is an info alert with useful information</InfoAlert>
 					)}
@@ -50,7 +49,7 @@ export function AlertsDemo() {
 						<Button onClick={() => setShowWarning(toggle)}>Toggle Warning Alert</Button>
 						<Button onClick={() => setShowDanger(toggle)}>Toggle Danger Alert</Button>
 					</div>
-				</Stack>
+				</div>
 			</CardContent>
 		</Card>
 	);

@@ -16,7 +16,6 @@ import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
 import { LabelledInline, LabelledInput } from '~/shared/components/labelled-control';
-import { Stack } from '~/shared/components/stack';
 import { Textarea } from '~/shared/components/textarea';
 
 export function AsyncFormDemo() {
@@ -55,7 +54,7 @@ export function AsyncFormDemo() {
 				<CardDescription>Form with async submission and loading state</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Stack>
+				<div class="o-stack">
 					<Form names={FormNames} onSubmit={handleSubmit}>
 						<LabelledInput label="Name">
 							<Input name={FormNames.name} autocomplete="none" />
@@ -75,7 +74,7 @@ export function AsyncFormDemo() {
 									<CardTitle>Submitted form data</CardTitle>
 								</CardHeader>
 								<CardContent>
-									<Stack>
+									<div class="o-stack">
 										<LabelStack>
 											<Label>Name</Label>
 											<Description>{formData()?.name}</Description>
@@ -84,12 +83,12 @@ export function AsyncFormDemo() {
 											<Label>Message</Label>
 											<Description>{formData()?.message}</Description>
 										</LabelStack>
-									</Stack>
+									</div>
 								</CardContent>
 							</Card>
 						</output>
 					</Show>
-				</Stack>
+				</div>
 			</CardContent>
 			<CardFooter>
 				<ResetButton />

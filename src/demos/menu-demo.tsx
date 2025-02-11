@@ -8,10 +8,8 @@ import {
 	CardHeader,
 	CardTitle,
 } from '~/shared/components/card';
-import { Description } from '~/shared/components/description';
 import { Dropdown } from '~/shared/components/dropdown';
 import { Menu, MenuGroup, MenuItem, MenuItemLink } from '~/shared/components/menu';
-import { Stack } from '~/shared/components/stack';
 
 function MenuDemo() {
 	const [selection, setSelection] = createSignal<string | null>(null);
@@ -22,8 +20,8 @@ function MenuDemo() {
 				<CardDescription>Dropdown menu with groups and items</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Stack class="gap-xs">
-					<Description>Selected: {selection() ?? 'None'}</Description>
+				<div class="o-stack">
+					<output>Selected: {selection() ?? 'None'}</output>
 					<div class="o-group">
 						<Dropdown>
 							{() => <Button>Simple Menu</Button>}
@@ -67,7 +65,7 @@ function MenuDemo() {
 							)}
 						</Dropdown>
 					</div>
-				</Stack>
+				</div>
 			</CardContent>
 		</Card>
 	);

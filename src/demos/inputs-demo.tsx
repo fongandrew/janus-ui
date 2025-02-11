@@ -18,7 +18,6 @@ import { Input } from '~/shared/components/input';
 import { LabelledInput } from '~/shared/components/labelled-control';
 import { Password } from '~/shared/components/password';
 import { Slider } from '~/shared/components/slider';
-import { Stack } from '~/shared/components/stack';
 
 function InputStates() {
 	return (
@@ -28,7 +27,7 @@ function InputStates() {
 				<CardDescription>Text input fields in different states</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Stack>
+				<div class="o-stack">
 					<LabelledInput label="Default input">
 						<Input placeholder="Placeholder content" />
 					</LabelledInput>
@@ -38,7 +37,7 @@ function InputStates() {
 					<LabelledInput label="Disabled input">
 						<Input disabled placeholder="Can't touch this" />
 					</LabelledInput>
-				</Stack>
+				</div>
 			</CardContent>
 		</Card>
 	);
@@ -52,7 +51,7 @@ function DateTimeInputs() {
 				<CardDescription>Text input fields for selecting dates and times</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Stack>
+				<div class="o-stack">
 					<LabelledInput label="Date input">
 						<DatePicker placeholder="Pick a date" value="2024-12-25" />
 					</LabelledInput>
@@ -68,7 +67,7 @@ function DateTimeInputs() {
 					<LabelledInput label="Month input">
 						<MonthPicker placeholder="Pick a month" value="2024-12" />
 					</LabelledInput>
-				</Stack>
+				</div>
 			</CardContent>
 		</Card>
 	);
@@ -117,7 +116,7 @@ function MiscInputVariations() {
 				<CardDescription>Non-textual inputs</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Stack>
+				<div class="o-stack">
 					<LabelledInput label="Color input">
 						<ColorPicker />
 					</LabelledInput>
@@ -138,7 +137,7 @@ function MiscInputVariations() {
 					<LabelledInput label="Range / slider input (disabled)">
 						<Slider unit="%" disabled />
 					</LabelledInput>
-				</Stack>
+				</div>
 			</CardContent>
 		</Card>
 	);

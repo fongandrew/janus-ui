@@ -5,7 +5,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from '~/shared/components/card';
-import { Stack } from '~/shared/components/stack';
 import { Tab, Tabs } from '~/shared/components/tabs';
 
 export function TabsDemo() {
@@ -16,7 +15,7 @@ export function TabsDemo() {
 				<CardDescription>Basic tabbed content</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Stack>
+				<div class="o-stack">
 					<div>
 						<Tabs>
 							<Tab label="Tab 1">
@@ -44,7 +43,7 @@ export function TabsDemo() {
 							</Tab>
 						</Tabs>
 					</Card>
-				</Stack>
+				</div>
 			</CardContent>
 		</Card>
 	);

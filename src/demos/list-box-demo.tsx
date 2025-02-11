@@ -12,7 +12,6 @@ import { ErrorMessage } from '~/shared/components/error-message';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
 import { ListBox, ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
-import { Stack } from '~/shared/components/stack';
 
 function ListBoxDemo() {
 	const [values, setValues] = createSignal<Set<string>>(new Set());
@@ -25,7 +24,7 @@ function ListBoxDemo() {
 				<CardDescription>Single and multiple selection list boxes</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Stack>
+				<div class="o-stack">
 					<LabelStack>
 						<Label>Single selection</Label>
 						<Description>
@@ -70,7 +69,7 @@ function ListBoxDemo() {
 							<ListBoxItem value="different">Can't pick me</ListBoxItem>
 						</ListBox>
 					</LabelStack>
-				</Stack>
+				</div>
 			</CardContent>
 		</Card>
 	);

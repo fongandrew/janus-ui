@@ -16,7 +16,6 @@ import { LabelStack } from '~/shared/components/label-stack';
 import { LabelledInput } from '~/shared/components/labelled-control';
 import { ListBox, ListBoxItem } from '~/shared/components/list-box';
 import { Select } from '~/shared/components/select';
-import { Stack } from '~/shared/components/stack';
 
 export function SelectionValidationDemo() {
 	const [formData, setFormData] = createSignal<{
@@ -60,7 +59,7 @@ export function SelectionValidationDemo() {
 				<CardDescription>Validation with ListBox and Select components</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Stack>
+				<div class="o-stack">
 					<Form onSubmit={handleSubmit} onReset={handleReset} names={FormNames}>
 						<LabelledInput label="Select Fruits (2-3)">
 							<ListBox
@@ -100,7 +99,7 @@ export function SelectionValidationDemo() {
 									<CardTitle>Submitted form data</CardTitle>
 								</CardHeader>
 								<CardContent>
-									<Stack>
+									<div class="o-stack">
 										<LabelStack>
 											<Label>Selected fruits</Label>
 											<Description>
@@ -113,12 +112,12 @@ export function SelectionValidationDemo() {
 												{formData()?.colors.join(', ')}
 											</Description>
 										</LabelStack>
-									</Stack>
+									</div>
 								</CardContent>
 							</Card>
 						</output>
 					</Show>
-				</Stack>
+				</div>
 			</CardContent>
 			<CardFooter>
 				<ResetButton />

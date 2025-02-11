@@ -7,7 +7,6 @@ import {
 	CardTitle,
 } from '~/shared/components/card';
 import { LabelledActionCard } from '~/shared/components/labelled-action';
-import { Stack } from '~/shared/components/stack';
 import { ToggleSwitch } from '~/shared/components/toggle-switch';
 
 export function LabelledActionDemo() {
@@ -18,7 +17,7 @@ export function LabelledActionDemo() {
 				<CardDescription>Text input fields in different states</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Stack>
+				<div class="o-stack">
 					<LabelledActionCard
 						label="Do the thing"
 						description="Doing the thing has consequences"
@@ -40,7 +39,7 @@ export function LabelledActionDemo() {
 					>
 						<ToggleSwitch />
 					</LabelledActionCard>
-				</Stack>
+				</div>
 			</CardContent>
 		</Card>
 	);

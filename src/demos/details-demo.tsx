@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '~/shared/components/card';
 import { Details } from '~/shared/components/details';
-import { Stack } from '~/shared/components/stack';
 
 export function DetailsDemo() {
 	return (
@@ -9,7 +8,7 @@ export function DetailsDemo() {
 				<CardTitle>Details component</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<Stack>
+				<div class="o-stack">
 					<Details>
 						{() => <>Click to expand</>}
 						{() => (
@@ -54,7 +53,7 @@ export function DetailsDemo() {
 							</div>
 						)}
 					</Details>
-				</Stack>
+				</div>
 			</CardContent>
 		</Card>
 	);

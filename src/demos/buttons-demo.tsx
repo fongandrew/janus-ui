@@ -8,7 +8,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from '~/shared/components/card';
-import { Stack } from '~/shared/components/stack';
 
 export function ButtonsDemo() {
 	return (
@@ -18,7 +17,7 @@ export function ButtonsDemo() {
 				<CardDescription>Different variations on your standard button</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Stack>
+				<div class="o-stack">
 					<div class="o-group">
 						<Button class="v-input-sm">
 							<Settings /> Small Button
@@ -45,7 +44,7 @@ export function ButtonsDemo() {
 							<Ellipsis />
 						</IconButton>
 					</div>
-				</Stack>
+				</div>
 			</CardContent>
 		</Card>
 	);

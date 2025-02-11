@@ -8,7 +8,6 @@ import {
 	validate,
 } from '~/shared/components/form-element-control';
 import { FormError } from '~/shared/components/form-error';
-import { Stack } from '~/shared/components/stack';
 import { type BoundCallbackUnion, callBound } from '~/shared/utility/bound-callbacks';
 import { generateId } from '~/shared/utility/id-generator';
 import { evtWin } from '~/shared/utility/multi-view';
@@ -159,10 +158,10 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 				aria-busy={context.busySig[0]()}
 				{...rest}
 			>
-				<Stack>
+				<div class="o-stack">
 					<FormError />
 					{rest.children}
-				</Stack>
+				</div>
 			</form>
 		</FormContext.Provider>
 	);

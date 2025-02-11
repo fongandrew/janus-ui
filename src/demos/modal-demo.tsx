@@ -27,7 +27,6 @@ import {
 	ModalFormContent,
 	ModalSubmitButton,
 } from '~/shared/components/modal-form';
-import { Stack } from '~/shared/components/stack';
 import { Textarea } from '~/shared/components/textarea';
 
 function SimpleModal() {
@@ -142,7 +141,7 @@ function FormModal() {
 								<CardTitle>Submitted Form Data</CardTitle>
 							</CardHeader>
 							<CardContent>
-								<Stack>
+								<div class="o-stack">
 									<LabelStack>
 										<Label>Name</Label>
 										<Description>{formData()?.name}</Description>
@@ -155,7 +154,7 @@ function FormModal() {
 										<Label>Message</Label>
 										<Description>{formData()?.message}</Description>
 									</LabelStack>
-								</Stack>
+								</div>
 							</CardContent>
 						</Card>
 					</output>
