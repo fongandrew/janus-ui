@@ -143,7 +143,7 @@ export function DropdownContent(props: DropdownContentProps) {
 		>
 			<div class="c-dropdown__children">{local.children}</div>
 			<div class="c-dropdown__footer">
-				<GhostButton class="v-input-spacing-sm" onClick={closePopover} unsetFormInput>
+				<GhostButton class="v-input-sm" onClick={closePopover} unsetFormInput>
 					<T>Close</T>
 				</GhostButton>
 			</div>
