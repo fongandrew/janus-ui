@@ -2,7 +2,7 @@
 
 .c-slider {
 	display: flex;
-	gap: var(--space-sm);
+	gap: var(--v-inline-gap);
 }
 
 .c-slider__range {
@@ -29,37 +29,34 @@
 }
 
 .c-slider__input {
-	display: flex;
-	gap: var(--space-xs);
-	flex-shrink: 1;
-	min-height: var(--input-height-md);
-	overflow-x: hidden;
-	border-radius: var(--radius-md);
-	border-width: var(--border-width-md);
-	border-style: solid;
-	background-color: var(--input-bg);
-	text-align: right;
-	font-weight: var(--font-weight-normal);
-	color: var(--input-fg);
-	box-shadow: var(--shadow-inner);
+	@mixin v-input-colors;
+	@mixin o-input-box;
+	@mixin t-inner-radius;
+	@mixin t-border;
+	@mixin t-transition-color;
 
-	@mixin transition-color;
-	@mixin border-dynamic var(--secondary);
-	@mixin input-size-md;
+	display: flex;
+	gap: var(--v-inline-gap);
+	flex-shrink: 1;
+	min-height: var(--v-input-height);
+	overflow-x: hidden;
+	text-align: right;
+	font-weight: var(--v-font-weight-normal);
+	box-shadow: var(--v-shadow-inner);
 }
 
 .c-slider__input:has(:focus-visible) {
-	@mixin focus-ring;
+	@mixin t-focus-ring;
 }
 
 .c-slider__input:has(:invalid, [aria-invalid='true']) {
-	@mixin error-input;
+	@mixin t-error;
 }
 
 .c-slider__input:has(:disabled, [aria-disabled='true']) {
-	@mixin disabled-input;
+	@mixin t-disabled-input;
 }
 
 .c-slider__unit {
-	color: var(--muted);
+	color: var(--v-muted);
 }

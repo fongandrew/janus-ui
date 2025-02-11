@@ -1,5 +1,3 @@
-import '~/shared/components/slider.css';
-
 import cx from 'classix';
 import { createSignal, type JSX, mergeProps, splitProps } from 'solid-js';
 
