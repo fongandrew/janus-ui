@@ -45,6 +45,9 @@
 @import '~/shared/components/list-box.css';
 @import '~/shared/components/modal-form.css';
 @import '~/shared/components/modal.css';
+@import '~/shared/components/option-list.css';
+@import '~/shared/components/radio.css';
+@import '~/shared/components/select.css';
 
 /*
 ';
@@ -54,6 +57,3 @@
 @import '~/shared/components/textarea.css';
 @import '~/shared/components/toggle-switch.css';
 @import '~/shared/components/tooltip.css'; */
-
-@import '~/shared/components/option-list.css';
-@import '~/shared/components/radio.css';

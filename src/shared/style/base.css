@@ -62,9 +62,8 @@
 	input:not([type='button'], [type='submit'], [type='reset'], [type='range'], .t-unstyled),
 	textarea:not(.t-unstyled),
 	select:not(.t-unstyled),
+	[role='combobox'],
 	[role='listbox'] {
-		box-shadow: var(--shadow-inner);
-
 		&:disabled,
 		&[aria-disabled='true'] {
 			@mixin t-disabled-input;
