@@ -35,7 +35,7 @@ export function TabPanel(props: TabPanelProps) {
 				{...props}
 				id={props.id}
 				aria-labelledby={attrs(props['aria-labelledby'], context.btnId(props.id))}
-				class={cx('c-tabs__panel', props.class, !visible() && 'hidden')}
+				class={cx('c-tabs__panel', props.class, !visible() && 't-hidden')}
 				tabIndex={0}
 			>
 				{props.children}
