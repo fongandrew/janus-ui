@@ -48,6 +48,18 @@
 		@mixin t-text;
 	}
 
+	/* input[type='file'] */
+	input[type='file'] {
+		cursor: pointer;
+
+		&::file-selector-button {
+			@mixin t-border;
+			@mixin t-inner-radius;
+
+			padding: 0 var(--v-inner-radius);
+		}
+	}
+
 	/* Button-like things */
 	button,
 	input[type='button'],
