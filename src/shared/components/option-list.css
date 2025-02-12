@@ -13,10 +13,8 @@
 		@mixin o-text-box;
 
 		display: block;
-		overflow-x: hidden;
 		padding-inline: calc(var(--v-spacing) + var(--v-inner-radius));
 		text-align: left;
-		text-overflow: ellipsis;
 		width: 100%;
 	}
 

@@ -30,7 +30,8 @@
 
 @layer variables {
 	:root {
-		--c-dropdown__width: 11.5rem;
+		--c-dropdown__min-width: 11.5rem;
+		--c-dropdown__max-width: 20rem;
 	}
 }
 
@@ -47,7 +48,7 @@
 		overflow: hidden;
 		padding-top: var(--c-dropdown__spacing);
 		z-index: var(--v-z-above-backdrop);
-		min-width: var(--c-dropdown__width);
+		min-width: var(--c-dropdown__min-width);
 
 		/* Mobile specific styling */
 		inset: var(--v-spacing);
@@ -91,17 +92,20 @@
 			width: auto;
 			padding-bottom: var(--c-dropdown__spacing);
 
-			/* These are set via `dropdown.tsx` */
+			/* These are set via `dropdown.tsx` and `select.tsx` */
 			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
-			left: var(--c-dropdown-left);
+			left: var(--c-dropdown__left);
 			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
-			top: var(--c-dropdown-top);
+			top: var(--c-dropdown__top);
 			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
-			max-height: var(--c-dropdown-max-height);
+			max-height: var(--c-dropdown__computed-max-height);
 			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
-			max-width: var(--c-dropdown-max-width);
+			max-width: min(
+				var(--c-dropdown_computed-max-width, 100vw),
+				var(--c-dropdown__max-width)
+			);
 			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
-			min-width: var(--c-dropdown-min-width, 180px);
+			min-width: max(var(--c-dropdown__computed-min-width, 0), var(--c-dropdown__min-width));
 		}
 
 		.c-dropdown__footer {

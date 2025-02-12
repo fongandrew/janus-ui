@@ -58,7 +58,9 @@ function MenuDemo() {
 									</MenuGroup>
 									<MenuGroup>
 										<MenuItemLink href="https://example.com">
-											Link to site
+											Link to site and let's give this a really long label to
+											see how it wraps and here's a long unbreakable string:
+											abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789
 										</MenuItemLink>
 									</MenuGroup>
 								</Menu>

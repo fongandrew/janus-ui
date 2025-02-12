@@ -31,15 +31,15 @@ export function SelectContainer(props: SelectContainerProps) {
 					size({
 						apply({ rects, elements, availableHeight }) {
 							elements.floating.style.setProperty(
-								'--c-dropdown-max-width',
+								'--c-dropdown__computed-max-width',
 								`${rects.reference.width}px`,
 							);
 							elements.floating.style.setProperty(
-								'--c-dropdown-min-width',
+								'--c-dropdown__computed-min-width',
 								`${rects.reference.width}px`,
 							);
 							elements.floating.style.setProperty(
-								'--c-dropdown-max-height',
+								'--c-dropdown__computed-max-height',
 								`${Math.max(0, availableHeight - 8)}px`,
 							);
 						},

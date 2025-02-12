@@ -179,11 +179,11 @@ export function Dropdown(props: DropdownProps) {
 				size({
 					apply({ elements, availableWidth, availableHeight }) {
 						elements.floating.style.setProperty(
-							'--c-dropdown-max-width',
+							'--c-dropdown__computed-max-width',
 							`${Math.max(0, availableWidth - 8)}px`,
 						);
 						elements.floating.style.setProperty(
-							'--c-dropdown-max-height',
+							'--c-dropdown__computed-max-height',
 							`${Math.max(0, availableHeight - 8)}px`,
 						);
 					},
@@ -192,8 +192,8 @@ export function Dropdown(props: DropdownProps) {
 			strategy: 'fixed',
 		});
 
-		menuElm.style.setProperty('--c-dropdown-left', `${x}px`);
-		menuElm.style.setProperty('--c-dropdown-top', `${y}px`);
+		menuElm.style.setProperty('--c-dropdown__left', `${x}px`);
+		menuElm.style.setProperty('--c-dropdown__top', `${y}px`);
 	};
 
 	// Main effect for showing + positioning dropdown
