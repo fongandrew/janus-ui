@@ -16,6 +16,7 @@
 		overflow: auto;
 		box-shadow: var(--v-shadow-md);
 		flex-direction: column;
+		container-type: inline-size;
 	}
 
 	.c-sidebar-layout--open .c-sidebar {

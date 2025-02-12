@@ -9,6 +9,7 @@
 		box-shadow: var(--v-shadow-md);
 		display: flex;
 		flex-direction: column;
+		container-type: inline-size;
 	}
 
 	.c-card__header {
