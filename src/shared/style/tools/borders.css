@@ -15,7 +15,7 @@
 }
 
 @define-mixin t-border-right {
-	border-left: var(--v-border-width) solid var(--v-border-color);
+	border-right: var(--v-border-width) solid var(--v-border-color);
 }
 
 @define-mixin t-border-bottom {
