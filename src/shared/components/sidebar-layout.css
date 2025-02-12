@@ -160,8 +160,9 @@
 		}
 
 		.c-sidebar ~ *:not(.c-sidebar__overlay) {
-			flex: 1 1 auto;
+			flex: 1 1 0;
 			overflow: auto;
+			container-type: inline-size;
 		}
 
 		/* Can be explicitly closed on desktop */

@@ -25,3 +25,27 @@
 		@mixin-content;
 	}
 }
+
+@define-mixin v-container-mobile-wide {
+	@container (width >= 640px) {
+		@mixin-content;
+	}
+}
+
+@define-mixin v-container-tablet {
+	@container (width >= 768px) {
+		@mixin-content;
+	}
+}
+
+@define-mixin v-container-tablet-wide {
+	@container (width >= 1024px) {
+		@mixin-content;
+	}
+}
+
+@define-mixin v-container-desktop {
+	@container (width >= 1200px) {
+		@mixin-content;
+	}
+}

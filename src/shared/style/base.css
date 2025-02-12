@@ -6,6 +6,12 @@
 		background: linear-gradient(102deg, hsl(0deg 0% 100% / 0%), rgb(255 204 0 / 5%)),
 			linear-gradient(12deg, rgb(33 37 41 / 5%), hsl(0deg 0% 100% / 0%)), var(--v-bg);
 		min-height: 100vh;
+
+		/* So container queries can fallback to the body as a container */
+		container-type: size;
+		height: 100%;
+		width: 100%;
+		overflow: auto;
 	}
 
 	* {
