@@ -18,7 +18,7 @@
 	}
 
 	.c-color-picker__swatch {
-		border-radius: var(--space-xs);
+		border-radius: var(--v-space-xs);
 		height: 1lh;
 		width: 1lh;
 		margin-left: calc((1em - 1lh) / 2);

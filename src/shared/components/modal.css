@@ -20,7 +20,7 @@
 	}
 
 	.c-modal::backdrop {
-		background-color: var(--backdrop);
+		background-color: var(--v-backdrop);
 		backdrop-filter: blur(4px);
 	}
 

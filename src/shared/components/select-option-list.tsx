@@ -21,7 +21,7 @@ export function SelectOptionList(props: SelectOptionListProps) {
 	const [local, rest] = splitProps(props, ['children', 'input', 'listCtrl', 'name', 'values']);
 	return (
 		<DropdownContent {...rest}>
-			<OptionList role="listbox" {...local.listCtrl?.merge()}>
+			<OptionList role="listbox" {...local.listCtrl?.merge({ class: 't-unstyled' })}>
 				{local.children}
 				<div class="c-select__empty_state">
 					{props.input?.trim() ? (

@@ -14,7 +14,7 @@
 		inset: 0;
 		z-index: var(--v-z-backdrop);
 		display: block;
-		background-color: var(--backdrop);
+		background-color: var(--v-backdrop);
 		backdrop-filter: blur(4px);
 	}
 
@@ -75,14 +75,12 @@
 		@mixin v-input-sm;
 		@mixin v-text-sm;
 		@mixin o-input-box;
+		@mixin t-border-top;
 
 		margin-top: var(--c-dropdown__spacing);
 		display: flex;
 		flex: none;
 		justify-content: flex-end;
-		border-width: var(--v-border-width) 0 0 0;
-		border-top-color: var(--v-border-color);
-		border-top-style: solid;
 		vertical-align: middle;
 	}
 

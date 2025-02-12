@@ -14,7 +14,7 @@
 		@mixin t-border;
 		@mixin t-transition-color;
 
-		border-radius: var(--space-xs);
+		border-radius: var(--v-space-xs);
 		position: relative;
 		display: inline-flex;
 		height: 1em;

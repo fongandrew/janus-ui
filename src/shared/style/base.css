@@ -8,6 +8,15 @@
 		min-height: 100vh;
 	}
 
+	* {
+		/*
+			The input-box object assumes some sort of border for spacing. We don't want
+			to automatically put a visible border on things without explicit indication
+			though, so just make everything transparent for now.
+		*/
+		border-color: transparent;
+	}
+
 	a[href] {
 		@mixin t-link-style;
 	}
@@ -44,37 +53,69 @@
 	input[type='button'],
 	input[type='submit'],
 	input[type='reset'] {
-		&:hover {
-			@mixin t-hover;
-		}
+		&:not(.t-unstyled) {
+			@mixin o-input-box;
+			@mixin t-text;
+			@mixin t-transition single-arg(color, background-color, border-color, box-shadow);
 
-		&:disabled,
-		&[aria-disabled='true'] {
-			@mixin t-disabled-button;
-		}
+			cursor: pointer;
+			display: inline-flex;
+			align-items: flex-start;
+			justify-content: center;
+			gap: var(--v-inline-gap);
 
-		&:focus-visible {
-			@mixin t-focus-ring;
+			.lucide + * {
+				text-align: left;
+			}
+
+			&:hover {
+				@mixin t-hover;
+			}
+
+			&:disabled,
+			&[aria-disabled='true'] {
+				@mixin t-disabled-button;
+			}
+
+			&:focus-visible {
+				@mixin t-focus-ring;
+			}
 		}
 	}
 
 	/* Input-like things */
-	input:not([type='button'], [type='submit'], [type='reset'], [type='range'], .t-unstyled),
-	textarea:not(.t-unstyled),
-	select:not(.t-unstyled),
+	input:not([type='button'], [type='submit'], [type='reset'], [type='range']),
+	textarea,
+	select,
 	[role='combobox'],
 	[role='listbox'] {
-		&:disabled,
-		&[aria-disabled='true'] {
-			@mixin t-disabled-input;
-		}
+		&:not(.t-unstyled) {
+			/*
+				A bit more style than buttons because we usually hide inputs we don't want styled
+				and use them for screenreader-only sort of things. Note that the combination of
+				input colors + input box will automatically add a border because there's a default
+				border style set for all elements in the reset.
+			*/
+			@mixin v-input-colors;
+			@mixin o-input-box;
+			@mixin t-inner-radius;
+			@mixin t-text;
+			@mixin t-transition-color;
 
-		&:focus {
-			@mixin t-focus-ring;
-		}
+			box-shadow: var(--v-shadow-inner);
 
-		&::placeholder {
-			color: var(--v-muted);
+			&:disabled,
+			&[aria-disabled='true'] {
+				@mixin t-disabled-input;
+			}
+
+			&:focus {
+				@mixin t-focus-ring;
+			}
+
+			&::placeholder {
+				color: var(--v-muted);
+			}
 		}
 	}
 

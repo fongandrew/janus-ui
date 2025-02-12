@@ -2,15 +2,8 @@
 
 @layer components {
 	.c-textarea {
-		@mixin v-input-colors;
-		@mixin o-input-box;
-		@mixin t-border;
-		@mixin t-inner-radius;
-		@mixin t-transition-color;
-
 		min-height: 6em;
 		width: 100%;
 		resize: vertical;
-		box-shadow: var(--v-shadow-inner);
 	}
 }

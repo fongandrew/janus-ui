@@ -15,19 +15,13 @@
 	}
 
 	.c-tabs__button {
-		@mixin o-input-box;
-		@mixin t-transition-color;
-
-		border-width: 0 0 var(--border-width-lg) 0;
-		border-color: transparent;
-		cursor: pointer;
+		border-width: 0 0 var(--v-border-width-lg) 0;
 		color: var(--v-muted);
+		display: block;
 		flex-grow: 1;
 		flex-basis: 0;
 		font-weight: var(--v-font-weight-medium);
 		max-width: var(--c-tabs__max-width);
-		overflow: hidden;
-		text-overflow: ellipsis;
 		white-space: nowrap;
 
 		&:hover,

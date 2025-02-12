@@ -1,10 +1,11 @@
 import cx from 'classix';
-import { splitProps } from 'solid-js';
+import { children, splitProps } from 'solid-js';
 
 import {
 	type FormElementProps,
 	mergeFormElementProps,
 } from '~/shared/components/form-element-props';
+import { spanify } from '~/shared/utility/solid/spanify';
 
 export interface ButtonProps extends FormElementProps<'button'> {
 	/** Removes default styling */
@@ -17,34 +18,36 @@ export interface ButtonProps extends FormElementProps<'button'> {
 	unsetFormInput?: boolean | undefined;
 }
 
-export function Button(props: ButtonProps) {
+export function BaseButton(props: ButtonProps) {
 	const [local, rest] = splitProps(props, ['unstyled']);
 	const formElementProps = mergeFormElementProps<'button'>(rest);
+	const resolved = children(() => formElementProps.children);
 	return (
 		<button
 			type="button"
 			{...formElementProps}
-			class={cx(!local.unstyled && 'c-button', props.class)}
-		/>
+			class={cx(local.unstyled && 't-unstyled', props.class)}
+		>
+			{spanify(resolved.toArray())}
+		</button>
 	);
 }
 
+export function Button(props: ButtonProps) {
+	return <BaseButton {...props} class={cx(!props.unstyled && 'c-button', props.class)} />;
+}
+
 export function GhostButton(props: ButtonProps) {
-	return <Button {...props} class={cx('c-button--ghost', props.class)} />;
+	return <BaseButton {...props} class={cx('c-button--ghost', props.class)} />;
 }
 
 export function LinkButton(props: ButtonProps) {
-	return <Button {...props} class={cx('c-button--link', props.class)} />;
+	return <BaseButton {...props} class={cx('c-button--link', props.class)} />;
 }
 
 export function IconButton(props: ButtonProps & { label: string }) {
 	const [local, rest] = splitProps(props, ['label']);
 	return (
-		<Button
-			aria-label={local.label}
-			{...rest}
-			class={cx('c-button--icon', props.class)}
-			unstyled
-		/>
+		<BaseButton aria-label={local.label} {...rest} class={cx('c-button--icon', props.class)} />
 	);
 }

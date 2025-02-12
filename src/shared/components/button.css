@@ -1,21 +1,20 @@
 @import '~/shared/style/common.css';
 
 @layer components {
-	.c-button {
-		@mixin v-secondary-colors;
-		@mixin o-input-box;
-		@mixin t-inner-radius;
-		@mixin t-border;
-		@mixin t-transition single-arg(color, background-color, border-color, box-shadow);
-
-		display: inline-flex;
-		align-items: flex-start;
-		justify-content: center;
-		white-space: nowrap;
-		gap: var(--v-inline-gap);
-		cursor: pointer;
+	.c-button,
+	.c-button--ghost {
 		font-weight: var(--v-font-weight-medium);
 		padding-inline: var(--v-spacing);
+	}
+
+	.c-button,
+	.c-button--ghost,
+	.c-button--icon {
+		@mixin t-inner-radius;
+	}
+
+	.c-button {
+		@mixin v-secondary-colors;
 
 		/* Hover/active states */
 		&:hover {
@@ -28,35 +27,16 @@
 	}
 
 	.c-button--icon {
-		@mixin o-input-box;
-		@mixin t-inner-radius;
-		@mixin t-border;
-
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		border-radius: var(--radius-md);
-		border-color: transparent;
 		font-size: inherit;
-		cursor: pointer;
-
-		&:hover {
-			border-color: var(--secondary);
-			background-color: var(--secondary);
-			color: var(--secondary-fg);
-		}
+		align-items: center;
 	}
-}
 
-@layer utilities {
+	.c-button--icon,
 	.c-button--ghost {
-		border-color: transparent;
-		background-color: transparent;
-
 		&:hover {
-			border-color: var(--secondary);
-			background-color: var(--secondary);
-			color: var(--secondary-fg);
+			border-color: var(--v-secondary-bg);
+			background-color: var(--v-secondary-bg);
+			color: var(--v-secondary-fg);
 			box-shadow: none;
 		}
 	}

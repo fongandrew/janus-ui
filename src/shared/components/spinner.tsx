@@ -6,5 +6,5 @@ export interface SpinnerProps extends LucideProps {}
 
 export function Spinner(props: SpinnerProps) {
 	const [local, rest] = splitProps(props, ['class']);
-	return <Loader2 {...rest} class={cx('animate-spin', local.class)} />;
+	return <Loader2 {...rest} class={cx('t-spin', local.class)} />;
 }

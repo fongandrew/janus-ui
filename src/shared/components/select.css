@@ -47,8 +47,6 @@
 	}
 
 	.c-select__clear {
-		@mixin t-inner-radius;
-
 		display: none;
 	}
 

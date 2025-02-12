@@ -2,12 +2,6 @@
 
 @layer components {
 	.c-input {
-		@mixin v-input-colors;
-		@mixin o-input-box;
-		@mixin t-inner-radius;
-		@mixin t-transition-color;
-
 		width: 100%;
-		box-shadow: var(--shadow-inner);
 	}
 }

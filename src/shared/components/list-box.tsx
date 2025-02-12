@@ -111,7 +111,7 @@ export function ListBoxSelections(props: { name: string; values: Set<string> }) 
 	return (
 		<>
 			<For each={Array.from(props.values)}>
-				{(value) => <input type="hidden" name={props.name} value={value} />}
+				{(value) => <input type="t-hidden" name={props.name} value={value} />}
 			</For>
 		</>
 	);

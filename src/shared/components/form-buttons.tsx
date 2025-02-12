@@ -32,7 +32,7 @@ export function SubmitButton(props: SubmitButtonProps) {
 			<Show when={formContext?.busySig[0]()} fallback={local.children ?? <T>Submit</T>}>
 				<Spinner aria-hidden="true" />
 				<span aria-hidden="true">{local.children ?? <T>Submit</T>}</span>
-				<span class="sr-only">
+				<span class="t-sr-only">
 					<T>In progress</T>
 				</span>
 			</Show>

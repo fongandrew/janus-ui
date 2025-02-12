@@ -11,7 +11,7 @@ import {
 
 export function ButtonsDemo() {
 	return (
-		<Card class="col-span-full">
+		<Card class="t-col-span-full">
 			<CardHeader>
 				<CardTitle>Buttons</CardTitle>
 				<CardDescription>Different variations on your standard button</CardDescription>

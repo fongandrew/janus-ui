@@ -127,6 +127,7 @@
 
 		font-weight: var(--v-font-weight-medium);
 		border-color: transparent;
+		border-width: var(--v-border-width);
 
 		+ .c-sidebar__list {
 			padding-top: 0;
