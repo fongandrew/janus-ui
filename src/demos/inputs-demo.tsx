@@ -32,7 +32,7 @@ function InputStates() {
 						<Input placeholder="Placeholder content" />
 					</LabelledInput>
 					<LabelledInput label="Error state input">
-						<Input aria-invalid="true" placeholder="Some wrong value" />
+						<Input invalid placeholder="Some wrong value" />
 					</LabelledInput>
 					<LabelledInput label="Disabled input">
 						<Input disabled placeholder="Can't touch this" />

@@ -21,7 +21,7 @@ export function ErrorMessage(props: ErrorMessageProps) {
 	// See https://cerovac.com/a11y/2024/06/support-for-aria-errormessage-is-getting-better-but-still-not-there-yet/
 	// As of Dec 2024, aria-errormessage still isn't quite there in Voiceover at least.
 	formControl?.extAttr('aria-describedby', () => (resolvedErrorMsg() ? id() : undefined));
-	formControl?.setAttr('aria-invalid', () => (resolvedErrorMsg() ? 'true' : undefined));
+	formControl?.defaultAttr('aria-invalid', () => (resolvedErrorMsg() ? 'true' : undefined));
 
 	return (
 		<div {...props} id={id()} class={cx('c-error-message', props.class)}>

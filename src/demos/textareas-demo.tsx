@@ -21,7 +21,7 @@ function TextareasDemo() {
 						<Textarea placeholder="Default (medium) textarea" />
 					</LabelledInput>
 					<LabelledInput label="Error">
-						<Textarea aria-invalid placeholder="Error state textarea" />
+						<Textarea invalid placeholder="Error state textarea" />
 					</LabelledInput>
 					<LabelledInput label="Disabled">
 						<Textarea disabled placeholder="Disabled textarea" />

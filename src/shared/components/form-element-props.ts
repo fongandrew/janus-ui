@@ -119,7 +119,7 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 	control.rmAttr('invalid');
 	control.setAttr(
 		'aria-invalid',
-		() => props.invalid ?? props['aria-invalid'] ?? !!control.error(),
+		() => !!(props.invalid ?? props['aria-invalid'] ?? control.error()),
 	);
 
 	// Set validation (and remove from props)

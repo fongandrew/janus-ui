@@ -109,6 +109,10 @@
 				@mixin t-disabled-input;
 			}
 
+			&[aria-invalid='true'] {
+				@mixin t-error;
+			}
+
 			&:focus {
 				@mixin t-focus-ring;
 			}
