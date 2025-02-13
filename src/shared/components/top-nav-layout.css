@@ -40,8 +40,22 @@
 		}
 	}
 
-	.c-top-nav__list-toggle {
+	.c-top-nav__list-open {
 		margin-left: auto;
+	}
+
+	.c-top-nav__list-close {
+		display: none;
+
+		.c-top-nav-layout--open & {
+			@mixin o-input-container-box;
+
+			display: block;
+			position: fixed;
+			top: 0;
+			right: 0;
+			z-index: var(--v-z-above-backdrop);
+		}
 	}
 
 	.c-top-nav__list {
@@ -114,12 +128,17 @@
 		&[aria-current]:not([aria-current='false']) {
 			font-weight: var(--v-font-weight-medium);
 		}
+
+		/* Leave space for close button */
+		.c-top-nav-layout--open li:first-child > & {
+			margin-right: calc(var(--v-input-height) + var(--v-inline-gap));
+		}
 	}
 
 	/* Actual nav bar on desktop */
 	@mixin v-breakpoint-tablet-wide {
 		.c-top-nav-layout:not(.c-top-nav-layout--open) {
-			.c-top-nav__list-toggle {
+			.c-top-nav__list-open {
 				display: none;
 			}
 

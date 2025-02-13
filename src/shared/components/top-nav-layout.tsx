@@ -1,5 +1,5 @@
 import cx from 'classix';
-import { Menu } from 'lucide-solid';
+import { Menu, X } from 'lucide-solid';
 import { createEffect, createMemo, createUniqueId, type JSX, onCleanup } from 'solid-js';
 
 import { Button, type ButtonProps, IconButton } from '~/shared/components/button';
@@ -104,11 +104,25 @@ export function TopNavMenuButton(props: ButtonProps) {
 		<IconButton
 			onClick={[setOpen, true]}
 			label={t`Open Menu`}
-			class="c-top-nav__list-toggle"
+			class="c-top-nav__list-open"
 			{...props}
 		>
 			<Menu />
 		</IconButton>
+	);
+}
+
+/**
+ * Separate button to close top nav on mobile
+ */
+export function TopNavCloseButton(props: ButtonProps) {
+	const [, setOpen] = useTopNav().open;
+	return (
+		<div class="c-top-nav__list-close">
+			<IconButton onClick={[setOpen, false]} label={t`Close Menu`} {...props}>
+				<X />
+			</IconButton>
+		</div>
 	);
 }
 
@@ -167,6 +181,7 @@ export function TopNavList(props: JSX.HTMLAttributes<HTMLElement>) {
 				aria-controls={navId()}
 				aria-expanded={open() ?? undefined}
 			/>
+			<TopNavCloseButton />
 		</>
 	);
 }
