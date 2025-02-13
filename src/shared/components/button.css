@@ -26,6 +26,15 @@
 		}
 	}
 
+	a.c-button,
+	a.c-button--ghost {
+		@mixin t-button-style;
+
+		color: var(--v-fg);
+		padding-inline: var(--v-spacing);
+		text-decoration: none;
+	}
+
 	.c-button--icon {
 		font-size: inherit;
 		align-items: center;

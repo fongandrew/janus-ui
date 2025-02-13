@@ -6,7 +6,7 @@
 	}
 }
 
-@layer components {
+@layer composite {
 	.c-top-nav-layout {
 		min-height: 100%;
 	}
@@ -105,24 +105,11 @@
 	.c-top-nav__list-link,
 	.c-top-nav__list-button {
 		@mixin o-input-box;
-		@mixin t-inner-radius;
 
-		color: var(--v-card-fg);
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		gap: var(--v-inline-gap);
-		text-decoration: none;
-
-		&:focus-visible {
-			@mixin t-focus-ring;
-		}
-
-		&:hover {
-			@mixin v-secondary-colors;
-
-			border-color: transparent;
-		}
+		display: flex; /* Override inline-flex */
+		font-weight: var(--v-font-weight-normal);
+		text-align: left;
+		justify-content: flex-start;
 
 		/* Selected */
 		&[aria-current]:not([aria-current='false']) {

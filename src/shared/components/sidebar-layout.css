@@ -6,7 +6,7 @@
 	}
 }
 
-@layer components {
+@layer composite {
 	/* Default closed on mobile */
 	.c-sidebar {
 		@mixin v-card-colors;
@@ -91,10 +91,13 @@
 		overflow-y: auto;
 	}
 
-	.c-sidebar__list ul {
+	.c-sidebar__list {
 		@mixin o-input-container-box;
 
-		list-style: none;
+		> ul {
+			list-style: none;
+			padding: 0;
+		}
 	}
 
 	.c-sidebar__list-item {
@@ -105,27 +108,11 @@
 	.c-sidebar__list-link,
 	.c-sidebar__list-button {
 		@mixin o-input-box;
-		@mixin t-inner-radius;
 
-		display: flex;
-		align-items: flex-start;
-		border-color: transparent;
-		color: var(--v-card-fg);
-		cursor: pointer;
-		gap: var(--v-inline-gap);
+		font-weight: var(--v-font-weight-normal);
 		text-align: left;
-		text-decoration: none;
+		justify-content: flex-start;
 		width: 100%;
-
-		&:focus-visible {
-			@mixin t-focus-ring;
-		}
-
-		&:hover {
-			@mixin v-secondary-colors;
-
-			border-color: transparent;
-		}
 
 		/* Selected */
 		&[aria-current]:not([aria-current='false']) {
@@ -135,10 +122,12 @@
 
 	.c-sidebar-list__heading {
 		@mixin o-input-box;
+		@mixin v-text-sm;
 
 		font-weight: var(--v-font-weight-medium);
 		border-color: transparent;
 		border-width: var(--v-border-width);
+		color: var(--v-muted);
 
 		+ .c-sidebar__list {
 			padding-top: 0;

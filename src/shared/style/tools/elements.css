@@ -27,6 +27,71 @@
 	}
 }
 
+/* Button-like things */
+@define-mixin t-button-style {
+	@mixin o-input-box;
+	@mixin t-text;
+	@mixin t-transition single-arg(color, background-color, border-color, box-shadow);
+
+	cursor: pointer;
+	display: inline-flex;
+	align-items: flex-start;
+	justify-content: center;
+	gap: var(--v-inline-gap);
+
+	.lucide + * {
+		text-align: left;
+	}
+
+	&:hover {
+		@mixin t-hover;
+	}
+
+	&:disabled,
+	&[aria-disabled='true'] {
+		@mixin t-disabled-button;
+	}
+
+	&:focus-visible {
+		@mixin t-focus-ring;
+	}
+}
+
+/*
+	Input-like things
+
+	A bit more style than buttons because we usually hide inputs we don't want styled
+	and use them for screenreader-only sort of things. Note that the combination of
+	input colors + input box will automatically add a border because there's a default
+	border style set for all elements in the reset.
+*/
+@define-mixin t-input-style {
+	@mixin v-input-colors;
+	@mixin o-input-box;
+	@mixin t-inner-radius;
+	@mixin t-text;
+	@mixin t-transition-color;
+
+	box-shadow: var(--v-shadow-inner);
+
+	&:disabled,
+	&[aria-disabled='true'] {
+		@mixin t-disabled-input;
+	}
+
+	&[aria-invalid='true'] {
+		@mixin t-error;
+	}
+
+	&:focus {
+		@mixin t-focus-ring;
+	}
+
+	&::placeholder {
+		color: var(--v-muted);
+	}
+}
+
 @layer tools {
 	.t-text {
 		@mixin t-text;

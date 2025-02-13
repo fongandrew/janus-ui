@@ -5,6 +5,7 @@ import { render } from 'solid-js/web';
 
 import { AlertsDemo } from '~/demos/alerts-demo';
 import { AsyncFormDemo } from '~/demos/async-form-demo';
+import { ButtonLinksDemo } from '~/demos/button-links-demo';
 import { ButtonsDemo } from '~/demos/buttons-demo';
 import { CheckboxesDemo } from '~/demos/checkboxes-demo';
 import { DetailsDemo } from '~/demos/details-demo';
@@ -95,6 +96,7 @@ function App() {
 					</TopNav>
 					<main class="o-box o-grid">
 						<ButtonsDemo />
+						<ButtonLinksDemo />
 						<AlertsDemo />
 						<DetailsDemo />
 						<MenuDemo />

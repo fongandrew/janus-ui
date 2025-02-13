@@ -1,8 +1,8 @@
 import cx from 'classix';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-solid';
-import { children, createEffect, createMemo, createUniqueId, type JSX, splitProps } from 'solid-js';
+import { createEffect, createMemo, createUniqueId, type JSX, splitProps } from 'solid-js';
 
-import { Button, IconButton } from '~/shared/components/button';
+import { GhostButton, GhostButtonLink, IconButton } from '~/shared/components/button';
 import {
 	createSidebarContext,
 	SidebarContext,
@@ -11,7 +11,6 @@ import {
 import { firstFocusable } from '~/shared/utility/focusables';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
-import { spanify } from '~/shared/utility/solid/spanify';
 import { t } from '~/shared/utility/text/t-tag';
 
 /**
@@ -199,9 +198,7 @@ export function SidebarListItem(props: JSX.HTMLAttributes<HTMLLIElement>) {
 export function SidebarListButton(props: JSX.ButtonHTMLAttributes<HTMLButtonElement>) {
 	return (
 		<SidebarListItem>
-			<Button {...props} class={cx('c-sidebar__list-button', props.class)} unstyled>
-				{props.children}
-			</Button>
+			<GhostButton {...props} class={cx('c-sidebar__list-button', props.class)} />
 		</SidebarListItem>
 	);
 }
@@ -210,12 +207,9 @@ export function SidebarListButton(props: JSX.ButtonHTMLAttributes<HTMLButtonElem
  * Nav item that is a link
  */
 export function SidebarListLink(props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) {
-	const resolved = children(() => props.children);
 	return (
 		<SidebarListItem>
-			<a {...props} class={cx('c-sidebar__list-link', props.class)}>
-				{spanify(resolved.toArray())}
-			</a>
+			<GhostButtonLink {...props} class={cx('c-sidebar__list-link', props.class)} />
 		</SidebarListItem>
 	);
 }
