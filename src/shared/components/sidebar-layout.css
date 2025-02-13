@@ -50,6 +50,12 @@
 		display: flex;
 		align-items: center;
 		gap: var(--v-inline-gap);
+
+		&:has(button, input) {
+			@mixin o-input-container-box;
+
+			padding-left: var(--v-spacing);
+		}
 	}
 
 	.c-sidebar__header {
@@ -160,7 +166,7 @@
 			display: none;
 		}
 
-		.c-sidebar ~ *:not(.c-sidebar__overlay) {
+		.c-sidebar-layout__content {
 			flex: 1 1 0;
 			overflow: auto;
 			container-type: inline-size;

@@ -1,0 +1,151 @@
+@import '~/shared/style/common.css';
+
+@layer variables {
+	:root {
+		--c-top-nav__drawer-width: 16rem;
+	}
+}
+
+@layer components {
+	.c-top-nav-layout {
+		height: 100%;
+	}
+
+	/* Top Navigation Bar */
+	.c-top-nav {
+		@mixin v-card-colors;
+		@mixin o-input-container-box;
+		@mixin t-border-bottom;
+
+		display: flex;
+		align-items: center;
+		gap: var(--v-inline-gap);
+		box-shadow: var(--v-shadow-md);
+		position: sticky;
+		top: 0;
+		transform: translateY(0%);
+
+		/* Since this basically contains the backdrop tiself */
+		z-index: var(--v-z-backdrop);
+
+		.c-top-nav-layout--open & {
+			/* Transform messes up position: fixed on drawer */
+			transform: unset;
+		}
+
+		/* Top nav hides on scroll */
+		.c-top-nav-layout--hidden & {
+			/* A little more than 100% to hide shadow */
+			transform: translateY(-110%);
+		}
+	}
+
+	.c-top-nav__list-toggle {
+		margin-left: auto;
+	}
+
+	.c-top-nav__list {
+		@mixin v-card-colors;
+		@mixin o-input-container-box;
+		@mixin t-border-left;
+
+		ul {
+			list-style: none;
+			display: flex;
+			flex-direction: column;
+		}
+
+		/* Nav links hidden by default on mobile */
+		display: none;
+
+		.c-top-nav-layout--open & {
+			display: block;
+			position: fixed;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			overflow: auto;
+			z-index: var(--v-z-above-backdrop);
+			width: 90vw;
+			max-width: var(--c-top-nav__drawer-width);
+		}
+	}
+
+	.c-top-nav__overlay {
+		display: none;
+
+		.c-top-nav-layout--open & {
+			display: block;
+			position: fixed;
+			inset: 0;
+			z-index: var(--v-z-backdrop);
+			background-color: var(--v-backdrop);
+		}
+	}
+
+	.c-top-nav__list-item {
+		padding: 0;
+		text-align: left;
+	}
+
+	.c-top-nav__list-link,
+	.c-top-nav__list-button {
+		@mixin o-input-box;
+		@mixin t-inner-radius;
+
+		color: var(--v-card-fg);
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		gap: var(--v-inline-gap);
+		text-decoration: none;
+
+		&:hover {
+			@mixin v-secondary-colors;
+
+			border-color: transparent;
+		}
+
+		/* Selected */
+		&[aria-current]:not([aria-current='false']) {
+			font-weight: var(--v-font-weight-medium);
+		}
+	}
+
+	/* Actual nav bar on desktop */
+	@mixin v-breakpoint-tablet-wide {
+		.c-top-nav__list-toggle {
+			display: none;
+		}
+
+		.c-top-nav {
+			padding-inline: var(--v-spacing);
+		}
+
+		.c-top-nav__list {
+			display: block;
+			border: 0;
+			margin-left: auto;
+			padding: 0;
+
+			ul {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				gap: var(--v-inline-gap);
+			}
+		}
+
+		/* Undo mobile styling */
+		.c-top-nav-layout--open {
+			.c-top-nav {
+				position: relative;
+				width: 100%;
+			}
+
+			.c-top-nav__overlay {
+				display: none;
+			}
+		}
+	}
+}

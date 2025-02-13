@@ -174,3 +174,14 @@ export function SidebarListGroup(
 		</SidebarListItem>
 	);
 }
+
+/**
+ * The non-sidebar content area of the layout
+ */
+export function SidebarLayoutContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
+	return (
+		<div {...props} class={cx('c-sidebar-layout__content', props.class)}>
+			{props.children}
+		</div>
+	);
+}

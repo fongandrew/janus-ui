@@ -30,12 +30,19 @@ import {
 	SidebarFooter,
 	SidebarHeader,
 	SidebarLayout,
+	SidebarLayoutContent,
 	SidebarList,
 	SidebarListButton,
 	SidebarListGroup,
 	SidebarListLink,
 	SidebarOpenButton,
 } from '~/shared/components/sidebar-layout';
+import {
+	TopNav,
+	TopNavLayout,
+	TopNavList,
+	TopNavListLink,
+} from '~/shared/components/top-nav-layout';
 
 function App() {
 	return (
@@ -75,13 +82,18 @@ function App() {
 					<p>Sidebar Footer</p>
 				</SidebarFooter>
 			</Sidebar>
-			<main>
-				<div class="o-box t-pt-0">
-					<header class="o-text-box o-group v-text-xl">
+			<SidebarLayoutContent>
+				<TopNavLayout>
+					<TopNav>
 						<SidebarOpenButton />
 						<h1>Solid Base</h1>
-					</header>
-					<div class="o-grid">
+						<TopNavList>
+							<TopNavListLink href="#">Home</TopNavListLink>
+							<TopNavListLink href="#">About</TopNavListLink>
+							<TopNavListLink href="#">Contact</TopNavListLink>
+						</TopNavList>
+					</TopNav>
+					<main class="o-box o-grid">
 						<ButtonsDemo />
 						<AlertsDemo />
 						<DetailsDemo />
@@ -102,9 +114,9 @@ function App() {
 						<FooterDemo />
 						<TabsDemo />
 						<TabsPersistDemo />
-					</div>
-				</div>
-			</main>
+					</main>
+				</TopNavLayout>
+			</SidebarLayoutContent>
 		</SidebarLayout>
 	);
 }
