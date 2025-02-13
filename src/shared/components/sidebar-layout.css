@@ -91,7 +91,7 @@
 		overflow-y: auto;
 	}
 
-	.c-sidebar__list {
+	.c-sidebar__list ul {
 		@mixin o-input-container-box;
 
 		list-style: none;
@@ -116,6 +116,10 @@
 		text-align: left;
 		text-decoration: none;
 		width: 100%;
+
+		&:focus-visible {
+			@mixin t-focus-ring;
+		}
 
 		&:hover {
 			@mixin v-secondary-colors;
