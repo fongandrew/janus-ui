@@ -1,6 +1,6 @@
 import cx from 'classix';
 import { Menu, X } from 'lucide-solid';
-import { createEffect, createMemo, createUniqueId, type JSX, onCleanup } from 'solid-js';
+import { children, createEffect, createMemo, createUniqueId, type JSX, onCleanup } from 'solid-js';
 
 import { Button, type ButtonProps, IconButton } from '~/shared/components/button';
 import { createTopNavContext, TopNavContext, useTopNav } from '~/shared/components/top-nav-context';
@@ -8,6 +8,7 @@ import { firstFocusable } from '~/shared/utility/focusables';
 import { getScrollableParent } from '~/shared/utility/get-scrollable-parent';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
+import { spanify } from '~/shared/utility/solid/spanify';
 import { t } from '~/shared/utility/text/t-tag';
 
 /**
@@ -214,10 +215,11 @@ export function TopNavListButton(props: JSX.ButtonHTMLAttributes<HTMLButtonEleme
  * Nav item that is a link
  */
 export function TopNavListLink(props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) {
+	const resolved = children(() => props.children);
 	return (
 		<TopNavListItem>
 			<a {...props} class={cx('c-top-nav__list-link', props.class)}>
-				{props.children}
+				{spanify(resolved.toArray())}
 			</a>
 		</TopNavListItem>
 	);

@@ -1,6 +1,6 @@
 import cx from 'classix';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-solid';
-import { createEffect, createMemo, createUniqueId, type JSX, splitProps } from 'solid-js';
+import { children, createEffect, createMemo, createUniqueId, type JSX, splitProps } from 'solid-js';
 
 import { Button, IconButton } from '~/shared/components/button';
 import {
@@ -11,6 +11,7 @@ import {
 import { firstFocusable } from '~/shared/utility/focusables';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
+import { spanify } from '~/shared/utility/solid/spanify';
 import { t } from '~/shared/utility/text/t-tag';
 
 /**
@@ -209,10 +210,11 @@ export function SidebarListButton(props: JSX.ButtonHTMLAttributes<HTMLButtonElem
  * Nav item that is a link
  */
 export function SidebarListLink(props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) {
+	const resolved = children(() => props.children);
 	return (
 		<SidebarListItem>
 			<a {...props} class={cx('c-sidebar__list-link', props.class)}>
-				{props.children}
+				{spanify(resolved.toArray())}
 			</a>
 		</SidebarListItem>
 	);
