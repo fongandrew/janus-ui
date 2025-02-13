@@ -13,7 +13,7 @@ export interface OptionListProps extends JSX.HTMLAttributes<HTMLDivElement> {
 
 /**
  * OptionList components is a base component with styling and should be used with a
- * `createOptionListControl`. You probably want to use something like ListBox or Menu.
+ * `OptionListControl`. You probably want to use something like ListBox or Menu.
  */
 export function OptionList(props: OptionListProps) {
 	return <div {...props} class={cx(props.class, 'c-option-list')} />;
