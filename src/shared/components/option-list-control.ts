@@ -1,7 +1,7 @@
 import { type JSX } from 'solid-js';
 
 import { isTextInput } from '~/shared/utility/element-types';
-import { isFocusVisible, setFocusVisible } from '~/shared/utility/is-focus-visible';
+import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { evtDoc } from '~/shared/utility/multi-view';
 import { nextIndex } from '~/shared/utility/next-index';
 import { PropBuilder } from '~/shared/utility/solid/prop-builder';
@@ -50,9 +50,6 @@ export function handleKeyDown(ctrl: OptionListControl, event: KeyboardEvent) {
 			// So explicitly select it if not already visible
 			if (highlighted?.autofocus && !isFocusVisible()) {
 				ctrl.highlight(items[0] ?? null, event);
-				// Indicate that focus is visible now so we don't get stuck
-				// in a stuck state
-				setFocusVisible(true);
 			} else {
 				ctrl.highlight(items[nextIndex(items, currentIndex, 1, true)] ?? null, event);
 			}
