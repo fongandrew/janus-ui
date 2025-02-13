@@ -8,7 +8,7 @@
 
 @layer components {
 	.c-top-nav-layout {
-		height: 100%;
+		min-height: 100%;
 	}
 
 	/* Top Navigation Bar */
@@ -118,37 +118,28 @@
 
 	/* Actual nav bar on desktop */
 	@mixin v-breakpoint-tablet-wide {
-		.c-top-nav__list-toggle {
-			display: none;
-		}
-
-		.c-top-nav {
-			padding-inline: var(--v-spacing);
-		}
-
-		.c-top-nav__list {
-			display: block;
-			border: 0;
-			margin-left: auto;
-			padding: 0;
-
-			ul {
-				display: flex;
-				flex-direction: row;
-				align-items: center;
-				gap: var(--v-inline-gap);
-			}
-		}
-
-		/* Undo mobile styling */
-		.c-top-nav-layout--open {
-			.c-top-nav {
-				position: relative;
-				width: 100%;
-			}
-
-			.c-top-nav__overlay {
+		.c-top-nav-layout:not(.c-top-nav-layout--open) {
+			.c-top-nav__list-toggle {
 				display: none;
+			}
+
+			.c-top-nav {
+				padding-inline: var(--v-spacing);
+			}
+
+			.c-top-nav__list {
+				display: block;
+				border: 0;
+				margin-left: auto;
+				padding: 0;
+				position: relative;
+
+				ul {
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					gap: var(--v-inline-gap);
+				}
 			}
 		}
 	}
