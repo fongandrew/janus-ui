@@ -100,6 +100,10 @@
 		gap: var(--v-inline-gap);
 		text-decoration: none;
 
+		&:focus-visible {
+			@mixin t-focus-ring;
+		}
+
 		&:hover {
 			@mixin v-secondary-colors;
 
