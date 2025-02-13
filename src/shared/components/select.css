@@ -142,9 +142,9 @@
 
 		.c-select__input ~ .c-dropdown__content {
 			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
-			top: var(--c-dropdown-top);
+			top: var(--c-dropdown__top);
 			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
-			max-height: var(--c-dropdown-max-height);
+			max-height: var(--c-dropdown__computed-max-height);
 		}
 	}
 }

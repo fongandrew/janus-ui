@@ -101,7 +101,7 @@
 			max-height: var(--c-dropdown__computed-max-height);
 			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
 			max-width: min(
-				var(--c-dropdown_computed-max-width, 100vw),
+				var(--c-dropdown__computed-max-width, 100vw),
 				var(--c-dropdown__max-width)
 			);
 			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
