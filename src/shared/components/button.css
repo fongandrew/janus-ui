@@ -50,6 +50,11 @@
 		background-color: transparent;
 		padding: 0;
 
+		&:focus-visible {
+			/* For reasons unknown, overflow hidden breaks double underline focus state */
+			overflow: visible;
+		}
+
 		&:hover {
 			box-shadow: none;
 		}
