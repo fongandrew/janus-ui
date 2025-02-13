@@ -1,10 +1,12 @@
 import cx from 'classix';
 import { Menu } from 'lucide-solid';
-import { createEffect, type JSX, onCleanup } from 'solid-js';
+import { createEffect, createMemo, createUniqueId, type JSX, onCleanup } from 'solid-js';
 
-import { Button, IconButton } from '~/shared/components/button';
+import { Button, type ButtonProps, IconButton } from '~/shared/components/button';
 import { createTopNavContext, TopNavContext, useTopNav } from '~/shared/components/top-nav-context';
+import { firstFocusable } from '~/shared/utility/focusables';
 import { getScrollableParent } from '~/shared/utility/get-scrollable-parent';
+import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { t } from '~/shared/utility/text/t-tag';
 
@@ -96,10 +98,15 @@ export function TopNav(props: JSX.HTMLAttributes<HTMLElement>) {
 /**
  * A button component that opens the nav drawer. Only visible on mobile.
  */
-export function TopNavMenuButton() {
+export function TopNavMenuButton(props: ButtonProps) {
 	const [, setOpen] = useTopNav().open;
 	return (
-		<IconButton onClick={[setOpen, true]} label={t`Open Menu`} class="c-top-nav__list-toggle">
+		<IconButton
+			onClick={[setOpen, true]}
+			label={t`Open Menu`}
+			class="c-top-nav__list-toggle"
+			{...props}
+		>
 			<Menu />
 		</IconButton>
 	);
@@ -109,12 +116,57 @@ export function TopNavMenuButton() {
  * A navigation list component for the top nav
  */
 export function TopNavList(props: JSX.HTMLAttributes<HTMLElement>) {
+	let navRef: HTMLElement | undefined;
+	const setNavRef = (v: HTMLElement | undefined) => {
+		navRef = v;
+	};
+
+	// No setter necessary since it's not wrapped in combineRefs
+	let toggleRef: HTMLButtonElement | undefined;
+
+	const [open, setOpen] = useTopNav().open;
+	createEffect(() => {
+		if (open() && navRef) {
+			firstFocusable(navRef)?.focus();
+		}
+	});
+
+	// We want to close the sidebar on narrow widths when focus leaves it but only if focus was
+	// previously visible (that is, focus is shifting via keypress rather than mouse click).
+	const handleFocusOut = (e: FocusEvent) => {
+		if (open() === true && !navRef?.contains(e.relatedTarget as Node) && isFocusVisible()) {
+			// Null = default (so closed on narrow). We could set it to false since it has
+			// no effect on desktop, but do it this way for consistency with how we do sidebar
+			setOpen(null);
+		}
+	};
+
+	const handleEscape = (e: KeyboardEvent) => {
+		if (e.key === 'Escape') {
+			setOpen(false);
+			toggleRef?.focus();
+		}
+	};
+
+	const navId = createMemo(() => props.id || createUniqueId());
+
 	return (
 		<>
-			<nav {...props} class={cx('c-top-nav__list', props.class)}>
+			<nav
+				{...props}
+				id={navId()}
+				ref={combineRefs(setNavRef, props.ref)}
+				class={cx('c-top-nav__list', props.class)}
+				onFocusOut={handleFocusOut}
+				onKeyDown={handleEscape}
+			>
 				<ul>{props.children}</ul>
 			</nav>
-			<TopNavMenuButton />
+			<TopNavMenuButton
+				ref={toggleRef}
+				aria-controls={navId()}
+				aria-expanded={open() ?? undefined}
+			/>
 		</>
 	);
 }
