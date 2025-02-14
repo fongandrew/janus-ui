@@ -141,33 +141,21 @@ export function SidebarCloseButton() {
  * A header component for the sidebar. Statically sized.
  */
 export function SidebarHeader(props: JSX.HTMLAttributes<HTMLElement>) {
-	return (
-		<header {...props} class={cx('c-sidebar__header', props.class)}>
-			{props.children}
-		</header>
-	);
+	return <header {...props} class={cx('c-sidebar__header', props.class)} />;
 }
 
 /**
  * A footer component for the sidebar. Statically sized.
  */
 export function SidebarFooter(props: JSX.HTMLAttributes<HTMLElement>) {
-	return (
-		<footer {...props} class={cx('c-sidebar__footer', props.class)}>
-			{props.children}
-		</footer>
-	);
+	return <footer {...props} class={cx('c-sidebar__footer', props.class)} />;
 }
 
 /**
  * A content component for the sidebar. Resizes and scrolls as needed.
  */
 export function SidebarContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
-	return (
-		<div {...props} class={cx('c-sidebar__content', props.class)}>
-			{props.children}
-		</div>
-	);
+	return <div {...props} class={cx('c-sidebar__content', props.class)} />;
 }
 
 /**
@@ -185,11 +173,7 @@ export function SidebarList(props: JSX.HTMLAttributes<HTMLElement>) {
  * Nav item for sidebar navigation.
  */
 export function SidebarListItem(props: JSX.HTMLAttributes<HTMLLIElement>) {
-	return (
-		<li {...props} class={cx('c-sidebar__list-item', props.class)}>
-			{props.children}
-		</li>
-	);
+	return <li {...props} class={cx('c-sidebar__list-item', props.class)} />;
 }
 
 /**
@@ -240,9 +224,5 @@ export function SidebarListGroup(
  * The non-sidebar content area of the layout
  */
 export function SidebarLayoutContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
-	return (
-		<div {...props} class={cx('c-sidebar-layout__content', props.class)}>
-			{props.children}
-		</div>
-	);
+	return <div {...props} class={cx('c-sidebar-layout__content', props.class)} />;
 }
