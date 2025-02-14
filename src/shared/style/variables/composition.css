@@ -5,12 +5,6 @@
     Colors should go in `color-schemes.css`.
 */
 :root {
-	/* Border Radius */
-	--v-radius-sm: 0.25rem;
-	--v-radius-md: 0.375rem;
-	--v-radius-lg: 0.5rem;
-	--v-radius-full: 9999px;
-
 	/* Spacing */
 	--v-space-xs: 0.25rem;
 	--v-space-sm: 0.5rem;
