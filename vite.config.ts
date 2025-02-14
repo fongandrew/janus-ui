@@ -1,6 +1,7 @@
 import solidPlugin from 'vite-plugin-solid';
 import { defineConfig } from 'vitest/config';
 
+import mangleCSSPlugin from './plugins/vite-plugin-manglecss';
 import purgeCSSPlugin from './plugins/vite-plugin-purgecss';
 
 export default defineConfig({
@@ -14,6 +15,9 @@ export default defineConfig({
 			// Needed to keep nested selectors from getting purged
 			// https://github.com/FullHuman/purgecss/issues/1153#issuecomment-2626375284
 			safelist: ['&'],
+		}),
+		mangleCSSPlugin({
+			classNamePattern: /^[cotv]-/,
 		}),
 	],
 	css: {
