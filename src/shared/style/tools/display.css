@@ -20,4 +20,100 @@
 	.t-sr-only {
 		@mixin t-sr-only;
 	}
+
+	.t-hidden-lt-mobile-wide {
+		@mixin v-breakpoint-lt-mobile-wide {
+			display: none;
+		}
+	}
+
+	.t-hidden-gte-mobile-wide {
+		@mixin v-breakpoint-mobile-wide {
+			display: none;
+		}
+	}
+
+	.t-hidden-lt-tablet {
+		@mixin v-breakpoint-lt-tablet {
+			display: none;
+		}
+	}
+
+	.t-hidden-gte-tablet {
+		@mixin v-breakpoint-tablet {
+			display: none;
+		}
+	}
+
+	.t-hidden-lt-tablet-wide {
+		@mixin v-breakpoint-lt-tablet-wide {
+			display: none;
+		}
+	}
+
+	.t-hidden-gte-tablet-wide {
+		@mixin v-breakpoint-tablet-wide {
+			display: none;
+		}
+	}
+
+	.t-hidden-lt-desktop {
+		@mixin v-breakpoint-lt-desktop {
+			display: none;
+		}
+	}
+
+	.t-hidden-gte-desktop {
+		@mixin v-breakpoint-desktop {
+			display: none;
+		}
+	}
+
+	.t-hidden-lt-mobile-wide-container {
+		@mixin v-container-lt-mobile-wide {
+			display: none;
+		}
+	}
+
+	.t-hidden-gte-mobile-wide-container {
+		@mixin v-container-mobile-wide {
+			display: none;
+		}
+	}
+
+	.t-hidden-lt-tablet-container {
+		@mixin v-container-lt-tablet {
+			display: none;
+		}
+	}
+
+	.t-hidden-gte-tablet-container {
+		@mixin v-container-tablet {
+			display: none;
+		}
+	}
+
+	.t-hidden-lt-tablet-wide-container {
+		@mixin v-container-lt-tablet-wide {
+			display: none;
+		}
+	}
+
+	.t-hidden-gte-tablet-wide-container {
+		@mixin v-container-tablet-wide {
+			display: none;
+		}
+	}
+
+	.t-hidden-lt-desktop-container {
+		@mixin v-container-lt-desktop {
+			display: none;
+		}
+	}
+
+	.t-hidden-gte-desktop-container {
+		@mixin v-container-desktop {
+			display: none;
+		}
+	}
 }
