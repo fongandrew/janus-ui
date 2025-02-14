@@ -7,6 +7,27 @@
 }
 
 @layer composite {
+	/*
+		We can do this without wrapping all content in the layout on mobile but it makes it
+		harder to understand scroll state and whatnot, so assume with a sidebay layout
+		everything is inside a container.
+	*/
+	.c-sidebar-layout {
+		display: flex;
+		height: 100vh;
+		width: 100vw;
+		overflow: hidden;
+
+		/* This is needed to keep absolute positioned children from doing dumb things */
+		position: relative;
+	}
+
+	.c-sidebar-layout__content {
+		flex: 1 1 0;
+		overflow: auto;
+		container-type: inline-size;
+	}
+
 	/* Default closed on mobile */
 	.c-sidebar {
 		@mixin v-card-colors;
@@ -135,16 +156,6 @@
 	}
 
 	@mixin v-breakpoint-tablet-wide {
-		.c-sidebar-layout {
-			display: flex;
-			height: 100vh;
-			width: 100vw;
-			overflow: hidden;
-
-			/* This is needed to keep absolute positioned children from doing dumb things */
-			position: relative;
-		}
-
 		/* Default open on desktop */
 		.c-sidebar,
 		.c-sidebar-layout--open .c-sidebar {
@@ -157,12 +168,6 @@
 		.c-sidebar__overlay,
 		.c-sidebar-layout--open .c-sidebar__overlay {
 			display: none;
-		}
-
-		.c-sidebar-layout__content {
-			flex: 1 1 0;
-			overflow: auto;
-			container-type: inline-size;
 		}
 
 		/* Can be explicitly closed on desktop */
