@@ -29,32 +29,12 @@
 }
 
 .c-slider__input {
-	@mixin v-input-colors;
-	@mixin o-input-box;
-	@mixin t-inner-radius;
-	@mixin t-border;
-	@mixin t-transition-color;
+	@mixin t-input-wrapper-style;
 
 	display: flex;
 	gap: var(--v-inline-gap);
 	flex-shrink: 1;
-	min-height: var(--v-input-height);
-	overflow-x: hidden;
 	text-align: right;
-	font-weight: var(--v-font-weight-normal);
-	box-shadow: var(--v-shadow-inner);
-}
-
-.c-slider__input:has(:focus-visible) {
-	@mixin t-focus-ring;
-}
-
-.c-slider__input:has(:invalid, [aria-invalid='true']) {
-	@mixin t-error;
-}
-
-.c-slider__input:has(:disabled, [aria-disabled='true']) {
-	@mixin t-disabled-input;
 }
 
 .c-slider__unit {

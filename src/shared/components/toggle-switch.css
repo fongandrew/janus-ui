@@ -4,7 +4,7 @@
 	.c-toggle-switch {
 		@mixin v-input-colors;
 		@mixin t-border;
-		@mixin t-transition-color;
+		@mixin t-input-wrapper-states;
 
 		position: relative;
 		display: inline-flex;
@@ -22,10 +22,6 @@
 
 	.c-toggle-switch input {
 		@mixin t-sr-only;
-	}
-
-	.c-toggle-switch:has(input:focus-visible) {
-		@mixin t-focus-ring;
 	}
 
 	.c-toggle-switch__thumb {

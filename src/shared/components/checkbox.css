@@ -12,7 +12,7 @@
 	.c-checkbox__box {
 		@mixin v-input-colors;
 		@mixin t-border;
-		@mixin t-transition-color;
+		@mixin t-input-wrapper-states;
 
 		border-radius: var(--v-space-xs);
 		position: relative;
@@ -28,29 +28,14 @@
 		}
 	}
 
-	/* State-based styles for the box */
-	.c-checkbox__box:has([aria-invalid='true']) {
-		@mixin t-error;
-	}
-
-	.c-checkbox__box:has([aria-disabled='true']) {
-		@mixin t-disabled-input;
+	.c-checkbox input {
+		@mixin t-sr-only;
 	}
 
 	.c-checkbox__box:has(input:checked) {
 		@mixin v-primary-colors;
 	}
 
-	.c-checkbox__box:has(input:focus-visible) {
-		@mixin t-focus-ring;
-	}
-
-	/* Input styling */
-	.c-checkbox input {
-		@mixin t-sr-only;
-	}
-
-	/* Check/indeterminate states */
 	.c-checkbox .c-checkbox__check {
 		display: none;
 	}

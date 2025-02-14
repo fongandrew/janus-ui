@@ -1,23 +1,28 @@
 @import '~/shared/style/common.css';
 
 @layer components {
+	.c-select__button {
+		@mixin t-input-style;
+
+		cursor: pointer;
+	}
+
+	.c-select__input_description {
+		@mixin t-input-base-style;
+		@mixin t-input-sibling-states;
+
+		pointer-events: none;
+	}
+
+	.c-select__button,
+	.c-select__input_description {
+		text-align: left;
+		width: 100%;
+	}
+
 	.c-select__button,
 	.c-select__input,
 	.c-select__input_description {
-		@mixin v-input-colors;
-		@mixin v-text-md;
-		@mixin o-input-box;
-		@mixin t-inner-radius;
-		@mixin t-transition-color;
-
-		width: 100%;
-		overflow-x: hidden;
-		text-overflow: ellipsis;
-		text-align: left;
-		font-weight: var(--v-font-weight-normal);
-		box-shadow: var(--v-shadow-inner);
-		min-height: var(--v-input-height);
-
 		/* To avoid overlap with the chevron or clear */
 		padding-right: var(--v-input-height);
 	}
@@ -100,21 +105,12 @@
 		}
 	}
 
-	.c-select__input_description {
-		pointer-events: none;
-	}
-
 	.c-select__container:has(:popover-open, :focus) .c-select__input {
 		opacity: 1;
 	}
 
 	.c-select__container:has(:popover-open, :focus) .c-select__input_description {
 		opacity: 0;
-	}
-
-	:disabled + .c-select__input_description,
-	[aria-disabled='true'] + .c-select__input_description {
-		@mixin t-disabled-input;
 	}
 
 	/* Mobile-specific fixed positioning for input + dropdown */

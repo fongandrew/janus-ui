@@ -17,7 +17,8 @@
 		padding-right: var(--v-space-xs);
 	}
 
-	.c-label-stack > label + .c-description {
+	.c-label-stack > label + .c-description,
+	.c-label-stack > .c-label + .c-description {
 		margin-top: 0;
 	}
 }

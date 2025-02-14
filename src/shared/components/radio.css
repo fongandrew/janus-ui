@@ -12,7 +12,7 @@
 	.c-radio__circle {
 		@mixin v-input-colors;
 		@mixin t-border;
-		@mixin t-transition-color;
+		@mixin t-input-wrapper-states;
 
 		position: relative;
 		display: inline-flex;
@@ -24,24 +24,12 @@
 		box-shadow: var(--v-shadow-inner);
 	}
 
-	.c-radio__circle:has([aria-disabled='true']) {
-		@mixin t-disabled-input;
-	}
-
-	.c-radio__circle:has([aria-invalid='true']) {
-		@mixin t-error;
-	}
-
 	.c-radio__circle:has(input:checked) {
 		@mixin v-primary-colors;
 	}
 
 	.c-radio input {
 		@mixin t-sr-only;
-	}
-
-	.c-radio__circle:has(input:focus-visible) {
-		@mixin t-focus-ring;
 	}
 
 	.c-radio .c-radio__dot {

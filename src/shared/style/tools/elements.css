@@ -65,14 +65,19 @@
 	input colors + input box will automatically add a border because there's a default
 	border style set for all elements in the reset.
 */
-@define-mixin t-input-style {
+@define-mixin t-input-base-style {
 	@mixin v-input-colors;
 	@mixin o-input-box;
 	@mixin t-inner-radius;
 	@mixin t-text;
-	@mixin t-transition-color;
 
 	box-shadow: var(--v-shadow-inner);
+	min-height: var(--v-input-height);
+}
+
+/* When state in on input itself */
+@define-mixin t-input-states {
+	@mixin t-transition-color;
 
 	&:disabled,
 	&[aria-disabled='true'] {
@@ -86,11 +91,56 @@
 	&:focus {
 		@mixin t-focus-ring;
 	}
+}
 
-	&::placeholder {
-		color: var(--v-muted);
+/* Convenience mixing base style + state */
+@define-mixin t-input-style {
+	@mixin t-input-base-style;
+	@mixin t-input-states;
+}
+
+/* When state is on a wrapper */
+@define-mixin t-input-wrapper-states {
+	@mixin t-transition-color;
+
+	&:focus-within {
+		@mixin t-focus-ring;
+	}
+
+	&:has([aria-invalid='true']) {
+		@mixin t-error;
+	}
+
+	&:has(:disabled, [aria-disabled='true']) {
+		@mixin t-disabled-input;
 	}
 }
+
+/* Convenience mixing base style + state */
+@define-mixin t-input-wrapper-style {
+	@mixin t-input-base-style;
+	@mixin t-input-wrapper-states;
+}
+
+/* When state is on a sibling input preceding the target */
+@define-mixin t-input-sibling-states {
+	@mixin t-transition-color;
+
+	:focus + & {
+		@mixin t-focus-ring;
+	}
+
+	:disabled + &,
+	[aria-disabled='true'] + & {
+		@mixin t-disabled-input;
+	}
+
+	[aria-invalid='true'] + & {
+		@mixin t-error;
+	}
+}
+
+/* A pseudo-input for things precede an actual input */
 
 @layer tools {
 	.t-text {
