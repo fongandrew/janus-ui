@@ -13,6 +13,10 @@
 }
 
 @layer tools {
+	.t-flex {
+		display: flex;
+	}
+
 	.t-flex-static {
 		@mixin t-flex-static;
 	}
@@ -23,5 +27,29 @@
 
 	.t-flex-auto {
 		@mixin t-flex-auto;
+	}
+
+	.t-align-start {
+		align-items: flex-start;
+	}
+
+	.t-align-center {
+		align-items: center;
+	}
+
+	.t-align-end {
+		align-items: flex-end;
+	}
+
+	.t-justify-start {
+		justify-content: flex-start;
+	}
+
+	.t-justify-center {
+		justify-content: center;
+	}
+
+	.t-justify-end {
+		justify-content: flex-end;
 	}
 }
