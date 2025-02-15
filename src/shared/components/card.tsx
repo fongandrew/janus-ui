@@ -19,7 +19,7 @@ export type CardFooterProps = JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTMLD
 export function Card(props: CardProps) {
 	const [local, rest] = splitProps(props, ['as']);
 	return (
-		<Dynamic component={local.as || 'div'} {...rest} class={cx('c-card', props.class)}>
+		<Dynamic component={local.as || 'section'} {...rest} class={cx('c-card', props.class)}>
 			<FormContextProvider>{props.children}</FormContextProvider>
 		</Dynamic>
 	);
