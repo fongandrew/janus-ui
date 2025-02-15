@@ -17,7 +17,7 @@
 	  but we just stick them together with the understanding that mixins have lowest
 	  precedence (they don't get emitted) and classes with the same name have highest.
 */
-@layer reset, base, components, composite, variables, objects, tools;
+@layer reset, base, components, composite, objects, tools, variables;
 
 @import '~/shared/style/reset.css';
 @import '~/shared/style/common.css';

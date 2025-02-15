@@ -17,6 +17,18 @@
 		display: none;
 	}
 
+	.t-block {
+		display: block;
+	}
+
+	.t-inline {
+		display: inline;
+	}
+
+	.t-inline-block {
+		display: inline-block;
+	}
+
 	.t-sr-only {
 		@mixin t-sr-only;
 	}
