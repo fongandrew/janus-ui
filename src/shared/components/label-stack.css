@@ -11,6 +11,7 @@
 	}
 
 	.c-label-stack > label,
+	.c-label-stack > .c-label,
 	.c-label-stack > .c-description,
 	.c-label-stack > .c-error-message {
 		padding-left: var(--v-space-xs);
