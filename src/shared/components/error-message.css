@@ -3,7 +3,7 @@
 @layer components {
 	.c-error-message {
 		@mixin v-text-sm;
-		@mixin t-text;
+		@mixin t-overflow-x;
 
 		color: var(--v-danger-text);
 	}

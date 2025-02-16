@@ -51,7 +51,7 @@
 	p,
 	span,
 	strong {
-		@mixin t-text;
+		@mixin t-overflow-x;
 	}
 
 	/*

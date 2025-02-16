@@ -1,0 +1,16 @@
+/* Overflow handling for simple text blocks */
+@define-mixin t-overflow-x {
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+
+	* {
+		overflow-x: hidden;
+		text-overflow: ellipsis;
+	}
+}
+
+@layer tools {
+	.t-overflow-x {
+		@mixin t-overflow-x;
+	}
+}

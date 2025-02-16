@@ -2,17 +2,6 @@
     Mixins for styling both generic elements and things we want to look like generic elements
 */
 
-/* Overflow handling for simple text blocks */
-@define-mixin t-text {
-	overflow-x: hidden;
-	text-overflow: ellipsis;
-
-	* {
-		overflow-x: hidden;
-		text-overflow: ellipsis;
-	}
-}
-
 @define-mixin t-link-style {
 	color: var(--v-link);
 	text-decoration-line: underline;
@@ -31,7 +20,7 @@
 /* Button-like things */
 @define-mixin t-button-style {
 	@mixin o-input-box;
-	@mixin t-text;
+	@mixin t-overflow-x;
 	@mixin t-transition single-arg(color, background-color, border-color, box-shadow);
 
 	cursor: pointer;
@@ -70,7 +59,7 @@
 	@mixin v-input-colors;
 	@mixin o-input-box;
 	@mixin t-inner-radius;
-	@mixin t-text;
+	@mixin t-overflow-x;
 
 	box-shadow: var(--v-shadow-inner);
 	min-height: var(--v-input-height);
@@ -138,13 +127,5 @@
 
 	[aria-invalid='true'] + & {
 		@mixin t-error;
-	}
-}
-
-/* A pseudo-input for things precede an actual input */
-
-@layer tools {
-	.t-text {
-		@mixin t-text;
 	}
 }

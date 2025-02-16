@@ -80,7 +80,7 @@
 	/* Select dropdown empty state */
 	.c-select__empty_state {
 		@mixin v-text-sm;
-		@mixin t-text;
+		@mixin t-overflow-x;
 
 		display: block;
 		width: 100%;
