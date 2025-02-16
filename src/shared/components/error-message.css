@@ -5,7 +5,7 @@
 		@mixin v-text-sm;
 		@mixin t-text;
 
-		color: var(--v-danger-bg);
+		color: var(--v-danger-text);
 	}
 
 	.c-error-message:empty {

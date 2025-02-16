@@ -26,8 +26,9 @@
 	--v-success-fg: hsl(0deg 0% 98%);
 	--v-warning-bg: hsl(50deg 85% 75%);
 	--v-warning-fg: hsl(0deg 0% 0%);
-	--v-danger-bg: hsl(0deg 66% 50%);
-	--v-danger-fg: hsl(0deg 0% 98%);
+	--v-danger-bg: hsl(29deg 100% 65%);
+	--v-danger-fg: hsl(0deg 0% 1.9%);
+	--v-danger-text: hsl(29deg 100% 65%);
 	--v-input-disabled-bg: hsl(0deg 0% 14.9%);
 	--v-backdrop: hsla(0deg 0% 0% / 50%);
 	--v-muted: hsl(0deg 0% 54.9%);
@@ -68,6 +69,7 @@
 	--v-warning-fg: hsl(0deg 0% 0%);
 	--v-danger-bg: hsl(0deg 84.2% 60.2%);
 	--v-danger-fg: hsl(0deg 0% 98%);
+	--v-danger-text: hsl(0deg 100% 39%);
 	--v-input-disabled-bg: hsl(0deg 0% 96.1%);
 	--v-backdrop: hsla(0deg 0% 0% / 50%);
 	--v-muted: hsl(0deg 0% 45.1%);

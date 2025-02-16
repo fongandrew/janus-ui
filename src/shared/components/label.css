@@ -21,11 +21,11 @@
 
 	.c-label:has([aria-invalid='true']),
 	.c-label:has(+ [aria-invalid='true']) {
-		color: var(--v-danger-bg);
+		color: var(--v-danger-text);
 	}
 
 	.c-label-stack:has([aria-invalid='true']) .c-label {
-		color: var(--v-danger-bg);
+		color: var(--v-danger-text);
 	}
 
 	.c-label-stack:has([aria-disabled='true']) .c-label {
