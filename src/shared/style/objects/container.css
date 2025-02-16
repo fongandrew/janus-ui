@@ -6,17 +6,19 @@
 
 /* Container meant to constrain text width */
 @define-mixin o-container {
+	@mixin v-default-colors;
+
 	max-width: var(--v-container-width);
 	margin-left: auto;
 	margin-right: auto;
 	padding: calc(var(--v-spacing) - (1lh - 1em) / 2) var(--v-spacing);
 
 	@mixin v-breakpoint-tablet {
-		padding-top: var(--v-space-xl);
+		padding-block: var(--v-space-xl);
 	}
 
 	@mixin v-breakpoint-desktop {
-		padding-top: var(--v-space-2xl);
+		padding-block: var(--v-space-2xl);
 	}
 }
 

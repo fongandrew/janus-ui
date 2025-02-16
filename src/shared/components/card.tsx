@@ -9,7 +9,7 @@ export type CardProps = JSX.IntrinsicAttributes &
 		as?: 'article' | 'div' | 'section';
 	};
 
-export type CardHeaderProps = JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTMLDivElement>;
+export type CardHeaderProps = JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTMLElement>;
 export type CardTitleProps = JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTMLHeadingElement>;
 export type CardDescriptionProps = JSX.IntrinsicAttributes &
 	JSX.HTMLAttributes<HTMLParagraphElement>;
@@ -26,11 +26,11 @@ export function Card(props: CardProps) {
 }
 
 export function CardHeader(props: CardHeaderProps) {
-	return <div {...props} class={cx('c-card__header', props.class)} />;
+	return <hgroup {...props} class={cx('c-card__header', props.class)} />;
 }
 
 export function CardTitle(props: CardTitleProps) {
-	return <h3 {...props} class={cx('c-card__title', props.class)} />;
+	return <h3 {...props} />;
 }
 
 export function CardDescription(props: CardDescriptionProps) {

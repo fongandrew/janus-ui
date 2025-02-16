@@ -93,14 +93,6 @@
 			overflow-x: hidden;
 			text-overflow: ellipsis;
 		}
-
-		h1,
-		h2,
-		h3 {
-			@mixin v-text-lg;
-
-			font-weight: var(--v-font-weight-medium);
-		}
 	}
 
 	.c-sidebar__footer {

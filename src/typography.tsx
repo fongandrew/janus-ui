@@ -12,11 +12,10 @@ function Main() {
 				<p>
 					We don't use <code>&lt;h1&gt;</code> elements outside of the top-level heading.
 					When using text in a component, we use <code>&lt;h2&gt;</code> as the top-level.
-					The HTML spec says (or used to say) that it's OK to use multiple
+					The HTML spec says (or used to say) that it's OK to use multiple{' '}
 					<code>&lt;h1&gt;</code>s if they're within a <code>&lt;section&gt;</code> or{' '}
-					<code>&lt;article&gt;</code> or whatever. But the outline algorithm that is The
-					outline algorithm that is supposed to reset headings for sections is, as of
-					today,{' '}
+					<code>&lt;article&gt;</code> or whatever. But the outline algorithm that is
+					supposed to reset headings for sections is, as of today,{' '}
 					<a
 						href="https://adrianroselli.com/2016/08/there-is-no-document-outline-algorithm.html
 "
@@ -60,46 +59,72 @@ function Main() {
 				<ul>
 					<li>First item in an unordered list</li>
 					<li>Second item in an unordered list</li>
+					<li>
+						<p>Nested list items</p>
+						<ul>
+							<li>First nested item in an unordered list</li>
+							<li>Second nested item in an unordered list</li>
+							<li>Third nested item in an unordered list</li>
+						</ul>
+					</li>
 				</ul>
+				<p>
+					Phasellus placerat mi erat, eu faucibus sem pellentesque eu. Mauris condimentum
+					suscipit sem eget faucibus. Duis sit amet nunc tincidunt, fringilla magna sit
+					amet, viverra est.
+				</p>
+				<ol>
+					<li>First item in an ordered list</li>
+					<li>Second item in an ordered list</li>
+					<li>Third item in an ordered list</li>
+				</ol>
+				<p>
+					Phasellus placerat mi erat, eu faucibus sem pellentesque eu. Mauris condimentum
+					suscipit sem eget faucibus. Duis sit amet nunc tincidunt, fringilla magna sit
+					amet, viverra est.
+				</p>
+				<pre>{`function main() {\n\tconsole.log('Hello World');\n}`}</pre>
+				<p>
+					Phasellus placerat mi erat, eu faucibus sem pellentesque eu. Mauris condimentum
+					suscipit sem eget faucibus. Duis sit amet nunc tincidunt, fringilla magna sit
+					amet, viverra est.
+				</p>
 				<table>
 					<thead>
 						<tr>
-							<th>Wrestler</th>
-							<th>Origin</th>
-							<th>Finisher</th>
+							<th>Bird</th>
+							<th>Habitat</th>
+							<th>Diet</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td>Bret "The Hitman" Hart</td>
-							<td>Calgary, AB</td>
-							<td>Sharpshooter</td>
+							<td>Bald Eagle</td>
+							<td>Forests, mountains, and near water</td>
+							<td>Fish, small mammals</td>
 						</tr>
 						<tr>
-							<td>Stone Cold Steve Austin</td>
-							<td>Austin, TX</td>
-							<td>Stone Cold Stunner</td>
+							<td>Peregrine Falcon</td>
+							<td>Urban areas, cliffs</td>
+							<td>Birds, small mammals</td>
 						</tr>
 						<tr>
-							<td>Randy Savage</td>
-							<td>Sarasota, FL</td>
-							<td>Elbow Drop</td>
+							<td>American Robin</td>
+							<td>Woodlands, gardens</td>
+							<td>Insects, fruits</td>
 						</tr>
 						<tr>
-							<td>Vader</td>
-							<td>Boulder, CO</td>
-							<td>Vader Bomb</td>
+							<td>Great Horned Owl</td>
+							<td>Forests, deserts, urban areas</td>
+							<td>Small mammals, birds</td>
 						</tr>
 						<tr>
-							<td>Razor Ramon</td>
-							<td>Chuluota, FL</td>
-							<td>Razor's Edge</td>
+							<td>Ruby-throated Hummingbird</td>
+							<td>Gardens, woodlands</td>
+							<td>Nectar, insects</td>
 						</tr>
 					</tbody>
 				</table>
-				<p>
-					<code>console.log('Hello World')</code>
-				</p>
 			</main>
 		</App>
 	);

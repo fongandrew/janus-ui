@@ -21,12 +21,6 @@
 	border-color: var(--v-border-color);
 }
 
-/* Le default */
-@define-mixin v-default-colors {
-	@mixin v-base-colors;
-	@mixin v-color-block;
-}
-
 /* Cards are used to create sectioned content in the "main" UI */
 @define-mixin v-card-colors {
 	--v-bg: var(--v-card-bg);
@@ -35,10 +29,18 @@
 	@mixin v-color-block;
 }
 
-/* Code block */
+/* Inline code highlight */
 @define-mixin v-code-colors {
 	--v-bg: var(--v-code-bg);
 	--v-fg: var(--v-code-fg);
+
+	@mixin v-color-block;
+}
+
+/* Code block */
+@define-mixin v-pre-colors {
+	--v-bg: var(--v-pre-bg);
+	--v-fg: var(--v-pre-fg);
 
 	@mixin v-color-block;
 }
@@ -149,6 +151,10 @@
 
 	.v-code-colors {
 		@mixin v-code-colors;
+	}
+
+	.v-pre-colors {
+		@mixin v-pre-colors;
 	}
 
 	.v-popover-colors {

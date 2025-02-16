@@ -2,6 +2,7 @@
     Mixins for styling both generic elements and things we want to look like generic elements
 */
 
+/* Overflow handling for simple text blocks */
 @define-mixin t-text {
 	overflow-x: hidden;
 	text-overflow: ellipsis;

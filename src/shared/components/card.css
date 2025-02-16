@@ -18,10 +18,6 @@
 		padding-bottom: 0;
 	}
 
-	.c-card__title {
-		font-weight: var(--v-font-weight-semibold);
-	}
-
 	.c-card__description {
 		@mixin v-text-sm;
 

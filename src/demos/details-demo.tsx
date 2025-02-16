@@ -21,7 +21,7 @@ export function DetailsDemo() {
 					<Details>
 						{() => <>Here is another example</>}
 						{() => (
-							<div>
+							<>
 								<p>
 									This time we have multiple paragraphs. Lorem ipsum dolor sit
 									amet, consectetur adipiscing elit. Mauris fringilla dolor quis
@@ -50,7 +50,7 @@ export function DetailsDemo() {
 									dignissim pellentesque. Ut felis lectus, suscipit id laoreet
 									quis, malesuada eget sem.
 								</p>
-							</div>
+							</>
 						)}
 					</Details>
 				</div>

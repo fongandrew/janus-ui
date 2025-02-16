@@ -54,6 +54,107 @@
 		@mixin t-text;
 	}
 
+	/*
+		Headings
+
+		Because I need to periodically remind myself, don't stick multiple h1s on a page,
+		even within a <section> or <article> or whatever. The outline algorithm that is
+		supposed to reset headings for sections is not implemented in any browser:
+		https://adrianroselli.com/2016/08/there-is-no-document-outline-algorithm.html
+
+		h1 - At most 1, the page title (or site if this is the main hero page)
+		h2 - Dialog, nav section headings
+		h3 - Cards
+		h4-h6 - Only used as alternatives to h1-h3 within self-contained section content
+
+		header is assumed to constrain the heading, so basically reduce the size by 1 level
+	*/
+
+	/* At most 1, the page title (or site if this is the main hero page) */
+	h1 {
+		@mixin v-text-2xl;
+
+		font-weight: var(--v-font-weight-bold);
+	}
+
+	/* h2 = top level  */
+	header h1,
+	h2 {
+		@mixin v-text-xl;
+
+		font-weight: var(--v-font-weight-bold);
+	}
+
+	/* Card headings basically */
+	header h2,
+	h3 {
+		@mixin v-text-lg;
+
+		font-weight: var(--v-font-weight-semibold);
+	}
+
+	/* Everything else */
+	h4,
+	h5,
+	h6 {
+		font-weight: var(--v-font-weight-medium);
+	}
+
+	/*
+		Sectioning content - Maybe this is user generated content and we want to display
+		this stuff in a certain way
+	*/
+	article,
+	aside {
+		h4 {
+			@mixin v-text-xl;
+
+			font-weight: var(--v-font-weight-bold);
+		}
+
+		h5 {
+			@mixin v-text-lg;
+
+			font-weight: var(--v-font-weight-semibold);
+		}
+	}
+
+	blockquote,
+	code,
+	pre {
+		@mixin t-inner-radius;
+	}
+
+	blockquote,
+	pre {
+		@mixin o-text-box;
+	}
+
+	code,
+	pre {
+		font-size: var(--v-font-size-sm);
+		overflow: auto;
+	}
+
+	blockquote {
+		@mixin v-callout-colors;
+	}
+
+	code {
+		@mixin v-code-colors;
+
+		padding: 0 var(--v-inner-radius);
+	}
+
+	pre {
+		@mixin v-pre-colors;
+	}
+
+	ul,
+	ol {
+		padding-left: 1em;
+	}
+
 	/* input[type='file'] */
 	input[type='file'] {
 		cursor: pointer;
@@ -92,5 +193,37 @@
 		height: 1lh;
 		width: 1em;
 		flex-shrink: 0;
+	}
+
+	table {
+		@mixin t-inner-radius;
+		@mixin t-border;
+
+		overflow: auto;
+		width: 100%;
+	}
+
+	/* Cell styling */
+	td,
+	th {
+		@mixin o-input-box;
+
+		border: 0;
+		width: 1%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		vertical-align: top;
+	}
+
+	th {
+		@mixin v-callout-colors;
+		@mixin t-border-bottom;
+
+		font-weight: var(--v-font-weight-medium);
+		text-align: left;
+	}
+
+	tr:nth-child(even) {
+		@mixin v-secondary-colors;
 	}
 }
