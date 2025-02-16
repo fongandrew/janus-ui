@@ -3,6 +3,7 @@ import '~/shared/style/index.css';
 import { AlertTriangle, Home, Info, Settings } from 'lucide-solid';
 import { render } from 'solid-js/web';
 
+import { App } from '~/app';
 import { AlertsDemo } from '~/demos/alerts-demo';
 import { AsyncFormDemo } from '~/demos/async-form-demo';
 import { BadgeAndCountDemo } from '~/demos/badge-and-count-demo';
@@ -39,14 +40,8 @@ import {
 	SidebarListLink,
 	SidebarOpenButton,
 } from '~/shared/components/sidebar-layout';
-import {
-	TopNav,
-	TopNavLayout,
-	TopNavList,
-	TopNavListLink,
-} from '~/shared/components/top-nav-layout';
 
-function App() {
+function Main() {
 	return (
 		<SidebarLayout>
 			<Sidebar>
@@ -85,16 +80,14 @@ function App() {
 				</SidebarFooter>
 			</Sidebar>
 			<SidebarLayoutContent>
-				<TopNavLayout>
-					<TopNav>
-						<SidebarOpenButton />
-						<h1>Solid Base</h1>
-						<TopNavList>
-							<TopNavListLink href="#">Home</TopNavListLink>
-							<TopNavListLink href="#">About</TopNavListLink>
-							<TopNavListLink href="#">Contact</TopNavListLink>
-						</TopNavList>
-					</TopNav>
+				<App
+					heading={
+						<>
+							<SidebarOpenButton />
+							<h1>Solid Base</h1>
+						</>
+					}
+				>
 					<main class="o-box o-grid">
 						<ButtonsDemo />
 						<BadgeAndCountDemo />
@@ -119,7 +112,7 @@ function App() {
 						<TabsDemo />
 						<TabsPersistDemo />
 					</main>
-				</TopNavLayout>
+				</App>
 			</SidebarLayoutContent>
 		</SidebarLayout>
 	);
@@ -133,4 +126,4 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
 	);
 }
 
-render(() => <App />, root!);
+render(() => <Main />, root!);

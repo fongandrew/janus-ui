@@ -1,0 +1,27 @@
+@layer variables {
+	:root {
+		--v-container-width: 44rem;
+	}
+}
+
+/* Container meant to constrain text width */
+@define-mixin o-container {
+	max-width: var(--v-container-width);
+	margin-left: auto;
+	margin-right: auto;
+	padding: calc(var(--v-spacing) - (1lh - 1em) / 2) var(--v-spacing);
+
+	@mixin v-breakpoint-tablet {
+		padding-top: var(--v-space-xl);
+	}
+
+	@mixin v-breakpoint-desktop {
+		padding-top: var(--v-space-2xl);
+	}
+}
+
+@layer objects {
+	.o-container {
+		@mixin o-container;
+	}
+}

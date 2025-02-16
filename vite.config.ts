@@ -1,3 +1,4 @@
+import { readdirSync, statSync } from 'fs';
 import solidPlugin from 'vite-plugin-solid';
 import { defineConfig } from 'vitest/config';
 
@@ -31,8 +32,21 @@ export default defineConfig({
 		},
 	},
 	build: {
-		target: 'esnext',
 		outDir: 'dist',
+		rollupOptions: {
+			input: Object.fromEntries(
+				readdirSync('.')
+					.filter(
+						(file) =>
+							// Must be HTML file
+							file.endsWith('.html') &&
+							// Must be a file (not directory)
+							statSync(file).isFile(),
+					)
+					.map((file) => [file.slice(0, -5), file]),
+			),
+		},
+		target: 'esnext',
 	},
 	server: { port: 3000, hmr: { port: 3000 } },
 	test: {
