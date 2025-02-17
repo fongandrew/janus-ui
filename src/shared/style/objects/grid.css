@@ -6,13 +6,13 @@
 
 	@mixin v-container-tablet {
 		& {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
+			grid-template-columns: repeat(auto-fit, minmax(50% - var(--v-spacing), 1fr));
 		}
 	}
 
 	@mixin v-container-tablet-wide {
 		& {
-			grid-template-columns: repeat(3, minmax(0, 1fr));
+			grid-template-columns: repeat(auto-fit, minmax(calc(100% / 3 - var(--v-spacing)), 1fr));
 		}
 	}
 }
