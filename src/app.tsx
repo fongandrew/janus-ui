@@ -37,6 +37,7 @@ export function App(props: AppProps) {
 				{props.heading ?? <h1>Solid Base</h1>}
 				<TopNavList>
 					<NavLink href="/">Components</NavLink>
+					<NavLink href="/colors">Colors</NavLink>
 					<NavLink href="/typography">Typography</NavLink>
 				</TopNavList>
 			</TopNav>

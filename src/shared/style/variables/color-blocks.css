@@ -196,4 +196,12 @@
 	.v-danger-colors {
 		@mixin v-danger-colors;
 	}
+
+	.v-danger-text {
+		color: var(--v-danger-text);
+	}
+
+	.v-muted-text {
+		color: var(--v-muted);
+	}
 }
