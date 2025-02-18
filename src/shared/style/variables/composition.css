@@ -23,6 +23,10 @@
 
 	/* Font Weights */
 	--v-font-weight-normal: 400;
+	--v-font-weight-label: 500;
+	--v-font-weight-selected: 600;
+	--v-font-weight-subtitle: 600;
+	--v-font-weight-title: 700;
 	--v-font-weight-medium: 500;
 	--v-font-weight-semibold: 600;
 	--v-font-weight-bold: 700;

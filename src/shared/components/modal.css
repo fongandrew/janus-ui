@@ -89,7 +89,7 @@
 	}
 
 	.c-modal__x {
-		color: var(--v-muted);
+		@mixin t-text-muted;
 	}
 
 	.c-modal__content:not(.c-modal__content--scroll-top) {

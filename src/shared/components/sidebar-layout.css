@@ -140,7 +140,8 @@
 		font-weight: var(--v-font-weight-medium);
 		border-color: transparent;
 		border-width: var(--v-border-width);
-		color: var(--v-muted);
+
+		@mixin t-text-muted;
 
 		+ .c-sidebar__list {
 			padding-top: 0;

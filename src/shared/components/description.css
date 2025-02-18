@@ -4,7 +4,6 @@
 	.c-description {
 		@mixin v-text-sm;
 		@mixin t-overflow-x;
-
-		color: var(--v-muted);
+		@mixin t-text-muted;
 	}
 }

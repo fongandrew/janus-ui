@@ -25,6 +25,8 @@
 
 	a[href] {
 		@mixin t-link-style;
+
+		font-weight: var(--v-font-weight-label);
 	}
 
 	b,

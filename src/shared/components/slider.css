@@ -38,5 +38,5 @@
 }
 
 .c-slider__unit {
-	color: var(--v-muted);
+	@mixin t-text-muted;
 }

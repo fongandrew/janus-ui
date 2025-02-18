@@ -4,8 +4,7 @@
 	.c-error-message {
 		@mixin v-text-sm;
 		@mixin t-overflow-x;
-
-		color: var(--v-danger-text);
+		@mixin t-text-danger;
 	}
 
 	.c-error-message:empty {

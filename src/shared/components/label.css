@@ -16,19 +16,19 @@
 
 	.c-label:has([aria-disabled='true']),
 	.c-label:has(+ [aria-disabled='true']) {
-		color: var(--v-muted);
+		@mixin t-text-muted;
 	}
 
 	.c-label:has([aria-invalid='true']),
 	.c-label:has(+ [aria-invalid='true']) {
-		color: var(--v-danger-text);
+		@mixin t-text-danger;
 	}
 
 	.c-label-stack:has([aria-invalid='true']) .c-label {
-		color: var(--v-danger-text);
+		@mixin t-text-danger;
 	}
 
 	.c-label-stack:has([aria-disabled='true']) .c-label {
-		color: var(--v-muted);
+		@mixin t-text-muted;
 	}
 }

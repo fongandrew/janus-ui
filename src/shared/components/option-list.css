@@ -44,7 +44,9 @@
 		@mixin v-text-xs;
 
 		font-weight: var(--v-font-weight-semibold);
-		color: var(--v-muted);
+
+		@mixin t-text-muted;
+
 		padding-bottom: var(--v-space-xs);
 	}
 

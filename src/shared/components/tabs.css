@@ -16,7 +16,9 @@
 
 	.c-tabs__button {
 		border-width: 0 0 var(--v-border-width-lg) 0;
-		color: var(--v-muted);
+
+		@mixin t-text-muted;
+
 		display: block;
 		flex-grow: 1;
 		flex-basis: 0;

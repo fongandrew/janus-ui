@@ -69,13 +69,13 @@ function ColorBox(props: {
 	return (
 		<section class={cx('o-text-box', 't-outer-radius', props.class)}>
 			<ColorWithAPCA>{props.label}</ColorWithAPCA>
-			{!props.noDanger && <ColorWithAPCA class="v-danger-text">Danger text</ColorWithAPCA>}
+			{!props.noDanger && <ColorWithAPCA class="t-text-danger">Danger text</ColorWithAPCA>}
 			{!props.noLink && (
 				<ColorWithAPCA as="a" href="#">
 					Link text
 				</ColorWithAPCA>
 			)}
-			{!props.noMuted && <ColorWithAPCA class="v-muted-text">Muted text</ColorWithAPCA>}
+			{!props.noMuted && <ColorWithAPCA class="t-text-muted">Muted text</ColorWithAPCA>}
 		</section>
 	);
 }

@@ -19,7 +19,7 @@
 	}
 
 	.c-color-picker__value {
-		color: var(--v-muted);
+		@mixin t-text-muted;
 	}
 
 	.c-color-picker__input {

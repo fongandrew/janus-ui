@@ -1,0 +1,19 @@
+@define-mixin t-text-muted {
+	color: var(--v-muted);
+	font-weight: var(--v-font-weight-muted, --var(--v-font-weight-normal));
+}
+
+@define-mixin t-text-danger {
+	color: var(--v-danger-text);
+	font-weight: var(--v-font-weight-danger, --var(--v-font-weight-normal));
+}
+
+@layer tools {
+	.t-text-muted {
+		@mixin t-text-muted;
+	}
+
+	.t-text-danger {
+		@mixin t-text-danger;
+	}
+}

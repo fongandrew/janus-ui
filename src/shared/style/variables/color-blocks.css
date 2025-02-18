@@ -41,6 +41,11 @@
 @define-mixin v-pre-colors {
 	--v-bg: var(--v-pre-bg);
 	--v-fg: var(--v-pre-fg);
+	--v-danger-text: var(--v-pre-danger);
+	--v-font-weight-danger: var(--v-font-weight-label);
+	--v-muted: var(--v-pre-muted);
+	--v-font-weight-muted: var(--v-font-weight-label);
+	--v-link: var(--v-fg);
 
 	@mixin v-color-block;
 }
@@ -57,6 +62,8 @@
 @define-mixin v-tooltip-colors {
 	--v-bg: var(--v-tooltip-bg);
 	--v-fg: var(--v-tooltip-fg);
+	--v-danger-text: var(--v-tooltip-danger);
+	--v-muted: var(--v-tooltip-muted);
 
 	@mixin v-color-block;
 }
@@ -73,6 +80,8 @@
 @define-mixin v-secondary-colors {
 	--v-bg: var(--v-secondary-bg);
 	--v-fg: var(--v-secondary-fg);
+	--v-danger-text: var(--v-secondary-danger);
+	--v-muted: var(--v-secondary-muted);
 
 	@mixin v-color-block;
 }
@@ -92,6 +101,7 @@
 @define-mixin v-highlight-colors {
 	--v-bg: var(--v-highlight-bg);
 	--v-fg: var(--v-highlight-fg);
+	--v-muted: color-mix(in hsl, var(--v-fg) 67.5%, transparent);
 
 	@mixin v-color-block;
 }
@@ -108,6 +118,7 @@
 @define-mixin v-success-colors {
 	--v-bg: var(--v-success-bg);
 	--v-fg: var(--v-success-fg);
+	--v-link: var(--v-fg);
 
 	@mixin v-color-block;
 }
@@ -116,6 +127,7 @@
 @define-mixin v-warning-colors {
 	--v-bg: var(--v-warning-bg);
 	--v-fg: var(--v-warning-fg);
+	--v-link: var(--v-fg);
 
 	@mixin v-color-block;
 }
@@ -124,6 +136,7 @@
 @define-mixin v-danger-colors {
 	--v-bg: var(--v-danger-bg);
 	--v-fg: var(--v-danger-fg);
+	--v-link: var(--v-fg);
 
 	@mixin v-color-block;
 }
@@ -195,13 +208,5 @@
 
 	.v-danger-colors {
 		@mixin v-danger-colors;
-	}
-
-	.v-danger-text {
-		color: var(--v-danger-text);
-	}
-
-	.v-muted-text {
-		color: var(--v-muted);
 	}
 }
