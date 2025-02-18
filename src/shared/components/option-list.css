@@ -42,11 +42,9 @@
 
 	.c-option-list__heading {
 		@mixin v-text-xs;
-
-		font-weight: var(--v-font-weight-semibold);
-
 		@mixin t-text-muted;
 
+		font-weight: var(--v-font-weight-subtitle);
 		padding-bottom: var(--v-space-xs);
 	}
 

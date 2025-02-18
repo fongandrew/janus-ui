@@ -31,7 +31,7 @@
 
 	b,
 	strong {
-		font-weight: var(--v-font-weight-semibold);
+		font-weight: var(--v-font-weight-strong);
 	}
 
 	/*
@@ -76,7 +76,7 @@
 	h1 {
 		@mixin v-text-2xl;
 
-		font-weight: var(--v-font-weight-bold);
+		font-weight: var(--v-font-weight-title);
 	}
 
 	/* h2 = top level  */
@@ -84,7 +84,7 @@
 	h2 {
 		@mixin v-text-xl;
 
-		font-weight: var(--v-font-weight-bold);
+		font-weight: var(--v-font-weight-title);
 	}
 
 	/* Card headings basically */
@@ -92,14 +92,14 @@
 	h3 {
 		@mixin v-text-lg;
 
-		font-weight: var(--v-font-weight-semibold);
+		font-weight: var(--v-font-weight-subtitle);
 	}
 
 	/* Everything else */
 	h4,
 	h5,
 	h6 {
-		font-weight: var(--v-font-weight-medium);
+		font-weight: var(--v-font-weight-label);
 	}
 
 	/*
@@ -111,13 +111,13 @@
 		h4 {
 			@mixin v-text-xl;
 
-			font-weight: var(--v-font-weight-bold);
+			font-weight: var(--v-font-weight-title);
 		}
 
 		h5 {
 			@mixin v-text-lg;
 
-			font-weight: var(--v-font-weight-semibold);
+			font-weight: var(--v-font-weight-subtitle);
 		}
 	}
 
@@ -221,7 +221,7 @@
 		@mixin v-callout-colors;
 		@mixin t-border-bottom;
 
-		font-weight: var(--v-font-weight-medium);
+		font-weight: var(--v-font-weight-label);
 		text-align: left;
 	}
 

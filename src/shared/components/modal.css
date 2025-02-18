@@ -110,7 +110,7 @@
 		@mixin v-text-xl;
 
 		flex-grow: 1;
-		font-weight: var(--v-font-weight-bold);
+		font-weight: var(--v-font-weight-title);
 	}
 
 	.c-modal__footer {

@@ -22,7 +22,7 @@
 		display: block;
 		flex-grow: 1;
 		flex-basis: 0;
-		font-weight: var(--v-font-weight-medium);
+		font-weight: var(--v-font-weight-label);
 		max-width: var(--c-tabs__max-width);
 		white-space: nowrap;
 
