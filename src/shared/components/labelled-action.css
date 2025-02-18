@@ -9,6 +9,10 @@
 
 	.c-labelled-action__label {
 		@mixin t-flex-fill;
+
+		display: flex;
+		flex-direction: column;
+		gap: var(--v-space-xs);
 	}
 
 	.c-labelled-action__control + * {
