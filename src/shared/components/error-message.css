@@ -2,12 +2,16 @@
 
 @layer components {
 	.c-error-message {
-		@mixin v-text-sm;
 		@mixin t-overflow-x;
 		@mixin t-text-danger;
-	}
 
-	.c-error-message:empty {
-		display: none;
+		&::before {
+			content: '✗';
+			margin-right: var(--v-space-xs);
+		}
+
+		&:empty {
+			display: none;
+		}
 	}
 }
