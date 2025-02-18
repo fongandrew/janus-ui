@@ -1,4 +1,4 @@
-import '~/shared/style/index.css';
+import '~/shared/styles/index.css';
 
 import { AlertTriangle, Home, Info, Settings } from 'lucide-solid';
 import { render } from 'solid-js/web';

@@ -1,4 +1,4 @@
-@import '~/shared/style/common.css';
+@import '~/shared/styles/common.css';
 
 @layer base {
 	/* Show disabled state on footer buttons if form in body has invalid fields */

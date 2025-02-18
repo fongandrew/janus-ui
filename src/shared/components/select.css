@@ -1,4 +1,4 @@
-@import '~/shared/style/common.css';
+@import '~/shared/styles/common.css';
 
 @layer components {
 	.c-select__button {

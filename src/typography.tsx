@@ -1,4 +1,4 @@
-import '~/shared/style/index.css';
+import '~/shared/styles/index.css';
 
 import { render } from 'solid-js/web';
 

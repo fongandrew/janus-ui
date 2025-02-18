@@ -1,4 +1,4 @@
-import '~/shared/style/index.css';
+import '~/shared/styles/index.css';
 
 import { type JSX } from 'solid-js';
 

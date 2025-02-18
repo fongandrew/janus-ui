@@ -1,4 +1,4 @@
-import '~/shared/style/index.css';
+import '~/shared/styles/index.css';
 
 import { alphaBlend, APCAcontrast, sRGBtoY } from 'apca-w3';
 import cx from 'classix';

@@ -19,9 +19,9 @@
 */
 @layer reset, base, components, composite, objects, tools, variables;
 
-@import '~/shared/style/reset.css';
-@import '~/shared/style/common.css';
-@import '~/shared/style/base.css';
+@import '~/shared/styles/reset.css';
+@import '~/shared/styles/common.css';
+@import '~/shared/styles/base.css';
 
 /* Components */
 @import '~/shared/components/alert.css';
