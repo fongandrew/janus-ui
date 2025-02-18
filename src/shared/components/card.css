@@ -40,4 +40,15 @@
 	.c-card__footer > :only-child {
 		margin-left: auto;
 	}
+
+	/* Show disabled state on footer buttons if form in body has invalid fields */
+	.c-card:has(:invalid) .c-card__footer [type='submit'] {
+		@mixin t-disabled-button;
+
+		/*
+			Visually disable buttons only so clicking on the disabled button lets us shift focus
+			to the first invalid element (especially useful with screenreaders).
+		*/
+		pointer-events: unset;
+	}
 }
