@@ -41,10 +41,11 @@
 	}
 
 	.c-option-list__heading {
-		@mixin v-text-xs;
+		@mixin v-text-sm;
 		@mixin t-text-muted;
 
 		font-weight: var(--v-font-weight-subtitle);
+		line-height: 1;
 		padding-bottom: var(--v-space-xs);
 	}
 
