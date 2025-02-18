@@ -2,7 +2,7 @@ import '~/shared/style/index.css';
 
 import { alphaBlend, APCAcontrast, sRGBtoY } from 'apca-w3';
 import cx from 'classix';
-import rgba from 'color-rgba';
+import { colorParsley } from 'colorparsley';
 import { createEffect, createSignal, type JSX, Show } from 'solid-js';
 import { Dynamic, render } from 'solid-js/web';
 
@@ -26,9 +26,10 @@ function ColorWithAPCA(props: {
 		if (!section) return;
 		const bg = getComputedStyle(section).backgroundColor;
 		const fg = getComputedStyle(ref).color;
-		const [bgR, bgG, bgB] = rgba(bg) as [number, number, number, number];
+		const [bgR, bgG, bgB] = colorParsley(bg);
+		const [fgR, fgG, fgB, fgA] = colorParsley(fg);
 		const value = APCAcontrast(
-			sRGBtoY(alphaBlend(rgba(fg) as [number, number, number, number], [bgR, bgG, bgB])),
+			sRGBtoY(alphaBlend([fgR, fgG, fgB, fgA], [bgR, bgG, bgB])),
 			sRGBtoY([bgR, bgG, bgB]),
 		);
 		setAPCA(typeof value === 'number' ? value : parseFloat(value));
@@ -66,7 +67,7 @@ function ColorBox(props: {
 	noMuted?: boolean;
 }) {
 	return (
-		<Card class={cx('o-text-box', props.class)}>
+		<section class={cx('o-text-box', 't-outer-radius', props.class)}>
 			<ColorWithAPCA>{props.label}</ColorWithAPCA>
 			{!props.noDanger && <ColorWithAPCA class="v-danger-text">Danger text</ColorWithAPCA>}
 			{!props.noLink && (
@@ -75,7 +76,7 @@ function ColorBox(props: {
 				</ColorWithAPCA>
 			)}
 			{!props.noMuted && <ColorWithAPCA class="v-muted-text">Muted text</ColorWithAPCA>}
-		</Card>
+		</section>
 	);
 }
 
@@ -124,9 +125,9 @@ function Main() {
 											<td>14px (small)</td>
 											<td>400 (normal)</td>
 											<td>
-												Descriptive text. May be body (&gt; 2.5 lines) or
-												fluent (less than 2.5 lines). Single-ish lines used
-												in menus, inputs, and other UI interfaces.
+												Descriptive text. May be body (many lines) or fluent
+												(fewer lines). Single-ish lines used in menus,
+												inputs, and other UI interfaces.
 											</td>
 										</tr>
 										<tr>
@@ -227,11 +228,17 @@ function Main() {
 						<Card class="o-box o-grid">
 							<ColorBox class="v-card-colors" label="Card" />
 							<ColorBox class="v-default-colors" label="Default" />
-							<ColorBox class="v-code-colors" label="Code" />
+							<ColorBox class="v-code-colors" label="Code" noDanger noLink noMuted />
 							<ColorBox class="v-pre-colors" label="Pre" />
 							<ColorBox class="v-popover-colors" label="Popover" />
 							<ColorBox class="v-tooltip-colors" label="Tooltip" noLink />
-							<ColorBox class="v-primary-colors" label="Primary" />
+							<ColorBox
+								class="v-primary-colors"
+								label="Primary"
+								noDanger
+								noLink
+								noMuted
+							/>
 							<ColorBox class="v-secondary-colors" label="Secondary" />
 							<ColorBox class="v-callout-colors" label="Callout" />
 							<ColorBox class="v-highlight-colors" label="Highlight" noLink />
