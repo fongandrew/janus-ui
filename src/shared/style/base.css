@@ -218,7 +218,7 @@
 	}
 
 	th {
-		@mixin v-callout-colors;
+		@mixin v-secondary-colors;
 		@mixin t-border-bottom;
 
 		font-weight: var(--v-font-weight-label);

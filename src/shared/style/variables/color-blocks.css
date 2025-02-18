@@ -63,7 +63,9 @@
 	--v-bg: var(--v-tooltip-bg);
 	--v-fg: var(--v-tooltip-fg);
 	--v-danger-text: var(--v-tooltip-danger);
+	--v-font-weight-danger: var(--v-font-weight-label);
 	--v-muted: var(--v-tooltip-muted);
+	--v-font-weight-muted: var(--v-font-weight-label);
 
 	@mixin v-color-block;
 }
@@ -81,7 +83,9 @@
 	--v-bg: var(--v-secondary-bg);
 	--v-fg: var(--v-secondary-fg);
 	--v-danger-text: var(--v-secondary-danger);
+	--v-font-weight-danger: var(--v-font-weight-label);
 	--v-muted: var(--v-secondary-muted);
+	--v-font-weight-muted: var(--v-font-weight-label);
 
 	@mixin v-color-block;
 }
@@ -94,6 +98,17 @@
 	--v-bg: var(--v-callout-bg);
 	--v-fg: var(--v-callout-fg);
 
+	/*
+		Bump font weights since callouts can be used to contain large blocks
+		of text (blockquotes) but typically have a grayish background that
+		decreases readability
+	*/
+	--v-font-weight-normal: 500;
+	--v-font-weight-label: 600;
+	--v-font-weight-strong: 800;
+
+	font-weight: var(--v-font-weight-normal);
+
 	@mixin v-color-block;
 }
 
@@ -101,7 +116,8 @@
 @define-mixin v-highlight-colors {
 	--v-bg: var(--v-highlight-bg);
 	--v-fg: var(--v-highlight-fg);
-	--v-muted: color-mix(in hsl, var(--v-fg) 67.5%, transparent);
+	--v-muted: var(--v-highlight-muted);
+	--v-danger-text: var(--v-highlight-danger);
 
 	@mixin v-color-block;
 }
@@ -119,6 +135,8 @@
 	--v-bg: var(--v-success-bg);
 	--v-fg: var(--v-success-fg);
 	--v-link: var(--v-fg);
+	--v-muted: var(--v-success-muted);
+	--v-font-weight-muted: var(--v-font-weight-label);
 
 	@mixin v-color-block;
 }
@@ -128,6 +146,8 @@
 	--v-bg: var(--v-warning-bg);
 	--v-fg: var(--v-warning-fg);
 	--v-link: var(--v-fg);
+	--v-muted: var(--v-warning-muted);
+	--v-font-weight-muted: var(--v-font-weight-label);
 
 	@mixin v-color-block;
 }
@@ -137,6 +157,8 @@
 	--v-bg: var(--v-danger-bg);
 	--v-fg: var(--v-danger-fg);
 	--v-link: var(--v-fg);
+	--v-muted: var(--v-danger-muted);
+	--v-font-weight-muted: var(--v-font-weight-label);
 
 	@mixin v-color-block;
 }
