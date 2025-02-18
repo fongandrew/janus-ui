@@ -201,8 +201,11 @@
 		@mixin t-inner-radius;
 		@mixin t-border;
 
+		/* Define a single border color that doesn't shift because of table backdrops flipping */
+		--v-table-border-color: var(--v-border-color);
+
+		display: block;
 		overflow: auto;
-		width: 100%;
 	}
 
 	/* Cell styling */
@@ -219,13 +222,22 @@
 
 	th {
 		@mixin v-secondary-colors;
-		@mixin t-border-bottom;
 
 		font-weight: var(--v-font-weight-label);
 		text-align: left;
 	}
 
+	* + tbody,
+	* + tr,
+	* + tfoot {
+		border-top: 1px solid var(--v-table-border-color);
+	}
+
 	tr:nth-child(even) {
 		@mixin v-secondary-colors;
+
+		&:last-child {
+			border-bottom: 0;
+		}
 	}
 }
