@@ -2,9 +2,9 @@
 
 @layer components {
 	.c-card {
-		@mixin v-card-colors;
+		@mixin v-colors-card;
 		@mixin t-border;
-		@mixin t-outer-radius;
+		@mixin t-radius-outer;
 
 		box-shadow: var(--v-shadow-md);
 		display: flex;

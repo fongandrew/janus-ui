@@ -13,7 +13,7 @@
 
 	/* Top Navigation Bar */
 	.c-top-nav {
-		@mixin v-card-colors;
+		@mixin v-colors-card;
 		@mixin o-input-container-box;
 		@mixin t-border-bottom;
 
@@ -59,7 +59,7 @@
 	}
 
 	.c-top-nav__list {
-		@mixin v-card-colors;
+		@mixin v-colors-card;
 		@mixin o-input-container-box;
 		@mixin t-border-left;
 

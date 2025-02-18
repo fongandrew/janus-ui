@@ -145,7 +145,7 @@ function ColorBox(props: {
 	usage?: 'body' | 'descriptive' | 'label' | 'subheading' | 'heading';
 }) {
 	return (
-		<section class={cx('o-text-box', 't-outer-radius', props.class)}>
+		<section class={cx('o-text-box', 't-radius-outer', props.class)}>
 			<ColorWithAPCA usage={props.usage}>{props.label}</ColorWithAPCA>
 			{!props.noDanger && (
 				<ColorWithAPCA class="t-text-danger" usage="label">
@@ -312,49 +312,49 @@ function Main() {
 				<Show when={value()} keyed>
 					{(_count: number) => (
 						<Card class="o-box o-grid">
-							<ColorBox class="v-card-colors" label="Card" usage="body" />
-							<ColorBox class="v-default-colors" label="Default" usage="body" />
+							<ColorBox class="v-colors-card" label="Card" usage="body" />
+							<ColorBox class="v-colors-default" label="Default" usage="body" />
 							<ColorBox
-								class="v-code-colors"
+								class="v-colors-code"
 								label="Code"
 								noDanger
 								noLink
 								noMuted
 								usage="label"
 							/>
-							<ColorBox class="v-pre-colors" label="Pre" usage="label" />
-							<ColorBox class="v-popover-colors" label="Popover" />
-							<ColorBox class="v-tooltip-colors" label="Tooltip" noLink />
+							<ColorBox class="v-colors-pre" label="Pre" usage="label" />
+							<ColorBox class="v-colors-popover" label="Popover" />
+							<ColorBox class="v-colors-tooltip" label="Tooltip" noLink />
 							<ColorBox
-								class="v-primary-colors"
+								class="v-colors-primary"
 								label="Primary"
 								noDanger
 								noLink
 								noMuted
 							/>
-							<ColorBox class="v-secondary-colors" label="Secondary" usage="label" />
-							<ColorBox class="v-callout-colors" label="Callout" />
+							<ColorBox class="v-colors-secondary" label="Secondary" usage="label" />
+							<ColorBox class="v-colors-callout" label="Callout" />
 							<ColorBox
-								class="v-highlight-colors"
+								class="v-colors-highlight"
 								label="Highlight"
 								noLink
 								usage="label"
 							/>
-							<ColorBox class="v-input-colors" label="Input" />
+							<ColorBox class="v-colors-input" label="Input" />
 							<ColorBox
-								class="v-success-colors"
+								class="v-colors-success"
 								label="Success"
 								noDanger
 								usage="label"
 							/>
 							<ColorBox
-								class="v-warning-colors"
+								class="v-colors-warning"
 								label="Warning"
 								noDanger
 								usage="label"
 							/>
 							<ColorBox
-								class="v-danger-colors"
+								class="v-colors-danger"
 								label="Danger"
 								noDanger
 								usage="label"

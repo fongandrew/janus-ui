@@ -56,9 +56,9 @@
 	border style set for all elements in the reset.
 */
 @define-mixin t-input-base-style {
-	@mixin v-input-colors;
+	@mixin v-colors-input;
 	@mixin o-input-box;
-	@mixin t-inner-radius;
+	@mixin t-radius-inner;
 	@mixin t-overflow-x;
 
 	box-shadow: var(--v-shadow-inner);

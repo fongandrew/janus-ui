@@ -26,9 +26,9 @@
 
 	/* Fullscreen on mobile */
 	.c-modal__body {
-		@mixin v-card-colors;
+		@mixin v-colors-card;
 		@mixin t-border;
-		@mixin t-outer-radius;
+		@mixin t-radius-outer;
 
 		--c-modal__inset: var(--v-space-xs);
 

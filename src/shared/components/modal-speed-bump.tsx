@@ -41,7 +41,7 @@ export function ModalSpeedBump(props: ModalSpeedBumpProps) {
 			</ModalContent>
 			<ModalFooter>
 				<ModalCloseButton>{local.cancel ?? <T>Cancel</T>}</ModalCloseButton>
-				<ModalCloseButton force class="v-danger-colors" targetId={modalContext.id()}>
+				<ModalCloseButton force class="v-colors-danger" targetId={modalContext.id()}>
 					{local.confirm ?? <T>Close</T>}
 				</ModalCloseButton>
 			</ModalFooter>

@@ -10,7 +10,7 @@
 	}
 
 	.c-checkbox__box {
-		@mixin v-input-colors;
+		@mixin v-colors-input;
 		@mixin t-border;
 		@mixin t-input-wrapper-states;
 
@@ -33,7 +33,7 @@
 	}
 
 	.c-checkbox__box:has(input:checked) {
-		@mixin v-primary-colors;
+		@mixin v-colors-primary;
 	}
 
 	.c-checkbox .c-checkbox__check {

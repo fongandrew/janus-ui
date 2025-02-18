@@ -32,8 +32,8 @@ export function ButtonsDemo() {
 						</Button>
 					</div>
 					<div class="o-group">
-						<Button class="v-primary-colors">Primary</Button>
-						<Button class="v-danger-colors">Danger</Button>
+						<Button class="v-colors-primary">Primary</Button>
+						<Button class="v-colors-danger">Danger</Button>
 						<Button disabled>Disabled</Button>
 						<GhostButton>Ghost</GhostButton>
 						<LinkButton>Link</LinkButton>

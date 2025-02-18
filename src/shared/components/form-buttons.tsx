@@ -26,7 +26,7 @@ export function SubmitButton(props: SubmitButtonProps) {
 			{...rest}
 			type="submit"
 			form={local.form || formContext?.idSig[0]()}
-			class={cx('v-primary-colors', props.class)}
+			class={cx('v-colors-primary', props.class)}
 			aria-live={formContext?.busySig[0]() ? 'polite' : undefined}
 		>
 			<Show when={formContext?.busySig[0]()} fallback={local.children ?? <T>Submit</T>}>

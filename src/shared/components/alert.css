@@ -2,10 +2,10 @@
 
 @layer components {
 	.c-alert {
-		@mixin v-callout-colors;
+		@mixin v-colors-callout;
 		@mixin o-text-box;
 		@mixin o-group;
 		@mixin t-border;
-		@mixin t-inner-radius;
+		@mixin t-radius-inner;
 	}
 }

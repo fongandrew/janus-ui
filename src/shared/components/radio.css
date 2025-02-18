@@ -10,7 +10,7 @@
 	}
 
 	.c-radio__circle {
-		@mixin v-input-colors;
+		@mixin v-colors-input;
 		@mixin t-border;
 		@mixin t-input-wrapper-states;
 
@@ -25,7 +25,7 @@
 	}
 
 	.c-radio__circle:has(input:checked) {
-		@mixin v-primary-colors;
+		@mixin v-colors-primary;
 	}
 
 	.c-radio input {

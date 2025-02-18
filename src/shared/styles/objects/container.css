@@ -6,7 +6,7 @@
 
 /* Container meant to constrain text width */
 @define-mixin o-container {
-	@mixin v-default-colors;
+	@mixin v-colors-default;
 
 	max-width: var(--v-container-width);
 	margin-left: auto;

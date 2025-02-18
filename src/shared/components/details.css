@@ -2,9 +2,9 @@
 
 @layer components {
 	.c-details {
-		@mixin v-card-colors;
+		@mixin v-colors-card;
 		@mixin t-border;
-		@mixin t-inner-radius;
+		@mixin t-radius-inner;
 
 		overflow: hidden;
 		width: 100%;
@@ -15,7 +15,7 @@
 	}
 
 	.c-details__summary {
-		@mixin v-secondary-colors;
+		@mixin v-colors-secondary;
 		@mixin o-text-box;
 
 		cursor: pointer;

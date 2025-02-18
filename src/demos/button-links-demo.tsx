@@ -17,7 +17,7 @@ export function ButtonLinksDemo() {
 			<CardContent>
 				<div class="o-group">
 					<ButtonLink href="#">Default</ButtonLink>
-					<ButtonLink class="v-primary-colors" href="#">
+					<ButtonLink class="v-colors-primary" href="#">
 						Primary
 					</ButtonLink>
 					<GhostButtonLink href="#">Ghost</GhostButtonLink>

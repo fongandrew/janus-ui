@@ -35,7 +35,7 @@
 	.c-option-list__item:focus-visible,
 	:focus-visible .c-option-list__item[aria-selected='true'],
 	:popover-open .c-option-list__item[aria-selected='true'] {
-		@mixin v-highlight-colors;
+		@mixin v-colors-highlight;
 
 		outline: none;
 	}

@@ -2,7 +2,7 @@
 
 @layer components {
 	.c-toggle-switch {
-		@mixin v-input-colors;
+		@mixin v-colors-input;
 		@mixin t-border;
 		@mixin t-input-wrapper-states;
 

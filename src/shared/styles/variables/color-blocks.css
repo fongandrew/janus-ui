@@ -22,7 +22,7 @@
 }
 
 /* Cards are used to create sectioned content in the "main" UI */
-@define-mixin v-card-colors {
+@define-mixin v-colors-card {
 	--v-bg: var(--v-card-bg);
 	--v-fg: var(--v-card-fg);
 
@@ -30,7 +30,7 @@
 }
 
 /* Inline code highlight */
-@define-mixin v-code-colors {
+@define-mixin v-colors-code {
 	--v-bg: var(--v-code-bg);
 	--v-fg: var(--v-code-fg);
 
@@ -38,7 +38,7 @@
 }
 
 /* Code block */
-@define-mixin v-pre-colors {
+@define-mixin v-colors-pre {
 	--v-bg: var(--v-pre-bg);
 	--v-fg: var(--v-pre-fg);
 	--v-danger-text: var(--v-pre-danger);
@@ -51,7 +51,7 @@
 }
 
 /* Menu and dropdowns colors */
-@define-mixin v-popover-colors {
+@define-mixin v-colors-popover {
 	--v-bg: var(--v-popover-bg);
 	--v-fg: var(--v-popover-fg);
 
@@ -59,7 +59,7 @@
 }
 
 /* Hovering tooltip colors */
-@define-mixin v-tooltip-colors {
+@define-mixin v-colors-tooltip {
 	--v-bg: var(--v-tooltip-bg);
 	--v-fg: var(--v-tooltip-fg);
 	--v-danger-text: var(--v-tooltip-danger);
@@ -71,7 +71,7 @@
 }
 
 /* Primary colors are used for submit buttons and other "main" actions */
-@define-mixin v-primary-colors {
+@define-mixin v-colors-primary {
 	--v-bg: var(--v-primary-bg);
 	--v-fg: var(--v-primary-fg);
 
@@ -79,7 +79,7 @@
 }
 
 /* Secondary colors are used for secondary actions like reset or cancel */
-@define-mixin v-secondary-colors {
+@define-mixin v-colors-secondary {
 	--v-bg: var(--v-secondary-bg);
 	--v-fg: var(--v-secondary-fg);
 	--v-danger-text: var(--v-secondary-danger);
@@ -94,7 +94,7 @@
     Callout colors are used for callout boxes and asides to draw attention
     in what is otherwise a wall of text
  */
-@define-mixin v-callout-colors {
+@define-mixin v-colors-callout {
 	--v-bg: var(--v-callout-bg);
 	--v-fg: var(--v-callout-fg);
 
@@ -113,7 +113,7 @@
 }
 
 /* Highlight colors are used for highlighting text (e.g. in a menu) */
-@define-mixin v-highlight-colors {
+@define-mixin v-colors-highlight {
 	--v-bg: var(--v-highlight-bg);
 	--v-fg: var(--v-highlight-fg);
 	--v-muted: var(--v-highlight-muted);
@@ -123,7 +123,7 @@
 }
 
 /* Color for input elements */
-@define-mixin v-input-colors {
+@define-mixin v-colors-input {
 	--v-bg: var(--v-input-bg);
 	--v-fg: var(--v-input-fg);
 
@@ -131,7 +131,7 @@
 }
 
 /* Color to provide feedback for successful actions */
-@define-mixin v-success-colors {
+@define-mixin v-colors-success {
 	--v-bg: var(--v-success-bg);
 	--v-fg: var(--v-success-fg);
 	--v-link: var(--v-fg);
@@ -142,7 +142,7 @@
 }
 
 /* Color to provide feedback that something is maybe wrong but still permissible */
-@define-mixin v-warning-colors {
+@define-mixin v-colors-warning {
 	--v-bg: var(--v-warning-bg);
 	--v-fg: var(--v-warning-fg);
 	--v-link: var(--v-fg);
@@ -153,7 +153,7 @@
 }
 
 /* Color to provide feedback that something is wrong and not permissible */
-@define-mixin v-danger-colors {
+@define-mixin v-colors-danger {
 	--v-bg: var(--v-danger-bg);
 	--v-fg: var(--v-danger-fg);
 	--v-link: var(--v-fg);
@@ -167,7 +167,7 @@
 	Le default -- defined last because otherwise my VSCode extension uses the last
 	defined variable definition for highlgihting.
 */
-@define-mixin v-default-colors {
+@define-mixin v-colors-default {
 	--v-bg: var(--v-default-bg);
 	--v-fg: var(--v-default-fg);
 
@@ -176,59 +176,59 @@
 
 @layer variables {
 	:root,
-	.v-default-colors {
-		@mixin v-default-colors;
+	.v-colors-default {
+		@mixin v-colors-default;
 	}
 
-	.v-card-colors {
-		@mixin v-card-colors;
+	.v-colors-card {
+		@mixin v-colors-card;
 	}
 
-	.v-code-colors {
-		@mixin v-code-colors;
+	.v-colors-code {
+		@mixin v-colors-code;
 	}
 
-	.v-pre-colors {
-		@mixin v-pre-colors;
+	.v-colors-pre {
+		@mixin v-colors-pre;
 	}
 
-	.v-popover-colors {
-		@mixin v-popover-colors;
+	.v-colors-popover {
+		@mixin v-colors-popover;
 	}
 
-	.v-tooltip-colors {
-		@mixin v-tooltip-colors;
+	.v-colors-tooltip {
+		@mixin v-colors-tooltip;
 	}
 
-	.v-primary-colors {
-		@mixin v-primary-colors;
+	.v-colors-primary {
+		@mixin v-colors-primary;
 	}
 
-	.v-secondary-colors {
-		@mixin v-secondary-colors;
+	.v-colors-secondary {
+		@mixin v-colors-secondary;
 	}
 
-	.v-callout-colors {
-		@mixin v-callout-colors;
+	.v-colors-callout {
+		@mixin v-colors-callout;
 	}
 
-	.v-highlight-colors {
-		@mixin v-highlight-colors;
+	.v-colors-highlight {
+		@mixin v-colors-highlight;
 	}
 
-	.v-input-colors {
-		@mixin v-input-colors;
+	.v-colors-input {
+		@mixin v-colors-input;
 	}
 
-	.v-success-colors {
-		@mixin v-success-colors;
+	.v-colors-success {
+		@mixin v-colors-success;
 	}
 
-	.v-warning-colors {
-		@mixin v-warning-colors;
+	.v-colors-warning {
+		@mixin v-colors-warning;
 	}
 
-	.v-danger-colors {
-		@mixin v-danger-colors;
+	.v-colors-danger {
+		@mixin v-colors-danger;
 	}
 }

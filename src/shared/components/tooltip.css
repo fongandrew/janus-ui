@@ -10,9 +10,9 @@
 @layer components {
 	.c-tooltip {
 		@mixin v-text-sm;
-		@mixin v-tooltip-colors;
+		@mixin v-colors-tooltip;
 		@mixin o-text-box;
-		@mixin t-inner-radius;
+		@mixin t-radius-inner;
 
 		max-width: var(--v-tooltip-width);
 		pointer-events: none;

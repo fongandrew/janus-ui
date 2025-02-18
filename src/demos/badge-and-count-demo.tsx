@@ -23,10 +23,10 @@ export function BadgeAndCountDemo() {
 				<div class="o-stack">
 					<div class="o-group">
 						<span class="o-badge">Badge</span>
-						<span class="o-badge v-primary-colors">Primary</span>
-						<span class="o-badge v-danger-colors">Danger</span>
-						<span class="o-badge v-warning-colors">Warning</span>
-						<span class="o-badge v-success-colors">Success</span>
+						<span class="o-badge v-colors-primary">Primary</span>
+						<span class="o-badge v-colors-danger">Danger</span>
+						<span class="o-badge v-colors-warning">Warning</span>
+						<span class="o-badge v-colors-success">Success</span>
 					</div>
 					<div class="o-group">
 						<span>Counts</span>

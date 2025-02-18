@@ -38,7 +38,7 @@ export function SuccessAlert(props: AlertBaseProps) {
 		<AlertBase
 			defaultIcon={CheckCircle}
 			{...props}
-			class={cx(props.class, 'v-success-colors')}
+			class={cx(props.class, 'v-colors-success')}
 		/>
 	);
 }
@@ -49,7 +49,7 @@ export function WarningAlert(props: AlertBaseProps) {
 		<AlertBase
 			defaultIcon={AlertTriangle}
 			{...props}
-			class={cx(props.class, 'v-warning-colors')}
+			class={cx(props.class, 'v-colors-warning')}
 		/>
 	);
 }
@@ -60,7 +60,7 @@ export function DangerAlert(props: AlertBaseProps) {
 		<AlertBase
 			defaultIcon={AlertCircle}
 			{...props}
-			class={cx(props.class, 'v-danger-colors')}
+			class={cx(props.class, 'v-colors-danger')}
 		/>
 	);
 }

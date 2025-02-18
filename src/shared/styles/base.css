@@ -124,7 +124,7 @@
 	blockquote,
 	code,
 	pre {
-		@mixin t-inner-radius;
+		@mixin t-radius-inner;
 	}
 
 	blockquote,
@@ -139,17 +139,17 @@
 	}
 
 	blockquote {
-		@mixin v-callout-colors;
+		@mixin v-colors-callout;
 	}
 
 	code {
-		@mixin v-code-colors;
+		@mixin v-colors-code;
 
 		padding: 0 var(--v-inner-radius);
 	}
 
 	pre {
-		@mixin v-pre-colors;
+		@mixin v-colors-pre;
 	}
 
 	ul,
@@ -163,7 +163,7 @@
 
 		&::file-selector-button {
 			@mixin t-border;
-			@mixin t-inner-radius;
+			@mixin t-radius-inner;
 
 			padding: 0 var(--v-inner-radius);
 		}
@@ -198,7 +198,7 @@
 	}
 
 	table {
-		@mixin t-inner-radius;
+		@mixin t-radius-inner;
 		@mixin t-border;
 
 		/* Define a single border color that doesn't shift because of table backdrops flipping */
@@ -221,7 +221,7 @@
 	}
 
 	th {
-		@mixin v-secondary-colors;
+		@mixin v-colors-secondary;
 
 		font-weight: var(--v-font-weight-label);
 		text-align: left;
@@ -234,7 +234,7 @@
 	}
 
 	tr:nth-child(even) {
-		@mixin v-secondary-colors;
+		@mixin v-colors-secondary;
 
 		&:last-child {
 			border-bottom: 0;

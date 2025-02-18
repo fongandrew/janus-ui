@@ -10,11 +10,11 @@
 	.c-button,
 	.c-button--ghost,
 	.c-button--icon {
-		@mixin t-inner-radius;
+		@mixin t-radius-inner;
 	}
 
 	.c-button {
-		@mixin v-secondary-colors;
+		@mixin v-colors-secondary;
 
 		/* Hover/active states */
 		&:hover {

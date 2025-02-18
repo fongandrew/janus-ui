@@ -37,8 +37,8 @@
 
 @layer components {
 	.c-dropdown__content {
-		@mixin v-popover-colors;
-		@mixin t-inner-radius;
+		@mixin v-colors-popover;
+		@mixin t-radius-inner;
 
 		--c-dropdown__spacing: var(--v-inner-radius);
 
@@ -60,7 +60,7 @@
 			Border looks weird with highlighting but is necessary to distinguish card from
 			identically colored background, so use this "shadow border"
 		*/
-		@mixin t-inner-border var(--v-shadow-lg);
+		@mixin t-border-inner var(--v-shadow-lg);
 	}
 
 	.c-dropdown__content:popover-open {

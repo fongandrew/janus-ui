@@ -30,7 +30,7 @@
 
 	/* Default closed on mobile */
 	.c-sidebar {
-		@mixin v-card-colors;
+		@mixin v-colors-card;
 		@mixin t-border-right;
 
 		display: none;
