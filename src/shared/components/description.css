@@ -2,7 +2,6 @@
 
 @layer components {
 	.c-description {
-		@mixin v-text-sm;
 		@mixin t-overflow-x;
 		@mixin t-text-muted;
 	}
