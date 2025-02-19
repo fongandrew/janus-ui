@@ -102,7 +102,9 @@ export class ListBoxControl<
 	}
 
 	clear(event: MouseEvent | KeyboardEvent) {
+		if (!this.values().size) return;
 		this.setValues(new Set<string>(), event);
+		this.listElm()?.dispatchEvent(new Event('change'));
 	}
 
 	override highlight(element: HTMLElement | null, event: KeyboardEvent | InputEvent): void {
