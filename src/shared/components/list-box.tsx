@@ -73,6 +73,11 @@ export function ListBox(props: ListBoxProps) {
 			tabIndex={0}
 			class={cx('c-list-box', rest.class)}
 		>
+			{/*
+				Note that there's no option to clear a selection here -- assumption
+				is that if we care about this, we'll have a separate button or list item
+				with the right text
+			*/}
 			{local.children}
 			{local.name && <ListBoxSelections name={local.name} values={listBoxControl.values()} />}
 		</OptionList>
