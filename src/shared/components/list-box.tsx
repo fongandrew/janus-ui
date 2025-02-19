@@ -56,7 +56,7 @@ export function ListBox(props: ListBoxProps) {
 		// Check if we're typing a character to filter the list
 		if (event.key.length === 1) {
 			const node = matchText(event.key);
-			node?.focus();
+			listBoxControl.highlight(node, event);
 		}
 	});
 
