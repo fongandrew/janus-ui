@@ -32,7 +32,7 @@
 		display: none;
 	}
 
-	.c-list-box__item[aria-checked='true'] .c-list-box__check-box svg {
+	.c-list-box__item[aria-selected='true'] .c-list-box__check-box svg {
 		display: block;
 	}
 }

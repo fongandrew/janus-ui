@@ -34,8 +34,8 @@
 	.c-option-list__item:hover,
 	a.c-option-list__item:hover,
 	.c-option-list__item:focus-visible,
-	:focus-visible .c-option-list__item[aria-selected='true'],
-	:popover-open .c-option-list__item[aria-selected='true'] {
+	:focus-visible .c-option-list__item[data-c-option-list-active],
+	:popover-open .c-option-list__item[data-c-option-list-active] {
 		@mixin v-colors-highlight;
 
 		outline: none;

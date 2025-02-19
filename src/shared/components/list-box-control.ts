@@ -12,7 +12,7 @@ export interface ListBoxProps extends OptionListProps {
 	defaultValues?: Set<string> | undefined;
 	/** Currently selected values (controlled) */
 	values?: Set<string> | undefined;
-	/** Active higlight ID (controlled) */
+	/** Active highlight ID (controlled) */
 	currentId?: string | null | undefined;
 	/** Called when selection changes */
 	onValues?: ((value: Set<string>, event: MouseEvent | KeyboardEvent) => void) | undefined;
@@ -63,12 +63,12 @@ export class ListBoxControl<
 			for (const option of this.items()) {
 				const optionValue = option.getAttribute(LIST_OPTION_VALUE_ATTR);
 				if (optionValue) {
-					option.ariaChecked = String(currentValues.has(optionValue));
+					option.ariaSelected = String(currentValues.has(optionValue));
 				}
 			}
 		});
 
-		// Update ARIA current state when currentId changes
+		// Update highlighted state when currentId changes
 		createRenderEffect(() => {
 			// Call this first to ensure reactivity is tracked since this.listElm()
 			// is not reactive
@@ -78,12 +78,12 @@ export class ListBoxControl<
 			if (!listBox) return;
 
 			const next = nextId && listBox.ownerDocument.getElementById(nextId);
-			const prev = listBox.querySelector('[aria-selected="true"]');
+			const prev = listBox.querySelector<HTMLElement>('[data-c-option-list-active]');
 			if (prev && prev !== next) {
-				prev.ariaSelected = null;
+				prev.removeAttribute('data-c-option-list-active');
 			}
 			if (next) {
-				next.ariaSelected = 'true';
+				next.setAttribute('data-c-option-list-active', '');
 			}
 		});
 	}
