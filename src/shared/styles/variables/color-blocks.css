@@ -107,8 +107,7 @@
 	--v-font-weight-label: 600;
 	--v-font-weight-strong: 800;
 
-	font-weight: var(--v-font-weight-normal);
-
+	@mixin t-font-weight var(--v-font-weight-normal);
 	@mixin v-color-block;
 }
 

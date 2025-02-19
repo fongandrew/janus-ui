@@ -2,16 +2,18 @@
 
 @layer components {
 	.c-label {
+		@mixin t-font-weight var(--v-font-weight-label);
+
 		display: inline-block;
 		cursor: pointer;
-		font-weight: var(--v-font-weight-label);
 	}
 
 	.c-label:has(input) {
+		@mixin t-font-weight var(--v-font-weight-normal);
+
 		display: inline-flex;
 		align-items: flex-start;
 		gap: var(--v-inline-gap);
-		font-weight: var(--v-font-weight-normal);
 	}
 
 	.c-label:has([aria-disabled='true']),

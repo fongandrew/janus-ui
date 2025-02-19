@@ -17,9 +17,9 @@
 	.c-details__summary {
 		@mixin v-colors-secondary;
 		@mixin o-text-box;
+		@mixin t-font-weight var(--v-font-weight-label);
 
 		cursor: pointer;
-		font-weight: var(--v-font-weight-label);
 		list-style: none;
 
 		&::before {

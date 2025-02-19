@@ -121,23 +121,23 @@
 	.c-sidebar__list-link,
 	.c-sidebar__list-button {
 		@mixin o-input-box;
+		@mixin t-font-weight var(--v-font-weight-normal);
 
-		font-weight: var(--v-font-weight-normal);
 		text-align: left;
 		justify-content: flex-start;
 		width: 100%;
 
 		/* Selected */
 		&[aria-current]:not([aria-current='false']) {
-			font-weight: var(--v-font-weight-selected);
+			@mixin t-font-weight var(--v-font-weight-selected);
 		}
 	}
 
 	.c-sidebar-list__heading {
 		@mixin o-input-box;
 		@mixin v-text-sm;
+		@mixin t-font-weight var(--v-font-weight-label);
 
-		font-weight: var(--v-font-weight-label);
 		border-color: transparent;
 		border-width: var(--v-border-width);
 

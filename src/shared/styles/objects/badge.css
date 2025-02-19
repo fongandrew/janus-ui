@@ -1,7 +1,8 @@
 /* Badge styles for displaying status or notifications */
 @define-mixin o-badge {
+	@mixin t-font-weight var(--v-font-weight-label);
+
 	display: inline-block;
-	font-weight: var(--v-font-weight-label);
 	font-size: var(--v-font-size-sm);
 	text-align: center;
 	border-radius: 0.5lh;
@@ -11,7 +12,7 @@
 
 @layer objects {
 	.o-badge {
-		@mixin o-badge;
 		@mixin v-colors-secondary;
+		@mixin o-badge;
 	}
 }

@@ -108,9 +108,9 @@
 
 	.c-modal__title {
 		@mixin v-text-xl;
+		@mixin t-font-weight var(--v-font-weight-title);
 
 		flex-grow: 1;
-		font-weight: var(--v-font-weight-title);
 	}
 
 	.c-modal__footer {

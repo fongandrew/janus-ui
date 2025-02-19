@@ -25,7 +25,8 @@
 	}
 
 	a.c-option-list__item {
-		font-weight: var(--v-font-weight-normal);
+		@mixin t-font-weight var(--v-font-weight-normal);
+
 		color: var(--v-popover-fg);
 		text-decoration: none;
 	}
@@ -42,9 +43,9 @@
 
 	.c-option-list__heading {
 		@mixin v-text-sm;
+		@mixin t-font-weight var(--v-font-weight-subtitle);
 		@mixin t-text-muted;
 
-		font-weight: var(--v-font-weight-subtitle);
 		line-height: 1;
 		padding-bottom: var(--v-space-xs);
 	}

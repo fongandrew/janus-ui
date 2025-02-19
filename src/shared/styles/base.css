@@ -25,13 +25,12 @@
 
 	a[href] {
 		@mixin t-link-style;
-
-		font-weight: var(--v-font-weight-label);
+		@mixin t-font-weight var(--v-font-weight-label);
 	}
 
 	b,
 	strong {
-		font-weight: var(--v-font-weight-strong);
+		@mixin t-font-weight var(--v-font-weight-strong);
 	}
 
 	/*
@@ -75,31 +74,28 @@
 	/* At most 1, the page title (or site if this is the main hero page) */
 	h1 {
 		@mixin v-text-2xl;
-
-		font-weight: var(--v-font-weight-title);
+		@mixin t-font-weight var(--v-font-weight-title);
 	}
 
 	/* h2 = top level  */
 	header h1,
 	h2 {
 		@mixin v-text-xl;
-
-		font-weight: var(--v-font-weight-title);
+		@mixin t-font-weight var(--v-font-weight-title);
 	}
 
 	/* Card headings basically */
 	header h2,
 	h3 {
 		@mixin v-text-lg;
-
-		font-weight: var(--v-font-weight-subtitle);
+		@mixin t-font-weight var(--v-font-weight-subtitle);
 	}
 
 	/* Everything else */
 	h4,
 	h5,
 	h6 {
-		font-weight: var(--v-font-weight-label);
+		@mixin t-font-weight var(--v-font-weight-label);
 	}
 
 	/*
@@ -110,14 +106,12 @@
 	aside {
 		h4 {
 			@mixin v-text-xl;
-
-			font-weight: var(--v-font-weight-title);
+			@mixin t-font-weight var(--v-font-weight-title);
 		}
 
 		h5 {
 			@mixin v-text-lg;
-
-			font-weight: var(--v-font-weight-subtitle);
+			@mixin t-font-weight var(--v-font-weight-subtitle);
 		}
 	}
 
@@ -222,8 +216,8 @@
 
 	th {
 		@mixin v-colors-secondary;
+		@mixin t-font-weight var(--v-font-weight-label);
 
-		font-weight: var(--v-font-weight-label);
 		text-align: left;
 	}
 
