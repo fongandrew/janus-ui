@@ -26,4 +26,18 @@ export default {
 			},
 		],
 	},
+	overrides: [
+		{
+			files: ['!**/tools/**/*.css'],
+			rules: {
+				'declaration-property-value-disallowed-list': [
+					{
+						color: [/var\(--v-muted/, /var\(--v-danger-text/],
+						'font-weight': [/var\(/],
+					},
+					{ message: 'Prefer tool mixins' },
+				],
+			},
+		},
+	],
 };
