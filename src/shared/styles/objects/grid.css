@@ -6,7 +6,7 @@
 
 	@mixin v-container-tablet {
 		& {
-			grid-template-columns: repeat(auto-fit, minmax(50% - var(--v-spacing), 1fr));
+			grid-template-columns: repeat(auto-fit, minmax(calc(50% - var(--v-spacing)), 1fr));
 		}
 	}
 
