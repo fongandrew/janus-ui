@@ -1,6 +1,7 @@
 import { type JSX } from 'solid-js';
 
 import { ComboBoxControl, type ComboBoxProps } from '~/shared/components/combo-box-control';
+import { isTextInput } from '~/shared/utility/element-types';
 
 /** Base props for Select are identical to ComboBox for now */
 export type SelectControlProps = ComboBoxProps;
@@ -13,6 +14,8 @@ export type SelectControlProps = ComboBoxProps;
 export class SelectControl<
 	TTag extends keyof JSX.HTMLElementTags = 'select' | 'button' | 'input',
 > extends ComboBoxControl<TTag> {
+	private noShowOnKeyDown = new WeakSet<Event>();
+
 	constructor(protected override props: SelectControlProps) {
 		super(props);
 		this.setAttr('aria-haspopup', 'listbox');
@@ -23,6 +26,25 @@ export class SelectControl<
 			if (this.ref()?.contains(relatedTarget)) return;
 			if (this.listElm()?.contains(relatedTarget)) return;
 			this.hide();
+		});
+
+		this.handle('onKeyDown', (event: KeyboardEvent) => {
+			if (
+				(event.key.length === 1 ||
+					event.key.startsWith('Arrow') ||
+					event.key === 'Enter') &&
+				!this.noShowOnKeyDown.has(event)
+			) {
+				this.show();
+			}
+
+			// Prevent default so that we don't submit form if enter key is pressed while
+			// text input is focused. That may be the expected behavior for an actual
+			// input, but behaviorally, this combobox input behaves much more like a
+			// select element (which doesn't submit form on enter in Chroem at least).
+			if (isTextInput(event.target as Element | null) && event.key === 'Enter') {
+				event.preventDefault();
+			}
 		});
 	}
 
@@ -53,6 +75,7 @@ export class SelectControl<
 		super.select(element, event);
 		if (!this.props.multiple) {
 			this.hide();
+			this.noShowOnKeyDown.add(event);
 		}
 	}
 }

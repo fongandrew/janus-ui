@@ -105,22 +105,15 @@
 		position: absolute;
 		inset: 0;
 		opacity: 0;
-
-		&:focus {
-			opacity: 1;
-		}
 	}
 
-	.c-select__container:has(:popover-open, :focus) .c-select__input {
-		opacity: 1;
-	}
-
-	.c-select__container:has(:popover-open, :focus) .c-select__input_description {
+	.c-select__container:has(:popover-open) .c-select__input_description {
 		opacity: 0;
 	}
 
 	/* Mobile-specific fixed positioning for input + dropdown */
 	.c-select__container:has(:popover-open) .c-select__input {
+		opacity: 1;
 		position: fixed;
 		inset: var(--v-spacing) var(--v-spacing) auto var(--v-spacing);
 		z-index: var(--v-z-above-backdrop);
