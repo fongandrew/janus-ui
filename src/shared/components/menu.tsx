@@ -14,9 +14,9 @@ import { combineRefs } from '~/shared/utility/solid/combine-refs';
 
 export interface MenuProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	/** Called when a menu item is selected */
-	onValue?: (value: string, event: KeyboardEvent | MouseEvent) => void;
+	onValue?: (value: string, event: Event) => void;
 	/** Require onClick to be functional */
-	onClick?: (event: KeyboardEvent | MouseEvent) => void;
+	onClick?: (event: Event) => void;
 	/** Make children required */
 	children: JSX.Element;
 }

@@ -19,7 +19,7 @@ export interface SelectProps extends Omit<FormElementProps<'button'>, 'onValidat
 	/** Default selected values (uncontrolled) */
 	defaultValues?: Set<string>;
 	/** Called when selection changes */
-	onValues?: (values: Set<string>, event: MouseEvent | KeyboardEvent) => void;
+	onValues?: (values: Set<string>, event: Event) => void;
 	/** Whether multiple selection is allowed */
 	multiple?: boolean;
 	/** Disables clearing selection */

@@ -9,13 +9,9 @@ import { PropBuilder } from '~/shared/utility/solid/prop-builder';
 /** Base props for different kinds of option lists (e.g. combobox, listbox, menu) */
 export interface OptionListProps {
 	/** Callback for when element is highlighted via arrow keys */
-	onHighlight?: (
-		id: string | null,
-		element: HTMLElement,
-		event: KeyboardEvent | InputEvent | null,
-	) => void;
+	onHighlight?: (id: string | null, element: HTMLElement, event: Event) => void;
 	/** Callback for when element is selected */
-	onSelect?: (value: string, element: HTMLElement, event: KeyboardEvent | MouseEvent) => void;
+	onSelect?: (value: string, element: HTMLElement, event: Event) => void;
 }
 
 /**
@@ -26,6 +22,8 @@ export const LIST_OPTION_VALUE_ATTR = 'data-list-option-value';
 
 /** Delegated keydown handler, meant to be bound to props */
 export function handleKeyDown(ctrl: OptionListControl, event: KeyboardEvent) {
+	if (!ctrl.enabled()) return;
+
 	const document = evtDoc(event);
 
 	const target = event.target as HTMLElement;
@@ -97,6 +95,11 @@ export class OptionListControl<
 		this.handle('onKeyDown', [handleKeyDown, this]);
 	}
 
+	/** Can override this if we need temporarily disable click and keydown handling */
+	enabled() {
+		return true;
+	}
+
 	listElm() {
 		const closest = this.ref()?.closest('[role="listbox"], [role="menu"], [aria-controls]') as
 			| HTMLElement
@@ -128,7 +131,7 @@ export class OptionListControl<
 			null) as HTMLElement | null;
 	}
 
-	highlight(element: HTMLElement | null, event: KeyboardEvent | InputEvent) {
+	highlight(element: HTMLElement | null, event: Event) {
 		const id = element?.id;
 		if (!id) return;
 		this.props.onHighlight?.(id, element, event);
@@ -137,7 +140,7 @@ export class OptionListControl<
 		element.scrollIntoView({ block: 'nearest' });
 	}
 
-	select(element: HTMLElement | null, event: KeyboardEvent | MouseEvent) {
+	select(element: HTMLElement | null, event: Event) {
 		if (!element) return;
 		const value = element.getAttribute(LIST_OPTION_VALUE_ATTR);
 		if (typeof value !== 'string') return;

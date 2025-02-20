@@ -15,28 +15,44 @@ export class SelectControl<
 > extends ComboBoxControl<TTag> {
 	constructor(protected override props: SelectControlProps) {
 		super(props);
-		super.setAttr('aria-haspopup', 'listbox');
+		this.setAttr('aria-haspopup', 'listbox');
 
-		super.handle('onBlur', (event) => {
+		this.handle('onFocusOut', (event) => {
 			const relatedTarget = event.relatedTarget as HTMLElement | null;
 			if (!relatedTarget) return;
 			if (this.ref()?.contains(relatedTarget)) return;
 			if (this.listElm()?.contains(relatedTarget)) return;
 			this.hide();
 		});
+	}
 
-		super.handle('onChange', () => {
-			if (!props.multiple) {
-				this.hide();
-			}
-		});
+	protected popover() {
+		return this.listCtrl.ref()?.closest('[popover]') as HTMLElement | null;
+	}
+
+	override enabled() {
+		return !!this.popover()?.matches(':popover-open');
 	}
 
 	hide() {
-		(this.listCtrl.ref()?.closest('[popover]') as HTMLElement | null)?.hidePopover();
+		this.popover()?.hidePopover();
+		if (!this.props.multiple) {
+			this.setUnctrlCurrentId(null);
+		}
 	}
 
 	show() {
-		(this.listCtrl.ref()?.closest('[popover]') as HTMLElement | null)?.showPopover();
+		this.popover()?.showPopover();
+	}
+
+	toggle() {
+		this.popover()?.togglePopover();
+	}
+
+	override select(element: HTMLElement, event: Event) {
+		super.select(element, event);
+		if (!this.props.multiple) {
+			this.hide();
+		}
 	}
 }

@@ -55,7 +55,7 @@ export class ComboBoxControl<
 		this.handle('onKeyDown', handleEscKeyDown);
 	}
 
-	override select(element: HTMLElement, event: MouseEvent | KeyboardEvent) {
+	override select(element: HTMLElement, event: Event) {
 		const oldValues = this.values();
 		super.select(element, event);
 

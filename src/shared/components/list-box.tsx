@@ -21,7 +21,7 @@ export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'
 	/** Default selected values (uncontrolled) */
 	defaultValues?: Set<string>;
 	/** Called when selection changes */
-	onValues?: (values: Set<string>, event: MouseEvent | KeyboardEvent) => void;
+	onValues?: (values: Set<string>, event: Event) => void;
 	/** Autofocus listbox? */
 	autofocus?: boolean | undefined;
 	/** Whether multiple selection is allowed */

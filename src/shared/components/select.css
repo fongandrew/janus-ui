@@ -54,10 +54,15 @@
 
 	.c-select__clear {
 		display: none;
+
+		&:focus {
+			@mixin t-radius-inner;
+			@mixin t-focus-ring;
+		}
 	}
 
 	/* Show clear button only is there's something to clear (and not required) */
-	.c-select__container:has(+ [role='listbox'] [aria-checked='true']):not(
+	.c-select__container:has([role='listbox'] [aria-selected='true']):not(
 			:has([aria-required]:not([aria-required='false'])),
 			:has(:required)
 		)
@@ -66,7 +71,7 @@
 	}
 
 	/* Hide chevron if clear button is shown */
-	.c-select__container:has(+ [role='listbox'] [aria-checked='true']):not(
+	.c-select__container:has([role='listbox'] [aria-selected='true']):not(
 			:has([aria-required]:not([aria-required='false'])),
 			:has(:required)
 		)
@@ -81,6 +86,7 @@
 	/* Select dropdown empty state */
 	.c-select__empty_state {
 		@mixin v-text-sm;
+		@mixin t-text-muted;
 		@mixin t-overflow-x;
 
 		display: block;
@@ -88,8 +94,6 @@
 		overflow: hidden auto;
 		padding: calc(var(--v-spacing) - var(--v-inner-radius)) var(--v-spacing);
 		text-align: center;
-
-		@mixin t-text-muted;
 	}
 
 	* + .c-select__empty_state {

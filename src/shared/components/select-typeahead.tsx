@@ -18,9 +18,9 @@ export interface SelectTypeaheadProps extends Omit<InputProps, 'onValidate'> {
 	/** Default selected values (uncontrolled) */
 	defaultValues?: Set<string>;
 	/** Called when selection changes */
-	onValues?: (value: Set<string>, event: MouseEvent | KeyboardEvent) => void;
+	onValues?: (value: Set<string>, event: Event) => void;
 	/** Called when typing happens */
-	onValueInput?: (value: string, event: InputEvent) => void;
+	onValueInput?: (value: string, event: Event) => void;
 	/** Whether multiple selection is allowed */
 	multiple?: boolean;
 	/** Disables clearing selection */

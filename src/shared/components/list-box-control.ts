@@ -15,7 +15,7 @@ export interface ListBoxProps extends OptionListProps {
 	/** Active highlight ID (controlled) */
 	currentId?: string | null | undefined;
 	/** Called when selection changes */
-	onValues?: ((value: Set<string>, event: MouseEvent | KeyboardEvent) => void) | undefined;
+	onValues?: ((value: Set<string>, event: Event) => void) | undefined;
 	/** Disables clearing selection */
 	required?: boolean | undefined;
 	/** Whether multiple selection is allowed */
@@ -30,13 +30,13 @@ export class ListBoxControl<
 	TTag extends keyof JSX.HTMLElementTags = keyof JSX.HTMLElementTags,
 > extends OptionListControl<TTag> {
 	/** Get ID of currently highlighted element (if not set via props) */
-	private readonly unctrlCurrentId: Accessor<string | null>;
+	protected readonly unctrlCurrentId: Accessor<string | null>;
 	/** Set ID of currently highlighted element (if not set via props) */
-	private readonly setUnctrlCurrentId: Setter<string | null>;
+	protected readonly setUnctrlCurrentId: Setter<string | null>;
 	/** Get uncontrolled value selection (if not set via props) */
-	private readonly unctrlValues: Accessor<Set<string>>;
+	protected readonly unctrlValues: Accessor<Set<string>>;
 	/** Set uncontrolled value selection (if not set via props) */
-	private readonly setUnctrlValues: Setter<Set<string>>;
+	protected readonly setUnctrlValues: Setter<Set<string>>;
 
 	constructor(protected override props: ListBoxProps) {
 		super(props);
@@ -56,10 +56,27 @@ export class ListBoxControl<
 		this.setAttr('aria-multiselectable', () => this.props.multiple);
 		this.setAttr('aria-required', () => this.props.required);
 
+		// Tabbing on a selection counts as highlight per WCAG reccomendations
+		this.handle('onKeyDown', (e) => {
+			if (this.props.multiple) return;
+			if (e.key !== 'Tab') return;
+			const currentValue = this.currentValue();
+			if (typeof currentValue !== 'string' || this.values().has(currentValue)) return;
+			this.select(this.item(currentValue), e);
+		});
+
 		// Update ARIA selected state when values change
 		createRenderEffect(() => {
 			// Calling `values()` here outside of for loop to ensure reactivity tracked
-			const currentValues = this.values();
+			let currentValues = this.values();
+
+			// The actual selection happens when the listbox is blurrd, but we can
+			// do a sort of pseudo-selection here for the single select case
+			const currentValue = this.currentValue();
+			if (currentValue && !this.props.multiple && !currentValues.has(currentValue)) {
+				currentValues = new Set([currentValue]);
+			}
+
 			for (const option of this.items()) {
 				const optionValue = option.getAttribute(LIST_OPTION_VALUE_ATTR);
 				if (optionValue) {
@@ -92,27 +109,37 @@ export class ListBoxControl<
 		return this.props.currentId ?? this.unctrlCurrentId();
 	}
 
+	currentValue() {
+		const currentId = this.currentId();
+		if (!currentId) return null;
+		return (
+			this.ref()
+				?.ownerDocument?.getElementById(currentId)
+				?.getAttribute(LIST_OPTION_VALUE_ATTR) ?? null
+		);
+	}
+
 	values() {
 		return this.props.values ?? this.unctrlValues();
 	}
 
-	setValues(newValues: Set<string>, event: KeyboardEvent | MouseEvent) {
+	setValues(newValues: Set<string>, event: Event) {
 		this.props.onValues?.(newValues, event);
 		this.setUnctrlValues(newValues);
 	}
 
-	clear(event: MouseEvent | KeyboardEvent) {
+	clear(event: Event) {
 		if (!this.values().size) return;
 		this.setValues(new Set<string>(), event);
 		this.listElm()?.dispatchEvent(new Event('change'));
 	}
 
-	override highlight(element: HTMLElement | null, event: KeyboardEvent | InputEvent): void {
+	override highlight(element: HTMLElement | null, event: Event): void {
 		this.setUnctrlCurrentId(element?.id ?? null);
 		super.highlight(element, event);
 	}
 
-	override select(element: HTMLElement | null, event: KeyboardEvent | MouseEvent): void {
+	override select(element: HTMLElement | null, event: Event): void {
 		const value = element?.getAttribute(LIST_OPTION_VALUE_ATTR);
 		if (typeof value !== 'string') return;
 
@@ -139,6 +166,7 @@ export class ListBoxControl<
 		}
 
 		this.setValues(newValues, event);
+		this.setUnctrlCurrentId(element?.id ?? null);
 		this.listElm()?.dispatchEvent(new Event('change'));
 	}
 }
