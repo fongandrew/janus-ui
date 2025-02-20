@@ -31,11 +31,11 @@
 		text-decoration: none;
 	}
 
-	.c-option-list__item:hover,
-	a.c-option-list__item:hover,
-	.c-option-list__item:focus-visible,
-	:focus-visible .c-option-list__item[data-c-option-list-active],
-	:popover-open .c-option-list__item[data-c-option-list-active] {
+	body[data-kb-nav='false'] .c-option-list__item:hover,
+	body[data-kb-nav='false'] a.c-option-list__item:hover,
+	body[data-kb-nav='true'] .c-option-list__item:focus-visible,
+	body[data-kb-nav='true'] :focus-visible .c-option-list__item[data-c-option-list-active],
+	body[data-kb-nav='true'] :popover-open .c-option-list__item[data-c-option-list-active] {
 		@mixin v-colors-highlight;
 
 		outline: none;

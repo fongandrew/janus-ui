@@ -1,3 +1,5 @@
+import '~/shared/utility/use-data-kb-nav';
+
 import cx from 'classix';
 import { createMemo, type JSX, splitProps } from 'solid-js';
 
