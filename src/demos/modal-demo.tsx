@@ -15,6 +15,7 @@ import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
 import { LabelledInline, LabelledInput } from '~/shared/components/labelled-control';
+import { ListBoxItem } from '~/shared/components/list-box';
 import {
 	Modal,
 	ModalCloseButton,
@@ -27,6 +28,7 @@ import {
 	ModalFormContent,
 	ModalSubmitButton,
 } from '~/shared/components/modal-form';
+import { Select } from '~/shared/components/select';
 import { Textarea } from '~/shared/components/textarea';
 
 function SimpleModal() {
@@ -119,6 +121,13 @@ function FormModal() {
 					</LabelledInput>
 					<LabelledInput label="Email">
 						<Input name={FormNames.email} type="email" required />
+					</LabelledInput>
+					<LabelledInput label="How did you hear about us?">
+						<Select placeholder="Select an option">
+							<ListBoxItem value="friend">Friends & family</ListBoxItem>
+							<ListBoxItem value="aliens">Space aliens</ListBoxItem>
+							<ListBoxItem value="ads">Advertising</ListBoxItem>
+						</Select>
 					</LabelledInput>
 					<LabelledInput label="Message">
 						<Textarea name={FormNames.message} required />
