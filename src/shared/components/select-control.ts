@@ -2,6 +2,7 @@ import { type JSX } from 'solid-js';
 
 import { ComboBoxControl, type ComboBoxProps } from '~/shared/components/combo-box-control';
 import { isTextInput } from '~/shared/utility/element-types';
+import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 
 /** Base props for Select are identical to ComboBox for now */
 export type SelectControlProps = ComboBoxProps;
@@ -21,6 +22,7 @@ export class SelectControl<
 		this.setAttr('aria-haspopup', 'listbox');
 
 		this.handle('onFocusOut', (event) => {
+			if (!isFocusVisible()) return;
 			const relatedTarget = event.relatedTarget as HTMLElement | null;
 			if (!relatedTarget) return;
 			if (this.ref()?.contains(relatedTarget)) return;

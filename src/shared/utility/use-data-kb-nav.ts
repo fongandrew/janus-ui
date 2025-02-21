@@ -4,6 +4,8 @@ import { evtDoc } from '~/shared/utility/multi-view';
 export const KB_NAV_ATTR = 'data-kb-nav';
 
 let isKeyboardNavigating = false;
+let prevX: number | null = null;
+let prevY: number | null = null;
 
 /** Is keyboard navigation currently active? */
 export function isKeyboardNavigatingActive() {
@@ -28,7 +30,15 @@ export function handleKeyDown(event: KeyboardEvent) {
 /** Handler for mouseover events */
 export function handleMouseOver(event: MouseEvent) {
 	if (!isKeyboardNavigating) return;
+
+	// Mouseover can trigger if something appears under mouse (like popover)
+	// without mouse moving, which shouldn't count. Also, if we decide to implement
+	// some min threshold or distance check in the future, we can do that here.
+	if (event.pageX === prevX && event.pageY === prevY) return;
+
 	isKeyboardNavigating = false;
+	prevX = event.pageX;
+	prevY = event.pageY;
 	evtDoc(event)?.body.setAttribute(KB_NAV_ATTR, 'false');
 }
 
