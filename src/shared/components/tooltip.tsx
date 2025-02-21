@@ -91,7 +91,7 @@ export function Tooltip(props: TooltipProps) {
 				position: 'absolute',
 				left: `${middlewareData.arrow.x}px`,
 				top: `${middlewareData.arrow.y}px`,
-				[staticSide]: 'calc(var(--tooltip-arrow-size) / -2)',
+				[staticSide]: 'calc(var(--v-tooltip-arrow-size) / -2)',
 			});
 		}
 	};
