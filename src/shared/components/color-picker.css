@@ -23,6 +23,8 @@
 	}
 
 	.c-color-picker__input {
+		@mixin t-no-focus-ring;
+
 		/* Input floats on top of the entire pseudo-input and intercepts clicks */
 		position: absolute;
 		inset: 0;
@@ -30,6 +32,5 @@
 		width: 100%;
 		cursor: pointer;
 		opacity: 0;
-		outline: none;
 	}
 }

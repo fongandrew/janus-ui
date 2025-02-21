@@ -37,8 +37,7 @@
 	body[data-kb-nav='true'] :focus-visible .c-option-list__item[data-c-option-list-active],
 	body[data-kb-nav='true'] :popover-open .c-option-list__item[data-c-option-list-active] {
 		@mixin v-colors-highlight;
-
-		outline: none;
+		@mixin t-no-focus-ring;
 	}
 
 	.c-option-list__heading {

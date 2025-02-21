@@ -22,7 +22,7 @@
 			@mixin t-radius-inner;
 
 			:focus-visible {
-				outline: none;
+				@mixin t-no-focus-ring;
 			}
 		}
 	}
@@ -59,8 +59,6 @@
 	}
 
 	.c-tabs__panel {
-		outline: none;
-
 		&:focus-visible {
 			@mixin t-focus-ring;
 			@mixin t-radius-inner;

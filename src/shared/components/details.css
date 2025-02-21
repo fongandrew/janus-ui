@@ -34,7 +34,7 @@
 		}
 
 		&:focus-visible {
-			outline: none;
+			@mixin t-no-focus-ring;
 		}
 
 		&:hover {

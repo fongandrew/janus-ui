@@ -12,8 +12,9 @@
 	}
 
 	&:focus-visible {
+		@mixin t-no-focus-ring;
+
 		text-decoration-style: double;
-		outline: none;
 	}
 }
 

@@ -10,10 +10,11 @@
 }
 
 .c-slider__number {
+	@mixin t-no-focus-ring;
+
 	border: 0;
 	background-color: transparent;
 	text-align: right;
-	outline: none;
 
 	/* Hide arrows since slider is there */
 

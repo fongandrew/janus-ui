@@ -36,6 +36,7 @@
 	--v-muted: hsl(0deg 0% 54.9%);
 	--v-link: hsl(210deg 80% 80%);
 	--v-ring: hsl(0deg 0% 83.1%);
+	--v-ring-alt: hsl(210deg 0% 14.9%);
 	--v-border-dynamic-base: white;
 	--v-border-dynamic-mix: 25%;
 }
@@ -89,7 +90,8 @@
 	--v-danger-text: hsl(0deg 100% 30.5%);
 	--v-muted: hsl(0deg 0% 32.3%);
 	--v-link: hsl(210deg 80% 20%);
-	--v-ring: hsl(0deg 0% 3%);
+	--v-ring: hsl(210deg 80% 20%);
+	--v-ring-alt: hsl(210deg 80% 80%);
 	--v-border-dynamic-base: black;
 	--v-border-dynamic-mix: 15%;
 }

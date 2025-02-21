@@ -16,8 +16,15 @@
 }
 
 @define-mixin t-focus-ring {
+	box-shadow: var(--v-shadow-focus);
 	outline: var(--v-outline-width) solid var(--v-ring);
 	outline-offset: var(--v-outline-offset);
+}
+
+/* For removing a focus ring -- use with caution */
+@define-mixin t-no-focus-ring {
+	box-shadow: none;
+	outline: none;
 }
 
 @define-mixin t-hover {
