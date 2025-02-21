@@ -2,13 +2,13 @@
 
 @layer base {
 	/* No scroll when dropdown open */
-	body:has(.c-dropdown__content:popover-open) {
+	body:has(.c-dropdown__content:popover-open, .c-dropdown__content[data-popover-open]) {
 		overflow: hidden;
 	}
 
 	/* Dropdown backdrop -- use this instead of ::backdrop because this blocks click-through */
-	body:has(.c-dropdown__content:popover-open)::after,
-	:modal:has(.c-dropdown__content:popover-open)::after {
+	body:has(.c-dropdown__content:popover-open, .c-dropdown__content[data-popover-open])::after,
+	:modal:has(.c-dropdown__content:popover-open, .c-dropdown__content[data-popover-open])::after {
 		content: ' ';
 		position: fixed;
 		inset: 0;
@@ -20,8 +20,11 @@
 
 	/* Make backdrop transparent on larger screens */
 	@mixin v-breakpoint-tablet {
-		body:has(.c-dropdown__content:popover-open)::after,
-		:modal:has(.c-dropdown__content:popover-open)::after {
+		body:has(.c-dropdown__content:popover-open, .c-dropdown__content[data-popover-open])::after,
+		:modal:has(
+				.c-dropdown__content:popover-open,
+				.c-dropdown__content[data-popover-open]
+			)::after {
 			background-color: transparent;
 			backdrop-filter: none;
 		}

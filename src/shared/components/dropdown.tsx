@@ -24,58 +24,53 @@ import {
 } from '~/shared/utility/solid/create-event-delegate';
 import { PropBuilder } from '~/shared/utility/solid/prop-builder';
 import { T } from '~/shared/utility/text/t-components';
+
 /** Track all open dropdowns so easier to close */
 const openDropdowns = new WeakMap<Document, Set<HTMLElement>>();
 
-// We use manual popovers instead of default auto popovers because the light dismiss feature
-// of auto popovers doesn't work well on mobile iOS as of 18.3, and because there are weird
-// quirks with mobiel Android when tryign to implement a backdrop that "blocks" click through.
 registerDocumentSetup((document) => {
-	openDropdowns.set(document, new Set());
+	const POPOVER_OPEN_ATTR = 'data-popover-open';
 
-	// Close dropdowns when clicking on backdrop / overlay area
-	document.addEventListener('click', (event) => {
-		if (openDropdowns.get(document)?.size === 0) return;
+	//
+	// On desktop, the sequence of events for light dismiss is something like: mousedown,
+	// popover dismissed, mouseup, toggle. On mobile and touchscreen devices, the sequence
+	// is touchstart, popover dismissed, touchend, mousedown, mouseup. This is a problem
+	// because we use popover visibility to display a backdrop that blocks clicks. This
+	// works fine on desktop because there the backdrop catches the mousedown. But on
+	// mobile, the backdrop disappears after touchstart and the elements get a full
+	// mousedown/mouseup and thus a click. This workaround ties to the backdrop to a
+	// special data attribute in between touchstart and touchend to prevent this.
+	//
+	// Note that we still want to rely on `:popover-open` in the general case since
+	// there are ways to toggle popovers without mouse or touch events. This is a
+	// special case.
+	//
 
-		const target = event.target as HTMLElement | null;
+	function removePopoverOpen() {
+		for (const elm of document.querySelectorAll(`[${POPOVER_OPEN_ATTR}]`)) {
+			elm.removeAttribute(POPOVER_OPEN_ATTR);
+		}
+	}
 
-		// This will land either on the popover itself (if click is inside
-		// the popover) or the nearest containing context (if outside)
-		const nearestRoot = target?.closest(':popover-open, :modal, body');
-		if (!nearestRoot) return;
-
-		// Closing all popovers within the nearest root effectively closes
-		// popovers when clicking outside of them (and respects popovers
-		// opened from inside modals + nested popovers)
-		let didHide = false;
-		for (const dropdown of openDropdowns.get(document) ?? []) {
-			if (nearestRoot !== dropdown && nearestRoot.contains(dropdown)) {
-				dropdown.hidePopover();
-				didHide = true;
+	document.addEventListener(
+		'touchstart',
+		function () {
+			let setPopoverOpen = false;
+			for (const elm of document.querySelectorAll(':popover-open')) {
+				elm.setAttribute(POPOVER_OPEN_ATTR, '');
+				setPopoverOpen = true;
 			}
-		}
+			if (setPopoverOpen) {
+				document.body.addEventListener('mouseup', removePopoverOpen, {
+					once: true,
+				});
+			}
+		},
+		true,
+	);
 
-		// Stop propagation and prevent default if we hid a popover to prevent
-		// clicks from going 'through' a backdrop and interacting with elements
-		if (didHide) {
-			event.stopPropagation();
-			event.preventDefault();
-		}
-	});
-
-	// Close dropdowns when pressing escape
-	document.addEventListener('keydown', (event) => {
-		if (event.key !== 'Escape') return;
-
-		// Hide the last popover only (in practice should be only one popover
-		// dropdown open at a time)
-		let dropdown;
-		for (dropdown of openDropdowns.get(document) ?? []);
-		if (dropdown) {
-			dropdown.hidePopover();
-			event.preventDefault();
-		}
-	});
+	// This is needed to make light dismiss work prior to iOS 18.3
+	document.addEventListener('pointerdown', function () {});
 });
 
 /**
@@ -136,11 +131,7 @@ export function DropdownContent(props: DropdownContentProps) {
 	propBuilder.setAttr('id', () => props.id ?? generateId('dropdown'));
 
 	return (
-		<div
-			{...propBuilder.merge(rest)}
-			class={cx('c-dropdown__content', rest.class)}
-			popover="manual"
-		>
+		<div {...propBuilder.merge(rest)} class={cx('c-dropdown__content', rest.class)} popover>
 			<div class="c-dropdown__children">{local.children}</div>
 			<div class="c-dropdown__footer">
 				<GhostButton class="v-input-sm" onClick={closePopover} unsetFormInput>
