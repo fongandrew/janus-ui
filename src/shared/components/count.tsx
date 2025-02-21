@@ -1,5 +1,5 @@
 import cx from 'classix';
-import { createMemo, type JSX } from 'solid-js';
+import { createMemo, type JSX, splitProps } from 'solid-js';
 
 export interface CountProps extends JSX.HTMLAttributes<HTMLSpanElement> {
 	/** Count */
@@ -18,21 +18,22 @@ export interface CountProps extends JSX.HTMLAttributes<HTMLSpanElement> {
 }
 
 export function Count(props: CountProps) {
-	const digits = () => props.digits ?? 1;
+	const [local, rest] = splitProps(props, ['value', 'digits', 'label']);
+	const digits = () => local.digits ?? 1;
 	const truncated = createMemo(() => {
 		const limit = Math.pow(10, digits()) - 1;
-		return props.value > limit ? `${limit}+` : props.value;
+		return local.value > limit ? `${limit}+` : local.value;
 	});
 	const label = createMemo(() => {
-		if (typeof props.label === 'function') {
-			return props.label(truncated());
+		if (typeof local.label === 'function') {
+			return local.label(truncated());
 		}
-		return `${truncated()} ${props.label}`;
+		return `${truncated()} ${local.label}`;
 	});
 	return (
-		<span {...props} class={cx('o-badge', props.class)} aria-label={label()}>
+		<span {...rest} class={cx('o-badge', rest.class)} aria-label={label()}>
 			{/* Fixed width, +1 ch for width because of `+` sign */}
-			<span class="t-inline-block" style={{ width: `${digits() + 1}ch` }}>
+			<span class="t-block" style={{ width: `${digits() + 1}ch` }}>
 				{truncated()}
 			</span>
 		</span>
