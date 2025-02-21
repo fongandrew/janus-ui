@@ -2,9 +2,9 @@ import '~/shared/utility/use-data-kb-nav';
 
 import cx from 'classix';
 import { createMemo, type JSX, splitProps } from 'solid-js';
+import { createUniqueId } from 'solid-js';
 
 import { LIST_OPTION_VALUE_ATTR } from '~/shared/components/option-list-control';
-import { generateId } from '~/shared/utility/id-generator';
 
 export interface OptionListProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	/** Make role required */
@@ -37,7 +37,7 @@ export interface OptionListItemProps<TElement> extends JSX.HTMLAttributes<TEleme
 /** Option list item, meant for use in Listbox-like components */
 export function OptionListItem(props: OptionListItemProps<HTMLDivElement>) {
 	const [local, rest] = splitProps(props, ['value']);
-	const id = createMemo(() => props.id || generateId('option'));
+	const id = createMemo(() => props.id || createUniqueId());
 	return (
 		<div
 			{...useOptionListItemProps(id(), local.value)}
@@ -50,7 +50,7 @@ export function OptionListItem(props: OptionListItemProps<HTMLDivElement>) {
 /** Button list item, meant for use in Menu-like components */
 export function OptionListButton(props: OptionListItemProps<HTMLButtonElement>) {
 	const [local, rest] = splitProps(props, ['value']);
-	const id = createMemo(() => props.id || generateId('option'));
+	const id = createMemo(() => props.id || createUniqueId());
 	return (
 		<button
 			{...useOptionListItemProps(id(), local.value)}
@@ -63,7 +63,7 @@ export function OptionListButton(props: OptionListItemProps<HTMLButtonElement>) 
 /** Anchor link list item, meant for use in Menu-like components */
 export function OptionListAnchor(props: OptionListItemProps<HTMLAnchorElement> & { href: string }) {
 	const [local, rest] = splitProps(props, ['value']);
-	const id = createMemo(() => props.id || generateId('option'));
+	const id = createMemo(() => props.id || createUniqueId());
 	return (
 		<a
 			{...useOptionListItemProps(id(), local.value)}
@@ -79,7 +79,7 @@ export interface OptionGroupProps extends JSX.HTMLAttributes<HTMLDivElement> {
 
 /** A group of option list items */
 export function OptionListGroup(props: OptionGroupProps) {
-	const headingId = generateId('option-group-heading');
+	const headingId = createUniqueId();
 	const [local, rest] = splitProps(props, ['heading']);
 	return (
 		<>

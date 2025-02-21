@@ -11,11 +11,10 @@ import {
 } from '@floating-ui/dom';
 import cx from 'classix';
 import { createMemo, type JSX, splitProps } from 'solid-js';
-import { createEffect, createSignal, onCleanup } from 'solid-js';
+import { createEffect, createSignal, createUniqueId, onCleanup } from 'solid-js';
 
 import { type FormElementControl } from '~/shared/components/form-element-control';
 import { FormElementProvider } from '~/shared/components/form-element-provider';
-import { generateId } from '~/shared/utility/id-generator';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 
 export const TOOLTIP_ARROW_ATTR = 'data-tooltip-arrow';
@@ -135,7 +134,7 @@ export function Tooltip(props: TooltipProps) {
 		hide();
 	};
 
-	const tooltipId = createMemo(() => rest.id || generateId('tooltip'));
+	const tooltipId = createMemo(() => rest.id || createUniqueId());
 
 	const triggerCtrlRef = (control: FormElementControl) => {
 		control.addRef(setTrigger);

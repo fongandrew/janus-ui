@@ -1,12 +1,11 @@
 import cx from 'classix';
-import { createSignal, splitProps } from 'solid-js';
+import { createSignal, createUniqueId, splitProps } from 'solid-js';
 
 import { Input, type InputProps } from '~/shared/components/input';
 import { SelectContainer } from '~/shared/components/select-container';
 import { SelectControl } from '~/shared/components/select-control';
 import { SelectOptionList } from '~/shared/components/select-option-list';
 import { SelectText } from '~/shared/components/select-text';
-import { generateId } from '~/shared/utility/id-generator';
 
 export interface SelectTypeaheadProps extends Omit<InputProps, 'onValidate'> {
 	/** Name for form submission */
@@ -40,7 +39,7 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 	);
 	const selectControl = new SelectControl(listBoxProps);
 
-	const descriptionId = generateId('select-description');
+	const descriptionId = createUniqueId();
 	selectControl.extAttr('aria-describedby', descriptionId);
 
 	const [input, setInput] = createSignal('');

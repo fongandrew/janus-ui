@@ -1,15 +1,15 @@
 import cx from 'classix';
 import { children, createMemo, createRenderEffect, createSignal, type JSX } from 'solid-js';
+import { createUniqueId } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 
 import { useFormElement } from '~/shared/components/form-element-context';
 import { isFormControl } from '~/shared/utility/element-types';
-import { generateId } from '~/shared/utility/id-generator';
 import { spanify } from '~/shared/utility/solid/spanify';
 
 export function Label(props: JSX.LabelHTMLAttributes<HTMLLabelElement>) {
 	const formElement = useFormElement();
-	const id = createMemo(() => props.id ?? generateId('label'));
+	const id = createMemo(() => props.id ?? createUniqueId());
 
 	// Two modes: Render an actual `label` element with a `for` attribute, or a
 	// `span` element with an `aria-labelledby` attribute. The latter is used when

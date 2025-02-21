@@ -1,9 +1,9 @@
 import { type JSX } from 'solid-js';
+import { createUniqueId } from 'solid-js';
 
 import { ListBoxControl, type ListBoxProps } from '~/shared/components/list-box-control';
 import { OptionListControl } from '~/shared/components/option-list-control';
 import { isTextInput } from '~/shared/utility/element-types';
-import { generateId } from '~/shared/utility/id-generator';
 
 /** Base props for ComboBox are identical to ListBox for now */
 export type ComboBoxProps = ListBoxProps;
@@ -47,7 +47,7 @@ export class ComboBoxControl<
 			},
 		});
 		this.listCtrl.setAttr('role', 'listbox');
-		this.listCtrl.defaultAttr('id', () => generateId('combobox-list'));
+		this.listCtrl.defaultAttr('id', () => createUniqueId());
 
 		this.setAttr('role', 'combobox');
 		this.setAttr('aria-autocomplete', 'list');

@@ -10,13 +10,13 @@ import {
 	splitProps,
 	useContext,
 } from 'solid-js';
+import { createUniqueId } from 'solid-js';
 
 import { Button, type ButtonProps, IconButton } from '~/shared/components/button';
 import { FormContextProvider } from '~/shared/components/form-context-provider';
 import { FORM_CONTROL_ATTR } from '~/shared/components/form-element-control';
 import { ModalContext, type ModalContextValue } from '~/shared/components/modal-context';
 import { firstFocusable } from '~/shared/utility/focusables';
-import { generateId } from '~/shared/utility/id-generator';
 import { pullLast } from '~/shared/utility/list';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { createMountedSignal } from '~/shared/utility/solid/create-mounted-signal';
@@ -115,7 +115,7 @@ export function Modal(props: DialogProps) {
 	const [local, rest] = splitProps(props, ['children', 'id', 'open']);
 
 	// Auto-generate ID if needed
-	const id = createMemo(() => local.id ?? generateId('modal'));
+	const id = createMemo(() => local.id ?? createUniqueId());
 
 	// Modal context that'll be accessible to child components
 	const requestCloseCallbacks: DialogProps['onRequestClose'][] = [];

@@ -10,13 +10,12 @@ import {
 } from '@floating-ui/dom';
 import cx from 'classix';
 import { createContext, type JSX, splitProps, useContext } from 'solid-js';
-import { createEffect, createSignal, onCleanup } from 'solid-js';
+import { createEffect, createSignal, createUniqueId, onCleanup } from 'solid-js';
 
 import { GhostButton } from '~/shared/components/button';
 import { type FormElementControl } from '~/shared/components/form-element-control';
 import { FormElementProvider } from '~/shared/components/form-element-provider';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
-import { generateId } from '~/shared/utility/id-generator';
 import { evtWin } from '~/shared/utility/multi-view';
 import {
 	createEventDelegate,
@@ -128,7 +127,7 @@ export function DropdownContent(props: DropdownContentProps) {
 	const [local, rest] = splitProps(props, ['children']);
 
 	const propBuilder = useContext(DropdownContentContext) ?? new PropBuilder<'div'>();
-	propBuilder.setAttr('id', () => props.id ?? generateId('dropdown'));
+	propBuilder.setAttr('id', () => props.id ?? createUniqueId());
 
 	return (
 		<div {...propBuilder.merge(rest)} class={cx('c-dropdown__content', rest.class)} popover>

@@ -1,8 +1,8 @@
 import cx from 'classix';
 import { children, createMemo, type JSX } from 'solid-js';
+import { createUniqueId } from 'solid-js';
 
 import { useFormElement } from '~/shared/components/form-element-context';
-import { generateId } from '~/shared/utility/id-generator';
 
 export interface ErrorMessageProps extends JSX.HTMLAttributes<HTMLDivElement> {}
 
@@ -10,7 +10,7 @@ export interface ErrorMessageProps extends JSX.HTMLAttributes<HTMLDivElement> {}
  * Displays error message for this input group if any
  */
 export function ErrorMessage(props: ErrorMessageProps) {
-	const id = createMemo(() => props.id || generateId('error'));
+	const id = createMemo(() => props.id || createUniqueId());
 	const formControl = useFormElement();
 
 	const resolvedErrorMsg = children(() => {

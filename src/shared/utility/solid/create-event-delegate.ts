@@ -1,7 +1,6 @@
-import { createEffect, onCleanup } from 'solid-js';
+import { createEffect, createUniqueId, onCleanup } from 'solid-js';
 
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
-import { generateId } from '~/shared/utility/id-generator';
 import { createMountedSignal } from '~/shared/utility/solid/create-mounted-signal';
 
 /** Prefix for magic attribute used to identify elements with attached event delegates */
@@ -30,7 +29,7 @@ export function createEventDelegate<TEvent extends keyof DocumentEventMap, TProp
 	options?: boolean | AddEventListenerOptions,
 ) {
 	/** Unique ID used to identify element has handler for this callback */
-	const eventId = generateId(eventType);
+	const eventId = createUniqueId();
 
 	/** Magic attribute for identifying elements with event delegate attached */
 	const eventDelegateAttr = `${EVENT_DELEGATE_ATTR_PREFIX}-${eventId}`;

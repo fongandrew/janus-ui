@@ -1,11 +1,11 @@
 import { createRenderEffect, type JSX, useContext } from 'solid-js';
+import { createUniqueId } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import { FormContext } from '~/shared/components/form-context';
 import { useFormElement } from '~/shared/components/form-element-context';
 import { FormElementControl, type Validator } from '~/shared/components/form-element-control';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
-import { generateId } from '~/shared/utility/id-generator';
 import { unreactivePropAccess } from '~/shared/utility/solid/unreactive-prop-access';
 
 export type FormElementProps<
@@ -98,7 +98,7 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 	control.rmAttr('unsetFormInput');
 
 	// Default ID
-	control.setAttr('id', () => props.id ?? generateId('form-elm'));
+	control.setAttr('id', () => props.id ?? createUniqueId());
 
 	// Switch disabled to aria-disabled if it exists (and we're on the client)
 	// so screen reader can still get useful info about the disabled component

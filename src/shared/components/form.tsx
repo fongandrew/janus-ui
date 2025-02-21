@@ -1,4 +1,5 @@
 import { createMemo, createRenderEffect, type JSX, splitProps, useContext } from 'solid-js';
+import { createUniqueId } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import { createFormContext, FormContext } from '~/shared/components/form-context';
@@ -9,9 +10,9 @@ import {
 } from '~/shared/components/form-element-control';
 import { FormError } from '~/shared/components/form-error';
 import { type BoundCallbackUnion, callBound } from '~/shared/utility/bound-callbacks';
-import { generateId } from '~/shared/utility/id-generator';
 import { evtWin } from '~/shared/utility/multi-view';
 import { handleEvent } from '~/shared/utility/solid/handle-event';
+
 /** Same as form data but the names are typed */
 export interface TypedFormData<TNames> {
 	append(key: TNames, value: string | Blob): void;
@@ -46,7 +47,7 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 	const [local, rest] = splitProps(props, ['names', 'onReset', 'onSubmit']);
 
 	const context = useContext(FormContext) ?? createFormContext();
-	const id = createMemo(() => props.id ?? generateId('form'));
+	const id = createMemo(() => props.id ?? createUniqueId());
 	createRenderEffect(() => {
 		context.idSig[1](id());
 	});

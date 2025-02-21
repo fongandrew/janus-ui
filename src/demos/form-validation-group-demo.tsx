@@ -1,4 +1,4 @@
-import { createSignal, Show } from 'solid-js';
+import { createSignal, createUniqueId, Show } from 'solid-js';
 
 import {
 	Card,
@@ -18,7 +18,6 @@ import { Label } from '~/shared/components/label';
 import { LabelStack } from '~/shared/components/label-stack';
 import { LabelledInput } from '~/shared/components/labelled-control';
 import { Password } from '~/shared/components/password';
-import { generateId } from '~/shared/utility/id-generator';
 
 export function FormValidationGroupDemo() {
 	const [formData, setFormData] = createSignal<{
@@ -53,7 +52,7 @@ export function FormValidationGroupDemo() {
 		return null;
 	};
 
-	const password1Id = generateId('password');
+	const password1Id = createUniqueId();
 	const matchesPassword1: Validator<HTMLInputElement> = (value, event) => {
 		const input = event.delegateTarget.ownerDocument.getElementById(password1Id);
 		if (!input) return null;

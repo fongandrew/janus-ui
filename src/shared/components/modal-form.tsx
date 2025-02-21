@@ -1,4 +1,5 @@
 import { createEffect, createSignal, type JSX, Show, splitProps, useContext } from 'solid-js';
+import { createUniqueId } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 
 import { type ButtonProps } from '~/shared/components/button';
@@ -8,7 +9,6 @@ import { getControlElements, isTouched } from '~/shared/components/form-element-
 import { ModalCloseButton, ModalContent } from '~/shared/components/modal';
 import { ModalContext } from '~/shared/components/modal-context';
 import { ModalSpeedBump, type ModalSpeedBumpProps } from '~/shared/components/modal-speed-bump';
-import { generateId } from '~/shared/utility/id-generator';
 import { combineEventHandlers } from '~/shared/utility/solid/combine-event-handlers';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { T } from '~/shared/utility/text/t-components';
@@ -87,7 +87,7 @@ export function ModalFormContent<TNames extends string>(props: ModalFormContentP
 		return true;
 	});
 
-	const id = generateId('modal-form');
+	const id = createUniqueId();
 	return (
 		<>
 			<ModalContent {...modalProps}>

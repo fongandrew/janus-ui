@@ -1,4 +1,5 @@
 import { type JSX, onMount, splitProps } from 'solid-js';
+import { createUniqueId } from 'solid-js';
 
 import { DropdownContent } from '~/shared/components/dropdown';
 import {
@@ -9,7 +10,6 @@ import {
 } from '~/shared/components/option-list';
 import { OptionListControl } from '~/shared/components/option-list-control';
 import { createTextMatcher } from '~/shared/utility/create-text-matcher';
-import { generateId } from '~/shared/utility/id-generator';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 
 export interface MenuProps extends JSX.HTMLAttributes<HTMLDivElement> {
@@ -103,18 +103,12 @@ export interface MenuItemProps extends JSX.HTMLAttributes<HTMLButtonElement> {
 
 /** A single menu item */
 export function MenuItem(props: MenuItemProps) {
-	return (
-		<OptionListButton
-			role="menuitem"
-			{...props}
-			value={props.value ?? generateId('menu-item')}
-		/>
-	);
+	return <OptionListButton role="menuitem" {...props} value={props.value ?? createUniqueId()} />;
 }
 
 /** Menu item variant that's a link */
 export function MenuItemLink(props: JSX.HTMLAttributes<HTMLAnchorElement> & { href: string }) {
-	return <OptionListAnchor role="menuitem" value={generateId('menu-item')} {...props} />;
+	return <OptionListAnchor role="menuitem" value={createUniqueId()} {...props} />;
 }
 
 /** No need for any changes to this. Just alias for use with menus */

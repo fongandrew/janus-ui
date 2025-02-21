@@ -1,6 +1,7 @@
 import cx from 'classix';
 import { Check } from 'lucide-solid';
 import { For, type JSX, splitProps } from 'solid-js';
+import { createUniqueId } from 'solid-js';
 
 import {
 	type FormElementProps,
@@ -9,7 +10,6 @@ import {
 import { ListBoxControl } from '~/shared/components/list-box-control';
 import { OptionList, OptionListGroup, OptionListItem } from '~/shared/components/option-list';
 import { createTextMatcher } from '~/shared/utility/create-text-matcher';
-import { generateId } from '~/shared/utility/id-generator';
 
 export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'> {
 	/** Name for form submission */
@@ -98,7 +98,7 @@ export function ListBoxItem(props: ListBoxItemProps) {
 		<OptionListItem
 			{...props}
 			class={cx(props.class, 'c-list-box__item')}
-			value={props.value ?? generateId('list-box-item')}
+			value={props.value ?? createUniqueId()}
 		>
 			<div role="presentation" class="c-list-box__check-box">
 				<Check />
