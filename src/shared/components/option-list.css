@@ -22,6 +22,12 @@
 		@mixin v-text-sm;
 
 		cursor: pointer;
+
+		/*
+			Undo default color transitions for buttons. It's a bit much when used
+			in a highlight item context.
+		*/
+		transition: none;
 	}
 
 	a.c-option-list__item {
