@@ -5,6 +5,7 @@ export function mountRoot(fn: () => JSX.Element, id = 'root') {
 	const root = document.getElementById(id);
 	if (root instanceof HTMLElement) {
 		render(fn, root);
+		return;
 	}
 
 	throw new Error(
