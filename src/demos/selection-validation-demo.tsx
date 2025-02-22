@@ -12,7 +12,6 @@ import { Description } from '~/shared/components/description';
 import { Form } from '~/shared/components/form';
 import { ResetButton, SubmitButton } from '~/shared/components/form-buttons';
 import { Label } from '~/shared/components/label';
-import { LabelStack } from '~/shared/components/label-stack';
 import { LabelledInput } from '~/shared/components/labelled-control';
 import { ListBox, ListBoxItem } from '~/shared/components/list-box';
 import { Select } from '~/shared/components/select';
@@ -100,18 +99,18 @@ export function SelectionValidationDemo() {
 								</CardHeader>
 								<CardContent>
 									<div class="o-stack">
-										<LabelStack>
+										<div class="o-label-stack">
 											<Label>Selected fruits</Label>
 											<Description>
 												{formData()?.fruits.join(', ')}
 											</Description>
-										</LabelStack>
-										<LabelStack>
+										</div>
+										<div class="o-label-stack">
 											<Label>Selected colors</Label>
 											<Description>
 												{formData()?.colors.join(', ')}
 											</Description>
-										</LabelStack>
+										</div>
 									</div>
 								</CardContent>
 							</Card>

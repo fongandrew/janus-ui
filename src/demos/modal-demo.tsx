@@ -13,7 +13,6 @@ import { Description } from '~/shared/components/description';
 import { type TypedFormData } from '~/shared/components/form';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
-import { LabelStack } from '~/shared/components/label-stack';
 import { LabelledInline, LabelledInput } from '~/shared/components/labelled-control';
 import { ListBoxItem } from '~/shared/components/list-box';
 import {
@@ -151,18 +150,18 @@ function FormModal() {
 							</CardHeader>
 							<CardContent>
 								<div class="o-stack">
-									<LabelStack>
+									<div class="o-label-stack">
 										<Label>Name</Label>
 										<Description>{formData()?.name}</Description>
-									</LabelStack>
-									<LabelStack>
+									</div>
+									<div class="o-label-stack">
 										<Label>Email</Label>
 										<Description>{formData()?.email}</Description>
-									</LabelStack>
-									<LabelStack>
+									</div>
+									<div class="o-label-stack">
 										<Label>Message</Label>
 										<Description>{formData()?.message}</Description>
-									</LabelStack>
+									</div>
 								</div>
 							</CardContent>
 						</Card>

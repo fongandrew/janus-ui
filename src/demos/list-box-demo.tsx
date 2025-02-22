@@ -7,10 +7,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '~/shared/components/card';
-import { Description } from '~/shared/components/description';
-import { ErrorMessage } from '~/shared/components/error-message';
-import { Label } from '~/shared/components/label';
-import { LabelStack } from '~/shared/components/label-stack';
+import { LabelledInput } from '~/shared/components/labelled-control';
 import { ListBox, ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
 
 function ListBoxDemo() {
@@ -25,23 +22,22 @@ function ListBoxDemo() {
 			</CardHeader>
 			<CardContent>
 				<div class="o-stack">
-					<LabelStack>
-						<Label>Single selection</Label>
-						<Description>
-							Selected: {Array.from(values()).join(', ') || 'None'}
-						</Description>
+					<LabelledInput
+						label="Single selection"
+						description={`Selected: ${Array.from(values()).join(', ') || 'None'}`}
+					>
 						<ListBox name="single-listbox" values={values()} onValues={setValues}>
 							<ListBoxItem value="apple">Apple</ListBoxItem>
 							<ListBoxItem value="banana">Banana</ListBoxItem>
 							<ListBoxItem value="orange">Orange</ListBoxItem>
 						</ListBox>
-					</LabelStack>
+					</LabelledInput>
 
-					<LabelStack>
-						<Label>Multiple selection</Label>
-						<Description>
-							Selected: {Array.from(multiValues()).join(', ') || 'None'}
-						</Description>
+					<LabelledInput
+						label="Multiple selection"
+						description={`Selected: ${Array.from(multiValues()).join(', ') || 'None'}`}
+						errorMessage={multiValues().has('red') ? "Don't pick red." : null}
+					>
 						<ListBox
 							name="multi-listbox"
 							values={multiValues()}
@@ -57,18 +53,14 @@ function ListBoxDemo() {
 								<ListBoxItem value="blue">Blue</ListBoxItem>
 							</ListBoxGroup>
 						</ListBox>
-						<ErrorMessage>
-							{multiValues().has('red') ? "Don't pick red." : null}
-						</ErrorMessage>
-					</LabelStack>
+					</LabelledInput>
 
-					<LabelStack>
-						<Label>Disabled selection</Label>
+					<LabelledInput label="Disabled selection">
 						<ListBox disabled name="disabled-listbox" values={new Set(['fixed'])}>
 							<ListBoxItem value="fixed">Can't change me</ListBoxItem>
 							<ListBoxItem value="different">Can't pick me</ListBoxItem>
 						</ListBox>
-					</LabelStack>
+					</LabelledInput>
 				</div>
 			</CardContent>
 		</Card>

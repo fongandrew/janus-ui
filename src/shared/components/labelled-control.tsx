@@ -1,9 +1,10 @@
+import cx from 'classix';
 import { type JSX, splitProps } from 'solid-js';
 
 import { Description } from '~/shared/components/description';
 import { ErrorMessage } from '~/shared/components/error-message';
+import { FormElementProvider } from '~/shared/components/form-element-provider';
 import { Label } from '~/shared/components/label';
-import { LabelStack } from '~/shared/components/label-stack';
 
 export interface LabelledInputProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	/** The actual label */
@@ -20,12 +21,14 @@ export interface LabelledInputProps extends JSX.HTMLAttributes<HTMLDivElement> {
 export function LabelledInput(props: LabelledInputProps) {
 	const [local, rest] = splitProps(props, ['label', 'description', 'errorMessage', 'children']);
 	return (
-		<LabelStack {...rest}>
-			<Label>{local.label}</Label>
-			{local.description ? <Description>{local.description}</Description> : null}
-			{local.children}
-			<ErrorMessage>{local.errorMessage}</ErrorMessage>
-		</LabelStack>
+		<FormElementProvider>
+			<div {...rest} class={cx('o-label-stack', rest.class)}>
+				<Label>{local.label}</Label>
+				{local.description ? <Description>{local.description}</Description> : null}
+				{local.children}
+				<ErrorMessage>{local.errorMessage}</ErrorMessage>
+			</div>
+		</FormElementProvider>
 	);
 }
 
@@ -33,12 +36,14 @@ export function LabelledInput(props: LabelledInputProps) {
 export function LabelledInline(props: Omit<LabelledInputProps, 'description'>) {
 	const [local, rest] = splitProps(props, ['label', 'errorMessage', 'children']);
 	return (
-		<LabelStack {...rest}>
-			<Label>
-				{local.children}
-				{local.label}
-			</Label>
-			<ErrorMessage>{local.errorMessage}</ErrorMessage>
-		</LabelStack>
+		<FormElementProvider>
+			<div {...rest} class={cx('o-label-stack', rest.class)}>
+				<Label>
+					{local.children}
+					{local.label}
+				</Label>
+				<ErrorMessage>{local.errorMessage}</ErrorMessage>
+			</div>
+		</FormElementProvider>
 	);
 }

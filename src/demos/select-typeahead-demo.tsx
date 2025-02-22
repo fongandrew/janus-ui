@@ -7,10 +7,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '~/shared/components/card';
-import { Description } from '~/shared/components/description';
-import { ErrorMessage } from '~/shared/components/error-message';
-import { Label } from '~/shared/components/label';
-import { LabelStack } from '~/shared/components/label-stack';
+import { LabelledInput } from '~/shared/components/labelled-control';
 import { ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
 import { SelectTypeahead } from '~/shared/components/select-typeahead';
 
@@ -36,11 +33,10 @@ function SelectTypeaheadDemo() {
 			</CardHeader>
 			<CardContent>
 				<div class="o-stack">
-					<LabelStack>
-						<Label>Single selection</Label>
-						<Description>
-							Selected: {Array.from(value()).join(', ') || 'None'}
-						</Description>
+					<LabelledInput
+						label="Single selection"
+						description={`Selected: ${Array.from(value()).join(', ') || 'None'}`}
+					>
 						<SelectTypeahead
 							placeholder="Select a fruit..."
 							values={value()}
@@ -51,13 +47,13 @@ function SelectTypeaheadDemo() {
 								{(part) => <ListBoxItem value={part}>{part}</ListBoxItem>}
 							</For>
 						</SelectTypeahead>
-					</LabelStack>
+					</LabelledInput>
 
-					<LabelStack>
-						<Label>Multiple selection</Label>
-						<Description>
-							Selected: {Array.from(multiValue()).join(', ') || 'None'}
-						</Description>
+					<LabelledInput
+						label="Multiple selection"
+						description={`Selected: ${Array.from(multiValue()).join(', ') || 'None'}`}
+						errorMessage={multiValue().has('red') ? "Don't pick red." : null}
+					>
 						<SelectTypeahead
 							aria-invalid={multiValue().has('red')}
 							placeholder="Select colors..."
@@ -77,24 +73,19 @@ function SelectTypeaheadDemo() {
 								</ListBoxGroup>
 							</Show>
 						</SelectTypeahead>
-						<ErrorMessage>
-							{multiValue().has('red') ? "Don't pick red." : null}
-						</ErrorMessage>
-					</LabelStack>
+					</LabelledInput>
 
-					<LabelStack>
-						<Label>Disabled selection</Label>
+					<LabelledInput label="Disabled selection">
 						<SelectTypeahead disabled values={new Set(['fixed'])}>
 							<ListBoxItem value="fixed">Can't change me</ListBoxItem>
 							<ListBoxItem value="different">Can't pick me</ListBoxItem>
 						</SelectTypeahead>
-					</LabelStack>
+					</LabelledInput>
 
-					<LabelStack>
-						<Label>Long selection list</Label>
-						<Description>
-							Selected: {Array.from(value()).join(', ') || 'None'}
-						</Description>
+					<LabelledInput
+						label="Long selection list"
+						description={`Selected: ${Array.from(value()).join(', ') || 'None'}`}
+					>
 						<SelectTypeahead
 							placeholder="Select an option..."
 							values={value()}
@@ -104,12 +95,11 @@ function SelectTypeaheadDemo() {
 								{(i) => <ListBoxItem value={String(i)}>Option {i}</ListBoxItem>}
 							</For>
 						</SelectTypeahead>
-					</LabelStack>
+					</LabelledInput>
 
-					<LabelStack>
-						<Label>Select with no matches</Label>
+					<LabelledInput label="Select with no matches">
 						<SelectTypeahead placeholder="Won't match" />
-					</LabelStack>
+					</LabelledInput>
 				</div>
 			</CardContent>
 		</Card>

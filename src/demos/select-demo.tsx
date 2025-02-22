@@ -7,10 +7,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '~/shared/components/card';
-import { Description } from '~/shared/components/description';
-import { ErrorMessage } from '~/shared/components/error-message';
-import { Label } from '~/shared/components/label';
-import { LabelStack } from '~/shared/components/label-stack';
+import { LabelledInput } from '~/shared/components/labelled-control';
 import { ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
 import { Select } from '~/shared/components/select';
 
@@ -28,11 +25,10 @@ function SelectDemo() {
 			</CardHeader>
 			<CardContent>
 				<div class="o-stack">
-					<LabelStack>
-						<Label>Single selection</Label>
-						<Description>
-							Selected: {Array.from(value()).join(', ') || 'None'}
-						</Description>
+					<LabelledInput
+						label="Single selection"
+						description={`Selected: ${Array.from(value()).join(', ') || 'None'}`}
+					>
 						<Select
 							placeholder="Select a fruit..."
 							values={value()}
@@ -42,13 +38,13 @@ function SelectDemo() {
 							<ListBoxItem value="banana">Banana</ListBoxItem>
 							<ListBoxItem value="orange">Orange</ListBoxItem>
 						</Select>
-					</LabelStack>
+					</LabelledInput>
 
-					<LabelStack>
-						<Label>Multiple selection</Label>
-						<Description>
-							Selected: {Array.from(multiValue()).join(', ') || 'None'}
-						</Description>
+					<LabelledInput
+						label="Multiple selection"
+						description={`Selected: ${Array.from(multiValue()).join(', ') || 'None'}`}
+						errorMessage={multiValue().has('red') ? "Don't pick red." : null}
+					>
 						<Select
 							aria-invalid={multiValue().has('red')}
 							placeholder="Select colors..."
@@ -64,16 +60,12 @@ function SelectDemo() {
 								<ListBoxItem value="blue">Blue</ListBoxItem>
 							</ListBoxGroup>
 						</Select>
-						<ErrorMessage>
-							{multiValue().has('red') ? "Don't pick red." : null}
-						</ErrorMessage>
-					</LabelStack>
+					</LabelledInput>
 
-					<LabelStack>
-						<Label>Long selection list</Label>
-						<Description>
-							Selected: {Array.from(value()).join(', ') || 'None'}
-						</Description>
+					<LabelledInput
+						label="Long selection list"
+						description={`Selected: ${Array.from(value()).join(', ') || 'None'}`}
+					>
 						<Select
 							placeholder="Select an option..."
 							values={value()}
@@ -83,15 +75,14 @@ function SelectDemo() {
 								{(i) => <ListBoxItem value={String(i)}>Option {i}</ListBoxItem>}
 							</For>
 						</Select>
-					</LabelStack>
+					</LabelledInput>
 
-					<LabelStack>
-						<Label>Disabled selection</Label>
+					<LabelledInput label="Disabled selection">
 						<Select disabled values={new Set(['fixed'])}>
 							<ListBoxItem value="fixed">Can't change me</ListBoxItem>
 							<ListBoxItem value="different">Can't pick me</ListBoxItem>
 						</Select>
-					</LabelStack>
+					</LabelledInput>
 				</div>
 			</CardContent>
 		</Card>

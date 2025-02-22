@@ -4,5 +4,13 @@
 	.c-description {
 		@mixin t-overflow-x;
 		@mixin t-text-muted;
+
+		.o-label-stack > & {
+			padding-inline: var(--v-space-xs);
+		}
+
+		.o-label-stack > .c-label + & {
+			margin-top: 0;
+		}
 	}
 }

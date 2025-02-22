@@ -14,7 +14,6 @@ import { Form, type TypedSubmitEvent } from '~/shared/components/form';
 import { ResetButton, SubmitButton } from '~/shared/components/form-buttons';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
-import { LabelStack } from '~/shared/components/label-stack';
 import { LabelledInline, LabelledInput } from '~/shared/components/labelled-control';
 import { Textarea } from '~/shared/components/textarea';
 
@@ -75,14 +74,14 @@ export function AsyncFormDemo() {
 								</CardHeader>
 								<CardContent>
 									<div class="o-stack">
-										<LabelStack>
+										<div class="o-label-stack">
 											<Label>Name</Label>
 											<Description>{formData()?.name}</Description>
-										</LabelStack>
-										<LabelStack>
+										</div>
+										<div class="o-label-stack">
 											<Label>Message</Label>
 											<Description>{formData()?.message}</Description>
-										</LabelStack>
+										</div>
 									</div>
 								</CardContent>
 							</Card>

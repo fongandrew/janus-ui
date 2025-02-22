@@ -1,4 +1,5 @@
 import { createEffect, createUniqueId, onCleanup } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { createMountedSignal } from '~/shared/utility/solid/create-mounted-signal';
@@ -28,6 +29,8 @@ export function createEventDelegate<TEvent extends keyof DocumentEventMap, TProp
 	callback: (event: DocumentEventMap[TEvent] & EventDelegateProps<TProps>) => any,
 	options?: boolean | AddEventListenerOptions,
 ) {
+	if (isServer) return () => {};
+
 	/** Unique ID used to identify element has handler for this callback */
 	const eventId = createUniqueId();
 

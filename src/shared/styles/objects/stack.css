@@ -12,9 +12,23 @@
 	}
 }
 
+/* Label stacks are used for form inputs */
+@define-mixin o-label-stack {
+	display: flex;
+	flex-direction: column;
+
+	> * + * {
+		margin-top: var(--v-space-xs);
+	}
+}
+
 @layer objects {
 	.o-stack {
 		@mixin o-stack;
+	}
+
+	.o-label-stack {
+		@mixin o-label-stack;
 	}
 
 	.o-text-stack {

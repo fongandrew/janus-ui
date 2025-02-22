@@ -6,31 +6,29 @@
 
 		display: inline-block;
 		cursor: pointer;
-	}
 
-	.c-label:has(input) {
-		@mixin t-font-weight var(--v-font-weight-normal);
+		&:has(input) {
+			@mixin t-font-weight var(--v-font-weight-normal);
 
-		display: inline-flex;
-		align-items: flex-start;
-		gap: var(--v-inline-gap);
-	}
+			display: inline-flex;
+			align-items: flex-start;
+			gap: var(--v-inline-gap);
+		}
 
-	.c-label:has([aria-disabled='true']),
-	.c-label:has(+ [aria-disabled='true']) {
-		@mixin t-text-muted;
-	}
+		&:has([aria-disabled='true']),
+		&:has(+ [aria-disabled='true']),
+		.o-label-stack:has([aria-disabled='true']) > & {
+			@mixin t-text-muted;
+		}
 
-	.c-label:has([aria-invalid='true']),
-	.c-label:has(+ [aria-invalid='true']) {
-		@mixin t-text-danger;
-	}
+		&:has([aria-invalid='true']),
+		&:has(+ [aria-invalid='true']),
+		.o-label-stack:has([aria-invalid='true']) > & {
+			@mixin t-text-danger;
+		}
 
-	.c-label-stack:has([aria-invalid='true']) .c-label {
-		@mixin t-text-danger;
-	}
-
-	.c-label-stack:has([aria-disabled='true']) .c-label {
-		@mixin t-text-muted;
+		.o-label-stack > & {
+			padding-inline: var(--v-space-xs);
+		}
 	}
 }

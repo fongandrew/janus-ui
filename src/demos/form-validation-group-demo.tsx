@@ -15,7 +15,6 @@ import { type Validator } from '~/shared/components/form-element-control';
 import { FormValidationGroup } from '~/shared/components/form-validation-group';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
-import { LabelStack } from '~/shared/components/label-stack';
 import { LabelledInput } from '~/shared/components/labelled-control';
 import { Password } from '~/shared/components/password';
 
@@ -110,14 +109,14 @@ export function FormValidationGroupDemo() {
 								</CardHeader>
 								<CardContent>
 									<div class="o-stack">
-										<LabelStack>
+										<div class="o-label-stack">
 											<Label>Username</Label>
 											<Description>{formData()?.username}</Description>
-										</LabelStack>
-										<LabelStack>
+										</div>
+										<div class="o-label-stack">
 											<Label>Password</Label>
 											<Description>{formData()?.password}</Description>
-										</LabelStack>
+										</div>
 									</div>
 								</CardContent>
 							</Card>
