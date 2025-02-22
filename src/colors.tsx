@@ -3,12 +3,13 @@ import '~/shared/styles/index.css';
 import { alphaBlend, APCAcontrast, sRGBtoY } from 'apca-w3';
 import cx from 'classix';
 import { colorParsley } from 'colorparsley';
-import { createEffect, createSignal, type JSX, Show } from 'solid-js';
-import { Dynamic, render } from 'solid-js/web';
+import { createEffect, createSignal, type JSX, onCleanup, Show } from 'solid-js';
+import { Dynamic } from 'solid-js/web';
 
 import { App } from '~/app';
 import { Card, CardContent, CardHeader, CardTitle } from '~/shared/components/card';
 import { createIncrSignal } from '~/shared/utility/solid/create-incr-signal';
+import { mountRoot } from '~/shared/utility/solid/mount-root';
 
 /** Returns minimum APCA threshold for font size / weight combo for "fluent" text */
 function minContrast(fontSizePx: number, fontWeight: number) {
@@ -167,17 +168,25 @@ function ColorBox(props: {
 }
 
 function Main() {
-	const [value, incr] = createIncrSignal(1);
-
 	// Force rerender when styles change
+	const [value, incr] = createIncrSignal(1);
 	const observer = new MutationObserver(incr);
-	for (const style of document.querySelectorAll('style')) {
-		observer.observe(style, { childList: true });
-	}
+
+	const setMain = (el: HTMLElement | null) => {
+		const styles = el?.ownerDocument.querySelectorAll('style');
+		if (!styles) return;
+		for (const style of styles) {
+			observer.observe(style, { childList: true });
+		}
+	};
+
+	onCleanup(() => {
+		observer.disconnect();
+	});
 
 	return (
 		<App heading={<h1>Colors</h1>}>
-			<main class="o-box o-stack">
+			<main ref={setMain} class="o-box o-stack">
 				<Card>
 					<CardHeader>
 						<CardTitle>Legend</CardTitle>
@@ -367,12 +376,4 @@ function Main() {
 	);
 }
 
-const root = document.getElementById('root');
-
-if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
-	throw new Error(
-		'Root element not found. Did you forget to add it to your index.html? Or maybe the id attribute got misspelled?',
-	);
-}
-
-render(() => <Main />, root!);
+mountRoot(Main);

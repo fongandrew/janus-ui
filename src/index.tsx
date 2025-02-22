@@ -1,7 +1,6 @@
 import '~/shared/styles/index.css';
 
 import { AlertTriangle, Home, Info, Settings } from 'lucide-solid';
-import { render } from 'solid-js/web';
 
 import { App } from '~/app';
 import { AlertsDemo } from '~/demos/alerts-demo';
@@ -40,6 +39,7 @@ import {
 	SidebarListLink,
 	SidebarOpenButton,
 } from '~/shared/components/sidebar-layout';
+import { mountRoot } from '~/shared/utility/solid/mount-root';
 
 function Main() {
 	return (
@@ -117,13 +117,4 @@ function Main() {
 		</SidebarLayout>
 	);
 }
-
-const root = document.getElementById('root');
-
-if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
-	throw new Error(
-		'Root element not found. Did you forget to add it to your index.html? Or maybe the id attribute got misspelled?',
-	);
-}
-
-render(() => <Main />, root!);
+mountRoot(Main);

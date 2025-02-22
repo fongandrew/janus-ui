@@ -8,18 +8,20 @@ import {
 	TopNavList,
 	TopNavListLink,
 } from '~/shared/components/top-nav-layout';
+import { useWindow } from '~/shared/utility/solid/window-context';
 
 export interface AppProps {
 	/** Heading element */
 	heading?: JSX.Element;
 	/** What is the current path? */
-	current?: string;
+	current?: string | undefined;
 	/** Main page content */
 	children: JSX.Element;
 }
 
-function NavLink(props: { current?: string; href: string; children: JSX.Element }) {
-	const current = () => props.current ?? window.location.pathname;
+function NavLink(props: { current?: string | undefined; href: string; children: JSX.Element }) {
+	const window = useWindow();
+	const current = () => props.current ?? window?.location.pathname;
 	return (
 		<TopNavListLink
 			href={props.href}
@@ -36,9 +38,18 @@ export function App(props: AppProps) {
 			<TopNav>
 				{props.heading ?? <h1>Solid Base</h1>}
 				<TopNavList>
-					<NavLink href="/">Components</NavLink>
-					<NavLink href="/colors">Colors</NavLink>
-					<NavLink href="/typography">Typography</NavLink>
+					<NavLink current={props.current} href="/">
+						Components
+					</NavLink>
+					<NavLink current={props.current} href="/colors">
+						Colors
+					</NavLink>
+					<NavLink current={props.current} href="/typography">
+						Typography
+					</NavLink>
+					<NavLink current={props.current} href="/ssr">
+						SSR
+					</NavLink>
 				</TopNavList>
 			</TopNav>
 			{props.children}
