@@ -176,7 +176,27 @@ export default tseslint.config(
 		},
 	},
 
-	// Allow conosle log in logging
+	// Restrict certain window-specific globals to avoid SSR or multi-window issues
+	{
+		files: ['src/**/*.{js,ts,jsx,tsx}'],
+		ignores: [
+			'src/shared/utility/document-setup.ts',
+			'src/shared/utility/solid/mount-root.ts',
+			'src/shared/utility/solid/window-context.ts',
+			'**/*.test.*',
+		],
+		rules: {
+			'no-restricted-globals': [
+				'error',
+				...['window', 'document', 'history', 'location'].map((name) => ({
+					name,
+					message: `Use the document-setup utility instead`,
+				})),
+			],
+		},
+	},
+
+	// Allow console log in logging
 	{
 		// Logging files
 		files: ['**/*logger*.{js,ts,jsx,tsx}', '**/*logging*.{js,ts,jsx,tsx}'],

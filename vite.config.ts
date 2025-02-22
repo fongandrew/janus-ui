@@ -4,10 +4,11 @@ import { defineConfig } from 'vitest/config';
 
 import mangleCSSPlugin from './plugins/vite-plugin-manglecss';
 import purgeCSSPlugin from './plugins/vite-plugin-purgecss';
+import viteSSGPlugin from './plugins/vite-plugin-ssg';
 
 export default defineConfig({
 	plugins: [
-		solidPlugin(),
+		solidPlugin({ ssr: true }),
 		purgeCSSPlugin({
 			variables: true,
 			keyframes: true,
@@ -20,6 +21,7 @@ export default defineConfig({
 		mangleCSSPlugin({
 			classNamePattern: /^[cotv]-/,
 		}),
+		viteSSGPlugin(),
 	],
 	css: {
 		modules: {
