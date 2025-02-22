@@ -249,6 +249,9 @@ export class PropBuilder<
 			| (() => JSX.HTMLElementTags[keyof JSX.HTMLElementTags][TAttr]),
 	): void;
 	setAttr(attr: any, value: any) {
+		if (attr === 'id') {
+			this.idSig[1](value);
+		}
 		this.attrVals.effect(attr, value, true);
 	}
 
@@ -339,13 +342,13 @@ export class PropBuilder<
 				(attr) =>
 					createRenderEffect(() => {
 						const propValue = props?.[attr as keyof typeof props] as string | undefined;
-						const values: string[] = propValue ? [propValue] : [];
+						const values = new Set<string>(propValue ? [propValue] : []);
 						for (const val of this.attrListVals.values(attr)) {
 							if (val) {
-								values.push(val);
+								values.add(val);
 							}
 						}
-						update(attr, values.join(' '));
+						update(attr, Array.from(values).join(' '));
 					}),
 			),
 		);

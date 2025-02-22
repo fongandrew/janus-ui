@@ -98,7 +98,7 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 	control.rmAttr('unsetFormInput');
 
 	// Default ID
-	control.setAttr('id', () => props.id ?? createUniqueId());
+	control.defaultAttr('id', () => props.id ?? createUniqueId());
 
 	// Switch disabled to aria-disabled if it exists (and we're on the client)
 	// so screen reader can still get useful info about the disabled component
