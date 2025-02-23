@@ -56,14 +56,15 @@ export function Select(props: SelectProps) {
 	const handleValidate = (_value: string, event: Event & { delegateTarget: HTMLElement }) =>
 		listBoxProps.onValidate?.(selectControl.values(), event);
 
+	const selectProps = selectControl.merge({
+		...buttonProps,
+		onValidate: handleValidate,
+	});
+
 	return (
 		<SelectContainer onClear={selectControl.clear.bind(selectControl)}>
 			{() => (
-				<Button
-					{...selectControl.merge({ ...buttonProps, onValidate: handleValidate })}
-					class={cx('c-select__button', props.class)}
-					unstyled
-				>
+				<Button {...selectProps} class={cx('c-select__button', props.class)} unstyled>
 					<SelectText
 						placeholder={local.placeholder}
 						values={selectControl.values()}

@@ -129,8 +129,9 @@ export function DropdownContent(props: DropdownContentProps) {
 	const propBuilder = useContext(DropdownContentContext) ?? new PropBuilder<'div'>();
 	propBuilder.setAttr('id', () => props.id ?? createUniqueId());
 
+	const dropdownProps = propBuilder.merge(rest);
 	return (
-		<div {...propBuilder.merge(rest)} class={cx('c-dropdown__content', rest.class)} popover>
+		<div {...dropdownProps} class={cx('c-dropdown__content', rest.class)} popover>
 			<div class="c-dropdown__children">{local.children}</div>
 			<div class="c-dropdown__footer">
 				<GhostButton class="v-input-sm" onClick={closePopover} unsetFormInput>

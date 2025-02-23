@@ -64,11 +64,13 @@ export function ListBox(props: ListBoxProps) {
 	const handleValidate = (_value: string, event: Event & { delegateTarget: HTMLElement }) =>
 		local.onValidate?.(listBoxControl.values(), event);
 
+	const optionListProps = mergeFormElementProps<'div'>(
+		listBoxControl.merge({ ...rest, onValidate: handleValidate }),
+	);
+
 	return (
 		<OptionList
-			{...mergeFormElementProps<'div'>(
-				listBoxControl.merge({ ...rest, onValidate: handleValidate }),
-			)}
+			{...optionListProps}
 			role="listbox"
 			tabIndex={0}
 			class={cx('c-list-box', rest.class)}

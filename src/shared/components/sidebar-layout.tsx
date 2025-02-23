@@ -102,15 +102,16 @@ export function SidebarOpenButton() {
 		open: [open, setOpen],
 		toggleCtrl,
 	} = useSidebar();
+
+	const toggleProps = toggleCtrl.merge({
+		'aria-expanded': open() === true,
+		class: 'c-sidebar__open-button',
+		label: t`Open Sidebar`,
+		onClick: [setOpen, true],
+	});
+
 	return (
-		<IconButton
-			{...toggleCtrl.merge({
-				'aria-expanded': open() === true,
-				class: 'c-sidebar__open-button',
-				label: t`Open Sidebar`,
-				onClick: [setOpen, true],
-			})}
-		>
+		<IconButton {...toggleProps}>
 			<PanelLeftOpen />
 		</IconButton>
 	);

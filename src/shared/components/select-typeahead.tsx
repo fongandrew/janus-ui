@@ -69,16 +69,16 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 		return listBoxProps.onValidate?.(selectControl.values(), event);
 	};
 
+	const selectProps = selectControl.merge({
+		...inputProps,
+		onValidate: handleValidate,
+	});
+
 	return (
 		<SelectContainer onClear={selectControl.clear.bind(selectControl)}>
 			{() => (
 				<>
-					<Input
-						{...selectControl.merge(inputProps)}
-						class={cx('c-select__input', props.class)}
-						onValidate={handleValidate}
-						unstyled
-					/>
+					<Input {...selectProps} class={cx('c-select__input', props.class)} unstyled />
 					<div id={descriptionId} class="c-select__input_description">
 						<SelectText
 							placeholder={local.placeholder}

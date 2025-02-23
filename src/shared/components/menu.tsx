@@ -84,9 +84,10 @@ export function Menu(props: MenuProps) {
 		}
 	});
 
+	const optionListProps = optionListControl.merge({ role: 'menu' });
 	return (
 		<DropdownContent {...rest} ref={combineRefs(setDropdownRef, props.ref)}>
-			<OptionList {...optionListControl.merge({ role: 'menu' })}>{local.children}</OptionList>
+			<OptionList {...optionListProps}>{local.children}</OptionList>
 		</DropdownContent>
 	);
 }

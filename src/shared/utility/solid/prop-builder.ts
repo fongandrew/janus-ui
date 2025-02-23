@@ -291,6 +291,9 @@ export class PropBuilder<
 		props?: TProps & Record<`data-${string}`, string | undefined>,
 	): TProps {
 		if (this.merged) {
+			// If you see this error while running SSR, you may need to memoize or move
+			// the .merge() call outside of the JSX (which seems to get called more often
+			// than it is in client code)
 			useLogger().warn('PropBuilder should only be used for a single component at a time');
 			return props ?? ({} as TProps);
 		}
