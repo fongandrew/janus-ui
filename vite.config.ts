@@ -8,7 +8,7 @@ import viteSSGPlugin from './plugins/vite-plugin-ssg';
 
 export default defineConfig({
 	plugins: [
-		solidPlugin({ ssr: true }),
+		solidPlugin({ ssr: process.env.NODE_ENV !== 'test' }),
 		purgeCSSPlugin({
 			variables: true,
 			keyframes: true,

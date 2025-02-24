@@ -170,6 +170,7 @@ export default tseslint.config(
 						'defaultAttr',
 						'handle',
 						'onRequestClose',
+						'mergeProps',
 					],
 				},
 			],
