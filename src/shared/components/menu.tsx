@@ -1,4 +1,4 @@
-import { type JSX, onMount, splitProps } from 'solid-js';
+import { type JSX, splitProps } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
 import { DropdownContent } from '~/shared/components/dropdown';
@@ -8,9 +8,8 @@ import {
 	OptionListButton,
 	OptionListGroup,
 } from '~/shared/components/option-list';
-import { OptionListControl } from '~/shared/components/option-list-control';
-import { createTextMatcher } from '~/shared/utility/create-text-matcher';
-import { combineRefs } from '~/shared/utility/solid/combine-refs';
+import { MenuControl } from '~/shared/utility/controls/menu-control';
+import { useControl } from '~/shared/utility/solid/use-control';
 
 export interface MenuProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	/** Called when a menu item is selected */
@@ -24,70 +23,17 @@ export interface MenuProps extends JSX.HTMLAttributes<HTMLDivElement> {
 export function Menu(props: MenuProps) {
 	const [local, rest] = splitProps(props, ['children', 'onValue']);
 
-	/** Refs for dropdown element (which may be container and not same as option list) */
-	let dropdownRef: HTMLDivElement | null = null;
-	const setDropdownRef = (el: HTMLDivElement) => {
-		dropdownRef = el;
-	};
-
-	/**
-	 * Set up the menu as an option list control. Main differences from standard
-	 * optionList -- focus to highlight, search on keypress, hide on tab, and
-	 * hide on escape.
-	 */
-	const optionListControl = new OptionListControl({
-		onHighlight: (_id, elm) => {
-			elm.focus();
-		},
-		onSelect: (val, _elm, event) => {
-			local.onValue?.(val, event);
-			dropdownRef?.hidePopover();
+	const ctrlProps = useControl(MenuControl, {
+		onSelect: (value, _elm, event) => {
+			local.onValue?.(value, event);
 		},
 	});
 
-	/** For matching user trying to type and match input */
-	const matchText = createTextMatcher(() => optionListControl.items());
-
-	onMount(() => {
-		const menu = optionListControl.listElm();
-		if (!menu) {
-			return;
-		}
-		if (!menu.querySelector('[autofocus]')) {
-			const first = optionListControl.items()[0];
-			if (first) {
-				first.autofocus = true;
-			}
-		}
-	});
-
-	optionListControl.handle('onKeyDown', (event: KeyboardEvent) => {
-		switch (event.key) {
-			// Arrow keys handled by OptionListControl
-			// Escape key handled by poopver light dismiss
-
-			case 'Tab': {
-				// We're assuming menu is in a popover right after the trigger so the
-				// tab sequence will naturally go to the right thing. This might do
-				// weird things in a portal though. Consider passing a reference
-				// to the trigger to menu so we can correctly focus it.
-				dropdownRef?.hidePopover();
-				break;
-			}
-			default: {
-				// If here, check if we're typing a character to filter the list
-				if (event.key.length === 1) {
-					const node = matchText(event.key);
-					optionListControl.highlight(node, event);
-				}
-			}
-		}
-	});
-
-	const optionListProps = optionListControl.merge({ role: 'menu' });
 	return (
-		<DropdownContent {...rest} ref={combineRefs(setDropdownRef, props.ref)}>
-			<OptionList {...optionListProps}>{local.children}</OptionList>
+		<DropdownContent {...rest}>
+			<OptionList role="menu" {...ctrlProps}>
+				{local.children}
+			</OptionList>
 		</DropdownContent>
 	);
 }
