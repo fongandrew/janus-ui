@@ -104,8 +104,11 @@ function maybeAttachHandler(document: Document, eventType: keyof typeof DELEGATA
  * to force children to implement all methods.
  */
 export class Control<TElement extends HTMLElement = HTMLElement, TProps = {}> {
-	/** Default attributes to assign when creating a new instance of this control */
-	static initProps<T extends Record<string, any>>(_props: T) {
+	/**
+	 * Map control props (should be TProps but static methods can't reference generics)
+	 * to render props (e.g. for Solid).
+	 */
+	static mapProps<T extends Record<string, any>>(_props: T) {
 		return {};
 	}
 

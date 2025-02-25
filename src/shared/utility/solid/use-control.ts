@@ -7,12 +7,12 @@ import { useWindow } from '~/shared/utility/solid/window-context';
  * Assigns initial attributes to a Control and updates on change
  */
 export function useControl<TElement extends HTMLElement, TProps, TInitProps>(
-	ControlCls: typeof Control<TElement, TProps> & { initProps: (props: TProps) => TInitProps },
+	ControlCls: typeof Control<TElement, TProps> & { mapProps: (props: TProps) => TInitProps },
 	props: (TProps & { id?: string | undefined }) | (() => TProps & { id?: string | undefined }),
 ) {
 	const retProps = mergeProps(
 		() => ({ id: createUniqueId() }),
-		() => ControlCls.initProps(props),
+		() => ControlCls.mapProps(props),
 	);
 	const window = useWindow();
 
