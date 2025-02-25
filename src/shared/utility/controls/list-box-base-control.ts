@@ -118,6 +118,15 @@ export class ListBoxBaseControl<
 	}
 
 	/**
+	 * Handle value changes, including callbacks and events
+	 */
+	protected handleValueChange(newValues: Set<string>, event: Event) {
+		this.updateValueAttrs(newValues);
+		this.props.onValues?.(newValues, event);
+		this.listElm()?.dispatchEvent(new Event('change'));
+	}
+
+	/**
 	 * Get the currently highlighted element
 	 */
 	private currentItem() {
@@ -154,15 +163,6 @@ export class ListBoxBaseControl<
 		const currentValue = this.currentItem()?.getAttribute(LIST_OPTION_VALUE_ATTR);
 		if (typeof currentValue !== 'string' || this.values().has(currentValue)) return;
 		this.select(this.item(currentValue), event);
-	}
-
-	/**
-	 * Handle value changes, including callbacks and events
-	 */
-	private handleValueChange(newValues: Set<string>, event: Event) {
-		this.updateValueAttrs(newValues);
-		this.props.onValues?.(newValues, event);
-		this.listElm()?.dispatchEvent(new Event('change'));
 	}
 
 	/** Update attributes and other stuff based on values changing */

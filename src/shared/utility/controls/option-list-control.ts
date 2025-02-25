@@ -18,16 +18,6 @@ export interface OptionListProps {
 	onSelect?: (value: string, element: HTMLElement, event: Event) => void;
 }
 
-/** Delegated click handler */
-export function handleClick(ctrl: OptionListControl, event: MouseEvent | KeyboardEvent) {
-	ctrl.select(
-		(event.target as HTMLElement | null)?.closest(
-			`[${LIST_OPTION_VALUE_ATTR}]`,
-		) as HTMLElement | null,
-		event,
-	);
-}
-
 /**
  * Behavior for a list of options that can be navigated with arrow keys
  */

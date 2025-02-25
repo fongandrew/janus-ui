@@ -12,7 +12,7 @@ const ELEMENT_CONTROL_REF = prop('control');
 /** Assign control to node */
 export function setControl<TElement extends HTMLElement>(
 	node: TElement,
-	control: Control<TElement, any>,
+	control: Control<TElement, any> | undefined,
 ) {
 	(node as any)[ELEMENT_CONTROL_REF] = control;
 }
