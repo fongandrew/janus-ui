@@ -24,17 +24,17 @@ export class MenuControl extends OptionListControl {
 		element?.focus();
 	}
 
-	protected popover() {
-		return this.node.closest('[popover]') as HTMLElement | null;
-	}
-
 	override select(element: HTMLElement | null, event: Event): void {
 		super.select(element, event);
 		this.popover()?.hidePopover();
 	}
 
+	private popover() {
+		return this.node.closest('[popover]') as HTMLElement | null;
+	}
+
 	/** Specific arrow key actions for a menu in a popover */
-	handleMenuKeyDown(event: KeyboardEvent) {
+	private handleMenuKeyDown(event: KeyboardEvent) {
 		switch (event.key) {
 			// Arrow keys handled by OptionListControl
 			// Escape key handled by poopver light dismiss

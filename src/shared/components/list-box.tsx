@@ -9,6 +9,7 @@ import {
 } from '~/shared/components/form-element-props';
 import { OptionList, OptionListGroup, OptionListItem } from '~/shared/components/option-list';
 import { getControl } from '~/shared/utility/controls/control';
+import { HIDDEN_INPUT_CONTAINER_ATTR } from '~/shared/utility/controls/list-box-base-control';
 import { ListBoxControl } from '~/shared/utility/controls/list-box-control';
 import { useControl } from '~/shared/utility/solid/use-control';
 
@@ -67,6 +68,7 @@ export function ListBox(props: ListBoxProps) {
 				with the right text
 			*/}
 			{local.children}
+			<div {...{ [HIDDEN_INPUT_CONTAINER_ATTR]: '' }} />
 		</OptionList>
 	);
 }

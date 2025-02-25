@@ -1,5 +1,11 @@
 @import '~/shared/styles/common.css';
 
+@layer base {
+	[data-hidden-input-container] {
+		display: none;
+	}
+}
+
 @layer components {
 	.c-option-list {
 		@mixin v-text-sm;

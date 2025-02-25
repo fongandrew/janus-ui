@@ -32,6 +32,7 @@ export class ListBoxBaseControl<
 > extends OptionListControl<TProps> {
 	static override mapProps(p: ListBoxProps) {
 		return {
+			role: 'listbox',
 			'aria-multiselectable': p.multiple,
 		};
 	}
@@ -99,7 +100,6 @@ export class ListBoxBaseControl<
 
 	protected override onMount(): void {
 		super.onMount();
-		this.node.role = 'listbox';
 
 		// Set initial value attrs even if no values at all because this sets
 		// up `aria-selected="false"` and other stuff
@@ -184,7 +184,7 @@ export class ListBoxBaseControl<
 	 * user input in this list box)
 	 */
 	private updateHiddenInputs(values: Set<string> | undefined) {
-		const name = (this.node as HTMLInputElement).name;
+		const name = this.node.getAttribute('name');
 		if (name) {
 			const container = this.getHiddenInputContainer();
 
