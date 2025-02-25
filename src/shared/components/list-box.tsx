@@ -1,21 +1,20 @@
 import cx from 'classix';
 import { Check } from 'lucide-solid';
-import { For, type JSX, splitProps } from 'solid-js';
+import { For, type JSX, mergeProps, splitProps } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
 import {
 	type FormElementProps,
 	mergeFormElementProps,
 } from '~/shared/components/form-element-props';
-import { ListBoxControl } from '~/shared/components/list-box-control';
 import { OptionList, OptionListGroup, OptionListItem } from '~/shared/components/option-list';
-import { createTextMatcher } from '~/shared/utility/create-text-matcher';
+import { getControl } from '~/shared/utility/controls/control';
+import { ListBoxControl } from '~/shared/utility/controls/list-box-control';
+import { useControl } from '~/shared/utility/solid/use-control';
 
 export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'> {
 	/** Name for form submission */
 	name?: string | undefined;
-	/** Is listbox disabled? */
-	disabled?: boolean | undefined;
 	/** Currently selected values (controlled) */
 	values?: Set<string> | undefined;
 	/** Default selected values (uncontrolled) */
@@ -26,8 +25,6 @@ export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'
 	autofocus?: boolean | undefined;
 	/** Whether multiple selection is allowed */
 	multiple?: boolean | undefined;
-	/** Disables clearing selection */
-	required?: boolean | undefined;
 	/** Make children required */
 	children: JSX.Element;
 	/** Custom validation function for this element */
@@ -38,39 +35,28 @@ export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'
 }
 
 export function ListBox(props: ListBoxProps) {
-	const [local, rest] = splitProps(props, [
-		'children',
-		'name',
-		'values',
-		'defaultValues',
-		'onValues',
-		'onValidate',
-		'multiple',
-		'required',
-	]);
-	const listBoxControl = new ListBoxControl(local);
+	const [local, listBoxProps, rest] = splitProps(
+		props,
+		['children', 'onValidate'],
+		['defaultValues', 'values', 'onValues', 'multiple'],
+	);
 
-	/** For matching user trying to type and match input */
-	const matchText = createTextMatcher(() => listBoxControl.items());
-	listBoxControl.handle('onKeyDown', (event: KeyboardEvent) => {
-		// Check if we're typing a character to filter the list
-		if (event.key.length === 1) {
-			const node = matchText(event.key);
-			listBoxControl.highlight(node, event);
-		}
-	});
+	const listBoxAttrs = useControl(ListBoxControl, listBoxProps);
 
 	// Transform Set<string> validator to string validator for underlying control
-	const handleValidate = (_value: string, event: Event & { delegateTarget: HTMLElement }) =>
-		local.onValidate?.(listBoxControl.values(), event);
-
-	const optionListProps = mergeFormElementProps<'div'>(
-		listBoxControl.merge({ ...rest, onValidate: handleValidate }),
-	);
+	const handleValidate = (_value: string, event: Event & { delegateTarget: HTMLElement }) => {
+		const values = (
+			getControl(event.delegateTarget as HTMLElement) as ListBoxControl
+		)?.values();
+		return local.onValidate?.(values, event);
+	};
+	const formElementProps = mergeProps(rest, { onValidate: handleValidate });
+	const optionListProps = mergeFormElementProps<'div'>(formElementProps);
 
 	return (
 		<OptionList
 			{...optionListProps}
+			{...listBoxAttrs}
 			role="listbox"
 			tabIndex={0}
 			class={cx('c-list-box', rest.class)}
@@ -81,7 +67,6 @@ export function ListBox(props: ListBoxProps) {
 				with the right text
 			*/}
 			{local.children}
-			{local.name && <ListBoxSelections name={local.name} values={listBoxControl.values()} />}
 		</OptionList>
 	);
 }
