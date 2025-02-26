@@ -108,7 +108,7 @@ export class Control<TElement extends HTMLElement = HTMLElement, TProps = {}> {
 	 * Map control props (should be TProps but static methods can't reference generics)
 	 * to render props (e.g. for Solid).
 	 */
-	static mapProps<T extends Record<string, any>>(_props: T) {
+	static mapProps(_props: any) {
 		return {};
 	}
 

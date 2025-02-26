@@ -4,11 +4,10 @@ import { type JSX, splitProps } from 'solid-js';
 
 import { Button } from '~/shared/components/button';
 import { Dropdown } from '~/shared/components/dropdown';
+import { CLEAR_ACTION_ATTR } from '~/shared/utility/controls/list-box-base-control';
 import { t } from '~/shared/utility/text/t-tag';
 
 export interface SelectContainerProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'children'> {
-	/** Hander for clearing selection */
-	onClear: (e: MouseEvent | KeyboardEvent) => void;
 	/**
 	 * Two children required -- context and menu. And must be render funcs
 	 * because Dropdown likes it that way.
@@ -17,7 +16,7 @@ export interface SelectContainerProps extends Omit<JSX.HTMLAttributes<HTMLDivEle
 }
 
 export function SelectContainer(props: SelectContainerProps) {
-	const [local, rest] = splitProps(props, ['children', 'onClear']);
+	const [local, rest] = splitProps(props, ['children']);
 
 	return (
 		<div {...rest} class="c-select__container">
@@ -55,7 +54,7 @@ export function SelectContainer(props: SelectContainerProps) {
 						<Button
 							class="c-select__clear"
 							aria-label={t`Clear selection`}
-							onClick={local.onClear}
+							{...{ [CLEAR_ACTION_ATTR]: '' }}
 							unsetFormInput
 							unstyled
 						>

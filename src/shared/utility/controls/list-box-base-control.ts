@@ -21,7 +21,10 @@ export interface ListBoxProps extends OptionListProps {
 export const ACTIVE_ATTR = data('c-option-list-active');
 
 /** Data attribute to identify a designated container for hidden inputs */
-export const HIDDEN_INPUT_CONTAINER_ATTR = data('hidden-input-container');
+export const HIDDEN_INPUT_CONTAINER_ATTR = data('listbox-hidden-inputs');
+
+/** Data attribute to identify a clear action */
+export const CLEAR_ACTION_ATTR = data('listbox-clear-action');
 
 /**
  * UI handling for something matching the ListBox role. Adds effects
@@ -32,7 +35,7 @@ export class ListBoxBaseControl<
 > extends OptionListControl<TProps> {
 	static override mapProps(p: ListBoxProps) {
 		return {
-			role: 'listbox',
+			role: 'listbox' as const,
 			'aria-multiselectable': p.multiple,
 		};
 	}
@@ -56,11 +59,6 @@ export class ListBoxBaseControl<
 			}
 		}
 		return ret;
-	}
-
-	/** Clear values */
-	clear(event: Event) {
-		this.handleValueChange(new Set<string>(), event);
 	}
 
 	override highlight(element: HTMLElement | null, event: Event): void {
@@ -105,6 +103,7 @@ export class ListBoxBaseControl<
 		// up `aria-selected="false"` and other stuff
 		this.updateValueAttrs(this.props.values || this.props.defaultValues);
 
+		this.listen('click', this.handleClear);
 		this.listen('keydown', this.handleTab);
 	}
 
@@ -127,6 +126,18 @@ export class ListBoxBaseControl<
 	}
 
 	/**
+	 * Update aria-activedescendant and other things when highlighted item changes
+	 * (via keyboard -- mouse is just hover)
+	 */
+	protected updateActive(element: HTMLElement | null) {
+		const prev = this.currentItem();
+		if (prev === element) return;
+		this.node.setAttribute('aria-activedescendant', element?.id ?? '');
+		prev?.removeAttribute(ACTIVE_ATTR);
+		element?.setAttribute(ACTIVE_ATTR, '');
+	}
+
+	/**
 	 * Get the currently highlighted element
 	 */
 	private currentItem() {
@@ -143,18 +154,6 @@ export class ListBoxBaseControl<
 	}
 
 	/**
-	 * Update aria-activedescendant and other things when highlighted item changes
-	 * (via keyboard -- mouse is just hover)
-	 */
-	private updateActive(element: HTMLElement | null) {
-		const prev = this.currentItem();
-		if (prev === element) return;
-		this.node.setAttribute('aria-activedescendant', element?.id ?? '');
-		prev?.removeAttribute(ACTIVE_ATTR);
-		element?.setAttribute(ACTIVE_ATTR, '');
-	}
-
-	/**
 	 * Tabbing on a selection counts as highlight per WCAG reccomendations
 	 */
 	private handleTab(event: KeyboardEvent) {
@@ -163,6 +162,12 @@ export class ListBoxBaseControl<
 		const currentValue = this.currentItem()?.getAttribute(LIST_OPTION_VALUE_ATTR);
 		if (typeof currentValue !== 'string' || this.values().has(currentValue)) return;
 		this.select(this.item(currentValue), event);
+	}
+
+	private handleClear(event: Event) {
+		if ((event.target as HTMLElement | null)?.hasAttribute(CLEAR_ACTION_ATTR)) {
+			this.handleValueChange(new Set<string>(), event);
+		}
 	}
 
 	/** Update attributes and other stuff based on values changing */

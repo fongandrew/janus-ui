@@ -1,13 +1,13 @@
 import cx from 'classix';
-import { type JSX, splitProps } from 'solid-js';
+import { createUniqueId, type JSX, mergeProps, splitProps } from 'solid-js';
 
 import { Button } from '~/shared/components/button';
 import { type FormElementProps } from '~/shared/components/form-element-props';
 import { SelectContainer } from '~/shared/components/select-container';
-import { SelectControl } from '~/shared/components/select-control';
 import { SelectOptionList } from '~/shared/components/select-option-list';
 import { SelectText } from '~/shared/components/select-text';
-import { createTextMatcher } from '~/shared/utility/create-text-matcher';
+import { SelectControl } from '~/shared/utility/controls/select-control';
+import { useControl } from '~/shared/utility/solid/use-control';
 
 export interface SelectProps extends Omit<FormElementProps<'button'>, 'onValidate'> {
 	/** Name for form submission */
@@ -39,32 +39,26 @@ export function Select(props: SelectProps) {
 		['values', 'defaultValues', 'onValues', 'onValidate', 'multiple', 'required'],
 		['children', 'name', 'placeholder'],
 	);
-	const selectControl = new SelectControl(listBoxProps);
-
-	/** For matching user trying to type and match input */
-	const matchText = createTextMatcher(() => selectControl.items());
-	selectControl.handle('onKeyDown', (event: KeyboardEvent) => {
-		// If here, check if we're typing a character to filter the list (force open too)
-		if (event.key.length === 1) {
-			selectControl.show();
-			const node = matchText(event.key);
-			selectControl.highlight(node, event);
-		}
-	});
 
 	// Transform Set<string> validator to string validator for underlying control
 	const handleValidate = (_value: string, event: Event & { delegateTarget: HTMLElement }) =>
 		listBoxProps.onValidate?.(selectControl.values(), event);
 
-	const selectProps = selectControl.merge({
-		...buttonProps,
-		onValidate: handleValidate,
+	const selectProps = mergeProps(buttonProps, { onValidate: handleValidate });
+	const listBoxId = createUniqueId();
+	const selectControlProps = useControl(SelectControl, {
+		listBoxId,
 	});
 
 	return (
-		<SelectContainer onClear={selectControl.clear.bind(selectControl)}>
+		<SelectContainer>
 			{() => (
-				<Button {...selectProps} class={cx('c-select__button', props.class)} unstyled>
+				<Button
+					{...selectControlProps}
+					{...selectProps}
+					class={cx('c-select__button', props.class)}
+					unstyled
+				>
 					<SelectText
 						placeholder={local.placeholder}
 						values={selectControl.values()}
@@ -72,15 +66,7 @@ export function Select(props: SelectProps) {
 					/>
 				</Button>
 			)}
-			{() => (
-				<SelectOptionList
-					name={local.name}
-					values={selectControl.values()}
-					listCtrl={selectControl.listCtrl}
-				>
-					{local.children}
-				</SelectOptionList>
-			)}
+			{() => <SelectOptionList id={listBoxId}>{local.children}</SelectOptionList>}
 		</SelectContainer>
 	);
 }

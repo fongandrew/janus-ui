@@ -31,11 +31,6 @@ export class OptionListControl<TProps extends OptionListProps = OptionListProps>
 		this.listen('keydown', this.handleKeyDown);
 	}
 
-	/** Can override this if we need temporarily disable click and keydown handling */
-	enabled() {
-		return true;
-	}
-
 	override handle(event: Event): void {
 		if (!this.enabled()) return;
 		return super.handle(event);
@@ -97,8 +92,13 @@ export class OptionListControl<TProps extends OptionListProps = OptionListProps>
 		this.props.onSelect?.(value, element, event);
 	}
 
+	/** Can override this if we need temporarily disable click and keydown handling */
+	protected enabled() {
+		return true;
+	}
+
 	/** Keydown handler that manages up/down arrow state */
-	protected handleKeyDown(event: KeyboardEvent) {
+	private handleKeyDown(event: KeyboardEvent) {
 		const document = this.document();
 		const target = event.target as HTMLElement;
 		const listElement = this.listElm();
@@ -148,7 +148,7 @@ export class OptionListControl<TProps extends OptionListProps = OptionListProps>
 	}
 
 	/** Clicking on a menu item */
-	protected handleClick(event: MouseEvent) {
+	private handleClick(event: MouseEvent) {
 		this.select(
 			(event.target as HTMLElement | null)?.closest(
 				`[${LIST_OPTION_VALUE_ATTR}]`,

@@ -1,7 +1,7 @@
 @import '~/shared/styles/common.css';
 
 @layer base {
-	[data-hidden-input-container] {
+	[data-listbox-hidden-inputs] {
 		display: none;
 	}
 }

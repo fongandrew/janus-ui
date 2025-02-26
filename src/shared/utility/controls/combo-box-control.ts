@@ -31,9 +31,10 @@ export function handleEscKeyDown(event: KeyboardEvent) {
 }
 
 /**
- * PropBuilder presentation of something matching the ComboBox role. Adds effects
- * and aria- props. This extends the ListBox control since it has all the state
- * management bits and bobs, but the actual ListBox will via the listCtrl element.
+ * UI handling for something matching the ComboBox role. Meant to reference the input
+ * or button element that controls a listbox element (and takes an ID to reference the
+ * listbox separately -- there is no need to use a ListBoxControl on that separate
+ * element).
  */
 export class ComboBoxControl<
 	TProps extends ComboBoxProps = ComboBoxProps,
@@ -41,8 +42,8 @@ export class ComboBoxControl<
 	static override mapProps(p: ComboBoxProps) {
 		return {
 			...super.mapProps(p),
-			role: 'combobox',
-			'aria-autocomplete': 'list',
+			role: 'combobox' as const,
+			'aria-autocomplete': 'list' as const,
 			'aria-controls': p.listBoxId,
 		};
 	}
