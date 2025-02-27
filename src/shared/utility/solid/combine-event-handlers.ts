@@ -66,3 +66,18 @@ export function bindProp<TProps, TKey extends keyof TProps>(
 	: unknown {
 	return [handleProp, [props, propName]] as any;
 }
+
+/**
+ * Convenience function for combining event handler with one in props object.
+ */
+export function extendHandler<
+	TKey extends string,
+	TProps extends Partial<Record<TKey, JSX.EventHandlerUnion<any, any> | undefined>>,
+>(props: TProps, key: TKey, handler: TProps[TKey]): Required<Pick<TProps, TKey>> {
+	return {
+		[key]: combineEventHandlers(
+			handler,
+			bindProp(props, key) as JSX.BoundEventHandler<any, any>,
+		),
+	} as any;
+}

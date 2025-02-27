@@ -1,3 +1,4 @@
+import { createMagicProp } from '~/shared/utility/magic-prop';
 import { normalizeText } from '~/shared/utility/normalize-text';
 
 /**
@@ -53,5 +54,27 @@ export function createTextMatcher(getNodes: () => Iterable<HTMLElement>, delay =
 
 		// No start match, return include match if any
 		return includeMatch as HTMLElement | null;
+	};
+}
+
+const [textMatcherForElm, setTextMatcherForElm] = createMagicProp<
+	(value: string) => HTMLElement | null,
+	HTMLElement
+>();
+
+/**
+ * Text matcher tied to a particular element
+ */
+export function createTextMatcherForElement(
+	selector: (elm: HTMLElement) => Iterable<HTMLElement>,
+	delay?: number,
+) {
+	return (elm: HTMLElement) => {
+		let matcher = textMatcherForElm(elm);
+		if (!matcher) {
+			matcher = createTextMatcher(() => selector(elm), delay);
+			setTextMatcherForElm(elm, matcher);
+		}
+		return matcher;
 	};
 }
