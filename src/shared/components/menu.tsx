@@ -61,7 +61,7 @@ export function MenuItem(props: MenuItemProps) {
 
 /** Menu item variant that's a link */
 export function MenuItemLink(props: JSX.HTMLAttributes<HTMLAnchorElement> & { href: string }) {
-	return <OptionListAnchor role="menuitem" value={createUniqueId()} {...props} />;
+	return <OptionListAnchor role="menuitem" {...props} />;
 }
 
 /** No need for any changes to this. Just alias for use with menus */
