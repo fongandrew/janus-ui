@@ -1,10 +1,15 @@
 /* Overflow handling for simple text blocks */
 @define-mixin t-overflow-x {
-	overflow-x: hidden;
+	/*
+		This is an overflow-x mixin but in practice, this ends up making a lot of things
+		unexpectedly scrollable (and thus creating lots of unexpected focus elements).
+		So just default to hidden. Explicit overflow-y: auto for things that need it.
+	*/
+	overflow: hidden;
 	text-overflow: ellipsis;
 
 	* {
-		overflow-x: hidden;
+		overflow: hidden;
 		text-overflow: ellipsis;
 	}
 }
