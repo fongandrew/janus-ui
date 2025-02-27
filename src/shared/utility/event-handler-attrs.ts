@@ -150,6 +150,10 @@ export function createHandler<T extends keyof typeof DELEGATABLE_EVENTS>(
 /**
  * Convenience function to return a spreadable props object with the handler ID(s)
  */
-export function handlerProps(...handlerIds: string[]): Record<string, string> {
-	return { [HANDLER_ATTR]: handlerIds.join(' ') };
+export function handlerProps(...handlerIds: (string | (() => string))[]): Record<string, string> {
+	const ids = [];
+	for (const id of handlerIds) {
+		ids.push(typeof id === 'function' ? id() : id);
+	}
+	return { [HANDLER_ATTR]: ids.join(' ') };
 }

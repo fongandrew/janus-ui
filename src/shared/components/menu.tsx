@@ -33,11 +33,11 @@ export function Menu(props: MenuProps) {
 
 	return (
 		<DropdownContent
-			{...handlerProps(menuFocusOnOpen(), dropdownCloseOnBlur())}
+			{...handlerProps(menuFocusOnOpen, dropdownCloseOnBlur)}
 			{...extendHandler(props, 'onClick', handleClick)}
 			{...rest}
 		>
-			<OptionList role="menu" {...handlerProps(menuKeyDown(), menuCloseOnSelect())}>
+			<OptionList role="menu" {...handlerProps(menuKeyDown, menuCloseOnSelect)}>
 				{local.children}
 			</OptionList>
 		</DropdownContent>
