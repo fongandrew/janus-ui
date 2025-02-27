@@ -1,10 +1,12 @@
 import '~/shared/utility/use-data-kb-nav';
 
 import cx from 'classix';
-import { createMemo, type JSX, splitProps } from 'solid-js';
+import { Check } from 'lucide-solid';
+import { children, createMemo, type JSX, splitProps } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
 import { LIST_OPTION_VALUE_ATTR } from '~/shared/components/option-list-control';
+import { spanify } from '~/shared/utility/solid/spanify';
 
 export interface OptionListProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	/** Make role required */
@@ -29,21 +31,32 @@ function useOptionListItemProps(id: string, value: string) {
 	};
 }
 
-export interface OptionListItemProps<TElement> extends JSX.HTMLAttributes<TElement> {
+export type OptionListItemProps<TElement> = {
 	/** Value of the option */
 	value: string;
-}
+} & (TElement extends HTMLInputElement
+	? JSX.InputHTMLAttributes<TElement>
+	: JSX.HTMLAttributes<TElement>);
 
-/** Option list item, meant for use in Listbox-like components */
-export function OptionListItem(props: OptionListItemProps<HTMLDivElement>) {
-	const [local, rest] = splitProps(props, ['value']);
+/** Option list selectable input item, meant for use in Listbox-like components */
+export function OptionListSelectable(props: OptionListItemProps<HTMLInputElement>) {
+	const [local, rest] = splitProps(props, ['children', 'class']);
 	const id = createMemo(() => props.id || createUniqueId());
 	return (
-		<div
-			{...useOptionListItemProps(id(), local.value)}
-			{...rest}
-			class={cx('c-option-list__item', props.class)}
-		/>
+		<label class={cx('t-unstyled', 'c-option-list__item', local.class)}>
+			<input
+				type="checkbox"
+				class="t-sr-only"
+				aria-selected={String(!!rest.checked) as 'true' | 'false'}
+				tabIndex={-1}
+				{...useOptionListItemProps(id(), props.value)}
+				{...rest}
+			/>
+			<div role="presentation" class="c-option-list__check-box">
+				<Check />
+			</div>
+			<span>{local.children}</span>
+		</label>
 	);
 }
 
@@ -51,12 +64,15 @@ export function OptionListItem(props: OptionListItemProps<HTMLDivElement>) {
 export function OptionListButton(props: OptionListItemProps<HTMLButtonElement>) {
 	const [local, rest] = splitProps(props, ['value']);
 	const id = createMemo(() => props.id || createUniqueId());
+	const resolved = children(() => props.children);
 	return (
 		<button
 			{...useOptionListItemProps(id(), local.value)}
 			{...rest}
 			class={cx('c-option-list__item', props.class)}
-		/>
+		>
+			{spanify(resolved.toArray())}
+		</button>
 	);
 }
 
@@ -64,12 +80,15 @@ export function OptionListButton(props: OptionListItemProps<HTMLButtonElement>) 
 export function OptionListAnchor(props: OptionListItemProps<HTMLAnchorElement> & { href: string }) {
 	const [local, rest] = splitProps(props, ['value']);
 	const id = createMemo(() => props.id || createUniqueId());
+	const resolved = children(() => props.children);
 	return (
 		<a
 			{...useOptionListItemProps(id(), local.value)}
 			{...rest}
 			class={cx('c-option-list__item', props.class)}
-		/>
+		>
+			{spanify(resolved.toArray())}
+		</a>
 	);
 }
 
@@ -81,11 +100,12 @@ export interface OptionGroupProps extends JSX.HTMLAttributes<HTMLDivElement> {
 export function OptionListGroup(props: OptionGroupProps) {
 	const headingId = createUniqueId();
 	const [local, rest] = splitProps(props, ['heading']);
+	const heading = children(() => local.heading);
 	return (
 		<>
 			{props.heading && (
 				<div class="c-option-list__heading" id={headingId}>
-					{local.heading}
+					{spanify(heading.toArray())}
 				</div>
 			)}
 			<div

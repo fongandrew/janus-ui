@@ -1,7 +1,6 @@
 import { createMemo, type JSX, splitProps } from 'solid-js';
 
 import { DropdownContent } from '~/shared/components/dropdown';
-import { ListBoxSelections } from '~/shared/components/list-box';
 import { OptionList } from '~/shared/components/option-list';
 import { type OptionListControl } from '~/shared/components/option-list-control';
 import { T } from '~/shared/utility/text/t-components';
@@ -34,9 +33,6 @@ export function SelectOptionList(props: SelectOptionListProps) {
 					)}
 				</div>
 			</OptionList>
-			{local.name && local.values && (
-				<ListBoxSelections name={local.name} values={local.values} />
-			)}
 		</DropdownContent>
 	);
 }

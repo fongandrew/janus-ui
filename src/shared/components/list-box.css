@@ -12,27 +12,4 @@
 		*/
 		@mixin t-border-inner var(--v-shadow-inner);
 	}
-
-	.c-list-box__item.c-option-list__item {
-		display: flex;
-		cursor: pointer;
-		align-items: center;
-		gap: var(--v-space-xs);
-	}
-
-	.c-list-box__check-box {
-		display: flex;
-		height: 1lh;
-		width: 1em;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.c-list-box__check-box svg {
-		display: none;
-	}
-
-	.c-list-box__item[aria-selected='true'] .c-list-box__check-box svg {
-		display: block;
-	}
 }

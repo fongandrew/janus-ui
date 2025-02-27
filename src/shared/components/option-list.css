@@ -12,7 +12,9 @@
 		@mixin v-spacing-sm;
 		@mixin o-text-box;
 
-		display: block;
+		display: flex;
+		gap: var(--v-space-xs);
+		align-items: flex-start;
 		padding-inline: calc(var(--v-spacing) + var(--v-inner-radius));
 		text-align: left;
 		width: 100%;
@@ -30,6 +32,23 @@
 		transition: none;
 	}
 
+	.c-option-list__check-box {
+		display: flex;
+		height: 1lh;
+		width: 1em;
+		align-items: center;
+		justify-content: center;
+
+		svg {
+			display: none;
+		}
+
+		:checked + & svg,
+		[aria-selected='true'] & svg {
+			display: block;
+		}
+	}
+
 	a.c-option-list__item {
 		@mixin t-font-weight var(--v-font-weight-normal);
 
@@ -37,11 +56,13 @@
 		text-decoration: none;
 	}
 
-	body[data-kb-nav='false'] .c-option-list__item:hover,
-	body[data-kb-nav='false'] a.c-option-list__item:hover,
+	body:not([data-kb-nav='true']) .c-option-list__item:hover,
+	body:not([data-kb-nav='true']) a.c-option-list__item:hover,
 	body[data-kb-nav='true'] .c-option-list__item:focus-visible,
 	body[data-kb-nav='true'] :focus-visible .c-option-list__item[data-c-option-list-active],
-	body[data-kb-nav='true'] :popover-open .c-option-list__item[data-c-option-list-active] {
+	body[data-kb-nav='true'] :focus-visible .c-option-list__item:has([data-c-option-list-active]),
+	body[data-kb-nav='true'] :popover-open .c-option-list__item[data-c-option-list-active],
+	body[data-kb-nav='true'] :popover-open .c-option-list__item:has([data-c-option-list-active]) {
 		@mixin v-colors-highlight;
 		@mixin t-no-focus-ring;
 	}

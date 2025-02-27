@@ -1,6 +1,5 @@
 import cx from 'classix';
-import { Check } from 'lucide-solid';
-import { For, type JSX, splitProps } from 'solid-js';
+import { createContext, createMemo, type JSX, mergeProps, splitProps, useContext } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
 import {
@@ -8,7 +7,7 @@ import {
 	mergeFormElementProps,
 } from '~/shared/components/form-element-props';
 import { ListBoxControl } from '~/shared/components/list-box-control';
-import { OptionList, OptionListGroup, OptionListItem } from '~/shared/components/option-list';
+import { OptionList, OptionListGroup, OptionListSelectable } from '~/shared/components/option-list';
 import { createTextMatcher } from '~/shared/utility/create-text-matcher';
 
 export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'> {
@@ -36,6 +35,10 @@ export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'
 		event: Event & { delegateTarget: HTMLElement },
 	) => string | undefined | null | Promise<string | undefined | null>;
 }
+
+const ListBoxContext = createContext<
+	Pick<ListBoxProps, 'name' | 'values' | 'multiple'> | undefined
+>();
 
 export function ListBox(props: ListBoxProps) {
 	const [local, rest] = splitProps(props, [
@@ -68,25 +71,29 @@ export function ListBox(props: ListBoxProps) {
 		listBoxControl.merge({ ...rest, onValidate: handleValidate }),
 	);
 
+	// Create default name for radio group if not provided
+	const context = mergeProps(() => (props.multiple ? { name: createUniqueId() } : {}), props);
+
 	return (
-		<OptionList
-			{...optionListProps}
-			role="listbox"
-			tabIndex={0}
-			class={cx('c-list-box', rest.class)}
-		>
-			{/*
+		<ListBoxContext.Provider value={context}>
+			<OptionList
+				{...optionListProps}
+				role="listbox"
+				tabIndex={0}
+				class={cx('c-list-box', rest.class)}
+			>
+				{/*
 				Note that there's no option to clear a selection here -- assumption
 				is that if we care about this, we'll have a separate button or list item
 				with the right text
 			*/}
-			{local.children}
-			{local.name && <ListBoxSelections name={local.name} values={listBoxControl.values()} />}
-		</OptionList>
+				{local.children}
+			</OptionList>
+		</ListBoxContext.Provider>
 	);
 }
 
-export interface ListBoxItemProps extends JSX.HTMLAttributes<HTMLDivElement> {
+export interface ListBoxItemProps extends JSX.HTMLAttributes<HTMLInputElement> {
 	/**
 	 * Option value for this prop -- if not set, will be autoassigned one for
 	 * option list matching purposes
@@ -96,30 +103,18 @@ export interface ListBoxItemProps extends JSX.HTMLAttributes<HTMLDivElement> {
 
 /** A single list box item */
 export function ListBoxItem(props: ListBoxItemProps) {
+	const context = useContext(ListBoxContext);
+	const value = createMemo(() => props.value ?? createUniqueId());
 	return (
-		<OptionListItem
+		<OptionListSelectable
 			{...props}
-			class={cx(props.class, 'c-list-box__item')}
-			value={props.value ?? createUniqueId()}
-		>
-			<div role="presentation" class="c-list-box__check-box">
-				<Check />
-			</div>
-			<span>{props.children}</span>
-		</OptionListItem>
+			name={context?.name}
+			type={context?.multiple ? 'checkbox' : 'radio'}
+			checked={context?.values?.has(value())}
+			value={value()}
+		/>
 	);
 }
 
 /** No need for any changes to this. Just alias for use with list boxes */
 export { OptionListGroup as ListBoxGroup };
-
-/** Returns a list of hidden inputs so option list selections can be sent to forms */
-export function ListBoxSelections(props: { name: string; values: Set<string> }) {
-	return (
-		<>
-			<For each={Array.from(props.values)}>
-				{(value) => <input type="hidden" name={props.name} value={value} />}
-			</For>
-		</>
-	);
-}
