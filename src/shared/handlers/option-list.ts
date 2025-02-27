@@ -62,6 +62,7 @@ export const optionListKeyDown = createHandler('keydown', 'option-list__keydown'
  * Highlight matching text when typing
  */
 export const optionListMatchText = createHandler('keydown', 'option-list__match-text', (event) => {
+	if (event.key === ' ') return;
 	if (event.key.length !== 1) return;
 
 	const target = event.target as HTMLElement;

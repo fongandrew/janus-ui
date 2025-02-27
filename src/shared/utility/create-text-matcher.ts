@@ -1,12 +1,29 @@
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { normalizeText } from '~/shared/utility/normalize-text';
 
+export interface TextMatcherOptions {
+	/** Delay in milliseconds before search string is reset */
+	delay?: number;
+	/** Regex for characters to ignore (applied after normalization) */
+	ignore?: RegExp | undefined;
+}
+
+const DEFAULT_OPTIONS = {
+	delay: 500,
+	ignore: /[^a-z0-9]/g,
+};
+
 /**
  * Creates a text matcher that matches input text against a list of nodes' text content.
  * Characters typed within the delay period are appended to form a search string.
  * For performance, normalized versions of node text content are cached during the delay period.
  */
-export function createTextMatcher(getNodes: () => Iterable<HTMLElement>, delay = 500) {
+export function createTextMatcher(
+	getNodes: () => Iterable<HTMLElement>,
+	options: TextMatcherOptions = {},
+) {
+	const { delay, ignore } = { ...DEFAULT_OPTIONS, ...options };
+
 	let current = '';
 	let lastMatchTime = 0;
 	const cachedNormalizedText = new Map<Node, string>();
@@ -16,6 +33,9 @@ export function createTextMatcher(getNodes: () => Iterable<HTMLElement>, delay =
 		let normalized = cachedNormalizedText.get(node);
 		if (!normalized) {
 			normalized = normalizeText(node.textContent ?? '');
+			if (ignore) {
+				normalized = normalized.replace(ignore, '');
+			}
 			cachedNormalizedText.set(node, normalized);
 		}
 		return normalized;
@@ -67,12 +87,12 @@ const [textMatcherForElm, setTextMatcherForElm] = createMagicProp<
  */
 export function createTextMatcherForElement(
 	selector: (elm: HTMLElement) => Iterable<HTMLElement>,
-	delay?: number,
+	options?: TextMatcherOptions,
 ) {
 	return (elm: HTMLElement) => {
 		let matcher = textMatcherForElm(elm);
 		if (!matcher) {
-			matcher = createTextMatcher(() => selector(elm), delay);
+			matcher = createTextMatcher(() => selector(elm), options);
 			setTextMatcherForElm(elm, matcher);
 		}
 		return matcher;
