@@ -1,11 +1,10 @@
 import {
-	getItemValue,
+	getClosestItem,
 	getList,
 	getListHighlighted,
 	getListItems,
-	getTextMatcherForList,
-	highlightInList,
 	optionListKeyDown,
+	optionListMatchText,
 } from '~/shared/handlers/option-list';
 import { createHandler } from '~/shared/utility/event-handler-attrs';
 
@@ -14,33 +13,22 @@ import { createHandler } from '~/shared/utility/event-handler-attrs';
  */
 export const menuKeyDown = createHandler('keydown', 'menu__keydown', (event) => {
 	optionListKeyDown.do(event);
+	optionListMatchText.do(event);
 
 	const target = event.target as HTMLElement;
 	const listElm = getList(target);
 	if (!listElm) return;
 
-	// Focus on highlighted item
-	if (event.key.startsWith('Arrow')) {
-		const highlighted = getListHighlighted(listElm);
-		if (highlighted) highlighted.focus();
-	}
-
 	// WCAG guideline says tab closes menu if in popover
 	if (event.key === 'Tab') {
 		const popover = target.closest(':popover-open') as HTMLElement | null;
 		popover?.hidePopover();
+		return;
 	}
 
-	// Text matcher
-	if (event.key.length === 1) {
-		const textMatcher = getTextMatcherForList(listElm);
-		const nextHighlighted = textMatcher(event.key);
-		if (nextHighlighted) {
-			event.preventDefault();
-			highlightInList(listElm, nextHighlighted);
-			nextHighlighted.focus();
-		}
-	}
+	// If not moving focus out of menu, then focus on highlighted item
+	const highlighted = getListHighlighted(listElm);
+	if (highlighted) highlighted.focus();
 });
 
 /**
@@ -48,8 +36,7 @@ export const menuKeyDown = createHandler('keydown', 'menu__keydown', (event) => 
  */
 export const menuCloseOnSelect = createHandler('click', 'menu__close-on-select', (event) => {
 	const target = event.target as HTMLElement;
-	const value = getItemValue(target);
-	if (value) {
+	if (getClosestItem(target)) {
 		const popover = target.closest(':popover-open') as HTMLElement | null;
 		popover?.hidePopover();
 	}

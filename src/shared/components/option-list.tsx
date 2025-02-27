@@ -5,7 +5,6 @@ import { Check } from 'lucide-solid';
 import { children, createMemo, type JSX, splitProps } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
-import { LIST_OPTION_VALUE_ATTR } from '~/shared/components/option-list-control';
 import { spanify } from '~/shared/utility/solid/spanify';
 
 export interface OptionListProps extends JSX.HTMLAttributes<HTMLDivElement> {
@@ -23,14 +22,6 @@ export function OptionList(props: OptionListProps) {
 	return <div {...props} class={cx(props.class, 'c-option-list')} />;
 }
 
-function useOptionListItemProps(id: string, value: string) {
-	return {
-		id,
-		role: 'option' as const,
-		[LIST_OPTION_VALUE_ATTR]: value,
-	};
-}
-
 export type OptionListItemProps<TElement> = {
 	/** Value of the option */
 	value: string;
@@ -39,18 +30,19 @@ export type OptionListItemProps<TElement> = {
 	: JSX.HTMLAttributes<TElement>);
 
 /** Option list selectable input item, meant for use in Listbox-like components */
-export function OptionListSelectable(props: OptionListItemProps<HTMLInputElement>) {
+export function OptionListSelectable(props: JSX.InputHTMLAttributes<HTMLInputElement>) {
 	const [local, rest] = splitProps(props, ['children', 'class']);
 	const id = createMemo(() => props.id || createUniqueId());
 	return (
 		<label class={cx('t-unstyled', 'c-option-list__item', local.class)}>
 			<input
+				{...rest}
+				id={id()}
+				role="option"
 				type="checkbox"
 				class="t-sr-only"
 				aria-selected={String(!!rest.checked) as 'true' | 'false'}
 				tabIndex={-1}
-				{...useOptionListItemProps(id(), props.value)}
-				{...rest}
 			/>
 			<div role="presentation" class="c-option-list__check-box">
 				<Check />
@@ -61,32 +53,22 @@ export function OptionListSelectable(props: OptionListItemProps<HTMLInputElement
 }
 
 /** Button list item, meant for use in Menu-like components */
-export function OptionListButton(props: OptionListItemProps<HTMLButtonElement>) {
-	const [local, rest] = splitProps(props, ['value']);
+export function OptionListButton(props: JSX.ButtonHTMLAttributes<HTMLButtonElement>) {
 	const id = createMemo(() => props.id || createUniqueId());
 	const resolved = children(() => props.children);
 	return (
-		<button
-			{...useOptionListItemProps(id(), local.value)}
-			{...rest}
-			class={cx('c-option-list__item', props.class)}
-		>
+		<button {...props} id={id()} role="option" class={cx('c-option-list__item', props.class)}>
 			{spanify(resolved.toArray())}
 		</button>
 	);
 }
 
 /** Anchor link list item, meant for use in Menu-like components */
-export function OptionListAnchor(props: OptionListItemProps<HTMLAnchorElement> & { href: string }) {
-	const [local, rest] = splitProps(props, ['value']);
+export function OptionListAnchor(props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) {
 	const id = createMemo(() => props.id || createUniqueId());
 	const resolved = children(() => props.children);
 	return (
-		<a
-			{...useOptionListItemProps(id(), local.value)}
-			{...rest}
-			class={cx('c-option-list__item', props.class)}
-		>
+		<a {...props} id={id()} class={cx('c-option-list__item', props.class)}>
 			{spanify(resolved.toArray())}
 		</a>
 	);

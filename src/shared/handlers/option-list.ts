@@ -6,12 +6,6 @@ import { data } from '~/shared/utility/magic-strings';
 import { nextIndex } from '~/shared/utility/next-index';
 
 /**
- * Data variable used to identify the associated value of an element since an actual
- * value attribute may be semantically incorrect.
- */
-export const LIST_OPTION_VALUE_ATTR = data('list-option-value');
-
-/**
  * Data variable used to identify a highlighted item in a list
  */
 export const LIST_HIGHLIGHTED_ATTR = data('option-list__active');
@@ -65,11 +59,29 @@ export const optionListKeyDown = createHandler('keydown', 'option-list__keydown'
 });
 
 /**
+ * Highlight matching text when typing
+ */
+export const optionListMatchText = createHandler('keydown', 'option-list__match-text', (event) => {
+	if (event.key.length !== 1) return;
+
+	const target = event.target as HTMLElement;
+	const listElm = getList(target);
+	if (!listElm) return;
+
+	const textMatcher = getTextMatcherForList(listElm);
+	const nextHighlighted = textMatcher(event.key);
+	if (nextHighlighted) {
+		event.preventDefault();
+		highlightInList(listElm, nextHighlighted);
+	}
+});
+
+/**
  * Get list element from an element inside the list, the element itself,
  * or something controlling it
  */
 export function getList(elm: HTMLElement) {
-	const closest = elm?.closest('[role="listbox"], [role="menu"], [aria-controls]') as
+	const closest = elm?.closest('[role="listbox"],[role="menu"],[aria-controls]') as
 		| HTMLElement
 		| null
 		| undefined;
@@ -88,11 +100,21 @@ export function getList(elm: HTMLElement) {
 }
 
 /**
+ * Returns true if a given event target / element is the list element (or a list element)
+ */
+export function isList(elm: EventTarget | HTMLElement | null): elm is HTMLElement {
+	const role = (elm as HTMLElement | null)?.role;
+	return role === 'listbox' || role === 'menu';
+}
+
+/**
  * Get items from a list element
  */
 export function getListItems(listElm: HTMLElement) {
 	return Array.from(
-		listElm?.querySelectorAll(`[${LIST_OPTION_VALUE_ATTR}]`) ?? [],
+		listElm?.querySelectorAll(
+			'[role="menuitem"],[role="menuitemcheckbox"],[role="menuitemradio"],[role="option"]',
+		) ?? [],
 	) as HTMLElement[];
 }
 
@@ -100,7 +122,7 @@ export function getListItems(listElm: HTMLElement) {
  * Get list item with a particular value
  */
 export function getListValue(listElm: HTMLElement, value: string) {
-	return listElm.querySelector(`[${LIST_OPTION_VALUE_ATTR}="${value}"]`) as HTMLElement | null;
+	return listElm.querySelector(`[value="${value}"]`) as HTMLElement | null;
 }
 
 /**
@@ -125,7 +147,16 @@ export function highlightInList(listElm: HTMLElement, itemElm: HTMLElement | nul
  * Get value from item element
  */
 export function getItemValue(itemElm: HTMLElement) {
-	return itemElm.closest(`[${LIST_OPTION_VALUE_ATTR}]`)?.getAttribute(LIST_OPTION_VALUE_ATTR);
+	return getClosestItem(itemElm)?.getAttribute('value');
+}
+
+/**
+ * Get closest list item based on roles
+ */
+export function getClosestItem(elm: HTMLElement) {
+	return elm.closest(
+		'[role="menuitem"],[role="menuitemcheckbox"],[role="menuitemradio"],[role="option"]',
+	);
 }
 
 /**
