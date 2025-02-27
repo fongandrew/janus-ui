@@ -31,18 +31,18 @@ export type OptionListItemProps<TElement> = {
 
 /** Option list selectable input item, meant for use in Listbox-like components */
 export function OptionListSelectable(props: JSX.InputHTMLAttributes<HTMLInputElement>) {
-	const [local, rest] = splitProps(props, ['children', 'class']);
-	const id = createMemo(() => props.id || createUniqueId());
+	const [local, rest] = splitProps(props, ['children', 'class', 'id']);
+	const id = createMemo(() => local.id || createUniqueId());
 	return (
 		<label class={cx('t-unstyled', 'c-option-list__item', local.class)}>
 			<input
-				{...rest}
 				id={id()}
 				role="option"
 				type="checkbox"
 				class="t-sr-only"
 				aria-selected={String(!!rest.checked) as 'true' | 'false'}
 				tabIndex={-1}
+				{...rest}
 			/>
 			<div role="presentation" class="c-option-list__check-box">
 				<Check />

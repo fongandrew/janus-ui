@@ -8,25 +8,24 @@ import {
 } from '~/shared/components/form-element-props';
 import { ListBoxControl } from '~/shared/components/list-box-control';
 import { OptionList, OptionListGroup, OptionListSelectable } from '~/shared/components/option-list';
-import { createTextMatcher } from '~/shared/utility/create-text-matcher';
+import { listBoxChange, listBoxKeyDown, listBoxValues } from '~/shared/handlers/list-box';
+import { isList } from '~/shared/handlers/option-list';
+import { handlerProps } from '~/shared/utility/event-handler-attrs';
 
 export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'> {
 	/** Name for form submission */
 	name?: string | undefined;
-	/** Is listbox disabled? */
-	disabled?: boolean | undefined;
-	/** Currently selected values (controlled) */
+	/**
+	 * Currently selected values (or if never changed, default values -- see
+	 * https://github.com/solidjs/solid/discussions/416 for Solid and controlled state
+	 */
 	values?: Set<string> | undefined;
-	/** Default selected values (uncontrolled) */
-	defaultValues?: Set<string>;
 	/** Called when selection changes */
 	onValues?: (values: Set<string>, event: Event) => void;
 	/** Autofocus listbox? */
 	autofocus?: boolean | undefined;
 	/** Whether multiple selection is allowed */
 	multiple?: boolean | undefined;
-	/** Disables clearing selection */
-	required?: boolean | undefined;
 	/** Make children required */
 	children: JSX.Element;
 	/** Custom validation function for this element */
@@ -45,7 +44,6 @@ export function ListBox(props: ListBoxProps) {
 		'children',
 		'name',
 		'values',
-		'defaultValues',
 		'onValues',
 		'onValidate',
 		'multiple',
@@ -53,23 +51,23 @@ export function ListBox(props: ListBoxProps) {
 	]);
 	const listBoxControl = new ListBoxControl(local);
 
-	/** For matching user trying to type and match input */
-	const matchText = createTextMatcher(() => listBoxControl.items());
-	listBoxControl.handle('onKeyDown', (event: KeyboardEvent) => {
-		// Check if we're typing a character to filter the list
-		if (event.key.length === 1) {
-			const node = matchText(event.key);
-			listBoxControl.highlight(node, event);
-		}
-	});
+	// Trigger values callback on JS change event
+	const handleChange = (event: Event) => {
+		// Check if this is the list because change events inside the list may be triggered
+		// by individual input changes and we're really just looking for the last "list-wide"
+		// change event
+		const target = event.target;
+		if (!isList(target)) return;
+
+		const values = listBoxValues(target);
+		local.onValues?.(values, event);
+	};
 
 	// Transform Set<string> validator to string validator for underlying control
 	const handleValidate = (_value: string, event: Event & { delegateTarget: HTMLElement }) =>
 		local.onValidate?.(listBoxControl.values(), event);
-
-	const optionListProps = mergeFormElementProps<'div'>(
-		listBoxControl.merge({ ...rest, onValidate: handleValidate }),
-	);
+	const formElementProps = mergeProps(rest, { onValidate: handleValidate });
+	const optionListProps = mergeFormElementProps<'div'>(formElementProps);
 
 	// Create default name for radio group if not provided
 	const context = mergeProps(() => (props.multiple ? { name: createUniqueId() } : {}), props);
@@ -77,10 +75,13 @@ export function ListBox(props: ListBoxProps) {
 	return (
 		<ListBoxContext.Provider value={context}>
 			<OptionList
+				{...handlerProps(listBoxChange, listBoxKeyDown)}
 				{...optionListProps}
 				role="listbox"
-				tabIndex={0}
 				class={cx('c-list-box', rest.class)}
+				tabIndex={0}
+				aria-multiselectable={props.multiple}
+				onChange={handleChange}
 			>
 				{/*
 				Note that there's no option to clear a selection here -- assumption

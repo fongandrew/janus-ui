@@ -11,5 +11,11 @@
 			inner border to give depth effect)
 		*/
 		@mixin t-border-inner var(--v-shadow-inner);
+
+		&:focus,
+		&:has(:focus) {
+			@mixin t-focus-ring;
+			@mixin t-border-inner single-arg(var(--v-shadow-inner), var(--v-shadow-focus));
+		}
 	}
 }

@@ -60,10 +60,10 @@
 	body:not([data-kb-nav='true']) .c-option-list__item:hover,
 	body:not([data-kb-nav='true']) a.c-option-list__item:hover,
 	body[data-kb-nav='true'] .c-option-list__item:focus-visible,
-	body[data-kb-nav='true'] :focus-visible .c-option-list__item[data-c-option-list-active],
-	body[data-kb-nav='true'] :focus-visible .c-option-list__item:has([data-c-option-list-active]),
-	body[data-kb-nav='true'] :popover-open .c-option-list__item[data-c-option-list-active],
-	body[data-kb-nav='true'] :popover-open .c-option-list__item:has([data-c-option-list-active]) {
+	body[data-kb-nav='true'] :focus-visible .c-option-list__item[data-option-list__active],
+	body[data-kb-nav='true'] :focus-visible .c-option-list__item:has([data-option-list__active]),
+	body[data-kb-nav='true'] :popover-open .c-option-list__item[data-option-list__active],
+	body[data-kb-nav='true'] :popover-open .c-option-list__item:has([data-option-list__active]) {
 		@mixin v-colors-highlight;
 		@mixin t-no-focus-ring;
 	}
@@ -73,8 +73,7 @@
 		@mixin t-font-weight var(--v-font-weight-subtitle);
 		@mixin t-text-muted;
 
-		line-height: 1;
-		padding-bottom: var(--v-space-xs);
+		padding-bottom: 0;
 	}
 
 	.c-option-list__group + .c-option-list__group,
