@@ -87,10 +87,12 @@ export function getList(elm: HTMLElement) {
 		| null
 		| undefined;
 
-	const ariaControlsId = closest?.getAttribute('aria-controls');
-	const ariaControlled = ariaControlsId && closest?.ownerDocument.getElementById(ariaControlsId);
-	if (ariaControlled) {
-		return ariaControlled;
+	const ariaControlsValue = closest?.getAttribute('aria-controls');
+	for (const id of ariaControlsValue?.split(' ') ?? []) {
+		const ariaControlled = closest?.ownerDocument.getElementById(id);
+		if (ariaControlled?.role === 'listbox' || ariaControlled?.role === 'menu') {
+			return ariaControlled;
+		}
 	}
 
 	if (closest?.role === 'listbox' || closest?.role === 'menu') {
@@ -142,6 +144,8 @@ export function highlightInList(listElm: HTMLElement, itemElm: HTMLElement | nul
 
 	current?.removeAttribute(LIST_HIGHLIGHTED_ATTR);
 	itemElm?.setAttribute(LIST_HIGHLIGHTED_ATTR, '');
+
+	(itemElm?.closest('label') ?? itemElm)?.scrollIntoView({ block: 'nearest' });
 }
 
 /**
@@ -163,4 +167,6 @@ export function getClosestItem(elm: HTMLElement) {
 /**
  * Get matcher for simple text matching in a list
  */
-export const getTextMatcherForList = createTextMatcherForElement(getListItems);
+export const getTextMatcherForList = createTextMatcherForElement(getListItems, {
+	getText: (elm) => elm.textContent || elm.closest('label')?.textContent || '',
+});

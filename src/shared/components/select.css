@@ -25,6 +25,10 @@
 	.c-select__input_description {
 		/* To avoid overlap with the chevron or clear */
 		padding-right: var(--v-input-height);
+
+		.c-select__container:has(:popover-open) & {
+			@mixin t-focus-ring;
+		}
 	}
 
 	/* Select container parts */
@@ -67,6 +71,7 @@
 			:has(:required)
 		)
 		.c-select__clear {
+		cursor: pointer;
 		display: flex;
 	}
 
@@ -81,6 +86,10 @@
 
 	.c-select__placeholder {
 		@mixin t-text-muted;
+
+		*:not(:empty) + & {
+			display: none;
+		}
 	}
 
 	/* Select dropdown empty state */
@@ -94,6 +103,14 @@
 		overflow: hidden auto;
 		padding: calc(var(--v-spacing) - var(--v-inner-radius)) var(--v-spacing);
 		text-align: center;
+
+		.c-select__no_match:has([data-select__input-text]:empty) {
+			display: none;
+		}
+
+		.c-select__no_match:not(:has([data-select__input-text]:empty)) + .c-select__no_value {
+			display: none;
+		}
 	}
 
 	* + .c-select__empty_state {

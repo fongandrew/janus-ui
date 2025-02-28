@@ -1,38 +1,59 @@
-import { createMemo, type JSX, splitProps } from 'solid-js';
+import { createUniqueId, type JSX, mergeProps, splitProps } from 'solid-js';
 
 import { DropdownContent } from '~/shared/components/dropdown';
+import { ListBoxContext } from '~/shared/components/list-box';
 import { OptionList } from '~/shared/components/option-list';
-import { type OptionListControl } from '~/shared/components/option-list-control';
+import { listBoxChange } from '~/shared/handlers/list-box';
+import { selectCloseOnClick, selectUpdateWithInput } from '~/shared/handlers/select';
+import { handlerProps } from '~/shared/utility/event-handler-attrs';
 import { T } from '~/shared/utility/text/t-components';
 
 export interface SelectOptionListProps extends JSX.HTMLAttributes<HTMLDivElement> {
-	/** ListBox control */
-	listCtrl: OptionListControl;
 	/** Form input name */
 	name?: string | undefined;
-	/** Current input value, if any */
-	input?: string | undefined;
 	/** Currently selected values */
-	values?: Set<string>;
+	values?: Set<string> | undefined;
+	/** Whether multiple selection is allowed */
+	multiple?: boolean | undefined;
+	/** Current (or initial, can be updated via `selectUpdateWithInput`) input value, if any */
+	input?: string | undefined;
 }
 
 export function SelectOptionList(props: SelectOptionListProps) {
-	const [local, rest] = splitProps(props, ['children', 'input', 'listCtrl', 'name', 'values']);
-	const optionListProps = createMemo(() => local.listCtrl.merge({ class: 't-unstyled' }));
+	const [local, listBoxContextProps, rest] = splitProps(
+		props,
+		['children', 'id', 'input'],
+		['name', 'values', 'multiple'],
+	);
+
+	// Create default name for radio group if not provided
+	const context = mergeProps({ name: createUniqueId() }, listBoxContextProps);
+
 	return (
 		<DropdownContent {...rest}>
-			<OptionList role="listbox" {...optionListProps()}>
-				{local.children}
-				<div class="c-select__empty_state">
-					{props.input?.trim() ? (
-						<T>
-							No matches found for <strong>{local.input}</strong>
-						</T>
-					) : (
-						<T>Type something</T>
-					)}
-				</div>
-			</OptionList>
+			<ListBoxContext.Provider value={context}>
+				<OptionList
+					role="listbox"
+					id={local.id}
+					class="t-unstyled"
+					{...handlerProps(listBoxChange, selectCloseOnClick)}
+				>
+					{local.children}
+					<div class="c-select__empty_state">
+						<span class="c-select__no_match">
+							<T>
+								No matches found for{' '}
+								<strong {...{ [selectUpdateWithInput.TEXT_ATTR]: '' }}>
+									{local.input?.trim()}
+								</strong>
+							</T>
+						</span>
+						<span class="c-select__no_value">
+							<T>Type something</T>
+						</span>
+					</div>
+				</OptionList>
+			</ListBoxContext.Provider>
 		</DropdownContent>
 	);
 }

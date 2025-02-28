@@ -1,14 +1,19 @@
 import { flip, offset, shift, size } from '@floating-ui/dom';
+import cx from 'classix';
 import { ChevronsUpDown, X } from 'lucide-solid';
 import { type JSX, splitProps } from 'solid-js';
 
 import { Button } from '~/shared/components/button';
 import { Dropdown } from '~/shared/components/dropdown';
+import { selectClear } from '~/shared/handlers/select';
+import { handlerProps } from '~/shared/utility/event-handler-attrs';
 import { t } from '~/shared/utility/text/t-tag';
 
 export interface SelectContainerProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'children'> {
-	/** Hander for clearing selection */
-	onClear: (e: MouseEvent | KeyboardEvent) => void;
+	/** Input ID, if any */
+	inputId?: string | undefined;
+	/** ListBox ID, if any */
+	listId?: string | undefined;
 	/**
 	 * Two children required -- context and menu. And must be render funcs
 	 * because Dropdown likes it that way.
@@ -17,10 +22,10 @@ export interface SelectContainerProps extends Omit<JSX.HTMLAttributes<HTMLDivEle
 }
 
 export function SelectContainer(props: SelectContainerProps) {
-	const [local, rest] = splitProps(props, ['children', 'onClear']);
+	const [local, rest] = splitProps(props, ['children', 'inputId', 'listId']);
 
 	return (
-		<div {...rest} class="c-select__container">
+		<div {...rest} class={cx('c-select__container', rest.class)}>
 			<Dropdown
 				middleware={[
 					// Selects have a focus ring so give a bit more space than
@@ -54,10 +59,11 @@ export function SelectContainer(props: SelectContainerProps) {
 						</span>
 						<Button
 							class="c-select__clear"
+							aria-controls={[local.listId, local.inputId].join(' ')}
 							aria-label={t`Clear selection`}
-							onClick={local.onClear}
 							unsetFormInput
 							unstyled
+							{...handlerProps(selectClear)}
 						>
 							<X />
 						</Button>

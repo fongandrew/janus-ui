@@ -1,29 +1,38 @@
 import cx from 'classix';
-import { createSignal, createUniqueId, splitProps } from 'solid-js';
+import { createMemo, createUniqueId, splitProps } from 'solid-js';
 
 import { Input, type InputProps } from '~/shared/components/input';
 import { SelectContainer } from '~/shared/components/select-container';
-import { SelectControl } from '~/shared/components/select-control';
 import { SelectOptionList } from '~/shared/components/select-option-list';
 import { SelectText } from '~/shared/components/select-text';
+import { listBoxValues } from '~/shared/handlers/list-box';
+import { getList } from '~/shared/handlers/option-list';
+import {
+	selectFocusOut,
+	selectHighlightOnInput,
+	selectInputKeyDown,
+	selectUpdateText,
+	selectUpdateWithInput,
+} from '~/shared/handlers/select';
+import { handlerProps } from '~/shared/utility/event-handler-attrs';
+import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
 
 export interface SelectTypeaheadProps extends Omit<InputProps, 'onValidate'> {
 	/** Name for form submission */
 	name?: string;
 	/** Placeholder text when no selection */
 	placeholder?: string;
-	/** Currently selected values (controlled) */
+	/**
+	 * Currently selected values (or if never changed, default values -- see
+	 * https://github.com/solidjs/solid/discussions/416 for Solid and controlled state
+	 */
 	values?: Set<string>;
-	/** Default selected values (uncontrolled) */
-	defaultValues?: Set<string>;
 	/** Called when selection changes */
 	onValues?: (value: Set<string>, event: Event) => void;
 	/** Called when typing happens */
 	onValueInput?: (value: string, event: Event) => void;
 	/** Whether multiple selection is allowed */
 	multiple?: boolean;
-	/** Disables clearing selection */
-	required?: boolean;
 	/** Custom validation function for this element */
 	onValidate?: (
 		values: Set<string>,
@@ -32,68 +41,83 @@ export interface SelectTypeaheadProps extends Omit<InputProps, 'onValidate'> {
 }
 
 export function SelectTypeahead(props: SelectTypeaheadProps) {
-	const [listBoxProps, local, inputProps] = splitProps(
-		props,
-		['values', 'defaultValues', 'onValues', 'onValidate', 'multiple', 'required'],
-		['children', 'name', 'onValueInput', 'placeholder'],
-	);
-	const selectControl = new SelectControl(listBoxProps);
+	const [local, inputProps] = splitProps(props, [
+		'children',
+		'name',
+		'placeholder',
+		'values',
+		'onValues',
+		'onValueInput',
+		'onValidate',
+		'multiple',
+	]);
 
 	const descriptionId = createUniqueId();
-	selectControl.extAttr('aria-describedby', descriptionId);
+	const listId = createUniqueId();
 
-	const [input, setInput] = createSignal('');
 	const handleInput = (event: InputEvent) => {
 		const target = event.target as HTMLInputElement;
-
-		// Force open if applicable
-		if (target.value) {
-			selectControl.show();
-		}
-
-		// Update state callbacks
-		setInput(target.value);
 		props.onValueInput?.(target.value, event);
-
-		// Queue microtask to ensure highlight happens after list is updated
-		// from input() changes
-		queueMicrotask(() => {
-			const firstItem = selectControl.items()[0];
-			if (!firstItem) return;
-			selectControl.highlight(firstItem, event);
-		});
 	};
-	selectControl.handle('onInput', handleInput);
 
+	// Trigger values callback on JS change event
+	const handleChange = (event: Event) => {
+		const listElm = getList(event.target as HTMLElement);
+		if (!listElm) return;
+
+		const values = listBoxValues(listElm);
+		local.onValues?.(values, event);
+	};
+
+	// Transform Set<string> validator to string validator for underlying control
 	const handleValidate = (_value: string, event: Event & { delegateTarget: HTMLElement }) => {
-		return listBoxProps.onValidate?.(selectControl.values(), event);
+		const listElm = getList(event.target as HTMLElement);
+		if (!listElm) return;
+		return local.onValidate?.(listBoxValues(listElm), event);
 	};
 
-	const selectProps = selectControl.merge({
-		...inputProps,
-		onValidate: handleValidate,
-	});
+	const id = createMemo(() => inputProps.id || createUniqueId());
 
 	return (
-		<SelectContainer onClear={selectControl.clear.bind(selectControl)}>
+		<SelectContainer
+			listId={listId}
+			inputId={id()}
+			{...handlerProps(selectUpdateText, selectUpdateWithInput)}
+		>
 			{() => (
 				<>
-					<Input {...selectProps} class={cx('c-select__input', props.class)} unstyled />
+					<Input
+						{...handlerProps(
+							selectInputKeyDown,
+							selectFocusOut,
+							selectHighlightOnInput,
+						)}
+						{...inputProps}
+						{...extendHandler(props, 'onChange', handleChange)}
+						{...extendHandler(props, 'onInput', handleInput)}
+						id={id()}
+						role="combobox"
+						class={cx('c-select__input', props.class)}
+						onValidate={handleValidate}
+						aria-autocomplete="list"
+						aria-controls={listId}
+						aria-describedby={descriptionId}
+						aria-haspopup="listbox"
+						aria-multiselectable={props.multiple}
+						unstyled
+					/>
 					<div id={descriptionId} class="c-select__input_description">
-						<SelectText
-							placeholder={local.placeholder}
-							values={selectControl.values()}
-							getItemByValue={selectControl.item.bind(selectControl)}
-						/>
+						<SelectText placeholder={local.placeholder} />
 					</div>
 				</>
 			)}
 			{() => (
 				<SelectOptionList
+					id={listId}
+					input={inputProps.value ? String(inputProps.value) : undefined}
 					name={local.name}
-					input={input()}
-					values={selectControl.values()}
-					listCtrl={selectControl.listCtrl}
+					multiple={local.multiple}
+					values={local.values}
 				>
 					{local.children}
 				</SelectOptionList>

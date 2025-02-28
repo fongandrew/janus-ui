@@ -6,10 +6,9 @@ import {
 	type FormElementProps,
 	mergeFormElementProps,
 } from '~/shared/components/form-element-props';
-import { ListBoxControl } from '~/shared/components/list-box-control';
 import { OptionList, OptionListGroup, OptionListSelectable } from '~/shared/components/option-list';
 import { listBoxChange, listBoxKeyDown, listBoxValues } from '~/shared/handlers/list-box';
-import { isList } from '~/shared/handlers/option-list';
+import { getList, isList } from '~/shared/handlers/option-list';
 import { handlerProps } from '~/shared/utility/event-handler-attrs';
 
 export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'> {
@@ -35,7 +34,7 @@ export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'
 	) => string | undefined | null | Promise<string | undefined | null>;
 }
 
-const ListBoxContext = createContext<
+export const ListBoxContext = createContext<
 	Pick<ListBoxProps, 'name' | 'values' | 'multiple'> | undefined
 >();
 
@@ -49,7 +48,6 @@ export function ListBox(props: ListBoxProps) {
 		'multiple',
 		'required',
 	]);
-	const listBoxControl = new ListBoxControl(local);
 
 	// Trigger values callback on JS change event
 	const handleChange = (event: Event) => {
@@ -64,13 +62,16 @@ export function ListBox(props: ListBoxProps) {
 	};
 
 	// Transform Set<string> validator to string validator for underlying control
-	const handleValidate = (_value: string, event: Event & { delegateTarget: HTMLElement }) =>
-		local.onValidate?.(listBoxControl.values(), event);
+	const handleValidate = (_value: string, event: Event & { delegateTarget: HTMLElement }) => {
+		const listElm = getList(event.target as HTMLElement);
+		if (!listElm) return;
+		return local.onValidate?.(listBoxValues(listElm), event);
+	};
 	const formElementProps = mergeProps(rest, { onValidate: handleValidate });
 	const optionListProps = mergeFormElementProps<'div'>(formElementProps);
 
 	// Create default name for radio group if not provided
-	const context = mergeProps(() => (props.multiple ? { name: createUniqueId() } : {}), props);
+	const context = mergeProps({ name: createUniqueId() }, props);
 
 	return (
 		<ListBoxContext.Provider value={context}>

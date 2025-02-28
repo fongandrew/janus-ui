@@ -3,6 +3,7 @@ import {
 	getList,
 	getListHighlighted,
 	getListItems,
+	highlightInList,
 	optionListKeyDown,
 	optionListMatchText,
 } from '~/shared/handlers/option-list';
@@ -23,6 +24,9 @@ export const menuKeyDown = createHandler('keydown', 'menu__keydown', (event) => 
 	if (event.key === 'Tab') {
 		const popover = target.closest(':popover-open') as HTMLElement | null;
 		popover?.hidePopover();
+
+		// Remove highlight so next time arrow keys go to beginning (or end)
+		highlightInList(listElm, null);
 		return;
 	}
 
@@ -46,7 +50,7 @@ export const menuCloseOnSelect = createHandler('click', 'menu__close-on-select',
  * Autofocus first menu item on menu open
  */
 export const menuFocusOnOpen = createHandler('beforetoggle', 'menu__focus-on-open', (event) => {
-	if ((event as ToggleEvent).newState !== 'open') return;
+	if ((event as ToggleEvent & { delegateTarget: HTMLElement }).newState !== 'open') return;
 
 	const dropdown = event.target as HTMLElement;
 	if (dropdown.querySelector('[autofocus]')) return;

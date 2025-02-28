@@ -44,7 +44,9 @@ function SelectTypeaheadDemo() {
 							onValueInput={setQuery}
 						>
 							<For each={parts()}>
-								{(part) => <ListBoxItem value={part}>{part}</ListBoxItem>}
+								{(part, index) => (
+									<ListBoxItem value={`${part}-${index()}`}>{part}</ListBoxItem>
+								)}
 							</For>
 						</SelectTypeahead>
 					</LabelledInput>
@@ -68,7 +70,11 @@ function SelectTypeaheadDemo() {
 							<Show when={parts().length > 0}>
 								<ListBoxGroup>
 									<For each={parts()}>
-										{(part) => <ListBoxItem value={part}>{part}</ListBoxItem>}
+										{(part, index) => (
+											<ListBoxItem value={`${part}-${index()}`}>
+												{part}
+											</ListBoxItem>
+										)}
 									</For>
 								</ListBoxGroup>
 							</Show>

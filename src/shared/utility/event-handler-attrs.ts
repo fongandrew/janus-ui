@@ -35,9 +35,12 @@ function eventHandler(event: Event) {
 		const attrValue = (node as HTMLElement).getAttribute?.(HANDLER_ATTR);
 		if (!attrValue) continue;
 
+		const eventWithDelegateTarget = Object.assign(event, {
+			delegateTarget: node as HTMLElement,
+		});
 		for (const handlerId of attrValue.split(' ')) {
 			if (isImmediatePropagationStopped(event)) return;
-			handlers[handlerId]?.(event);
+			handlers[handlerId]?.(eventWithDelegateTarget);
 		}
 	}
 }
@@ -85,7 +88,7 @@ const DELEGATABLE_EVENTS = {
  */
 function getHandlerMap<T extends keyof typeof DELEGATABLE_EVENTS>(
 	eventType: T,
-): Record<string, (event: HTMLElementEventMap[T]) => void> {
+): Record<string, (event: HTMLElementEventMap[T] & { delegateTarget: HTMLElement }) => void> {
 	let handlerMap = handlerRegistry[eventType];
 	if (handlerMap) return handlerMap;
 
@@ -110,7 +113,7 @@ function getHandlerMap<T extends keyof typeof DELEGATABLE_EVENTS>(
 export function listen<T extends keyof typeof DELEGATABLE_EVENTS>(
 	eventType: T,
 	handlerId: string,
-	handler: (event: HTMLElementEventMap[T]) => void,
+	handler: (event: HTMLElementEventMap[T] & { delegateTarget: HTMLElement }) => void,
 ) {
 	getHandlerMap(eventType)[handlerId] = handler;
 }
@@ -133,7 +136,7 @@ export function unlisten<T extends keyof typeof DELEGATABLE_EVENTS>(
 export function createHandler<T extends keyof typeof DELEGATABLE_EVENTS>(
 	eventType: T,
 	handlerId: string,
-	handler: (event: HTMLElementEventMap[T]) => void,
+	handler: (event: HTMLElementEventMap[T] & { delegateTarget: HTMLElement }) => void,
 ) {
 	function handle() {
 		listen(eventType, handlerId, (e) => handle.do(e));

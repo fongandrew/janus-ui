@@ -4,7 +4,7 @@ import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 /**
  * Handle menu blur / focus out closing the parent popover
  */
-export const dropdownCloseOnBlur = createHandler('focusout', 'dropdown__focus-out', (event) => {
+export const dropdownCloseOnBlur = createHandler('focusout', 'dropdown__focusout', (event) => {
 	if (!isFocusVisible()) return;
 
 	const relatedTarget = event.relatedTarget as HTMLElement | null;

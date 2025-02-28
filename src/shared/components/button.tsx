@@ -21,7 +21,7 @@ export interface ButtonProps extends FormElementProps<'button'> {
 export function BaseButton(props: ButtonProps) {
 	const [local, rest] = splitProps(props, ['unstyled']);
 	const formElementProps = mergeFormElementProps<'button'>(rest);
-	const resolved = children(() => formElementProps.children);
+	const resolved = children(() => props.children);
 	return (
 		<button
 			type="button"

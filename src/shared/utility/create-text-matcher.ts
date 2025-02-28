@@ -6,11 +6,14 @@ export interface TextMatcherOptions {
 	delay?: number;
 	/** Regex for characters to ignore (applied after normalization) */
 	ignore?: RegExp | undefined;
+	/** Callback to extract text from element (defaults to textContent) */
+	getText?: (node: HTMLElement) => string;
 }
 
 const DEFAULT_OPTIONS = {
 	delay: 500,
 	ignore: /[^a-z0-9]/g,
+	getText: (node: HTMLElement) => node.textContent ?? '',
 };
 
 /**
@@ -22,7 +25,7 @@ export function createTextMatcher(
 	getNodes: () => Iterable<HTMLElement>,
 	options: TextMatcherOptions = {},
 ) {
-	const { delay, ignore } = { ...DEFAULT_OPTIONS, ...options };
+	const { delay, ignore, getText } = { ...DEFAULT_OPTIONS, ...options };
 
 	let current = '';
 	let lastMatchTime = 0;
@@ -32,7 +35,7 @@ export function createTextMatcher(
 	const getNormalizedText = (node: Node) => {
 		let normalized = cachedNormalizedText.get(node);
 		if (!normalized) {
-			normalized = normalizeText(node.textContent ?? '');
+			normalized = normalizeText(getText(node as HTMLElement));
 			if (ignore) {
 				normalized = normalized.replace(ignore, '');
 			}

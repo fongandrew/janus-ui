@@ -226,11 +226,15 @@ export function Dropdown(props: DropdownProps) {
 		});
 		control.handle('onKeyDown', (e) => {
 			if (!visible() && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
-				openDropdown();
 				e.preventDefault();
-
-				// For menu, move focus into menu
 				const trigger = e.target as HTMLElement;
+
+				// Don't open for comobobox (select has its own handlers)
+				if (trigger.role !== 'combobox') {
+					openDropdown();
+				}
+
+				// For menus and dialogs, move focus into menu
 				if (trigger.ariaHasPopup === 'menu') {
 					const items = dropdownContentCtrl
 						.ref()
