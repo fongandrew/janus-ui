@@ -159,6 +159,7 @@
 			@mixin t-border;
 			@mixin t-radius-inner;
 
+			cursor: pointer;
 			padding: 0 var(--v-inner-radius);
 		}
 	}
