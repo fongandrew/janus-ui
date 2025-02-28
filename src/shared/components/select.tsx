@@ -8,9 +8,15 @@ import { SelectOptionList } from '~/shared/components/select-option-list';
 import { SelectText } from '~/shared/components/select-text';
 import { listBoxValues } from '~/shared/handlers/list-box';
 import { getList } from '~/shared/handlers/option-list';
-import { selectButtonKeyDown, selectFocusOut, selectUpdateText } from '~/shared/handlers/select';
+import {
+	selectButtonKeyDown,
+	selectFocusOut,
+	selectMountText,
+	selectUpdateText,
+} from '~/shared/handlers/select';
 import { handlerProps } from '~/shared/utility/event-handler-attrs';
 import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
+import { useMountAttrs } from '~/shared/utility/solid/use-mount-attrs';
 
 export interface SelectProps extends Omit<FormElementProps<'button'>, 'onValidate'> {
 	/** Name for form submission */
@@ -64,8 +70,10 @@ export function Select(props: SelectProps) {
 		return local.onValidate?.(listBoxValues(listElm), event);
 	};
 
+	const mounterProps = useMountAttrs(selectMountText);
+
 	return (
-		<SelectContainer listId={listId} {...handlerProps(selectUpdateText)}>
+		<SelectContainer listId={listId} {...handlerProps(selectUpdateText)} {...mounterProps}>
 			{() => (
 				<Button
 					{...handlerProps(selectButtonKeyDown, selectFocusOut)}

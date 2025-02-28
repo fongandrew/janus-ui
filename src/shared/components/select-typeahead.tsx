@@ -11,11 +11,13 @@ import {
 	selectFocusOut,
 	selectHighlightOnInput,
 	selectInputKeyDown,
+	selectMountText,
 	selectUpdateText,
 	selectUpdateWithInput,
 } from '~/shared/handlers/select';
 import { handlerProps } from '~/shared/utility/event-handler-attrs';
 import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
+import { useMountAttrs } from '~/shared/utility/solid/use-mount-attrs';
 
 export interface SelectTypeaheadProps extends Omit<InputProps, 'onValidate'> {
 	/** Name for form submission */
@@ -77,12 +79,14 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 	};
 
 	const id = createMemo(() => inputProps.id || createUniqueId());
+	const mounterProps = useMountAttrs(selectMountText);
 
 	return (
 		<SelectContainer
 			listId={listId}
 			inputId={id()}
 			{...handlerProps(selectUpdateText, selectUpdateWithInput)}
+			{...mounterProps}
 		>
 			{() => (
 				<>

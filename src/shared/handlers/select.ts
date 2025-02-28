@@ -15,6 +15,7 @@ import {
 import { createHandler } from '~/shared/utility/event-handler-attrs';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { data } from '~/shared/utility/magic-strings';
+import { createMounter } from '~/shared/utility/mount-attrs';
 import { t } from '~/shared/utility/text/t-tag';
 
 /** Keydown handler for select button */
@@ -128,6 +129,28 @@ export const selectHighlightOnInput = createHandler('input', 'select__focus-on-i
 });
 
 /**
+ * Mounter to populate descriptive text for select button or input based on selected
+ * elements in list box.
+ */
+export const selectMountText = createMounter('select__mount-text', (elm) => {
+	const updateTarget = elm.querySelector<HTMLElement>(`[${selectUpdateText.DESC_ATTR}]`);
+	if (!updateTarget) return;
+
+	const listElm = getList(elm.querySelector('[role="combobox') ?? elm);
+	if (!listElm) return;
+
+	const values = listBoxValues(listElm);
+	if (values.size === 0) {
+		updateTarget.textContent = '';
+	} else if (values.size > 1) {
+		updateTarget.textContent = t`${values.size} selected`;
+	} else {
+		const checked = listElm.querySelector<HTMLInputElement>(':checked');
+		updateTarget.textContent = checked?.closest('label')?.textContent ?? '';
+	}
+});
+
+/**
  * Change handler that updates content of a select box with text from the selected
  * values (or summary text if multiple values are selected). Should be attached to
  * an element that gets the bubbled change event and contains the element to update.
@@ -189,14 +212,28 @@ function showOnKeyDown(event: KeyboardEvent) {
 			?.popoverTargetElement as HTMLElement;
 		popover?.showPopover();
 
+		const listElm = getList(event.target as HTMLElement);
+		if (!listElm) return;
+
 		// Arrow down should highlight first item only if there is no item already
 		// highlighted (e.g. go to default)
 		if (event.key === 'ArrowDown') {
-			const listElm = getList(event.target as HTMLElement);
-			if (listElm && !getListHighlighted(listElm)) {
-				const items = getListItems(listElm);
-				highlightInList(listElm, items[0] ?? null);
+			const highlighted = getListHighlighted(listElm);
+			if (highlighted) return;
+
+			// For single select, highlight selected item by default
+			const controller = getControllingElement(listElm);
+			const multiple = controller.getAttribute('aria-multiselectable') === 'true';
+			if (!multiple) {
+				const checked = listElm.querySelector<HTMLInputElement>(':checked');
+				if (checked) {
+					highlightInList(listElm, checked);
+					return;
+				}
 			}
+
+			const items = getListItems(listElm);
+			highlightInList(listElm, items[0] ?? null);
 		}
 
 		// Arrow up is different in that it always highlights the last item in list,

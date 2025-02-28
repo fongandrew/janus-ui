@@ -13,6 +13,8 @@ import { Select } from '~/shared/components/select';
 
 function SelectDemo() {
 	const [value, setValue] = createSignal<Set<string>>(new Set());
+	const [withInitValue, setWithInitValue] = createSignal<Set<string>>(new Set(['banana']));
+	const [longValue, setLongValue] = createSignal<Set<string>>(new Set());
 	const [multiValue, setMultiValue] = createSignal<Set<string>>(new Set());
 
 	return (
@@ -33,6 +35,21 @@ function SelectDemo() {
 							placeholder="Select a fruit..."
 							values={value()}
 							onValues={setValue}
+						>
+							<ListBoxItem value="apple">Apple</ListBoxItem>
+							<ListBoxItem value="banana">Banana</ListBoxItem>
+							<ListBoxItem value="orange">Orange</ListBoxItem>
+						</Select>
+					</LabelledInput>
+
+					<LabelledInput
+						label="Single selection with initial value"
+						description={`Selected: ${Array.from(withInitValue()).join(', ') || 'None'}`}
+					>
+						<Select
+							placeholder="Select a fruit..."
+							values={withInitValue()}
+							onValues={setWithInitValue}
 						>
 							<ListBoxItem value="apple">Apple</ListBoxItem>
 							<ListBoxItem value="banana">Banana</ListBoxItem>
@@ -68,8 +85,8 @@ function SelectDemo() {
 					>
 						<Select
 							placeholder="Select an option..."
-							values={value()}
-							onValues={setValue}
+							values={longValue()}
+							onValues={setLongValue}
 						>
 							<For each={[...Array(100).keys()]}>
 								{(i) => <ListBoxItem value={String(i)}>Option {i}</ListBoxItem>}
