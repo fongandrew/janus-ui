@@ -24,6 +24,11 @@
 	.c-option-list__item {
 		@mixin v-text-sm;
 
+		/*
+			See v-colors-highlight usage below for highlighting
+		*/
+		@mixin t-no-focus-ring;
+
 		cursor: pointer;
 
 		/*
@@ -65,7 +70,6 @@
 	body[data-kb-nav='true'] :popover-open .c-option-list__item[data-option-list__active],
 	body[data-kb-nav='true'] :popover-open .c-option-list__item:has([data-option-list__active]) {
 		@mixin v-colors-highlight;
-		@mixin t-no-focus-ring;
 	}
 
 	.c-option-list__heading {
