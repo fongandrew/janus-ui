@@ -91,12 +91,13 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 			{() => (
 				<>
 					<Input
+						{...inputProps}
 						{...handlerProps(
+							inputProps,
 							selectInputKeyDown,
 							selectFocusOut,
 							selectHighlightOnInput,
 						)}
-						{...inputProps}
 						{...extendHandler(props, 'onChange', handleChange)}
 						{...extendHandler(props, 'onInput', handleInput)}
 						id={id()}

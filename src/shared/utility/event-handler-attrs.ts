@@ -10,7 +10,7 @@ import {
 import { data } from '~/shared/utility/magic-strings';
 
 /** Data attribute used to identify delegated event handlers */
-const HANDLER_ATTR = data('handler');
+export const HANDLER_ATTR = data('handler');
 
 /**
  * Delegated handler registry mapping event types to IDs to event handlers. Presence of event
@@ -153,9 +153,24 @@ export function createHandler<T extends keyof typeof DELEGATABLE_EVENTS>(
 /**
  * Convenience function to return a spreadable props object with the handler ID(s)
  */
-export function handlerProps(...handlerIds: (string | (() => string))[]): Record<string, string> {
-	const ids = [];
-	for (const id of handlerIds) {
+export function handlerProps(
+	props: Record<string, any>,
+	...handlerIds: (string | (() => string))[]
+): Record<string, string>;
+export function handlerProps(...handlerIds: (string | (() => string))[]): Record<string, string>;
+export function handlerProps(
+	propsOrFirstHandler?: Record<string, any> | string | (() => string),
+	...extraHandlerIds: (string | (() => string))[]
+): Record<string, string> {
+	const ids: string[] = [];
+	if (typeof propsOrFirstHandler === 'string') {
+		ids.push(propsOrFirstHandler);
+	} else if (typeof propsOrFirstHandler === 'function') {
+		ids.push(propsOrFirstHandler());
+	} else if (propsOrFirstHandler?.[HANDLER_ATTR]) {
+		ids.push(propsOrFirstHandler[HANDLER_ATTR] as string);
+	}
+	for (const id of extraHandlerIds) {
 		ids.push(typeof id === 'function' ? id() : id);
 	}
 	return { [HANDLER_ATTR]: ids.join(' ') };

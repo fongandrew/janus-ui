@@ -33,7 +33,7 @@ export function Menu(props: MenuProps) {
 
 	return (
 		<DropdownContent
-			{...handlerProps(menuFocusOnOpen, dropdownCloseOnBlur)}
+			{...handlerProps(props, menuFocusOnOpen, dropdownCloseOnBlur)}
 			{...extendHandler(props, 'onClick', handleClick)}
 			{...rest}
 		>

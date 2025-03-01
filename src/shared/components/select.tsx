@@ -76,8 +76,8 @@ export function Select(props: SelectProps) {
 		<SelectContainer listId={listId} {...handlerProps(selectUpdateText)} {...mounterProps}>
 			{() => (
 				<Button
-					{...handlerProps(selectButtonKeyDown, selectFocusOut)}
 					{...buttonProps}
+					{...handlerProps(buttonProps, selectButtonKeyDown, selectFocusOut)}
 					{...extendHandler(buttonProps, 'onChange', handleChange)}
 					role="combobox"
 					class={cx('c-select__button', props.class)}

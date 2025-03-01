@@ -76,8 +76,8 @@ export function ListBox(props: ListBoxProps) {
 	return (
 		<ListBoxContext.Provider value={context}>
 			<OptionList
-				{...handlerProps(listBoxChange, listBoxKeyDown)}
 				{...optionListProps}
+				{...handlerProps(optionListProps, listBoxChange, listBoxKeyDown)}
 				role="listbox"
 				class={cx('c-list-box', rest.class)}
 				tabIndex={0}
