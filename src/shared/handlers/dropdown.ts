@@ -17,8 +17,22 @@ import { createMagicProp } from '~/shared/utility/magic-prop';
 import { data } from '~/shared/utility/magic-strings';
 import { evtDoc } from '~/shared/utility/multi-view';
 import { parseIntOrNull } from '~/shared/utility/parse';
+import { onUnmount } from '~/shared/utility/unmount-observer';
 
-const [popoverCleanup, setPopoverCleanup] = createMagicProp<() => void>();
+const [cleanUpCallback, setCleanUpCallback] = createMagicProp<() => void>();
+
+/** Set popover cleanup function */
+export const setPopoverCleanUp = (popover: HTMLElement, cleanUp: () => void) => {
+	setCleanUpCallback(popover, cleanUp);
+	onUnmount(popover, cleanUpPopover);
+};
+
+/** Clean up observers associated with a popover */
+export const cleanUpPopover = (popover: HTMLElement) => {
+	const cleanUp = cleanUpCallback(popover);
+	cleanUp?.();
+	setCleanUpCallback(popover, undefined);
+};
 
 /**
  * Handle menu blur / focus out closing the parent popover
@@ -65,15 +79,13 @@ export const dropdownBeforeToggle = Object.assign(
 		// Position the popover relative to trigger
 		const trigger = evtDoc(event)?.querySelector<HTMLElement>(`[popovertarget="${target.id}"]`);
 		if (!trigger) return;
+
 		if (event.newState === 'open') {
 			updatePosition(trigger, target);
-			setPopoverCleanup(
-				target,
-				autoUpdate(trigger, target, () => updatePosition(trigger, target)),
-			);
+			const cleanUp = autoUpdate(trigger, target, () => updatePosition(trigger, target));
+			setPopoverCleanUp(target, cleanUp);
 		} else {
-			const cleanUp = popoverCleanup(target);
-			cleanUp?.();
+			cleanUpPopover(target);
 		}
 
 		trigger.setAttribute('aria-expanded', event.newState === 'open' ? 'true' : 'false');
@@ -95,8 +107,7 @@ const updatePosition = async (
 	},
 ) => {
 	if (!trigger.isConnected || !popover.isConnected) {
-		const cleanUp = popoverCleanup(popover);
-		cleanUp?.();
+		cleanUpPopover(popover);
 		return;
 	}
 

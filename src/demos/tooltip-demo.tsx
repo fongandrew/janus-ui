@@ -17,17 +17,17 @@ function TooltipDemo() {
 			</CardHeader>
 			<CardContent>
 				<div class="o-grid v-spacing-sm">
-					<Tooltip tip="Hello, I'm a toolip" placement="top">
-						<Button>Top</Button>
+					<Tooltip tip="Hello, I'm a tooltip" placement="top">
+						{(props) => <Button {...props}>Top</Button>}
 					</Tooltip>
-					<Tooltip tip="Hello, I'm a toolip" placement="bottom">
-						<Button>Bottom</Button>
+					<Tooltip tip="Hello, I'm a tooltip" placement="bottom">
+						{(props) => <Button {...props}>Bottom</Button>}
 					</Tooltip>
-					<Tooltip tip="Hello, I'm a toolip" placement="left">
-						<Button>Left</Button>
+					<Tooltip tip="Hello, I'm a tooltip" placement="left">
+						{(props) => <Button {...props}>Left</Button>}
 					</Tooltip>
-					<Tooltip tip="Hello, I'm a toolip" placement="right">
-						<Button>Right</Button>
+					<Tooltip tip="Hello, I'm a tooltip" placement="right">
+						{(props) => <Button {...props}>Right</Button>}
 					</Tooltip>
 				</div>
 			</CardContent>
