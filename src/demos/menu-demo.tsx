@@ -8,8 +8,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '~/shared/components/card';
-import { Dropdown } from '~/shared/components/dropdown';
-import { Menu, MenuGroup, MenuItem, MenuItemLink } from '~/shared/components/menu';
+import { Menu, MenuGroup, MenuItem, MenuItemLink, MenuTrigger } from '~/shared/components/menu';
 
 function MenuDemo() {
 	const [selection, setSelection] = createSignal<string | null>(null);
@@ -23,21 +22,21 @@ function MenuDemo() {
 				<div class="o-stack">
 					<output>Selected: {selection() ?? 'None'}</output>
 					<div class="o-group">
-						<Dropdown>
-							{() => <Button>Simple Menu</Button>}
-							{() => (
-								<Menu onValue={setSelection}>
+						<MenuTrigger>
+							{(props) => <Button {...props}>Simple Menu</Button>}
+							{(props) => (
+								<Menu {...props} onValue={setSelection}>
 									<MenuItem value="a">Option A</MenuItem>
 									<MenuItem value="b">Option B</MenuItem>
 									<MenuItem value="c">Option C</MenuItem>
 								</Menu>
 							)}
-						</Dropdown>
+						</MenuTrigger>
 
-						<Dropdown>
-							{() => <Button>Menu with Groups</Button>}
-							{() => (
-								<Menu onValue={setSelection}>
+						<MenuTrigger>
+							{(props) => <Button {...props}>Menu with Groups</Button>}
+							{(props) => (
+								<Menu {...props} onValue={setSelection}>
 									<MenuGroup heading="File">
 										<MenuItem value="new">New file</MenuItem>
 										<MenuItem value="open">Open...</MenuItem>
@@ -65,7 +64,7 @@ function MenuDemo() {
 									</MenuGroup>
 								</Menu>
 							)}
-						</Dropdown>
+						</MenuTrigger>
 					</div>
 				</div>
 			</CardContent>

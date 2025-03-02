@@ -51,6 +51,16 @@ export const selectInputKeyDown = createHandler('keydown', 'select__input-keydow
 	}
 });
 
+/**
+ * Toggle popover on input click -- this happens automatically with buttons with
+ * popovertargets but not inputs
+ */
+export const selectInputClick = createHandler('click', 'select__input-click', (event) => {
+	const target = event.target as HTMLInputElement;
+	const popover = target.popoverTargetElement as HTMLElement;
+	popover?.togglePopover();
+});
+
 /** Blur / focusout handler to close dropdown when focus leaves input */
 export const selectFocusOut = createHandler('focusout', 'select__focusout', (event) => {
 	if (!isFocusVisible()) return;
@@ -218,6 +228,7 @@ function showOnKeyDown(event: KeyboardEvent) {
 		// Arrow down should highlight first item only if there is no item already
 		// highlighted (e.g. go to default)
 		if (event.key === 'ArrowDown') {
+			event.preventDefault();
 			const highlighted = getListHighlighted(listElm);
 			if (highlighted) return;
 
@@ -239,6 +250,7 @@ function showOnKeyDown(event: KeyboardEvent) {
 		// Arrow up is different in that it always highlights the last item in list,
 		// regardless of previous selection
 		if (event.key === 'ArrowUp') {
+			event.preventDefault();
 			const listElm = getList(event.target as HTMLElement);
 			if (listElm) {
 				const items = getListItems(listElm);

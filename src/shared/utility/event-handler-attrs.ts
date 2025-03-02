@@ -154,24 +154,21 @@ export function createHandler<T extends keyof typeof DELEGATABLE_EVENTS>(
  * Convenience function to return a spreadable props object with the handler ID(s)
  */
 export function handlerProps(
-	props: Record<string, any>,
-	...handlerIds: (string | (() => string))[]
-): Record<string, string>;
-export function handlerProps(...handlerIds: (string | (() => string))[]): Record<string, string>;
-export function handlerProps(
-	propsOrFirstHandler?: Record<string, any> | string | (() => string),
-	...extraHandlerIds: (string | (() => string))[]
+	...handlersOrProps: (Record<string, any> | string | (() => string))[]
 ): Record<string, string> {
 	const ids: string[] = [];
-	if (typeof propsOrFirstHandler === 'string') {
-		ids.push(propsOrFirstHandler);
-	} else if (typeof propsOrFirstHandler === 'function') {
-		ids.push(propsOrFirstHandler());
-	} else if (propsOrFirstHandler?.[HANDLER_ATTR]) {
-		ids.push(propsOrFirstHandler[HANDLER_ATTR] as string);
-	}
-	for (const id of extraHandlerIds) {
-		ids.push(typeof id === 'function' ? id() : id);
+	for (const idOrProps of handlersOrProps) {
+		switch (typeof idOrProps) {
+			case 'string':
+				ids.push(idOrProps);
+				break;
+			case 'function':
+				ids.push(idOrProps());
+				break;
+			case 'object':
+				if (idOrProps[HANDLER_ATTR]) ids.push(idOrProps[HANDLER_ATTR] as string);
+				break;
+		}
 	}
 	return { [HANDLER_ATTR]: ids.join(' ') };
 }

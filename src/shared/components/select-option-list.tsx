@@ -9,6 +9,10 @@ import { handlerProps } from '~/shared/utility/event-handler-attrs';
 import { T } from '~/shared/utility/text/t-components';
 
 export interface SelectOptionListProps extends JSX.HTMLAttributes<HTMLDivElement> {
+	/** ID is required for popover */
+	id: string;
+	/** Separate listbox ID for `aria-controls` on combobox */
+	listBoxId?: string | undefined;
 	/** Form input name */
 	name?: string | undefined;
 	/** Currently selected values */
@@ -22,7 +26,7 @@ export interface SelectOptionListProps extends JSX.HTMLAttributes<HTMLDivElement
 export function SelectOptionList(props: SelectOptionListProps) {
 	const [local, listBoxContextProps, rest] = splitProps(
 		props,
-		['children', 'id', 'input'],
+		['children', 'listBoxId', 'input'],
 		['name', 'values', 'multiple'],
 	);
 
@@ -34,7 +38,7 @@ export function SelectOptionList(props: SelectOptionListProps) {
 			<ListBoxContext.Provider value={context}>
 				<OptionList
 					role="listbox"
-					id={local.id}
+					id={local.listBoxId}
 					class="t-unstyled"
 					{...handlerProps(listBoxChange, selectCloseOnClick)}
 				>

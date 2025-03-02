@@ -10,6 +10,7 @@ import { getList } from '~/shared/handlers/option-list';
 import {
 	selectFocusOut,
 	selectHighlightOnInput,
+	selectInputClick,
 	selectInputKeyDown,
 	selectMountText,
 	selectUpdateText,
@@ -88,12 +89,15 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 			{...handlerProps(selectUpdateText, selectUpdateWithInput)}
 			{...mounterProps}
 		>
-			{() => (
+			{(triggerProps) => (
 				<>
 					<Input
+						{...triggerProps}
 						{...inputProps}
 						{...handlerProps(
+							triggerProps,
 							inputProps,
+							selectInputClick,
 							selectInputKeyDown,
 							selectFocusOut,
 							selectHighlightOnInput,
@@ -116,9 +120,10 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 					</div>
 				</>
 			)}
-			{() => (
+			{(props) => (
 				<SelectOptionList
-					id={listId}
+					{...props}
+					listBoxId={listId}
 					input={inputProps.value ? String(inputProps.value) : undefined}
 					name={local.name}
 					multiple={local.multiple}

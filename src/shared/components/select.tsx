@@ -74,10 +74,16 @@ export function Select(props: SelectProps) {
 
 	return (
 		<SelectContainer listId={listId} {...handlerProps(selectUpdateText)} {...mounterProps}>
-			{() => (
+			{(triggerProps) => (
 				<Button
+					{...triggerProps}
 					{...buttonProps}
-					{...handlerProps(buttonProps, selectButtonKeyDown, selectFocusOut)}
+					{...handlerProps(
+						triggerProps,
+						buttonProps,
+						selectButtonKeyDown,
+						selectFocusOut,
+					)}
 					{...extendHandler(buttonProps, 'onChange', handleChange)}
 					role="combobox"
 					class={cx('c-select__button', props.class)}
@@ -90,9 +96,10 @@ export function Select(props: SelectProps) {
 					<SelectText placeholder={local.placeholder} />
 				</Button>
 			)}
-			{() => (
+			{(popoverProps) => (
 				<SelectOptionList
-					id={listId}
+					{...popoverProps}
+					listBoxId={listId}
 					name={local.name}
 					multiple={local.multiple}
 					values={local.values}
