@@ -74,39 +74,28 @@ export function Select(props: SelectProps) {
 
 	return (
 		<SelectContainer listId={listId} {...handlerProps(selectUpdateText)} {...mounterProps}>
-			{(triggerProps) => (
-				<Button
-					{...triggerProps}
-					{...buttonProps}
-					{...handlerProps(
-						triggerProps,
-						buttonProps,
-						selectButtonKeyDown,
-						selectFocusOut,
-					)}
-					{...extendHandler(buttonProps, 'onChange', handleChange)}
-					role="combobox"
-					class={cx('c-select__button', props.class)}
-					onValidate={handleValidate}
-					aria-controls={listId}
-					aria-haspopup="listbox"
-					aria-multiselectable={props.multiple}
-					unstyled
-				>
-					<SelectText placeholder={local.placeholder} />
-				</Button>
-			)}
-			{(popoverProps) => (
-				<SelectOptionList
-					{...popoverProps}
-					listBoxId={listId}
-					name={local.name}
-					multiple={local.multiple}
-					values={local.values}
-				>
-					{local.children}
-				</SelectOptionList>
-			)}
+			<Button
+				{...buttonProps}
+				{...handlerProps(buttonProps, selectButtonKeyDown, selectFocusOut)}
+				{...extendHandler(buttonProps, 'onChange', handleChange)}
+				role="combobox"
+				class={cx('c-select__button', props.class)}
+				onValidate={handleValidate}
+				aria-controls={listId}
+				aria-haspopup="listbox"
+				aria-multiselectable={props.multiple}
+				unstyled
+			>
+				<SelectText placeholder={local.placeholder} />
+			</Button>
+			<SelectOptionList
+				listBoxId={listId}
+				name={local.name}
+				multiple={local.multiple}
+				values={local.values}
+			>
+				{local.children}
+			</SelectOptionList>
 		</SelectContainer>
 	);
 }

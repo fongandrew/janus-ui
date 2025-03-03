@@ -28,6 +28,7 @@ export type PropModContextShape<T> = PropModGeneric<T>[];
 export function createPropModContext<T = JSX.HTMLAttributes<HTMLElement>>() {
 	const Context = createContext<PropModContextShape<T>>([]);
 
+	/** Pass props on provider down to targeted element */
 	function Provider(props: PropModGeneric<T> & { children: JSX.Element }) {
 		const parentContext = useContext(Context) ?? [];
 		const [local, rest] = splitProps(props, ['children']);
@@ -36,9 +37,15 @@ export function createPropModContext<T = JSX.HTMLAttributes<HTMLElement>>() {
 		);
 	}
 
+	/** Reset is used to unset props provided by ancestors */
+	function Reset(props: { children: JSX.Element }) {
+		return <Context.Provider value={[]} children={props.children} />;
+	}
+
 	const { Provider: _originalProvider, ...rest } = Context;
 	return {
 		Provider,
+		Reset,
 		...rest,
 	};
 }

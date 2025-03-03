@@ -1,33 +1,24 @@
 import { type Placement } from '@floating-ui/dom';
 import cx from 'classix';
-import { createMemo, type JSX, splitProps } from 'solid-js';
+import { createContext, createMemo, type JSX, splitProps, useContext } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
 import { GhostButton } from '~/shared/components/button';
+import {
+	FormElementButtonPropsProvider,
+	FormElementResetProvider,
+} from '~/shared/components/form-element-context';
 import { dropdownBeforeToggle, dropdownClose } from '~/shared/handlers/dropdown';
+import { attrs } from '~/shared/utility/attribute-list';
 import { handlerProps } from '~/shared/utility/event-handler-attrs';
 import { T } from '~/shared/utility/text/t-components';
-import { type RequiredNonNullable } from '~/shared/utility/type-helpers';
 
-export interface DropdownContentProps extends JSX.HTMLAttributes<HTMLDivElement> {
-	/** ID required to open */
-	id: string;
+// Omit the `id` attribute from the HTMLDivElement interface because it should be assigned
+// via context
+export interface DropdownContentProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'id'> {
 	/** Make children required */
 	children: JSX.Element;
 }
-
-/** Props passed to trigger render func */
-export type TriggerRenderProps = RequiredNonNullable<
-	Pick<
-		JSX.ButtonHTMLAttributes<HTMLButtonElement>,
-		'id' | 'aria-expanded' | 'aria-haspopup' | 'popoverTarget' | 'popoverTargetAction'
-	>
->;
-
-/** Props to pass to popover render func */
-export type PopoverRenderProps = RequiredNonNullable<
-	Pick<JSX.ButtonHTMLAttributes<HTMLButtonElement>, 'id' | 'popover' | 'aria-labelledby'>
->;
 
 export interface DropdownProps {
 	/** Fixed width dropdown (vs expanding to fill available space up to some CSS max) */
@@ -40,29 +31,46 @@ export interface DropdownProps {
 	triggerId?: string | undefined;
 	/** Popover ID (set here instead of on popover so elements can reference each other) */
 	popoverId?: string | undefined;
-	/** Two children required -- trigger and popover render funcs */
-	children: [
-		(triggerProps: TriggerRenderProps) => JSX.Element,
-		(renderProps: PopoverRenderProps) => JSX.Element,
-	];
+	/**
+	 * Make children required -- should be two (trigger + popover) but a bit awkward
+	 * to type that since we can have intervening components rendering both
+	 */
+	children: JSX.Element;
 }
+
+export const DropdownContext = createContext<{
+	triggerId: () => string;
+	popoverId: () => string;
+}>();
 
 /** A wrapper component that applies Dropdown styling and connects to `createDropdown` */
 export function DropdownContent(props: DropdownContentProps) {
+	const context = useContext(DropdownContext);
 	const [local, rest] = splitProps(props, ['children']);
+
+	// Reset to prevent dropdown trigger props from flowing down into dropdown content
 	return (
-		<div {...rest} class={cx('c-dropdown__content', rest.class)} popover>
-			<div class="c-dropdown__children">{local.children}</div>
-			<div class="c-dropdown__footer">
-				<GhostButton
-					class="v-input-sm"
-					unsetFormInput
-					{...handlerProps(props, dropdownClose)}
-				>
-					<T>Close</T>
-				</GhostButton>
+		<FormElementResetProvider>
+			<div
+				{...rest}
+				{...handlerProps(rest, dropdownBeforeToggle)}
+				id={context?.popoverId()}
+				class={cx('c-dropdown__content', rest.class)}
+				aria-labelledby={attrs(context?.triggerId(), rest['aria-labelledby'])}
+				popover="auto"
+			>
+				<div class="c-dropdown__children">{local.children}</div>
+				<div class="c-dropdown__footer">
+					<GhostButton
+						class="v-input-sm"
+						unsetFormInput
+						{...handlerProps(props, dropdownClose)}
+					>
+						<T>Close</T>
+					</GhostButton>
+				</div>
 			</div>
-		</div>
+		</FormElementResetProvider>
 	);
 }
 
@@ -70,29 +78,22 @@ export function DropdownContent(props: DropdownContentProps) {
 export function Dropdown(props: DropdownProps) {
 	const triggerId = createMemo(() => props.triggerId ?? createUniqueId());
 	const popoverId = createMemo(() => props.popoverId ?? createUniqueId());
-	const triggerProps = createMemo(() => ({
-		id: triggerId(),
-		'aria-expanded': false,
-		'aria-haspopup': 'menu' as const,
-		popoverTarget: popoverId(),
-		// popovertargetaction is "toggle" by default. Set exlicit show or else other handlers
-		// (like select) which may do an explicit show right before that will transform this
-		// into a hide action. Rely on `esc` + light dismiss to hide instead.
-		popoverTargetAction: 'show' as const,
-		[dropdownBeforeToggle.FIXED_WIDTH_ATTR]: props.fixedWidth,
-		[dropdownBeforeToggle.OFFSET_ATTR]: props.offset,
-		[dropdownBeforeToggle.PLACEMENT_ATTR]: props.placement,
-	}));
-	const popoverProps = createMemo(() => ({
-		id: popoverId(),
-		popover: 'auto' as const,
-		'aria-labelledby': triggerId(),
-		...handlerProps(dropdownBeforeToggle),
-	}));
 	return (
-		<>
-			{props.children[0](triggerProps())}
-			{props.children[1](popoverProps())}
-		</>
+		<DropdownContext.Provider value={{ triggerId, popoverId }}>
+			<FormElementButtonPropsProvider
+				id={triggerId}
+				aria-expanded={() => false}
+				aria-haspopup={() => 'menu'}
+				popoverTarget={popoverId}
+				popoverTargetAction={() => 'show'}
+				{...{
+					[dropdownBeforeToggle.FIXED_WIDTH_ATTR]: () => props.fixedWidth,
+					[dropdownBeforeToggle.OFFSET_ATTR]: () => props.offset,
+					[dropdownBeforeToggle.PLACEMENT_ATTR]: () => props.placement,
+				}}
+			>
+				{props.children}
+			</FormElementButtonPropsProvider>
+		</DropdownContext.Provider>
 	);
 }

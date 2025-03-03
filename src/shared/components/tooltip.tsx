@@ -3,7 +3,7 @@ import cx from 'classix';
 import { createMemo, type JSX, splitProps } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
-import { FormElementPropsContext } from '~/shared/components/form-element-context';
+import { FormElementButtonPropsProvider } from '~/shared/components/form-element-context';
 import {
 	tooltipBlur,
 	tooltipFocus,
@@ -47,9 +47,9 @@ export function Tooltip(props: TooltipProps) {
 	};
 	return (
 		<>
-			<FormElementPropsContext.Provider {...mods}>
+			<FormElementButtonPropsProvider {...mods}>
 				{props.children}
-			</FormElementPropsContext.Provider>
+			</FormElementButtonPropsProvider>
 			<TooltipContent {...rest} id={tooltipId()}>
 				{local.tip}
 			</TooltipContent>

@@ -1,13 +1,8 @@
 import { type JSX, splitProps } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
-import {
-	Dropdown,
-	DropdownContent,
-	type DropdownProps,
-	type PopoverRenderProps,
-	type TriggerRenderProps,
-} from '~/shared/components/dropdown';
+import { Dropdown, DropdownContent, type DropdownProps } from '~/shared/components/dropdown';
+import { FormElementButtonPropsProvider } from '~/shared/components/form-element-context';
 import {
 	OptionList,
 	OptionListAnchor,
@@ -23,24 +18,15 @@ import {
 	menuTriggerKeyDown,
 } from '~/shared/handlers/menu';
 import { getItemValue } from '~/shared/handlers/option-list';
-import { handlerProps } from '~/shared/utility/event-handler-attrs';
+import { extendHandlerProps, handlerProps } from '~/shared/utility/event-handler-attrs';
 import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
 
-export interface MenuProps extends JSX.HTMLAttributes<HTMLDivElement> {
-	/** ID is required */
-	id: string;
+// Disallow ID since it should be set via context
+export interface MenuProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'id'> {
 	/** Called when a menu item is selected */
 	onValue?: (value: string, event: Event) => void;
 	/** Make children required */
 	children: JSX.Element;
-}
-
-export interface MenuTriggerProps extends DropdownProps {
-	/** Two render func children -- first for trigger, second for menu */
-	children: [
-		(props: TriggerRenderProps) => JSX.Element,
-		(props: PopoverRenderProps) => JSX.Element,
-	];
 }
 
 export function Menu(props: MenuProps) {
@@ -93,16 +79,14 @@ export { OptionListGroup as MenuGroup };
  * MenuTrigger is a wrapper around Dropdown to match the menu button to a Menu element
  * and assign arrow key up/down handlers
  */
-export function MenuTrigger(props: MenuTriggerProps) {
+export function MenuTrigger(props: DropdownProps) {
 	return (
 		<Dropdown {...props}>
-			{(triggerProps) =>
-				props.children[0]({
-					...triggerProps,
-					...handlerProps(triggerProps, menuTriggerClick, menuTriggerKeyDown),
-				})
-			}
-			{(popoverPros) => props.children[1](popoverPros)}
+			<FormElementButtonPropsProvider
+				{...extendHandlerProps(menuTriggerClick, menuTriggerKeyDown)}
+			>
+				{props.children}
+			</FormElementButtonPropsProvider>
 		</Dropdown>
 	);
 }

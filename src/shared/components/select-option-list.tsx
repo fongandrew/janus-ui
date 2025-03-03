@@ -8,9 +8,8 @@ import { selectCloseOnClick, selectUpdateWithInput } from '~/shared/handlers/sel
 import { handlerProps } from '~/shared/utility/event-handler-attrs';
 import { T } from '~/shared/utility/text/t-components';
 
-export interface SelectOptionListProps extends JSX.HTMLAttributes<HTMLDivElement> {
-	/** ID is required for popover */
-	id: string;
+// Disallow ID, should be set via context
+export interface SelectOptionListProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'id'> {
 	/** Separate listbox ID for `aria-controls` on combobox */
 	listBoxId?: string | undefined;
 	/** Form input name */

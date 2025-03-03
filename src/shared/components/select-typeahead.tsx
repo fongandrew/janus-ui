@@ -89,49 +89,40 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 			{...handlerProps(selectUpdateText, selectUpdateWithInput)}
 			{...mounterProps}
 		>
-			{(triggerProps) => (
-				<>
-					<Input
-						{...triggerProps}
-						{...inputProps}
-						{...handlerProps(
-							triggerProps,
-							inputProps,
-							selectInputClick,
-							selectInputKeyDown,
-							selectFocusOut,
-							selectHighlightOnInput,
-						)}
-						{...extendHandler(props, 'onChange', handleChange)}
-						{...extendHandler(props, 'onInput', handleInput)}
-						id={id()}
-						role="combobox"
-						class={cx('c-select__input', props.class)}
-						onValidate={handleValidate}
-						aria-autocomplete="list"
-						aria-controls={listId}
-						aria-describedby={descriptionId}
-						aria-haspopup="listbox"
-						aria-multiselectable={props.multiple}
-						unstyled
-					/>
-					<div id={descriptionId} class="c-select__input_description">
-						<SelectText placeholder={local.placeholder} />
-					</div>
-				</>
-			)}
-			{(props) => (
-				<SelectOptionList
-					{...props}
-					listBoxId={listId}
-					input={inputProps.value ? String(inputProps.value) : undefined}
-					name={local.name}
-					multiple={local.multiple}
-					values={local.values}
-				>
-					{local.children}
-				</SelectOptionList>
-			)}
+			<Input
+				{...inputProps}
+				{...handlerProps(
+					inputProps,
+					selectInputClick,
+					selectInputKeyDown,
+					selectFocusOut,
+					selectHighlightOnInput,
+				)}
+				{...extendHandler(props, 'onChange', handleChange)}
+				{...extendHandler(props, 'onInput', handleInput)}
+				id={id()}
+				role="combobox"
+				class={cx('c-select__input', props.class)}
+				onValidate={handleValidate}
+				aria-autocomplete="list"
+				aria-controls={listId}
+				aria-describedby={descriptionId}
+				aria-haspopup="listbox"
+				aria-multiselectable={props.multiple}
+				unstyled
+			/>
+			<div id={descriptionId} class="c-select__input_description">
+				<SelectText placeholder={local.placeholder} />
+			</div>
+			<SelectOptionList
+				listBoxId={listId}
+				input={inputProps.value ? String(inputProps.value) : undefined}
+				name={local.name}
+				multiple={local.multiple}
+				values={local.values}
+			>
+				{local.children}
+			</SelectOptionList>
 		</SelectContainer>
 	);
 }
