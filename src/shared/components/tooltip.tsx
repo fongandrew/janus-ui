@@ -3,35 +3,28 @@ import cx from 'classix';
 import { createMemo, type JSX, splitProps } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
+import { FormElementPropsContext } from '~/shared/components/form-element-context';
 import {
 	tooltipBlur,
 	tooltipFocus,
 	tooltipMouseOut,
 	tooltipMouseOver,
 } from '~/shared/handlers/tooltip';
-import { handlerProps } from '~/shared/utility/event-handler-attrs';
-import { type RequiredNonNullable } from '~/shared/utility/type-helpers';
+import { attrs } from '~/shared/utility/attribute-list';
+import { extendHandlerProps } from '~/shared/utility/event-handler-attrs';
 
 export const TOOLTIP_ARROW_ATTR = 'data-tooltip-arrow';
-
-export type TooltipTriggerRenderProps = RequiredNonNullable<
-	Pick<JSX.ButtonHTMLAttributes<HTMLButtonElement>, 'aria-describedby'>
-> & { [tooltipMouseOver.PLACEMENT_ATTR]: Placement | undefined };
 
 export interface TooltipContentProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	/** Make ID required for `aria-label` purposes */
 	id: string;
-	/** Make children required */
-	children: JSX.Element;
 }
 
-export interface TooltipProps extends Omit<TooltipContentProps, 'children'> {
+export interface TooltipProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	/** Tooltip placement */
 	placement?: Placement | undefined;
 	/** Tooltip content */
 	tip: JSX.Element;
-	/** Render func for trigger as child */
-	children: (props: TooltipTriggerRenderProps) => JSX.Element;
 }
 
 export function TooltipContent(props: TooltipContentProps) {
@@ -46,13 +39,17 @@ export function TooltipContent(props: TooltipContentProps) {
 export function Tooltip(props: TooltipProps) {
 	const [local, rest] = splitProps(props, ['children', 'tip']);
 	const tooltipId = createMemo(() => props.id || createUniqueId());
+
+	const mods = {
+		'aria-describedby': (prev: string | undefined) => attrs(prev, tooltipId()),
+		[tooltipMouseOver.PLACEMENT_ATTR]: () => props.placement,
+		...extendHandlerProps(tooltipMouseOver, tooltipMouseOut, tooltipFocus, tooltipBlur),
+	};
 	return (
 		<>
-			{local.children({
-				'aria-describedby': tooltipId(),
-				[tooltipMouseOver.PLACEMENT_ATTR]: props.placement,
-				...handlerProps(tooltipMouseOver, tooltipMouseOut, tooltipFocus, tooltipBlur),
-			})}
+			<FormElementPropsContext.Provider {...mods}>
+				{props.children}
+			</FormElementPropsContext.Provider>
 			<TooltipContent {...rest} id={tooltipId()}>
 				{local.tip}
 			</TooltipContent>

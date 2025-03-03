@@ -172,3 +172,19 @@ export function handlerProps(
 	}
 	return { [HANDLER_ATTR]: ids.join(' ') };
 }
+
+/**
+ * Convenience function to use handler props with a prop mod
+ */
+export function extendHandlerProps(...handlerIds: (string | (() => string))[]) {
+	return {
+		[HANDLER_ATTR]: (prevIds: string | undefined) => {
+			const ids = prevIds ? [prevIds] : [];
+			for (const id of handlerIds) {
+				if (typeof id === 'string') ids.push(id);
+				else ids.push(id());
+			}
+			return ids.join(' ');
+		},
+	};
+}

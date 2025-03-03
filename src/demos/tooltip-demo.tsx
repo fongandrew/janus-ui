@@ -18,16 +18,16 @@ function TooltipDemo() {
 			<CardContent>
 				<div class="o-grid v-spacing-sm">
 					<Tooltip tip="Hello, I'm a tooltip" placement="top">
-						{(props) => <Button {...props}>Top</Button>}
+						<Button>Top</Button>
 					</Tooltip>
 					<Tooltip tip="Hello, I'm a tooltip" placement="bottom">
-						{(props) => <Button {...props}>Bottom</Button>}
+						<Button>Bottom</Button>
 					</Tooltip>
 					<Tooltip tip="Hello, I'm a tooltip" placement="left">
-						{(props) => <Button {...props}>Left</Button>}
+						<Button>Left</Button>
 					</Tooltip>
 					<Tooltip tip="Hello, I'm a tooltip" placement="right">
-						{(props) => <Button {...props}>Right</Button>}
+						<Button>Right</Button>
 					</Tooltip>
 				</div>
 			</CardContent>
