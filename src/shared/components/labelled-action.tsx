@@ -4,21 +4,44 @@ import { splitProps } from 'solid-js';
 import { Card, CardContent } from '~/shared/components/card';
 import { Description } from '~/shared/components/description';
 import { ErrorMessage } from '~/shared/components/error-message';
+import { FormElementPropsProvider } from '~/shared/components/form-element-context';
 import { FormElementProvider } from '~/shared/components/form-element-provider';
 import { Label } from '~/shared/components/label';
 import { type LabelledInputProps } from '~/shared/components/labelled-control';
+import { attrs } from '~/shared/utility/attribute-list';
+import { createAuto } from '~/shared/utility/solid/auto-prop';
+
 /** Label + squarish action trigger (like button or toggle) */
 export function LabelledAction(props: LabelledInputProps) {
-	const [local, rest] = splitProps(props, ['label', 'description', 'errorMessage', 'children']);
+	const [local, rest] = splitProps(props, [
+		'label',
+		'description',
+		'descriptionId',
+		'errorMessage',
+		'errorId',
+		'children',
+	]);
+
+	const descriptionId = createAuto(props, 'descriptionId');
+	const errorId = createAuto(props, 'errorId');
+
 	return (
 		<FormElementProvider>
 			<div {...rest} class={cx('c-labelled-action', props.class)}>
 				<div class="c-labelled-action__label">
 					<Label>{local.label}</Label>
-					{local.description ? <Description>{local.description}</Description> : null}
-					<ErrorMessage>{local.errorMessage}</ErrorMessage>
+					{local.description ? (
+						<Description id={descriptionId()}>{local.description}</Description>
+					) : null}
+					<ErrorMessage id={errorId()}>{local.errorMessage}</ErrorMessage>
 				</div>
-				{local.children}
+				<FormElementPropsProvider
+					aria-describedby={(prev) =>
+						attrs(prev, props.description ? descriptionId() : null, errorId())
+					}
+				>
+					{local.children}
+				</FormElementPropsProvider>
 			</div>
 		</FormElementProvider>
 	);

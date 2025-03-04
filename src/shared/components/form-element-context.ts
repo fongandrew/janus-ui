@@ -18,7 +18,7 @@ export const FormElementPropsContext = createPropModContext();
 // The form element props system is a little loosey-goosey with types since form elements
 // can be anything from a button to inputs to  a div with ARIA props. It's all the same
 // at runtime, but create some extra typed variants to make working with it easier.
-export const FormElementPropsProvider = FormElementContext.Provider;
+export const FormElementPropsProvider = FormElementPropsContext.Provider;
 export const FormElementButtonPropsProvider = FormElementPropsContext.Provider as (
 	props: PropModGeneric<JSX.ButtonHTMLAttributes<HTMLButtonElement>> & { children: JSX.Element },
 ) => JSX.Element;
