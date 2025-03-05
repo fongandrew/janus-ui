@@ -1,6 +1,7 @@
 import cx from 'classix';
 import { createMemo, createUniqueId, splitProps } from 'solid-js';
 
+import { createFormElementId } from '~/shared/components/form-element-context';
 import { Input, type InputProps } from '~/shared/components/input';
 import { SelectContainer } from '~/shared/components/select-container';
 import { SelectOptionList } from '~/shared/components/select-option-list';
@@ -79,7 +80,7 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 		return local.onValidate?.(listBoxValues(listElm), event);
 	};
 
-	const id = createMemo(() => inputProps.id || createUniqueId());
+	const id = createFormElementId(props);
 	const mounterProps = useMountAttrs(selectMountText);
 
 	return (
