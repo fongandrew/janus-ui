@@ -15,7 +15,7 @@ export function attrNoConflict(
 	a: string | null | undefined,
 	b: string | null | undefined,
 ): string | null | undefined {
-	if (a && b) {
+	if (a && b && a !== b) {
 		throw new Error(`Conflicting attributes: ${a} and ${b}`);
 	}
 	return a || b;

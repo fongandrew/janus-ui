@@ -92,3 +92,27 @@ export function mergePropMods<T = JSX.HTMLAttributes<HTMLElement>>(
 	}) as T;
 	return merged;
 }
+
+/**
+ * Grab a single prop from context (e.g. an ID)
+ */
+export function useSingleProp<
+	TKey extends Exclude<keyof T, 'children'>,
+	T = JSX.HTMLAttributes<HTMLElement>,
+>(
+	context: PropModContextType<T>,
+	propKey: TKey,
+	initialValue?: T[typeof propKey] | undefined,
+): T[TKey] | undefined {
+	const propMods = useContext(context);
+	if (!propMods?.length) return undefined;
+
+	let ret: T[typeof propKey] | undefined = initialValue;
+	for (const modMap of propMods) {
+		const mod = modMap?.[propKey as TKey];
+		if (mod) {
+			ret = mod(ret);
+		}
+	}
+	return ret;
+}
