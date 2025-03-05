@@ -8,9 +8,18 @@ import {
 	wrapStopPropagation,
 } from '~/shared/utility/event-propagation';
 import { data } from '~/shared/utility/magic-strings';
+import { type Falsey } from '~/shared/utility/type-helpers';
 
 /** Data attribute used to identify delegated event handlers */
 export const HANDLER_ATTR = data('handler');
+
+/**
+ * Interface mapping custom event types that support delegation to detail type
+ */
+export interface CustomEventDetails {
+	// Nothing here yet but can add to this with:
+	// `declare module "./event-handler-attrs" { interface CustomEventDetails { ... } }`
+}
 
 /**
  * Delegated handler registry mapping event types to IDs to event handlers. Presence of event
@@ -60,6 +69,7 @@ const DELEGATABLE_EVENTS = {
 	focusin: true,
 	focusout: true,
 	input: false,
+	invalid: true,
 	keydown: false,
 	keypress: false,
 	keyup: false,
@@ -83,22 +93,28 @@ const DELEGATABLE_EVENTS = {
 	touchstart: false,
 };
 
+export type DelegatableEvent = keyof typeof DELEGATABLE_EVENTS | keyof CustomEventDetails;
+
+export type DelegatableEventMap = {
+	[T in DelegatableEvent]: T extends keyof HTMLElementEventMap
+		? HTMLElementEventMap[T]
+		: T extends keyof CustomEventDetails
+			? Event & { detail: CustomEventDetails[T] }
+			: Event;
+};
+
 /**
  * Maybe attach event handler to document if none exists, returns current handler map
  */
-function getHandlerMap<T extends keyof typeof DELEGATABLE_EVENTS>(
+function getHandlerMap<T extends DelegatableEvent>(
 	eventType: T,
-): Record<string, (event: HTMLElementEventMap[T] & { delegateTarget: HTMLElement }) => void> {
+): Record<string, (event: DelegatableEventMap[T] & { delegateTarget: HTMLElement }) => void> {
 	let handlerMap = handlerRegistry[eventType];
 	if (handlerMap) return handlerMap;
 
-	if (!(eventType in DELEGATABLE_EVENTS)) {
-		throw new Error(`Unsupported event type: ${eventType}`);
-	}
-
 	registerDocumentSetup((document) => {
 		document.addEventListener(eventType, eventHandler, {
-			capture: DELEGATABLE_EVENTS[eventType],
+			capture: !!DELEGATABLE_EVENTS[eventType as keyof typeof DELEGATABLE_EVENTS],
 		});
 	});
 
@@ -110,10 +126,10 @@ function getHandlerMap<T extends keyof typeof DELEGATABLE_EVENTS>(
 /**
  * Register a delegated event handler with a given ID
  */
-export function listen<T extends keyof typeof DELEGATABLE_EVENTS>(
+export function listen<T extends DelegatableEvent>(
 	eventType: T,
 	handlerId: string,
-	handler: (event: HTMLElementEventMap[T] & { delegateTarget: HTMLElement }) => void,
+	handler: (event: DelegatableEventMap[T] & { delegateTarget: HTMLElement }) => void,
 ) {
 	getHandlerMap(eventType)[handlerId] = handler;
 }
@@ -122,10 +138,7 @@ export function listen<T extends keyof typeof DELEGATABLE_EVENTS>(
  * Remove delegated event handler with given ID. Probably no reason to call this
  * but it's here if needed.
  */
-export function unlisten<T extends keyof typeof DELEGATABLE_EVENTS>(
-	eventType: T,
-	handlerId: string,
-) {
+export function unlisten<T extends DelegatableEvent>(eventType: T, handlerId: string) {
 	return delete handlerRegistry[eventType]?.[handlerId];
 }
 
@@ -133,10 +146,10 @@ export function unlisten<T extends keyof typeof DELEGATABLE_EVENTS>(
  * Create a function that will lazily register the handler with registry and returns
  * the given ID.
  */
-export function createHandler<T extends keyof typeof DELEGATABLE_EVENTS>(
+export function createHandler<T extends DelegatableEvent>(
 	eventType: T,
 	handlerId: string,
-	handler: (event: HTMLElementEventMap[T] & { delegateTarget: HTMLElement }) => void,
+	handler: (event: DelegatableEventMap[T] & { delegateTarget: HTMLElement }) => void,
 ) {
 	function handle() {
 		listen(eventType, handlerId, (e) => handle.do(e));
@@ -154,10 +167,11 @@ export function createHandler<T extends keyof typeof DELEGATABLE_EVENTS>(
  * Convenience function to return a spreadable props object with the handler ID(s)
  */
 export function handlerProps(
-	...handlersOrProps: (Record<string, any> | string | (() => string))[]
+	...handlersOrProps: (Record<string, any> | string | (() => string) | Falsey)[]
 ): Record<string, string> {
 	const ids: string[] = [];
 	for (const idOrProps of handlersOrProps) {
+		if (!idOrProps) continue;
 		switch (typeof idOrProps) {
 			case 'string':
 				ids.push(idOrProps);
@@ -176,11 +190,12 @@ export function handlerProps(
 /**
  * Convenience function to use handler props with a prop mod
  */
-export function extendHandlerProps(...handlerIds: (string | (() => string))[]) {
+export function extendHandlerProps(...handlerIds: (string | (() => string) | Falsey)[]) {
 	return {
 		[HANDLER_ATTR]: (prevIds: string | undefined) => {
 			const ids = prevIds ? [prevIds] : [];
 			for (const id of handlerIds) {
+				if (!id) continue;
 				if (typeof id === 'string') ids.push(id);
 				else ids.push(id());
 			}

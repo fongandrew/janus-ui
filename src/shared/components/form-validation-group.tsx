@@ -1,20 +1,28 @@
-import { createSignal, type JSX } from 'solid-js';
+import { type JSX } from 'solid-js';
 
 import {
-	useValidationGroup,
-	type ValidationGroupProps,
-} from '~/shared/components/use-validation-group';
-import { combineRefs } from '~/shared/utility/solid/combine-refs';
+	validateChildrenOnChange,
+	validateTouchedChildrenOnChange,
+} from '~/shared/handlers/validation';
+import { handlerProps } from '~/shared/utility/event-handler-attrs';
 
 /**
  * Simple div wrapper to reuire that certain form controls validate together
  */
-export interface FormValidationGroupProps
-	extends ValidationGroupProps,
-		JSX.HTMLAttributes<HTMLDivElement> {}
+export interface FormValidationGroupProps extends JSX.HTMLAttributes<HTMLDivElement> {
+	/** Validate touched elements only (defaults to true) */
+	touchedOnly?: boolean;
+}
 
 export function FormValidationGroup(props: FormValidationGroupProps) {
-	const [validationGroup, setValidationGroup] = createSignal<HTMLDivElement | null>(null);
-	useValidationGroup(validationGroup, props);
-	return <div ref={combineRefs(setValidationGroup, props.ref)} {...props} />;
+	return (
+		<div
+			{...props}
+			{...handlerProps(
+				props.touchedOnly === false
+					? validateChildrenOnChange
+					: validateTouchedChildrenOnChange,
+			)}
+		/>
+	);
 }

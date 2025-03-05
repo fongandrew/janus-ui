@@ -7,5 +7,9 @@
 		@mixin o-group;
 		@mixin t-border;
 		@mixin t-radius-inner;
+
+		&:has(.c-alert__children:empty) {
+			display: none;
+		}
 	}
 }

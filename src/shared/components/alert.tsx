@@ -3,7 +3,7 @@ import { AlertCircle, AlertTriangle, CheckCircle, Info, type LucideProps } from 
 import { type Component, type JSX, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 /** Base alert props shared by all alert variants */
-type AlertBaseProps = JSX.HTMLAttributes<HTMLDivElement> & {
+export type AlertBaseProps = JSX.HTMLAttributes<HTMLDivElement> & {
 	/** Optional icon override */
 	icon?: Component<LucideProps>;
 };
@@ -17,7 +17,7 @@ function AlertBase(props: AlertBaseProps & { defaultIcon: typeof Info }) {
 			<span class="t-flex-static">
 				<Dynamic component={local.icon ?? local.defaultIcon} aria-hidden="true" />
 			</span>
-			<div class="t-flex-fill">{local.children}</div>
+			<div class="c-alert__children t-flex-fill">{local.children}</div>
 		</div>
 	);
 }

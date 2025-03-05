@@ -1,5 +1,5 @@
 import cx from 'classix';
-import { createUniqueId, type JSX, splitProps } from 'solid-js';
+import { type JSX, splitProps } from 'solid-js';
 
 import { Description } from '~/shared/components/description';
 import { ErrorMessage } from '~/shared/components/error-message';
@@ -17,6 +17,8 @@ export interface LabelledInputProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	id?: string | undefined;
 	/** The actual label */
 	label: JSX.Element;
+	/** Option ID for label element */
+	labelId?: string | undefined;
 	/** Optional description content */
 	description?: JSX.Element;
 	/** Option ID for description element */
@@ -34,6 +36,7 @@ export function LabelledInput(props: LabelledInputProps) {
 	const [local, rest] = splitProps(props, [
 		'id',
 		'label',
+		'labelId',
 		'description',
 		'descriptionId',
 		'errorMessage',
@@ -42,19 +45,19 @@ export function LabelledInput(props: LabelledInputProps) {
 	]);
 
 	const inputId = createAutoId(props);
-	const labelId = createUniqueId();
+	const labelId = createAuto(props, 'labelId');
 	const descriptionId = createAuto(props, 'descriptionId');
 	const errorId = createAuto(props, 'errorId');
 
 	return (
 		<div {...rest} class={cx('o-label-stack', rest.class)}>
-			<Label id={labelId}>{local.label}</Label>
+			<Label id={labelId()}>{local.label}</Label>
 			{local.description ? (
 				<Description id={descriptionId()}>{local.description}</Description>
 			) : null}
 			<FormElementPropsProvider
 				id={(prev) => attrNoConflict(prev, inputId())}
-				aria-labelledby={(prev) => attrs(prev, labelId)}
+				aria-labelledby={(prev) => attrs(prev, labelId())}
 				aria-describedby={(prev) =>
 					attrs(prev, props.description ? descriptionId() : undefined, errorId())
 				}
@@ -68,18 +71,25 @@ export function LabelledInput(props: LabelledInputProps) {
 
 /** Label + inline input (like checkbox) */
 export function LabelledInline(props: Omit<LabelledInputProps, 'description'>) {
-	const [local, rest] = splitProps(props, ['id', 'label', 'errorId', 'errorMessage', 'children']);
+	const [local, rest] = splitProps(props, [
+		'id',
+		'label',
+		'labelId',
+		'errorId',
+		'errorMessage',
+		'children',
+	]);
 
 	const inputId = createAutoId(props);
-	const labelId = createUniqueId();
+	const labelId = createAuto(props, 'labelId');
 	const errorId = createAuto(props, 'errorId');
 
 	return (
 		<div {...rest} class={cx('o-label-stack', rest.class)}>
-			<Label id={labelId}>
+			<Label id={labelId()}>
 				<FormElementPropsProvider
 					id={(prev) => attrNoConflict(prev, inputId())}
-					aria-labelledby={(prev) => attrs(prev, labelId)}
+					aria-labelledby={(prev) => attrs(prev, labelId())}
 					aria-describedby={(prev) => attrs(prev, errorId())}
 				>
 					{local.children}

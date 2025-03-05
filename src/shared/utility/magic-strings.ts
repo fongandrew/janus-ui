@@ -17,3 +17,10 @@ export function data<T extends string>(name: T) {
 export function prop<T extends string>(name: T) {
 	return `$$${prefix}${name}` as const;
 }
+
+/**
+ * Create a custom event name
+ */
+export function evt<T extends string>(name: T) {
+	return `${prefix}${name}` as const;
+}

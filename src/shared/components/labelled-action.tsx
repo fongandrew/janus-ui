@@ -5,7 +5,6 @@ import { Card, CardContent } from '~/shared/components/card';
 import { Description } from '~/shared/components/description';
 import { ErrorMessage } from '~/shared/components/error-message';
 import { FormElementPropsProvider } from '~/shared/components/form-element-context';
-import { FormElementProvider } from '~/shared/components/form-element-provider';
 import { Label } from '~/shared/components/label';
 import { type LabelledInputProps } from '~/shared/components/labelled-control';
 import { attrs } from '~/shared/utility/attribute-list';
@@ -15,6 +14,7 @@ import { createAuto } from '~/shared/utility/solid/auto-prop';
 export function LabelledAction(props: LabelledInputProps) {
 	const [local, rest] = splitProps(props, [
 		'label',
+		'labelId',
 		'description',
 		'descriptionId',
 		'errorMessage',
@@ -24,26 +24,26 @@ export function LabelledAction(props: LabelledInputProps) {
 
 	const descriptionId = createAuto(props, 'descriptionId');
 	const errorId = createAuto(props, 'errorId');
+	const labelId = createAuto(props, 'labelId');
 
 	return (
-		<FormElementProvider>
-			<div {...rest} class={cx('c-labelled-action', props.class)}>
-				<div class="c-labelled-action__label">
-					<Label>{local.label}</Label>
-					{local.description ? (
-						<Description id={descriptionId()}>{local.description}</Description>
-					) : null}
-					<ErrorMessage id={errorId()}>{local.errorMessage}</ErrorMessage>
-				</div>
-				<FormElementPropsProvider
-					aria-describedby={(prev) =>
-						attrs(prev, props.description ? descriptionId() : null, errorId())
-					}
-				>
-					{local.children}
-				</FormElementPropsProvider>
+		<div {...rest} class={cx('c-labelled-action', props.class)}>
+			<div class="c-labelled-action__label">
+				<Label id={labelId()}>{local.label}</Label>
+				{local.description ? (
+					<Description id={descriptionId()}>{local.description}</Description>
+				) : null}
+				<ErrorMessage id={errorId()}>{local.errorMessage}</ErrorMessage>
 			</div>
-		</FormElementProvider>
+			<FormElementPropsProvider
+				aria-describedby={(prev) =>
+					attrs(prev, props.description ? descriptionId() : null, errorId())
+				}
+				aria-labelledby={(prev) => attrs(prev, labelId())}
+			>
+				{local.children}
+			</FormElementPropsProvider>
+		</div>
 	);
 }
 
