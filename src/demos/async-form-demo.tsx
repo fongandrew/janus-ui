@@ -9,13 +9,14 @@ import {
 	CardTitle,
 } from '~/shared/components/card';
 import { Checkbox } from '~/shared/components/checkbox';
-import { Description } from '~/shared/components/description';
-import { Form, type TypedSubmitEvent } from '~/shared/components/form';
+import { BaseDescription } from '~/shared/components/description';
+import { Form } from '~/shared/components/form';
 import { ResetButton, SubmitButton } from '~/shared/components/form-buttons';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelledInline, LabelledInput } from '~/shared/components/labelled-control';
 import { Textarea } from '~/shared/components/textarea';
+import { type TypedSubmitEvent } from '~/shared/handlers/form';
 
 export function AsyncFormDemo() {
 	enum FormNames {
@@ -76,11 +77,11 @@ export function AsyncFormDemo() {
 									<div class="o-stack">
 										<div class="o-label-stack">
 											<Label>Name</Label>
-											<Description>{formData()?.name}</Description>
+											<BaseDescription>{formData()?.name}</BaseDescription>
 										</div>
 										<div class="o-label-stack">
 											<Label>Message</Label>
-											<Description>{formData()?.message}</Description>
+											<BaseDescription>{formData()?.message}</BaseDescription>
 										</div>
 									</div>
 								</CardContent>

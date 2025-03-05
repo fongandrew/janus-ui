@@ -5,7 +5,6 @@ import { Dynamic } from 'solid-js/web';
 import { type ButtonProps } from '~/shared/components/button';
 import { Form, type FormProps } from '~/shared/components/form';
 import { SubmitButton } from '~/shared/components/form-buttons';
-import { getControlElements, isTouched } from '~/shared/components/form-element-control';
 import { ModalCloseButton, ModalContent } from '~/shared/components/modal';
 import { ModalContext } from '~/shared/components/modal-context';
 import { ModalSpeedBump, type ModalSpeedBumpProps } from '~/shared/components/modal-speed-bump';

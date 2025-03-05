@@ -81,9 +81,8 @@ export function FormValidationGroupDemo() {
 
 						<FormValidationGroup>
 							<div class="o-stack">
-								<LabelledInput label="Password">
+								<LabelledInput label="Password" id={password1Id}>
 									<Password
-										id={password1Id}
 										name={FormNames.password1}
 										autocomplete="new-password"
 										required

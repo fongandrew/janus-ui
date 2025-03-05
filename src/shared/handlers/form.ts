@@ -29,7 +29,7 @@ export type TypedSubmitEvent<TNames> = SubmitEvent & { data: TypedFormData<TName
 /** Submit handler returning null or defined is deemed `{ ok: true }` */
 export type SubmitHandler<TNames> = (
 	event: TypedSubmitEvent<TNames>,
-) => Promise<FormSubmitResponse | null | undefined>;
+) => Promise<FormSubmitResponse | null | undefined | void>;
 
 /** Additional options for form submit handlers */
 export interface FormSubmitOptions {
@@ -71,30 +71,37 @@ export const formResetOnSuccess = createHandler(
 );
 
 export function createSubmitHandler<TNames>(
+	handlerName: string,
 	onSubmit: SubmitHandler<TNames>,
 	names: Record<string, TNames>,
 ) {
 	return Object.assign(
-		createHandler('submit', 'form__submit', async (event) => {
+		createHandler('submit', handlerName, async (event) => {
 			event.preventDefault();
 
 			const form = event.target as HTMLFormElement;
 			form.setAttribute(FORM_BUSY_ATTR, '');
 
+			// Set attribute + aria-disabled on all submit and reset buttons within the form.
 			// Also set busy attribute on buttons that may be outside the form but tied to it
 			// (e.g. in a modal with a separate footer element)
 			const formId = form.id;
-			const submitButtons = form.id
-				? elmDoc(form).querySelectorAll(`button[form="${formId}"]`)
-				: [];
-			for (const button of submitButtons) {
+			const formButtons = form.id
+				? elmDoc(form).querySelectorAll(
+						`[form="${formId}"],.${formId} [type="submit"],.${formId} [type="reset"]`,
+					)
+				: form.querySelectorAll('[type="submit"],[type="reset"]');
+			for (const button of formButtons) {
+				if (button.ariaDisabled === 'true') continue;
 				button.setAttribute(FORM_BUSY_ATTR, '');
+				button.setAttribute('aria-disabled', 'true');
 			}
 
 			try {
-				const response = await onSubmit(
-					event as TypedSubmitEvent<TNames> & { delegateTarget: HTMLFormElement },
-				);
+				const eventWithData = Object.assign(event, {
+					data: new FormData(form) as TypedFormData<TNames>,
+				}) as TypedSubmitEvent<TNames> & { delegateTarget: HTMLFormElement };
+				const response = await onSubmit(eventWithData);
 				if (response?.ok === false) {
 					if (response.fieldErrors) {
 						setErrorsByName(form, response.fieldErrors);
@@ -107,13 +114,19 @@ export function createSubmitHandler<TNames>(
 					return;
 				}
 				form.dispatchEvent(new CustomEvent(VALID_SUBMIT_EVENT, { bubbles: true }));
+			} catch (err) {
+				setError(form, (err as Error)?.message ?? String(err));
+				focusOrScrollToError(form);
+				form.dispatchEvent(new CustomEvent(INVALID_SUBMIT_EVENT, { bubbles: true }));
 			} finally {
 				form.removeAttribute(FORM_BUSY_ATTR);
-				for (const button of submitButtons) {
+				for (const button of formButtons) {
+					if (!button.hasAttribute(FORM_BUSY_ATTR)) continue;
 					button.removeAttribute(FORM_BUSY_ATTR);
+					button.ariaDisabled = 'false';
 				}
 			}
 		}),
-		names,
+		{ names },
 	);
 }

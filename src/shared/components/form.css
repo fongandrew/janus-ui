@@ -11,3 +11,24 @@
 		pointer-events: unset;
 	}
 }
+
+@layer components {
+	.c-form__submit {
+		@mixin v-colors-primary;
+	}
+
+	.c-form__busy {
+		display: none;
+	}
+
+	[data-form__busy] {
+		button&,
+		input& {
+			@mixin t-disabled-button;
+		}
+
+		.c-form__busy {
+			display: inline;
+		}
+	}
+}

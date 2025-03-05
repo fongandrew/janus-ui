@@ -10,14 +10,16 @@ export type AlertBaseProps = JSX.HTMLAttributes<HTMLDivElement> & {
 
 /** Base alert component used by specific variants */
 function AlertBase(props: AlertBaseProps & { defaultIcon: typeof Info }) {
-	const [local, rest] = splitProps(props, ['icon', 'children', 'defaultIcon']);
+	const [local, rest] = splitProps(props, ['class', 'icon', 'children', 'defaultIcon']);
 
 	return (
-		<div role="alert" aria-live="assertive" {...rest} class={cx('c-alert', props.class)}>
+		<div class={cx('c-alert', local.class)}>
 			<span class="t-flex-static">
 				<Dynamic component={local.icon ?? local.defaultIcon} aria-hidden="true" />
 			</span>
-			<div class="c-alert__children t-flex-fill">{local.children}</div>
+			<div role="alert" aria-live="assertive" class="c-alert__children t-flex-fill" {...rest}>
+				{local.children}
+			</div>
 		</div>
 	);
 }

@@ -13,8 +13,7 @@ import {
 import { createUniqueId } from 'solid-js';
 
 import { Button, type ButtonProps, IconButton } from '~/shared/components/button';
-import { FormContextProvider } from '~/shared/components/form-context-provider';
-import { FORM_CONTROL_ATTR } from '~/shared/components/form-element-control';
+import { FormContextProvider } from '~/shared/components/form-context';
 import { ModalContext, type ModalContextValue } from '~/shared/components/modal-context';
 import { firstFocusable } from '~/shared/utility/focusables';
 import { pullLast } from '~/shared/utility/list';
@@ -74,7 +73,7 @@ export function setAutofocus(dialog: HTMLDialogElement) {
 	// Prefer form control element that is not the close button (input)
 	let target: HTMLElement | null | undefined = dialog.querySelector<HTMLElement>(
 		'[' +
-			FORM_CONTROL_ATTR +
+			// FORM_CONTROL_ATTR +
 			']:not([' +
 			FORM_CLOSE_ATTR +
 			']):not([' +
