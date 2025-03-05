@@ -4,7 +4,7 @@ import { type JSX, splitProps } from 'solid-js';
 import { Description } from '~/shared/components/description';
 import { ErrorMessage } from '~/shared/components/error-message';
 import { FormElementPropsProvider } from '~/shared/components/form-element-context';
-import { Label } from '~/shared/components/label';
+import { Label, LabelSpan } from '~/shared/components/label';
 import { attrNoConflict } from '~/shared/utility/attribute';
 import { attrs } from '~/shared/utility/attribute-list';
 import { createAuto, createAutoId } from '~/shared/utility/solid/auto-prop';
@@ -51,7 +51,7 @@ export function LabelledInput(props: LabelledInputProps) {
 
 	return (
 		<div {...rest} class={cx('o-label-stack', rest.class)}>
-			<Label id={labelId()}>{local.label}</Label>
+			<LabelSpan id={labelId()}>{local.label}</LabelSpan>
 			{local.description ? (
 				<Description id={descriptionId()}>{local.description}</Description>
 			) : null}
@@ -69,7 +69,10 @@ export function LabelledInput(props: LabelledInputProps) {
 	);
 }
 
-/** Label + inline input (like checkbox) */
+/**
+ * Label + inline input (like checkbox). Unlike `LabelledInput`, this uses
+ * a regular label instead of a span with aria-labelledby.
+ */
 export function LabelledInline(props: Omit<LabelledInputProps, 'description'>) {
 	const [local, rest] = splitProps(props, [
 		'id',
@@ -81,15 +84,13 @@ export function LabelledInline(props: Omit<LabelledInputProps, 'description'>) {
 	]);
 
 	const inputId = createAutoId(props);
-	const labelId = createAuto(props, 'labelId');
 	const errorId = createAuto(props, 'errorId');
 
 	return (
 		<div {...rest} class={cx('o-label-stack', rest.class)}>
-			<Label id={labelId()}>
+			<Label id={local.labelId}>
 				<FormElementPropsProvider
 					id={(prev) => attrNoConflict(prev, inputId())}
-					aria-labelledby={(prev) => attrs(prev, labelId())}
 					aria-describedby={(prev) => attrs(prev, errorId())}
 				>
 					{local.children}
