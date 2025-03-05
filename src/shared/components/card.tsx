@@ -1,8 +1,9 @@
 import cx from 'classix';
-import { type JSX, splitProps } from 'solid-js';
+import { ErrorBoundary, type JSX, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 
-import { FormContextProvider } from '~/shared/components/form-context-provider';
+import { FormContextProvider } from '~/shared/components/form-context';
+import { T } from '~/shared/utility/text/t-components';
 
 export type CardProps = JSX.IntrinsicAttributes &
 	JSX.HTMLAttributes<HTMLDivElement> & {
@@ -19,9 +20,11 @@ export type CardFooterProps = JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTMLD
 export function Card(props: CardProps) {
 	const [local, rest] = splitProps(props, ['as']);
 	return (
-		<Dynamic component={local.as || 'section'} {...rest} class={cx('c-card', props.class)}>
-			<FormContextProvider>{props.children}</FormContextProvider>
-		</Dynamic>
+		<ErrorBoundary fallback={<T>Something went wrong</T>}>
+			<Dynamic component={local.as || 'section'} {...rest} class={cx('c-card', props.class)}>
+				<FormContextProvider>{props.children}</FormContextProvider>
+			</Dynamic>
+		</ErrorBoundary>
 	);
 }
 
