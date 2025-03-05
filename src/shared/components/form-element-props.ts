@@ -1,13 +1,34 @@
-import { type JSX, mergeProps } from 'solid-js';
+import { createMemo, type JSX, mergeProps, onCleanup } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
 import { useFormElementProps } from '~/shared/components/form-element-context';
-import { validateOnChange, validatorProps } from '~/shared/handlers/validation';
+import {
+	createValidator,
+	removeValidator,
+	validateOnChange,
+	type Validator,
+	validatorProps,
+} from '~/shared/handlers/validation';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { handlerProps } from '~/shared/utility/event-handler-attrs';
-import { type Falsey } from '~/shared/utility/type-helpers';
 
-export type FormElementProps<TTag extends keyof JSX.HTMLElementTags> = JSX.HTMLElementTags[TTag] & {
+export interface HTMLElements {
+	a: HTMLAnchorElement;
+	button: HTMLButtonElement;
+	div: HTMLDivElement;
+	input: HTMLInputElement;
+	label: HTMLLabelElement;
+	select: HTMLSelectElement;
+	span: HTMLSpanElement;
+	textarea: HTMLTextAreaElement;
+}
+
+export type FormElementProps<
+	TTag extends keyof JSX.HTMLElementTags,
+	TElement extends HTMLElement = TTag extends keyof HTMLElements
+		? HTMLElements[TTag]
+		: HTMLElement,
+> = JSX.HTMLElementTags[TTag] & {
 	/**
 	 * Whether the input is disabled. Not all HTMLElements support `disabled`
 	 * but allow this as a prop
@@ -25,7 +46,7 @@ export type FormElementProps<TTag extends keyof JSX.HTMLElementTags> = JSX.HTMLE
 	 */
 	invalid?: boolean | undefined;
 	/** Validation attribute functions created with `createValidator` */
-	validators?: (string | (() => string) | Falsey)[] | undefined;
+	onValidate?: Validator<TElement> | undefined;
 	/**
 	 * Allow arbitrary data attributes
 	 */
@@ -34,16 +55,23 @@ export type FormElementProps<TTag extends keyof JSX.HTMLElementTags> = JSX.HTMLE
 
 /** Rewrites contextual props input elements and other form-like controls */
 export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
-	passedProps: FormElementProps<TTag>,
-) {
-	// Merge in elements from above first
-	const props = useFormElementProps(passedProps);
+	props: FormElementProps<TTag>,
+): JSX.HTMLElementTags[TTag] {
+	// Create a validator on the fly if needed
+	const validatorId = createMemo(() => {
+		if (!props.onValidate) return;
+		const id = createUniqueId();
+		onCleanup(() => removeValidator(id));
+		return createValidator(id, props.onValidate)();
+	});
+
+	// Merge in elements from above, then add in custom behaviors
+	const formProps = useFormElementProps(props);
 	const merged = mergeProps(
-		{
-			// Set ID by default
-			id: createUniqueId(),
-		},
-		props,
+		formProps,
+
+		// Set ID by default
+		() => (formProps.id ? {} : { id: createUniqueId() }),
 
 		{
 			// Prefer `aria-disabled` over disabled. Better screenreader experience if you
@@ -53,27 +81,26 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 			},
 			// Set aria-disabled if disabled
 			get ['aria-disabled']() {
-				return props.disabled ?? props['aria-disabled'];
+				return formProps.disabled ?? formProps['aria-disabled'];
 			},
 			// Set aria-required if required
 			get ['aria-required']() {
-				return props.required ?? props['aria-required'];
+				return formProps.required ?? formProps['aria-required'];
 			},
 			// Set aria-invalid if invalid
 			get ['aria-invalid']() {
-				return !!(props.invalid ?? props['aria-invalid']);
+				return !!(formProps.invalid ?? formProps['aria-invalid']);
 			},
 			// Unset non-standard invalid attribute */
 			invalid: null,
 		},
 
-		// Hook up validate on change -- stick props.validators access in function
-		// so we can recalc if validators passed to props change
-		handlerProps(props, validateOnChange),
-		() => validatorProps(props, ...(props.validators ?? [])),
+		// Hook up validate on change
+		handlerProps(formProps, validateOnChange),
+		() => validatorProps(formProps, validatorId),
 	);
 
-	return merged;
+	return merged as JSX.HTMLElementTags[TTag];
 }
 
 registerDocumentSetup((document) => {

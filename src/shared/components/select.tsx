@@ -6,7 +6,11 @@ import { type FormElementProps } from '~/shared/components/form-element-props';
 import { SelectContainer } from '~/shared/components/select-container';
 import { SelectOptionList } from '~/shared/components/select-option-list';
 import { SelectText } from '~/shared/components/select-text';
-import { listBoxValues } from '~/shared/handlers/list-box';
+import {
+	createListBoxValidator,
+	type ListBoxValidator,
+	listBoxValues,
+} from '~/shared/handlers/list-box';
 import { getList } from '~/shared/handlers/option-list';
 import {
 	selectButtonKeyDown,
@@ -35,10 +39,7 @@ export interface SelectProps extends Omit<FormElementProps<'button'>, 'onValidat
 	/** Make children required */
 	children: JSX.Element;
 	/** Custom validation function for this element */
-	onValidate?: (
-		values: Set<string>,
-		event: Event & { delegateTarget: HTMLElement },
-	) => string | undefined | null | Promise<string | undefined | null>;
+	onValidate?: ListBoxValidator | undefined;
 }
 
 export function Select(props: SelectProps) {
@@ -63,12 +64,10 @@ export function Select(props: SelectProps) {
 		local.onValues?.(values, event);
 	};
 
-	// Transform Set<string> validator to string validator for underlying control
-	const handleValidate = (_value: string, event: Event & { delegateTarget: HTMLElement }) => {
-		const listElm = getList(event.target as HTMLElement);
-		if (!listElm) return;
-		return local.onValidate?.(listBoxValues(listElm), event);
-	};
+	// Add values to validator
+	const handleValidate = createListBoxValidator((values, event) =>
+		local.onValidate?.(values, event),
+	);
 
 	const mounterProps = useMountAttrs(selectMountText);
 

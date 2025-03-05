@@ -1,12 +1,16 @@
 import cx from 'classix';
-import { createMemo, createUniqueId, splitProps } from 'solid-js';
+import { createUniqueId, splitProps } from 'solid-js';
 
 import { createFormElementId } from '~/shared/components/form-element-context';
 import { Input, type InputProps } from '~/shared/components/input';
 import { SelectContainer } from '~/shared/components/select-container';
 import { SelectOptionList } from '~/shared/components/select-option-list';
 import { SelectText } from '~/shared/components/select-text';
-import { listBoxValues } from '~/shared/handlers/list-box';
+import {
+	createListBoxValidator,
+	type ListBoxValidator,
+	listBoxValues,
+} from '~/shared/handlers/list-box';
 import { getList } from '~/shared/handlers/option-list';
 import {
 	selectFocusOut,
@@ -38,10 +42,7 @@ export interface SelectTypeaheadProps extends Omit<InputProps, 'onValidate'> {
 	/** Whether multiple selection is allowed */
 	multiple?: boolean;
 	/** Custom validation function for this element */
-	onValidate?: (
-		values: Set<string>,
-		event: Event & { delegateTarget: HTMLElement },
-	) => string | undefined | null | Promise<string | undefined | null>;
+	onValidate?: ListBoxValidator | undefined;
 }
 
 export function SelectTypeahead(props: SelectTypeaheadProps) {
@@ -73,12 +74,10 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 		local.onValues?.(values, event);
 	};
 
-	// Transform Set<string> validator to string validator for underlying control
-	const handleValidate = (_value: string, event: Event & { delegateTarget: HTMLElement }) => {
-		const listElm = getList(event.target as HTMLElement);
-		if (!listElm) return;
-		return local.onValidate?.(listBoxValues(listElm), event);
-	};
+	// Add values to validator
+	const handleValidate = createListBoxValidator((values, event) =>
+		local.onValidate?.(values, event),
+	);
 
 	const id = createFormElementId(props);
 	const mounterProps = useMountAttrs(selectMountText);

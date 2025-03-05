@@ -7,8 +7,14 @@ import {
 	mergeFormElementProps,
 } from '~/shared/components/form-element-props';
 import { OptionList, OptionListGroup, OptionListSelectable } from '~/shared/components/option-list';
-import { listBoxChange, listBoxKeyDown, listBoxValues } from '~/shared/handlers/list-box';
-import { getList, isList } from '~/shared/handlers/option-list';
+import {
+	createListBoxValidator,
+	listBoxChange,
+	listBoxKeyDown,
+	type ListBoxValidator,
+	listBoxValues,
+} from '~/shared/handlers/list-box';
+import { isList } from '~/shared/handlers/option-list';
 import { handlerProps } from '~/shared/utility/event-handler-attrs';
 
 export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'> {
@@ -28,10 +34,7 @@ export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'
 	/** Make children required */
 	children: JSX.Element;
 	/** Custom validation function for this element */
-	onValidate?: (
-		values: Set<string>,
-		event: Event & { delegateTarget: HTMLElement },
-	) => string | undefined | null | Promise<string | undefined | null>;
+	onValidate?: ListBoxValidator | undefined;
 }
 
 export const ListBoxContext = createContext<
@@ -61,12 +64,10 @@ export function ListBox(props: ListBoxProps) {
 		local.onValues?.(values, event);
 	};
 
-	// Transform Set<string> validator to string validator for underlying control
-	const handleValidate = (_value: string, event: Event & { delegateTarget: HTMLElement }) => {
-		const listElm = getList(event.target as HTMLElement);
-		if (!listElm) return;
-		return local.onValidate?.(listBoxValues(listElm), event);
-	};
+	// // Add values to validator
+	const handleValidate = createListBoxValidator((values, event) =>
+		local.onValidate?.(values, event),
+	);
 	const formElementProps = mergeProps(rest, { onValidate: handleValidate });
 	const optionListProps = mergeFormElementProps<'div'>(formElementProps);
 

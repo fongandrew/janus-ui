@@ -29,7 +29,12 @@ export type TypedSubmitEvent<TNames> = SubmitEvent & { data: TypedFormData<TName
 /** Submit handler returning null or defined is deemed `{ ok: true }` */
 export type SubmitHandler<TNames> = (
 	event: TypedSubmitEvent<TNames>,
-) => Promise<FormSubmitResponse | null | undefined | void>;
+) =>
+	| Promise<FormSubmitResponse | null | undefined | void>
+	| FormSubmitResponse
+	| null
+	| undefined
+	| void;
 
 /** Additional options for form submit handlers */
 export interface FormSubmitOptions {

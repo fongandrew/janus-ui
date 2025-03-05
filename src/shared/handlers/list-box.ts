@@ -8,6 +8,9 @@ import {
 import { createHandler } from '~/shared/utility/event-handler-attrs';
 import { elmDoc } from '~/shared/utility/multi-view';
 
+/** Custom validator for ListBox-like things -- returns error or nothing if fine */
+export type ListBoxValidator = (values: Set<string>, event: Event) => string | undefined | null;
+
 /**
  * Handle arrow navigation in list box and basic selection
  */
@@ -34,7 +37,7 @@ export const listBoxChange = createHandler('change', 'list-box__change', (event)
 
 	const dispatcher = getControllingElement(listElm);
 	dispatcher.setAttribute('aria-activedescendant', target.id);
-	dispatcher.dispatchEvent(new Event('change'));
+	dispatcher.dispatchEvent(new Event('change', { bubbles: true }));
 });
 
 /**
@@ -81,4 +84,15 @@ export function getControllingElement(listElm: HTMLElement) {
 			)) ||
 		listElm
 	);
+}
+
+/**
+ * Create a custom validator for a list box that includes values
+ */
+export function createListBoxValidator(onValidate: ListBoxValidator) {
+	return (event: Event) => {
+		const listElm = getList(event.target as HTMLElement);
+		if (!listElm) return;
+		return onValidate(listBoxValues(listElm), event);
+	};
 }

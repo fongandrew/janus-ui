@@ -8,15 +8,15 @@ import {
 	CardHeader,
 	CardTitle,
 } from '~/shared/components/card';
-import { Description } from '~/shared/components/description';
+import { BaseDescription } from '~/shared/components/description';
 import { Form } from '~/shared/components/form';
 import { ResetButton, SubmitButton } from '~/shared/components/form-buttons';
-import { type Validator } from '~/shared/components/form-element-control';
 import { FormValidationGroup } from '~/shared/components/form-validation-group';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelledInput } from '~/shared/components/labelled-control';
 import { Password } from '~/shared/components/password';
+import { type Validator } from '~/shared/handlers/validation';
 
 export function FormValidationGroupDemo() {
 	const [formData, setFormData] = createSignal<{
@@ -44,7 +44,8 @@ export function FormValidationGroupDemo() {
 		password2: 'password2',
 	};
 
-	const validateUserName: Validator<HTMLInputElement> = (value) => {
+	const validateUserName: Validator<HTMLInputElement> = (event) => {
+		const value = event.currentTarget.value;
 		if (value.includes(' ')) {
 			return 'Username cannot contain spaces';
 		}
@@ -52,10 +53,11 @@ export function FormValidationGroupDemo() {
 	};
 
 	const password1Id = createUniqueId();
-	const matchesPassword1: Validator<HTMLInputElement> = (value, event) => {
-		const input = event.delegateTarget.ownerDocument.getElementById(password1Id);
-		if (!input) return null;
-		if ((input as HTMLInputElement).value !== value) {
+	const matchesPassword1: Validator<HTMLInputElement> = (event) => {
+		const value = event.currentTarget.value;
+		const input1 = event.currentTarget.ownerDocument.getElementById(password1Id);
+		if (!input1) return null;
+		if ((input1 as HTMLInputElement).value !== value) {
 			return 'Passwords do not match';
 		}
 		return null;
@@ -110,11 +112,15 @@ export function FormValidationGroupDemo() {
 									<div class="o-stack">
 										<div class="o-label-stack">
 											<Label>Username</Label>
-											<Description>{formData()?.username}</Description>
+											<BaseDescription>
+												{formData()?.username}
+											</BaseDescription>
 										</div>
 										<div class="o-label-stack">
 											<Label>Password</Label>
-											<Description>{formData()?.password}</Description>
+											<BaseDescription>
+												{formData()?.password}
+											</BaseDescription>
 										</div>
 									</div>
 								</CardContent>

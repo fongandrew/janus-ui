@@ -8,7 +8,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '~/shared/components/card';
-import { Description } from '~/shared/components/description';
+import { BaseDescription } from '~/shared/components/description';
 import { Form } from '~/shared/components/form';
 import { ResetButton, SubmitButton } from '~/shared/components/form-buttons';
 import { Label } from '~/shared/components/label';
@@ -101,15 +101,15 @@ export function SelectionValidationDemo() {
 									<div class="o-stack">
 										<div class="o-label-stack">
 											<Label>Selected fruits</Label>
-											<Description>
+											<BaseDescription>
 												{formData()?.fruits.join(', ')}
-											</Description>
+											</BaseDescription>
 										</div>
 										<div class="o-label-stack">
 											<Label>Selected colors</Label>
-											<Description>
+											<BaseDescription>
 												{formData()?.colors.join(', ')}
-											</Description>
+											</BaseDescription>
 										</div>
 									</div>
 								</CardContent>

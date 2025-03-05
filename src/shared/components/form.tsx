@@ -47,6 +47,8 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 		<form
 			id={id()}
 			aria-describedby={attrs(props['aria-describedby'], errorId())}
+			// Default HTML validation interferes with our own custom handlers
+			noValidate
 			{...handlerProps(props, handlerId, props.resetOnSuccess && formResetOnSuccess())}
 		>
 			<div class="o-stack">
