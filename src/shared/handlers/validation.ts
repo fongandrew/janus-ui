@@ -260,7 +260,7 @@ export function extendValidatorProps(...validatorIds: (string | (() => string) |
  */
 export function getValidatableElements(container: HTMLElement): Iterable<HTMLElement> {
 	return container.querySelectorAll<HTMLElement>(
-		`[input,${HANDLER_ATTR}~="${validateOnChange()}"]`,
+		`input[${HANDLER_ATTR}~="${validateOnChange()}"]`,
 	);
 }
 
