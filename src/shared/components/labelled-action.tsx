@@ -5,7 +5,7 @@ import { Card, CardContent } from '~/shared/components/card';
 import { Description } from '~/shared/components/description';
 import { ErrorMessage } from '~/shared/components/error-message';
 import { FormElementPropsProvider } from '~/shared/components/form-element-context';
-import { Label, LabelSpan } from '~/shared/components/label';
+import { LabelSpan } from '~/shared/components/label';
 import { type LabelledInputProps } from '~/shared/components/labelled-control';
 import { attrs } from '~/shared/utility/attribute-list';
 import { createAuto } from '~/shared/utility/solid/auto-prop';

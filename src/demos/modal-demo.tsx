@@ -9,7 +9,7 @@ import {
 	CardTitle,
 } from '~/shared/components/card';
 import { Checkbox } from '~/shared/components/checkbox';
-import { Description } from '~/shared/components/description';
+import { BaseDescription } from '~/shared/components/description';
 import { type TypedFormData } from '~/shared/components/form';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
@@ -152,15 +152,15 @@ function FormModal() {
 								<div class="o-stack">
 									<div class="o-label-stack">
 										<Label>Name</Label>
-										<Description>{formData()?.name}</Description>
+										<BaseDescription>{formData()?.name}</BaseDescription>
 									</div>
 									<div class="o-label-stack">
 										<Label>Email</Label>
-										<Description>{formData()?.email}</Description>
+										<BaseDescription>{formData()?.email}</BaseDescription>
 									</div>
 									<div class="o-label-stack">
 										<Label>Message</Label>
-										<Description>{formData()?.message}</Description>
+										<BaseDescription>{formData()?.message}</BaseDescription>
 									</div>
 								</div>
 							</CardContent>
