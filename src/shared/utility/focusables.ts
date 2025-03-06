@@ -5,8 +5,10 @@ export const FOCUSABLE_SELECTOR = [
 	'select:not([disabled])', // Non-disabled select dropdowns
 	'textarea:not([disabled])', // Non-disabled textareas
 	'details', // Details elements
-	'[tabindex]:not([tabindex="-1"])', // Elements with positive tabindex
-].join(',');
+	'[tabindex]', // Elements with positive tabindex
+]
+	.map((n) => `${n}:not([tabindex="-1"])`)
+	.join(',');
 
 /**
  * Returns a list of focusable elements within a given element
