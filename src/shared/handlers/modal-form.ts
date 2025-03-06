@@ -8,20 +8,22 @@ export const modalFormCloseOnSuccess = createHandler(
 	VALID_SUBMIT_EVENT,
 	'modal-form__close-on-success',
 	(e) => {
-		const dialog = e.delegateTarget.closest(':modal') as HTMLDialogElement | null;
+		const dialog = e.currentTarget.closest(':modal') as HTMLDialogElement | null;
 		if (!dialog) return;
 		closeModal(dialog);
 	},
 );
 
 export const modalFormResetOnClose = createHandler('close', 'modal-form__reset-on-close', (e) => {
-	const dialog = e.delegateTarget as HTMLDialogElement;
+	const dialog = e.currentTarget as HTMLDialogElement;
 	dialog.querySelector('form')?.reset();
 });
 
 export const modalFormMaybeShowSpeedBump = Object.assign(
 	createRequestCloseCallback('modal-form__maybe_show_speed_bump', (e) => {
-		const dialog = e.currentTarget;
+		const dialog = e.currentTarget.closest(':modal') as HTMLDialogElement | null;
+		if (!dialog) return;
+
 		const speedBump = dialog.querySelector<HTMLDialogElement>(
 			`[${modalFormMaybeShowSpeedBump.SPEED_BUMP_ATTR}]`,
 		);

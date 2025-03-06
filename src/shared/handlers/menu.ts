@@ -50,7 +50,7 @@ export const menuCloseOnSelect = createHandler('click', 'menu__close-on-select',
  * Autofocus first menu item on menu open
  */
 export const menuFocusOnOpen = createHandler('beforetoggle', 'menu__focus-on-open', (event) => {
-	if ((event as ToggleEvent & { delegateTarget: HTMLElement }).newState !== 'open') return;
+	if ((event as ToggleEvent & { currentTarget: HTMLElement }).newState !== 'open') return;
 
 	const dropdown = event.target as HTMLElement;
 	if (dropdown.querySelector('[autofocus]')) return;

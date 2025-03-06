@@ -167,7 +167,7 @@ export const selectMountText = createMounter('select__mount-text', (elm) => {
  */
 export const selectUpdateText = Object.assign(
 	createHandler('change', 'select__update-text', (event) => {
-		const updateTarget = event.delegateTarget.querySelector<HTMLElement>(
+		const updateTarget = event.currentTarget.querySelector<HTMLElement>(
 			`[${selectUpdateText.DESC_ATTR}]`,
 		);
 		if (!updateTarget) return;
@@ -198,7 +198,7 @@ export const selectUpdateText = Object.assign(
  */
 export const selectUpdateWithInput = Object.assign(
 	createHandler('input', 'select__update-with-input', (event) => {
-		const updateTarget = event.delegateTarget.querySelector<HTMLElement>(
+		const updateTarget = event.currentTarget.querySelector<HTMLElement>(
 			`[${selectUpdateWithInput.TEXT_ATTR}]`,
 		);
 		if (!updateTarget) return;

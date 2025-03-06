@@ -53,7 +53,7 @@ export const extendValidatorProps = validationRegistry.extendProps;
  * Run any validators associated with this element on change
  */
 export const validateOnChange = createHandler('change', 'validate__change', (event) => {
-	validate(event.delegateTarget, event);
+	validate(event.currentTarget, event);
 });
 
 /**
@@ -64,8 +64,7 @@ export const validateChildrenOnChange = createHandler(
 	'change',
 	'validate__children-change',
 	(event) => {
-		const elm = event.delegateTarget as HTMLElement;
-		for (const child of getValidatableElements(elm)) {
+		for (const child of getValidatableElements(event.currentTarget)) {
 			validate(child as HTMLElement, event);
 		}
 	},
@@ -79,8 +78,7 @@ export const validateTouchedChildrenOnChange = createHandler(
 	'change',
 	'validate__children-change',
 	(event) => {
-		const elm = event.delegateTarget as HTMLElement;
-		for (const child of getValidatableElements(elm)) {
+		for (const child of getValidatableElements(event.currentTarget)) {
 			if (touched(child as HTMLElement)) {
 				validate(child as HTMLElement, event);
 			}

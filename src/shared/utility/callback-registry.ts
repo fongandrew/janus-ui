@@ -108,3 +108,8 @@ export function createCallbackRegistry<
 		},
 	};
 }
+
+export type CallbackRegistry<
+	TAttr extends string,
+	TCallback extends (...args: any[]) => any,
+> = ReturnType<typeof createCallbackRegistry<TAttr, TCallback>>;

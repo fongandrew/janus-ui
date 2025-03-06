@@ -105,7 +105,7 @@ export function createSubmitHandler<TNames>(
 			try {
 				const eventWithData = Object.assign(event, {
 					data: new FormData(form) as TypedFormData<TNames>,
-				}) as TypedSubmitEvent<TNames> & { delegateTarget: HTMLFormElement };
+				}) as TypedSubmitEvent<TNames> & { currentTarget: HTMLFormElement };
 				const response = await onSubmit(eventWithData);
 				if (response?.ok === false) {
 					if (response.fieldErrors) {

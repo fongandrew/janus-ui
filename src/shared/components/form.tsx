@@ -9,7 +9,7 @@ import {
 } from '~/shared/handlers/form';
 import { FORM_CONTROL_ERROR_ATTR } from '~/shared/handlers/validation';
 import { attrs } from '~/shared/utility/attribute-list';
-import { handlerProps, unlisten } from '~/shared/utility/event-handler-attrs';
+import { handlerProps } from '~/shared/utility/event-handler-attrs';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
 
 export interface FormProps<TNames extends string>
@@ -38,9 +38,9 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 
 	const handlerId = createMemo(() => {
 		if (!props.onSubmit) return;
-		const id = createUniqueId();
-		onCleanup(() => unlisten('submit', id));
-		return createSubmitHandler(id, props.onSubmit, props.names ?? {})();
+		const handler = createSubmitHandler(createUniqueId(), props.onSubmit, props.names ?? {});
+		onCleanup(handler.rm);
+		return handler();
 	});
 
 	return (

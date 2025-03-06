@@ -50,14 +50,14 @@ export const modalBackdropMouseDown = createHandler(
 	'mousedown',
 	'modal__backdrop-mousedown',
 	(event) => {
-		const dialog = event.delegateTarget as HTMLDialogElement;
+		const dialog = event.currentTarget as HTMLDialogElement;
 		setMouseDownDialog(dialog, event.target === dialog);
 	},
 );
 
 /** Close modal on backdrop click  */
 export const modalBackdropClick = createHandler('click', 'modal__backdrop-click', (event) => {
-	const dialog = event.delegateTarget as HTMLDialogElement;
+	const dialog = event.currentTarget as HTMLDialogElement;
 	if (mouseDownDialog(dialog)) {
 		// A click on the dialog itself is really a click on the backdrop. The visible
 		// content area of the dialog is within a separate element and will result in
@@ -86,7 +86,7 @@ export const modalEscapeKey = createHandler('keydown', 'modal__escape', (event) 
  * Switch this to command / commandfor when tere's better support for that.
  */
 export const modalTriggerOpen = createHandler('click', 'modal__trigger-open', (event) => {
-	const target = event.delegateTarget as HTMLElement;
+	const target = event.currentTarget as HTMLElement;
 	const dialogId = target.getAttribute('aria-controls');
 	if (!dialogId) return;
 	const dialog = elmDoc(target)?.getElementById(dialogId);
@@ -99,7 +99,7 @@ export const modalTriggerRequestClose = createHandler(
 	'click',
 	'modal__trigger-request-close',
 	(event) => {
-		const target = event.delegateTarget as HTMLElement;
+		const target = event.currentTarget as HTMLElement;
 		const dialogId = target.getAttribute('aria-controls');
 		const dialog = dialogId
 			? elmDoc(target)?.getElementById(dialogId)
@@ -111,7 +111,7 @@ export const modalTriggerRequestClose = createHandler(
 
 /** Forcefully close the modal associated with trigger */
 export const modalTriggerClose = createHandler('click', 'modal__trigger-close', (event) => {
-	const target = event.delegateTarget as HTMLElement;
+	const target = event.currentTarget as HTMLElement;
 	const dialogId = target.getAttribute('aria-controls');
 	const dialog = dialogId ? elmDoc(target)?.getElementById(dialogId) : target.closest(':modal');
 	if (!dialog) return;

@@ -44,7 +44,7 @@ const [tooltipCleanup, setTooltipCleanup] = createMagicProp<() => void>();
 /** Show tooltip when mousing over */
 export const tooltipMouseOver = Object.assign(
 	createHandler('mouseover', 'tooltip__mouseover', (event) => {
-		const trigger = event.target as HTMLElement;
+		const trigger = event.currentTarget;
 		const tooltip = tooltipFromTrigger(trigger);
 		if (!tooltip) return;
 		showTooltip(trigger, tooltip);
@@ -57,7 +57,7 @@ export const tooltipMouseOver = Object.assign(
 
 /** Hide tooltip when mousing out */
 export const tooltipMouseOut = createHandler('mouseout', 'tooltip__mouseout', (event) => {
-	const tooltip = tooltipFromTrigger(event.target as HTMLElement);
+	const tooltip = tooltipFromTrigger(event.currentTarget);
 	if (!tooltip) return;
 
 	// Ignore mouseout events that are still within the tooltip
@@ -68,7 +68,7 @@ export const tooltipMouseOut = createHandler('mouseout', 'tooltip__mouseout', (e
 
 /** Show tooltip on focus */
 export const tooltipFocus = createHandler('focusin', 'tooltip__focus', (event) => {
-	const trigger = event.target as HTMLElement;
+	const trigger = event.currentTarget;
 	const tooltip = tooltipFromTrigger(trigger);
 	if (!tooltip) return;
 	showTooltip(trigger, tooltip);
@@ -76,7 +76,7 @@ export const tooltipFocus = createHandler('focusin', 'tooltip__focus', (event) =
 
 /** Hide tooltip on blur */
 export const tooltipBlur = createHandler('focusout', 'tooltip__blur', (event) => {
-	const tooltip = tooltipFromTrigger(event.target as HTMLElement);
+	const tooltip = tooltipFromTrigger(event.currentTarget);
 	if (!tooltip) return;
 	hideTooltip(tooltip);
 });
