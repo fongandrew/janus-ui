@@ -9,14 +9,18 @@ export function attrIsTruthy(element: Element, attr: string): boolean {
  * This is used in prop mods where, e.g, a parent wants to pass down an ID
  * and we want to make sure the child doesn't pass a conflicting one.
  */
-export function attrNoConflict(a: string, b: string | null | undefined): string;
-export function attrNoConflict(a: string | null | undefined, b: string): string;
-export function attrNoConflict(
-	a: string | null | undefined,
-	b: string | null | undefined,
-): string | null | undefined {
+export function attrNoConflict<T = string>(a: T, b: T | null | undefined): T;
+export function attrNoConflict<T = string>(a: T | null | undefined, b: T): T;
+export function attrNoConflict<T = string>(
+	a: T | null | undefined,
+	b: T | null | undefined,
+): T | null | undefined;
+export function attrNoConflict<T = string>(
+	a: T | null | undefined,
+	b: T | null | undefined,
+): T | null | undefined {
 	if (a && b && a !== b) {
-		throw new Error(`Conflicting attributes: ${a} and ${b}`);
+		throw new Error(`Conflicting attributes: ${String(a)} and ${String(b)}`);
 	}
 	return a || b;
 }

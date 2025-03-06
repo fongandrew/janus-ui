@@ -61,6 +61,7 @@ const DELEGATABLE_EVENTS = {
 	beforetoggle: true,
 	beforeinput: false,
 	change: false,
+	close: true,
 	contextmenu: false,
 	copy: false,
 	click: false,

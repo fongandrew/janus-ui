@@ -23,14 +23,23 @@ export interface ModalSpeedBumpProps extends Omit<DialogProps, 'children'> {
 }
 
 export function ModalSpeedBump(props: ModalSpeedBumpProps) {
-	const modalContext = useContext(ModalContext);
-	if (!modalContext) {
+	const modalId = useContext(ModalContext);
+	if (!modalId) {
 		throw new Error('ModalSpeedBump must be used within a Modal');
 	}
 
-	const [local, modalProps] = splitProps(props, ['title', 'cancel', 'confirm', 'children']);
+	const [local, modalProps] = splitProps(props, [
+		'title',
+		'cancel',
+		'confirm',
+		'children',
+		'open',
+	]);
 	return (
-		<Modal role="alertdialog" {...modalProps}>
+		// Typecast to undefined to avoid TS error (should usually be undefined
+		// but if explicit true/false passed, then Modal checks for a corresponding
+		// onClose that isn't managed by this component)
+		<Modal open={local.open as undefined} role="alertdialog" {...modalProps}>
 			<ModalTitle>{local.title ?? <T>Please confirm</T>}</ModalTitle>
 			<ModalContent>
 				{local.children ?? (
@@ -41,7 +50,7 @@ export function ModalSpeedBump(props: ModalSpeedBumpProps) {
 			</ModalContent>
 			<ModalFooter>
 				<ModalCloseButton>{local.cancel ?? <T>Cancel</T>}</ModalCloseButton>
-				<ModalCloseButton force class="v-colors-danger" targetId={modalContext.id()}>
+				<ModalCloseButton force class="v-colors-danger" targetId={modalId()}>
 					{local.confirm ?? <T>Close</T>}
 				</ModalCloseButton>
 			</ModalFooter>

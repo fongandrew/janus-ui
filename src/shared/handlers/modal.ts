@@ -1,0 +1,297 @@
+import { createHandler } from '~/shared/utility/event-handler-attrs';
+import { firstFocusable } from '~/shared/utility/focusables';
+import { createMagicProp } from '~/shared/utility/magic-prop';
+import { data } from '~/shared/utility/magic-strings';
+import { elmDoc } from '~/shared/utility/multi-view';
+import { type Falsey } from '~/shared/utility/type-helpers';
+
+/**
+ * A request-to-close callback is a function that can return false to interrupt
+ * the current modal from being closed.
+ */
+export type RequestCloseCallback = (
+	this: HTMLDialogElement,
+	event: Event & { currentTarget: HTMLDialogElement },
+) => boolean | void;
+
+/**
+ * Magic attribute to identify modal content (used to find focusable elements)
+ */
+export const MODAL_CONTENT_ATTR = data('modal__content');
+
+/**
+ * Magic attribute to identify modal footer (used to find focusable elements)
+ */
+export const MODAL_FOOTER_ATTR = data('modal__footer');
+
+/**
+ * Magic data attribute used to register a "request to close" callback on a modal
+ */
+export const REQUEST_CLOSE_ATTR = data('modal__request-close');
+
+/**
+ * Store for request close callbacks
+ */
+const requestCloseRegistry: Record<string, RequestCloseCallback> = {};
+
+/** Registers a callback for close requests with a given ID */
+export function addRequestCloseCallback(
+	callbackId: string,
+	callbackFn: RequestCloseCallback,
+): void {
+	requestCloseRegistry[callbackId] = callbackFn;
+}
+
+/** Unregisters the callback function associated with a given ID */
+export function removeRequestCloseCallback(callbackId: string): void {
+	delete requestCloseRegistry[callbackId];
+}
+
+// Flag used by `modalBackdropMouseDown` below.
+const [mouseDownDialog, setMouseDownDialog] = createMagicProp<boolean>();
+
+/**
+ * Set a flag that lets the click handler know what the initial click target was. A user
+ * may start a click on the dialog element, then move to the backdrop before mouseup
+ * (e.g. to highlight some text). This should not count as a click on the backdrop.
+ */
+export const modalBackdropMouseDown = createHandler(
+	'mousedown',
+	'modal__backdrop-mousedown',
+	(event) => {
+		const dialog = event.delegateTarget as HTMLDialogElement;
+		setMouseDownDialog(dialog, event.target === dialog);
+	},
+);
+
+/** Close modal on backdrop click  */
+export const modalBackdropClick = createHandler('click', 'modal__backdrop-click', (event) => {
+	const dialog = event.delegateTarget as HTMLDialogElement;
+	if (mouseDownDialog(dialog)) {
+		// A click on the dialog itself is really a click on the backdrop. The visible
+		// content area of the dialog is within a separate element and will result in
+		// the event target being some child of the dialog.
+		if (event.target === dialog) {
+			requestModalClose(dialog, event);
+		}
+	}
+});
+
+/** Close current modal when escape key is pressed */
+export const modalEscapeKey = createHandler('keydown', 'modal__escape', (event) => {
+	if (event.key !== 'Escape') return;
+
+	const dialog = (event.target as HTMLElement)?.closest(':modal') as HTMLDialogElement | null;
+	if (!dialog) return;
+
+	// Don't auto close on escape if popover is open (let light dismiss handle it)
+	if (dialog.querySelector(':popover-open')) return;
+
+	requestModalClose(dialog, event);
+});
+
+/**
+ * Open the modal associated with this element's target attribute
+ * Switch this to command / commandfor when tere's better support for that.
+ */
+export const modalTriggerOpen = createHandler('click', 'modal__trigger-open', (event) => {
+	const target = event.delegateTarget as HTMLElement;
+	const dialogId = target.getAttribute('aria-controls');
+	if (!dialogId) return;
+	const dialog = elmDoc(target)?.getElementById(dialogId);
+	if (!dialog) return;
+	openModal(dialog as HTMLDialogElement);
+});
+
+/** Request the modal associated with this trigger close */
+export const modalTriggerRequestClose = createHandler(
+	'click',
+	'modal__trigger-request-close',
+	(event) => {
+		const target = event.delegateTarget as HTMLElement;
+		const dialogId = target.getAttribute('aria-controls');
+		const dialog = dialogId
+			? elmDoc(target)?.getElementById(dialogId)
+			: target.closest(':modal');
+		if (!dialog) return;
+		requestModalClose(dialog as HTMLDialogElement, event);
+	},
+);
+
+/** Forcefully close the modal associated with trigger */
+export const modalTriggerClose = createHandler('click', 'modal__trigger-close', (event) => {
+	const target = event.delegateTarget as HTMLElement;
+	const dialogId = target.getAttribute('aria-controls');
+	const dialog = dialogId ? elmDoc(target)?.getElementById(dialogId) : target.closest(':modal');
+	if (!dialog) return;
+	closeModal(dialog as HTMLDialogElement);
+});
+
+/**
+ * Create a callback to be called when a dialog wants to be closed.
+ * Returns a function with the ID to be used to register the callback on an element.
+ */
+export function createRequestCloseCallback(callbackId: string, callbackFn: RequestCloseCallback) {
+	function register() {
+		addRequestCloseCallback(callbackId, function (this: HTMLDialogElement, event) {
+			return register.do.call(this, event);
+		});
+		return callbackId;
+	}
+
+	// Stick original handler on the function so it can be easily composed with other handlers
+	// or spied on for tests
+	register.do = callbackFn;
+
+	return register;
+}
+
+/**
+ * Convenience function to return a spreadable props object with the request close ID(s)
+ */
+export function requestCloseProps(
+	...callbackIdsOrProps: (Record<string, any> | string | (() => string) | Falsey)[]
+): Record<string, string> {
+	const ids: string[] = [];
+	for (const idOrProps of callbackIdsOrProps) {
+		if (!idOrProps) continue;
+		switch (typeof idOrProps) {
+			case 'string':
+				ids.push(idOrProps);
+				break;
+			case 'function':
+				ids.push(idOrProps());
+				break;
+			case 'object':
+				if (idOrProps[REQUEST_CLOSE_ATTR])
+					ids.push(idOrProps[REQUEST_CLOSE_ATTR] as string);
+				break;
+		}
+	}
+	return { [REQUEST_CLOSE_ATTR]: ids.join(' ') };
+}
+
+/**
+ * Convenience function to use handler props with a prop mod
+ */
+export function extendRequestCloseProps(
+	...callbackIdsOrProps: (string | (() => string) | Falsey)[]
+) {
+	return {
+		[REQUEST_CLOSE_ATTR]: (prevIds: string | undefined) => {
+			const ids = prevIds ? [prevIds] : [];
+			for (const id of callbackIdsOrProps) {
+				if (!id) continue;
+				if (typeof id === 'string') ids.push(id);
+				else ids.push(id());
+			}
+			return ids.join(' ');
+		},
+	};
+}
+
+/**
+ * Open a modal dialog
+ */
+export function openModal(dialog: HTMLDialogElement) {
+	dialog.showModal();
+	focusModal(dialog);
+	setAriaExpanded(dialog, true);
+}
+
+/**
+ * Close a modal dialog (and closes all child dialogs too so any bookkeeping and event
+ * listeners can be cleaned up)
+ */
+export function closeModal(dialog: HTMLDialogElement) {
+	const childDialogs = dialog.querySelectorAll<HTMLDialogElement>(':modal') ?? [];
+
+	// Close in reverse order with assumption that the later ones are the "top-most" ones
+	for (const childDialog of Array.from(childDialogs).reverse()) {
+		setAriaExpanded(childDialog, false);
+		childDialog.close();
+	}
+
+	setAriaExpanded(dialog, false);
+	dialog.close();
+}
+
+/**
+ * Focus on the first focusable element in the modal to ensure focus moves
+ * into the modal from the trigger.
+ */
+export function focusModal(dialog: HTMLDialogElement) {
+	// Always go with explicit autofocus
+	const autoFocusElement = dialog.querySelector<HTMLElement>('[autofocus]');
+	if (autoFocusElement) {
+		autoFocusElement.focus();
+		return;
+	}
+
+	// Else prefer focusable in content
+	const content = dialog.querySelector<HTMLElement>('[' + MODAL_CONTENT_ATTR + ']');
+	let target = content ? firstFocusable(content) : undefined;
+	if (target) {
+		target.focus();
+		return;
+	}
+
+	// Else if no content, look in footer
+	const footer = dialog.querySelector<HTMLElement>('[' + MODAL_FOOTER_ATTR + ']');
+	target = footer ? firstFocusable(footer) : undefined;
+	if (target) {
+		target.focus();
+		return;
+	}
+
+	// Else just focus the first focusable in the dialog
+	firstFocusable(dialog)?.focus();
+}
+
+/** Toggle any aria-controls / aria-expanded options for trigger buttons */
+export function setAriaExpanded(dialog: HTMLDialogElement, value: boolean) {
+	if (dialog.id) {
+		for (const trigger of elmDoc(dialog)?.querySelectorAll(
+			`[aria-expanded][aria-controls~="${dialog.id}"]`,
+		) ?? []) {
+			trigger.setAttribute('aria-expanded', String(value));
+		}
+	}
+}
+
+/**
+ * Attempt to close a modal, checking with registered callbacks first
+ * Returns true if the modal was closed, false if a callback prevented it
+ */
+export function requestModalClose(dialog: HTMLDialogElement, event: Event) {
+	if (!dialog.open) return false;
+
+	// Prevent default since we're maybe doing this manually
+	event.preventDefault();
+
+	// Specify dialog as current target for ease of reference
+	Object.defineProperty(event, 'currentTarget', {
+		configurable: true,
+		value: dialog,
+	});
+
+	// Check for callbacks on dialog plus any child callbacks as well
+	for (const elm of [
+		dialog,
+		...dialog.querySelectorAll<HTMLElement>('[' + REQUEST_CLOSE_ATTR + ']'),
+	]) {
+		for (const callbackId of elm.getAttribute(REQUEST_CLOSE_ATTR)?.split(/\s/) ?? []) {
+			const callback = requestCloseRegistry[callbackId];
+			if (
+				callback?.call(dialog, event as Event & { currentTarget: HTMLDialogElement }) ===
+				false
+			) {
+				return false;
+			}
+		}
+	}
+
+	// Close the dialog
+	closeModal(dialog);
+	return true;
+}

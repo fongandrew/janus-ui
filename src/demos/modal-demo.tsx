@@ -1,4 +1,4 @@
-import { createSignal } from 'solid-js';
+import { createSignal, createUniqueId } from 'solid-js';
 
 import { Button } from '~/shared/components/button';
 import {
@@ -10,7 +10,6 @@ import {
 } from '~/shared/components/card';
 import { Checkbox } from '~/shared/components/checkbox';
 import { BaseDescription } from '~/shared/components/description';
-import { type TypedFormData } from '~/shared/components/form';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelledInline, LabelledInput } from '~/shared/components/labelled-control';
@@ -20,6 +19,7 @@ import {
 	ModalCloseButton,
 	ModalContent,
 	ModalFooter,
+	ModalOpenTrigger,
 	ModalTitle,
 } from '~/shared/components/modal';
 import {
@@ -29,13 +29,34 @@ import {
 } from '~/shared/components/modal-form';
 import { Select } from '~/shared/components/select';
 import { Textarea } from '~/shared/components/textarea';
+import { type TypedSubmitEvent } from '~/shared/handlers/form';
 
-function SimpleModal() {
+function ControlledModal() {
 	const [isOpen, setIsOpen] = createSignal(false);
 	return (
 		<>
-			<Button onClick={() => setIsOpen(true)}>Open Modal</Button>
+			<Button onClick={() => setIsOpen(true)}>Controlled Modal</Button>
 			<Modal open={isOpen()} onClose={() => setIsOpen(false)}>
+				<ModalTitle>Example Modal</ModalTitle>
+				<ModalContent>
+					<p>Click outside or the close button to dismiss</p>
+				</ModalContent>
+				<ModalFooter>
+					<ModalCloseButton />
+				</ModalFooter>
+			</Modal>
+		</>
+	);
+}
+
+function TriggeredModal() {
+	const dialogId = createUniqueId();
+	return (
+		<>
+			<ModalOpenTrigger targetId={dialogId}>
+				<Button>Triggered Modal</Button>
+			</ModalOpenTrigger>
+			<Modal id={dialogId}>
 				<ModalTitle>Example Modal</ModalTitle>
 				<ModalContent>
 					<p>Click outside or the close button to dismiss</p>
@@ -94,7 +115,7 @@ function FormModal() {
 	const [formData, setFormData] = createSignal<Record<keyof typeof FormNames, string> | null>(
 		null,
 	);
-	const handleSubmit = (e: SubmitEvent & { data: TypedFormData<keyof typeof FormNames> }) => {
+	const handleSubmit = (e: TypedSubmitEvent<keyof typeof FormNames>) => {
 		e.preventDefault();
 		const data = e.data;
 		setFormData({
@@ -103,6 +124,7 @@ function FormModal() {
 			message: data.get('message') as string,
 			terms: data.get('terms') as string,
 		});
+		setIsResultsOpen(true);
 	};
 
 	return (
@@ -110,11 +132,7 @@ function FormModal() {
 			<Button onClick={[setIsFormOpen, true]}>Open Modal (Form)</Button>
 			<Modal open={isFormOpen()} onClose={[setIsFormOpen, false]}>
 				<ModalTitle>Form Example</ModalTitle>
-				<ModalFormContent
-					names={FormNames}
-					onSubmit={handleSubmit}
-					onSubmitSuccess={[setIsResultsOpen, true]}
-				>
+				<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
 					<LabelledInput label="Name">
 						<Input name={FormNames.name} required />
 					</LabelledInput>
@@ -180,7 +198,7 @@ function ScrollableForm() {
 		field2: 'field2' as const,
 	};
 
-	const handleSubmit = (e: SubmitEvent & { data: TypedFormData<keyof typeof FormNames> }) => {
+	const handleSubmit = (e: TypedSubmitEvent<keyof typeof FormNames>) => {
 		e.preventDefault();
 		setIsFormOpen(false);
 	};
@@ -219,9 +237,7 @@ function AsyncForm() {
 		shouldError: 'shouldError' as const,
 	};
 
-	const handleSubmit = async (
-		e: SubmitEvent & { data: TypedFormData<keyof typeof FormNames> },
-	) => {
+	const handleSubmit = async (e: TypedSubmitEvent<keyof typeof FormNames>) => {
 		e.preventDefault();
 		await new Promise((resolve) => setTimeout(resolve, 2500));
 		if (e.data.get('shouldError')) {
@@ -263,7 +279,8 @@ function ModalDemo() {
 			</CardHeader>
 			<CardContent>
 				<div class="o-group">
-					<SimpleModal />
+					<ControlledModal />
+					<TriggeredModal />
 					<LongModal />
 					<FormModal />
 					<ScrollableForm />

@@ -197,7 +197,7 @@ export function validate<T extends HTMLElement>(elm: T, event: Event): string | 
 		value: elm,
 	});
 
-	const validatorIds = elm.getAttribute(VALIDATE_ATTR)?.split(/s/) ?? [];
+	const validatorIds = elm.getAttribute(VALIDATE_ATTR)?.split(/\s/) ?? [];
 	for (const id of validatorIds) {
 		const fn = validationRegistry[id];
 		if (!fn) continue;
@@ -260,7 +260,7 @@ export function extendValidatorProps(...validatorIds: (string | (() => string) |
  */
 export function getValidatableElements(container: HTMLElement): Iterable<HTMLElement> {
 	return container.querySelectorAll<HTMLElement>(
-		`input[${HANDLER_ATTR}~="${validateOnChange()}"]`,
+		`input,[${HANDLER_ATTR}~="${validateOnChange()}"]`,
 	);
 }
 
@@ -269,7 +269,7 @@ export function getValidatableElements(container: HTMLElement): Iterable<HTMLEle
  */
 export function getErrorElement(target: HTMLElement): HTMLElement | null {
 	const document = elmDoc(target);
-	const describedBy = target.getAttribute('aria-describedby')?.split(/s/) ?? [];
+	const describedBy = target.getAttribute('aria-describedby')?.split(/\s/) ?? [];
 	for (const id of describedBy) {
 		const elm = document.getElementById(id);
 		if (elm?.hasAttribute(FORM_CONTROL_ERROR_ATTR)) {
