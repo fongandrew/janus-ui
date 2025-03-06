@@ -4,7 +4,6 @@ import { createUniqueId } from 'solid-js';
 import { useFormElementProps } from '~/shared/components/form-element-context';
 import {
 	createValidator,
-	removeValidator,
 	validateOnChange,
 	type Validator,
 	validatorProps,
@@ -60,9 +59,9 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 	// Create a validator on the fly if needed
 	const validatorId = createMemo(() => {
 		if (!props.onValidate) return;
-		const id = createUniqueId();
-		onCleanup(() => removeValidator(id));
-		return createValidator(id, props.onValidate)();
+		const validator = createValidator(createUniqueId(), props.onValidate);
+		onCleanup(validator.rm);
+		return validator();
 	});
 
 	// Merge in elements from above, then add in custom behaviors

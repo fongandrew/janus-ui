@@ -1,17 +1,17 @@
+import { createCallbackRegistry } from '~/shared/utility/callback-registry';
 import { createHandler } from '~/shared/utility/event-handler-attrs';
 import { firstFocusable } from '~/shared/utility/focusables';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { data } from '~/shared/utility/magic-strings';
 import { elmDoc } from '~/shared/utility/multi-view';
-import { type Falsey } from '~/shared/utility/type-helpers';
 
 /**
  * A request-to-close callback is a function that can return false to interrupt
  * the current modal from being closed.
  */
 export type RequestCloseCallback = (
-	this: HTMLDialogElement,
-	event: Event & { currentTarget: HTMLDialogElement },
+	this: HTMLElement,
+	event: Event & { currentTarget: HTMLElement },
 ) => boolean | void;
 
 /**
@@ -29,23 +29,14 @@ export const MODAL_FOOTER_ATTR = data('modal__footer');
  */
 export const REQUEST_CLOSE_ATTR = data('modal__request-close');
 
-/**
- * Store for request close callbacks
- */
-const requestCloseRegistry: Record<string, RequestCloseCallback> = {};
+const requestCloseRegistry = createCallbackRegistry<
+	typeof REQUEST_CLOSE_ATTR,
+	RequestCloseCallback
+>(REQUEST_CLOSE_ATTR);
 
-/** Registers a callback for close requests with a given ID */
-export function addRequestCloseCallback(
-	callbackId: string,
-	callbackFn: RequestCloseCallback,
-): void {
-	requestCloseRegistry[callbackId] = callbackFn;
-}
-
-/** Unregisters the callback function associated with a given ID */
-export function removeRequestCloseCallback(callbackId: string): void {
-	delete requestCloseRegistry[callbackId];
-}
+export const createRequestCloseCallback = requestCloseRegistry.create;
+export const requestCloseProps = requestCloseRegistry.props;
+export const extendRequestCloseProps = requestCloseRegistry.extendProps;
 
 // Flag used by `modalBackdropMouseDown` below.
 const [mouseDownDialog, setMouseDownDialog] = createMagicProp<boolean>();
@@ -126,69 +117,6 @@ export const modalTriggerClose = createHandler('click', 'modal__trigger-close', 
 	if (!dialog) return;
 	closeModal(dialog as HTMLDialogElement);
 });
-
-/**
- * Create a callback to be called when a dialog wants to be closed.
- * Returns a function with the ID to be used to register the callback on an element.
- */
-export function createRequestCloseCallback(callbackId: string, callbackFn: RequestCloseCallback) {
-	function register() {
-		addRequestCloseCallback(callbackId, function (this: HTMLDialogElement, event) {
-			return register.do.call(this, event);
-		});
-		return callbackId;
-	}
-
-	// Stick original handler on the function so it can be easily composed with other handlers
-	// or spied on for tests
-	register.do = callbackFn;
-
-	return register;
-}
-
-/**
- * Convenience function to return a spreadable props object with the request close ID(s)
- */
-export function requestCloseProps(
-	...callbackIdsOrProps: (Record<string, any> | string | (() => string) | Falsey)[]
-): Record<string, string> {
-	const ids: string[] = [];
-	for (const idOrProps of callbackIdsOrProps) {
-		if (!idOrProps) continue;
-		switch (typeof idOrProps) {
-			case 'string':
-				ids.push(idOrProps);
-				break;
-			case 'function':
-				ids.push(idOrProps());
-				break;
-			case 'object':
-				if (idOrProps[REQUEST_CLOSE_ATTR])
-					ids.push(idOrProps[REQUEST_CLOSE_ATTR] as string);
-				break;
-		}
-	}
-	return { [REQUEST_CLOSE_ATTR]: ids.join(' ') };
-}
-
-/**
- * Convenience function to use handler props with a prop mod
- */
-export function extendRequestCloseProps(
-	...callbackIdsOrProps: (string | (() => string) | Falsey)[]
-) {
-	return {
-		[REQUEST_CLOSE_ATTR]: (prevIds: string | undefined) => {
-			const ids = prevIds ? [prevIds] : [];
-			for (const id of callbackIdsOrProps) {
-				if (!id) continue;
-				if (typeof id === 'string') ids.push(id);
-				else ids.push(id());
-			}
-			return ids.join(' ');
-		},
-	};
-}
 
 /**
  * Open a modal dialog
@@ -280,12 +208,8 @@ export function requestModalClose(dialog: HTMLDialogElement, event: Event) {
 		dialog,
 		...dialog.querySelectorAll<HTMLElement>('[' + REQUEST_CLOSE_ATTR + ']'),
 	]) {
-		for (const callbackId of elm.getAttribute(REQUEST_CLOSE_ATTR)?.split(/\s/) ?? []) {
-			const callback = requestCloseRegistry[callbackId];
-			if (
-				callback?.call(dialog, event as Event & { currentTarget: HTMLDialogElement }) ===
-				false
-			) {
+		for (const callback of requestCloseRegistry.iter(elm)) {
+			if (callback.call(elm, event as Event & { currentTarget: HTMLElement }) === false) {
 				return false;
 			}
 		}

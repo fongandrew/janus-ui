@@ -1,9 +1,9 @@
+import { createCallbackRegistry } from '~/shared/utility/callback-registry';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { createHandler, HANDLER_ATTR } from '~/shared/utility/event-handler-attrs';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { data } from '~/shared/utility/magic-strings';
 import { elmDoc } from '~/shared/utility/multi-view';
-import { type Falsey } from '~/shared/utility/type-helpers';
 
 /**
  * A validator processes an event (a change or submit event probably) for a given
@@ -39,23 +39,15 @@ export const VALIDATE_ATTR = data('validation');
  */
 export const [touched, setTouched] = createMagicProp<boolean>();
 
-/**
- * Registry mapping event types to IDs to validation functions.
- */
-const validationRegistry: Record<string, Validator<any>> = {};
+// Create validation registry using the callback registry utility
+const validationRegistry = createCallbackRegistry<typeof VALIDATE_ATTR, Validator<any>>(
+	VALIDATE_ATTR,
+);
 
-/** Registers a validation function with a given ID */
-export function addValidator<T extends HTMLElement>(
-	validatorId: string,
-	validator: Validator<T>,
-): void {
-	validationRegistry[validatorId] = validator;
-}
-
-/** Unregisters the validation function associated with a given ID */
-export function removeValidator(validatorId: string): void {
-	delete validationRegistry[validatorId];
-}
+// Replace the existing registry functions with the ones from the callback registry
+export const createValidator = validationRegistry.create;
+export const validatorProps = validationRegistry.props;
+export const extendValidatorProps = validationRegistry.extendProps;
 
 /**
  * Run any validators associated with this element on change
@@ -107,28 +99,6 @@ export const validateReset = createHandler('reset', 'validate__reset', (event) =
 		(child as Partial<HTMLInputElement>).setCustomValidity?.('');
 	}
 });
-
-/**
- * Create a function that will lazily register the validation function with the
- * registry and returns the given ID.
- */
-export function createValidator<T extends HTMLElement = HTMLElement>(
-	validatorId: string,
-	onValidate: Validator<T>,
-) {
-	function register() {
-		addValidator<T>(validatorId, function (this: T, event) {
-			return register.do.call(this, event);
-		});
-		return validatorId;
-	}
-
-	// Stick original handler on the function so it can be easily composed with other handlers
-	// or spied on for tests
-	register.do = onValidate;
-
-	return register;
-}
 
 /**
  * Set an error message on any error element describing the target element.
@@ -197,12 +167,9 @@ export function validate<T extends HTMLElement>(elm: T, event: Event): string | 
 		value: elm,
 	});
 
-	const validatorIds = elm.getAttribute(VALIDATE_ATTR)?.split(/\s/) ?? [];
-	for (const id of validatorIds) {
-		const fn = validationRegistry[id];
-		if (!fn) continue;
-
-		const res = fn.call(elm, event);
+	// Use the registry's iter method to iterate through all validators for this element
+	for (const validator of validationRegistry.iter(elm)) {
+		const res = validator.call(elm, event as Event & { currentTarget: T });
 		if (res) {
 			setError(elm, res);
 			return res;
@@ -211,47 +178,6 @@ export function validate<T extends HTMLElement>(elm: T, event: Event): string | 
 
 	setError(elm, null);
 	return null;
-}
-
-/**
- * Convenience function to return a spreadable props object with the validator ID(s)
- */
-export function validatorProps(
-	...validatorOrProps: (Record<string, any> | string | (() => string) | Falsey)[]
-): Record<string, string> {
-	const ids: string[] = [];
-	for (const idOrProps of validatorOrProps) {
-		if (!idOrProps) continue;
-		switch (typeof idOrProps) {
-			case 'string':
-				ids.push(idOrProps);
-				break;
-			case 'function':
-				ids.push(idOrProps());
-				break;
-			case 'object':
-				if (idOrProps[VALIDATE_ATTR]) ids.push(idOrProps[VALIDATE_ATTR] as string);
-				break;
-		}
-	}
-	return { [VALIDATE_ATTR]: ids.join(' ') };
-}
-
-/**
- * Convenience function to use handler props with a prop mod
- */
-export function extendValidatorProps(...validatorIds: (string | (() => string) | Falsey)[]) {
-	return {
-		[VALIDATE_ATTR]: (prevIds: string | undefined) => {
-			const ids = prevIds ? [prevIds] : [];
-			for (const id of validatorIds) {
-				if (!id) continue;
-				if (typeof id === 'string') ids.push(id);
-				else ids.push(id());
-			}
-			return ids.join(' ');
-		},
-	};
 }
 
 /**
