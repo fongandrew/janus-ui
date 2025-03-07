@@ -4,7 +4,7 @@ import {
 	validateChildrenOnChange,
 	validateTouchedChildrenOnChange,
 } from '~/shared/handlers/validation';
-import { handlerProps } from '~/shared/utility/event-handler-attrs';
+import { callbackAttrs } from '~/shared/utility/callback-registry';
 
 /**
  * Simple div wrapper to reuire that certain form controls validate together
@@ -18,7 +18,7 @@ export function FormValidationGroup(props: FormValidationGroupProps) {
 	return (
 		<div
 			{...props}
-			{...handlerProps(
+			{...callbackAttrs(
 				props.touchedOnly === false
 					? validateChildrenOnChange
 					: validateTouchedChildrenOnChange,

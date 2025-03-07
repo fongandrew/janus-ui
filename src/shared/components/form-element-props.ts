@@ -2,14 +2,9 @@ import { createMemo, type JSX, mergeProps, onCleanup } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
 import { useFormElementProps } from '~/shared/components/form-element-context';
-import {
-	createValidator,
-	validateOnChange,
-	type Validator,
-	validatorProps,
-} from '~/shared/handlers/validation';
+import { createValidator, validateOnChange, type Validator } from '~/shared/handlers/validation';
+import { callbackAttrs } from '~/shared/utility/callback-registry';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
-import { handlerProps } from '~/shared/utility/event-handler-attrs';
 
 export interface HTMLElements {
 	a: HTMLAnchorElement;
@@ -94,9 +89,8 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 			invalid: null,
 		},
 
-		// Hook up validate on change
-		handlerProps(formProps, validateOnChange),
-		() => validatorProps(formProps, validatorId),
+		// Hook up validate on change (inside function so validatorId is tracked)
+		() => callbackAttrs(formProps, validateOnChange, validatorId),
 	);
 
 	return merged as JSX.HTMLElementTags[TTag];

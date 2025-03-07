@@ -15,7 +15,7 @@ import {
 	listBoxValues,
 } from '~/shared/handlers/list-box';
 import { isList } from '~/shared/handlers/option-list';
-import { handlerProps } from '~/shared/utility/event-handler-attrs';
+import { callbackAttrs } from '~/shared/utility/callback-registry';
 
 export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'> {
 	/** Name for form submission */
@@ -78,7 +78,7 @@ export function ListBox(props: ListBoxProps) {
 		<ListBoxContext.Provider value={context}>
 			<OptionList
 				{...optionListProps}
-				{...handlerProps(optionListProps, listBoxChange, listBoxKeyDown)}
+				{...callbackAttrs(optionListProps, listBoxChange, listBoxKeyDown)}
 				role="listbox"
 				class={cx('c-list-box', rest.class)}
 				tabIndex={0}

@@ -10,7 +10,7 @@ import {
 } from '~/shared/components/form-element-context';
 import { dropdownBeforeToggle, dropdownClose } from '~/shared/handlers/dropdown';
 import { attrs } from '~/shared/utility/attribute-list';
-import { handlerProps } from '~/shared/utility/event-handler-attrs';
+import { callbackAttrs } from '~/shared/utility/callback-registry';
 import { T } from '~/shared/utility/text/t-components';
 
 // Omit the `id` attribute from the HTMLDivElement interface because it should be assigned
@@ -53,7 +53,7 @@ export function DropdownContent(props: DropdownContentProps) {
 		<FormElementResetProvider>
 			<div
 				{...rest}
-				{...handlerProps(rest, dropdownBeforeToggle)}
+				{...callbackAttrs(rest, dropdownBeforeToggle)}
 				id={context?.popoverId()}
 				class={cx('c-dropdown__content', rest.class)}
 				aria-labelledby={attrs(context?.triggerId(), rest['aria-labelledby'])}
@@ -64,7 +64,7 @@ export function DropdownContent(props: DropdownContentProps) {
 					<GhostButton
 						class="v-input-sm"
 						unsetFormInput
-						{...handlerProps(props, dropdownClose)}
+						{...callbackAttrs(props, dropdownClose)}
 					>
 						<T>Close</T>
 					</GhostButton>

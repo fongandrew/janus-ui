@@ -5,7 +5,7 @@ import { ListBoxContext } from '~/shared/components/list-box';
 import { OptionList } from '~/shared/components/option-list';
 import { listBoxChange } from '~/shared/handlers/list-box';
 import { selectCloseOnClick, selectUpdateWithInput } from '~/shared/handlers/select';
-import { handlerProps } from '~/shared/utility/event-handler-attrs';
+import { callbackAttrs } from '~/shared/utility/callback-registry';
 import { T } from '~/shared/utility/text/t-components';
 
 // Disallow ID, should be set via context
@@ -39,7 +39,7 @@ export function SelectOptionList(props: SelectOptionListProps) {
 					role="listbox"
 					id={local.listBoxId}
 					class="t-unstyled"
-					{...handlerProps(listBoxChange, selectCloseOnClick)}
+					{...callbackAttrs(listBoxChange, selectCloseOnClick)}
 				>
 					{local.children}
 					<div class="c-select__empty_state">

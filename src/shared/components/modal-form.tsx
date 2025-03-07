@@ -6,13 +6,12 @@ import { Form, type FormProps } from '~/shared/components/form';
 import { SubmitButton } from '~/shared/components/form-buttons';
 import { ModalCloseButton, ModalContent } from '~/shared/components/modal';
 import { ModalSpeedBump, type ModalSpeedBumpProps } from '~/shared/components/modal-speed-bump';
-import { closedProps, requestCloseProps } from '~/shared/handlers/modal';
 import {
 	modalFormCloseOnSuccess,
 	modalFormMaybeShowSpeedBump,
 	modalFormResetOnClose,
 } from '~/shared/handlers/modal-form';
-import { handlerProps } from '~/shared/utility/event-handler-attrs';
+import { callbackAttrs } from '~/shared/utility/callback-registry';
 import { T } from '~/shared/utility/text/t-components';
 
 export interface ModalFormContentProps<TNames extends string> extends FormProps<TNames> {
@@ -50,12 +49,15 @@ export function ModalFormContent<TNames extends string>(props: ModalFormContentP
 		<>
 			<ModalContent
 				{...modalProps}
-				{...requestCloseProps(modalProps, modalFormMaybeShowSpeedBump)}
+				{...callbackAttrs(modalProps, modalFormMaybeShowSpeedBump)}
 			>
 				<Form
 					{...formProps}
-					{...handlerProps(formProps, closeOnSubmit() && modalFormCloseOnSuccess)}
-					{...closedProps(formProps, resetOnClose() && modalFormResetOnClose)}
+					{...callbackAttrs(
+						formProps,
+						closeOnSubmit() && modalFormCloseOnSuccess,
+						resetOnClose() && modalFormResetOnClose,
+					)}
 				>
 					{props.children}
 				</Form>

@@ -18,7 +18,7 @@ import {
 	selectMountText,
 	selectUpdateText,
 } from '~/shared/handlers/select';
-import { handlerProps } from '~/shared/utility/event-handler-attrs';
+import { callbackAttrs } from '~/shared/utility/callback-registry';
 import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
 import { useMountAttrs } from '~/shared/utility/solid/use-mount-attrs';
 
@@ -72,10 +72,10 @@ export function Select(props: SelectProps) {
 	const mounterProps = useMountAttrs(selectMountText);
 
 	return (
-		<SelectContainer listId={listId} {...handlerProps(selectUpdateText)} {...mounterProps}>
+		<SelectContainer listId={listId} {...callbackAttrs(selectUpdateText)} {...mounterProps}>
 			<Button
 				{...buttonProps}
-				{...handlerProps(buttonProps, selectButtonKeyDown, selectFocusOut)}
+				{...callbackAttrs(buttonProps, selectButtonKeyDown, selectFocusOut)}
 				{...extendHandler(buttonProps, 'onChange', handleChange)}
 				role="combobox"
 				class={cx('c-select__button', props.class)}

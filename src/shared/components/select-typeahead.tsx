@@ -21,7 +21,7 @@ import {
 	selectUpdateText,
 	selectUpdateWithInput,
 } from '~/shared/handlers/select';
-import { handlerProps } from '~/shared/utility/event-handler-attrs';
+import { callbackAttrs } from '~/shared/utility/callback-registry';
 import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
 import { useMountAttrs } from '~/shared/utility/solid/use-mount-attrs';
 
@@ -86,12 +86,12 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 		<SelectContainer
 			listId={listId}
 			inputId={id()}
-			{...handlerProps(selectUpdateText, selectUpdateWithInput)}
+			{...callbackAttrs(selectUpdateText, selectUpdateWithInput)}
 			{...mounterProps}
 		>
 			<Input
 				{...inputProps}
-				{...handlerProps(
+				{...callbackAttrs(
 					inputProps,
 					selectInputClick,
 					selectInputKeyDown,

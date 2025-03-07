@@ -140,8 +140,3 @@ export function createHandler<T extends DelegatableEvent>(
 ) {
 	return getRegistry(eventType).create(handlerId, handler as (e: Event) => void);
 }
-
-// Handler props + modHandlerProps functions are the same for all registries
-// since they're tied to the same data attribute, so we can just define them once
-export const handlerProps = getRegistry('click').props;
-export const modHandlerProps = getRegistry('click').modProps;

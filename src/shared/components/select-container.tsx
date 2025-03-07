@@ -6,7 +6,7 @@ import { Button } from '~/shared/components/button';
 import { Dropdown } from '~/shared/components/dropdown';
 import { FormElementResetProvider } from '~/shared/components/form-element-context';
 import { selectClear } from '~/shared/handlers/select';
-import { handlerProps } from '~/shared/utility/event-handler-attrs';
+import { callbackAttrs } from '~/shared/utility/callback-registry';
 import { t } from '~/shared/utility/text/t-tag';
 
 export interface SelectContainerProps extends JSX.HTMLAttributes<HTMLDivElement> {
@@ -41,7 +41,7 @@ export function SelectContainer(props: SelectContainerProps) {
 						aria-label={t`Clear selection`}
 						unsetFormInput
 						unstyled
-						{...handlerProps(selectClear)}
+						{...callbackAttrs(selectClear)}
 					>
 						<X />
 					</Button>

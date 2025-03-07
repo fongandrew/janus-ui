@@ -7,7 +7,6 @@ import { FormContextProvider } from '~/shared/components/form-context';
 import { FormElementPropsProvider } from '~/shared/components/form-element-context';
 import { ModalContext } from '~/shared/components/modal-context';
 import {
-	closedProps,
 	closeModal,
 	MODAL_CONTENT_ATTR,
 	MODAL_FOOTER_ATTR,
@@ -19,11 +18,10 @@ import {
 	modalTriggerClose,
 	modalTriggerOpen,
 	modalTriggerRequestClose,
-	openedProps,
 	openModal,
 } from '~/shared/handlers/modal';
 import { attrNoConflict } from '~/shared/utility/attribute';
-import { handlerProps, modHandlerProps } from '~/shared/utility/event-handler-attrs';
+import { callbackAttrMods, callbackAttrs } from '~/shared/utility/callback-registry';
 import { createAutoId } from '~/shared/utility/solid/auto-prop';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { T } from '~/shared/utility/text/t-components';
@@ -88,7 +86,7 @@ export function Modal(props: DialogProps) {
 			<ModalContext.Provider value={id}>
 				<dialog
 					{...rest}
-					{...handlerProps(
+					{...callbackAttrs(
 						rest,
 						modalBackdropMouseDown,
 						modalBackdropClick,
@@ -113,7 +111,7 @@ export function ModalXButton(props: ButtonProps) {
 		<IconButton
 			label={t`Close`}
 			{...props}
-			{...handlerProps(props, modalTriggerRequestClose)}
+			{...callbackAttrs(props, modalTriggerRequestClose)}
 			class={cx('c-modal__x', props.class)}
 		>
 			<X />
@@ -128,7 +126,7 @@ export function ModalCloseButton(
 	return (
 		<Button
 			{...props}
-			{...handlerProps(props, props.force ? modalTriggerClose : modalTriggerRequestClose)}
+			{...callbackAttrs(props, props.force ? modalTriggerClose : modalTriggerRequestClose)}
 			aria-controls={props.targetId}
 		>
 			{props.children ?? <T>Close</T>}
@@ -143,7 +141,7 @@ export function ModalOpenTrigger(props: { children: JSX.Element; targetId: strin
 			aria-controls={(prev) => attrNoConflict(prev, props.targetId)}
 			aria-expanded={() => false}
 			aria-haspopup={(prev) => attrNoConflict(prev, 'dialog')}
-			{...modHandlerProps(modalTriggerOpen)}
+			{...callbackAttrMods(modalTriggerOpen)}
 		>
 			{props.children}
 		</FormElementPropsProvider>
@@ -164,8 +162,7 @@ export function ModalContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
 	return (
 		<div
 			{...props}
-			{...openedProps(props, modalOpenScrollState)}
-			{...closedProps(props, modalClosedScrollState)}
+			{...callbackAttrs(props, modalOpenScrollState, modalClosedScrollState)}
 			{...{ [MODAL_CONTENT_ATTR]: '' }}
 			class={cx('c-modal__content', props.class)}
 		/>

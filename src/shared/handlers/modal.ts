@@ -36,10 +36,7 @@ const openedRegistry = createCallbackRegistry<
 	typeof MODAL_OPENED_ATTR,
 	(this: HTMLElement, elm: HTMLElement) => void
 >(MODAL_OPENED_ATTR);
-
 export const createOpenedCallback = openedRegistry.create;
-export const openedProps = openedRegistry.props;
-export const modOpenedProps = openedRegistry.modProps;
 
 /**
  * Magic data attribute to register a "modal closed" callback within a modal.
@@ -51,10 +48,7 @@ const closedRegistry = createCallbackRegistry<
 	typeof MODAL_CLOSED_ATTR,
 	(this: HTMLElement, elm: HTMLElement) => void
 >(MODAL_CLOSED_ATTR);
-
 export const createClosedCallback = closedRegistry.create;
-export const closedProps = closedRegistry.props;
-export const modClosedProps = closedRegistry.modProps;
 
 /**
  * Magic data attribute used to register a "request to close" callback on a modal
@@ -65,10 +59,7 @@ const requestCloseRegistry = createCallbackRegistry<
 	typeof REQUEST_CLOSE_ATTR,
 	RequestCloseCallback
 >(REQUEST_CLOSE_ATTR);
-
 export const createRequestCloseCallback = requestCloseRegistry.create;
-export const requestCloseProps = requestCloseRegistry.props;
-export const modRequestCloseProps = requestCloseRegistry.modProps;
 
 // Flag used by `modalBackdropMouseDown` below.
 const [mouseDownDialog, setMouseDownDialog] = createMagicProp<boolean>();

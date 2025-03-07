@@ -18,7 +18,7 @@ import {
 	menuTriggerKeyDown,
 } from '~/shared/handlers/menu';
 import { getItemValue } from '~/shared/handlers/option-list';
-import { handlerProps, modHandlerProps } from '~/shared/utility/event-handler-attrs';
+import { callbackAttrMods, callbackAttrs } from '~/shared/utility/callback-registry';
 import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
 
 // Disallow ID since it should be set via context
@@ -42,10 +42,10 @@ export function Menu(props: MenuProps) {
 	return (
 		<DropdownContent
 			{...rest}
-			{...handlerProps(props, menuFocusOnOpen, dropdownCloseOnBlur)}
+			{...callbackAttrs(props, menuFocusOnOpen, dropdownCloseOnBlur)}
 			{...extendHandler(props, 'onClick', handleClick)}
 		>
-			<OptionList role="menu" {...handlerProps(menuKeyDown, menuCloseOnSelect)}>
+			<OptionList role="menu" {...callbackAttrs(menuKeyDown, menuCloseOnSelect)}>
 				{local.children}
 			</OptionList>
 		</DropdownContent>
@@ -83,7 +83,7 @@ export function MenuTrigger(props: DropdownProps) {
 	return (
 		<Dropdown {...props}>
 			<FormElementButtonPropsProvider
-				{...modHandlerProps(menuTriggerClick, menuTriggerKeyDown)}
+				{...callbackAttrMods(menuTriggerClick, menuTriggerKeyDown)}
 			>
 				{props.children}
 			</FormElementButtonPropsProvider>

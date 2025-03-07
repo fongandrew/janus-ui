@@ -11,7 +11,7 @@ import {
 	tooltipMouseOver,
 } from '~/shared/handlers/tooltip';
 import { attrs } from '~/shared/utility/attribute-list';
-import { modHandlerProps } from '~/shared/utility/event-handler-attrs';
+import { callbackAttrMods } from '~/shared/utility/callback-registry';
 
 export const TOOLTIP_ARROW_ATTR = 'data-tooltip-arrow';
 
@@ -43,7 +43,7 @@ export function Tooltip(props: TooltipProps) {
 	const mods = {
 		'aria-describedby': (prev: string | undefined) => attrs(prev, tooltipId()),
 		[tooltipMouseOver.PLACEMENT_ATTR]: () => props.placement,
-		...modHandlerProps(tooltipMouseOver, tooltipMouseOut, tooltipFocus, tooltipBlur),
+		...callbackAttrMods(tooltipMouseOver, tooltipMouseOut, tooltipFocus, tooltipBlur),
 	};
 	return (
 		<>

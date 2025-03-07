@@ -2,7 +2,7 @@ import cx from 'classix';
 import { children, type JSX } from 'solid-js';
 
 import { focusInputOnClick } from '~/shared/handlers/label';
-import { handlerProps } from '~/shared/utility/event-handler-attrs';
+import { callbackAttrs } from '~/shared/utility/callback-registry';
 import { spanify } from '~/shared/utility/solid/spanify';
 
 /** Default HTML label -- used for inline stuff mostly */
@@ -32,7 +32,7 @@ export function LabelSpan(props: JSX.HTMLAttributes<HTMLSpanElement> & { id: str
 	return (
 		<span
 			{...props}
-			{...handlerProps(props, focusInputOnClick)}
+			{...callbackAttrs(props, focusInputOnClick)}
 			class={cx('c-label', props.class)}
 		>
 			{

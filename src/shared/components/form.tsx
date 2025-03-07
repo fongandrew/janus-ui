@@ -9,7 +9,7 @@ import {
 } from '~/shared/handlers/form';
 import { FORM_CONTROL_ERROR_ATTR } from '~/shared/handlers/validation';
 import { attrs } from '~/shared/utility/attribute-list';
-import { handlerProps } from '~/shared/utility/event-handler-attrs';
+import { callbackAttrs } from '~/shared/utility/callback-registry';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
 
 export interface FormProps<TNames extends string>
@@ -40,7 +40,7 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 		if (!props.onSubmit) return;
 		const handler = createSubmitHandler(createUniqueId(), props.onSubmit, props.names ?? {});
 		onCleanup(handler.rm);
-		return handler();
+		return handler;
 	});
 
 	return (
@@ -50,10 +50,10 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 			{...rest}
 			id={id()}
 			aria-describedby={attrs(props['aria-describedby'], errorId())}
-			{...handlerProps(
+			{...callbackAttrs(
 				rest,
-				handlerId,
-				local.resetOnSuccess !== false && formResetOnSuccess(),
+				handlerId(),
+				local.resetOnSuccess !== false && formResetOnSuccess,
 			)}
 		>
 			<div class="o-stack">
