@@ -1,36 +1,42 @@
 import cx from 'classix';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-solid';
-import { createEffect, createMemo, createUniqueId, type JSX, splitProps } from 'solid-js';
+import { createUniqueId, type JSX, splitProps, useContext } from 'solid-js';
 
-import { GhostButton, GhostButtonLink, IconButton } from '~/shared/components/button';
 import {
-	createSidebarContext,
-	SidebarContext,
-	useSidebar,
-} from '~/shared/components/sidebar-context';
-import { firstFocusable } from '~/shared/utility/focusables';
-import { isFocusVisible } from '~/shared/utility/is-focus-visible';
-import { combineRefs } from '~/shared/utility/solid/combine-refs';
+	type ButtonProps,
+	GhostButton,
+	GhostButtonLink,
+	IconButton,
+} from '~/shared/components/button';
+import { SidebarContext } from '~/shared/components/sidebar-context';
+import {
+	SIDEBAR_STATE_ATTR,
+	sidebarClose,
+	sidebarEscape,
+	sidebarFocusOut,
+	sidebarOpen,
+} from '~/shared/handlers/sidebar';
+import { callbackAttrs } from '~/shared/utility/callback-registry';
+import { createAuto } from '~/shared/utility/solid/auto-prop';
 import { t } from '~/shared/utility/text/t-tag';
 
 /**
  * A layout component that provides a sidebar context
  */
-export function SidebarLayout(props: JSX.HTMLAttributes<HTMLDivElement>) {
-	const context = createSidebarContext();
-	const [open, setOpen] = context.open;
+export function SidebarLayout(
+	props: JSX.HTMLAttributes<HTMLDivElement> & { sidebarId?: string | undefined },
+) {
+	const [local, rest] = splitProps(props, ['sidebarId']);
+	const sidebarId = createAuto(local, 'sidebarId');
 	return (
-		<SidebarContext.Provider value={context}>
+		<SidebarContext.Provider value={sidebarId}>
 			<div
-				{...props}
-				class={cx(
-					'c-sidebar-layout',
-					open() && 'c-sidebar-layout--open',
-					open() === false && 'c-sidebar-layout--closed',
-				)}
+				{...rest}
+				class={cx('c-sidebar-layout', rest.class)}
+				{...{ [SIDEBAR_STATE_ATTR]: '' }}
 			>
 				{props.children}
-				<div class="c-sidebar__overlay" onClick={[setOpen, false]} />
+				<div class="c-sidebar__overlay" {...callbackAttrs(sidebarClose)} />
 			</div>
 		</SidebarContext.Provider>
 	);
@@ -39,53 +45,25 @@ export function SidebarLayout(props: JSX.HTMLAttributes<HTMLDivElement>) {
 /**
  * A sidebar component that uses the sidebar context to determine its visibility.
  */
-export function Sidebar(props: JSX.HTMLAttributes<HTMLElement>) {
-	const {
-		open: [open, setOpen],
-		toggleCtrl,
-	} = useSidebar();
-
-	let ref: HTMLElement | null;
-	const setRef = (v: HTMLElement | null) => {
-		ref = v;
-	};
-
-	createEffect(() => {
-		if (open() && ref) {
-			firstFocusable(ref)?.focus();
-		}
-	});
-
-	// We want to close the sidebar on narrow widths when focus leaves it but only if focus was
-	// previously visible (that is, focus is shifting via keypress rather than mouse click).
-	const handleFocusOut = (e: FocusEvent) => {
-		if (open() === true && !ref?.contains(e.relatedTarget as Node) && isFocusVisible()) {
-			// Null will close sidebar on narrow mobile widths but leave it in its
-			// default open state on wide desktop widths
-			setOpen(null);
-		}
-	};
-
-	const handleEscape = (e: KeyboardEvent) => {
-		if (e.key === 'Escape') {
-			setOpen(false);
-			toggleCtrl.ref()?.focus();
-		}
-	};
-
-	const id = createMemo(() => props.id || createUniqueId());
-	toggleCtrl.setAttr('aria-controls', () => id());
+export function Sidebar(
+	props: Omit<
+		JSX.HTMLAttributes<HTMLDivElement>,
+		/* No ID here, set within context provider */ 'id'
+	>,
+) {
+	const contextId = useContext(SidebarContext);
+	if (!contextId) {
+		throw new Error('Sidebar must be a child of SidebarLayout');
+	}
 
 	return (
 		<>
 			<div
 				role="complementary"
 				{...props}
-				id={id()}
-				ref={combineRefs(setRef, props.ref)}
+				{...callbackAttrs(props, sidebarEscape, sidebarFocusOut)}
+				id={contextId()}
 				class={cx('c-sidebar', props.class)}
-				onFocusOut={handleFocusOut}
-				onKeyDown={handleEscape}
 			>
 				{props.children}
 			</div>
@@ -97,21 +75,17 @@ export function Sidebar(props: JSX.HTMLAttributes<HTMLElement>) {
  * A button component that opens the sidebar. Place somewhere outside the sidebar.
  * Will hide itself when the sidebar is open on desktop.
  */
-export function SidebarOpenButton() {
-	const {
-		open: [open, setOpen],
-		toggleCtrl,
-	} = useSidebar();
-
-	const toggleProps = toggleCtrl.merge({
-		'aria-expanded': open() === true,
-		class: 'c-sidebar__open-button',
-		label: t`Open Sidebar`,
-		onClick: [setOpen, true],
-	});
-
+export function SidebarOpenButton(props: ButtonProps) {
+	const contextId = useContext(SidebarContext);
 	return (
-		<IconButton {...toggleProps}>
+		<IconButton
+			aria-controls={contextId?.()}
+			aria-expanded={false}
+			label={t`Open Sidebar`}
+			{...props}
+			{...callbackAttrs(props, sidebarOpen)}
+			class={cx('c-sidebar__open-button', props.class)}
+		>
 			<PanelLeftOpen />
 		</IconButton>
 	);
@@ -121,18 +95,9 @@ export function SidebarOpenButton() {
  * A button component that closes the sidebar. Place somewhere inside the sidebar.
  * Will hide itself when the sidebar is open on desktop.
  */
-export function SidebarCloseButton() {
-	const {
-		open: [, setOpen],
-		toggleCtrl,
-	} = useSidebar();
-	const handleClick = () => {
-		setOpen(false);
-		toggleCtrl.ref()?.focus();
-	};
-
+export function SidebarCloseButton(props: ButtonProps) {
 	return (
-		<IconButton onClick={handleClick} label={t`Close Sidebar`}>
+		<IconButton label={t`Close Sidebar`} {...props} {...callbackAttrs(props, sidebarClose)}>
 			<PanelLeftClose />
 		</IconButton>
 	);

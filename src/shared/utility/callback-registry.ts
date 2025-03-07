@@ -146,3 +146,10 @@ export function callbackAttrMods(...idOrProps: (RegisteredCallback<any> | Falsey
 	}
 	return ret;
 }
+
+/**
+ * Returns a selector to find a given registered callback
+ */
+export function callbackSelector(callback: RegisteredCallback<any>) {
+	return `[${callback.attr}~="${callback()}"]`;
+}
