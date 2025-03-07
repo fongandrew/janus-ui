@@ -47,7 +47,7 @@ const validationRegistry = createCallbackRegistry<typeof VALIDATE_ATTR, Validato
 // Replace the existing registry functions with the ones from the callback registry
 export const createValidator = validationRegistry.create;
 export const validatorProps = validationRegistry.props;
-export const extendValidatorProps = validationRegistry.extendProps;
+export const extendValidatorProps = validationRegistry.modProps;
 
 /**
  * Run any validators associated with this element on change

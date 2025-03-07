@@ -63,7 +63,6 @@ export function createCallbackRegistry<
 		/**
 		 * Creates a props object with the specified attribute and IDs.
 		 *
-		 * @param attr - The attribute to use for the props object.
 		 * @param idsOrProps - The IDs or props to include in the props object.
 		 * @returns A props object with the specified attribute and IDs.
 		 */
@@ -87,13 +86,12 @@ export function createCallbackRegistry<
 		},
 
 		/**
-		 * Extends a props object with additional IDs.
+		 * Extends a props object with additional IDs via prop mod form.
 		 *
-		 * @param attr - The attribute to use for the props object.
 		 * @param idsOrProps - The IDs or props to include in the props object.
 		 * @returns A function that extends the props object with additional IDs.
 		 */
-		extendProps(...idsOrProps: (string | (() => string) | Falsey)[]) {
+		modProps(...idsOrProps: (string | (() => string) | Falsey)[]) {
 			return {
 				[attr]: (prevIds: string | undefined) => {
 					const ids = prevIds ? [prevIds] : [];

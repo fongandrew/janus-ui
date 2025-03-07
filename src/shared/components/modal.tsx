@@ -23,7 +23,7 @@ import {
 	openModal,
 } from '~/shared/handlers/modal';
 import { attrNoConflict } from '~/shared/utility/attribute';
-import { extendHandlerProps, handlerProps } from '~/shared/utility/event-handler-attrs';
+import { handlerProps, modHandlerProps } from '~/shared/utility/event-handler-attrs';
 import { createAutoId } from '~/shared/utility/solid/auto-prop';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { T } from '~/shared/utility/text/t-components';
@@ -143,7 +143,7 @@ export function ModalOpenTrigger(props: { children: JSX.Element; targetId: strin
 			aria-controls={(prev) => attrNoConflict(prev, props.targetId)}
 			aria-expanded={() => false}
 			aria-haspopup={(prev) => attrNoConflict(prev, 'dialog')}
-			{...extendHandlerProps(modalTriggerOpen)}
+			{...modHandlerProps(modalTriggerOpen)}
 		>
 			{props.children}
 		</FormElementPropsProvider>

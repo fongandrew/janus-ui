@@ -42,10 +42,10 @@ describe('createCallbackRegistry', () => {
 		expect(props).toEqual({ 'data-test': 'id1 id2 other prev more' });
 	});
 
-	it('should extend props object with additional IDs', () => {
+	it('should mod props object with additional IDs', () => {
 		const registry = createCallbackRegistry('data-test');
-		const extendProps = registry.extendProps('id4', 'id5');
-		const extendedProps = extendProps['data-test']('id1 id2');
+		const modProps = registry.modProps('id4', 'id5');
+		const extendedProps = modProps['data-test']('id1 id2');
 
 		expect(extendedProps).toBe('id1 id2 id4 id5');
 	});

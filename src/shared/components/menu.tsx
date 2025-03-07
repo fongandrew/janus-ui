@@ -18,7 +18,7 @@ import {
 	menuTriggerKeyDown,
 } from '~/shared/handlers/menu';
 import { getItemValue } from '~/shared/handlers/option-list';
-import { extendHandlerProps, handlerProps } from '~/shared/utility/event-handler-attrs';
+import { handlerProps, modHandlerProps } from '~/shared/utility/event-handler-attrs';
 import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
 
 // Disallow ID since it should be set via context
@@ -83,7 +83,7 @@ export function MenuTrigger(props: DropdownProps) {
 	return (
 		<Dropdown {...props}>
 			<FormElementButtonPropsProvider
-				{...extendHandlerProps(menuTriggerClick, menuTriggerKeyDown)}
+				{...modHandlerProps(menuTriggerClick, menuTriggerKeyDown)}
 			>
 				{props.children}
 			</FormElementButtonPropsProvider>
