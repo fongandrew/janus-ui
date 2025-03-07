@@ -1,5 +1,10 @@
 import { VALID_SUBMIT_EVENT } from '~/shared/handlers/form';
-import { closeModal, createRequestCloseCallback, openModal } from '~/shared/handlers/modal';
+import {
+	closeModal,
+	createClosedCallback,
+	createRequestCloseCallback,
+	openModal,
+} from '~/shared/handlers/modal';
 import { getValidatableElements, touched } from '~/shared/handlers/validation';
 import { createHandler } from '~/shared/utility/event-handler-attrs';
 import { data } from '~/shared/utility/magic-strings';
@@ -14,9 +19,9 @@ export const modalFormCloseOnSuccess = createHandler(
 	},
 );
 
-export const modalFormResetOnClose = createHandler('close', 'modal-form__reset-on-close', (e) => {
-	const dialog = e.currentTarget as HTMLDialogElement;
-	dialog.querySelector('form')?.reset();
+export const modalFormResetOnClose = createClosedCallback('modal-form__reset-on-close', (elm) => {
+	const form = elm as HTMLFormElement;
+	form.reset();
 });
 
 export const modalFormMaybeShowSpeedBump = Object.assign(

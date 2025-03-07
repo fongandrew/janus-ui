@@ -191,7 +191,7 @@ function FormModal() {
 }
 
 function ScrollableForm() {
-	const [isFormOpen, setIsFormOpen] = createSignal(false);
+	const formId = createUniqueId();
 
 	const FormNames = {
 		field1: 'field1' as const,
@@ -200,13 +200,14 @@ function ScrollableForm() {
 
 	const handleSubmit = (e: TypedSubmitEvent<keyof typeof FormNames>) => {
 		e.preventDefault();
-		setIsFormOpen(false);
 	};
 
 	return (
 		<>
-			<Button onClick={[setIsFormOpen, true]}>Open Form Modal (Scrollable)</Button>
-			<Modal open={isFormOpen()} onClose={[setIsFormOpen, false]}>
+			<ModalOpenTrigger targetId={formId}>
+				<Button>Open Form Modal (Scrollable)</Button>
+			</ModalOpenTrigger>
+			<Modal id={formId}>
 				<ModalTitle>Form Example</ModalTitle>
 				<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
 					<LabelledInput label="First">

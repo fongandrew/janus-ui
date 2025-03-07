@@ -6,8 +6,12 @@ import { Form, type FormProps } from '~/shared/components/form';
 import { SubmitButton } from '~/shared/components/form-buttons';
 import { ModalCloseButton, ModalContent } from '~/shared/components/modal';
 import { ModalSpeedBump, type ModalSpeedBumpProps } from '~/shared/components/modal-speed-bump';
-import { requestCloseProps } from '~/shared/handlers/modal';
-import { modalFormCloseOnSuccess, modalFormMaybeShowSpeedBump } from '~/shared/handlers/modal-form';
+import { closedProps, requestCloseProps } from '~/shared/handlers/modal';
+import {
+	modalFormCloseOnSuccess,
+	modalFormMaybeShowSpeedBump,
+	modalFormResetOnClose,
+} from '~/shared/handlers/modal-form';
 import { handlerProps } from '~/shared/utility/event-handler-attrs';
 import { T } from '~/shared/utility/text/t-components';
 
@@ -51,6 +55,7 @@ export function ModalFormContent<TNames extends string>(props: ModalFormContentP
 				<Form
 					{...formProps}
 					{...handlerProps(formProps, closeOnSubmit() && modalFormCloseOnSuccess)}
+					{...closedProps(formProps, resetOnClose() && modalFormResetOnClose)}
 				>
 					{props.children}
 				</Form>

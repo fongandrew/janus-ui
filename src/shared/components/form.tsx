@@ -20,7 +20,7 @@ export interface FormProps<TNames extends string>
 	names?: Record<string, TNames> | undefined;
 	/** Typed submit handler */
 	onSubmit?: SubmitHandler<TNames> | undefined;
-	/** Should form reset on success? */
+	/** Should form reset on success? Defaults to true. */
 	resetOnSuccess?: boolean | undefined;
 }
 
@@ -34,7 +34,7 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 	});
 
 	const errorId = createAuto(props, 'errorId');
-	const [, rest] = splitProps(props, ['errorId']);
+	const [local, rest] = splitProps(props, ['errorId', 'names', 'onSubmit', 'resetOnSuccess']);
 
 	const handlerId = createMemo(() => {
 		if (!props.onSubmit) return;
@@ -45,11 +45,16 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 
 	return (
 		<form
-			id={id()}
-			aria-describedby={attrs(props['aria-describedby'], errorId())}
 			// Default HTML validation interferes with our own custom handlers
 			noValidate
-			{...handlerProps(props, handlerId, props.resetOnSuccess && formResetOnSuccess())}
+			{...rest}
+			id={id()}
+			aria-describedby={attrs(props['aria-describedby'], errorId())}
+			{...handlerProps(
+				rest,
+				handlerId,
+				local.resetOnSuccess !== false && formResetOnSuccess(),
+			)}
 		>
 			<div class="o-stack">
 				<DangerAlert id={errorId()} {...{ [FORM_CONTROL_ERROR_ATTR]: '' }} />

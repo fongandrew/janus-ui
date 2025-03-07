@@ -24,3 +24,12 @@ export function attrNoConflict<T = string>(
 	}
 	return a || b;
 }
+
+/** Set attribute if truthy, remove otherwise */
+export function attrBool(element: Element, attr: string, value: boolean): void {
+	if (value) {
+		element.setAttribute(attr, '');
+	} else {
+		element.removeAttribute(attr);
+	}
+}

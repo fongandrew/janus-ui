@@ -7,15 +7,19 @@ import { FormContextProvider } from '~/shared/components/form-context';
 import { FormElementPropsProvider } from '~/shared/components/form-element-context';
 import { ModalContext } from '~/shared/components/modal-context';
 import {
+	closedProps,
 	closeModal,
 	MODAL_CONTENT_ATTR,
 	MODAL_FOOTER_ATTR,
 	modalBackdropClick,
 	modalBackdropMouseDown,
+	modalClosedScrollState,
 	modalEscapeKey,
+	modalOpenScrollState,
 	modalTriggerClose,
 	modalTriggerOpen,
 	modalTriggerRequestClose,
+	openedProps,
 	openModal,
 } from '~/shared/handlers/modal';
 import { attrNoConflict } from '~/shared/utility/attribute';
@@ -157,43 +161,13 @@ export function ModalTitle(props: JSX.HTMLAttributes<HTMLDivElement>) {
 }
 
 export function ModalContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
-	const [ref, setRef] = createSignal<HTMLDivElement | null>(null);
-	// const modalContext = useContext(ModalContext);
-
-	const [scrolledToTop, setScrolledToTop] = createSignal(true);
-	const [scrolledToBottom, setScrolledToBottom] = createSignal(true);
-
-	// Scroll handler
-	const updateScrollState = () => {
-		const content = ref();
-		if (!content) return;
-		setScrolledToTop(content.scrollTop === 0);
-		// 2px buffer to account for rounding errors and general weirdness
-		setScrolledToBottom(content.scrollHeight - content.scrollTop - 2 <= content.clientHeight);
-	};
-
-	// createEffect(() => {
-	// 	const content = ref();
-	// 	if (!content) return;
-	// 	if (!modalContext?.open?.()) return;
-	// 	content.addEventListener('scroll', updateScrollState, { passive: true });
-	// 	onCleanup(() => content.removeEventListener('scroll', updateScrollState));
-
-	// 	// Trigger once on mount in case there's nothing to scroll
-	// 	updateScrollState();
-	// });
-
 	return (
 		<div
 			{...props}
+			{...openedProps(props, modalOpenScrollState)}
+			{...closedProps(props, modalClosedScrollState)}
 			{...{ [MODAL_CONTENT_ATTR]: '' }}
-			ref={combineRefs(setRef, props.ref)}
-			class={cx(
-				'c-modal__content',
-				scrolledToTop() && 'c-modal__content--scroll-top',
-				scrolledToBottom() && 'c-modal__content--scroll-bottom',
-				props.class,
-			)}
+			class={cx('c-modal__content', props.class)}
 		/>
 	);
 }

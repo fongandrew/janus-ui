@@ -1,6 +1,8 @@
+import { updateScrollState } from '~/shared/handlers/scroll';
 import { createCallbackRegistry } from '~/shared/utility/callback-registry';
 import { createHandler } from '~/shared/utility/event-handler-attrs';
 import { firstFocusable } from '~/shared/utility/focusables';
+import { inClosedDialog, inClosedPopover } from '~/shared/utility/in-closed';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { data } from '~/shared/utility/magic-strings';
 import { elmDoc } from '~/shared/utility/multi-view';
@@ -23,6 +25,36 @@ export const MODAL_CONTENT_ATTR = data('modal__content');
  * Magic attribute to identify modal footer (used to find focusable elements)
  */
 export const MODAL_FOOTER_ATTR = data('modal__footer');
+
+/**
+ * Magic data attribute to register a "modal opened" callback within a modal.
+ * This will run right *after* the modal is opened.
+ */
+export const MODAL_OPENED_ATTR = data('modal__opened');
+
+const openedRegistry = createCallbackRegistry<
+	typeof MODAL_OPENED_ATTR,
+	(this: HTMLElement, elm: HTMLElement) => void
+>(MODAL_OPENED_ATTR);
+
+export const createOpenedCallback = openedRegistry.create;
+export const openedProps = openedRegistry.props;
+export const extendOpenedProps = openedRegistry.extendProps;
+
+/**
+ * Magic data attribute to register a "modal closed" callback within a modal.
+ * This will run right *before* the modal is closed.
+ */
+export const MODAL_CLOSED_ATTR = data('modal__closed');
+
+const closedRegistry = createCallbackRegistry<
+	typeof MODAL_CLOSED_ATTR,
+	(this: HTMLElement, elm: HTMLElement) => void
+>(MODAL_CLOSED_ATTR);
+
+export const createClosedCallback = closedRegistry.create;
+export const closedProps = closedRegistry.props;
+export const extendClosedProps = closedRegistry.extendProps;
 
 /**
  * Magic data attribute used to register a "request to close" callback on a modal
@@ -118,6 +150,15 @@ export const modalTriggerClose = createHandler('click', 'modal__trigger-close', 
 	closeModal(dialog as HTMLDialogElement);
 });
 
+/** Set scroll handler on modal content area when visible */
+export const modalOpenScrollState = createOpenedCallback('modal__open-scroll-state', (elm) => {
+	elm.addEventListener('scroll', updateScrollState, { passive: true });
+	updateScrollState({ target: elm });
+});
+export const modalClosedScrollState = createClosedCallback('modal__closed-scroll-state', (elm) => {
+	elm.removeEventListener('scroll', updateScrollState);
+});
+
 /**
  * Open a modal dialog
  */
@@ -125,6 +166,19 @@ export function openModal(dialog: HTMLDialogElement) {
 	dialog.showModal();
 	focusModal(dialog);
 	setAriaExpanded(dialog, true);
+
+	// Run any opened callbacks
+	for (const elm of [
+		dialog,
+		...dialog.querySelectorAll<HTMLElement>('[' + MODAL_OPENED_ATTR + ']'),
+	]) {
+		// Ignore things inside closed popovers or dialogs
+		if (inClosedDialog(elm)) continue;
+		if (inClosedPopover(elm)) continue;
+		for (const callback of openedRegistry.iter(elm)) {
+			callback.call(elm, elm);
+		}
+	}
 }
 
 /**
@@ -136,11 +190,37 @@ export function closeModal(dialog: HTMLDialogElement) {
 
 	// Close in reverse order with assumption that the later ones are the "top-most" ones
 	for (const childDialog of Array.from(childDialogs).reverse()) {
-		setAriaExpanded(childDialog, false);
-		childDialog.close();
+		closeJustOne(childDialog);
 	}
 
+	closeJustOne(dialog);
+}
+
+/**
+ * Helper function called by closeModal that closes just the immediate dialog,
+ * with no child dialogs.
+ */
+function closeJustOne(dialog: HTMLDialogElement) {
 	setAriaExpanded(dialog, false);
+
+	// Close any popovers
+	for (const popover of dialog.querySelectorAll<HTMLElement>(':popover-open')) {
+		popover.hidePopover();
+	}
+
+	// Run any closed callbacks
+	for (const elm of [
+		dialog,
+		...dialog.querySelectorAll<HTMLElement>('[' + MODAL_CLOSED_ATTR + ']'),
+	]) {
+		// Ignore things inside closed popovers or dialogs
+		if (inClosedDialog(elm)) continue;
+		if (inClosedPopover(elm)) continue;
+		for (const callback of closedRegistry.iter(elm)) {
+			callback.call(elm, elm);
+		}
+	}
+
 	dialog.close();
 }
 
