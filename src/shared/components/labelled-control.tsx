@@ -61,6 +61,7 @@ export function LabelledInput(props: LabelledInputProps) {
 				aria-describedby={(prev) =>
 					attrs(prev, props.description ? descriptionId() : undefined, errorId())
 				}
+				invalid={(prev) => !!local.errorMessage || prev}
 			>
 				{local.children}
 			</FormElementPropsProvider>

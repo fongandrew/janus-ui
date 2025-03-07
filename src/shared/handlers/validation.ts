@@ -19,15 +19,15 @@ export type Validator<T extends HTMLElement = HTMLElement> = (
 ) => string | undefined | null;
 
 /**
- * Magic data attribute used to identify control elements (form.elements is insufficient
- * since we want to also include custom controls with ARIA props)
- */
-export const FORM_CONTROL_ATTR = data('form-control');
-
-/**
  * Magic data attribute used to identify an error element associated with a control
  */
 export const FORM_CONTROL_ERROR_ATTR = data('validation__error');
+
+/**
+ * Magic data attribute for marking an input-like element as invalid. Set this to prevent
+ * change validation from clearing errors set via reactive frameworks.
+ */
+export const EXTERNAL_ERROR_ATTR = data('validation__external-error');
 
 /**
  * Magic data attribute used to identify elements with custom validators
@@ -100,6 +100,7 @@ export const validateReset = createHandler('reset', 'validate__reset', (event) =
  * Set an error message on any error element describing the target element.
  */
 export function setError(target: HTMLElement, msg: string | null) {
+	if (target.hasAttribute(EXTERNAL_ERROR_ATTR)) return;
 	target.setAttribute('aria-invalid', msg ? 'true' : 'false');
 
 	const currentMsg = (target as HTMLInputElement).validationMessage;

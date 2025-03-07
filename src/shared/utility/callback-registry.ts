@@ -84,7 +84,13 @@ export type CallbackRegistry<
  * with other element props.
  */
 export function callbackAttrs(
-	...idsOrProps: (Record<string, any> | RegisteredCallback<any> | Falsey)[]
+	...idsOrProps: (
+		| (Record<string, any> & {
+				/* Hack to exclude functions from union */ call?: undefined | never;
+		  })
+		| RegisteredCallback<any>
+		| Falsey
+	)[]
 ) {
 	// We want to ignore most of the attributes on prop objects and include only
 	// those implicated by any callback args. So let's make a first pass and

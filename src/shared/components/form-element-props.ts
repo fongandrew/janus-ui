@@ -1,8 +1,14 @@
 import { createMemo, type JSX, mergeProps, onCleanup } from 'solid-js';
 import { createUniqueId } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
 import { useFormElementProps } from '~/shared/components/form-element-context';
-import { createValidator, validateOnChange, type Validator } from '~/shared/handlers/validation';
+import {
+	createValidator,
+	EXTERNAL_ERROR_ATTR,
+	validateOnChange,
+	type Validator,
+} from '~/shared/handlers/validation';
 import { callbackAttrs } from '~/shared/utility/callback-registry';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 
@@ -52,11 +58,11 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 	props: FormElementProps<TTag>,
 ): JSX.HTMLElementTags[TTag] {
 	// Create a validator on the fly if needed
-	const validatorId = createMemo(() => {
+	const getValidator = createMemo(() => {
 		if (!props.onValidate) return;
 		const validator = createValidator(createUniqueId(), props.onValidate);
 		onCleanup(validator.rm);
-		return validator();
+		return validator;
 	});
 
 	// Merge in elements from above, then add in custom behaviors
@@ -85,12 +91,18 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 			get ['aria-invalid']() {
 				return !!(formProps.invalid ?? formProps['aria-invalid']);
 			},
+			// Set additional variable if invalid is set externally to keep imperative
+			// validation handlers from clobbering it
+			get [EXTERNAL_ERROR_ATTR]() {
+				if (isServer) return null;
+				return (formProps.invalid ?? formProps['aria-invalid']) ? 'true' : null;
+			},
 			// Unset non-standard invalid attribute */
 			invalid: null,
 		},
 
 		// Hook up validate on change (inside function so validatorId is tracked)
-		() => callbackAttrs(formProps, validateOnChange, validatorId),
+		() => callbackAttrs(formProps, validateOnChange, getValidator()),
 	);
 
 	return merged as JSX.HTMLElementTags[TTag];

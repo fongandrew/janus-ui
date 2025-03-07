@@ -25,7 +25,13 @@ export const listBoxKeyDown = createHandler('keydown', 'list-box__keydown', (eve
  * as highlighted
  */
 export const listBoxChange = createHandler('change', 'list-box__change', (event) => {
+	// ListBox is meant to encapsulate its internal elements. We'll re-dispatch
+	// change event from listbox itself below, so ignore it here and stop further
+	// propagation.
 	const target = event.target as HTMLElement;
+	if (target === event.currentTarget) return;
+	event.stopPropagation();
+
 	if (target instanceof HTMLInputElement && target.role === 'option') {
 		target.setAttribute('aria-selected', target.checked ? 'true' : 'false');
 	}

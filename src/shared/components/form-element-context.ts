@@ -1,5 +1,6 @@
 import { type Accessor, createMemo, createUniqueId, type JSX } from 'solid-js';
 
+import { type FormElementProps } from '~/shared/components/form-element-props';
 import {
 	createPropModContext,
 	mergePropMods,
@@ -7,17 +8,17 @@ import {
 	useSingleProp,
 } from '~/shared/utility/solid/prop-mod-context';
 
-export const FormElementPropsContext = createPropModContext();
+export const FormElementPropsContext = createPropModContext<FormElementProps<'div'>>();
 
 // The form element props system is a little loosey-goosey with types since form elements
 // can be anything from a button to inputs to  a div with ARIA props. It's all the same
 // at runtime, but create some extra typed variants to make working with it easier.
 export const FormElementPropsProvider = FormElementPropsContext.Provider;
 export const FormElementButtonPropsProvider = FormElementPropsContext.Provider as (
-	props: PropModGeneric<JSX.ButtonHTMLAttributes<HTMLButtonElement>> & { children: JSX.Element },
+	props: PropModGeneric<FormElementProps<'button'>> & { children: JSX.Element },
 ) => JSX.Element;
 export const FormElementInputPropsProvider = FormElementPropsContext.Provider as (
-	props: PropModGeneric<JSX.InputHTMLAttributes<HTMLInputElement>> & { children: JSX.Element },
+	props: PropModGeneric<FormElementProps<'input'>> & { children: JSX.Element },
 ) => JSX.Element;
 
 /**
