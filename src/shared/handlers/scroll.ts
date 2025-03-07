@@ -1,4 +1,3 @@
-import { attrBool } from '~/shared/utility/attribute';
 import { data } from '~/shared/utility/magic-strings';
 
 /**
@@ -9,9 +8,8 @@ export function updateScrollState(event: { target: EventTarget | null }) {
 	const content = event.target as HTMLElement;
 	if (!content) return;
 
-	attrBool(content, updateScrollState.SCROLLED_TO_TOP_ATTR, content.scrollTop === 0);
-	attrBool(
-		content,
+	content.toggleAttribute(updateScrollState.SCROLLED_TO_TOP_ATTR, content.scrollTop === 0);
+	content.toggleAttribute(
 		updateScrollState.SCROLLED_TO_BOTTOM_ATTR,
 		content.scrollHeight - content.scrollTop - 2 <= content.clientHeight,
 	);
