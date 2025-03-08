@@ -11,10 +11,10 @@ import {
 import { SidebarContext } from '~/shared/components/sidebar-context';
 import {
 	SIDEBAR_STATE_ATTR,
-	sidebarClose,
 	sidebarEscape,
 	sidebarFocusOut,
-	sidebarOpen,
+	sidebarTriggerClose,
+	sidebarTriggerOpen,
 } from '~/shared/handlers/sidebar';
 import { callbackAttrs } from '~/shared/utility/callback-registry';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
@@ -30,13 +30,15 @@ export function SidebarLayout(
 	const sidebarId = createAuto(local, 'sidebarId');
 	return (
 		<SidebarContext.Provider value={sidebarId}>
-			<div
-				{...rest}
-				class={cx('c-sidebar-layout', rest.class)}
-				{...{ [SIDEBAR_STATE_ATTR]: '' }}
-			>
+			<div {...rest} class={cx('c-sidebar-layout', rest.class)}>
 				{props.children}
-				<div class="c-sidebar__overlay" {...callbackAttrs(sidebarClose)} />
+				<div
+					class="c-sidebar__overlay"
+					{...callbackAttrs(sidebarTriggerClose)}
+					// Not really necessary for screenreader since overlay isn't focusable
+					// but this is used by `sidebarTriggerClose`
+					aria-controls={sidebarId()}
+				/>
 			</div>
 		</SidebarContext.Provider>
 	);
@@ -61,6 +63,7 @@ export function Sidebar(
 			<div
 				role="complementary"
 				{...props}
+				{...{ [SIDEBAR_STATE_ATTR]: '' }}
 				{...callbackAttrs(props, sidebarEscape, sidebarFocusOut)}
 				id={contextId()}
 				class={cx('c-sidebar', props.class)}
@@ -83,7 +86,7 @@ export function SidebarOpenButton(props: ButtonProps) {
 			aria-expanded={false}
 			label={t`Open Sidebar`}
 			{...props}
-			{...callbackAttrs(props, sidebarOpen)}
+			{...callbackAttrs(props, sidebarTriggerOpen)}
 			class={cx('c-sidebar__open-button', props.class)}
 		>
 			<PanelLeftOpen />
@@ -97,7 +100,11 @@ export function SidebarOpenButton(props: ButtonProps) {
  */
 export function SidebarCloseButton(props: ButtonProps) {
 	return (
-		<IconButton label={t`Close Sidebar`} {...props} {...callbackAttrs(props, sidebarClose)}>
+		<IconButton
+			label={t`Close Sidebar`}
+			{...props}
+			{...callbackAttrs(props, sidebarTriggerClose)}
+		>
 			<PanelLeftClose />
 		</IconButton>
 	);

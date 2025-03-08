@@ -7,7 +7,8 @@ import { elmDoc } from '~/shared/utility/multi-view';
 
 /**
  * Magic data attribute for sidebar layout state. Values should `"true"`` or `"false"`
- * (empty string is considered the null or default state)
+ * (empty string is considered the null or default state). This should go on the
+ * sidebar element itself.
  */
 export const SIDEBAR_STATE_ATTR = data('sidebar__state');
 
@@ -16,17 +17,25 @@ export const SIDEBAR_STATE_ATTR = data('sidebar__state');
  * previously visible (that is, focus is shifting via keypress rather than mouse click).
  */
 export const sidebarFocusOut = createHandler('focusout', 'sidebar__focus-out', (event) => {
-	const stateElm = (event.target as HTMLElement).closest(`[${SIDEBAR_STATE_ATTR}]`);
-	if (!stateElm) return;
+	const sidebar = event.currentTarget;
 
 	if (
-		stateElm.getAttribute(SIDEBAR_STATE_ATTR) === 'true' &&
-		event.currentTarget.contains(event.relatedTarget as Node) &&
+		sidebar.getAttribute(SIDEBAR_STATE_ATTR) === 'open' &&
+		!sidebar.contains(event.relatedTarget as Node) &&
 		isFocusVisible()
 	) {
 		// Empty string will close sidebar on narrow mobile widths but leave it in its
 		// default open state on wide desktop widths
-		stateElm.setAttribute(SIDEBAR_STATE_ATTR, '');
+		sidebar.setAttribute(SIDEBAR_STATE_ATTR, '');
+
+		// aria-expanded state should be false because these buttons only show up on
+		// mobile widths (in which case the sidebar is closed)
+		const openButtons = getOpenButtons(sidebar);
+		for (const button of openButtons) {
+			if (button?.hasAttribute('aria-expanded')) {
+				button.setAttribute('aria-expanded', 'false');
+			}
+		}
 	}
 });
 
@@ -35,47 +44,72 @@ export const sidebarFocusOut = createHandler('focusout', 'sidebar__focus-out', (
  */
 export const sidebarEscape = createHandler('keydown', 'sidebar__escape', (event) => {
 	if (event.key === 'Escape') {
-		sidebarClose.do(event);
+		closeSidebar(event.currentTarget);
 	}
 });
 
 /**
  * Click handler to show sidebar
  */
-export const sidebarOpen = createHandler('click', 'sidebar__open', (event) => {
-	const target = event.target as HTMLElement;
-
-	const stateElm = target.closest(`[${SIDEBAR_STATE_ATTR}]`);
-	stateElm?.setAttribute(SIDEBAR_STATE_ATTR, 'open');
-
-	if (target.hasAttribute('aria-expanded')) {
-		target.setAttribute('aria-expanded', 'true');
+export const sidebarTriggerOpen = createHandler('click', 'sidebar__open', (event) => {
+	const sidebar = getSidebarFromTrigger(event.currentTarget);
+	if (sidebar) {
+		openSidebar(sidebar);
 	}
-
-	// Focus on first focusable element in sidebar
-	const sidebar = elmDoc(stateElm as HTMLElement)?.querySelector<HTMLElement>(
-		callbackSelector(sidebarFocusOut),
-	);
-	if (!sidebar) return;
-	firstFocusable(sidebar)?.focus();
 });
 
 /**
  * Click handler to hide sidebar
  */
-export const sidebarClose = createHandler('click', 'sidebar__close', (event) => {
-	const stateElm = (event.target as HTMLElement).closest(`[${SIDEBAR_STATE_ATTR}]`);
-	if (!stateElm) return;
+export const sidebarTriggerClose = createHandler('click', 'sidebar__close', (event) => {
+	const sidebar = getSidebarFromTrigger(event.currentTarget);
+	if (sidebar) {
+		closeSidebar(sidebar);
+	}
+});
 
-	stateElm.setAttribute(SIDEBAR_STATE_ATTR, 'closed');
+function openSidebar(sidebar: HTMLElement) {
+	sidebar.setAttribute(SIDEBAR_STATE_ATTR, 'open');
 
-	const openButtons = elmDoc(stateElm as HTMLElement)?.querySelectorAll<HTMLElement>(
-		callbackSelector(sidebarOpen),
-	);
+	for (const button of getOpenButtons(sidebar)) {
+		if (button?.hasAttribute('aria-expanded')) {
+			button.setAttribute('aria-expanded', 'true');
+		}
+	}
+
+	firstFocusable(sidebar)?.focus();
+}
+
+function closeSidebar(sidebar: HTMLElement) {
+	sidebar.setAttribute(SIDEBAR_STATE_ATTR, 'closed');
+
+	const sidebarId = sidebar.id;
+	if (!sidebarId) return;
+
+	const openButtons = getOpenButtons(sidebar);
 	for (const button of openButtons) {
 		if (button?.hasAttribute('aria-expanded')) {
 			button.setAttribute('aria-expanded', 'false');
 		}
 	}
 	openButtons[0]?.focus();
-});
+}
+
+function getSidebarFromTrigger(trigger: HTMLElement) {
+	const sidebarId = trigger.getAttribute('aria-controls');
+	return (
+		(sidebarId && elmDoc(trigger)?.getElementById(sidebarId)) ||
+		trigger.closest<HTMLElement>(`[${SIDEBAR_STATE_ATTR}]`)
+	);
+}
+
+function getOpenButtons(sidebar: HTMLElement) {
+	const sidebarId = sidebar.id;
+	if (!sidebarId) return [];
+
+	return (
+		elmDoc(sidebar)?.querySelectorAll<HTMLElement>(
+			`${callbackSelector(sidebarTriggerOpen)}[aria-controls="${sidebarId}"]`,
+		) ?? []
+	);
+}

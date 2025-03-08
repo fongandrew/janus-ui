@@ -40,7 +40,7 @@
 		container-type: inline-size;
 	}
 
-	[data-sidebar__state='open'] .c-sidebar {
+	.c-sidebar[data-sidebar__state='open'] {
 		position: fixed;
 		bottom: 0;
 		left: 0;
@@ -59,7 +59,7 @@
 		background-color: var(--v-backdrop);
 	}
 
-	[data-sidebar__state='open'] .c-sidebar__overlay {
+	.c-sidebar-layout:has(.c-sidebar[data-sidebar__state='open']) .c-sidebar__overlay {
 		display: block;
 	}
 
@@ -159,12 +159,12 @@
 		}
 
 		.c-sidebar__overlay,
-		[data-sidebar__state='open'] .c-sidebar__overlay {
+		.c-sidebar-layout:has(.c-sidebar[data-sidebar__state='open']) .c-sidebar__overlay {
 			display: none;
 		}
 
 		/* Can be explicitly closed on desktop */
-		[data-sidebar__state='closed'] .c-sidebar {
+		.c-sidebar[data-sidebar__state='closed'] {
 			display: none;
 		}
 
@@ -177,7 +177,7 @@
 			display: none;
 		}
 
-		[data-sidebar__state='closed'] .c-sidebar__open-button {
+		.c-sidebar-layout:has(.c-sidebar[data-sidebar__state='closed']) .c-sidebar__open-button {
 			display: inline-flex;
 		}
 	}
