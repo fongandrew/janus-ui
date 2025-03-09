@@ -1,6 +1,6 @@
 import cx from 'classix';
 import { Menu, X } from 'lucide-solid';
-import { createEffect, createMemo, createUniqueId, type JSX, onCleanup } from 'solid-js';
+import { type JSX, useContext } from 'solid-js';
 
 import {
 	type ButtonProps,
@@ -8,79 +8,31 @@ import {
 	GhostButtonLink,
 	IconButton,
 } from '~/shared/components/button';
-import { createTopNavContext, TopNavContext, useTopNav } from '~/shared/components/top-nav-context';
-import { firstFocusable } from '~/shared/utility/focusables';
-import { getScrollableParent } from '~/shared/utility/get-scrollable-parent';
-import { isFocusVisible } from '~/shared/utility/is-focus-visible';
-import { combineRefs } from '~/shared/utility/solid/combine-refs';
+import { TopNavContext } from '~/shared/components/top-nav-context';
+import {
+	SIDEBAR_STATE_ATTR,
+	sidebarEscape,
+	sidebarFocusOut,
+	sidebarTriggerClose,
+	sidebarTriggerOpen,
+} from '~/shared/handlers/sidebar';
+import { topNavScroll } from '~/shared/handlers/top-nav';
+import { callbackAttrs } from '~/shared/utility/callback-registry';
+import { createAuto } from '~/shared/utility/solid/auto-prop';
+import { useMountAttrs } from '~/shared/utility/solid/use-mount-attrs';
 import { t } from '~/shared/utility/text/t-tag';
 
 /**
  * A layout component that provides a top navigation context
  */
-export function TopNavLayout(props: JSX.HTMLAttributes<HTMLDivElement>) {
-	const context = createTopNavContext();
-	const [isOpen] = context.open;
-	const [isHidden, setHidden] = context.hidden;
-
-	let ref: HTMLElement | null = null;
-
-	/** Memoized height + last measure for a given container */
-	const memoizedHeaderHeight = new WeakMap<HTMLElement, [number, number]>();
-
-	/** Get height of header within container */
-	const measureHeaderHeight = (container: HTMLElement) => {
-		const lastMeasure = memoizedHeaderHeight.get(container);
-		if (lastMeasure) {
-			const [measure, time] = lastMeasure;
-			if (Date.now() - time < 1000) return measure;
-			return measure;
-		}
-
-		const header = container.querySelector('header');
-		if (!header) return 0;
-
-		const height = header.getBoundingClientRect().height;
-		memoizedHeaderHeight.set(container, [height, Date.now()]);
-		return height;
-	};
-
-	/** Last measured scoll top position of container */
-	let lastScrollTop = 0;
-
-	const handleScroll = (e: Event) => {
-		const container = e.target as HTMLElement | null;
-		if (!container) return;
-		if (!ref) return;
-
-		const headerHeight = measureHeaderHeight(ref);
-		const scrollDiff = container.scrollTop - lastScrollTop;
-		if (Math.abs(scrollDiff) < headerHeight) return;
-
-		lastScrollTop = container.scrollTop;
-		setHidden(scrollDiff > 0);
-	};
-
-	createEffect(() => {
-		getScrollableParent(ref)?.addEventListener('scroll', handleScroll, { passive: true });
-		onCleanup(() => {
-			getScrollableParent(ref)?.removeEventListener('scroll', handleScroll);
-		});
-	});
-
+export function TopNavLayout(
+	props: JSX.HTMLAttributes<HTMLDivElement> & { navId?: string | undefined },
+) {
+	const navId = createAuto(props, 'navId');
+	const mounterProps = useMountAttrs(topNavScroll);
 	return (
-		<TopNavContext.Provider value={context}>
-			<div
-				{...props}
-				ref={combineRefs((v) => {
-					ref = v;
-				}, props.ref)}
-				class={cx(
-					'c-top-nav-layout',
-					isHidden() && 'c-top-nav-layout--hidden',
-					isOpen() && 'c-top-nav-layout--open',
-				)}
-			>
+		<TopNavContext.Provider value={navId}>
+			<div {...props} {...mounterProps} class={cx('c-top-nav-layout', props.class)}>
 				{props.children}
 			</div>
 		</TopNavContext.Provider>
@@ -91,11 +43,16 @@ export function TopNavLayout(props: JSX.HTMLAttributes<HTMLDivElement>) {
  * A top navigation component that adapts between horizontal nav and drawer
  */
 export function TopNav(props: JSX.HTMLAttributes<HTMLElement>) {
-	const [, setOpen] = useTopNav().open;
+	const navId = useContext(TopNavContext);
 	return (
 		<header {...props} class={cx('c-top-nav', props.class)}>
 			{props.children}
-			<div class="c-top-nav__overlay" onClick={[setOpen, false]} />
+			<div
+				class="c-top-nav__overlay"
+				{...callbackAttrs(sidebarTriggerClose)}
+				// Not actually used by screenreader but used by sidebarTriggerClose
+				aria-controls={navId?.()}
+			/>
 		</header>
 	);
 }
@@ -104,13 +61,12 @@ export function TopNav(props: JSX.HTMLAttributes<HTMLElement>) {
  * A button component that opens the nav drawer. Only visible on mobile.
  */
 export function TopNavMenuButton(props: ButtonProps) {
-	const [, setOpen] = useTopNav().open;
 	return (
 		<IconButton
-			onClick={[setOpen, true]}
 			label={t`Open Menu`}
 			class="c-top-nav__list-open"
 			{...props}
+			{...callbackAttrs(props, sidebarTriggerOpen)}
 		>
 			<Menu />
 		</IconButton>
@@ -121,10 +77,16 @@ export function TopNavMenuButton(props: ButtonProps) {
  * Separate button to close top nav on mobile
  */
 export function TopNavCloseButton(props: ButtonProps) {
-	const [, setOpen] = useTopNav().open;
+	const navId = useContext(TopNavContext);
 	return (
 		<div class="c-top-nav__list-close">
-			<IconButton onClick={[setOpen, false]} label={t`Close Menu`} {...props}>
+			<IconButton
+				label={t`Close Menu`}
+				aria-controls={navId?.()}
+				aria-expanded="true"
+				{...props}
+				{...callbackAttrs(props, sidebarTriggerClose)}
+			>
 				<X />
 			</IconButton>
 		</div>
@@ -134,58 +96,23 @@ export function TopNavCloseButton(props: ButtonProps) {
 /**
  * A navigation list component for the top nav
  */
-export function TopNavList(props: JSX.HTMLAttributes<HTMLElement>) {
-	let navRef: HTMLElement | undefined;
-	const setNavRef = (v: HTMLElement | undefined) => {
-		navRef = v;
-	};
-
-	// No setter necessary since it's not wrapped in combineRefs
-	let toggleRef: HTMLButtonElement | undefined;
-
-	const [open, setOpen] = useTopNav().open;
-	createEffect(() => {
-		if (open() && navRef) {
-			firstFocusable(navRef)?.focus();
-		}
-	});
-
-	// We want to close the sidebar on narrow widths when focus leaves it but only if focus was
-	// previously visible (that is, focus is shifting via keypress rather than mouse click).
-	const handleFocusOut = (e: FocusEvent) => {
-		if (open() === true && !navRef?.contains(e.relatedTarget as Node) && isFocusVisible()) {
-			// Null = default (so closed on narrow). We could set it to false since it has
-			// no effect on desktop, but do it this way for consistency with how we do sidebar
-			setOpen(null);
-		}
-	};
-
-	const handleEscape = (e: KeyboardEvent) => {
-		if (e.key === 'Escape') {
-			setOpen(false);
-			toggleRef?.focus();
-		}
-	};
-
-	const navId = createMemo(() => props.id || createUniqueId());
+export function TopNavList(
+	props: Omit<JSX.HTMLAttributes<HTMLElement>, /* Use ID from context */ 'id'>,
+) {
+	const navId = useContext(TopNavContext);
 
 	return (
 		<>
 			<nav
 				{...props}
-				id={navId()}
-				ref={combineRefs(setNavRef, props.ref)}
+				{...callbackAttrs(sidebarFocusOut, sidebarEscape)}
+				{...{ [SIDEBAR_STATE_ATTR]: '' }}
+				id={navId?.()}
 				class={cx('c-top-nav__list', props.class)}
-				onFocusOut={handleFocusOut}
-				onKeyDown={handleEscape}
 			>
 				<ul>{props.children}</ul>
 			</nav>
-			<TopNavMenuButton
-				ref={toggleRef}
-				aria-controls={navId()}
-				aria-expanded={open() ?? undefined}
-			/>
+			<TopNavMenuButton aria-controls={navId?.()} aria-expanded="false" />
 			<TopNavCloseButton />
 		</>
 	);
