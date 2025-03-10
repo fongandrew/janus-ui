@@ -1,17 +1,17 @@
 import { type JSX, Show, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 
+import {
+	modalFormCloseOnSuccess,
+	modalFormMaybeShowSpeedBump,
+	modalFormResetOnClose,
+} from '~/shared/callback-attrs/modal-form';
 import { type ButtonProps } from '~/shared/components/button';
 import { Form, type FormProps } from '~/shared/components/form';
 import { SubmitButton } from '~/shared/components/form-buttons';
 import { ModalCloseButton, ModalContent } from '~/shared/components/modal';
 import { ModalSpeedBump, type ModalSpeedBumpProps } from '~/shared/components/modal-speed-bump';
-import {
-	modalFormCloseOnSuccess,
-	modalFormMaybeShowSpeedBump,
-	modalFormResetOnClose,
-} from '~/shared/handlers/modal-form';
-import { callbackAttrs } from '~/shared/utility/callback-registry';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { T } from '~/shared/utility/text/t-components';
 
 export interface ModalFormContentProps<TNames extends string> extends FormProps<TNames> {

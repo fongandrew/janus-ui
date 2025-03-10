@@ -1,5 +1,6 @@
 import { createSignal, createUniqueId } from 'solid-js';
 
+import { type TypedSubmitEvent } from '~/shared/callback-attrs/form';
 import { Button } from '~/shared/components/button';
 import {
 	Card,
@@ -29,7 +30,6 @@ import {
 } from '~/shared/components/modal-form';
 import { Select } from '~/shared/components/select';
 import { Textarea } from '~/shared/components/textarea';
-import { type TypedSubmitEvent } from '~/shared/handlers/form';
 
 function ControlledModal() {
 	const [isOpen, setIsOpen] = createSignal(false);

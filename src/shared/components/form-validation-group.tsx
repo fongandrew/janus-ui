@@ -3,8 +3,8 @@ import { type JSX } from 'solid-js';
 import {
 	validateChildrenOnChange,
 	validateTouchedChildrenOnChange,
-} from '~/shared/handlers/validation';
-import { callbackAttrs } from '~/shared/utility/callback-registry';
+} from '~/shared/callback-attrs/validation';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
 /**
  * Simple div wrapper to reuire that certain form controls validate together

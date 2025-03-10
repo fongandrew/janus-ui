@@ -1,5 +1,5 @@
-import { callbackSelector } from '~/shared/utility/callback-registry';
-import { createHandler } from '~/shared/utility/event-handler-attrs';
+import { callbackSelector } from '~/shared/utility/callback-attrs/callback-registry';
+import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { firstFocusable } from '~/shared/utility/focusables';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { data } from '~/shared/utility/magic-strings';

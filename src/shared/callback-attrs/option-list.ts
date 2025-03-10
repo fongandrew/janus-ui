@@ -1,6 +1,6 @@
+import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createTextMatcherForElement } from '~/shared/utility/create-text-matcher';
 import { isTextInput } from '~/shared/utility/element-types';
-import { createHandler } from '~/shared/utility/event-handler-attrs';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { data } from '~/shared/utility/magic-strings';
 import { nextIndex } from '~/shared/utility/next-index';

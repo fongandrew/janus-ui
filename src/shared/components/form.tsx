@@ -1,15 +1,15 @@
 import { createMemo, createUniqueId, type JSX, onCleanup, splitProps, useContext } from 'solid-js';
 
-import { DangerAlert } from '~/shared/components/alert';
-import { FormContext } from '~/shared/components/form-context';
 import {
 	createSubmitHandler,
 	formResetOnSuccess,
 	type SubmitHandler,
-} from '~/shared/handlers/form';
-import { FORM_CONTROL_ERROR_ATTR } from '~/shared/handlers/validation';
+} from '~/shared/callback-attrs/form';
+import { FORM_CONTROL_ERROR_ATTR } from '~/shared/callback-attrs/validation';
+import { DangerAlert } from '~/shared/components/alert';
+import { FormContext } from '~/shared/components/form-context';
 import { attrs } from '~/shared/utility/attribute-list';
-import { callbackAttrs } from '~/shared/utility/callback-registry';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
 
 export interface FormProps<TNames extends string>

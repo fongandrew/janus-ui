@@ -1,5 +1,9 @@
-import { focusOrScrollToError, setError, setErrorsByName } from '~/shared/handlers/validation';
-import { createHandler } from '~/shared/utility/event-handler-attrs';
+import {
+	focusOrScrollToError,
+	setError,
+	setErrorsByName,
+} from '~/shared/callback-attrs/validation';
+import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { data, evt } from '~/shared/utility/magic-strings';
 import { elmDoc } from '~/shared/utility/multi-view';
 
@@ -58,7 +62,7 @@ export const VALID_SUBMIT_EVENT = evt('validate__submit-valid');
  */
 export const INVALID_SUBMIT_EVENT = evt('validate__submit-invalid');
 
-declare module '~/shared/utility/event-handler-attrs' {
+declare module '~/shared/utility/callback-attrs/events' {
 	interface CustomEventDetails {
 		[VALID_SUBMIT_EVENT]: null;
 		[INVALID_SUBMIT_EVENT]: null;

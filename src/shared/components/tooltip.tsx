@@ -3,15 +3,15 @@ import cx from 'classix';
 import { createMemo, type JSX, splitProps } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
-import { FormElementButtonPropsProvider } from '~/shared/components/form-element-context';
 import {
 	tooltipBlur,
 	tooltipFocus,
 	tooltipMouseOut,
 	tooltipMouseOver,
-} from '~/shared/handlers/tooltip';
+} from '~/shared/callback-attrs/tooltip';
+import { FormElementButtonPropsProvider } from '~/shared/components/form-element-context';
 import { attrs } from '~/shared/utility/attribute-list';
-import { callbackAttrMods } from '~/shared/utility/callback-registry';
+import { callbackAttrMods } from '~/shared/utility/callback-attrs/callback-registry';
 
 export const TOOLTIP_ARROW_ATTR = 'data-tooltip-arrow';
 

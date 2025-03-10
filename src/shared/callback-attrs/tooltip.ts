@@ -10,7 +10,7 @@ import {
 	type Side,
 } from '@floating-ui/dom';
 
-import { createHandler } from '~/shared/utility/event-handler-attrs';
+import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { data } from '~/shared/utility/magic-strings';
 import { elmDoc } from '~/shared/utility/multi-view';

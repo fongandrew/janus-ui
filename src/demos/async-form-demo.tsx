@@ -1,5 +1,6 @@
 import { createSignal, Show } from 'solid-js';
 
+import { type TypedSubmitEvent } from '~/shared/callback-attrs/form';
 import {
 	Card,
 	CardContent,
@@ -16,7 +17,6 @@ import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelledInline, LabelledInput } from '~/shared/components/labelled-control';
 import { Textarea } from '~/shared/components/textarea';
-import { type TypedSubmitEvent } from '~/shared/handlers/form';
 
 export function AsyncFormDemo() {
 	enum FormNames {

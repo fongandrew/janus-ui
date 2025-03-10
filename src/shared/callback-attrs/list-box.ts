@@ -4,8 +4,8 @@ import {
 	highlightInList,
 	optionListKeyDown,
 	optionListMatchText,
-} from '~/shared/handlers/option-list';
-import { createHandler } from '~/shared/utility/event-handler-attrs';
+} from '~/shared/callback-attrs/option-list';
+import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { elmDoc } from '~/shared/utility/multi-view';
 
 /** Custom validator for ListBox-like things -- returns error or nothing if fine */

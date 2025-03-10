@@ -1,4 +1,4 @@
-import { createHandler } from '~/shared/utility/event-handler-attrs';
+import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { elmDoc } from '~/shared/utility/multi-view';
 
 /**

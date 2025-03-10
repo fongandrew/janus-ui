@@ -1,13 +1,13 @@
 import cx from 'classix';
 import { splitProps } from 'solid-js';
 
+import { toggleSwitchChange, toggleSwitchEnter } from '~/shared/callback-attrs/toggle-switch';
 import { handleClick } from '~/shared/components/checkbox';
 import {
 	type FormElementProps,
 	mergeFormElementProps,
 } from '~/shared/components/form-element-props';
-import { toggleSwitchChange, toggleSwitchEnter } from '~/shared/handlers/toggle-switch';
-import { callbackAttrs } from '~/shared/utility/callback-registry';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
 export interface ToggleSwitchProps extends Omit<FormElementProps<'input'>, 'type'> {}
 

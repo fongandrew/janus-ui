@@ -2,10 +2,6 @@ import cx from 'classix';
 import { X } from 'lucide-solid';
 import { createEffect, createSignal, type JSX, onCleanup, Show, splitProps } from 'solid-js';
 
-import { Button, type ButtonProps, IconButton } from '~/shared/components/button';
-import { FormContextProvider } from '~/shared/components/form-context';
-import { FormElementPropsProvider } from '~/shared/components/form-element-context';
-import { ModalContext } from '~/shared/components/modal-context';
 import {
 	closeModal,
 	MODAL_CONTENT_ATTR,
@@ -19,9 +15,13 @@ import {
 	modalTriggerOpen,
 	modalTriggerRequestClose,
 	openModal,
-} from '~/shared/handlers/modal';
+} from '~/shared/callback-attrs/modal';
+import { Button, type ButtonProps, IconButton } from '~/shared/components/button';
+import { FormContextProvider } from '~/shared/components/form-context';
+import { FormElementPropsProvider } from '~/shared/components/form-element-context';
+import { ModalContext } from '~/shared/components/modal-context';
 import { attrNoConflict } from '~/shared/utility/attribute';
-import { callbackAttrMods, callbackAttrs } from '~/shared/utility/callback-registry';
+import { callbackAttrMods, callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { createAutoId } from '~/shared/utility/solid/auto-prop';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { T } from '~/shared/utility/text/t-components';

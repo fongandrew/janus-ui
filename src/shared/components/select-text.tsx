@@ -1,4 +1,4 @@
-import { selectUpdateText } from '~/shared/handlers/select';
+import { selectUpdateText } from '~/shared/callback-attrs/select';
 
 export interface SelectTextProps {
 	/** Placeholder text, if any */

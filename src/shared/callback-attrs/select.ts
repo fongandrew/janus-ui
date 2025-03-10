@@ -2,7 +2,7 @@ import {
 	getControllingElement,
 	listBoxValues,
 	syncActiveDescendant,
-} from '~/shared/handlers/list-box';
+} from '~/shared/callback-attrs/list-box';
 import {
 	getClosestItem,
 	getList,
@@ -11,11 +11,11 @@ import {
 	highlightInList,
 	optionListKeyDown,
 	optionListMatchText,
-} from '~/shared/handlers/option-list';
-import { createHandler } from '~/shared/utility/event-handler-attrs';
+} from '~/shared/callback-attrs/option-list';
+import { createHandler } from '~/shared/utility/callback-attrs/events';
+import { createMounter } from '~/shared/utility/callback-attrs/mount';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { data } from '~/shared/utility/magic-strings';
-import { createMounter } from '~/shared/utility/mount-attrs';
 import { t } from '~/shared/utility/text/t-tag';
 
 /** Keydown handler for select button */

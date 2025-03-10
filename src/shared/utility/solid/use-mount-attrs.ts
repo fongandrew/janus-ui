@@ -1,6 +1,6 @@
 import { onMount } from 'solid-js';
 
-import { mounterProps, scheduleProcessRoot } from '~/shared/utility/mount-attrs';
+import { mounterProps, scheduleProcessRoot } from '~/shared/utility/callback-attrs/mount';
 import { useWindow } from '~/shared/utility/solid/window-context';
 
 /**

@@ -1,6 +1,6 @@
-import { updateScrollState } from '~/shared/handlers/scroll';
-import { createCallbackRegistry } from '~/shared/utility/callback-registry';
-import { createHandler } from '~/shared/utility/event-handler-attrs';
+import { updateScrollState } from '~/shared/callback-attrs/scroll';
+import { createCallbackRegistry } from '~/shared/utility/callback-attrs/callback-registry';
+import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { firstFocusable } from '~/shared/utility/focusables';
 import { inClosedDialog, inClosedPopover } from '~/shared/utility/in-closed';
 import { createMagicProp } from '~/shared/utility/magic-prop';

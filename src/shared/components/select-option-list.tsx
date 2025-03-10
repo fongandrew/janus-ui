@@ -1,11 +1,11 @@
 import { createUniqueId, type JSX, mergeProps, splitProps } from 'solid-js';
 
+import { listBoxChange } from '~/shared/callback-attrs/list-box';
+import { selectCloseOnClick, selectUpdateWithInput } from '~/shared/callback-attrs/select';
 import { DropdownContent } from '~/shared/components/dropdown';
 import { ListBoxContext } from '~/shared/components/list-box';
 import { OptionList } from '~/shared/components/option-list';
-import { listBoxChange } from '~/shared/handlers/list-box';
-import { selectCloseOnClick, selectUpdateWithInput } from '~/shared/handlers/select';
-import { callbackAttrs } from '~/shared/utility/callback-registry';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { T } from '~/shared/utility/text/t-components';
 
 // Disallow ID, should be set via context

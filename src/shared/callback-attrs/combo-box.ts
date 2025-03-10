@@ -1,5 +1,5 @@
+import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { isTextInput } from '~/shared/utility/element-types';
-import { createHandler } from '~/shared/utility/event-handler-attrs';
 
 /** Clear input on keydown (if applicable) */
 export const comboBoxClearInput = createHandler('keydown', 'combo-box__clear-input', (event) => {

@@ -1,24 +1,24 @@
 import cx from 'classix';
 import { createUniqueId, type JSX, splitProps } from 'solid-js';
 
-import { Button } from '~/shared/components/button';
-import { type FormElementProps } from '~/shared/components/form-element-props';
-import { SelectContainer } from '~/shared/components/select-container';
-import { SelectOptionList } from '~/shared/components/select-option-list';
-import { SelectText } from '~/shared/components/select-text';
 import {
 	createListBoxValidator,
 	type ListBoxValidator,
 	listBoxValues,
-} from '~/shared/handlers/list-box';
-import { getList } from '~/shared/handlers/option-list';
+} from '~/shared/callback-attrs/list-box';
+import { getList } from '~/shared/callback-attrs/option-list';
 import {
 	selectButtonKeyDown,
 	selectFocusOut,
 	selectMountText,
 	selectUpdateText,
-} from '~/shared/handlers/select';
-import { callbackAttrs } from '~/shared/utility/callback-registry';
+} from '~/shared/callback-attrs/select';
+import { Button } from '~/shared/components/button';
+import { type FormElementProps } from '~/shared/components/form-element-props';
+import { SelectContainer } from '~/shared/components/select-container';
+import { SelectOptionList } from '~/shared/components/select-option-list';
+import { SelectText } from '~/shared/components/select-text';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
 import { useMountAttrs } from '~/shared/utility/solid/use-mount-attrs';
 

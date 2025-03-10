@@ -3,14 +3,14 @@ import cx from 'classix';
 import { createContext, createMemo, type JSX, splitProps, useContext } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
+import { dropdownBeforeToggle, dropdownClose } from '~/shared/callback-attrs/dropdown';
 import { GhostButton } from '~/shared/components/button';
 import {
 	FormElementButtonPropsProvider,
 	FormElementResetProvider,
 } from '~/shared/components/form-element-context';
-import { dropdownBeforeToggle, dropdownClose } from '~/shared/handlers/dropdown';
 import { attrs } from '~/shared/utility/attribute-list';
-import { callbackAttrs } from '~/shared/utility/callback-registry';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { T } from '~/shared/utility/text/t-components';
 
 // Omit the `id` attribute from the HTMLDivElement interface because it should be assigned

@@ -1,6 +1,15 @@
 import { type JSX, splitProps } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
+import { dropdownCloseOnBlur } from '~/shared/callback-attrs/dropdown';
+import {
+	menuCloseOnSelect,
+	menuFocusOnOpen,
+	menuKeyDown,
+	menuTriggerClick,
+	menuTriggerKeyDown,
+} from '~/shared/callback-attrs/menu';
+import { getItemValue } from '~/shared/callback-attrs/option-list';
 import { Dropdown, DropdownContent, type DropdownProps } from '~/shared/components/dropdown';
 import { FormElementButtonPropsProvider } from '~/shared/components/form-element-context';
 import {
@@ -9,16 +18,7 @@ import {
 	OptionListButton,
 	OptionListGroup,
 } from '~/shared/components/option-list';
-import { dropdownCloseOnBlur } from '~/shared/handlers/dropdown';
-import {
-	menuCloseOnSelect,
-	menuFocusOnOpen,
-	menuKeyDown,
-	menuTriggerClick,
-	menuTriggerKeyDown,
-} from '~/shared/handlers/menu';
-import { getItemValue } from '~/shared/handlers/option-list';
-import { callbackAttrMods, callbackAttrs } from '~/shared/utility/callback-registry';
+import { callbackAttrMods, callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
 
 // Disallow ID since it should be set via context

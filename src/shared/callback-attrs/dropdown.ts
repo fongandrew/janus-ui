@@ -10,8 +10,8 @@ import {
 } from '@floating-ui/dom';
 
 import { attrIsTruthy } from '~/shared/utility/attribute';
+import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
-import { createHandler } from '~/shared/utility/event-handler-attrs';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { data } from '~/shared/utility/magic-strings';

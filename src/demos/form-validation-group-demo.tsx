@@ -1,5 +1,6 @@
 import { createSignal, createUniqueId, Show } from 'solid-js';
 
+import { type Validator } from '~/shared/callback-attrs/validation';
 import {
 	Card,
 	CardContent,
@@ -16,7 +17,6 @@ import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelledInput } from '~/shared/components/labelled-control';
 import { Password } from '~/shared/components/password';
-import { type Validator } from '~/shared/handlers/validation';
 
 export function FormValidationGroupDemo() {
 	const [formData, setFormData] = createSignal<{

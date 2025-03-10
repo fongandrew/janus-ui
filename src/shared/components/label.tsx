@@ -1,8 +1,8 @@
 import cx from 'classix';
 import { children, type JSX } from 'solid-js';
 
-import { focusInputOnClick } from '~/shared/handlers/label';
-import { callbackAttrs } from '~/shared/utility/callback-registry';
+import { focusInputOnClick } from '~/shared/callback-attrs/label';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { spanify } from '~/shared/utility/solid/spanify';
 
 /** Default HTML label -- used for inline stuff mostly */

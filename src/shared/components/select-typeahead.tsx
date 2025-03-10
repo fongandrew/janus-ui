@@ -1,17 +1,12 @@
 import cx from 'classix';
 import { createUniqueId, splitProps } from 'solid-js';
 
-import { createFormElementId } from '~/shared/components/form-element-context';
-import { Input, type InputProps } from '~/shared/components/input';
-import { SelectContainer } from '~/shared/components/select-container';
-import { SelectOptionList } from '~/shared/components/select-option-list';
-import { SelectText } from '~/shared/components/select-text';
 import {
 	createListBoxValidator,
 	type ListBoxValidator,
 	listBoxValues,
-} from '~/shared/handlers/list-box';
-import { getList } from '~/shared/handlers/option-list';
+} from '~/shared/callback-attrs/list-box';
+import { getList } from '~/shared/callback-attrs/option-list';
 import {
 	selectFocusOut,
 	selectHighlightOnInput,
@@ -20,8 +15,13 @@ import {
 	selectMountText,
 	selectUpdateText,
 	selectUpdateWithInput,
-} from '~/shared/handlers/select';
-import { callbackAttrs } from '~/shared/utility/callback-registry';
+} from '~/shared/callback-attrs/select';
+import { createFormElementId } from '~/shared/components/form-element-context';
+import { Input, type InputProps } from '~/shared/components/input';
+import { SelectContainer } from '~/shared/components/select-container';
+import { SelectOptionList } from '~/shared/components/select-option-list';
+import { SelectText } from '~/shared/components/select-text';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
 import { useMountAttrs } from '~/shared/utility/solid/use-mount-attrs';
 

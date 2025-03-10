@@ -1,4 +1,4 @@
-import { createHandler } from '~/shared/utility/event-handler-attrs';
+import { createHandler } from '~/shared/utility/callback-attrs/events';
 
 /**
  * Treat enter key as a click on the toggle switch. Because toggle is input, general browser

@@ -1,6 +1,6 @@
-import { createCallbackRegistry } from '~/shared/utility/callback-registry';
+import { createCallbackRegistry } from '~/shared/utility/callback-attrs/callback-registry';
+import { createHandler, HANDLER_ATTR } from '~/shared/utility/callback-attrs/events';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
-import { createHandler, HANDLER_ATTR } from '~/shared/utility/event-handler-attrs';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { data } from '~/shared/utility/magic-strings';
 import { elmDoc } from '~/shared/utility/multi-view';

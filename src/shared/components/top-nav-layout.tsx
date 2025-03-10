@@ -3,21 +3,21 @@ import { Menu, X } from 'lucide-solid';
 import { type JSX, useContext } from 'solid-js';
 
 import {
+	SIDEBAR_STATE_ATTR,
+	sidebarEscape,
+	sidebarFocusOut,
+	sidebarTriggerClose,
+	sidebarTriggerOpen,
+} from '~/shared/callback-attrs/sidebar';
+import { topNavScroll } from '~/shared/callback-attrs/top-nav';
+import {
 	type ButtonProps,
 	GhostButton,
 	GhostButtonLink,
 	IconButton,
 } from '~/shared/components/button';
 import { TopNavContext } from '~/shared/components/top-nav-context';
-import {
-	SIDEBAR_STATE_ATTR,
-	sidebarEscape,
-	sidebarFocusOut,
-	sidebarTriggerClose,
-	sidebarTriggerOpen,
-} from '~/shared/handlers/sidebar';
-import { topNavScroll } from '~/shared/handlers/top-nav';
-import { callbackAttrs } from '~/shared/utility/callback-registry';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
 import { useMountAttrs } from '~/shared/utility/solid/use-mount-attrs';
 import { t } from '~/shared/utility/text/t-tag';

@@ -2,11 +2,11 @@ import cx from 'classix';
 import { ChevronsUpDown, X } from 'lucide-solid';
 import { type JSX, splitProps } from 'solid-js';
 
+import { selectClear } from '~/shared/callback-attrs/select';
 import { Button } from '~/shared/components/button';
 import { Dropdown } from '~/shared/components/dropdown';
 import { FormElementResetProvider } from '~/shared/components/form-element-context';
-import { selectClear } from '~/shared/handlers/select';
-import { callbackAttrs } from '~/shared/utility/callback-registry';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { t } from '~/shared/utility/text/t-tag';
 
 export interface SelectContainerProps extends JSX.HTMLAttributes<HTMLDivElement> {

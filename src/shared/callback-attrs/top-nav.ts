@@ -1,7 +1,7 @@
+import { createMounter } from '~/shared/utility/callback-attrs/mount';
 import { getScrollableParent } from '~/shared/utility/get-scrollable-parent';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { data } from '~/shared/utility/magic-strings';
-import { createMounter } from '~/shared/utility/mount-attrs';
 import { onUnmount } from '~/shared/utility/unmount-observer';
 
 /** Magic data attr to set to signal we should hide top nav on scroll */

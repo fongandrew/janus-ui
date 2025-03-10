@@ -6,8 +6,8 @@ import {
 	highlightInList,
 	optionListKeyDown,
 	optionListMatchText,
-} from '~/shared/handlers/option-list';
-import { createHandler } from '~/shared/utility/event-handler-attrs';
+} from '~/shared/callback-attrs/option-list';
+import { createHandler } from '~/shared/utility/callback-attrs/events';
 
 /**
  * Handle arrow navigation in menu

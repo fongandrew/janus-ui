@@ -2,7 +2,7 @@ import {
 	callbackAttrMods,
 	callbackAttrs,
 	createCallbackRegistry,
-} from '~/shared/utility/callback-registry';
+} from '~/shared/utility/callback-attrs/callback-registry';
 
 describe('createCallbackRegistry', () => {
 	it('should create and register a callback', () => {

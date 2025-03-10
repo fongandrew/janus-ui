@@ -1,7 +1,10 @@
 /**
  * Utilities for associating a delegated event handler with a node via a data prop
  */
-import { type CallbackRegistry, createCallbackRegistry } from '~/shared/utility/callback-registry';
+import {
+	type CallbackRegistry,
+	createCallbackRegistry,
+} from '~/shared/utility/callback-attrs/callback-registry';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import {
 	isImmediatePropagationStopped,

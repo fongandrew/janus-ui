@@ -1,12 +1,12 @@
-import { VALID_SUBMIT_EVENT } from '~/shared/handlers/form';
+import { VALID_SUBMIT_EVENT } from '~/shared/callback-attrs/form';
 import {
 	closeModal,
 	createClosedCallback,
 	createRequestCloseCallback,
 	openModal,
-} from '~/shared/handlers/modal';
-import { getValidatableElements, touched } from '~/shared/handlers/validation';
-import { createHandler } from '~/shared/utility/event-handler-attrs';
+} from '~/shared/callback-attrs/modal';
+import { getValidatableElements, touched } from '~/shared/callback-attrs/validation';
+import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { data } from '~/shared/utility/magic-strings';
 
 export const modalFormCloseOnSuccess = createHandler(

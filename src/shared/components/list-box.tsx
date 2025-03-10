@@ -3,19 +3,19 @@ import { createContext, createMemo, type JSX, mergeProps, splitProps, useContext
 import { createUniqueId } from 'solid-js';
 
 import {
-	type FormElementProps,
-	mergeFormElementProps,
-} from '~/shared/components/form-element-props';
-import { OptionList, OptionListGroup, OptionListSelectable } from '~/shared/components/option-list';
-import {
 	createListBoxValidator,
 	listBoxChange,
 	listBoxKeyDown,
 	type ListBoxValidator,
 	listBoxValues,
-} from '~/shared/handlers/list-box';
-import { isList } from '~/shared/handlers/option-list';
-import { callbackAttrs } from '~/shared/utility/callback-registry';
+} from '~/shared/callback-attrs/list-box';
+import { isList } from '~/shared/callback-attrs/option-list';
+import {
+	type FormElementProps,
+	mergeFormElementProps,
+} from '~/shared/components/form-element-props';
+import { OptionList, OptionListGroup, OptionListSelectable } from '~/shared/components/option-list';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
 export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'> {
 	/** Name for form submission */
