@@ -19,11 +19,6 @@ export default defineConfig({
 		}),
 		viteSSGPlugin(),
 	],
-	css: {
-		modules: {
-			localsConvention: 'camelCaseOnly',
-		},
-	},
 	resolve: {
 		alias: {
 			'~': '/src',
