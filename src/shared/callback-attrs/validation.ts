@@ -40,9 +40,7 @@ export const VALIDATE_ATTR = data('validation');
 export const [touched, setTouched] = createMagicProp<boolean>();
 
 // Create validation registry using the callback registry utility
-const validationRegistry = createCallbackRegistry<typeof VALIDATE_ATTR, Validator<any>>(
-	VALIDATE_ATTR,
-);
+const validationRegistry = createCallbackRegistry<Validator<any>>(VALIDATE_ATTR);
 
 // Replace the existing registry functions with the ones from the callback registry
 export const createValidator = validationRegistry.create;

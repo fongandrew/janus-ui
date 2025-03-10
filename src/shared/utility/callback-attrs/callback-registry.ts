@@ -21,10 +21,9 @@ export interface RegisteredCallback<TCallback extends (...args: any[]) => any> {
  * @param attr - The data attribute we're using for this
  * @returns An object with methods to add, remove, get, create, and manage props for callbacks.
  */
-export function createCallbackRegistry<
-	TAttr extends string,
-	TRegistryCallback extends (...args: any[]) => any,
->(attr: TAttr) {
+export function createCallbackRegistry<TRegistryCallback extends (...args: any[]) => any>(
+	attr: string,
+) {
 	const registry: Record<string, TRegistryCallback> = {};
 
 	return {
@@ -74,10 +73,9 @@ export function createCallbackRegistry<
 	};
 }
 
-export type CallbackRegistry<
-	TAttr extends string,
-	TCallback extends (...args: any[]) => any,
-> = ReturnType<typeof createCallbackRegistry<TAttr, TCallback>>;
+export type CallbackRegistry<TCallback extends (...args: any[]) => any> = ReturnType<
+	typeof createCallbackRegistry<TCallback>
+>;
 
 /**
  * Creates a props object with the specified attribute and IDs that can be merged in

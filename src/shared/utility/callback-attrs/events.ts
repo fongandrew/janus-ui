@@ -82,7 +82,7 @@ export type DelegatableEventMap = {
  */
 const handlerRegistries: Record<
 	string,
-	CallbackRegistry<typeof HANDLER_ATTR, (e: Event & { currentTarget: HTMLElement }) => void>
+	CallbackRegistry<(e: Event & { currentTarget: HTMLElement }) => void>
 > = {};
 
 /**
@@ -114,7 +114,7 @@ function eventHandler(event: Event) {
  */
 function getRegistry<T extends DelegatableEvent>(
 	eventType: T,
-): CallbackRegistry<typeof HANDLER_ATTR, (e: Event & { currentTarget: HTMLElement }) => void> {
+): CallbackRegistry<(e: Event & { currentTarget: HTMLElement }) => void> {
 	let registry = handlerRegistries[eventType];
 	if (registry) return registry;
 
@@ -124,10 +124,8 @@ function getRegistry<T extends DelegatableEvent>(
 		});
 	});
 
-	registry = createCallbackRegistry<
-		typeof HANDLER_ATTR,
-		(e: Event & { currentTarget: HTMLElement }) => void
-	>(HANDLER_ATTR);
+	registry =
+		createCallbackRegistry<(e: Event & { currentTarget: HTMLElement }) => void>(HANDLER_ATTR);
 	handlerRegistries[eventType] = registry;
 	return registry;
 }

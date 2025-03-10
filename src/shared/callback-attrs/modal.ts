@@ -32,10 +32,8 @@ export const MODAL_FOOTER_ATTR = data('modal__footer');
  */
 export const MODAL_OPENED_ATTR = data('modal__opened');
 
-const openedRegistry = createCallbackRegistry<
-	typeof MODAL_OPENED_ATTR,
-	(this: HTMLElement, elm: HTMLElement) => void
->(MODAL_OPENED_ATTR);
+const openedRegistry =
+	createCallbackRegistry<(this: HTMLElement, elm: HTMLElement) => void>(MODAL_OPENED_ATTR);
 export const createOpenedCallback = openedRegistry.create;
 
 /**
@@ -44,10 +42,8 @@ export const createOpenedCallback = openedRegistry.create;
  */
 export const MODAL_CLOSED_ATTR = data('modal__closed');
 
-const closedRegistry = createCallbackRegistry<
-	typeof MODAL_CLOSED_ATTR,
-	(this: HTMLElement, elm: HTMLElement) => void
->(MODAL_CLOSED_ATTR);
+const closedRegistry =
+	createCallbackRegistry<(this: HTMLElement, elm: HTMLElement) => void>(MODAL_CLOSED_ATTR);
 export const createClosedCallback = closedRegistry.create;
 
 /**
@@ -55,10 +51,7 @@ export const createClosedCallback = closedRegistry.create;
  */
 export const REQUEST_CLOSE_ATTR = data('modal__request-close');
 
-const requestCloseRegistry = createCallbackRegistry<
-	typeof REQUEST_CLOSE_ATTR,
-	RequestCloseCallback
->(REQUEST_CLOSE_ATTR);
+const requestCloseRegistry = createCallbackRegistry<RequestCloseCallback>(REQUEST_CLOSE_ATTR);
 export const createRequestCloseCallback = requestCloseRegistry.create;
 
 // Flag used by `modalBackdropMouseDown` below.
