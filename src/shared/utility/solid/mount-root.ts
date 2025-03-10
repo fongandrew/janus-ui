@@ -1,5 +1,8 @@
 import { type JSX } from 'solid-js';
-import { render } from 'solid-js/web';
+import { DelegatedEvents, render } from 'solid-js/web';
+
+// Add the change event to the list of delegated events since we make somewhat heavy use of it
+DelegatedEvents.add('change');
 
 export function mountRoot(fn: () => JSX.Element, id = 'root') {
 	const root = document.getElementById(id);

@@ -12,19 +12,6 @@
 
 		display: flex;
 		overflow: auto;
-
-		/*
-			Move focus ring to bar since there are clipping issues when it's on the
-			tab button itself.
-		*/
-		&:has(:focus-visible) {
-			@mixin t-focus-ring;
-			@mixin t-radius-inner;
-
-			:focus-visible {
-				@mixin t-no-focus-ring;
-			}
-		}
 	}
 
 	.c-tabs__button {
@@ -43,7 +30,19 @@
 			color: var(--v-fg);
 		}
 
-		/* Active state */
+		/*
+			Move focus ring to inner container since there are clipping issues when it's on the
+			tab button itself.
+		*/
+		&:focus-visible {
+			@mixin t-no-focus-ring;
+
+			.c-tabs__button-content {
+				@mixin t-focus-ring;
+				@mixin t-radius-inner;
+			}
+		}
+
 		&[aria-selected='true'] {
 			border-color: var(--v-primary-bg);
 			color: var(--v-fg);
@@ -58,7 +57,18 @@
 		}
 	}
 
+	.c-tabs__button-content {
+		display: flex;
+		align-items: flex-start;
+		justify-content: center;
+		gap: var(--v-inline-gap);
+	}
+
 	.c-tabs__panel {
+		&[aria-hidden='true'] {
+			display: none;
+		}
+
 		&:focus-visible {
 			@mixin t-focus-ring;
 			@mixin t-radius-inner;

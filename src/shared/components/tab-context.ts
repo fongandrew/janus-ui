@@ -1,10 +1,11 @@
-import { type Accessor, createContext, type Setter, useContext } from 'solid-js';
+import { type Accessor, createContext, useContext } from 'solid-js';
 
 export interface TabContextValue {
-	/** Get the name of the currently active tab */
+	/**
+	 * Get the name of the currently active tab (as determined by props).
+	 * Script handlers may change this independently.
+	 */
 	active: Accessor<string | undefined>;
-	/** Set the active tab by name */
-	setActive: Setter<string | undefined>;
 	/** Add a tab if component mounted */
 	add: (id: string) => void;
 	/** Remove a tab if component unmounted */

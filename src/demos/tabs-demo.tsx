@@ -19,7 +19,7 @@ export function TabsDemo() {
 					<div>
 						<Tabs>
 							<Tab label="Tab 1">
-								<div class="o-text-box">Content of Tab 1</div>
+								<div class="o-text-box">These tabs switch automatically.</div>
 							</Tab>
 							<Tab label="Tab 2">
 								<div class="o-text-box">Content of Tab 2</div>
@@ -31,9 +31,9 @@ export function TabsDemo() {
 					</div>
 
 					<Card>
-						<Tabs>
+						<Tabs auto={false}>
 							<Tab label="Tab with a very long long long long name">
-								<div class="o-text-box">Content of Tab 1</div>
+								<div class="o-text-box">These tabs require manual activation.</div>
 							</Tab>
 							<Tab label="Short tab">
 								<div class="o-text-box">Content of Tab 2</div>

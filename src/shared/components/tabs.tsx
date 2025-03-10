@@ -16,6 +16,8 @@ import { TabsContextProvider } from '~/shared/components/tab-provider';
 import { createAutoId } from '~/shared/utility/solid/auto-prop';
 
 export interface TabsProps {
+	/** Whether to enable automatic tab switching. Defaults to true. */
+	auto?: boolean | undefined;
 	/** Whether to enable tab content persistence */
 	persist?: boolean | undefined;
 	/** Children (should be Tabs and things in tabs bar) */
@@ -65,7 +67,7 @@ export function Tabs(props: TabsProps) {
 	return (
 		<TabsContextProvider persist={props.persist}>
 			<TabListContext.Provider value={context}>
-				<TabBar>
+				<TabBar auto={props.auto}>
 					{/*
                             Although children are `Tab` component, render within bar since the
                             `Tab` component renders buttons. Also makes it simple to add

@@ -3,6 +3,8 @@ import { createSignal, type JSX } from 'solid-js';
 import { TabContext, type TabContextValue } from '~/shared/components/tab-context';
 
 interface TabContextProviderProps {
+	/** Active tabId? */
+	active?: string | undefined;
 	/** Default persistence for all tabs? */
 	persist?: boolean | undefined;
 	/** Required children */
@@ -11,7 +13,6 @@ interface TabContextProviderProps {
 
 export function TabsContextProvider(props: TabContextProviderProps) {
 	const [tabIds, setTabIds] = createSignal<string[]>([]);
-	const [active, setActive] = createSignal<string | undefined>();
 	const [btnIds, setBtnIds] = createSignal<Record<string, string>>({});
 
 	function add(name: string) {
@@ -44,13 +45,12 @@ export function TabsContextProvider(props: TabContextProviderProps) {
 	const value: TabContextValue = {
 		active: () => {
 			const allIds = tabIds();
-			const current = active();
+			const current = props.active;
 			if (current !== undefined && allIds.includes(current)) {
 				return current;
 			}
 			return allIds[0];
 		},
-		setActive,
 		add,
 		rm,
 		tabIds,
