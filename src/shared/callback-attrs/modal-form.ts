@@ -1,12 +1,8 @@
 import { VALID_SUBMIT_EVENT } from '~/shared/callback-attrs/form';
-import {
-	closeModal,
-	createClosedCallback,
-	createRequestCloseCallback,
-	openModal,
-} from '~/shared/callback-attrs/modal';
+import { closeModal, createRequestCloseCallback, openModal } from '~/shared/callback-attrs/modal';
 import { getValidatableElements, touched } from '~/shared/callback-attrs/validation';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
+import { createAfterHideCallback } from '~/shared/utility/callback-attrs/visibility';
 import { data } from '~/shared/utility/magic-strings';
 
 export const modalFormCloseOnSuccess = createHandler(
@@ -19,10 +15,13 @@ export const modalFormCloseOnSuccess = createHandler(
 	},
 );
 
-export const modalFormResetOnClose = createClosedCallback('modal-form__reset-on-close', (elm) => {
-	const form = elm as HTMLFormElement;
-	form.reset();
-});
+export const modalFormResetOnClose = createAfterHideCallback(
+	'modal-form__reset-on-close',
+	(elm) => {
+		const form = elm as HTMLFormElement;
+		form.reset();
+	},
+);
 
 export const modalFormMaybeShowSpeedBump = Object.assign(
 	createRequestCloseCallback('modal-form__maybe_show_speed_bump', (e) => {

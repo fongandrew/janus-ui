@@ -3,7 +3,11 @@ import cx from 'classix';
 import { createContext, createMemo, type JSX, splitProps, useContext } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
-import { dropdownBeforeToggle, dropdownClose } from '~/shared/callback-attrs/dropdown';
+import {
+	dropdownBeforeToggleOpen,
+	dropdownClose,
+	dropdownToggleClosed,
+} from '~/shared/callback-attrs/dropdown';
 import { GhostButton } from '~/shared/components/button';
 import {
 	FormElementButtonPropsProvider,
@@ -53,7 +57,7 @@ export function DropdownContent(props: DropdownContentProps) {
 		<FormElementResetProvider>
 			<div
 				{...rest}
-				{...callbackAttrs(rest, dropdownBeforeToggle)}
+				{...callbackAttrs(rest, dropdownBeforeToggleOpen, dropdownToggleClosed)}
 				id={context?.popoverId()}
 				class={cx('c-dropdown__content', rest.class)}
 				aria-labelledby={attrs(context?.triggerId(), rest['aria-labelledby'])}
@@ -87,9 +91,9 @@ export function Dropdown(props: DropdownProps) {
 				popoverTarget={popoverId}
 				popoverTargetAction={() => 'show'}
 				{...{
-					[dropdownBeforeToggle.FIXED_WIDTH_ATTR]: () => props.fixedWidth,
-					[dropdownBeforeToggle.OFFSET_ATTR]: () => props.offset,
-					[dropdownBeforeToggle.PLACEMENT_ATTR]: () => props.placement,
+					[dropdownBeforeToggleOpen.FIXED_WIDTH_ATTR]: () => props.fixedWidth,
+					[dropdownBeforeToggleOpen.OFFSET_ATTR]: () => props.offset,
+					[dropdownBeforeToggleOpen.PLACEMENT_ATTR]: () => props.placement,
 				}}
 			>
 				{props.children}

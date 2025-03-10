@@ -1,5 +1,9 @@
 import { callbackSelector } from '~/shared/utility/callback-attrs/callback-registry';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
+import {
+	runAfterHideCallbacks,
+	runBeforeShowCallbacks,
+} from '~/shared/utility/callback-attrs/visibility';
 import { firstFocusable } from '~/shared/utility/focusables';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { data } from '~/shared/utility/magic-strings';
@@ -69,6 +73,7 @@ export const sidebarTriggerClose = createHandler('click', 'sidebar__close', (eve
 });
 
 function openSidebar(sidebar: HTMLElement) {
+	runBeforeShowCallbacks(sidebar);
 	sidebar.setAttribute(SIDEBAR_STATE_ATTR, 'open');
 
 	for (const button of getOpenButtons(sidebar)) {
@@ -82,6 +87,7 @@ function openSidebar(sidebar: HTMLElement) {
 
 function closeSidebar(sidebar: HTMLElement) {
 	sidebar.setAttribute(SIDEBAR_STATE_ATTR, 'closed');
+	runAfterHideCallbacks(sidebar);
 
 	const sidebarId = sidebar.id;
 	if (!sidebarId) return;

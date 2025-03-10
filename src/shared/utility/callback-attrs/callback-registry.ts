@@ -27,6 +27,8 @@ export function createCallbackRegistry<TRegistryCallback extends (...args: any[]
 	const registry: Record<string, TRegistryCallback> = {};
 
 	return {
+		attr,
+
 		/**
 		 * Gets a callback from the registry.
 		 *

@@ -11,11 +11,15 @@ import {
 
 import { attrIsTruthy } from '~/shared/utility/attribute';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
+import {
+	runAfterHideCallbacks,
+	runBeforeShowCallbacks,
+} from '~/shared/utility/callback-attrs/visibility';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { data } from '~/shared/utility/magic-strings';
-import { evtDoc } from '~/shared/utility/multi-view';
+import { elmDoc, evtDoc } from '~/shared/utility/multi-view';
 import { parseIntOrNull } from '~/shared/utility/parse';
 import { onUnmount } from '~/shared/utility/unmount-observer';
 
@@ -63,32 +67,28 @@ export const dropdownClose = createHandler('click', 'dropdown__close', (event) =
 /**
  * Position dropdown on open, set ARIA props, close other popovers
  */
-export const dropdownBeforeToggle = Object.assign(
-	createHandler('beforetoggle', 'dropdown__before-toggle', ((event: ToggleEvent) => {
+export const dropdownBeforeToggleOpen = Object.assign(
+	createHandler('beforetoggle', 'dropdown__before-toggle-open', ((event: ToggleEvent) => {
+		if (event.newState !== 'open') return;
 		const target = event.target as HTMLElement;
 
 		// Close other popovers when opening this one
-		if (event.newState === 'open') {
-			for (const popover of evtDoc(event)?.querySelectorAll(':popover-open') ?? []) {
-				if (!popover.contains(target)) {
-					(popover as HTMLElement).hidePopover();
-				}
+		for (const popover of evtDoc(event)?.querySelectorAll(':popover-open') ?? []) {
+			if (!popover.contains(target)) {
+				(popover as HTMLElement).hidePopover();
 			}
 		}
 
 		// Position the popover relative to trigger
-		const trigger = evtDoc(event)?.querySelector<HTMLElement>(`[popovertarget="${target.id}"]`);
+		const trigger = getTrigger(target);
 		if (!trigger) return;
 
-		if (event.newState === 'open') {
-			updatePosition(trigger, target);
-			const cleanUp = autoUpdate(trigger, target, () => updatePosition(trigger, target));
-			setPopoverCleanUp(target, cleanUp);
-		} else {
-			cleanUpPopover(target);
-		}
+		updatePosition(trigger, target);
+		const cleanUp = autoUpdate(trigger, target, () => updatePosition(trigger, target));
+		setPopoverCleanUp(target, cleanUp);
 
-		trigger.setAttribute('aria-expanded', event.newState === 'open' ? 'true' : 'false');
+		trigger.setAttribute('aria-expanded', 'true');
+		runBeforeShowCallbacks(target);
 	}) as (event: Event) => void),
 	{
 		FIXED_WIDTH_ATTR: data('dropdown__fixed-width'),
@@ -96,6 +96,18 @@ export const dropdownBeforeToggle = Object.assign(
 		PLACEMENT_ATTR: data('dropdown__placement'),
 	},
 );
+
+/** Run any cleanup callbacks after dropdown is closed */
+export const dropdownToggleClosed = createHandler('toggle', 'dropdown__toggle-closed', ((
+	event: ToggleEvent,
+) => {
+	if (event.newState !== 'closed') return;
+	const target = event.target as HTMLElement;
+
+	runAfterHideCallbacks(target);
+	getTrigger(target)?.setAttribute('aria-expanded', 'false');
+	cleanUpPopover(target);
+}) as (event: Event) => void);
 
 /** Update the position of an element given a trigger + dropdown */
 const updatePosition = async (
@@ -114,10 +126,10 @@ const updatePosition = async (
 	const { x, y } = await computePosition(trigger, popover, {
 		placement:
 			opts?.placement ??
-			(trigger.getAttribute(dropdownBeforeToggle.PLACEMENT_ATTR) as Placement) ??
+			(trigger.getAttribute(dropdownBeforeToggleOpen.PLACEMENT_ATTR) as Placement) ??
 			'bottom-start',
 		middleware: opts?.middleware ?? [
-			offset(parseIntOrNull(trigger.getAttribute(dropdownBeforeToggle.OFFSET_ATTR)) ?? 4),
+			offset(parseIntOrNull(trigger.getAttribute(dropdownBeforeToggleOpen.OFFSET_ATTR)) ?? 4),
 			flip({
 				// Somewhat large padding for flip because dropdown content is resizable
 				// (overflow: auto) and will technically "fit" in smaller spaces but look
@@ -127,7 +139,7 @@ const updatePosition = async (
 			shift({ padding: 4 }),
 			size({
 				apply({ rects, elements, availableWidth, availableHeight }) {
-					if (attrIsTruthy(trigger, dropdownBeforeToggle.FIXED_WIDTH_ATTR)) {
+					if (attrIsTruthy(trigger, dropdownBeforeToggleOpen.FIXED_WIDTH_ATTR)) {
 						elements.floating.style.setProperty(
 							'--c-dropdown__computed-max-width',
 							`${rects.reference.width}px`,
@@ -154,6 +166,10 @@ const updatePosition = async (
 	popover.style.setProperty('--c-dropdown__left', `${x}px`);
 	popover.style.setProperty('--c-dropdown__top', `${y}px`);
 };
+
+function getTrigger(popover: HTMLElement) {
+	return elmDoc(popover)?.querySelector<HTMLElement>(`[popovertarget="${popover.id}"]`);
+}
 
 registerDocumentSetup((document) => {
 	const POPOVER_OPEN_ATTR = data('popover-open');
