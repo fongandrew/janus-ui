@@ -58,6 +58,9 @@ export function LabelledInput(props: LabelledInputProps) {
 			<FormElementPropsProvider
 				id={(prev) => attrNoConflict(prev, inputId())}
 				aria-labelledby={(prev) => attrs(prev, labelId())}
+				// See https://cerovac.com/a11y/2024/06/support-for-aria-errormessage-is-getting-better-but-still-not-there-yet/
+				// As of Dec 2024, aria-errormessage still isn't quite there in Voiceover at least,
+				// so using aria-describedby for error in addition to description
 				aria-describedby={(prev) =>
 					attrs(prev, props.description ? descriptionId() : undefined, errorId())
 				}
