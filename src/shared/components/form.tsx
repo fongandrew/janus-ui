@@ -17,7 +17,7 @@ export interface FormProps<TNames extends string>
 	/** ID for form-wide error element */
 	errorId?: string | undefined;
 	/** Lookup map for field names, mostly used to type form field names */
-	names?: Record<string, TNames> | undefined;
+	names?: Record<any, TNames> | undefined;
 	/** Typed submit handler */
 	onSubmit?: SubmitHandler<TNames> | undefined;
 	/** Should form reset on success? Defaults to true. */

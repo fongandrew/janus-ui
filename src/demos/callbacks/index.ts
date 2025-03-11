@@ -1,10 +1,10 @@
-import { asyncFormSSRSubmit } from '~/demos/callbacks/async-form-ssr';
+import { asyncFormSubmit } from '~/demos/callbacks/async-form';
 import { formOutputClear, formOutputWrite } from '~/demos/callbacks/form-output';
-import { matchesPassword } from '~/demos/callbacks/form-validation-group-ssr';
+import { matchesPassword } from '~/demos/callbacks/form-validation-group';
 import { listBoxMinMax, listBoxNoRed } from '~/demos/callbacks/list-box';
 
 // Call callbacks to register
-asyncFormSSRSubmit();
+asyncFormSubmit();
 formOutputClear();
 formOutputWrite();
 matchesPassword();

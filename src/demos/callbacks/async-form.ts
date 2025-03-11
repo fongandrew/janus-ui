@@ -1,23 +1,23 @@
 import { formOutputWrite } from '~/demos/callbacks/form-output';
 import { createSubmitHandler } from '~/shared/callback-attrs/form';
 
-export const AsyncFormSSRNames = {
+export const AsyncFormNames = {
 	name: 'name',
 	message: 'message',
 	shouldError: 'shouldError',
 } as const;
 
 /** Delayed submit, error if shouldError set */
-export const asyncFormSSRSubmit = createSubmitHandler(
+export const asyncFormSubmit = createSubmitHandler(
 	'async-form-ssr__submit',
 	async (event) => {
 		await new Promise((resolve) => setTimeout(resolve, 3000));
 
-		if (event.data.get(AsyncFormSSRNames.shouldError)) {
+		if (event.data.get(AsyncFormNames.shouldError)) {
 			throw new Error('Form submission failed (as requested)');
 		}
 
-		if (String(event.data.get(AsyncFormSSRNames.name)).toLowerCase() === 'bob') {
+		if (String(event.data.get(AsyncFormNames.name)).toLowerCase() === 'bob') {
 			return {
 				ok: false,
 				fieldErrors: {
@@ -31,5 +31,5 @@ export const asyncFormSSRSubmit = createSubmitHandler(
 			ok: true,
 		};
 	},
-	AsyncFormSSRNames,
+	AsyncFormNames,
 );

@@ -1,5 +1,8 @@
 import { createSignal, createUniqueId, Show } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
+import { formOutputClear, formOutputWrite } from '~/demos/callbacks/form-output';
+import { matchesPassword } from '~/demos/callbacks/form-validation-group';
 import { type Validator } from '~/shared/callback-attrs/validation';
 import {
 	Card,
@@ -18,6 +21,7 @@ import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelledInput } from '~/shared/components/labelled-control';
 import { Password } from '~/shared/components/password';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
 export function FormValidationGroupDemo() {
 	const [formData, setFormData] = createSignal<{
@@ -73,7 +77,12 @@ export function FormValidationGroupDemo() {
 			<FormContextProvider>
 				<CardContent>
 					<div class="o-stack">
-						<Form names={FormNames} onSubmit={handleSubmit} onReset={handleReset}>
+						<Form
+							names={FormNames}
+							onSubmit={handleSubmit}
+							onReset={handleReset}
+							{...callbackAttrs(isServer && formOutputWrite)}
+						>
 							<LabelledInput label="Username">
 								<Input
 									name={FormNames.username}
@@ -98,6 +107,8 @@ export function FormValidationGroupDemo() {
 											onValidate={matchesPassword1}
 											autocomplete="new-password"
 											required
+											{...callbackAttrs(matchesPassword)}
+											{...{ [matchesPassword.MATCH_ATTR]: password1Id }}
 										/>
 									</LabelledInput>
 								</div>
@@ -132,7 +143,7 @@ export function FormValidationGroupDemo() {
 					</div>
 				</CardContent>
 				<CardFooter>
-					<ResetButton />
+					<ResetButton {...callbackAttrs(isServer && formOutputClear)} />
 					<SubmitButton />
 				</CardFooter>
 			</FormContextProvider>

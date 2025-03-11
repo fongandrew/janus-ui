@@ -3,14 +3,14 @@ import { NoHydration, renderToString } from 'solid-js/web';
 
 import { App } from '~/app';
 import { AlertsDemo } from '~/demos/alerts-demo';
-import { AsyncFormSSRDemo } from '~/demos/async-form-ssr-demo';
+import { AsyncFormDemo } from '~/demos/async-form-demo';
 import { BadgeAndCountDemo } from '~/demos/badge-and-count-demo';
 import { ButtonLinksDemo } from '~/demos/button-links-demo';
 import { ButtonsDemo } from '~/demos/buttons-demo';
 import { CheckboxesDemo } from '~/demos/checkboxes-demo';
 import { DetailsDemo } from '~/demos/details-demo';
 import { FooterDemo } from '~/demos/footer-demo';
-import { FormValidationGroupSSRDemo } from '~/demos/form-validation-group-ssr-demo';
+import { FormValidationGroupDemo } from '~/demos/form-validation-group-demo';
 import { InputsDemo } from '~/demos/inputs-demo';
 import { LabelledActionDemo } from '~/demos/labelled-action-demo';
 import { ListBoxDemo } from '~/demos/list-box-demo';
@@ -103,8 +103,8 @@ function Main() {
 						<SelectDemo />
 						<SelectTypeaheadDemo />
 						<ModalDemo />
-						<AsyncFormSSRDemo />
-						<FormValidationGroupSSRDemo />
+						<AsyncFormDemo />
+						<FormValidationGroupDemo />
 						<SelectionValidationDemo />
 						<FooterDemo />
 						<TabsDemo />

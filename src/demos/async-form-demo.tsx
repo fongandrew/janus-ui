@@ -1,5 +1,8 @@
 import { createSignal, Show } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
+import { AsyncFormNames, asyncFormSubmit } from '~/demos/callbacks/async-form';
+import { formOutputClear } from '~/demos/callbacks/form-output';
 import { type TypedSubmitEvent } from '~/shared/callback-attrs/form';
 import {
 	Card,
@@ -18,33 +21,30 @@ import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelledInline, LabelledInput } from '~/shared/components/labelled-control';
 import { Textarea } from '~/shared/components/textarea';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
 export function AsyncFormDemo() {
-	enum FormNames {
-		name = 'name',
-		message = 'message',
-		shouldError = 'shouldError',
-	}
-
 	const [formData, setFormData] = createSignal<{
 		name: string;
 		message: string;
 	} | null>(null);
 
-	const handleSubmit = async (e: TypedSubmitEvent<FormNames>) => {
+	const handleSubmit = async (
+		e: TypedSubmitEvent<(typeof AsyncFormNames)[keyof typeof AsyncFormNames]>,
+	) => {
 		e.preventDefault();
 
 		// Artificial delay
 		await new Promise((resolve) => setTimeout(resolve, 3000));
 
-		if (e.data.get(FormNames.shouldError)) {
+		if (e.data.get(AsyncFormNames.shouldError)) {
 			setFormData(null);
 			throw new Error('Form submission failed (as requested)');
 		}
 
 		setFormData({
-			name: e.data.get(FormNames.name) as string,
-			message: e.data.get(FormNames.message) as string,
+			name: e.data.get(AsyncFormNames.name) as string,
+			message: e.data.get(AsyncFormNames.message) as string,
 		});
 	};
 
@@ -57,15 +57,19 @@ export function AsyncFormDemo() {
 			<FormContextProvider>
 				<CardContent>
 					<div class="o-stack">
-						<Form names={FormNames} onSubmit={handleSubmit}>
+						<Form
+							names={AsyncFormNames}
+							onSubmit={handleSubmit}
+							{...callbackAttrs(isServer && asyncFormSubmit)}
+						>
 							<LabelledInput label="Name">
-								<Input name={FormNames.name} autocomplete="none" />
+								<Input name={AsyncFormNames.name} autocomplete="none" />
 							</LabelledInput>
 							<LabelledInput label="Message">
-								<Textarea name={FormNames.message} />
+								<Textarea name={AsyncFormNames.message} />
 							</LabelledInput>
 							<LabelledInline label="Force error">
-								<Checkbox name={FormNames.shouldError} />
+								<Checkbox name={AsyncFormNames.shouldError} />
 							</LabelledInline>
 						</Form>
 
@@ -97,7 +101,7 @@ export function AsyncFormDemo() {
 					</div>
 				</CardContent>
 				<CardFooter>
-					<ResetButton />
+					<ResetButton {...callbackAttrs(isServer && formOutputClear)} />
 					<SubmitButton />
 				</CardFooter>
 			</FormContextProvider>
