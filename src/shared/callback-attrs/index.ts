@@ -7,6 +7,7 @@ import * as label from '~/shared/callback-attrs/label';
 import * as listBox from '~/shared/callback-attrs/list-box';
 import * as menu from '~/shared/callback-attrs/menu';
 import * as modal from '~/shared/callback-attrs/modal';
+import * as modalForm from '~/shared/callback-attrs/modal-form';
 import * as optionList from '~/shared/callback-attrs/option-list';
 import * as scroll from '~/shared/callback-attrs/scroll';
 import * as select from '~/shared/callback-attrs/select';
@@ -37,6 +38,7 @@ for (const module of [
 	listBox,
 	menu,
 	modal,
+	modalForm,
 	optionList,
 	scroll,
 	select,

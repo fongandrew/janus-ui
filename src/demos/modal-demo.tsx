@@ -1,5 +1,8 @@
 import { createSignal, createUniqueId } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
+import { asyncFormSubmit } from '~/demos/callbacks/async-form';
+import { formOutputWrite } from '~/demos/callbacks/form-output';
 import { type TypedSubmitEvent } from '~/shared/callback-attrs/form';
 import { Button } from '~/shared/components/button';
 import {
@@ -31,6 +34,7 @@ import {
 } from '~/shared/components/modal-form';
 import { Select } from '~/shared/components/select';
 import { Textarea } from '~/shared/components/textarea';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
 function ControlledModal() {
 	const [isOpen, setIsOpen] = createSignal(false);
@@ -69,10 +73,8 @@ function TriggeredModal() {
 		</>
 	);
 }
-
 function LongModal() {
-	const [isOpen, setIsOpen] = createSignal(false);
-
+	const dialogId = createUniqueId();
 	const manyParagraphs = [];
 	for (let i = 0; i < 20; i++) {
 		manyParagraphs.push(
@@ -90,8 +92,10 @@ function LongModal() {
 
 	return (
 		<>
-			<Button onClick={() => setIsOpen(true)}>Open Modal (Long)</Button>
-			<Modal open={isOpen()} onClose={() => setIsOpen(false)}>
+			<ModalOpenTrigger targetId={dialogId}>
+				<Button>Open Modal (Long)</Button>
+			</ModalOpenTrigger>
+			<Modal id={dialogId}>
 				<ModalTitle>Example Modal</ModalTitle>
 				<ModalContent>{manyParagraphs}</ModalContent>
 				<ModalFooter>
@@ -102,8 +106,8 @@ function LongModal() {
 	);
 }
 
-function FormModal() {
-	const [isFormOpen, setIsFormOpen] = createSignal(false);
+function FormModal(props: { outputId: string }) {
+	const formDialogId = createUniqueId();
 	const [isResultsOpen, setIsResultsOpen] = createSignal(false);
 
 	const FormNames = {
@@ -130,11 +134,18 @@ function FormModal() {
 
 	return (
 		<>
-			<Button onClick={[setIsFormOpen, true]}>Open Modal (Form)</Button>
-			<Modal open={isFormOpen()} onClose={[setIsFormOpen, false]}>
+			<ModalOpenTrigger targetId={formDialogId}>
+				<Button>Open Modal (Form)</Button>
+			</ModalOpenTrigger>
+			<Modal id={formDialogId}>
 				<ModalTitle>Form Example</ModalTitle>
 				<FormContextProvider>
-					<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
+					<ModalFormContent
+						names={FormNames}
+						onSubmit={handleSubmit}
+						{...callbackAttrs(isServer && formOutputWrite)}
+						{...{ [formOutputWrite.TARGET_ATTR]: props.outputId }}
+					>
 						<LabelledInput label="Name">
 							<Input name={FormNames.name} required />
 						</LabelledInput>
@@ -193,16 +204,12 @@ function FormModal() {
 	);
 }
 
-function ScrollableForm() {
+function ScrollableForm(props: { outputId: string }) {
 	const formId = createUniqueId();
 
 	const FormNames = {
 		field1: 'field1' as const,
 		field2: 'field2' as const,
-	};
-
-	const handleSubmit = (e: TypedSubmitEvent<keyof typeof FormNames>) => {
-		e.preventDefault();
 	};
 
 	return (
@@ -213,7 +220,11 @@ function ScrollableForm() {
 			<Modal id={formId}>
 				<ModalTitle>Form Example</ModalTitle>
 				<FormContextProvider>
-					<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
+					<ModalFormContent
+						names={FormNames}
+						{...callbackAttrs(formOutputWrite)}
+						{...{ [formOutputWrite.TARGET_ATTR]: props.outputId }}
+					>
 						<LabelledInput label="First">
 							<Input name={FormNames.field1} required />
 						</LabelledInput>
@@ -234,8 +245,8 @@ function ScrollableForm() {
 	);
 }
 
-function AsyncForm() {
-	const [isFormOpen, setIsFormOpen] = createSignal(false);
+function AsyncForm(props: { outputId: string }) {
+	const dialogId = createUniqueId();
 
 	const FormNames = {
 		name: 'name' as const,
@@ -243,21 +254,19 @@ function AsyncForm() {
 		shouldError: 'shouldError' as const,
 	};
 
-	const handleSubmit = async (e: TypedSubmitEvent<keyof typeof FormNames>) => {
-		e.preventDefault();
-		await new Promise((resolve) => setTimeout(resolve, 2500));
-		if (e.data.get('shouldError')) {
-			throw new Error('Forced error');
-		}
-	};
-
 	return (
 		<>
-			<Button onClick={[setIsFormOpen, true]}>Open Modal (Async Form)</Button>
-			<Modal open={isFormOpen()} onClose={[setIsFormOpen, false]}>
+			<ModalOpenTrigger targetId={dialogId}>
+				<Button>Open Modal (Async Form)</Button>
+			</ModalOpenTrigger>
+			<Modal id={dialogId}>
 				<ModalTitle>Async Form Example</ModalTitle>
 				<FormContextProvider>
-					<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
+					<ModalFormContent
+						names={FormNames}
+						{...callbackAttrs(asyncFormSubmit)}
+						{...{ [formOutputWrite.TARGET_ATTR]: props.outputId }}
+					>
 						<LabelledInput label="Name">
 							<Input name={FormNames.name} />
 						</LabelledInput>
@@ -279,21 +288,23 @@ function AsyncForm() {
 }
 
 function ModalDemo() {
+	const outputId = createUniqueId();
 	return (
 		<Card>
 			<CardHeader>
 				<CardTitle>Modal</CardTitle>
 				<CardDescription>Modal dialog with backdrop</CardDescription>
 			</CardHeader>
-			<CardContent>
+			<CardContent class="o-stack">
 				<div class="o-group">
-					<ControlledModal />
+					{!isServer && <ControlledModal />}
 					<TriggeredModal />
 					<LongModal />
-					<FormModal />
-					<ScrollableForm />
-					<AsyncForm />
+					<FormModal outputId={outputId} />
+					<ScrollableForm outputId={outputId} />
+					<AsyncForm outputId={outputId} />
 				</div>
+				<output id={outputId} />
 			</CardContent>
 		</Card>
 	);
