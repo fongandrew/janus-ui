@@ -151,7 +151,7 @@
 	@mixin v-breakpoint-tablet-wide {
 		/* Default open on desktop */
 		.c-sidebar,
-		[data-sidebar__state='open'] .c-sidebar {
+		.c-sidebar[data-sidebar__state='open'] {
 			position: relative;
 			flex-shrink: 0;
 			display: flex;
