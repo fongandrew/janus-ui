@@ -2,7 +2,6 @@ import cx from 'classix';
 import { ErrorBoundary, type JSX, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 
-import { FormContextProvider } from '~/shared/components/form-context';
 import { T } from '~/shared/utility/text/t-components';
 
 export type CardProps = JSX.IntrinsicAttributes &
@@ -22,7 +21,7 @@ export function Card(props: CardProps) {
 	return (
 		<ErrorBoundary fallback={<T>Something went wrong</T>}>
 			<Dynamic component={local.as || 'section'} {...rest} class={cx('c-card', props.class)}>
-				<FormContextProvider>{props.children}</FormContextProvider>
+				{props.children}
 			</Dynamic>
 		</ErrorBoundary>
 	);

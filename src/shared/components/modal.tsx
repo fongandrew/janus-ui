@@ -17,7 +17,6 @@ import {
 	openModal,
 } from '~/shared/callback-attrs/modal';
 import { Button, type ButtonProps, IconButton } from '~/shared/components/button';
-import { FormContextProvider } from '~/shared/components/form-context';
 import { FormElementPropsProvider } from '~/shared/components/form-element-context';
 import { ModalContext } from '~/shared/components/modal-context';
 import { attrNoConflict } from '~/shared/utility/attribute';
@@ -96,9 +95,7 @@ export function Modal(props: DialogProps) {
 					ref={combineRefs(setDialog, props.ref)}
 					class={cx('c-modal', props.class)}
 				>
-					<FormContextProvider>
-						<div class="c-modal__body">{local.children}</div>
-					</FormContextProvider>
+					<div class="c-modal__body">{local.children}</div>
 				</dialog>
 			</ModalContext.Provider>
 		</Show>

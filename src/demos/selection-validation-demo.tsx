@@ -11,6 +11,7 @@ import {
 import { BaseDescription } from '~/shared/components/description';
 import { Form } from '~/shared/components/form';
 import { ResetButton, SubmitButton } from '~/shared/components/form-buttons';
+import { FormContextProvider } from '~/shared/components/form-context';
 import { Label } from '~/shared/components/label';
 import { LabelledInput } from '~/shared/components/labelled-control';
 import { ListBox, ListBoxItem } from '~/shared/components/list-box';
@@ -57,71 +58,73 @@ export function SelectionValidationDemo() {
 				<CardTitle>Selection validation</CardTitle>
 				<CardDescription>Validation with ListBox and Select components</CardDescription>
 			</CardHeader>
-			<CardContent>
-				<div class="o-stack">
-					<Form onSubmit={handleSubmit} onReset={handleReset} names={FormNames}>
-						<LabelledInput label="Select Fruits (2-3)">
-							<ListBox
-								name={FormNames.fruits}
-								multiple
-								onValidate={validateMultiple}
-								required
-							>
-								<ListBoxItem value="apple">Apple</ListBoxItem>
-								<ListBoxItem value="banana">Banana</ListBoxItem>
-								<ListBoxItem value="orange">Orange</ListBoxItem>
-								<ListBoxItem value="grape">Grape</ListBoxItem>
-								<ListBoxItem value="kiwi">Kiwi</ListBoxItem>
-							</ListBox>
-						</LabelledInput>
+			<FormContextProvider>
+				<CardContent>
+					<div class="o-stack">
+						<Form onSubmit={handleSubmit} onReset={handleReset} names={FormNames}>
+							<LabelledInput label="Select Fruits (2-3)">
+								<ListBox
+									name={FormNames.fruits}
+									multiple
+									onValidate={validateMultiple}
+									required
+								>
+									<ListBoxItem value="apple">Apple</ListBoxItem>
+									<ListBoxItem value="banana">Banana</ListBoxItem>
+									<ListBoxItem value="orange">Orange</ListBoxItem>
+									<ListBoxItem value="grape">Grape</ListBoxItem>
+									<ListBoxItem value="kiwi">Kiwi</ListBoxItem>
+								</ListBox>
+							</LabelledInput>
 
-						<LabelledInput label="Select Colors (2-3)">
-							<Select
-								name={FormNames.colors}
-								multiple
-								onValidate={validateMultiple}
-								required
-							>
-								<ListBoxItem value="red">Red</ListBoxItem>
-								<ListBoxItem value="blue">Blue</ListBoxItem>
-								<ListBoxItem value="green">Green</ListBoxItem>
-								<ListBoxItem value="yellow">Yellow</ListBoxItem>
-								<ListBoxItem value="purple">Purple</ListBoxItem>
-							</Select>
-						</LabelledInput>
-					</Form>
+							<LabelledInput label="Select Colors (2-3)">
+								<Select
+									name={FormNames.colors}
+									multiple
+									onValidate={validateMultiple}
+									required
+								>
+									<ListBoxItem value="red">Red</ListBoxItem>
+									<ListBoxItem value="blue">Blue</ListBoxItem>
+									<ListBoxItem value="green">Green</ListBoxItem>
+									<ListBoxItem value="yellow">Yellow</ListBoxItem>
+									<ListBoxItem value="purple">Purple</ListBoxItem>
+								</Select>
+							</LabelledInput>
+						</Form>
 
-					<Show when={formData()}>
-						<output>
-							<Card>
-								<CardHeader>
-									<CardTitle>Submitted form data</CardTitle>
-								</CardHeader>
-								<CardContent>
-									<div class="o-stack">
-										<div class="o-label-stack">
-											<Label>Selected fruits</Label>
-											<BaseDescription>
-												{formData()?.fruits.join(', ')}
-											</BaseDescription>
+						<Show when={formData()}>
+							<output>
+								<Card>
+									<CardHeader>
+										<CardTitle>Submitted form data</CardTitle>
+									</CardHeader>
+									<CardContent>
+										<div class="o-stack">
+											<div class="o-label-stack">
+												<Label>Selected fruits</Label>
+												<BaseDescription>
+													{formData()?.fruits.join(', ')}
+												</BaseDescription>
+											</div>
+											<div class="o-label-stack">
+												<Label>Selected colors</Label>
+												<BaseDescription>
+													{formData()?.colors.join(', ')}
+												</BaseDescription>
+											</div>
 										</div>
-										<div class="o-label-stack">
-											<Label>Selected colors</Label>
-											<BaseDescription>
-												{formData()?.colors.join(', ')}
-											</BaseDescription>
-										</div>
-									</div>
-								</CardContent>
-							</Card>
-						</output>
-					</Show>
-				</div>
-			</CardContent>
-			<CardFooter>
-				<ResetButton />
-				<SubmitButton />
-			</CardFooter>
+									</CardContent>
+								</Card>
+							</output>
+						</Show>
+					</div>
+				</CardContent>
+				<CardFooter>
+					<ResetButton />
+					<SubmitButton />
+				</CardFooter>
+			</FormContextProvider>
 		</Card>
 	);
 }

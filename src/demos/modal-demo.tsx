@@ -11,6 +11,7 @@ import {
 } from '~/shared/components/card';
 import { Checkbox } from '~/shared/components/checkbox';
 import { BaseDescription } from '~/shared/components/description';
+import { FormContextProvider } from '~/shared/components/form-context';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelledInline, LabelledInput } from '~/shared/components/labelled-control';
@@ -132,31 +133,33 @@ function FormModal() {
 			<Button onClick={[setIsFormOpen, true]}>Open Modal (Form)</Button>
 			<Modal open={isFormOpen()} onClose={[setIsFormOpen, false]}>
 				<ModalTitle>Form Example</ModalTitle>
-				<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
-					<LabelledInput label="Name">
-						<Input name={FormNames.name} required />
-					</LabelledInput>
-					<LabelledInput label="Email">
-						<Input name={FormNames.email} type="email" required />
-					</LabelledInput>
-					<LabelledInput label="How did you hear about us?">
-						<Select placeholder="Select an option">
-							<ListBoxItem value="friend">Friends & family</ListBoxItem>
-							<ListBoxItem value="aliens">Space aliens</ListBoxItem>
-							<ListBoxItem value="ads">Advertising</ListBoxItem>
-						</Select>
-					</LabelledInput>
-					<LabelledInput label="Message">
-						<Textarea name={FormNames.message} required />
-					</LabelledInput>
-					<LabelledInline label="Agree to the terms of service?">
-						<Checkbox name={FormNames.terms} required />
-					</LabelledInline>
-				</ModalFormContent>
-				<ModalFooter>
-					<ModalCancelButton />
-					<ModalSubmitButton />
-				</ModalFooter>
+				<FormContextProvider>
+					<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
+						<LabelledInput label="Name">
+							<Input name={FormNames.name} required />
+						</LabelledInput>
+						<LabelledInput label="Email">
+							<Input name={FormNames.email} type="email" required />
+						</LabelledInput>
+						<LabelledInput label="How did you hear about us?">
+							<Select placeholder="Select an option">
+								<ListBoxItem value="friend">Friends & family</ListBoxItem>
+								<ListBoxItem value="aliens">Space aliens</ListBoxItem>
+								<ListBoxItem value="ads">Advertising</ListBoxItem>
+							</Select>
+						</LabelledInput>
+						<LabelledInput label="Message">
+							<Textarea name={FormNames.message} required />
+						</LabelledInput>
+						<LabelledInline label="Agree to the terms of service?">
+							<Checkbox name={FormNames.terms} required />
+						</LabelledInline>
+					</ModalFormContent>
+					<ModalFooter>
+						<ModalCancelButton />
+						<ModalSubmitButton />
+					</ModalFooter>
+				</FormContextProvider>
 			</Modal>
 			<Modal open={isResultsOpen()} onClose={[setIsResultsOpen, false]}>
 				<ModalTitle>Form Results</ModalTitle>
@@ -209,21 +212,23 @@ function ScrollableForm() {
 			</ModalOpenTrigger>
 			<Modal id={formId}>
 				<ModalTitle>Form Example</ModalTitle>
-				<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
-					<LabelledInput label="First">
-						<Input name={FormNames.field1} required />
-					</LabelledInput>
-					<div style={{ height: '3000px' }}>
-						A big block that takes up lots of space to force scrolling
-					</div>
-					<LabelledInput label="Last">
-						<Input name={FormNames.field2} required />
-					</LabelledInput>
-				</ModalFormContent>
-				<ModalFooter>
-					<ModalCancelButton />
-					<ModalSubmitButton />
-				</ModalFooter>
+				<FormContextProvider>
+					<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
+						<LabelledInput label="First">
+							<Input name={FormNames.field1} required />
+						</LabelledInput>
+						<div style={{ height: '3000px' }}>
+							A big block that takes up lots of space to force scrolling
+						</div>
+						<LabelledInput label="Last">
+							<Input name={FormNames.field2} required />
+						</LabelledInput>
+					</ModalFormContent>
+					<ModalFooter>
+						<ModalCancelButton />
+						<ModalSubmitButton />
+					</ModalFooter>
+				</FormContextProvider>
 			</Modal>
 		</>
 	);
@@ -251,21 +256,23 @@ function AsyncForm() {
 			<Button onClick={[setIsFormOpen, true]}>Open Modal (Async Form)</Button>
 			<Modal open={isFormOpen()} onClose={[setIsFormOpen, false]}>
 				<ModalTitle>Async Form Example</ModalTitle>
-				<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
-					<LabelledInput label="Name">
-						<Input name={FormNames.name} />
-					</LabelledInput>
-					<LabelledInput label="Message">
-						<Textarea name={FormNames.message} />
-					</LabelledInput>
-					<LabelledInline label="Should error">
-						<Checkbox name={FormNames.shouldError} />
-					</LabelledInline>
-				</ModalFormContent>
-				<ModalFooter>
-					<ModalCancelButton />
-					<ModalSubmitButton />
-				</ModalFooter>
+				<FormContextProvider>
+					<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
+						<LabelledInput label="Name">
+							<Input name={FormNames.name} />
+						</LabelledInput>
+						<LabelledInput label="Message">
+							<Textarea name={FormNames.message} />
+						</LabelledInput>
+						<LabelledInline label="Should error">
+							<Checkbox name={FormNames.shouldError} />
+						</LabelledInline>
+					</ModalFormContent>
+					<ModalFooter>
+						<ModalCancelButton />
+						<ModalSubmitButton />
+					</ModalFooter>
+				</FormContextProvider>
 			</Modal>
 		</>
 	);

@@ -12,6 +12,7 @@ import {
 import { BaseDescription } from '~/shared/components/description';
 import { Form } from '~/shared/components/form';
 import { ResetButton, SubmitButton } from '~/shared/components/form-buttons';
+import { FormContextProvider } from '~/shared/components/form-context';
 import { FormValidationGroup } from '~/shared/components/form-validation-group';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
@@ -69,70 +70,72 @@ export function FormValidationGroupDemo() {
 				<CardTitle>Form validation (inputs)</CardTitle>
 				<CardDescription>Password validation with FormValidationGroup</CardDescription>
 			</CardHeader>
-			<CardContent>
-				<div class="o-stack">
-					<Form names={FormNames} onSubmit={handleSubmit} onReset={handleReset}>
-						<LabelledInput label="Username">
-							<Input
-								name={FormNames.username}
-								onValidate={validateUserName}
-								autocomplete="username"
-								required
-							/>
-						</LabelledInput>
+			<FormContextProvider>
+				<CardContent>
+					<div class="o-stack">
+						<Form names={FormNames} onSubmit={handleSubmit} onReset={handleReset}>
+							<LabelledInput label="Username">
+								<Input
+									name={FormNames.username}
+									onValidate={validateUserName}
+									autocomplete="username"
+									required
+								/>
+							</LabelledInput>
 
-						<FormValidationGroup>
-							<div class="o-stack">
-								<LabelledInput label="Password" id={password1Id}>
-									<Password
-										name={FormNames.password1}
-										autocomplete="new-password"
-										required
-									/>
-								</LabelledInput>
-								<LabelledInput label="Confirm Password">
-									<Password
-										name={FormNames.password2}
-										onValidate={matchesPassword1}
-										autocomplete="new-password"
-										required
-									/>
-								</LabelledInput>
-							</div>
-						</FormValidationGroup>
-					</Form>
+							<FormValidationGroup>
+								<div class="o-stack">
+									<LabelledInput label="Password" id={password1Id}>
+										<Password
+											name={FormNames.password1}
+											autocomplete="new-password"
+											required
+										/>
+									</LabelledInput>
+									<LabelledInput label="Confirm Password">
+										<Password
+											name={FormNames.password2}
+											onValidate={matchesPassword1}
+											autocomplete="new-password"
+											required
+										/>
+									</LabelledInput>
+								</div>
+							</FormValidationGroup>
+						</Form>
 
-					<Show when={formData()}>
-						<output>
-							<Card>
-								<CardHeader>
-									<CardTitle>Submitted form data</CardTitle>
-								</CardHeader>
-								<CardContent>
-									<div class="o-stack">
-										<div class="o-label-stack">
-											<Label>Username</Label>
-											<BaseDescription>
-												{formData()?.username}
-											</BaseDescription>
+						<Show when={formData()}>
+							<output>
+								<Card>
+									<CardHeader>
+										<CardTitle>Submitted form data</CardTitle>
+									</CardHeader>
+									<CardContent>
+										<div class="o-stack">
+											<div class="o-label-stack">
+												<Label>Username</Label>
+												<BaseDescription>
+													{formData()?.username}
+												</BaseDescription>
+											</div>
+											<div class="o-label-stack">
+												<Label>Password</Label>
+												<BaseDescription>
+													{formData()?.password}
+												</BaseDescription>
+											</div>
 										</div>
-										<div class="o-label-stack">
-											<Label>Password</Label>
-											<BaseDescription>
-												{formData()?.password}
-											</BaseDescription>
-										</div>
-									</div>
-								</CardContent>
-							</Card>
-						</output>
-					</Show>
-				</div>
-			</CardContent>
-			<CardFooter>
-				<ResetButton />
-				<SubmitButton />
-			</CardFooter>
+									</CardContent>
+								</Card>
+							</output>
+						</Show>
+					</div>
+				</CardContent>
+				<CardFooter>
+					<ResetButton />
+					<SubmitButton />
+				</CardFooter>
+			</FormContextProvider>
 		</Card>
 	);
 }

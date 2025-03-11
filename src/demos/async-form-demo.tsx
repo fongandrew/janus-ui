@@ -13,6 +13,7 @@ import { Checkbox } from '~/shared/components/checkbox';
 import { BaseDescription } from '~/shared/components/description';
 import { Form } from '~/shared/components/form';
 import { ResetButton, SubmitButton } from '~/shared/components/form-buttons';
+import { FormContextProvider } from '~/shared/components/form-context';
 import { Input } from '~/shared/components/input';
 import { Label } from '~/shared/components/label';
 import { LabelledInline, LabelledInput } from '~/shared/components/labelled-control';
@@ -53,47 +54,53 @@ export function AsyncFormDemo() {
 				<CardTitle>Async form</CardTitle>
 				<CardDescription>Form with async submission and loading state</CardDescription>
 			</CardHeader>
-			<CardContent>
-				<div class="o-stack">
-					<Form names={FormNames} onSubmit={handleSubmit}>
-						<LabelledInput label="Name">
-							<Input name={FormNames.name} autocomplete="none" />
-						</LabelledInput>
-						<LabelledInput label="Message">
-							<Textarea name={FormNames.message} />
-						</LabelledInput>
-						<LabelledInline label="Force error">
-							<Checkbox name={FormNames.shouldError} />
-						</LabelledInline>
-					</Form>
+			<FormContextProvider>
+				<CardContent>
+					<div class="o-stack">
+						<Form names={FormNames} onSubmit={handleSubmit}>
+							<LabelledInput label="Name">
+								<Input name={FormNames.name} autocomplete="none" />
+							</LabelledInput>
+							<LabelledInput label="Message">
+								<Textarea name={FormNames.message} />
+							</LabelledInput>
+							<LabelledInline label="Force error">
+								<Checkbox name={FormNames.shouldError} />
+							</LabelledInline>
+						</Form>
 
-					<Show when={formData()}>
-						<output>
-							<Card>
-								<CardHeader>
-									<CardTitle>Submitted form data</CardTitle>
-								</CardHeader>
-								<CardContent>
-									<div class="o-stack">
-										<div class="o-label-stack">
-											<Label>Name</Label>
-											<BaseDescription>{formData()?.name}</BaseDescription>
+						<Show when={formData()}>
+							<output>
+								<Card>
+									<CardHeader>
+										<CardTitle>Submitted form data</CardTitle>
+									</CardHeader>
+									<CardContent>
+										<div class="o-stack">
+											<div class="o-label-stack">
+												<Label>Name</Label>
+												<BaseDescription>
+													{formData()?.name}
+												</BaseDescription>
+											</div>
+											<div class="o-label-stack">
+												<Label>Message</Label>
+												<BaseDescription>
+													{formData()?.message}
+												</BaseDescription>
+											</div>
 										</div>
-										<div class="o-label-stack">
-											<Label>Message</Label>
-											<BaseDescription>{formData()?.message}</BaseDescription>
-										</div>
-									</div>
-								</CardContent>
-							</Card>
-						</output>
-					</Show>
-				</div>
-			</CardContent>
-			<CardFooter>
-				<ResetButton />
-				<SubmitButton />
-			</CardFooter>
+									</CardContent>
+								</Card>
+							</output>
+						</Show>
+					</div>
+				</CardContent>
+				<CardFooter>
+					<ResetButton />
+					<SubmitButton />
+				</CardFooter>
+			</FormContextProvider>
 		</Card>
 	);
 }
