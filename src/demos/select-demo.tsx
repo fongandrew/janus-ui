@@ -1,5 +1,7 @@
 import { createSignal, For } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
+import { listBoxNoRed } from '~/demos/callbacks/list-box';
 import {
 	Card,
 	CardContent,
@@ -10,6 +12,7 @@ import {
 import { LabelledInput } from '~/shared/components/labelled-control';
 import { ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
 import { Select } from '~/shared/components/select';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
 function SelectDemo() {
 	const [value, setValue] = createSignal<Set<string>>(new Set());
@@ -68,6 +71,7 @@ function SelectDemo() {
 							values={multiValue()}
 							onValues={setMultiValue}
 							multiple
+							{...callbackAttrs(isServer && listBoxNoRed)}
 						>
 							<ListBoxGroup heading="Don't Pick These">
 								<ListBoxItem value="red">Red</ListBoxItem>

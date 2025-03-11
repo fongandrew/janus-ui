@@ -1,5 +1,7 @@
 import { createMemo, createSignal, For, Show } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
+import { listBoxNoRed } from '~/demos/callbacks/list-box';
 import {
 	Card,
 	CardContent,
@@ -10,6 +12,7 @@ import {
 import { LabelledInput } from '~/shared/components/labelled-control';
 import { ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
 import { SelectTypeahead } from '~/shared/components/select-typeahead';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
 function SelectTypeaheadDemo() {
 	// Value selection
@@ -63,6 +66,7 @@ function SelectTypeaheadDemo() {
 							onValues={setMultiValue}
 							onValueInput={setQuery}
 							multiple
+							{...callbackAttrs(isServer && listBoxNoRed)}
 						>
 							<ListBoxGroup heading="Don't Pick This">
 								<ListBoxItem value="red">Red</ListBoxItem>
