@@ -10,6 +10,7 @@ import * as scroll from '~/shared/callback-attrs/scroll';
 import * as select from '~/shared/callback-attrs/select';
 import * as sidebar from '~/shared/callback-attrs/sidebar';
 import * as tabs from '~/shared/callback-attrs/tabs';
+import * as toggle from '~/shared/callback-attrs/toggle';
 import * as toggleSwitch from '~/shared/callback-attrs/toggle-switch';
 import * as tooltip from '~/shared/callback-attrs/tooltip';
 import * as topNav from '~/shared/callback-attrs/top-nav';
@@ -39,6 +40,7 @@ for (const module of [
 	select,
 	sidebar,
 	tabs,
+	toggle,
 	toggleSwitch,
 	tooltip,
 	topNav,
