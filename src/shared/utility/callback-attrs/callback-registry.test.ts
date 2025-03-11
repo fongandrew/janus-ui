@@ -76,15 +76,20 @@ describe('callbackAttrs', () => {
 
 	it('should extract relevant attributes from object props', () => {
 		const registry = createCallbackRegistry('data-test');
-		const callback = registry.create('test-id', () => {});
+		const callback1 = registry.create('test-id-1', () => {});
+		const callback2 = registry.create('test-id-2', () => {});
 
-		const props = callbackAttrs(callback, {
-			'data-test': 'manual-id',
-			'data-other': 'should-not-appear',
-		});
+		const props = callbackAttrs(
+			callback1,
+			{
+				'data-test': 'manual-id',
+				'data-other': 'should-not-appear',
+			},
+			callback2,
+		);
 
 		expect(props).toEqual({
-			'data-test': 'test-id manual-id',
+			'data-test': 'test-id-1 manual-id test-id-2',
 		});
 	});
 });

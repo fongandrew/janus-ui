@@ -95,10 +95,10 @@ export function callbackAttrs(
 	// We want to ignore most of the attributes on prop objects and include only
 	// those implicated by any callback args. So let's make a first pass and
 	// collect just those.
-	const attrs: string[] = [];
+	const attrs = new Set<string>();
 	for (const idOrProps of idsOrProps) {
 		if (typeof idOrProps === 'function' && (idOrProps as RegisteredCallback<any>).attr) {
-			attrs.push((idOrProps as RegisteredCallback<any>).attr);
+			attrs.add((idOrProps as RegisteredCallback<any>).attr);
 		}
 	}
 
@@ -110,9 +110,7 @@ export function callbackAttrs(
 		if (typeof idOrProps === 'function' && (idOrProps as RegisteredCallback<any>).attr) {
 			const attr = (idOrProps as RegisteredCallback<any>).attr;
 			(idsByAttr[attr] ??= []).push(idOrProps());
-		}
-
-		if (typeof idOrProps === 'object') {
+		} else if (typeof idOrProps === 'object') {
 			for (const attr of attrs) {
 				if (idOrProps[attr]) (idsByAttr[attr] ??= []).push(idOrProps[attr]);
 			}

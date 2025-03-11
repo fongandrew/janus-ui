@@ -1,4 +1,7 @@
-import { createCallbackRegistry } from '~/shared/utility/callback-attrs/callback-registry';
+import {
+	createCallbackRegistry,
+	type RegisteredCallback,
+} from '~/shared/utility/callback-attrs/callback-registry';
 import { createHandler, HANDLER_ATTR } from '~/shared/utility/callback-attrs/events';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { createMagicProp } from '~/shared/utility/magic-prop';
@@ -43,7 +46,10 @@ export const [touched, setTouched] = createMagicProp<boolean>();
 const validationRegistry = createCallbackRegistry<Validator<any>>(VALIDATE_ATTR);
 
 // Replace the existing registry functions with the ones from the callback registry
-export const createValidator = validationRegistry.create;
+export const createValidator = validationRegistry.create as <T extends HTMLElement = HTMLElement>(
+	name: string,
+	validator: Validator<T>,
+) => RegisteredCallback<Validator<T>>;
 
 /**
  * Run any validators associated with this element on change

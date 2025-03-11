@@ -5,7 +5,7 @@ import {
 	formResetOnSuccess,
 	type SubmitHandler,
 } from '~/shared/callback-attrs/form';
-import { FORM_CONTROL_ERROR_ATTR } from '~/shared/callback-attrs/validation';
+import { FORM_CONTROL_ERROR_ATTR, validateReset } from '~/shared/callback-attrs/validation';
 import { DangerAlert } from '~/shared/components/alert';
 import { FormContext } from '~/shared/components/form-context';
 import { attrs } from '~/shared/utility/attribute-list';
@@ -54,6 +54,7 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 				rest,
 				handlerId(),
 				local.resetOnSuccess !== false && formResetOnSuccess,
+				validateReset,
 			)}
 		>
 			<div class="o-stack">

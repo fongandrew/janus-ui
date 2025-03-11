@@ -4,6 +4,7 @@ import {
 	setErrorsByName,
 } from '~/shared/callback-attrs/validation';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
+import { getDefaultLogger } from '~/shared/utility/logger';
 import { data, evt } from '~/shared/utility/magic-strings';
 import { elmDoc } from '~/shared/utility/multi-view';
 
@@ -28,7 +29,10 @@ export interface TypedFormData<TNames> {
 	set(key: TNames, value: Blob, filename?: string): void;
 }
 
-export type TypedSubmitEvent<TNames> = SubmitEvent & { data: TypedFormData<TNames> };
+export type TypedSubmitEvent<TNames> = SubmitEvent & {
+	data: TypedFormData<TNames>;
+	currentTarget: HTMLFormElement;
+};
 
 /** Submit handler returning null or defined is deemed `{ ok: true }` */
 export type SubmitHandler<TNames> = (
@@ -97,7 +101,7 @@ export function createSubmitHandler<TNames>(
 			const formId = form.id;
 			const formButtons = form.id
 				? elmDoc(form).querySelectorAll(
-						`[form="${formId}"],.${formId} [type="submit"],.${formId} [type="reset"]`,
+						`[form="${formId}"],[id="${formId}"] [type="submit"],[id="${formId}"] [type="reset"]`,
 					)
 				: form.querySelectorAll('[type="submit"],[type="reset"]');
 			for (const button of formButtons) {
@@ -109,7 +113,7 @@ export function createSubmitHandler<TNames>(
 			try {
 				const eventWithData = Object.assign(event, {
 					data: new FormData(form) as TypedFormData<TNames>,
-				}) as TypedSubmitEvent<TNames> & { currentTarget: HTMLFormElement };
+				}) as TypedSubmitEvent<TNames>;
 				const response = await onSubmit(eventWithData);
 				if (response?.ok === false) {
 					if (response.fieldErrors) {
@@ -124,6 +128,7 @@ export function createSubmitHandler<TNames>(
 				}
 				form.dispatchEvent(new CustomEvent(VALID_SUBMIT_EVENT, { bubbles: true }));
 			} catch (err) {
+				getDefaultLogger().error(err);
 				setError(form, (err as Error)?.message ?? String(err));
 				focusOrScrollToError(form);
 				form.dispatchEvent(new CustomEvent(INVALID_SUBMIT_EVENT, { bubbles: true }));
