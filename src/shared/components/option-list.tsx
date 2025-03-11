@@ -1,5 +1,3 @@
-import '~/shared/utility/use-data-kb-nav';
-
 import cx from 'classix';
 import { Check } from 'lucide-solid';
 import { children, createMemo, type JSX, splitProps } from 'solid-js';
