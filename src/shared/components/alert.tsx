@@ -3,21 +3,39 @@ import { AlertCircle, AlertTriangle, CheckCircle, Info, type LucideProps } from 
 import { type Component, type JSX, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 /** Base alert props shared by all alert variants */
-export type AlertBaseProps = JSX.HTMLAttributes<HTMLDivElement> & {
+export type AlertBaseProps = Omit<JSX.HTMLAttributes<HTMLDivElement>, 'id'> & {
+	/** ID for container element */
+	containerId?: string | undefined;
+	/** ID for the actual thing with role="alert" */
+	alertId?: string | undefined;
 	/** Optional icon override */
 	icon?: Component<LucideProps>;
 };
 
 /** Base alert component used by specific variants */
 function AlertBase(props: AlertBaseProps & { defaultIcon: typeof Info }) {
-	const [local, rest] = splitProps(props, ['class', 'icon', 'children', 'defaultIcon']);
+	const [local, rest] = splitProps(props, [
+		'alertId',
+		'class',
+		'containerId',
+		'icon',
+		'children',
+		'defaultIcon',
+		'style',
+	]);
 
 	return (
-		<div class={cx('c-alert', local.class)}>
+		<div id={local.containerId} class={cx('c-alert', local.class)} style={local.style}>
 			<span class="t-flex-static">
 				<Dynamic component={local.icon ?? local.defaultIcon} aria-hidden="true" />
 			</span>
-			<div role="alert" aria-live="assertive" class="c-alert__children t-flex-fill" {...rest}>
+			<div
+				role="alert"
+				id={local.alertId}
+				aria-live="assertive"
+				class="c-alert__children t-flex-fill"
+				{...rest}
+			>
 				{local.children}
 			</div>
 		</div>

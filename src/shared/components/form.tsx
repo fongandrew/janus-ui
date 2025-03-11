@@ -57,7 +57,7 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 			)}
 		>
 			<div class="o-stack">
-				<DangerAlert id={errorId()} {...{ [FORM_CONTROL_ERROR_ATTR]: '' }} />
+				<DangerAlert alertId={errorId()} {...{ [FORM_CONTROL_ERROR_ATTR]: '' }} />
 				{rest.children}
 			</div>
 		</form>
