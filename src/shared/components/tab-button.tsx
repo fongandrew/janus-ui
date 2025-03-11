@@ -1,5 +1,5 @@
 import cx from 'classix';
-import { children, createRenderEffect, type JSX } from 'solid-js';
+import { children, createRenderEffect, type JSX, onCleanup } from 'solid-js';
 
 import { useTabContext } from '~/shared/components/tab-context';
 import { createAutoId } from '~/shared/utility/solid/auto-prop';
@@ -17,7 +17,9 @@ export function TabButton(props: TabButtonProps) {
 
 	const id = createAutoId(props);
 	createRenderEffect(() => {
+		context.add(props.tabId);
 		context.setBtnId(props.tabId, id());
+		onCleanup(() => context.rm(props.tabId));
 	});
 
 	const resolved = children(() => props.children);

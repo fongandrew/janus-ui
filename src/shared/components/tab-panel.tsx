@@ -5,7 +5,6 @@ import {
 	createSignal,
 	createUniqueId,
 	type JSX,
-	onCleanup,
 	Show,
 } from 'solid-js';
 import { isServer } from 'solid-js/web';
@@ -17,6 +16,7 @@ import {
 	createAfterHideCallback,
 	createBeforeShowCallback,
 } from '~/shared/utility/callback-attrs/visibility';
+import { useLogger } from '~/shared/utility/logger';
 
 export interface TabPanelProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	/** ID is required since this is how we connect tab button */
@@ -30,15 +30,21 @@ export interface TabPanelProps extends JSX.HTMLAttributes<HTMLDivElement> {
 
 export function TabPanel(props: TabPanelProps) {
 	const context = useTabContext();
-	createRenderEffect(() => {
-		context.add(props.id);
-		onCleanup(() => context.rm(props.id));
-	});
 
-	// Lazily mount when needed
+	// Lazily mount when needed -- note that we assume we've rendered the tab bar
+	// already and thus tab IDs are already registered. If not, we will need
+	// to call context.add on the first possibly visible tabId.
 	const [mount, setMount] = createSignal(isServer);
 	const visible = () => context.active() === props.id;
-	const persist = () => props.persist ?? context.persist() ?? true;
+	const persist = () => {
+		const ret = props.persist ?? context.persist() ?? true;
+		if (isServer && !ret) {
+			useLogger().warn('persist=false does not work on server');
+			return true;
+		}
+		return ret;
+	};
+
 	createRenderEffect(() => {
 		if (visible()) {
 			setMount(true);
