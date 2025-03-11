@@ -15,6 +15,8 @@ import * as tooltip from '~/shared/callback-attrs/tooltip';
 import * as topNav from '~/shared/callback-attrs/top-nav';
 import * as validation from '~/shared/callback-attrs/validation';
 import { type RegisteredCallback } from '~/shared/utility/callback-attrs/callback-registry';
+import { processRoot } from '~/shared/utility/callback-attrs/mount';
+import { registerDocumentSetup } from '~/shared/utility/document-setup';
 
 function isRegisteredCallback(val: any): val is RegisteredCallback<any> {
 	return !!(
@@ -48,3 +50,9 @@ for (const module of [
 		}
 	}
 }
+
+registerDocumentSetup((document) => {
+	const window = document.defaultView;
+	if (!window) return;
+	document.addEventListener('DOMContentLoaded', () => processRoot(window));
+});

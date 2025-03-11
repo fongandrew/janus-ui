@@ -54,6 +54,7 @@ export function createMounter(mounterId: string, mounter: (event: HTMLElement) =
 	// Stick original handler on the function so it can be easily composed with other handlers
 	// or spied on for tests
 	mount.do = mounter;
+	mount.attr = MOUNT_ATTR;
 
 	return mount;
 }
@@ -94,7 +95,7 @@ export function process(node: Element) {
 }
 
 /**
- * Process all monnt attributes for a given root
+ * Process all mount attributes for a given root
  */
 export function processRoot(root: Window) {
 	root.document.querySelectorAll(`[${MOUNT_ATTR}]`).forEach(process);
@@ -102,7 +103,8 @@ export function processRoot(root: Window) {
 }
 
 /**
- * Schedule a processRoot call for a given root
+ * Schedule a processRoot call for a given root (called as part of update cycle
+ * in reactive code via `useMountAttrs`
  */
 export function scheduleProcessRoot(root: Window) {
 	if (raf(root)) return;
