@@ -1,3 +1,5 @@
+import '~/shared/callback-attrs/disabled';
+
 import { createMemo, type JSX, mergeProps, onCleanup } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 import { isServer } from 'solid-js/web';
@@ -10,7 +12,6 @@ import {
 } from '~/shared/callback-attrs/validation';
 import { useFormElementProps } from '~/shared/components/form-element-context';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
-import { registerDocumentSetup } from '~/shared/utility/document-setup';
 
 export interface HTMLElements {
 	a: HTMLAnchorElement;
@@ -107,39 +108,3 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 
 	return merged as JSX.HTMLElementTags[TTag];
 }
-
-registerDocumentSetup((document) => {
-	const relevantEvents = [
-		'click',
-		'dblclick',
-		'input',
-		'keydown',
-		'keyup',
-		'mousedown',
-		'mouseup',
-		'paste',
-	];
-
-	/** Listener that selectively disables event propagation if aria-disabled */
-	function preventDefaultIfAriaDisabled(event: Event) {
-		const target = event.target as HTMLElement;
-		if (!target) return;
-
-		const closestAriaDisabled = target.closest('[aria-disabled]');
-		if (closestAriaDisabled && closestAriaDisabled?.getAttribute('aria-disabled') !== 'false') {
-			if (event instanceof KeyboardEvent) {
-				// Need to allow tabbing off disabled element
-				if (event.key === 'Tab') return;
-				// For toolbars + radios, arrow key allows moving selection
-				// Exception for aria-haspopup elements since arrow means "open popup"
-				if (event.key.startsWith('Arrow') && !closestAriaDisabled.ariaHasPopup) return;
-			}
-			event.preventDefault();
-			event.stopImmediatePropagation();
-		}
-	}
-
-	relevantEvents.forEach((eventName) => {
-		document.addEventListener(eventName, preventDefaultIfAriaDisabled, true);
-	});
-});

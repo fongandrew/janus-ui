@@ -1,3 +1,5 @@
+import '~/shared/callback-attrs/disabled';
+
 import * as comboBox from '~/shared/callback-attrs/combo-box';
 import * as dropdown from '~/shared/callback-attrs/dropdown';
 import * as form from '~/shared/callback-attrs/form';
