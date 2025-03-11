@@ -21,7 +21,6 @@ import { SelectDemo } from '~/demos/select-demo';
 import { SelectTypeaheadDemo } from '~/demos/select-typeahead-demo';
 import { SelectionValidationDemo } from '~/demos/selection-validation-demo';
 import { TabsDemo } from '~/demos/tabs-demo';
-import { TabsPersistDemo } from '~/demos/tabs-persist-demo';
 import { TextareasDemo } from '~/demos/textareas-demo';
 import { TooltipDemo } from '~/demos/tooltip-demo';
 import {
@@ -109,7 +108,6 @@ function Main() {
 						<SelectionValidationDemo />
 						<FooterDemo />
 						<TabsDemo />
-						<TabsPersistDemo />
 					</main>
 				</App>
 			</SidebarLayoutContent>
