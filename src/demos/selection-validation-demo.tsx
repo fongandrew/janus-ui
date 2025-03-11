@@ -1,5 +1,8 @@
 import { createSignal, Show } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
+import { formOutputClear, formOutputWrite } from '~/demos/callbacks/form-output';
+import { listBoxMinMax } from '~/demos/callbacks/list-box';
 import {
 	Card,
 	CardContent,
@@ -16,6 +19,7 @@ import { Label } from '~/shared/components/label';
 import { LabelledInput } from '~/shared/components/labelled-control';
 import { ListBox, ListBoxItem } from '~/shared/components/list-box';
 import { Select } from '~/shared/components/select';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
 export function SelectionValidationDemo() {
 	const [formData, setFormData] = createSignal<{
@@ -61,13 +65,23 @@ export function SelectionValidationDemo() {
 			<FormContextProvider>
 				<CardContent>
 					<div class="o-stack">
-						<Form onSubmit={handleSubmit} onReset={handleReset} names={FormNames}>
+						<Form
+							onSubmit={handleSubmit}
+							onReset={handleReset}
+							names={FormNames}
+							{...callbackAttrs(isServer && formOutputWrite)}
+						>
 							<LabelledInput label="Select Fruits (2-3)">
 								<ListBox
 									name={FormNames.fruits}
 									multiple
 									onValidate={validateMultiple}
 									required
+									{...{
+										...callbackAttrs(isServer && listBoxMinMax),
+										[listBoxMinMax.MIN_ATTR]: 2,
+										[listBoxMinMax.MAX_ATTR]: 3,
+									}}
 								>
 									<ListBoxItem value="apple">Apple</ListBoxItem>
 									<ListBoxItem value="banana">Banana</ListBoxItem>
@@ -83,6 +97,11 @@ export function SelectionValidationDemo() {
 									multiple
 									onValidate={validateMultiple}
 									required
+									{...{
+										...callbackAttrs(isServer && listBoxMinMax),
+										[listBoxMinMax.MIN_ATTR]: 2,
+										[listBoxMinMax.MAX_ATTR]: 3,
+									}}
 								>
 									<ListBoxItem value="red">Red</ListBoxItem>
 									<ListBoxItem value="blue">Blue</ListBoxItem>
@@ -121,7 +140,7 @@ export function SelectionValidationDemo() {
 					</div>
 				</CardContent>
 				<CardFooter>
-					<ResetButton />
+					<ResetButton {...callbackAttrs(isServer && formOutputClear)} />
 					<SubmitButton />
 				</CardFooter>
 			</FormContextProvider>

@@ -21,7 +21,15 @@ export const formOutputWrite = createSubmitHandler(
 			nextSibling.appendChild(pre);
 		}
 
-		pre.textContent = JSON.stringify(Object.fromEntries(data));
+		pre.textContent = JSON.stringify(
+			Array.from(data.keys()).reduce(
+				(acc, key) => {
+					acc[key] = data.getAll(key);
+					return acc;
+				},
+				{} as Record<string, any>,
+			),
+		);
 	},
 	{},
 );
