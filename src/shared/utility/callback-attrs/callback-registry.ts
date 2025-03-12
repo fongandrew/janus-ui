@@ -2,7 +2,6 @@
  * Utility code for a pattern where a special data attribute is used to specify a list of
  * JavaScript handlers to be called in some event
  */
-import { createMagicProp } from '~/shared/utility/magic-prop';
 import { type Falsey } from '~/shared/utility/type-helpers';
 
 /**
@@ -12,12 +11,6 @@ import { type Falsey } from '~/shared/utility/type-helpers';
  * `['do-foo', 'arg1,arg2']` in the first match and `['do-bar']` in the second.
  */
 const CALLBACK_REGEX = /([^\s(]+)(?:\s+\(([^)]*)\))?/g;
-
-/**
- * Magic prop for accessing bound functions attached to an element
- */
-const [boundCallbacks, setBoundCallbacks] =
-	createMagicProp<[string, Record<string, (...args: any[]) => any>]>();
 
 export interface RegisteredCallback<
 	TCallback extends (this: TThis, ...args: any[]) => any,
@@ -36,11 +29,6 @@ export interface RegisteredCallback<
 	add(): void;
 	/** Removes the callback from the registry */
 	rm(): void;
-}
-
-/** Type-guard to check if something is a registered callback */
-export function isRegisteredCallback(val: any): val is RegisteredCallback<any, any> {
-	return !!(typeof val === 'function' && val.attr && val.id && val.add);
 }
 
 /**
@@ -77,22 +65,8 @@ export function createCallbackRegistry<TRegistryCallback extends (...args: any[]
 			const str = elm.getAttribute(attr);
 			if (!str) return;
 
-			let [prevAttr, memos] = boundCallbacks(elm) ?? [];
-			if (!memos || str !== prevAttr) {
-				memos = {};
-				setBoundCallbacks(elm, [str, memos]);
-			}
-
-			let match: RegExpExecArray | null;
-			while ((match = CALLBACK_REGEX.exec(str)) !== null) {
-				const [completeMatch, callbackName, argsString] = match;
-
-				const memoized = memos[completeMatch];
-				if (memoized) {
-					yield memoized as TRegistryCallback;
-					continue;
-				}
-
+			for (const match of str.matchAll(CALLBACK_REGEX)) {
+				const [_completeMatch, callbackName, argsString] = match;
 				if (!callbackName) continue;
 
 				const callback = registry[callbackName];
@@ -100,15 +74,11 @@ export function createCallbackRegistry<TRegistryCallback extends (...args: any[]
 
 				if (argsString) {
 					const args = argsString.split(',');
-					const ret = callback.bind(elm, ...args) as TRegistryCallback;
-					memos[completeMatch] = ret;
-					yield ret;
+					yield callback.bind(elm, ...args) as TRegistryCallback;
 					continue;
 				}
 
-				const ret = callback.bind(elm) as TRegistryCallback;
-				memos[completeMatch] = ret;
-				yield ret;
+				yield callback.bind(elm) as TRegistryCallback;
 			}
 		},
 
@@ -225,4 +195,22 @@ export function callbackAttrMods(
  */
 export function callbackSelector(callback: RegisteredCallback<any>) {
 	return `[${callback.attr}~="${callback.id}"]`;
+}
+
+/** Type-guard to check if something is a registered callback */
+export function isRegisteredCallback(val: any): val is RegisteredCallback<any, any> {
+	return !!(typeof val === 'function' && val.attr && val.id && val.add);
+}
+
+/**
+ * Auto-load callbacks from a module (or other object containing callbacks)
+ */
+export function loadCallbacks(...mods: Record<string, any>[]) {
+	for (const mod of mods) {
+		for (const value of Object.values(mod)) {
+			if (isRegisteredCallback(value)) {
+				value.add();
+			}
+		}
+	}
 }

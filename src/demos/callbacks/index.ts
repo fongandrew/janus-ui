@@ -1,12 +1,7 @@
-import { asyncFormSubmit } from '~/demos/callbacks/async-form';
-import { formOutputClear, formOutputWrite } from '~/demos/callbacks/form-output';
-import { matchesPassword } from '~/demos/callbacks/form-validation-group';
-import { listBoxMinMax, listBoxNoRed } from '~/demos/callbacks/list-box';
+import * as asyncForm from '~/demos/callbacks/async-form';
+import * as formOutput from '~/demos/callbacks/form-output';
+import * as formValidationGroup from '~/demos/callbacks/form-validation-group';
+import * as listBox from '~/demos/callbacks/list-box';
+import { loadCallbacks } from '~/shared/utility/callback-attrs/callback-registry';
 
-// Call callbacks to register
-asyncFormSubmit();
-formOutputClear();
-formOutputWrite();
-matchesPassword();
-listBoxMinMax();
-listBoxNoRed();
+loadCallbacks(asyncForm, formOutput, formValidationGroup, listBox);

@@ -96,64 +96,6 @@ describe('createCallbackRegistry', () => {
 			expect(callback).toHaveBeenCalledWith();
 			expect(callback.mock.instances[1]).toBe(element);
 		});
-
-		it('should  memoize bound callbacks for better performance', () => {
-			const registry = createCallbackRegistry('data-test');
-			const callback = vi.fn();
-			const testCallback = registry.create('testCallback', callback);
-
-			const element = document.createElement('div');
-
-			// Use callbackAttrs to generate the attributes and apply them to the element
-			const props = callbackAttrs(testCallback('arg1', 'arg2'));
-			applyCallbackAttrs(element, props);
-
-			// First iteration
-			const firstIter = Array.from(registry.iter(element));
-			const boundFn1 = firstIter[0];
-
-			// Second iteration - should return the same bound function instance
-			const secondIter = Array.from(registry.iter(element));
-			const boundFn2 = secondIter[0];
-
-			expect(boundFn1).toBe(boundFn2);
-		});
-
-		it('should unmemoize if attributes change', () => {
-			const registry = createCallbackRegistry('data-test');
-			const callback = vi.fn();
-			const testCallback = registry.create('testCallback', callback);
-
-			const element = document.createElement('div');
-
-			// Use callbackAttrs to generate the initial attributes and apply them to the element
-			const props1 = callbackAttrs(testCallback('arg1', 'arg2'));
-			applyCallbackAttrs(element, props1);
-
-			// First iteration
-			const firstIter = Array.from(registry.iter(element));
-			const boundFn1 = firstIter[0];
-
-			// Change the props using callbackAttrs with different arguments
-			const props2 = callbackAttrs(testCallback('arg3', 'arg4'));
-			applyCallbackAttrs(element, props2);
-
-			// Second iteration - should return a new bound function instance
-			const secondIter = Array.from(registry.iter(element));
-			const boundFn2 = secondIter[0];
-
-			expect(boundFn1).not.toBe(boundFn2);
-
-			// Change back to original props
-			applyCallbackAttrs(element, props1);
-
-			// Third iteration - should not return the original bound function instance
-			// (so we don't leak memory)
-			const thirdIter = Array.from(registry.iter(element));
-			const boundFn3 = thirdIter[0];
-
-			expect(boundFn1).not.toBe(boundFn3);
-		});
 	});
 });
 
