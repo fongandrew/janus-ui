@@ -19,50 +19,58 @@ import { data } from '~/shared/utility/magic-strings';
 import { t } from '~/shared/utility/text/t-tag';
 
 /** Keydown handler for select button */
-export const selectButtonKeyDown = createHandler('keydown', 'select__button-keydown', (event) => {
-	const popover = (event.target as HTMLButtonElement).popoverTargetElement;
-	let popoverOpen = popover?.matches(':popover-open');
-	if (popoverOpen) {
-		optionListKeyDown.do(event);
-	} else {
-		showOnKeyDown(event);
-	}
+export const selectButtonKeyDown = createHandler(
+	'keydown',
+	'select__button-keydown',
+	function (this, event) {
+		const popover = (event.target as HTMLButtonElement).popoverTargetElement;
+		let popoverOpen = popover?.matches(':popover-open');
+		if (popoverOpen) {
+			optionListKeyDown.do.call(this, event);
+		} else {
+			showOnKeyDown(event);
+		}
 
-	optionListMatchText.do(event);
+		optionListMatchText.do.call(this, event);
 
-	popoverOpen = popover?.matches(':popover-open');
-	if (popoverOpen) {
-		syncActiveDescendant(event.target as HTMLElement);
-	} else {
-		selectMaybeClearOnEsc(event);
-	}
-});
+		popoverOpen = popover?.matches(':popover-open');
+		if (popoverOpen) {
+			syncActiveDescendant(event.target as HTMLElement);
+		} else {
+			selectMaybeClearOnEsc.call(this, event);
+		}
+	},
+);
 
 /** Keydown handler for select input */
-export const selectInputKeyDown = createHandler('keydown', 'select__input-keydown', (event) => {
-	const popover = (event.target as HTMLInputElement).popoverTargetElement;
-	let popoverOpen = popover?.matches(':popover-open');
-	if (popoverOpen) {
-		optionListKeyDown.do(event);
-	} else {
-		showOnKeyDown(event);
-	}
+export const selectInputKeyDown = createHandler(
+	'keydown',
+	'select__input-keydown',
+	function (this, event) {
+		const popover = (event.target as HTMLInputElement).popoverTargetElement;
+		let popoverOpen = popover?.matches(':popover-open');
+		if (popoverOpen) {
+			optionListKeyDown.do.call(this, event);
+		} else {
+			showOnKeyDown(event);
+		}
 
-	popoverOpen = popover?.matches(':popover-open');
-	if (popoverOpen) {
-		syncActiveDescendant(event.target as HTMLElement);
-	} else {
-		selectMaybeClearOnEsc(event);
-	}
+		popoverOpen = popover?.matches(':popover-open');
+		if (popoverOpen) {
+			syncActiveDescendant(event.target as HTMLElement);
+		} else {
+			selectMaybeClearOnEsc.call(this, event);
+		}
 
-	// Prevent default so that we don't submit form if enter key is pressed while
-	// text input is focused. That may be the expected behavior for an actual
-	// input, but behaviorally, this combobox input behaves much more like a
-	// select element (which doesn't submit form on enter in Chrome at least).
-	if (event.key === 'Enter') {
-		event.preventDefault();
-	}
-});
+		// Prevent default so that we don't submit form if enter key is pressed while
+		// text input is focused. That may be the expected behavior for an actual
+		// input, but behaviorally, this combobox input behaves much more like a
+		// select element (which doesn't submit form on enter in Chrome at least).
+		if (event.key === 'Enter') {
+			event.preventDefault();
+		}
+	},
+);
 
 /**
  * Toggle popover on input click -- this happens automatically with buttons with
@@ -227,13 +235,16 @@ export const selectUpdateWithInput = Object.assign(
  * Maybe clear the select element when pressing escape. Do this only if there is
  * something to clear to avoid blocking escape functionality inside a modal or somthing.
  */
-function selectMaybeClearOnEsc(event: KeyboardEvent & { currentTarget: HTMLElement }) {
+function selectMaybeClearOnEsc(
+	this: HTMLElement,
+	event: KeyboardEvent & { currentTarget: HTMLElement },
+) {
 	if (event.key === 'Escape') {
 		const target = event.target as HTMLElement;
 		const listElm = getList(target);
 		if (listElm?.querySelector<HTMLInputElement>('[aria-selected="true"]')) {
 			event.preventDefault();
-			selectClear.do(event);
+			selectClear.do.call(this, event);
 		}
 	}
 }

@@ -36,6 +36,7 @@ export type TypedSubmitEvent<TNames> = SubmitEvent & {
 
 /** Submit handler returning null or defined is deemed `{ ok: true }` */
 export type SubmitHandler<TNames> = (
+	this: HTMLFormElement,
 	event: TypedSubmitEvent<TNames>,
 ) =>
 	| Promise<FormSubmitResponse | null | undefined | void>
@@ -89,7 +90,7 @@ export function createSubmitHandler<TNames>(
 	names: Record<string, TNames>,
 ) {
 	return Object.assign(
-		createHandler('submit', handlerName, async (event) => {
+		createHandler('submit', handlerName, async function (event) {
 			event.preventDefault();
 
 			const form = event.target as HTMLFormElement;
@@ -114,7 +115,7 @@ export function createSubmitHandler<TNames>(
 				const eventWithData = Object.assign(event, {
 					data: new FormData(form) as TypedFormData<TNames>,
 				}) as TypedSubmitEvent<TNames>;
-				const response = await onSubmit(eventWithData);
+				const response = await onSubmit.call(form, eventWithData);
 				if (response?.ok === false) {
 					if (response.fieldErrors) {
 						setErrorsByName(form, response.fieldErrors);

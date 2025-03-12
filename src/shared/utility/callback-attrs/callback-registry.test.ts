@@ -262,8 +262,8 @@ describe('callbackAttrMods', () => {
 	});
 
 	it('should handle callbacks with args', () => {
-		const registry = createCallbackRegistry('data-test');
-		const callback = registry.create('test-id', () => {});
+		const registry = createCallbackRegistry<() => void>('data-test');
+		const callback = registry.create('test-id', (_arg1: string, _arg2: string) => {});
 
 		const modProps = callbackAttrMods(callback('arg1', 'arg2'), callback('arg3', 'arg4'));
 		const result = modProps['data-test']!('existing');

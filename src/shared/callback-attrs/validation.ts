@@ -1,8 +1,9 @@
 import {
+	callbackSelector,
 	createCallbackRegistry,
 	type RegisteredCallback,
 } from '~/shared/utility/callback-attrs/callback-registry';
-import { createHandler, HANDLER_ATTR } from '~/shared/utility/callback-attrs/events';
+import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { data } from '~/shared/utility/magic-strings';
@@ -46,10 +47,16 @@ export const [touched, setTouched] = createMagicProp<boolean>();
 const validationRegistry = createCallbackRegistry<Validator<any>>(VALIDATE_ATTR);
 
 // Replace the existing registry functions with the ones from the callback registry
-export const createValidator = validationRegistry.create as <T extends HTMLElement = HTMLElement>(
+export const createValidator = validationRegistry.create as <
+	T extends HTMLElement = HTMLElement,
+	TArgs extends string[] = [],
+>(
 	name: string,
-	validator: Validator<T>,
-) => RegisteredCallback<Validator<T>>;
+	validator: (
+		this: T,
+		...args: [...TArgs, event: Event & { currentTarget: T }]
+	) => string | undefined | null,
+) => RegisteredCallback<Validator<T>, TArgs, T>;
 
 /**
  * Run any validators associated with this element on change
@@ -186,9 +193,7 @@ export function validate<T extends HTMLElement>(elm: T, event: Event): string | 
  * any input or custom elements with a validation handler.
  */
 export function getValidatableElements(container: HTMLElement): Iterable<HTMLElement> {
-	return container.querySelectorAll<HTMLElement>(
-		`input,[${HANDLER_ATTR}~="${validateOnChange()}"]`,
-	);
+	return container.querySelectorAll<HTMLElement>(`input,${callbackSelector(validateOnChange)}`);
 }
 
 /**

@@ -20,8 +20,9 @@ const [boundCallbacks, setBoundCallbacks] =
 	createMagicProp<[string, Record<string, (...args: any[]) => any>]>();
 
 export interface RegisteredCallback<
-	TCallback extends (this: HTMLElement, ...args: any[]) => any,
+	TCallback extends (this: TThis, ...args: any[]) => any,
 	TArgs extends string[] = [],
+	TThis extends HTMLElement = HTMLElement,
 > {
 	/** Return object mapping attribute to ID / args tuple */
 	(...args: TArgs): [string, string];
@@ -30,7 +31,7 @@ export interface RegisteredCallback<
 	/** The raw ID string */
 	id: string;
 	/** Calls the callback */
-	do(this: HTMLElement, ...args: [...TArgs, ...Parameters<TCallback>]): ReturnType<TCallback>;
+	do(this: TThis, ...args: [...TArgs, ...Parameters<TCallback>]): ReturnType<TCallback>;
 	/** Adds the callback to the registry */
 	add(): void;
 	/** Removes the callback from the registry */
@@ -118,9 +119,10 @@ export function createCallbackRegistry<TRegistryCallback extends (...args: any[]
 		 * @param callback - The callback function to register.
 		 * @returns A function that registers the callback and returns the ID.
 		 */
-		create<TArgs extends string[]>(
+		create<TArgs extends string[] = [], TThis extends HTMLElement = HTMLElement>(
 			id: string,
 			callback: (
+				this: TThis,
 				...args: [...TArgs, ...Parameters<TRegistryCallback>]
 			) => ReturnType<TRegistryCallback>,
 		): RegisteredCallback<TRegistryCallback, TArgs> {

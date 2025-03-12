@@ -14,9 +14,9 @@ export type ListBoxValidator = (values: Set<string>, event: Event) => string | u
 /**
  * Handle arrow navigation in list box and basic selection
  */
-export const listBoxKeyDown = createHandler('keydown', 'list-box__keydown', (event) => {
-	optionListKeyDown.do(event);
-	optionListMatchText.do(event);
+export const listBoxKeyDown = createHandler('keydown', 'list-box__keydown', function (event) {
+	optionListKeyDown.do.call(this, event);
+	optionListMatchText.do.call(this, event);
 	syncActiveDescendant(event.target as HTMLElement);
 });
 

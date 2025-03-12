@@ -107,7 +107,7 @@ function eventHandler(event: Event) {
 		});
 		for (const handler of registry.iter(node as HTMLElement)) {
 			if (isImmediatePropagationStopped(event)) return;
-			handler.call(node, event as Event & { currentTarget: HTMLElement });
+			handler(event as Event & { currentTarget: HTMLElement });
 		}
 
 		if (isDev()) {
@@ -152,7 +152,10 @@ function getRegistry<T extends DelegatableEvent>(
 export function createHandler<T extends DelegatableEvent>(
 	eventType: T,
 	handlerId: string,
-	handler: (event: DelegatableEventMap[T] & { currentTarget: HTMLElement }) => void,
+	handler: (
+		this: HTMLElement,
+		event: DelegatableEventMap[T] & { currentTarget: HTMLElement },
+	) => void,
 ) {
 	return getRegistry(eventType).create(handlerId, handler as (e: Event) => void);
 }

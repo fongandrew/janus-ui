@@ -12,9 +12,9 @@ import { createHandler } from '~/shared/utility/callback-attrs/events';
 /**
  * Handle arrow navigation in menu
  */
-export const menuKeyDown = createHandler('keydown', 'menu__keydown', (event) => {
-	optionListKeyDown.do(event);
-	optionListMatchText.do(event);
+export const menuKeyDown = createHandler('keydown', 'menu__keydown', function (this, event) {
+	optionListKeyDown.do.call(this, event);
+	optionListMatchText.do.call(this, event);
 
 	const target = event.target as HTMLElement;
 	const listElm = getList(target);
