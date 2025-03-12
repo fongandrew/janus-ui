@@ -107,8 +107,7 @@ export function FormValidationGroupDemo() {
 											onValidate={matchesPassword1}
 											autocomplete="new-password"
 											required
-											{...callbackAttrs(matchesPassword)}
-											{...{ [matchesPassword.MATCH_ATTR]: password1Id }}
+											{...callbackAttrs(matchesPassword(password1Id))}
 										/>
 									</LabelledInput>
 								</div>
