@@ -2,17 +2,44 @@
  * Utility code for a pattern where a special data attribute is used to specify a list of
  * JavaScript handlers to be called in some event
  */
+import { createMagicProp } from '~/shared/utility/magic-prop';
 import { type Falsey } from '~/shared/utility/type-helpers';
 
-export interface RegisteredCallback<TCallback extends (...args: any[]) => any> {
-	/** Return the ID used for the attribute */
-	(): string;
+/**
+ * Used to parse attribute strings that maybe have args:
+ *
+ * Given something like `data-on-click="do-foo (arg1,arg2) do-bar"`, this will give us
+ * `['do-foo', 'arg1,arg2']` in the first match and `['do-bar']` in the second.
+ */
+const CALLBACK_REGEX = /([^\s(]+)(?:\s+\(([^)]*)\))?/g;
+
+/**
+ * Magic prop for accessing bound functions attached to an element
+ */
+const [boundCallbacks, setBoundCallbacks] =
+	createMagicProp<[string, Record<string, (...args: any[]) => any>]>();
+
+export interface RegisteredCallback<
+	TCallback extends (this: HTMLElement, ...args: any[]) => any,
+	TArgs extends string[] = [],
+> {
+	/** Return object mapping attribute to ID / args tuple */
+	(...args: TArgs): [string, string];
 	/** The attribute this ID should be assigned to */
 	attr: string;
+	/** The raw ID string */
+	id: string;
 	/** Calls the callback */
-	do(...args: Parameters<TCallback>): ReturnType<TCallback>;
+	do(this: HTMLElement, ...args: [...TArgs, ...Parameters<TCallback>]): ReturnType<TCallback>;
+	/** Adds the callback to the registry */
+	add(): void;
 	/** Removes the callback from the registry */
 	rm(): void;
+}
+
+/** Type-guard to check if something is a registered callback */
+export function isRegisteredCallback(val: any): val is RegisteredCallback<any, any> {
+	return !!(typeof val === 'function' && val.attr && val.id && val.add);
 }
 
 /**
@@ -24,7 +51,7 @@ export interface RegisteredCallback<TCallback extends (...args: any[]) => any> {
 export function createCallbackRegistry<TRegistryCallback extends (...args: any[]) => any>(
 	attr: string,
 ) {
-	const registry: Record<string, TRegistryCallback> = {};
+	const registry: Record<string, (...args: any[]) => any> = {};
 
 	return {
 		attr,
@@ -35,7 +62,7 @@ export function createCallbackRegistry<TRegistryCallback extends (...args: any[]
 		 * @param id - The ID of the callback to get.
 		 * @returns The callback function associated with the ID, or undefined if not found.
 		 */
-		get(id: string): TRegistryCallback | undefined {
+		get(id: string) {
 			return registry[id];
 		},
 
@@ -46,10 +73,41 @@ export function createCallbackRegistry<TRegistryCallback extends (...args: any[]
 		 * @returns An iterable of all callbacks in the registry for this element
 		 */
 		*iter(elm: HTMLElement): Iterable<TRegistryCallback> {
-			for (const id of elm.getAttribute(attr)?.split(/\s/) ?? []) {
-				const callback = registry[id];
+			const str = elm.getAttribute(attr);
+			if (!str) return;
+
+			let [prevAttr, memos] = boundCallbacks(elm) ?? [];
+			if (!memos || str !== prevAttr) {
+				memos = {};
+				setBoundCallbacks(elm, [str, memos]);
+			}
+
+			let match: RegExpExecArray | null;
+			while ((match = CALLBACK_REGEX.exec(str)) !== null) {
+				const [completeMatch, callbackName, argsString] = match;
+
+				const memoized = memos[completeMatch];
+				if (memoized) {
+					yield memoized as TRegistryCallback;
+					continue;
+				}
+
+				if (!callbackName) continue;
+
+				const callback = registry[callbackName];
 				if (!callback) continue;
-				yield callback;
+
+				if (argsString) {
+					const args = argsString.split(',');
+					const ret = callback.bind(elm, ...args) as TRegistryCallback;
+					memos[completeMatch] = ret;
+					yield ret;
+					continue;
+				}
+
+				const ret = callback.bind(elm) as TRegistryCallback;
+				memos[completeMatch] = ret;
+				yield ret;
 			}
 		},
 
@@ -60,17 +118,27 @@ export function createCallbackRegistry<TRegistryCallback extends (...args: any[]
 		 * @param callback - The callback function to register.
 		 * @returns A function that registers the callback and returns the ID.
 		 */
-		create(id: string, callback: TRegistryCallback): RegisteredCallback<TRegistryCallback> {
-			function register() {
-				registry[id] = function (this: any, ...params) {
-					return register.do.apply(this, params);
-				} as TRegistryCallback;
-				return id;
+		create<TArgs extends string[]>(
+			id: string,
+			callback: (
+				...args: [...TArgs, ...Parameters<TRegistryCallback>]
+			) => ReturnType<TRegistryCallback>,
+		): RegisteredCallback<TRegistryCallback, TArgs> {
+			function attrStr(...args: TArgs): [string, string] {
+				attrStr.add();
+				if (args.length) return [attr, `${id} (${args.join(',')})`];
+				return [attr, id];
 			}
-			register.attr = attr;
-			register.do = callback;
-			register.rm = () => delete registry[id];
-			return register;
+			attrStr.attr = attr;
+			attrStr.id = id;
+			attrStr.do = callback;
+			attrStr.add = () => {
+				registry[id] ??= function (this: any, ...args) {
+					return attrStr.do.apply(this, args as any);
+				} as TRegistryCallback;
+			};
+			attrStr.rm = () => delete registry[id];
+			return attrStr;
 		},
 	};
 }
@@ -89,6 +157,7 @@ export function callbackAttrs(
 				/* Hack to exclude functions from union */ call?: undefined | never;
 		  })
 		| RegisteredCallback<any>
+		| [string, string]
 		| Falsey
 	)[]
 ) {
@@ -99,6 +168,8 @@ export function callbackAttrs(
 	for (const idOrProps of idsOrProps) {
 		if (typeof idOrProps === 'function' && (idOrProps as RegisteredCallback<any>).attr) {
 			attrs.add((idOrProps as RegisteredCallback<any>).attr);
+		} else if (Array.isArray(idOrProps)) {
+			attrs.add(idOrProps[0]);
 		}
 	}
 
@@ -109,7 +180,9 @@ export function callbackAttrs(
 
 		if (typeof idOrProps === 'function' && (idOrProps as RegisteredCallback<any>).attr) {
 			const attr = (idOrProps as RegisteredCallback<any>).attr;
-			(idsByAttr[attr] ??= []).push(idOrProps());
+			(idsByAttr[attr] ??= []).push(idOrProps()[1]);
+		} else if (Array.isArray(idOrProps)) {
+			(idsByAttr[idOrProps[0]] ??= []).push(idOrProps[1]);
 		} else if (typeof idOrProps === 'object') {
 			for (const attr of attrs) {
 				if (idOrProps[attr]) (idsByAttr[attr] ??= []).push(idOrProps[attr]);
@@ -129,18 +202,18 @@ export function callbackAttrs(
 /**
  * Returns an object with functions to modify (append) IDs onto an existing callback attribute
  */
-export function callbackAttrMods(...idOrProps: (RegisteredCallback<any> | Falsey)[]) {
+export function callbackAttrMods(
+	...idOrProps: ((() => [string, string]) | [string, string] | Falsey)[]
+) {
 	const idsByAttr: Record<string, string[]> = {};
 	const ret: Record<string, (prevIds: string | undefined) => string> = {};
 	for (const idOrProp of idOrProps) {
 		if (!idOrProp) continue;
-		if (idOrProp.attr) {
-			(idsByAttr[idOrProp.attr] ??= []).push(idOrProp());
-			ret[idOrProp.attr] ??= (prev: string | undefined) =>
-				prev
-					? [prev, ...idsByAttr[idOrProp.attr]!].join(' ')
-					: idsByAttr[idOrProp.attr]!.join(' ');
-		}
+
+		const [attr, value] = typeof idOrProp === 'function' ? idOrProp() : idOrProp;
+		(idsByAttr[attr] ??= []).push(value);
+		ret[attr] ??= (prev: string | undefined) =>
+			prev ? [prev, ...idsByAttr[attr]!].join(' ') : idsByAttr[attr]!.join(' ');
 	}
 	return ret;
 }
@@ -149,5 +222,5 @@ export function callbackAttrMods(...idOrProps: (RegisteredCallback<any> | Falsey
  * Returns a selector to find a given registered callback
  */
 export function callbackSelector(callback: RegisteredCallback<any>) {
-	return `[${callback.attr}~="${callback()}"]`;
+	return `[${callback.attr}~="${callback.id}"]`;
 }

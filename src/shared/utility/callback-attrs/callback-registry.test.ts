@@ -2,7 +2,17 @@ import {
 	callbackAttrMods,
 	callbackAttrs,
 	createCallbackRegistry,
+	isRegisteredCallback,
 } from '~/shared/utility/callback-attrs/callback-registry';
+
+/**
+ * Helper to apply callback attributes to an element
+ */
+function applyCallbackAttrs(element: HTMLElement, props: Record<string, string>): void {
+	Object.entries(props).forEach(([attr, value]) => {
+		element.setAttribute(attr, value);
+	});
+}
 
 describe('createCallbackRegistry', () => {
 	it('should create and register a callback', () => {
@@ -10,28 +20,140 @@ describe('createCallbackRegistry', () => {
 		const callback = vi.fn();
 		const testCallback = registry.create('testCallback', callback);
 
-		const retrievedCallback = registry.get(testCallback());
+		testCallback();
+		const retrievedCallback = registry.get(testCallback.id);
 		expect(retrievedCallback).toBeDefined();
 	});
 
-	it('should allow callbaack to be unregistered with .rm', () => {
+	it('should allow callback to be unregistered with .rm()', () => {
 		const registry = createCallbackRegistry('data-test');
 		const callback = vi.fn();
 		const testCallback = registry.create('testCallback', callback);
 
-		const callbackId = testCallback();
+		testCallback();
 		testCallback.rm();
-		const retrievedCallback = registry.get(callbackId);
+		const retrievedCallback = registry.get(testCallback.id);
 		expect(retrievedCallback).not.toBeDefined();
 	});
 
-	it('should allow callback to invoked via .do', () => {
+	it('should allow callback to be invoked via .do()', () => {
 		const registry = createCallbackRegistry('data-test');
 		const callback = vi.fn();
 		const testCallback = registry.create('testCallback', callback);
 
-		testCallback.do();
+		const element = document.createElement('div');
+		testCallback.do.call(element);
 		expect(callback).toHaveBeenCalled();
+	});
+
+	describe('.iter', () => {
+		it('should  iterate over callbacks', () => {
+			const registry = createCallbackRegistry('data-test');
+			const callback1 = vi.fn();
+			const testCallback1 = registry.create('testCallback1', callback1);
+			const callback2 = vi.fn();
+			const testCallback2 = registry.create('testCallback2', callback2);
+
+			const element = document.createElement('div');
+
+			// Use callbackAttrs to generate the attributes and apply them to the element
+			const props = callbackAttrs(testCallback1, testCallback2);
+			applyCallbackAttrs(element, props);
+
+			// Get the callback from the iterator
+			const iterCallbacks = Array.from(registry.iter(element));
+			expect(iterCallbacks.length).toBe(2);
+
+			// Call the callback and check that 'this' is bound to the element
+			iterCallbacks[0]?.();
+			expect(callback1).toHaveBeenCalledWith();
+			expect(callback1.mock.instances[0]).toBe(element);
+			iterCallbacks[1]?.();
+			expect(callback2).toHaveBeenCalledWith();
+			expect(callback2.mock.instances[0]).toBe(element);
+		});
+
+		it('should  handle callbacks with arguments', () => {
+			const registry = createCallbackRegistry('data-test');
+			const callback = vi.fn();
+			const testCallback = registry.create('testCallback', callback);
+
+			testCallback.add();
+
+			const element = document.createElement('div');
+
+			// Use callbackAttrs to generate the attributes and apply them to the element
+			const props = callbackAttrs(testCallback('arg1', 'arg2'), testCallback());
+			applyCallbackAttrs(element, props);
+
+			const iterCallbacks = Array.from(registry.iter(element));
+			expect(iterCallbacks.length).toBe(2);
+
+			iterCallbacks[0]?.();
+			expect(callback).toHaveBeenCalledWith('arg1', 'arg2');
+			expect(callback.mock.instances[0]).toBe(element);
+			iterCallbacks[1]?.();
+			expect(callback).toHaveBeenCalledWith();
+			expect(callback.mock.instances[1]).toBe(element);
+		});
+
+		it('should  memoize bound callbacks for better performance', () => {
+			const registry = createCallbackRegistry('data-test');
+			const callback = vi.fn();
+			const testCallback = registry.create('testCallback', callback);
+
+			const element = document.createElement('div');
+
+			// Use callbackAttrs to generate the attributes and apply them to the element
+			const props = callbackAttrs(testCallback('arg1', 'arg2'));
+			applyCallbackAttrs(element, props);
+
+			// First iteration
+			const firstIter = Array.from(registry.iter(element));
+			const boundFn1 = firstIter[0];
+
+			// Second iteration - should return the same bound function instance
+			const secondIter = Array.from(registry.iter(element));
+			const boundFn2 = secondIter[0];
+
+			expect(boundFn1).toBe(boundFn2);
+		});
+
+		it('should unmemoize if attributes change', () => {
+			const registry = createCallbackRegistry('data-test');
+			const callback = vi.fn();
+			const testCallback = registry.create('testCallback', callback);
+
+			const element = document.createElement('div');
+
+			// Use callbackAttrs to generate the initial attributes and apply them to the element
+			const props1 = callbackAttrs(testCallback('arg1', 'arg2'));
+			applyCallbackAttrs(element, props1);
+
+			// First iteration
+			const firstIter = Array.from(registry.iter(element));
+			const boundFn1 = firstIter[0];
+
+			// Change the props using callbackAttrs with different arguments
+			const props2 = callbackAttrs(testCallback('arg3', 'arg4'));
+			applyCallbackAttrs(element, props2);
+
+			// Second iteration - should return a new bound function instance
+			const secondIter = Array.from(registry.iter(element));
+			const boundFn2 = secondIter[0];
+
+			expect(boundFn1).not.toBe(boundFn2);
+
+			// Change back to original props
+			applyCallbackAttrs(element, props1);
+
+			// Third iteration - should not return the original bound function instance
+			// (so we don't leak memory)
+			const thirdIter = Array.from(registry.iter(element));
+			const boundFn3 = thirdIter[0];
+
+			expect(boundFn1).not.toBe(boundFn3);
+		});
 	});
 });
 
@@ -137,5 +259,37 @@ describe('callbackAttrMods', () => {
 		const result = modProps['data-test']!('existing');
 
 		expect(result).toBe('existing test-id');
+	});
+
+	it('should handle callbacks with args', () => {
+		const registry = createCallbackRegistry('data-test');
+		const callback = registry.create('test-id', () => {});
+
+		const modProps = callbackAttrMods(callback('arg1', 'arg2'), callback('arg3', 'arg4'));
+		const result = modProps['data-test']!('existing');
+
+		expect(result).toBe('existing test-id (arg1,arg2) test-id (arg3,arg4)');
+	});
+});
+
+describe('isRegisteredCallback', () => {
+	it('should identify registered callbacks', () => {
+		const registry = createCallbackRegistry('data-test');
+		const callback = registry.create('test-id', () => {});
+
+		expect(isRegisteredCallback(callback)).toBe(true);
+		expect(isRegisteredCallback(() => {})).toBe(false);
+		expect(isRegisteredCallback({})).toBe(false);
+		expect(isRegisteredCallback(null)).toBe(false);
+	});
+});
+
+describe('callbackSelector', () => {
+	it('should create a selector using the callback id property', () => {
+		const registry = createCallbackRegistry('data-test');
+		const callback = registry.create('test-id', () => {});
+
+		expect(callback.id).toBe('test-id');
+		expect(`[${callback.attr}~="${callback.id}"]`).toBe('[data-test~="test-id"]');
 	});
 });
