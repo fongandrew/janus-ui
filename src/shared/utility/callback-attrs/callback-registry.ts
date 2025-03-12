@@ -2,6 +2,7 @@
  * Utility code for a pattern where a special data attribute is used to specify a list of
  * JavaScript handlers to be called in some event
  */
+import { getDefaultLogger } from '~/shared/utility/logger';
 import { type Falsey } from '~/shared/utility/type-helpers';
 
 /**
@@ -25,8 +26,8 @@ export interface RegisteredCallback<
 	id: string;
 	/** Calls the callback */
 	do(this: TThis, ...args: [...TArgs, ...Parameters<TCallback>]): ReturnType<TCallback>;
-	/** Adds the callback to the registry */
-	add(): void;
+	/** Adds the callback to the registry, returns false if already exists */
+	add(): boolean;
 	/** Removes the callback from the registry */
 	rm(): void;
 }
@@ -105,9 +106,11 @@ export function createCallbackRegistry<TRegistryCallback extends (...args: any[]
 			attrStr.id = id;
 			attrStr.do = callback;
 			attrStr.add = () => {
-				registry[id] ??= function (this: any, ...args) {
+				if (registry[id]) return false;
+				registry[id] = function (this: any, ...args) {
 					return attrStr.do.apply(this, args as any);
 				} as TRegistryCallback;
+				return true;
 			};
 			attrStr.rm = () => delete registry[id];
 			return attrStr;
@@ -209,7 +212,9 @@ export function loadCallbacks(...mods: Record<string, any>[]) {
 	for (const mod of mods) {
 		for (const value of Object.values(mod)) {
 			if (isRegisteredCallback(value)) {
-				value.add();
+				if (value.add() === false) {
+					getDefaultLogger().warn(`Callback already exists: ${value.id}`);
+				}
 			}
 		}
 	}
