@@ -85,7 +85,7 @@ export const validateChildrenOnChange = createHandler(
  */
 export const validateTouchedChildrenOnChange = createHandler(
 	'change',
-	'validate__children-change',
+	'validate__touched-children-change',
 	(event) => {
 		for (const child of getValidatableElements(event.currentTarget)) {
 			if (touched(child as HTMLElement)) {
