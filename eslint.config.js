@@ -84,6 +84,12 @@ export default tseslint.config(
 
 			// General rules
 			'comma-dangle': ['error', 'always-multiline'],
+			'prefer-const': [
+				'error',
+				{
+					destructuring: 'all',
+				},
+			],
 
 			// Import rules
 			'import/no-cycle': ['error', { ignoreExternal: true }],
