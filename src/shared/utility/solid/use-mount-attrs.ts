@@ -1,6 +1,7 @@
 import { onMount } from 'solid-js';
 
-import { mounterProps, scheduleProcessRoot } from '~/shared/utility/callback-attrs/mount';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { scheduleProcessRoot } from '~/shared/utility/callback-attrs/mount';
 import { useWindow } from '~/shared/utility/solid/window-context';
 
 /**
@@ -8,11 +9,11 @@ import { useWindow } from '~/shared/utility/solid/window-context';
  * is useful for code we want to run both with and without a framework. Returns props to spread
  * on an element to mount the given handler.
  */
-export function useMountAttrs(...mounterIds: (string | (() => string))[]) {
+export function useMountAttrs(...mounterIds: Parameters<typeof callbackAttrs>) {
 	const window = useWindow();
 	onMount(() => {
 		if (!window) return;
 		scheduleProcessRoot(window);
 	});
-	return mounterProps(...mounterIds);
+	return callbackAttrs(...mounterIds);
 }

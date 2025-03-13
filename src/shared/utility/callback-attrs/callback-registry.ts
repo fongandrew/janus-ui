@@ -65,9 +65,12 @@ export function createCallbackRegistry<TRegistryCallback extends (...args: any[]
 		 * Iterate over all callbacks in the registry.
 		 *
 		 * @param elm - The element to use as the context for the callback.
-		 * @returns An iterable of all callbacks in the registry for this element
+		 * @returns An iterable of all callbacks in the registry for this element bound
+		 * to the element.
 		 */
-		*iter(elm: HTMLElement): Iterable<TRegistryCallback> {
+		*iter(
+			elm: HTMLElement,
+		): Iterable<(...params: Parameters<TRegistryCallback>) => ReturnType<TRegistryCallback>> {
 			const str = elm.getAttribute(attr);
 			if (!str) return;
 
