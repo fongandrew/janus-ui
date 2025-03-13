@@ -2,8 +2,8 @@ import cx from 'classix';
 import { ChevronsUpDown, X } from 'lucide-solid';
 import { type JSX, splitProps } from 'solid-js';
 
-import { selectClear } from '~/shared/callback-attrs/select';
 import { Button } from '~/shared/components/button';
+import { selectClear } from '~/shared/components/callbacks/select';
 import { Dropdown } from '~/shared/components/dropdown';
 import { FormElementResetProvider } from '~/shared/components/form-element-context';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';

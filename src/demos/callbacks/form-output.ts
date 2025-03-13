@@ -1,4 +1,4 @@
-import { createSubmitHandler } from '~/shared/callback-attrs/form';
+import { createSubmitHandler } from '~/shared/components/callbacks/form';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { evtDoc } from '~/shared/utility/multi-view';
 

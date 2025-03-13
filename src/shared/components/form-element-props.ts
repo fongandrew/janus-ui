@@ -1,4 +1,4 @@
-import '~/shared/callback-attrs/disabled';
+import '~/shared/components/callbacks/disabled';
 
 import { createMemo, type JSX, mergeProps, onCleanup } from 'solid-js';
 import { createUniqueId } from 'solid-js';
@@ -9,7 +9,7 @@ import {
 	EXTERNAL_ERROR_ATTR,
 	validateOnChange,
 	type Validator,
-} from '~/shared/callback-attrs/validation';
+} from '~/shared/components/callbacks/validation';
 import { useFormElementProps } from '~/shared/components/form-element-context';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 

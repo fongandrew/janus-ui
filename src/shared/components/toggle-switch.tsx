@@ -1,7 +1,7 @@
 import cx from 'classix';
 import { splitProps } from 'solid-js';
 
-import { toggleSwitchChange, toggleSwitchEnter } from '~/shared/callback-attrs/toggle-switch';
+import { toggleSwitchChange, toggleSwitchEnter } from '~/shared/components/callbacks/toggle-switch';
 import { handleClick } from '~/shared/components/checkbox';
 import {
 	type FormElementProps,

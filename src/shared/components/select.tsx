@@ -1,21 +1,21 @@
 import cx from 'classix';
 import { createUniqueId, type JSX, splitProps } from 'solid-js';
 
+import { Button } from '~/shared/components/button';
 import {
 	createListBoxValidator,
 	listBoxRequired,
 	type ListBoxValidator,
 	listBoxValues,
-} from '~/shared/callback-attrs/list-box';
-import { getList } from '~/shared/callback-attrs/option-list';
+} from '~/shared/components/callbacks/list-box';
+import { getList } from '~/shared/components/callbacks/option-list';
 import {
 	selectButtonKeyDown,
 	selectFocusOut,
 	selectMountText,
 	selectResetText,
 	selectUpdateText,
-} from '~/shared/callback-attrs/select';
-import { Button } from '~/shared/components/button';
+} from '~/shared/components/callbacks/select';
 import { type FormElementProps } from '~/shared/components/form-element-props';
 import { SelectContainer } from '~/shared/components/select-container';
 import { SelectOptionList } from '~/shared/components/select-option-list';

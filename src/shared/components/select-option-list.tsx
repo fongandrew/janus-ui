@@ -1,7 +1,7 @@
 import { createUniqueId, type JSX, mergeProps, splitProps } from 'solid-js';
 
-import { listBoxChange, listBoxReset } from '~/shared/callback-attrs/list-box';
-import { selectCloseOnClick } from '~/shared/callback-attrs/select';
+import { listBoxChange, listBoxReset } from '~/shared/components/callbacks/list-box';
+import { selectCloseOnClick } from '~/shared/components/callbacks/select';
 import { DropdownContent } from '~/shared/components/dropdown';
 import { ListBoxContext } from '~/shared/components/list-box';
 import { OptionList } from '~/shared/components/option-list';

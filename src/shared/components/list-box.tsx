@@ -10,8 +10,8 @@ import {
 	listBoxReset,
 	type ListBoxValidator,
 	listBoxValues,
-} from '~/shared/callback-attrs/list-box';
-import { isList } from '~/shared/callback-attrs/option-list';
+} from '~/shared/components/callbacks/list-box';
+import { isList } from '~/shared/components/callbacks/option-list';
 import {
 	type FormElementProps,
 	mergeFormElementProps,

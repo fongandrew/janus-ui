@@ -3,7 +3,7 @@ import { isServer } from 'solid-js/web';
 
 import { AsyncFormNames, asyncFormSubmit } from '~/demos/callbacks/async-form';
 import { formOutputClear } from '~/demos/callbacks/form-output';
-import { type TypedSubmitEvent } from '~/shared/callback-attrs/form';
+import { type TypedSubmitEvent } from '~/shared/components/callbacks/form';
 import {
 	Card,
 	CardContent,

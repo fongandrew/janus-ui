@@ -5,8 +5,8 @@ import {
 	createListBoxValidator,
 	type ListBoxValidator,
 	listBoxValues,
-} from '~/shared/callback-attrs/list-box';
-import { getList } from '~/shared/callback-attrs/option-list';
+} from '~/shared/components/callbacks/list-box';
+import { getList } from '~/shared/components/callbacks/option-list';
 import {
 	selectFocusOut,
 	selectHighlightOnInput,
@@ -15,7 +15,7 @@ import {
 	selectMountText,
 	selectUpdateText,
 	selectUpdateWithInput,
-} from '~/shared/callback-attrs/select';
+} from '~/shared/components/callbacks/select';
 import { createFormElementId } from '~/shared/components/form-element-context';
 import { Input, type InputProps } from '~/shared/components/input';
 import { SelectContainer } from '~/shared/components/select-container';

@@ -1,13 +1,13 @@
 import { createMemo, createUniqueId, type JSX, onCleanup, splitProps, useContext } from 'solid-js';
 
+import { DangerAlert } from '~/shared/components/alert';
 import {
 	createSubmitHandler,
 	formResetChildren,
 	formResetOnSuccess,
 	type SubmitHandler,
-} from '~/shared/callback-attrs/form';
-import { FORM_CONTROL_ERROR_ATTR, validateReset } from '~/shared/callback-attrs/validation';
-import { DangerAlert } from '~/shared/components/alert';
+} from '~/shared/components/callbacks/form';
+import { FORM_CONTROL_ERROR_ATTR, validateReset } from '~/shared/components/callbacks/validation';
 import { FormContext } from '~/shared/components/form-context';
 import { attrs } from '~/shared/utility/attribute-list';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';

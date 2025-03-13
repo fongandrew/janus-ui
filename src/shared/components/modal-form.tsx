@@ -1,12 +1,12 @@
 import { createMemo, createUniqueId, type JSX, Show, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 
+import { type ButtonProps } from '~/shared/components/button';
 import {
 	modalFormCloseOnSuccess,
 	modalFormMaybeShowSpeedBump,
 	modalFormResetOnClose,
-} from '~/shared/callback-attrs/modal-form';
-import { type ButtonProps } from '~/shared/components/button';
+} from '~/shared/components/callbacks/modal-form';
 import { Form, type FormProps } from '~/shared/components/form';
 import { SubmitButton } from '~/shared/components/form-buttons';
 import { ModalCloseButton, ModalContent } from '~/shared/components/modal';

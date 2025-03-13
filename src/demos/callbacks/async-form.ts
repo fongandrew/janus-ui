@@ -1,5 +1,5 @@
 import { formOutputWrite } from '~/demos/callbacks/form-output';
-import { createSubmitHandler } from '~/shared/callback-attrs/form';
+import { createSubmitHandler } from '~/shared/components/callbacks/form';
 
 export const AsyncFormNames = {
 	name: 'name',

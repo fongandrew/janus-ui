@@ -1,6 +1,10 @@
-import { VALID_SUBMIT_EVENT } from '~/shared/callback-attrs/form';
-import { closeModal, createRequestCloseCallback, openModal } from '~/shared/callback-attrs/modal';
-import { getValidatableElements, touched } from '~/shared/callback-attrs/validation';
+import { VALID_SUBMIT_EVENT } from '~/shared/components/callbacks/form';
+import {
+	closeModal,
+	createRequestCloseCallback,
+	openModal,
+} from '~/shared/components/callbacks/modal';
+import { getValidatableElements, touched } from '~/shared/components/callbacks/validation';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createAfterHideCallback } from '~/shared/utility/callback-attrs/visibility';
 import { elmDoc } from '~/shared/utility/multi-view';

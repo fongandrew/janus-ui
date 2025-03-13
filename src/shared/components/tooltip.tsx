@@ -8,7 +8,7 @@ import {
 	tooltipFocus,
 	tooltipMouseOut,
 	tooltipMouseOver,
-} from '~/shared/callback-attrs/tooltip';
+} from '~/shared/components/callbacks/tooltip';
 import { FormElementButtonPropsProvider } from '~/shared/components/form-element-context';
 import { attrs } from '~/shared/utility/attribute-list';
 import { callbackAttrMods } from '~/shared/utility/callback-attrs/callback-registry';

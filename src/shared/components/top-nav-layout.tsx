@@ -3,19 +3,19 @@ import { Menu, X } from 'lucide-solid';
 import { type JSX, useContext } from 'solid-js';
 
 import {
-	SIDEBAR_STATE_ATTR,
-	sidebarEscape,
-	sidebarFocusOut,
-	sidebarTriggerClose,
-	sidebarTriggerOpen,
-} from '~/shared/callback-attrs/sidebar';
-import { topNavScroll } from '~/shared/callback-attrs/top-nav';
-import {
 	type ButtonProps,
 	GhostButton,
 	GhostButtonLink,
 	IconButton,
 } from '~/shared/components/button';
+import {
+	SIDEBAR_STATE_ATTR,
+	sidebarEscape,
+	sidebarFocusOut,
+	sidebarTriggerClose,
+	sidebarTriggerOpen,
+} from '~/shared/components/callbacks/sidebar';
+import { topNavScroll } from '~/shared/components/callbacks/top-nav';
 import { TopNavContext } from '~/shared/components/top-nav-context';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { createAuto } from '~/shared/utility/solid/auto-prop';

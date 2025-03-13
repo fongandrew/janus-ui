@@ -1,6 +1,5 @@
 import { createUniqueId } from 'solid-js';
 
-import { toggle } from '~/shared/callback-attrs/toggle';
 import {
 	Callout,
 	DangerAlert,
@@ -9,6 +8,7 @@ import {
 	WarningAlert,
 } from '~/shared/components/alert';
 import { Button } from '~/shared/components/button';
+import { toggle } from '~/shared/components/callbacks/toggle';
 import { Card, CardContent, CardHeader, CardTitle } from '~/shared/components/card';
 import { ToggleBox } from '~/shared/components/toggle-box';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';

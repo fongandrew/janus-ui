@@ -3,8 +3,8 @@ import { isServer } from 'solid-js/web';
 
 import { asyncFormSubmit } from '~/demos/callbacks/async-form';
 import { formOutputWrite } from '~/demos/callbacks/form-output';
-import { type TypedSubmitEvent } from '~/shared/callback-attrs/form';
 import { Button } from '~/shared/components/button';
+import { type TypedSubmitEvent } from '~/shared/components/callbacks/form';
 import {
 	Card,
 	CardContent,

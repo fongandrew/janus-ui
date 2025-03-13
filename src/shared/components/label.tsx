@@ -1,7 +1,7 @@
 import cx from 'classix';
 import { children, type JSX } from 'solid-js';
 
-import { focusInputOnClick } from '~/shared/callback-attrs/label';
+import { focusInputOnClick } from '~/shared/components/callbacks/label';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { spanify } from '~/shared/utility/solid/spanify';
 

@@ -3,18 +3,18 @@ import { PanelLeftClose, PanelLeftOpen } from 'lucide-solid';
 import { createUniqueId, type JSX, splitProps, useContext } from 'solid-js';
 
 import {
-	SIDEBAR_STATE_ATTR,
-	sidebarEscape,
-	sidebarFocusOut,
-	sidebarTriggerClose,
-	sidebarTriggerOpen,
-} from '~/shared/callback-attrs/sidebar';
-import {
 	type ButtonProps,
 	GhostButton,
 	GhostButtonLink,
 	IconButton,
 } from '~/shared/components/button';
+import {
+	SIDEBAR_STATE_ATTR,
+	sidebarEscape,
+	sidebarFocusOut,
+	sidebarTriggerClose,
+	sidebarTriggerOpen,
+} from '~/shared/components/callbacks/sidebar';
 import { SidebarContext } from '~/shared/components/sidebar-context';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { createAuto } from '~/shared/utility/solid/auto-prop';

@@ -1,6 +1,6 @@
-import { listBoxValues } from '~/shared/callback-attrs/list-box';
-import { getList } from '~/shared/callback-attrs/option-list';
-import { createValidator } from '~/shared/callback-attrs/validation';
+import { listBoxValues } from '~/shared/components/callbacks/list-box';
+import { getList } from '~/shared/components/callbacks/option-list';
+import { createValidator } from '~/shared/components/callbacks/validation';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 
 export const listBoxUpdateText = createHandler(

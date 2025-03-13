@@ -1,4 +1,4 @@
-import { updateScrollState } from '~/shared/callback-attrs/scroll';
+import { updateScrollState } from '~/shared/components/callbacks/scroll';
 import { createCallbackRegistry } from '~/shared/utility/callback-attrs/callback-registry';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import {

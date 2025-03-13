@@ -3,12 +3,12 @@ import cx from 'classix';
 import { createContext, createMemo, type JSX, splitProps, useContext } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
+import { GhostButton } from '~/shared/components/button';
 import {
 	dropdownBeforeToggleOpen,
 	dropdownClose,
 	dropdownToggleClosed,
-} from '~/shared/callback-attrs/dropdown';
-import { GhostButton } from '~/shared/components/button';
+} from '~/shared/components/callbacks/dropdown';
 import {
 	FormElementButtonPropsProvider,
 	FormElementResetProvider,

@@ -1,9 +1,9 @@
-import { createResetCallback } from '~/shared/callback-attrs/form';
+import { createResetCallback } from '~/shared/components/callbacks/form';
 import {
 	getControllingElement,
 	listBoxValues,
 	syncActiveDescendant,
-} from '~/shared/callback-attrs/list-box';
+} from '~/shared/components/callbacks/list-box';
 import {
 	getClosestItem,
 	getList,
@@ -12,7 +12,7 @@ import {
 	highlightInList,
 	optionListKeyDown,
 	optionListMatchText,
-} from '~/shared/callback-attrs/option-list';
+} from '~/shared/components/callbacks/option-list';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createMounter } from '~/shared/utility/callback-attrs/mount';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';

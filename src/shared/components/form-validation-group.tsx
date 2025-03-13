@@ -3,7 +3,7 @@ import { type JSX } from 'solid-js';
 import {
 	validateChildrenOnChange,
 	validateTouchedChildrenOnChange,
-} from '~/shared/callback-attrs/validation';
+} from '~/shared/components/callbacks/validation';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
 /**

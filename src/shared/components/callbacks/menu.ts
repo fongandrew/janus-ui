@@ -6,7 +6,7 @@ import {
 	highlightInList,
 	optionListKeyDown,
 	optionListMatchText,
-} from '~/shared/callback-attrs/option-list';
+} from '~/shared/components/callbacks/option-list';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 
 /**

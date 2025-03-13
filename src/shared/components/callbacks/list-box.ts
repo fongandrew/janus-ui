@@ -1,4 +1,4 @@
-import { createResetCallback } from '~/shared/callback-attrs/form';
+import { createResetCallback } from '~/shared/components/callbacks/form';
 import {
 	getList,
 	getListHighlighted,
@@ -6,8 +6,8 @@ import {
 	highlightInList,
 	optionListKeyDown,
 	optionListMatchText,
-} from '~/shared/callback-attrs/option-list';
-import { createValidator } from '~/shared/callback-attrs/validation';
+} from '~/shared/components/callbacks/option-list';
+import { createValidator } from '~/shared/components/callbacks/validation';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { elmDoc } from '~/shared/utility/multi-view';
 import { t } from '~/shared/utility/text/t-tag';

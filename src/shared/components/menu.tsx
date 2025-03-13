@@ -1,15 +1,15 @@
 import { type JSX, splitProps } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
-import { dropdownCloseOnBlur } from '~/shared/callback-attrs/dropdown';
+import { dropdownCloseOnBlur } from '~/shared/components/callbacks/dropdown';
 import {
 	menuCloseOnSelect,
 	menuFocusOnOpen,
 	menuKeyDown,
 	menuTriggerClick,
 	menuTriggerKeyDown,
-} from '~/shared/callback-attrs/menu';
-import { getItemValue } from '~/shared/callback-attrs/option-list';
+} from '~/shared/components/callbacks/menu';
+import { getItemValue } from '~/shared/components/callbacks/option-list';
 import {
 	Dropdown,
 	DropdownContent,

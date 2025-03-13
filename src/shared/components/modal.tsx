@@ -2,6 +2,7 @@ import cx from 'classix';
 import { X } from 'lucide-solid';
 import { createEffect, createSignal, type JSX, onCleanup, Show, splitProps } from 'solid-js';
 
+import { Button, type ButtonProps, IconButton } from '~/shared/components/button';
 import {
 	closeModal,
 	MODAL_CONTENT_ATTR,
@@ -15,8 +16,7 @@ import {
 	modalTriggerOpen,
 	modalTriggerRequestClose,
 	openModal,
-} from '~/shared/callback-attrs/modal';
-import { Button, type ButtonProps, IconButton } from '~/shared/components/button';
+} from '~/shared/components/callbacks/modal';
 import { FormElementPropsProvider } from '~/shared/components/form-element-context';
 import { ModalContext } from '~/shared/components/modal-context';
 import { attrNoConflict } from '~/shared/utility/attribute';
