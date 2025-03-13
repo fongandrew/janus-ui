@@ -69,10 +69,15 @@ export function Select(props: SelectProps) {
 		local.onValidate?.(values, event),
 	);
 
+	const selectUpdateTextId = createUniqueId();
 	const mounterProps = useMountAttrs(selectMountText);
 
 	return (
-		<SelectContainer listId={listId} {...callbackAttrs(selectUpdateText)} {...mounterProps}>
+		<SelectContainer
+			listId={listId}
+			{...callbackAttrs(selectUpdateText(selectUpdateTextId))}
+			{...mounterProps}
+		>
 			<Button
 				{...buttonProps}
 				{...callbackAttrs(buttonProps, selectButtonKeyDown, selectFocusOut)}
@@ -85,7 +90,7 @@ export function Select(props: SelectProps) {
 				aria-multiselectable={props.multiple}
 				unstyled
 			>
-				<SelectText placeholder={local.placeholder} />
+				<SelectText id={selectUpdateTextId} placeholder={local.placeholder} />
 			</Button>
 			<SelectOptionList
 				listBoxId={listId}

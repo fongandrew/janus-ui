@@ -80,13 +80,14 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 	);
 
 	const id = createFormElementId(props);
+	const selectUpdateTextId = createUniqueId();
 	const mounterProps = useMountAttrs(selectMountText);
 
 	return (
 		<SelectContainer
 			listId={listId}
 			inputId={id()}
-			{...callbackAttrs(selectUpdateText, selectUpdateWithInput)}
+			{...callbackAttrs(selectUpdateText(selectUpdateTextId), selectUpdateWithInput)}
 			{...mounterProps}
 		>
 			<Input
@@ -112,7 +113,7 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 				unstyled
 			/>
 			<div id={descriptionId} class="c-select__input_description">
-				<SelectText placeholder={local.placeholder} />
+				<SelectText id={selectUpdateTextId} placeholder={local.placeholder} />
 			</div>
 			<SelectOptionList
 				listBoxId={listId}

@@ -1,6 +1,6 @@
-import { selectUpdateText } from '~/shared/callback-attrs/select';
-
 export interface SelectTextProps {
+	/** ID of the span for the update text */
+	id: string;
 	/** Placeholder text, if any */
 	placeholder?: string | undefined;
 }
@@ -11,7 +11,7 @@ export interface SelectTextProps {
 export function SelectText(props: SelectTextProps) {
 	return (
 		<>
-			<span {...{ [selectUpdateText.DESC_ATTR]: '' }} />
+			<span id={props.id} />
 			<span class="c-select__placeholder">{props.placeholder}</span>
 		</>
 	);

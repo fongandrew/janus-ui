@@ -16,6 +16,7 @@ import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createMounter } from '~/shared/utility/callback-attrs/mount';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { data } from '~/shared/utility/magic-strings';
+import { elmDoc } from '~/shared/utility/multi-view';
 import { t } from '~/shared/utility/text/t-tag';
 
 /** Keydown handler for select button */
@@ -187,13 +188,11 @@ export const selectMountText = createMounter('select__mount-text', (elm) => {
  * an element that gets the bubbled change event and contains the element to update.
  */
 export const selectUpdateText = Object.assign(
-	createHandler('change', 'select__update-text', (event) => {
-		const updateTarget = event.currentTarget.querySelector<HTMLElement>(
-			`[${selectUpdateText.DESC_ATTR}]`,
-		);
+	createHandler('change', 'select__update-text', (event, updateTargetId: string) => {
+		const target = event.target as HTMLElement;
+		const updateTarget = elmDoc(target)?.getElementById(updateTargetId);
 		if (!updateTarget) return;
 
-		const target = event.target as HTMLElement;
 		const listElm = getList(target);
 		if (!listElm) return;
 
