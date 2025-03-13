@@ -70,7 +70,7 @@ export function Select(props: SelectProps) {
 	);
 
 	const selectUpdateTextId = createUniqueId();
-	const mounterProps = useMountAttrs(selectMountText);
+	const mounterProps = useMountAttrs(selectMountText(selectUpdateTextId));
 
 	return (
 		<SelectContainer

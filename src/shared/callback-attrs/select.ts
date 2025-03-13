@@ -164,36 +164,13 @@ export const selectHighlightOnInput = createHandler('input', 'select__focus-on-i
  * Mounter to populate descriptive text for select button or input based on selected
  * elements in list box.
  */
-export const selectMountText = createMounter('select__mount-text', (elm) => {
-	const updateTarget = elm.querySelector<HTMLElement>(`[${selectUpdateText.DESC_ATTR}]`);
-	if (!updateTarget) return;
-
-	const listElm = getList(elm.querySelector('[role="combobox') ?? elm);
-	if (!listElm) return;
-
-	const values = listBoxValues(listElm);
-	if (values.size === 0) {
-		updateTarget.textContent = '';
-	} else if (values.size > 1) {
-		updateTarget.textContent = t`${values.size} selected`;
-	} else {
-		const checked = listElm.querySelector<HTMLInputElement>(':checked');
-		updateTarget.textContent = checked?.closest('label')?.textContent ?? '';
-	}
-});
-
-/**
- * Change handler that updates content of a select box with text from the selected
- * values (or summary text if multiple values are selected). Should be attached to
- * an element that gets the bubbled change event and contains the element to update.
- */
-export const selectUpdateText = Object.assign(
-	createHandler('change', 'select__update-text', (event, updateTargetId: string) => {
-		const target = event.target as HTMLElement;
-		const updateTarget = elmDoc(target)?.getElementById(updateTargetId);
+export const selectMountText = createMounter<[string]>(
+	'select__mount-text',
+	(elm, updateTargetId: string) => {
+		const updateTarget = elmDoc(elm)?.getElementById(updateTargetId);
 		if (!updateTarget) return;
 
-		const listElm = getList(target);
+		const listElm = getList(elm.querySelector<HTMLElement>('[role="combobox"]') ?? elm);
 		if (!listElm) return;
 
 		const values = listBoxValues(listElm);
@@ -205,10 +182,19 @@ export const selectUpdateText = Object.assign(
 			const checked = listElm.querySelector<HTMLInputElement>(':checked');
 			updateTarget.textContent = checked?.closest('label')?.textContent ?? '';
 		}
-	}),
-	{
-		/** Data attribute to assign to element to update with change text */
-		DESC_ATTR: data('select__text'),
+	},
+);
+
+/**
+ * Change handler that updates content of a select box with text from the selected
+ * values (or summary text if multiple values are selected). Should be attached to
+ * an element that gets the bubbled change event and contains the element to update.
+ */
+export const selectUpdateText = createHandler(
+	'change',
+	'select__update-text',
+	(event, updateTargetId: string) => {
+		selectMountText.do.call(event.currentTarget, event.currentTarget, updateTargetId);
 	},
 );
 

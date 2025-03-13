@@ -81,7 +81,7 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 
 	const id = createFormElementId(props);
 	const selectUpdateTextId = createUniqueId();
-	const mounterProps = useMountAttrs(selectMountText);
+	const mounterProps = useMountAttrs(selectMountText(selectUpdateTextId));
 
 	return (
 		<SelectContainer
