@@ -15,17 +15,17 @@ const CALLBACK_REGEX = /([^\s(]+)(?:\s+\(([^)]*)\))?/g;
 
 export interface RegisteredCallback<
 	TCallback extends (this: TThis, ...args: any[]) => any,
-	TArgs extends string[] = [],
+	TExtra extends string[] = [],
 	TThis extends HTMLElement = HTMLElement,
 > {
-	/** Return object mapping attribute to ID / args tuple */
-	(...args: TArgs): [string, string];
+	/** Return object mapping attribute to ID / extra args tuple */
+	(...args: TExtra): [string, string];
 	/** The attribute this ID should be assigned to */
 	attr: string;
 	/** The raw ID string */
 	id: string;
 	/** Calls the callback */
-	do(this: TThis, ...args: [...TArgs, ...Parameters<TCallback>]): ReturnType<TCallback>;
+	do(this: TThis, ...args: [...Parameters<TCallback>, ...TExtra]): ReturnType<TCallback>;
 	/** Adds the callback to the registry, returns false if already exists */
 	add(): boolean;
 	/** Removes the callback from the registry */
@@ -67,15 +67,16 @@ export function createCallbackRegistry<TRegistryCallback extends (...args: any[]
 			if (!str) return;
 
 			for (const match of str.matchAll(CALLBACK_REGEX)) {
-				const [_completeMatch, callbackName, argsString] = match;
+				const [_completeMatch, callbackName, extraArgsString] = match;
 				if (!callbackName) continue;
 
 				const callback = registry[callbackName];
 				if (!callback) continue;
 
-				if (argsString) {
-					const args = argsString.split(',');
-					yield callback.bind(elm, ...args) as TRegistryCallback;
+				if (extraArgsString) {
+					const extraArgs = extraArgsString.split(',');
+					yield ((...args: any) =>
+						callback.call(elm, ...args, ...extraArgs)) as TRegistryCallback;
 					continue;
 				}
 
@@ -90,14 +91,14 @@ export function createCallbackRegistry<TRegistryCallback extends (...args: any[]
 		 * @param callback - The callback function to register.
 		 * @returns A function that registers the callback and returns the ID.
 		 */
-		create<TArgs extends string[] = [], TThis extends HTMLElement = HTMLElement>(
+		create<TExtra extends string[], TThis extends HTMLElement = HTMLElement>(
 			id: string,
 			callback: (
 				this: TThis,
-				...args: [...TArgs, ...Parameters<TRegistryCallback>]
+				...args: [...Parameters<TRegistryCallback>, ...TExtra]
 			) => ReturnType<TRegistryCallback>,
-		): RegisteredCallback<TRegistryCallback, TArgs> {
-			function attrStr(...args: TArgs): [string, string] {
+		): RegisteredCallback<TRegistryCallback, TExtra> {
+			function attrStr(...args: TExtra): [string, string] {
 				attrStr.add();
 				if (args.length) return [attr, `${id} (${args.join(',')})`];
 				return [attr, id];

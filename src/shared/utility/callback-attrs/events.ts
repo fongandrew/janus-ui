@@ -149,13 +149,17 @@ function getRegistry<T extends DelegatableEvent>(
  * Create a function that will lazily register the handler with registry and returns
  * the given ID.
  */
-export function createHandler<T extends DelegatableEvent>(
-	eventType: T,
+export function createHandler<TEventType extends DelegatableEvent, TExtra extends string[]>(
+	eventType: TEventType,
 	handlerId: string,
 	handler: (
 		this: HTMLElement,
-		event: DelegatableEventMap[T] & { currentTarget: HTMLElement },
+		event: DelegatableEventMap[TEventType] & { currentTarget: HTMLElement },
+		...extraArgs: TExtra
 	) => void,
 ) {
-	return getRegistry(eventType).create(handlerId, handler as (e: Event) => void);
+	return getRegistry(eventType).create<TExtra>(
+		handlerId,
+		handler as (e: Event, ...extra: TExtra) => void,
+	);
 }

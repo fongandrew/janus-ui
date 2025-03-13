@@ -47,7 +47,7 @@ describe('createCallbackRegistry', () => {
 	});
 
 	describe('.iter', () => {
-		it('should  iterate over callbacks', () => {
+		it('should iterate over callbacks', () => {
 			const registry = createCallbackRegistry('data-test');
 			const callback1 = vi.fn();
 			const testCallback1 = registry.create('testCallback1', callback1);
@@ -73,7 +73,7 @@ describe('createCallbackRegistry', () => {
 			expect(callback2.mock.instances[0]).toBe(element);
 		});
 
-		it('should  handle callbacks with arguments', () => {
+		it('should handle callbacks with extra arguments', () => {
 			const registry = createCallbackRegistry('data-test');
 			const callback = vi.fn();
 			const testCallback = registry.create('testCallback', callback);
@@ -89,11 +89,11 @@ describe('createCallbackRegistry', () => {
 			const iterCallbacks = Array.from(registry.iter(element));
 			expect(iterCallbacks.length).toBe(2);
 
-			iterCallbacks[0]?.();
-			expect(callback).toHaveBeenCalledWith('arg1', 'arg2');
+			iterCallbacks[0]?.('given-arg1', 'given-arg2');
+			expect(callback).toHaveBeenCalledWith('given-arg1', 'given-arg2', 'arg1', 'arg2');
 			expect(callback.mock.instances[0]).toBe(element);
-			iterCallbacks[1]?.();
-			expect(callback).toHaveBeenCalledWith();
+			iterCallbacks[1]?.('given-arg');
+			expect(callback).toHaveBeenCalledWith('given-arg');
 			expect(callback.mock.instances[1]).toBe(element);
 		});
 	});

@@ -48,15 +48,16 @@ const validationRegistry = createCallbackRegistry<Validator<any>>(VALIDATE_ATTR)
 
 // Replace the existing registry functions with the ones from the callback registry
 export const createValidator = validationRegistry.create as <
-	T extends HTMLElement = HTMLElement,
-	TArgs extends string[] = [],
+	TExtra extends string[],
+	TElement extends HTMLElement = HTMLElement,
 >(
 	name: string,
 	validator: (
-		this: T,
-		...args: [...TArgs, event: Event & { currentTarget: T }]
+		this: TElement,
+		event: Event & { currentTarget: TElement },
+		...extra: TExtra
 	) => string | undefined | null,
-) => RegisteredCallback<Validator<T>, TArgs, T>;
+) => RegisteredCallback<Validator<TElement>, TExtra, TElement>;
 
 /**
  * Run any validators associated with this element on change

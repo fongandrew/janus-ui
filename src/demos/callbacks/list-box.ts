@@ -11,9 +11,9 @@ export const listBoxNoRed = createValidator('list-box__no-red', (event) => {
 	}
 });
 
-export const listBoxMinMax = createValidator<HTMLElement, [string, string]>(
+export const listBoxMinMax = createValidator(
 	'list-box__min-max',
-	(minStr: string, maxStr: string, event) => {
+	(event, minStr: string, maxStr: string) => {
 		const target = event.currentTarget;
 		const list = getList(target);
 		if (!list) return;
