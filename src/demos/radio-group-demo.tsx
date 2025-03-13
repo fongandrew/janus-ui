@@ -1,5 +1,7 @@
-import { createSignal } from 'solid-js';
+import { createSignal, createUniqueId } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
+import { formChangeOutputWrite } from '~/demos/callbacks/form-output';
 import {
 	Card,
 	CardContent,
@@ -11,9 +13,11 @@ import { Label } from '~/shared/components/label';
 import { LabelledInput } from '~/shared/components/labelled-control';
 import { Radio } from '~/shared/components/radio';
 import { RadioGroup } from '~/shared/components/radio-group';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
 function RadioGroupDemo() {
 	const [value, setValue] = createSignal('checked');
+	const outputId = createUniqueId();
 
 	return (
 		<Card>
@@ -23,8 +27,15 @@ function RadioGroupDemo() {
 			</CardHeader>
 			<CardContent>
 				<div class="o-stack">
-					<strong>Selected: {value()}</strong>
-					<RadioGroup name="demo1" value={value()} onValue={setValue}>
+					<output id={outputId} class="t-text-weight-strong">
+						Selected: {value()}
+					</output>
+					<RadioGroup
+						name="demo1"
+						value={value()}
+						onValue={setValue}
+						{...callbackAttrs(isServer && formChangeOutputWrite(outputId))}
+					>
 						<Label>
 							<Radio value="default" /> Default radio
 						</Label>

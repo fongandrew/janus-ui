@@ -49,3 +49,17 @@ export const formOutputClear = createHandler('click', 'form-output__clear', (eve
 		nextSibling.remove();
 	}
 });
+
+/** Update output text when form element changes */
+export const formChangeOutputWrite = createHandler(
+	'change',
+	'form-output__change-write',
+	(event, writeTargetId: string) => {
+		const inputElm = event.target as HTMLElement;
+		if (!inputElm || !(inputElm instanceof HTMLInputElement)) return;
+
+		const writeTarget = inputElm.ownerDocument?.getElementById(writeTargetId);
+		if (!writeTarget) return;
+		writeTarget.textContent = `Selected: ${inputElm.value}`;
+	},
+);
