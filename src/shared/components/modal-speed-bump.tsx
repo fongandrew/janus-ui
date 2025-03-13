@@ -12,6 +12,8 @@ import { ModalContext } from '~/shared/components/modal-context';
 import { T } from '~/shared/utility/text/t-components';
 
 export interface ModalSpeedBumpProps extends Omit<DialogProps, 'children'> {
+	/** ID required for speed bump targeting to work */
+	id: string;
 	/** Title for the speed bump dialog */
 	title?: string;
 	/** Text for the cancel button */

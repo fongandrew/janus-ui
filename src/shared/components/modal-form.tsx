@@ -1,4 +1,4 @@
-import { type JSX, Show, splitProps } from 'solid-js';
+import { createMemo, createUniqueId, type JSX, Show, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 
 import {
@@ -28,7 +28,7 @@ export interface ModalFormContentProps<TNames extends string> extends FormProps<
 	/**
 	 * Extra props to pass to modal speed bump (if any)
 	 */
-	speedBumpProps?: ModalSpeedBumpProps | undefined;
+	speedBumpProps?: Partial<ModalSpeedBumpProps> | undefined;
 }
 
 /**
@@ -45,11 +45,13 @@ export function ModalFormContent<TNames extends string>(props: ModalFormContentP
 	const closeOnSubmit = () => local.closeOnSubmit ?? true;
 	const resetOnClose = () => local.resetOnClose ?? true;
 
+	const speedBumpId = createMemo(() => props.speedBumpProps?.id ?? createUniqueId());
+
 	return (
 		<>
 			<ModalContent
 				{...modalProps}
-				{...callbackAttrs(modalProps, modalFormMaybeShowSpeedBump)}
+				{...callbackAttrs(modalProps, modalFormMaybeShowSpeedBump(speedBumpId()))}
 			>
 				<Form
 					{...formProps}
@@ -68,8 +70,8 @@ export function ModalFormContent<TNames extends string>(props: ModalFormContentP
 						(props.renderSpeedBump as typeof ModalSpeedBump | undefined) ??
 						ModalSpeedBump
 					}
-					{...{ [modalFormMaybeShowSpeedBump.SPEED_BUMP_ATTR]: '' }}
 					{...props.speedBumpProps}
+					id={speedBumpId()}
 				/>
 			</Show>
 		</>

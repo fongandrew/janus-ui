@@ -3,7 +3,7 @@ import { closeModal, createRequestCloseCallback, openModal } from '~/shared/call
 import { getValidatableElements, touched } from '~/shared/callback-attrs/validation';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createAfterHideCallback } from '~/shared/utility/callback-attrs/visibility';
-import { data } from '~/shared/utility/magic-strings';
+import { elmDoc } from '~/shared/utility/multi-view';
 
 export const modalFormCloseOnSuccess = createHandler(
 	VALID_SUBMIT_EVENT,
@@ -23,14 +23,13 @@ export const modalFormResetOnClose = createAfterHideCallback(
 	},
 );
 
-export const modalFormMaybeShowSpeedBump = Object.assign(
-	createRequestCloseCallback('modal-form__maybe_show_speed_bump', (e) => {
+export const modalFormMaybeShowSpeedBump = createRequestCloseCallback<[string]>(
+	'modal-form__maybe_show_speed_bump',
+	(e, speedBumpId) => {
 		const dialog = e.currentTarget.closest(':modal') as HTMLDialogElement | null;
 		if (!dialog) return;
 
-		const speedBump = dialog.querySelector<HTMLDialogElement>(
-			`[${modalFormMaybeShowSpeedBump.SPEED_BUMP_ATTR}]`,
-		);
+		const speedBump = elmDoc(dialog)?.getElementById(speedBumpId) as HTMLDialogElement | null;
 		if (!speedBump) return;
 
 		for (const element of getValidatableElements(dialog)) {
@@ -39,8 +38,5 @@ export const modalFormMaybeShowSpeedBump = Object.assign(
 				return false;
 			}
 		}
-	}),
-	{
-		SPEED_BUMP_ATTR: data('modal-form__speed_bump'),
 	},
 );
