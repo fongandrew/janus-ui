@@ -6,6 +6,7 @@ import {
 	createListBoxValidator,
 	listBoxChange,
 	listBoxKeyDown,
+	listBoxRequired,
 	listBoxReset,
 	type ListBoxValidator,
 	listBoxValues,
@@ -65,7 +66,7 @@ export function ListBox(props: ListBoxProps) {
 		local.onValues?.(values, event);
 	};
 
-	// // Add values to validator
+	// Add values to validator
 	const handleValidate = createListBoxValidator((values, event) =>
 		local.onValidate?.(values, event),
 	);
@@ -79,7 +80,13 @@ export function ListBox(props: ListBoxProps) {
 		<ListBoxContext.Provider value={context}>
 			<OptionList
 				{...optionListProps}
-				{...callbackAttrs(optionListProps, listBoxChange, listBoxKeyDown, listBoxReset)}
+				{...callbackAttrs(
+					optionListProps,
+					listBoxChange,
+					(props.required || props['aria-required']) && listBoxRequired,
+					listBoxKeyDown,
+					listBoxReset,
+				)}
 				role="listbox"
 				class={cx('c-list-box', rest.class)}
 				tabIndex={0}

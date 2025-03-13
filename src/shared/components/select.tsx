@@ -3,6 +3,7 @@ import { createUniqueId, type JSX, splitProps } from 'solid-js';
 
 import {
 	createListBoxValidator,
+	listBoxRequired,
 	type ListBoxValidator,
 	listBoxValues,
 } from '~/shared/callback-attrs/list-box';
@@ -83,7 +84,12 @@ export function Select(props: SelectProps) {
 		>
 			<Button
 				{...buttonProps}
-				{...callbackAttrs(buttonProps, selectButtonKeyDown, selectFocusOut)}
+				{...callbackAttrs(
+					buttonProps,
+					selectButtonKeyDown,
+					selectFocusOut,
+					(props.required || props['aria-required']) && listBoxRequired,
+				)}
 				{...extendHandler(buttonProps, 'onChange', handleChange)}
 				role="combobox"
 				class={cx('c-select__button', props.class)}

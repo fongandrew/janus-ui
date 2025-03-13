@@ -7,8 +7,10 @@ import {
 	optionListKeyDown,
 	optionListMatchText,
 } from '~/shared/callback-attrs/option-list';
+import { createValidator } from '~/shared/callback-attrs/validation';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { elmDoc } from '~/shared/utility/multi-view';
+import { t } from '~/shared/utility/text/t-tag';
 
 /** Custom validator for ListBox-like things -- returns error or nothing if fine */
 export type ListBoxValidator = (values: Set<string>, event: Event) => string | undefined | null;
@@ -46,6 +48,18 @@ export const listBoxChange = createHandler('change', 'list-box__change', (event)
 	const dispatcher = getControllingElement(listElm);
 	dispatcher.setAttribute('aria-activedescendant', target.id);
 	dispatcher.dispatchEvent(new Event('change', { bubbles: true }));
+});
+
+/**
+ * Custom validator to handle "required" behavior for list boxes
+ */
+export const listBoxRequired = createValidator('list-box__required', function () {
+	const listElm = getList(this);
+	if (!listElm) return;
+
+	if (listBoxValues(listElm).size === 0) {
+		return t`Please fill out this field.`;
+	}
 });
 
 /**
@@ -114,7 +128,7 @@ export function getControllingElement(listElm: HTMLElement) {
  */
 export function createListBoxValidator(onValidate: ListBoxValidator) {
 	return (event: Event) => {
-		const listElm = getList(event.target as HTMLElement);
+		const listElm = getList(event.currentTarget as HTMLElement);
 		if (!listElm) return;
 		return onValidate(listBoxValues(listElm), event);
 	};

@@ -152,7 +152,7 @@ function FormModal(props: { outputId: string }) {
 							<Input name={FormNames.email} type="email" required />
 						</LabelledInput>
 						<LabelledInput label="How did you hear about us?">
-							<Select placeholder="Select an option">
+							<Select placeholder="Select an option" required>
 								<ListBoxItem value="friend">Friends & family</ListBoxItem>
 								<ListBoxItem value="aliens">Space aliens</ListBoxItem>
 								<ListBoxItem value="ads">Advertising</ListBoxItem>
