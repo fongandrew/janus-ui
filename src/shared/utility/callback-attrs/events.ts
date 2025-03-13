@@ -11,8 +11,6 @@ import {
 	isPropagationStopped,
 	wrapStopPropagation,
 } from '~/shared/utility/event-propagation';
-import { isDev } from '~/shared/utility/is-dev';
-import { getDefaultLogger } from '~/shared/utility/logger';
 import { data } from '~/shared/utility/magic-strings';
 
 /** Data attribute used to identify delegated event handlers */
@@ -108,19 +106,6 @@ function eventHandler(event: Event) {
 		for (const handler of registry.iter(node as HTMLElement)) {
 			if (isImmediatePropagationStopped(event)) return;
 			handler(event as Event & { currentTarget: HTMLElement });
-		}
-
-		if (isDev()) {
-			Object.defineProperty(event, 'currentTarget', {
-				configurable: true,
-				get: () => {
-					// Because we change the currentTarget with event delegation,
-					// async checks to the current target may result in unexpected
-					// targets.
-					getDefaultLogger().warn('Possible async currentTarget check');
-					return null;
-				},
-			});
 		}
 	}
 }
