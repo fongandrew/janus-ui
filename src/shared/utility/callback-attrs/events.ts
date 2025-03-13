@@ -149,7 +149,10 @@ function getRegistry<T extends DelegatableEvent>(
  * Create a function that will lazily register the handler with registry and returns
  * the given ID.
  */
-export function createHandler<TEventType extends DelegatableEvent, TExtra extends string[]>(
+export function createHandler<
+	TEventType extends DelegatableEvent,
+	TExtra extends (string | undefined)[],
+>(
 	eventType: TEventType,
 	handlerId: string,
 	handler: (

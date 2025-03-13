@@ -15,7 +15,12 @@ const CALLBACK_REGEX = /([^\s(]+)(?:\s+\(([^)]*)\))?/g;
 
 export interface RegisteredCallback<
 	TCallback extends (this: TThis, ...args: any[]) => any,
-	TExtra extends string[] = [],
+	/**
+	 * Extra args that can be passed to the callback -- type is not quite right since
+	 * undefined args will be passed back as empty strings when parsing attributes
+	 * but we do this because it makes typing optional args easier.
+	 */
+	TExtra extends (string | undefined)[] = [],
 	TThis extends HTMLElement = HTMLElement,
 > {
 	/** Return object mapping attribute to ID / extra args tuple */
@@ -91,7 +96,7 @@ export function createCallbackRegistry<TRegistryCallback extends (...args: any[]
 		 * @param callback - The callback function to register.
 		 * @returns A function that registers the callback and returns the ID.
 		 */
-		create<TExtra extends string[], TThis extends HTMLElement = HTMLElement>(
+		create<TExtra extends (string | undefined)[], TThis extends HTMLElement = HTMLElement>(
 			id: string,
 			callback: (
 				this: TThis,

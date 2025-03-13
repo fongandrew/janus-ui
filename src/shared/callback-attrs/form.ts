@@ -35,9 +35,10 @@ export type TypedSubmitEvent<TNames> = SubmitEvent & {
 };
 
 /** Submit handler returning null or defined is deemed `{ ok: true }` */
-export type SubmitHandler<TNames> = (
+export type SubmitHandler<TNames, TExtra extends (string | undefined)[]> = (
 	this: HTMLFormElement,
 	event: TypedSubmitEvent<TNames>,
+	...extra: TExtra
 ) =>
 	| Promise<FormSubmitResponse | null | undefined | void>
 	| FormSubmitResponse
@@ -84,13 +85,13 @@ export const formResetOnSuccess = createHandler(
 	},
 );
 
-export function createSubmitHandler<TNames>(
+export function createSubmitHandler<TNames, TExtra extends (string | undefined)[]>(
 	handlerName: string,
-	onSubmit: SubmitHandler<TNames>,
+	onSubmit: SubmitHandler<TNames, TExtra>,
 	names: Record<string, TNames>,
 ) {
 	return Object.assign(
-		createHandler('submit', handlerName, async function (event) {
+		createHandler('submit', handlerName, async function (event, ...extra: TExtra) {
 			event.preventDefault();
 
 			const form = event.target as HTMLFormElement;
@@ -115,7 +116,7 @@ export function createSubmitHandler<TNames>(
 				const eventWithData = Object.assign(event, {
 					data: new FormData(form) as TypedFormData<TNames>,
 				}) as TypedSubmitEvent<TNames>;
-				const response = await onSubmit.call(form, eventWithData);
+				const response = await onSubmit.call(form, eventWithData, ...extra);
 				if (response?.ok === false) {
 					if (response.fieldErrors) {
 						setErrorsByName(form, response.fieldErrors);

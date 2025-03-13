@@ -10,7 +10,7 @@ export const AsyncFormNames = {
 /** Delayed submit, error if shouldError set */
 export const asyncFormSubmit = createSubmitHandler(
 	'async-form-ssr__submit',
-	async function (event) {
+	async function (event, targetId?: string) {
 		await new Promise((resolve) => setTimeout(resolve, 3000));
 
 		if (event.data.get(AsyncFormNames.shouldError)) {
@@ -26,7 +26,7 @@ export const asyncFormSubmit = createSubmitHandler(
 			};
 		}
 
-		formOutputWrite.do.call(this, event);
+		formOutputWrite.do.call(this, event, targetId);
 		return {
 			ok: true,
 		};

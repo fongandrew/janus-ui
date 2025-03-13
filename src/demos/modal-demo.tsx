@@ -143,8 +143,7 @@ function FormModal(props: { outputId: string }) {
 					<ModalFormContent
 						names={FormNames}
 						onSubmit={handleSubmit}
-						{...callbackAttrs(isServer && formOutputWrite)}
-						{...{ [formOutputWrite.TARGET_ATTR]: props.outputId }}
+						{...callbackAttrs(isServer && formOutputWrite(props.outputId))}
 					>
 						<LabelledInput label="Name">
 							<Input name={FormNames.name} required />
@@ -222,8 +221,7 @@ function ScrollableForm(props: { outputId: string }) {
 				<FormContextProvider>
 					<ModalFormContent
 						names={FormNames}
-						{...callbackAttrs(formOutputWrite)}
-						{...{ [formOutputWrite.TARGET_ATTR]: props.outputId }}
+						{...callbackAttrs(formOutputWrite(props.outputId))}
 					>
 						<LabelledInput label="First">
 							<Input name={FormNames.field1} required />
@@ -264,8 +262,7 @@ function AsyncForm(props: { outputId: string }) {
 				<FormContextProvider>
 					<ModalFormContent
 						names={FormNames}
-						{...callbackAttrs(asyncFormSubmit)}
-						{...{ [formOutputWrite.TARGET_ATTR]: props.outputId }}
+						{...callbackAttrs(asyncFormSubmit(props.outputId))}
 					>
 						<LabelledInput label="Name">
 							<Input name={FormNames.name} />
