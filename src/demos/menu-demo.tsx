@@ -1,5 +1,7 @@
-import { createSignal } from 'solid-js';
+import { createSignal, createUniqueId } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
+import { menuUpdateText } from '~/demos/callbacks/menu';
 import { Button } from '~/shared/components/button';
 import {
 	Card,
@@ -9,9 +11,12 @@ import {
 	CardTitle,
 } from '~/shared/components/card';
 import { Menu, MenuGroup, MenuItem, MenuItemLink, MenuTrigger } from '~/shared/components/menu';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
 function MenuDemo() {
 	const [selection, setSelection] = createSignal<string | null>(null);
+	const outputId = createUniqueId();
+
 	return (
 		<Card>
 			<CardHeader>
@@ -20,11 +25,14 @@ function MenuDemo() {
 			</CardHeader>
 			<CardContent>
 				<div class="o-stack">
-					<output>Selected: {selection() ?? 'None'}</output>
+					<output id={outputId}>Selected: {selection() ?? 'None'}</output>
 					<div class="o-group">
 						<MenuTrigger>
 							<Button>Simple Menu</Button>
-							<Menu onValue={setSelection}>
+							<Menu
+								onValue={setSelection}
+								{...callbackAttrs(isServer && menuUpdateText(outputId))}
+							>
 								<MenuItem value="a">Option A</MenuItem>
 								<MenuItem value="b">Option B</MenuItem>
 								<MenuItem value="c">Option C</MenuItem>
@@ -33,7 +41,10 @@ function MenuDemo() {
 
 						<MenuTrigger>
 							<Button>Menu with Groups</Button>
-							<Menu onValue={setSelection}>
+							<Menu
+								onValue={setSelection}
+								{...callbackAttrs(isServer && menuUpdateText(outputId))}
+							>
 								<MenuGroup heading="File">
 									<MenuItem value="new">New file</MenuItem>
 									<MenuItem value="open">Open...</MenuItem>
