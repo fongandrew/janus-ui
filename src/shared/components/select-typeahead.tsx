@@ -23,7 +23,6 @@ import { SelectOptionList } from '~/shared/components/select-option-list';
 import { SelectText } from '~/shared/components/select-text';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
-import { useMountAttrs } from '~/shared/utility/solid/use-mount-attrs';
 
 export interface SelectTypeaheadProps extends Omit<InputProps, 'onValidate'> {
 	/** Name for form submission */
@@ -82,17 +81,16 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 	const id = createFormElementId(props);
 	const selectInputTextId = createUniqueId();
 	const selectUpdateTextId = createUniqueId();
-	const mounterProps = useMountAttrs(selectMountText(selectUpdateTextId));
 
 	return (
 		<SelectContainer
 			listId={listId}
 			inputId={id()}
 			{...callbackAttrs(
+				selectMountText(selectUpdateTextId),
 				selectUpdateText(selectUpdateTextId),
 				selectUpdateWithInput(selectInputTextId),
 			)}
-			{...mounterProps}
 		>
 			<Input
 				{...inputProps}

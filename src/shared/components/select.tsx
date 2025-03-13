@@ -20,7 +20,6 @@ import { SelectOptionList } from '~/shared/components/select-option-list';
 import { SelectText } from '~/shared/components/select-text';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
-import { useMountAttrs } from '~/shared/utility/solid/use-mount-attrs';
 
 export interface SelectProps extends Omit<FormElementProps<'button'>, 'onValidate'> {
 	/** Name for form submission */
@@ -71,13 +70,14 @@ export function Select(props: SelectProps) {
 
 	const selectInputTextId = createUniqueId();
 	const selectUpdateTextId = createUniqueId();
-	const mounterProps = useMountAttrs(selectMountText(selectUpdateTextId));
 
 	return (
 		<SelectContainer
 			listId={listId}
-			{...callbackAttrs(selectUpdateText(selectUpdateTextId))}
-			{...mounterProps}
+			{...callbackAttrs(
+				selectMountText(selectUpdateTextId),
+				selectUpdateText(selectUpdateTextId),
+			)}
 		>
 			<Button
 				{...buttonProps}

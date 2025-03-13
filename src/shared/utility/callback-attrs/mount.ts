@@ -60,13 +60,21 @@ export function processRoot(root: Window) {
 }
 
 /**
- * Schedule a processRoot call for a given root (called as part of update cycle
- * in reactive code via `useMountAttrs`
+ * Schedule a processRoot call for a given root (called as part of update cycle).
+ * Call `addMounterRenderEffect` to use this.
  */
-export function scheduleProcessRoot(root: Window) {
+export function scheduleProcessRoot(root: Window = self) {
 	if (raf(root)) return;
 	setRaf(
 		root,
 		root.requestAnimationFrame(() => processRoot(root)),
 	);
 }
+
+/** Add a callback when mounter renders something */
+export const addMounterRenderEffect = (
+	callback: (scheduleForWindow: (root?: Window) => void) => void,
+) =>
+	mountRegistry.listen('render', () => {
+		callback(scheduleProcessRoot);
+	});

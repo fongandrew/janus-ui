@@ -6,13 +6,9 @@ import { getDefaultLogger } from '~/shared/utility/logger';
 import { type Falsey } from '~/shared/utility/type-helpers';
 
 /**
- * Used to parse attribute strings that maybe have args:
- *
- * Given something like `data-on-click="do-foo (arg1,arg2) do-bar"`, this will give us
- * `['do-foo', 'arg1,arg2']` in the first match and `['do-bar']` in the second.
+ * A registered callback is actually a getter function that returns attribute + ID + bound args.
+ * It has a bunch of other stuff attached to it for managing the callback.
  */
-const CALLBACK_REGEX = /([^\s(]+)(?:\s+\(([^)]*)\))?/g;
-
 export interface RegisteredCallback<
 	TCallback extends (this: TThis, ...args: any[]) => any,
 	/**
@@ -38,6 +34,25 @@ export interface RegisteredCallback<
 }
 
 /**
+ * Map from event types that can be listened to on the registry to the type of handler.
+ * Just one right now, but maybe we add more later.
+ */
+export interface RegistryEventTypes {
+	/** Render event called the RegisteredCallback func is invoked */
+	render: (id: string) => void;
+}
+
+export type RegistryEventType = keyof RegistryEventTypes;
+
+/**
+ * Used to parse attribute strings that maybe have args:
+ *
+ * Given something like `data-on-click="do-foo (arg1,arg2) do-bar"`, this will give us
+ * `['do-foo', 'arg1,arg2']` in the first match and `['do-bar']` in the second.
+ */
+const CALLBACK_REGEX = /([^\s(]+)(?:\s+\(([^)]*)\))?/g;
+
+/**
  * Creates a registry for managing callbacks by string IDs.
  *
  * @param attr - The data attribute we're using for this
@@ -47,6 +62,11 @@ export function createCallbackRegistry<TRegistryCallback extends (...args: any[]
 	attr: string,
 ) {
 	const registry: Record<string, (...args: any[]) => any> = {};
+
+	/** Event listeners */
+	const listeners = {
+		render: new Set<RegistryEventTypes['render']>(),
+	};
 
 	return {
 		attr,
@@ -59,6 +79,16 @@ export function createCallbackRegistry<TRegistryCallback extends (...args: any[]
 		 */
 		get(id: string) {
 			return registry[id];
+		},
+
+		/** Add an event callback of a given type */
+		listen<T extends RegistryEventType>(type: T, listener: RegistryEventTypes[T]) {
+			(listeners[type] as Set<any>).add(listener);
+		},
+
+		/** Remove an event callback of a given type */
+		unlisten<T extends RegistryEventType>(type: T, listener: RegistryEventTypes[T]) {
+			(listeners[type] as Set<any>).delete(listener);
 		},
 
 		/**
@@ -108,6 +138,9 @@ export function createCallbackRegistry<TRegistryCallback extends (...args: any[]
 		): RegisteredCallback<TRegistryCallback, TExtra> {
 			function attrStr(...args: TExtra): [string, string] {
 				attrStr.add();
+				for (const listener of listeners.render) {
+					listener(id);
+				}
 				if (args.length) {
 					let lastDefinedIndex = args.length - 1;
 					while (lastDefinedIndex >= 0 && args[lastDefinedIndex] === undefined) {

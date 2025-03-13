@@ -55,6 +55,27 @@ describe('createCallbackRegistry', () => {
 		expect(testCallback(undefined, undefined)[1]).toEqual('testCallback');
 	});
 
+	it('should allow adding and removing render event listeners', () => {
+		const registry = createCallbackRegistry('data-test');
+		const renderListener = vi.fn();
+
+		registry.listen('render', renderListener);
+
+		const callback = vi.fn();
+		const testCallback = registry.create('testCallback', callback);
+
+		// First invoke should trigger listener
+		testCallback();
+		expect(renderListener).toHaveBeenCalledTimes(1);
+
+		// Remove the listener
+		registry.unlisten('render', renderListener);
+
+		// Second invoke should not trigger listener
+		testCallback();
+		expect(renderListener).toHaveBeenCalledTimes(1);
+	});
+
 	describe('.iter', () => {
 		it('should iterate over callbacks', () => {
 			const registry = createCallbackRegistry('data-test');

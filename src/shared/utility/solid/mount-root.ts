@@ -1,8 +1,19 @@
-import { type JSX } from 'solid-js';
+import { type JSX, onMount } from 'solid-js';
 import { DelegatedEvents, render } from 'solid-js/web';
+
+import { addMounterRenderEffect } from '~/shared/utility/callback-attrs/mount';
+import { useWindow } from '~/shared/utility/solid/window-context';
 
 // Add the change event to the list of delegated events since we make somewhat heavy use of it
 DelegatedEvents.add('change');
+
+// Tie mounter attributes into the Solid lifecycle
+addMounterRenderEffect((scheduleProcessRoot) => {
+	const window = useWindow();
+	onMount(() => {
+		scheduleProcessRoot(window);
+	});
+});
 
 export function mountRoot(fn: () => JSX.Element, id = 'root') {
 	const root = document.getElementById(id);

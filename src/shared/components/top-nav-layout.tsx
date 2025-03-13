@@ -19,7 +19,6 @@ import {
 import { TopNavContext } from '~/shared/components/top-nav-context';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
-import { useMountAttrs } from '~/shared/utility/solid/use-mount-attrs';
 import { t } from '~/shared/utility/text/t-tag';
 
 /**
@@ -29,10 +28,13 @@ export function TopNavLayout(
 	props: JSX.HTMLAttributes<HTMLDivElement> & { navId?: string | undefined },
 ) {
 	const navId = createAuto(props, 'navId');
-	const mounterProps = useMountAttrs(topNavScroll);
 	return (
 		<TopNavContext.Provider value={navId}>
-			<div {...props} {...mounterProps} class={cx('c-top-nav-layout', props.class)}>
+			<div
+				{...props}
+				{...callbackAttrs(props, topNavScroll)}
+				class={cx('c-top-nav-layout', props.class)}
+			>
 				{props.children}
 			</div>
 		</TopNavContext.Provider>
