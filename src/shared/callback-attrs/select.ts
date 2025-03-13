@@ -15,8 +15,7 @@ import {
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createMounter } from '~/shared/utility/callback-attrs/mount';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
-import { data } from '~/shared/utility/magic-strings';
-import { elmDoc } from '~/shared/utility/multi-view';
+import { elmDoc, evtDoc } from '~/shared/utility/multi-view';
 import { t } from '~/shared/utility/text/t-tag';
 
 /** Keydown handler for select button */
@@ -202,17 +201,13 @@ export const selectUpdateText = createHandler(
  * Input handler that updates the empty state text (or anything else that needs
  * the current input value)
  */
-export const selectUpdateWithInput = Object.assign(
-	createHandler('input', 'select__update-with-input', (event) => {
-		const updateTarget = event.currentTarget.querySelector<HTMLElement>(
-			`[${selectUpdateWithInput.TEXT_ATTR}]`,
-		);
+export const selectUpdateWithInput = createHandler(
+	'input',
+	'select__update-with-input',
+	(event, targetId: string) => {
+		const updateTarget = evtDoc(event)?.getElementById(targetId);
 		if (!updateTarget) return;
 		updateTarget.textContent = (event.target as HTMLInputElement).value;
-	}),
-	{
-		/** Data attribute to assign to element to update with input value */
-		TEXT_ATTR: data('select__input-text'),
 	},
 );
 

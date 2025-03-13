@@ -104,11 +104,11 @@
 		padding: calc(var(--v-spacing) - var(--v-inner-radius)) var(--v-spacing);
 		text-align: center;
 
-		.c-select__no_match:has([data-select__input-text]:empty) {
+		.c-select__no_match:has(.c-select__no_match_value:empty) {
 			display: none;
 		}
 
-		.c-select__no_match:not(:has([data-select__input-text]:empty)) + .c-select__no_value {
+		.c-select__no_match:not(:has(.c-select__no_match_value:empty)) + .c-select__no_value {
 			display: none;
 		}
 	}

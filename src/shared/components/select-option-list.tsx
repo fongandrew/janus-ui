@@ -1,7 +1,7 @@
 import { createUniqueId, type JSX, mergeProps, splitProps } from 'solid-js';
 
 import { listBoxChange } from '~/shared/callback-attrs/list-box';
-import { selectCloseOnClick, selectUpdateWithInput } from '~/shared/callback-attrs/select';
+import { selectCloseOnClick } from '~/shared/callback-attrs/select';
 import { DropdownContent } from '~/shared/components/dropdown';
 import { ListBoxContext } from '~/shared/components/list-box';
 import { OptionList } from '~/shared/components/option-list';
@@ -12,6 +12,8 @@ import { T } from '~/shared/utility/text/t-components';
 export interface SelectOptionListProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'id'> {
 	/** Separate listbox ID for `aria-controls` on combobox */
 	listBoxId?: string | undefined;
+	/** Separate ID for "no matches found" element */
+	selectInputTextId: string;
 	/** Form input name */
 	name?: string | undefined;
 	/** Currently selected values */
@@ -53,7 +55,10 @@ export function SelectOptionList(props: SelectOptionListProps) {
 						<span class="c-select__no_match">
 							<T>
 								No matches found for{' '}
-								<strong {...{ [selectUpdateWithInput.TEXT_ATTR]: '' }}>
+								<strong
+									id={props.selectInputTextId}
+									class="c-select__no_match_value"
+								>
 									{local.input?.trim()}
 								</strong>
 							</T>

@@ -69,6 +69,7 @@ export function Select(props: SelectProps) {
 		local.onValidate?.(values, event),
 	);
 
+	const selectInputTextId = createUniqueId();
 	const selectUpdateTextId = createUniqueId();
 	const mounterProps = useMountAttrs(selectMountText(selectUpdateTextId));
 
@@ -94,6 +95,7 @@ export function Select(props: SelectProps) {
 			</Button>
 			<SelectOptionList
 				listBoxId={listId}
+				selectInputTextId={selectInputTextId}
 				name={local.name}
 				multiple={local.multiple}
 				values={local.values}
