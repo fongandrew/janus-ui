@@ -19,8 +19,7 @@ export function TabBar(props: TabBarProps) {
 			role="tablist"
 			aria-orientation={props.orientation}
 			{...props}
-			{...callbackAttrs(tabKeyDown, tabClick)}
-			{...{ [tabKeyDown.AUTO_ATTR]: props.auto !== false ? '' : null }}
+			{...callbackAttrs(tabKeyDown(props.auto !== false ? 'auto' : 'manual'), tabClick)}
 			class={cx('c-tabs__bar', props.class)}
 		>
 			{props.children}

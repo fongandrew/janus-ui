@@ -3,15 +3,16 @@ import {
 	runAfterHideCallbacks,
 	runBeforeShowCallbacks,
 } from '~/shared/utility/callback-attrs/visibility';
-import { data } from '~/shared/utility/magic-strings';
 import { elmDoc } from '~/shared/utility/multi-view';
 import { nextIndex } from '~/shared/utility/next-index';
 
 /**
  * Handle keydown events on tab bar
  */
-export const tabKeyDown = Object.assign(
-	createHandler('keydown', 'tab__keydown', (event) => {
+export const tabKeyDown = createHandler(
+	'keydown',
+	'tab__keydown',
+	(event, mode: 'auto' | 'manual' = 'auto') => {
 		const tabBtn = event.target as HTMLButtonElement;
 
 		const tabList = tabBtn.closest<HTMLElement>('[role="tablist"]');
@@ -51,20 +52,15 @@ export const tabKeyDown = Object.assign(
 		}
 
 		if (newIndex === undefined) return;
-		const tabBar = event.currentTarget as HTMLElement;
 
 		const nextTabBtn = tabBtns[newIndex];
 		if (!nextTabBtn) return;
 
 		nextTabBtn.focus();
 
-		const auto = tabBar.hasAttribute(tabKeyDown.AUTO_ATTR);
-		if (auto) {
+		if (mode === 'auto') {
 			switchTabPanel(tabList, nextTabBtn);
 		}
-	}),
-	{
-		AUTO_ATTR: data('tab__auto'),
 	},
 );
 
