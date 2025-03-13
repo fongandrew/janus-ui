@@ -46,6 +46,15 @@ describe('createCallbackRegistry', () => {
 		expect(callback).toHaveBeenCalled();
 	});
 
+	it('should remove trailing undefined extra args', () => {
+		const registry = createCallbackRegistry('data-test');
+		const testCallback = registry.create('testCallback', () => {});
+		expect(testCallback('foo', undefined, 'bar', undefined, undefined)[1]).toEqual(
+			'testCallback (foo,,bar)',
+		);
+		expect(testCallback(undefined, undefined)[1]).toEqual('testCallback');
+	});
+
 	describe('.iter', () => {
 		it('should iterate over callbacks', () => {
 			const registry = createCallbackRegistry('data-test');

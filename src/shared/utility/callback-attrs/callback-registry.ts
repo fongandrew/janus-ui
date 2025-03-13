@@ -105,7 +105,15 @@ export function createCallbackRegistry<TRegistryCallback extends (...args: any[]
 		): RegisteredCallback<TRegistryCallback, TExtra> {
 			function attrStr(...args: TExtra): [string, string] {
 				attrStr.add();
-				if (args.length) return [attr, `${id} (${args.join(',')})`];
+				if (args.length) {
+					let lastDefinedIndex = args.length - 1;
+					while (lastDefinedIndex >= 0 && args[lastDefinedIndex] === undefined) {
+						lastDefinedIndex--;
+					}
+					if (lastDefinedIndex >= 0) {
+						return [attr, `${id} (${args.slice(0, lastDefinedIndex + 1).join(',')})`];
+					}
+				}
 				return [attr, id];
 			}
 			attrStr.attr = attr;
