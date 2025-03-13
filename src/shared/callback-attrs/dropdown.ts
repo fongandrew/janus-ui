@@ -9,7 +9,6 @@ import {
 	size,
 } from '@floating-ui/dom';
 
-import { attrIsTruthy } from '~/shared/utility/attribute';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import {
 	runAfterHideCallbacks,
@@ -67,9 +66,11 @@ export const dropdownClose = createHandler('click', 'dropdown__close', (event) =
 /**
  * Position dropdown on open, set ARIA props, close other popovers
  */
-export const dropdownBeforeToggleOpen = Object.assign(
-	createHandler('beforetoggle', 'dropdown__before-toggle-open', ((event: ToggleEvent) => {
-		if (event.newState !== 'open') return;
+export const dropdownBeforeToggleOpen = createHandler(
+	'beforetoggle',
+	'dropdown__before-toggle-open',
+	(event, placement?: Placement, offset?: string, fixedWidth?: 'fw') => {
+		if ((event as ToggleEvent & { currentTarget: HTMLElement }).newState !== 'open') return;
 		const target = event.target as HTMLElement;
 
 		// Close other popovers when opening this one
@@ -83,17 +84,17 @@ export const dropdownBeforeToggleOpen = Object.assign(
 		const trigger = getTrigger(target);
 		if (!trigger) return;
 
-		updatePosition(trigger, target);
-		const cleanUp = autoUpdate(trigger, target, () => updatePosition(trigger, target));
+		const opts = {
+			placement,
+			offset: parseIntOrNull(offset ?? null),
+			fixedWidth: !!fixedWidth,
+		};
+		updatePosition(trigger, target, opts);
+		const cleanUp = autoUpdate(trigger, target, () => updatePosition(trigger, target, opts));
 		setPopoverCleanUp(target, cleanUp);
 
 		trigger.setAttribute('aria-expanded', 'true');
 		runBeforeShowCallbacks(target);
-	}) as (event: Event) => void),
-	{
-		FIXED_WIDTH_ATTR: data('dropdown__fixed-width'),
-		OFFSET_ATTR: data('dropdown__offset'),
-		PLACEMENT_ATTR: data('dropdown__placement'),
 	},
 );
 
@@ -114,7 +115,9 @@ const updatePosition = async (
 	trigger: HTMLElement,
 	popover: HTMLElement,
 	opts?: {
-		placement?: Placement;
+		placement?: Placement | '' | undefined;
+		offset?: number | null;
+		fixedWidth?: boolean;
 		middleware?: Middleware[];
 	},
 ) => {
@@ -124,12 +127,9 @@ const updatePosition = async (
 	}
 
 	const { x, y } = await computePosition(trigger, popover, {
-		placement:
-			opts?.placement ??
-			(trigger.getAttribute(dropdownBeforeToggleOpen.PLACEMENT_ATTR) as Placement) ??
-			'bottom-start',
+		placement: opts?.placement || 'bottom-start',
 		middleware: opts?.middleware ?? [
-			offset(parseIntOrNull(trigger.getAttribute(dropdownBeforeToggleOpen.OFFSET_ATTR)) ?? 4),
+			offset(opts?.offset ?? 4),
 			flip({
 				// Somewhat large padding for flip because dropdown content is resizable
 				// (overflow: auto) and will technically "fit" in smaller spaces but look
@@ -139,7 +139,7 @@ const updatePosition = async (
 			shift({ padding: 4 }),
 			size({
 				apply({ rects, elements, availableWidth, availableHeight }) {
-					if (attrIsTruthy(trigger, dropdownBeforeToggleOpen.FIXED_WIDTH_ATTR)) {
+					if (opts?.fixedWidth) {
 						elements.floating.style.setProperty(
 							'--c-dropdown__computed-max-width',
 							`${rects.reference.width}px`,

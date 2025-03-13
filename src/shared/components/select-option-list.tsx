@@ -33,7 +33,14 @@ export function SelectOptionList(props: SelectOptionListProps) {
 	const context = mergeProps({ name: createUniqueId() }, listBoxContextProps);
 
 	return (
-		<DropdownContent {...rest}>
+		<DropdownContent
+			// Dropdown width should match select input / button size
+			fixedWidth
+			// Selects have a focus ring so give a bit more space than
+			// normal dropdowns
+			offset={8}
+			{...rest}
+		>
 			<ListBoxContext.Provider value={context}>
 				<OptionList
 					role="listbox"

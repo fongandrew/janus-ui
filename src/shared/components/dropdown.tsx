@@ -20,17 +20,17 @@ import { T } from '~/shared/utility/text/t-components';
 // Omit the `id` attribute from the HTMLDivElement interface because it should be assigned
 // via context
 export interface DropdownContentProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'id'> {
-	/** Make children required */
-	children: JSX.Element;
-}
-
-export interface DropdownProps {
 	/** Fixed width dropdown (vs expanding to fill available space up to some CSS max) */
 	fixedWidth?: boolean | undefined;
 	/** Offset for dropdown */
 	offset?: number | undefined;
 	/** Placement of dropdown */
 	placement?: Placement | undefined;
+	/** Make children required */
+	children: JSX.Element;
+}
+
+export interface DropdownProps {
 	/** Trigger ID (set here instead of on button so elements can reference each other) */
 	triggerId?: string | undefined;
 	/** Popover ID (set here instead of on popover so elements can reference each other) */
@@ -57,7 +57,15 @@ export function DropdownContent(props: DropdownContentProps) {
 		<FormElementResetProvider>
 			<div
 				{...rest}
-				{...callbackAttrs(rest, dropdownBeforeToggleOpen, dropdownToggleClosed)}
+				{...callbackAttrs(
+					rest,
+					dropdownBeforeToggleOpen(
+						props.placement,
+						typeof props.offset === 'number' ? props.offset.toString() : undefined,
+						props.fixedWidth ? 'fw' : undefined,
+					),
+					dropdownToggleClosed,
+				)}
 				id={context?.popoverId()}
 				class={cx('c-dropdown__content', rest.class)}
 				aria-labelledby={attrs(context?.triggerId(), rest['aria-labelledby'])}
@@ -90,11 +98,6 @@ export function Dropdown(props: DropdownProps) {
 				aria-haspopup={() => 'menu'}
 				popoverTarget={popoverId}
 				popoverTargetAction={() => 'show'}
-				{...{
-					[dropdownBeforeToggleOpen.FIXED_WIDTH_ATTR]: () => props.fixedWidth,
-					[dropdownBeforeToggleOpen.OFFSET_ATTR]: () => props.offset,
-					[dropdownBeforeToggleOpen.PLACEMENT_ATTR]: () => props.placement,
-				}}
 			>
 				{props.children}
 			</FormElementButtonPropsProvider>

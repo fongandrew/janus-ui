@@ -23,13 +23,7 @@ export function SelectContainer(props: SelectContainerProps) {
 
 	return (
 		<div {...rest} class={cx('c-select__container', rest.class)}>
-			<Dropdown
-				// Dropdown width should match select input / button size
-				fixedWidth
-				// Selects have a focus ring so give a bit more space than
-				// normal dropdowns
-				offset={8}
-			>
+			<Dropdown>
 				{local.children}
 				<span class="c-select__chevron">
 					<ChevronsUpDown />

@@ -10,7 +10,12 @@ import {
 	menuTriggerKeyDown,
 } from '~/shared/callback-attrs/menu';
 import { getItemValue } from '~/shared/callback-attrs/option-list';
-import { Dropdown, DropdownContent, type DropdownProps } from '~/shared/components/dropdown';
+import {
+	Dropdown,
+	DropdownContent,
+	type DropdownContentProps,
+	type DropdownProps,
+} from '~/shared/components/dropdown';
 import { FormElementButtonPropsProvider } from '~/shared/components/form-element-context';
 import {
 	OptionList,
@@ -22,7 +27,7 @@ import { callbackAttrMods, callbackAttrs } from '~/shared/utility/callback-attrs
 import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
 
 // Disallow ID since it should be set via context
-export interface MenuProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'id'> {
+export interface MenuProps extends DropdownContentProps {
 	/** Called when a menu item is selected */
 	onValue?: (value: string, event: Event) => void;
 	/** Make children required */
