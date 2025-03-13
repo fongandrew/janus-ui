@@ -11,6 +11,7 @@ import {
 	selectButtonKeyDown,
 	selectFocusOut,
 	selectMountText,
+	selectResetText,
 	selectUpdateText,
 } from '~/shared/callback-attrs/select';
 import { Button } from '~/shared/components/button';
@@ -77,6 +78,7 @@ export function Select(props: SelectProps) {
 			{...callbackAttrs(
 				selectMountText(selectUpdateTextId),
 				selectUpdateText(selectUpdateTextId),
+				selectResetText(selectUpdateTextId),
 			)}
 		>
 			<Button

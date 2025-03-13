@@ -6,6 +6,7 @@ import {
 	createListBoxValidator,
 	listBoxChange,
 	listBoxKeyDown,
+	listBoxReset,
 	type ListBoxValidator,
 	listBoxValues,
 } from '~/shared/callback-attrs/list-box';
@@ -78,7 +79,7 @@ export function ListBox(props: ListBoxProps) {
 		<ListBoxContext.Provider value={context}>
 			<OptionList
 				{...optionListProps}
-				{...callbackAttrs(optionListProps, listBoxChange, listBoxKeyDown)}
+				{...callbackAttrs(optionListProps, listBoxChange, listBoxKeyDown, listBoxReset)}
 				role="listbox"
 				class={cx('c-list-box', rest.class)}
 				tabIndex={0}

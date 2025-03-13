@@ -1,3 +1,4 @@
+import { createResetCallback } from '~/shared/callback-attrs/form';
 import {
 	getControllingElement,
 	listBoxValues,
@@ -194,6 +195,17 @@ export const selectUpdateText = createHandler(
 	'select__update-text',
 	(event, updateTargetId: string) => {
 		selectMountText.do.call(event.currentTarget, event.currentTarget, updateTargetId);
+	},
+);
+
+/** Update text on form reset */
+export const selectResetText = createResetCallback(
+	'select__reset',
+	function (_event: Event, updateTargetId: string) {
+		// Queue microtask so we can process state *after* reset has happened
+		queueMicrotask(() => {
+			selectMountText.do.call(this, this, updateTargetId);
+		});
 	},
 );
 

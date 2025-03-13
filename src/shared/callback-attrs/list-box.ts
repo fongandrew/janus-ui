@@ -1,6 +1,8 @@
+import { createResetCallback } from '~/shared/callback-attrs/form';
 import {
 	getList,
 	getListHighlighted,
+	getListItems,
 	highlightInList,
 	optionListKeyDown,
 	optionListMatchText,
@@ -44,6 +46,21 @@ export const listBoxChange = createHandler('change', 'list-box__change', (event)
 	const dispatcher = getControllingElement(listElm);
 	dispatcher.setAttribute('aria-activedescendant', target.id);
 	dispatcher.dispatchEvent(new Event('change', { bubbles: true }));
+});
+
+/**
+ * Reset values for reset -- reset event should handle input, so just resynchonize
+ */
+export const listBoxReset = createResetCallback('list-box__reset', function () {
+	const listElm = getList(this);
+	if (!listElm) return;
+
+	for (const item of getListItems(listElm)) {
+		if (item instanceof HTMLInputElement && typeof item.checked === 'boolean') {
+			item.checked = item.defaultChecked;
+			item.setAttribute('aria-selected', String(item.defaultChecked));
+		}
+	}
 });
 
 /**

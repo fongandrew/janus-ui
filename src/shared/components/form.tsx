@@ -2,6 +2,7 @@ import { createMemo, createUniqueId, type JSX, onCleanup, splitProps, useContext
 
 import {
 	createSubmitHandler,
+	formResetChildren,
 	formResetOnSuccess,
 	type SubmitHandler,
 } from '~/shared/callback-attrs/form';
@@ -54,6 +55,7 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 				rest,
 				handlerId(),
 				local.resetOnSuccess !== false && formResetOnSuccess,
+				formResetChildren,
 				validateReset,
 			)}
 		>

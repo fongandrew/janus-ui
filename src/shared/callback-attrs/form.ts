@@ -3,6 +3,7 @@ import {
 	setError,
 	setErrorsByName,
 } from '~/shared/callback-attrs/validation';
+import { createCallbackRegistry } from '~/shared/utility/callback-attrs/callback-registry';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { getDefaultLogger } from '~/shared/utility/logger';
 import { data, evt } from '~/shared/utility/magic-strings';
@@ -74,6 +75,35 @@ declare module '~/shared/utility/callback-attrs/events' {
 		[INVALID_SUBMIT_EVENT]: null;
 	}
 }
+
+/** Callback when parent form is reset */
+export type ResetCallback = (
+	this: HTMLElement,
+	event: Event & { currentTarget: HTMLElement },
+) => void;
+
+/**
+ * Magic data attribute used to register a reset callback on a synthetic form element
+ */
+export const RESET_ATTR = data('form__reset');
+
+const resetRegistry = createCallbackRegistry<ResetCallback>(RESET_ATTR);
+export const createResetCallback = resetRegistry.create;
+
+/** Handler to call all registered reset items when form resets */
+export const formResetChildren = createHandler('reset', 'form__reset-children', (event) => {
+	const form = event.currentTarget as HTMLFormElement;
+	for (const handler of resetRegistry.iter(form)) {
+		handler(event);
+	}
+
+	// Check for callbacks on reset plus any child callbacks as well
+	for (const elm of [form, ...form.querySelectorAll<HTMLElement>('[' + RESET_ATTR + ']')]) {
+		for (const callback of resetRegistry.iter(elm)) {
+			callback(event);
+		}
+	}
+});
 
 /** Handler to reset on successful (async) submit */
 export const formResetOnSuccess = createHandler(
