@@ -19,7 +19,7 @@ export interface FormProps<TNames extends string>
 	/** Lookup map for field names, mostly used to type form field names */
 	names?: Record<any, TNames> | undefined;
 	/** Typed submit handler */
-	onSubmit?: SubmitHandler<TNames> | undefined;
+	onSubmit?: SubmitHandler<TNames, []> | undefined;
 	/** Should form reset on success? Defaults to true. */
 	resetOnSuccess?: boolean | undefined;
 }
