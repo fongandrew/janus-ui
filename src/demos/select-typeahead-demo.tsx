@@ -1,7 +1,7 @@
-import { createMemo, createSignal, For, Show } from 'solid-js';
+import { createMemo, createSignal, createUniqueId, For, Show } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
-import { listBoxNoRed } from '~/demos/callbacks/list-box';
+import { listBoxNoRed, listBoxUpdateText } from '~/demos/callbacks/list-box';
 import {
 	Card,
 	CardContent,
@@ -28,6 +28,10 @@ function SelectTypeaheadDemo() {
 			.filter((word) => word.length > 0),
 	);
 
+	const descriptionId1 = createUniqueId();
+	const descriptionId2 = createUniqueId();
+	const descriptionId3 = createUniqueId();
+
 	return (
 		<Card>
 			<CardHeader>
@@ -39,12 +43,14 @@ function SelectTypeaheadDemo() {
 					<LabelledInput
 						label="Single selection"
 						description={`Selected: ${Array.from(value()).join(', ') || 'None'}`}
+						descriptionId={descriptionId1}
 					>
 						<SelectTypeahead
 							placeholder="Select a fruit..."
 							values={value()}
 							onValues={setValue}
 							onValueInput={setQuery}
+							{...callbackAttrs(isServer && listBoxUpdateText(descriptionId1))}
 						>
 							<For each={parts()}>
 								{(part, index) => (
@@ -57,6 +63,7 @@ function SelectTypeaheadDemo() {
 					<LabelledInput
 						label="Multiple selection"
 						description={`Selected: ${Array.from(multiValue()).join(', ') || 'None'}`}
+						descriptionId={descriptionId2}
 						errorMessage={multiValue().has('red') ? "Don't pick red." : null}
 					>
 						<SelectTypeahead
@@ -66,7 +73,10 @@ function SelectTypeaheadDemo() {
 							onValues={setMultiValue}
 							onValueInput={setQuery}
 							multiple
-							{...callbackAttrs(isServer && listBoxNoRed)}
+							{...callbackAttrs(
+								isServer && listBoxNoRed,
+								isServer && listBoxUpdateText(descriptionId2),
+							)}
 						>
 							<ListBoxGroup heading="Don't Pick This">
 								<ListBoxItem value="red">Red</ListBoxItem>
@@ -95,11 +105,13 @@ function SelectTypeaheadDemo() {
 					<LabelledInput
 						label="Long selection list"
 						description={`Selected: ${Array.from(value()).join(', ') || 'None'}`}
+						descriptionId={descriptionId3}
 					>
 						<SelectTypeahead
 							placeholder="Select an option..."
 							values={value()}
 							onValues={setValue}
+							{...callbackAttrs(isServer && listBoxUpdateText(descriptionId3))}
 						>
 							<For each={[...Array(100).keys()]}>
 								{(i) => <ListBoxItem value={String(i)}>Option {i}</ListBoxItem>}

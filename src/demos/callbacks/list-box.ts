@@ -1,6 +1,23 @@
 import { listBoxValues } from '~/shared/callback-attrs/list-box';
 import { getList } from '~/shared/callback-attrs/option-list';
 import { createValidator } from '~/shared/callback-attrs/validation';
+import { createHandler } from '~/shared/utility/callback-attrs/events';
+
+export const listBoxUpdateText = createHandler(
+	'change',
+	'list-box__update-text',
+	(event, targetId: string) => {
+		const listElm = getList(event.currentTarget);
+		if (!listElm) return;
+
+		const target = listElm.ownerDocument?.getElementById(targetId);
+		if (!target) return;
+
+		const values = listBoxValues(listElm);
+		const text = `Selected: ${values.size ? Array.from(values).join(', ') : 'None'}`;
+		target.textContent = text;
+	},
+);
 
 export const listBoxNoRed = createValidator('list-box__no-red', (event) => {
 	const listElm = getList(event.currentTarget);

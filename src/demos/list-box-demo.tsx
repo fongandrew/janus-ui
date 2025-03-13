@@ -1,7 +1,7 @@
-import { createSignal } from 'solid-js';
+import { createSignal, createUniqueId } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
-import { listBoxNoRed } from '~/demos/callbacks/list-box';
+import { listBoxNoRed, listBoxUpdateText } from '~/demos/callbacks/list-box';
 import {
 	Card,
 	CardContent,
@@ -17,6 +17,9 @@ function ListBoxDemo() {
 	const [values, setValues] = createSignal<Set<string>>(new Set());
 	const [multiValues, setMultiValues] = createSignal<Set<string>>(new Set());
 
+	const descriptionId1 = createUniqueId();
+	const descriptionId2 = createUniqueId();
+
 	return (
 		<Card>
 			<CardHeader>
@@ -27,9 +30,15 @@ function ListBoxDemo() {
 				<div class="o-stack">
 					<LabelledInput
 						label="Single selection"
+						descriptionId={descriptionId1}
 						description={`Selected: ${Array.from(values()).join(', ') || 'None'}`}
 					>
-						<ListBox name="single-listbox" values={values()} onValues={setValues}>
+						<ListBox
+							name="single-listbox"
+							values={values()}
+							onValues={setValues}
+							{...callbackAttrs(isServer && listBoxUpdateText(descriptionId1))}
+						>
 							<ListBoxItem value="apple">Apple</ListBoxItem>
 							<ListBoxItem value="banana">Banana</ListBoxItem>
 							<ListBoxItem value="orange">Orange</ListBoxItem>
@@ -39,6 +48,7 @@ function ListBoxDemo() {
 					<LabelledInput
 						label="Multiple selection"
 						description={`Selected: ${Array.from(multiValues()).join(', ') || 'None'}`}
+						descriptionId={descriptionId2}
 						errorMessage={multiValues().has('red') ? "Don't pick red." : null}
 					>
 						<ListBox
@@ -47,7 +57,10 @@ function ListBoxDemo() {
 							onValues={setMultiValues}
 							multiple
 							aria-invalid={multiValues().has('red')}
-							{...callbackAttrs(isServer && listBoxNoRed)}
+							{...callbackAttrs(
+								isServer && listBoxNoRed,
+								isServer && listBoxUpdateText(descriptionId2),
+							)}
 						>
 							<ListBoxGroup heading="Don't Pick These">
 								<ListBoxItem value="red">Red</ListBoxItem>
