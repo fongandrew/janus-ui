@@ -37,7 +37,7 @@ function runContainerCallbacks(
 	container: HTMLElement,
 ) {
 	for (const callback of registry.iter(container)) {
-		callback.call(container, container, container);
+		callback(container, container);
 	}
 
 	const elements = container.querySelectorAll<HTMLElement>(`[${registry.attr}]`);
@@ -47,7 +47,7 @@ function runContainerCallbacks(
 		);
 		if (!closestVisBoundary || closestVisBoundary.contains(element)) {
 			for (const callback of registry.iter(element)) {
-				callback.call(element, element, container);
+				callback(element, container);
 			}
 		}
 	}

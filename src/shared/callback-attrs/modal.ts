@@ -239,7 +239,7 @@ export function requestModalClose(dialog: HTMLDialogElement, event: Event) {
 		...dialog.querySelectorAll<HTMLElement>('[' + REQUEST_CLOSE_ATTR + ']'),
 	]) {
 		for (const callback of requestCloseRegistry.iter(elm)) {
-			if (callback.call(elm, event as Event & { currentTarget: HTMLElement }) === false) {
+			if (callback(event as Event & { currentTarget: HTMLElement }) === false) {
 				return false;
 			}
 		}
