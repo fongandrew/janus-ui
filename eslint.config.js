@@ -171,10 +171,7 @@ export default tseslint.config(
 				{
 					customReactiveFunctions: [
 						'combineEventHandlers',
-						'setAttr',
-						'extAttr',
-						'defaultAttr',
-						'handle',
+						'extendHandler',
 						'onRequestClose',
 						'mergeProps',
 					],

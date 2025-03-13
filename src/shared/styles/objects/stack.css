@@ -7,6 +7,9 @@
 
 /* A variant of stack for holding blocks of text */
 @define-mixin o-text-stack {
+	display: flex;
+	flex-direction: column;
+
 	> * + * {
 		margin-top: calc(max(var(--v-spacing), 1em) - 0.5lh + 0.5em);
 	}

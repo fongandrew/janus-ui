@@ -17,17 +17,17 @@
 
 		&:has([aria-disabled='true']),
 		&:has(+ [aria-disabled='true']),
-		.o-label-stack:has([aria-disabled='true']) > & {
+		.c-label-stack:has([aria-disabled='true']) > & {
 			@mixin t-text-muted;
 		}
 
 		&:has([aria-invalid='true']),
 		&:has(+ [aria-invalid='true']),
-		.o-label-stack:has([aria-invalid='true']) > & {
+		.c-label-stack:has([aria-invalid='true']) > & {
 			@mixin t-text-danger;
 		}
 
-		.o-label-stack > & {
+		.c-label-stack:not(:has(.t-label-stack--no-indent)) > & {
 			padding-inline: var(--v-space-xs);
 		}
 	}

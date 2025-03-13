@@ -50,7 +50,7 @@ export function LabelledInput(props: LabelledInputProps) {
 	const errorId = createAuto(props, 'errorId');
 
 	return (
-		<div {...rest} class={cx('o-label-stack', rest.class)}>
+		<div {...rest} class={cx('c-label-stack', rest.class)}>
 			<LabelSpan id={labelId()}>{local.label}</LabelSpan>
 			{local.description ? (
 				<Description id={descriptionId()}>{local.description}</Description>
@@ -91,7 +91,7 @@ export function LabelledInline(props: Omit<LabelledInputProps, 'description'>) {
 	const errorId = createAuto(props, 'errorId');
 
 	return (
-		<div {...rest} class={cx('o-label-stack', rest.class)}>
+		<div {...rest} class={cx('c-label-stack', rest.class)}>
 			<Label id={local.labelId}>
 				<FormElementPropsProvider
 					id={(prev) => attrNoConflict(prev, inputId())}

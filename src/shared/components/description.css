@@ -5,11 +5,11 @@
 		@mixin t-overflow-x;
 		@mixin t-text-muted;
 
-		.o-label-stack > & {
+		.c-label-stack:not(:has(.t-label-stack--no-indent)) > & {
 			padding-inline: var(--v-space-xs);
 		}
 
-		.o-label-stack > .c-label + & {
+		.c-label-stack > .c-label + & {
 			margin-top: 0;
 		}
 	}

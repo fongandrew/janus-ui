@@ -1,36 +1,55 @@
-import { createSignal, type JSX } from 'solid-js';
+import cx from 'classix';
+import { type JSX, splitProps } from 'solid-js';
 
+import { FormElementResetProvider } from '~/shared/components/form-element-context';
+import { mergeFormElementProps } from '~/shared/components/form-element-props';
 import {
 	RadioGroupContext,
 	type RadioGroupContextValue,
 } from '~/shared/components/radio-group-context';
-import { handleEvent } from '~/shared/utility/solid/handle-event';
+import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
 
-export interface RadioGroupProps {
+export interface RadioGroupProps extends JSX.HTMLAttributes<HTMLDivElement> {
+	/** Shared name to use across radio elements */
 	name: string;
-	defaultValue?: string;
+	/** Value of selected radio button */
 	value?: string;
-	onChange?: JSX.ChangeEventHandlerUnion<HTMLInputElement, Event>;
+	/** Change handler with value set */
+	onValue?: (value: string, event: Event) => void;
+	/** Children (should have radio elements) */
 	children: JSX.Element;
-	class?: string;
 }
 
 export function RadioGroup(props: RadioGroupProps) {
-	const [internalValue, setInternalValue] = createSignal(props.defaultValue);
+	const [local, rest] = splitProps(props, ['name', 'value', 'onValue', 'children']);
 
-	const handleChange: JSX.ChangeEventHandler<HTMLInputElement, Event> = (event) => {
-		const target = event.target as HTMLInputElement;
-		setInternalValue(target.value);
-		handleEvent(target, props.onChange, event);
+	const handleChange = (event: Event) => {
+		const target = event.target;
+		if (target instanceof HTMLInputElement) {
+			local.onValue?.(target.value, event);
+		}
 	};
 
+	const radioGroupProps = mergeFormElementProps<'div'>(rest);
+
 	const context: RadioGroupContextValue = {
-		name: () => props.name,
-		value: () => props.value ?? internalValue(),
-		onChange: handleChange,
+		name: () => local.name,
+		value: () => local.value,
 	};
 
 	return (
-		<RadioGroupContext.Provider value={context}>{props.children}</RadioGroupContext.Provider>
+		<div
+			role="radiogroup"
+			{...radioGroupProps}
+			{...extendHandler(radioGroupProps, 'onChange', handleChange)}
+			class={cx('c-radio-group t-label-stack--no-indent', radioGroupProps.class)}
+		>
+			{/* Reset FormElementProvider because it would potentially apply to multiple inputs */}
+			<FormElementResetProvider>
+				<RadioGroupContext.Provider value={context}>
+					{local.children}
+				</RadioGroupContext.Provider>
+			</FormElementResetProvider>
+		</div>
 	);
 }

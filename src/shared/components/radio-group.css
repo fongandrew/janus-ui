@@ -1,0 +1,11 @@
+@import '~/shared/styles/common.css';
+
+@layer components {
+	.c-radio-group {
+		@mixin o-text-stack;
+
+		.c-label-stack & {
+			margin-top: calc(max(var(--v-spacing), 1em) - 0.5lh + 0.5em);
+		}
+	}
+}
