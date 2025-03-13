@@ -77,11 +77,7 @@ export function SelectionValidationDemo() {
 									multiple
 									onValidate={validateMultiple}
 									required
-									{...{
-										...callbackAttrs(isServer && listBoxMinMax),
-										[listBoxMinMax.MIN_ATTR]: 2,
-										[listBoxMinMax.MAX_ATTR]: 3,
-									}}
+									{...callbackAttrs(isServer && listBoxMinMax('2', '3'))}
 								>
 									<ListBoxItem value="apple">Apple</ListBoxItem>
 									<ListBoxItem value="banana">Banana</ListBoxItem>
@@ -97,11 +93,7 @@ export function SelectionValidationDemo() {
 									multiple
 									onValidate={validateMultiple}
 									required
-									{...{
-										...callbackAttrs(isServer && listBoxMinMax),
-										[listBoxMinMax.MIN_ATTR]: 2,
-										[listBoxMinMax.MAX_ATTR]: 3,
-									}}
+									{...callbackAttrs(isServer && listBoxMinMax('2', '3'))}
 								>
 									<ListBoxItem value="red">Red</ListBoxItem>
 									<ListBoxItem value="blue">Blue</ListBoxItem>
@@ -113,7 +105,7 @@ export function SelectionValidationDemo() {
 						</Form>
 
 						<Show when={formData()}>
-							<output>
+							<div>
 								<Card>
 									<CardHeader>
 										<CardTitle>Submitted form data</CardTitle>
@@ -135,7 +127,7 @@ export function SelectionValidationDemo() {
 										</div>
 									</CardContent>
 								</Card>
-							</output>
+							</div>
 						</Show>
 					</div>
 				</CardContent>
