@@ -12,6 +12,8 @@
 }
 
 @define-mixin t-error {
+	--v-border-color: var(--v-danger-bg);
+
 	border-color: var(--v-danger-bg);
 }
 
