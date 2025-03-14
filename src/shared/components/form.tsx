@@ -1,4 +1,5 @@
 import { createMemo, createUniqueId, type JSX, onCleanup, splitProps, useContext } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
 import { DangerAlert } from '~/shared/components/alert';
 import {
@@ -10,6 +11,7 @@ import {
 import { FormContext } from '~/shared/components/form-context';
 import { attrs } from '~/shared/utility/attribute-list';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { mountAttr } from '~/shared/utility/callback-attrs/no-js';
 import { FORM_CONTROL_ERROR_ATTR, validateReset } from '~/shared/utility/callback-attrs/validate';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
 
@@ -47,7 +49,7 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 	return (
 		<form
 			// Default HTML validation interferes with our own custom handlers
-			noValidate
+			noValidate={!isServer}
 			{...rest}
 			id={id()}
 			aria-describedby={attrs(props['aria-describedby'], errorId())}
@@ -57,6 +59,7 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 				local.resetOnSuccess !== false && formResetOnSuccess,
 				formResetChildren,
 				validateReset,
+				isServer && mountAttr('novalidate', ''),
 			)}
 		>
 			<div class="o-stack">

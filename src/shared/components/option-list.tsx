@@ -2,7 +2,10 @@ import cx from 'classix';
 import { Check } from 'lucide-solid';
 import { children, type JSX, splitProps } from 'solid-js';
 import { createUniqueId } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { mountAttr } from '~/shared/utility/callback-attrs/no-js';
 import { createAutoId } from '~/shared/utility/solid/auto-prop';
 import { spanify } from '~/shared/utility/solid/spanify';
 
@@ -40,8 +43,9 @@ export function OptionListSelectable(props: JSX.InputHTMLAttributes<HTMLInputEle
 				type="checkbox"
 				class="t-sr-only"
 				aria-selected={String(!!rest.checked) as 'true' | 'false'}
-				tabIndex={-1}
+				tabIndex={isServer ? 0 : -1}
 				{...rest}
+				{...callbackAttrs(rest, isServer && mountAttr('tabindex', '-1'))}
 			/>
 			<div role="presentation" class="c-option-list__check-box">
 				<Check />

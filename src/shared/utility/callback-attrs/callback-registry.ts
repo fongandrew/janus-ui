@@ -2,7 +2,6 @@
  * Utility code for a pattern where a special data attribute is used to specify a list of
  * JavaScript handlers to be called in some event
  */
-import { getDefaultLogger } from '~/shared/utility/logger';
 import { type Falsey } from '~/shared/utility/type-helpers';
 
 /**
@@ -253,19 +252,4 @@ export function callbackSelector(callback: RegisteredCallback<any>) {
 /** Type-guard to check if something is a registered callback */
 export function isRegisteredCallback(val: any): val is RegisteredCallback<any, any> {
 	return !!(typeof val === 'function' && val.attr && val.id && val.add);
-}
-
-/**
- * Auto-load callbacks from a module (or other object containing callbacks)
- */
-export function loadCallbacks(...mods: Record<string, any>[]) {
-	for (const mod of mods) {
-		for (const value of Object.values(mod)) {
-			if (isRegisteredCallback(value)) {
-				if (value.add() === false) {
-					getDefaultLogger().warn(`Callback already exists: ${value.id}`);
-				}
-			}
-		}
-	}
 }

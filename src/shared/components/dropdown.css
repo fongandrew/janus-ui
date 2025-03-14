@@ -2,15 +2,15 @@
 
 @layer base {
 	/* No scroll when dropdown open */
-	body:has(.c-dropdown__content:popover-open, .c-dropdown__content[data-c-popover-open]) {
+	body:has(.c-dropdown__content:popover-open, .c-dropdown__content[data-v-popover-open]) {
 		overflow: hidden;
 	}
 
 	/* Dropdown backdrop -- use this instead of ::backdrop because this blocks click-through */
-	body:has(.c-dropdown__content:popover-open, .c-dropdown__content[data-c-popover-open])::after,
+	body:has(.c-dropdown__content:popover-open, .c-dropdown__content[data-v-popover-open])::after,
 	:modal:has(
 			.c-dropdown__content:popover-open,
-			.c-dropdown__content[data-c-popover-open]
+			.c-dropdown__content[data-v-popover-open]
 		)::after {
 		content: ' ';
 		position: fixed;
@@ -24,12 +24,12 @@
 	/* Make backdrop transparent on larger screens */
 	@mixin v-breakpoint-tablet {
 		body:has(
-				.c-dropdown__content:popover-open,
-				.c-dropdown__content[data-c-popover-open]
+				.c-dropdown__content[data-c-dropdown__positioned]:popover-open,
+				.c-dropdown__content[data-c-dropdown__positioned][data-v-popover-open]
 			)::after,
 		:modal:has(
-				.c-dropdown__content:popover-open,
-				.c-dropdown__content[data-c-popover-open]
+				.c-dropdown__content[data-c-dropdown__positioned]:popover-open,
+				.c-dropdown__content[data-c-dropdown__positioned][data-v-popover-open]
 			)::after {
 			background-color: transparent;
 			backdrop-filter: none;
@@ -96,7 +96,7 @@
 
 	/* Dropdown positioning only on larger screens */
 	@mixin v-breakpoint-tablet {
-		.c-dropdown__content {
+		.c-dropdown__content[data-c-dropdown__positioned] {
 			inset: unset;
 			width: auto;
 			padding-bottom: var(--c-dropdown__spacing);

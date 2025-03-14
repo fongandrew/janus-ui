@@ -21,6 +21,10 @@ import { elmDoc, evtDoc } from '~/shared/utility/multi-view';
 import { parseIntOrNull } from '~/shared/utility/parse';
 import { onUnmount } from '~/shared/utility/unmount-observer';
 
+/** Magic attribute to signal popover has been positioend */
+const POPOVER_POSITIONED_ATTR = 'data-c-dropdown__positioned';
+
+/** Track whether there's a floating UI clean up function for a popover */
 const [cleanUpCallback, setCleanUpCallback] = createMagicProp<() => void>();
 
 /** Set popover cleanup function */
@@ -162,6 +166,7 @@ const updatePosition = async (
 		],
 		strategy: 'fixed',
 	});
+	popover.setAttribute(POPOVER_POSITIONED_ATTR, '');
 	popover.style.setProperty('--c-dropdown__left', `${x}px`);
 	popover.style.setProperty('--c-dropdown__top', `${y}px`);
 };
@@ -171,7 +176,7 @@ function getTrigger(popover: HTMLElement) {
 }
 
 registerDocumentSetup((document) => {
-	const POPOVER_OPEN_ATTR = 'data-c-popover-open';
+	const POPOVER_OPEN_ATTR = 'data-v-popover-open';
 
 	//
 	// On desktop, the sequence of events for light dismiss is something like: mousedown,

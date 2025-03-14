@@ -94,6 +94,8 @@ export function Dropdown(props: DropdownProps) {
 				aria-haspopup={() => 'menu'}
 				popoverTarget={popoverId}
 				popoverTargetAction={() => 'show'}
+				// Native HTML popovers should work without JS
+				noJSDisabled={() => false}
 			>
 				{props.children}
 			</FormElementButtonPropsProvider>

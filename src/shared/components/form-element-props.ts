@@ -6,6 +6,7 @@ import { isServer } from 'solid-js/web';
 
 import { useFormElementProps } from '~/shared/components/form-element-context';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { mountRmAttr } from '~/shared/utility/callback-attrs/no-js';
 import {
 	createValidator,
 	EXTERNAL_ERROR_ATTR,
@@ -48,6 +49,8 @@ export type FormElementProps<
 	invalid?: boolean | undefined;
 	/** Validation attribute functions created with `createValidator` */
 	onValidate?: Validator<TElement> | undefined;
+	/** Disable this element if JS is disabled */
+	noJSDisabled?: boolean | undefined;
 	/**
 	 * Allow arbitrary data attributes
 	 */
@@ -78,10 +81,12 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 			// Prefer `aria-disabled` over disabled. Better screenreader experience if you
 			// can focus disabled element and see that it's disabled.
 			get disabled() {
+				if (isServer && formProps.noJSDisabled) return true;
 				return null;
 			},
 			// Set aria-disabled if disabled
 			get ['aria-disabled']() {
+				if (isServer && formProps.noJSDisabled) return true;
 				return formProps.disabled ?? formProps['aria-disabled'];
 			},
 			// Set aria-required if required
@@ -99,11 +104,23 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 				return (formProps.invalid ?? formProps['aria-invalid']) ? 'true' : null;
 			},
 			// Unset non-standard invalid attribute */
+			noJSDisabled: null,
 			invalid: null,
 		},
 
-		// Hook up validate on change (inside function so validatorId is tracked)
-		() => callbackAttrs(formProps, validateOnChange, getValidator()),
+		// Wrap callbackAttrs inside function so getValidator() / validatorId
+		// is in tracked scope
+		() =>
+			callbackAttrs(
+				formProps,
+				validateOnChange,
+				getValidator(),
+				...(isServer &&
+				formProps.noJSDisabled &&
+				!(formProps.disabled ?? formProps['aria-disabled'])
+					? [mountRmAttr('disabled'), mountRmAttr('aria-disabled')]
+					: []),
+			),
 	);
 
 	return merged as JSX.HTMLElementTags[TTag];

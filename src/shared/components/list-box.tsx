@@ -1,11 +1,13 @@
 import cx from 'classix';
 import { createContext, type JSX, mergeProps, splitProps, useContext } from 'solid-js';
 import { createUniqueId } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
 import {
 	createListBoxValidator,
 	listBoxChange,
 	listBoxKeyDown,
+	listBoxMount,
 	listBoxRequired,
 	listBoxReset,
 	type ListBoxValidator,
@@ -18,6 +20,7 @@ import {
 } from '~/shared/components/form-element-props';
 import { OptionList, OptionListGroup, OptionListSelectable } from '~/shared/components/option-list';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { mountAttr } from '~/shared/utility/callback-attrs/no-js';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
 
 export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'> {
@@ -84,13 +87,15 @@ export function ListBox(props: ListBoxProps) {
 				{...callbackAttrs(
 					optionListProps,
 					listBoxChange,
+					listBoxMount,
 					(props.required || props['aria-required']) && listBoxRequired,
 					listBoxKeyDown,
 					listBoxReset,
+					isServer && mountAttr('tabindex', '0'),
 				)}
 				role="listbox"
 				class={cx('c-list-box', rest.class)}
-				tabIndex={0}
+				tabIndex={isServer ? -1 : 0}
 				aria-multiselectable={props.multiple}
 				onChange={handleChange}
 			>

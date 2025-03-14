@@ -1,5 +1,6 @@
 import cx from 'classix';
-import { children, type JSX, splitProps } from 'solid-js';
+import { children, type JSX, mergeProps, splitProps } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
 import {
 	type FormElementProps,
@@ -14,7 +15,16 @@ export interface ButtonProps extends FormElementProps<'button'> {
 
 export function BaseButton(props: ButtonProps) {
 	const [local, rest] = splitProps(props, ['unstyled']);
-	const formElementProps = mergeFormElementProps<'button'>(rest);
+	const formElementProps = mergeFormElementProps<'button'>(
+		isServer
+			? /* eslint-disable solid/reactivity */
+				mergeProps(rest, {
+					// Buttons are default disabled with no JS
+					noJSDisabled: props.noJSDisabled !== false,
+				})
+			: /* eslint-enable solid/reactivity */
+				rest,
+	);
 	const resolved = children(() => props.children);
 	return (
 		<button

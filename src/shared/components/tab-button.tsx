@@ -1,7 +1,10 @@
 import cx from 'classix';
 import { children, createRenderEffect, type JSX, onCleanup } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
 import { useTabContext } from '~/shared/components/tab-context';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { mountRmAttr } from '~/shared/utility/callback-attrs/no-js';
 import { createAutoId } from '~/shared/utility/solid/auto-prop';
 import { spanify } from '~/shared/utility/solid/spanify';
 
@@ -34,6 +37,8 @@ export function TabButton(props: TabButtonProps) {
 			aria-selected={isSelected()}
 			tabIndex={isSelected() ? 0 : -1}
 			class={cx('c-tabs__button', props.class)}
+			disabled={props.disabled || isServer}
+			{...callbackAttrs(props, !props.disabled && mountRmAttr('disabled'))}
 		>
 			<span class="c-tabs__button-content">{spanify(resolved.toArray())}</span>
 		</button>

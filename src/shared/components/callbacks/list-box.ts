@@ -8,6 +8,7 @@ import {
 	optionListMatchText,
 } from '~/shared/components/callbacks/option-list';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
+import { createMounter } from '~/shared/utility/callback-attrs/mount';
 import { createValidator } from '~/shared/utility/callback-attrs/validate';
 import { elmDoc } from '~/shared/utility/multi-view';
 import { elmT } from '~/shared/utility/text/t-tag';
@@ -22,6 +23,21 @@ export const listBoxKeyDown = createHandler('keydown', '$c-list-box__keydown', f
 	optionListKeyDown.do.call(this, event);
 	optionListMatchText.do.call(this, event);
 	syncActiveDescendant(event.target as HTMLElement);
+});
+
+/**
+ * Synchronize aria-selected attribute with selection state (if JS is slow in loading,
+ * user may change initial selection before mount)
+ */
+export const listBoxMount = createMounter('$c-list-box__mount', function () {
+	const listElm = getList(this);
+	if (!listElm) return;
+
+	for (const elm of getListItems(listElm)) {
+		if (elm instanceof HTMLInputElement && typeof elm.checked === 'boolean') {
+			elm.setAttribute('aria-selected', String(elm.checked));
+		}
+	}
 });
 
 /**

@@ -1,6 +1,6 @@
 import { createUniqueId, type JSX, mergeProps, splitProps } from 'solid-js';
 
-import { listBoxChange, listBoxReset } from '~/shared/components/callbacks/list-box';
+import { listBoxChange, listBoxMount, listBoxReset } from '~/shared/components/callbacks/list-box';
 import { selectCloseOnClick } from '~/shared/components/callbacks/select';
 import { DropdownContent } from '~/shared/components/dropdown';
 import { ListBoxContext } from '~/shared/components/list-box';
@@ -48,7 +48,12 @@ export function SelectOptionList(props: SelectOptionListProps) {
 					role="listbox"
 					id={local.listBoxId}
 					class="t-unstyled"
-					{...callbackAttrs(listBoxChange, listBoxReset, selectCloseOnClick)}
+					{...callbackAttrs(
+						listBoxChange,
+						listBoxMount,
+						listBoxReset,
+						selectCloseOnClick,
+					)}
 				>
 					{local.children}
 					<div class="c-select__empty_state">
