@@ -32,7 +32,7 @@ export function SelectContainer(props: SelectContainerProps) {
 					<Button
 						class="c-select__clear"
 						aria-controls={[local.listId, local.inputId].join(' ')}
-						aria-label={t`Clear selection`}
+						aria-label={t`Clear Selection`}
 						unsetFormInput
 						unstyled
 						{...callbackAttrs(selectClear)}

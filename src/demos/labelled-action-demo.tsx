@@ -22,7 +22,7 @@ export function LabelledActionDemo() {
 						label="Do the thing"
 						description="Doing the thing has consequences"
 					>
-						<Button class="v-colors-danger">Do the thing</Button>
+						<Button class="v-colors-danger">Do the Thing</Button>
 					</LabelledActionCard>
 					<LabelledActionCard
 						label="Do the thing"
@@ -30,7 +30,7 @@ export function LabelledActionDemo() {
 						errorMessage="Oops, doing the thing has been disabled"
 					>
 						<Button class="v-colors-danger" disabled>
-							Do the thing
+							Do the Thing
 						</Button>
 					</LabelledActionCard>
 					<LabelledActionCard
