@@ -39,6 +39,7 @@ export default tseslint.config(
 	eslintConfigPrettier,
 	solid.configs['flat/typescript'],
 	{
+		ignores: ['**/*.test.*'],
 		plugins: {
 			'css-class-usage': cssClassUsagePlugin,
 		},

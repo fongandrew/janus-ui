@@ -33,7 +33,7 @@ export function createPropModContext<T = JSX.HTMLAttributes<HTMLElement>>() {
 		const parentContext = useContext(Context) ?? [];
 		const [local, rest] = splitProps(props, ['children']);
 		return (
-			<Context.Provider value={[...parentContext, rest as any]} children={local.children} />
+			<Context.Provider value={[rest as any, ...parentContext]} children={local.children} />
 		);
 	}
 
