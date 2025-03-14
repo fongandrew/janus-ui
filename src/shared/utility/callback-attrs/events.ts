@@ -14,7 +14,7 @@ import {
 import { data } from '~/shared/utility/magic-strings';
 
 /** Data attribute used to identify delegated event handlers */
-export const HANDLER_ATTR = data('handler');
+export const HANDLER_ATTR_PREFIX = data('on-');
 
 /**
  * List of supported delegatable events. If map is true, then we delegate via useCapture
@@ -124,8 +124,9 @@ function getRegistry<T extends DelegatableEvent>(
 		});
 	});
 
-	registry =
-		createCallbackRegistry<(e: Event & { currentTarget: HTMLElement }) => void>(HANDLER_ATTR);
+	registry = createCallbackRegistry<(e: Event & { currentTarget: HTMLElement }) => void>(
+		`${HANDLER_ATTR_PREFIX}${eventType}`,
+	);
 	handlerRegistries[eventType] = registry;
 	return registry;
 }
