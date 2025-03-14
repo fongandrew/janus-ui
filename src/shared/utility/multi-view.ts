@@ -1,3 +1,9 @@
+import { isServer } from 'solid-js/web';
+
+// Export references to root window and doc in base we need it
+export const parentWindow = isServer ? undefined : window;
+export const parentDocument = isServer ? undefined : window.document;
+
 /**
  * Util for getting document from a node. Useful to support multiple documents
  */

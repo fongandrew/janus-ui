@@ -183,12 +183,7 @@ export default tseslint.config(
 	// Restrict certain window-specific globals to avoid SSR or multi-window issues
 	{
 		files: ['src/**/*.{js,ts,jsx,tsx}'],
-		ignores: [
-			'src/shared/utility/document-setup.ts',
-			'src/shared/utility/solid/mount-root.ts',
-			'src/shared/utility/solid/window-context.ts',
-			'**/*.test.*',
-		],
+		ignores: ['src/shared/utility/multi-view.ts', '**/*.test.*'],
 		rules: {
 			'no-restricted-globals': [
 				'error',
