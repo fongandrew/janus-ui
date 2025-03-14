@@ -1,5 +1,5 @@
 import cx from 'classix';
-import { createContext, createMemo, type JSX, mergeProps, splitProps, useContext } from 'solid-js';
+import { createContext, type JSX, mergeProps, splitProps, useContext } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
 import {
@@ -18,6 +18,7 @@ import {
 } from '~/shared/components/form-element-props';
 import { OptionList, OptionListGroup, OptionListSelectable } from '~/shared/components/option-list';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { createAuto } from '~/shared/utility/solid/auto-prop';
 
 export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'> {
 	/** Name for form submission */
@@ -115,7 +116,7 @@ export interface ListBoxItemProps extends JSX.HTMLAttributes<HTMLInputElement> {
 /** A single list box item */
 export function ListBoxItem(props: ListBoxItemProps) {
 	const context = useContext(ListBoxContext);
-	const value = createMemo(() => props.value ?? createUniqueId());
+	const value = createAuto(props, 'value');
 	return (
 		<OptionListSelectable
 			{...props}

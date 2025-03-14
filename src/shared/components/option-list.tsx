@@ -1,8 +1,9 @@
 import cx from 'classix';
 import { Check } from 'lucide-solid';
-import { children, createMemo, type JSX, splitProps } from 'solid-js';
+import { children, type JSX, splitProps } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
+import { createAutoId } from '~/shared/utility/solid/auto-prop';
 import { spanify } from '~/shared/utility/solid/spanify';
 
 export interface OptionListProps extends JSX.HTMLAttributes<HTMLDivElement> {
@@ -30,7 +31,7 @@ export type OptionListItemProps<TElement> = {
 /** Option list selectable input item, meant for use in Listbox-like components */
 export function OptionListSelectable(props: JSX.InputHTMLAttributes<HTMLInputElement>) {
 	const [local, rest] = splitProps(props, ['children', 'class', 'id']);
-	const id = createMemo(() => local.id || createUniqueId());
+	const id = createAutoId(local);
 	return (
 		<label class={cx('t-unstyled', 'c-option-list__item', local.class)}>
 			<input
@@ -52,7 +53,7 @@ export function OptionListSelectable(props: JSX.InputHTMLAttributes<HTMLInputEle
 
 /** Button list item, meant for use in Menu-like components */
 export function OptionListButton(props: JSX.ButtonHTMLAttributes<HTMLButtonElement>) {
-	const id = createMemo(() => props.id || createUniqueId());
+	const id = createAutoId(props);
 	const resolved = children(() => props.children);
 	return (
 		<button {...props} id={id()} role="option" class={cx('c-option-list__item', props.class)}>
@@ -63,7 +64,7 @@ export function OptionListButton(props: JSX.ButtonHTMLAttributes<HTMLButtonEleme
 
 /** Anchor link list item, meant for use in Menu-like components */
 export function OptionListAnchor(props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) {
-	const id = createMemo(() => props.id || createUniqueId());
+	const id = createAutoId(props);
 	const resolved = children(() => props.children);
 	return (
 		<a {...props} id={id()} class={cx('c-option-list__item', props.class)}>

@@ -1,7 +1,6 @@
 import { type Placement } from '@floating-ui/dom';
 import cx from 'classix';
-import { createMemo, type JSX, splitProps } from 'solid-js';
-import { createUniqueId } from 'solid-js';
+import { type JSX, splitProps } from 'solid-js';
 
 import {
 	tooltipBlur,
@@ -12,6 +11,7 @@ import {
 import { FormElementButtonPropsProvider } from '~/shared/components/form-element-context';
 import { attrs } from '~/shared/utility/attribute-list';
 import { callbackAttrMods } from '~/shared/utility/callback-attrs/callback-registry';
+import { createAutoId } from '~/shared/utility/solid/auto-prop';
 
 export interface TooltipContentProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	/** Make ID required for `aria-label` purposes */
@@ -36,7 +36,7 @@ export function TooltipContent(props: TooltipContentProps) {
 
 export function Tooltip(props: TooltipProps) {
 	const [local, rest] = splitProps(props, ['children', 'tip']);
-	const tooltipId = createMemo(() => props.id || createUniqueId());
+	const tooltipId = createAutoId(props);
 
 	const mods = {
 		'aria-describedby': (prev: string | undefined) => attrs(prev, tooltipId()),

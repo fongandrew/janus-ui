@@ -1,7 +1,6 @@
 import { type Placement } from '@floating-ui/dom';
 import cx from 'classix';
-import { createContext, createMemo, type JSX, splitProps, useContext } from 'solid-js';
-import { createUniqueId } from 'solid-js';
+import { createContext, type JSX, splitProps, useContext } from 'solid-js';
 
 import { GhostButton } from '~/shared/components/button';
 import {
@@ -15,6 +14,7 @@ import {
 } from '~/shared/components/form-element-context';
 import { attrs } from '~/shared/utility/attribute-list';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { createAuto } from '~/shared/utility/solid/auto-prop';
 import { T } from '~/shared/utility/text/t-components';
 
 // Omit the `id` attribute from the HTMLDivElement interface because it should be assigned
@@ -88,8 +88,8 @@ export function DropdownContent(props: DropdownContentProps) {
 
 /** The wrapper component that creates IDs and ties things together */
 export function Dropdown(props: DropdownProps) {
-	const triggerId = createMemo(() => props.triggerId ?? createUniqueId());
-	const popoverId = createMemo(() => props.popoverId ?? createUniqueId());
+	const triggerId = createAuto(props, 'triggerId');
+	const popoverId = createAuto(props, 'popoverId');
 	return (
 		<DropdownContext.Provider value={{ triggerId, popoverId }}>
 			<FormElementButtonPropsProvider
