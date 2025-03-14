@@ -36,7 +36,7 @@ export const EXTERNAL_ERROR_ATTR = data('validation__external-error');
 /**
  * Magic data attribute used to identify elements with custom validators
  */
-export const VALIDATE_ATTR = data('validation');
+export const VALIDATE_ATTR = data('on-validation');
 
 /**
  * Magic prop for marking an input as having been "touched" for validation purposes
@@ -166,7 +166,6 @@ export function validate<T extends HTMLElement>(elm: T, event: Event): string | 
 	(elm as Partial<HTMLInputElement>).setCustomValidity?.('');
 	if ((elm as Partial<HTMLInputElement>).checkValidity?.() === false) {
 		const msg = (elm as T & HTMLInputElement).validationMessage;
-		console.log('built in', msg);
 		setError(elm, msg);
 		return msg;
 	}
@@ -179,10 +178,8 @@ export function validate<T extends HTMLElement>(elm: T, event: Event): string | 
 
 	// Use the registry's iter method to iterate through all validators for this element
 	for (const validator of validationRegistry.iter(elm)) {
-		console.log('iter', elm, validator);
 		const res = validator.call(elm, event as Event & { currentTarget: T });
 		if (res) {
-			console.log('custom', { res });
 			setError(elm, res);
 			return res;
 		}
@@ -244,7 +241,6 @@ registerDocumentSetup((document) => {
 			// validate everything so they can fix before resubmit.
 			let hasValidationErrors = false;
 			for (const child of getValidatableElements(form)) {
-				console.log(child);
 				if (validate(child as HTMLElement, event)) {
 					hasValidationErrors = true;
 				}
