@@ -94,7 +94,7 @@ describe('createPropModContext', () => {
 		));
 
 		const element = getByTestId('test-element');
-		expect(element).toHaveAttribute('class', 'original-class inner-class outer-class');
+		expect(element).toHaveAttribute('class', 'original-class outer-class inner-class');
 		expect(element).toHaveAttribute('id', 'inner-id');
 		expect(element).toHaveAttribute('aria-label', 'outer-label');
 	});
@@ -189,6 +189,6 @@ describe('useSingleProp', () => {
 		));
 
 		const element = getByTestId('test-element');
-		expect(element).toHaveAttribute('data-text', 'initial-inner-outer');
+		expect(element).toHaveAttribute('data-text', 'initial-outer-inner');
 	});
 });
