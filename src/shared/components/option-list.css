@@ -62,13 +62,17 @@
 		text-decoration: none;
 	}
 
-	body:not([data-kb-nav='true']) .c-option-list__item:hover,
-	body:not([data-kb-nav='true']) a.c-option-list__item:hover,
-	body[data-kb-nav='true'] .c-option-list__item:focus-visible,
-	body[data-kb-nav='true'] :focus-visible .c-option-list__item[data-option-list__active],
-	body[data-kb-nav='true'] :focus-visible .c-option-list__item:has([data-option-list__active]),
-	body[data-kb-nav='true'] :popover-open .c-option-list__item[data-option-list__active],
-	body[data-kb-nav='true'] :popover-open .c-option-list__item:has([data-option-list__active]) {
+	body:not([data-c-v-kb-nav='true']) .c-option-list__item:hover,
+	body:not([data-c-v-kb-nav='true']) a.c-option-list__item:hover,
+	body[data-c-v-kb-nav='true'] .c-option-list__item:focus-visible,
+	body[data-c-v-kb-nav='true'] :focus-visible .c-option-list__item[data-c-option-list__active],
+	body[data-c-v-kb-nav='true']
+		:focus-visible
+		.c-option-list__item:has([data-c-option-list__active]),
+	body[data-c-v-kb-nav='true'] :popover-open .c-option-list__item[data-c-option-list__active],
+	body[data-c-v-kb-nav='true']
+		:popover-open
+		.c-option-list__item:has([data-c-option-list__active]) {
 		@mixin v-colors-highlight;
 	}
 

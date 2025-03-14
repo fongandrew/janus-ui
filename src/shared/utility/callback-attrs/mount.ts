@@ -9,7 +9,7 @@ import { createMagicProp } from '~/shared/utility/magic-prop';
 export type MountHandler = (this: HTMLElement, element: HTMLElement) => void;
 
 /** Data attribute used to identify delegated event handlers */
-const MOUNT_ATTR = 'data-mount';
+const MOUNT_ATTR = 'data-t-mount';
 
 const mountRegistry = createCallbackRegistry<MountHandler>(MOUNT_ATTR);
 export const createMounter = mountRegistry.create;

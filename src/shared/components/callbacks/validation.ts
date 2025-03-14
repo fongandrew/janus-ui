@@ -24,18 +24,18 @@ export type Validator<T extends HTMLElement = HTMLElement> = (
 /**
  * Magic data attribute used to identify an error element associated with a control
  */
-export const FORM_CONTROL_ERROR_ATTR = 'data-validation__error';
+export const FORM_CONTROL_ERROR_ATTR = 'data-c-validation__error';
 
 /**
  * Magic data attribute for marking an input-like element as invalid. Set this to prevent
  * change validation from clearing errors set via reactive frameworks.
  */
-export const EXTERNAL_ERROR_ATTR = 'data-validation__external-error';
+export const EXTERNAL_ERROR_ATTR = 'data-c-validation__external-error';
 
 /**
  * Magic data attribute used to identify elements with custom validators
  */
-export const VALIDATE_ATTR = 'data-validation';
+export const VALIDATE_ATTR = 'data-c-validation';
 
 /**
  * Magic prop for marking an input as having been "touched" for validation purposes

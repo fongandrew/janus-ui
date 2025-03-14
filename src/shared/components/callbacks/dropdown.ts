@@ -171,7 +171,7 @@ function getTrigger(popover: HTMLElement) {
 }
 
 registerDocumentSetup((document) => {
-	const POPOVER_OPEN_ATTR = 'data-popover-open';
+	const POPOVER_OPEN_ATTR = 'data-c-popover-open';
 
 	//
 	// On desktop, the sequence of events for light dismiss is something like: mousedown,

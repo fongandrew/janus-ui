@@ -51,7 +51,7 @@ export type FormElementProps<
 	/**
 	 * Allow arbitrary data attributes
 	 */
-	[key: `data-${string}`]: string | undefined;
+	[key: `data-c-${string}`]: string | undefined;
 };
 
 /** Rewrites contextual props input elements and other form-like controls */

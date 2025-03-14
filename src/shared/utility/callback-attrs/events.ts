@@ -13,7 +13,7 @@ import {
 } from '~/shared/utility/event-propagation';
 
 /** Data attribute used to identify delegated event handlers */
-export const HANDLER_ATTR_PREFIX = 'data-on-';
+export const HANDLER_ATTR_PREFIX = 'data-t-on-';
 
 /**
  * List of supported delegatable events. If map is true, then we delegate via useCapture

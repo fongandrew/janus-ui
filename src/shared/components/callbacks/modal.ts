@@ -23,17 +23,17 @@ export type RequestCloseCallback = (
 /**
  * Magic attribute to identify modal content (used to find focusable elements)
  */
-export const MODAL_CONTENT_ATTR = 'data-modal__content';
+export const MODAL_CONTENT_ATTR = 'data-c-modal__content';
 
 /**
  * Magic attribute to identify modal footer (used to find focusable elements)
  */
-export const MODAL_FOOTER_ATTR = 'data-modal__footer';
+export const MODAL_FOOTER_ATTR = 'data-c-modal__footer';
 
 /**
  * Magic data attribute used to register a "request to close" callback on a modal
  */
-export const REQUEST_CLOSE_ATTR = 'data-modal__request-close';
+export const REQUEST_CLOSE_ATTR = 'data-c-modal__request-close';
 
 const requestCloseRegistry = createCallbackRegistry<RequestCloseCallback>(REQUEST_CLOSE_ATTR);
 export const createRequestCloseCallback = requestCloseRegistry.create;

@@ -54,7 +54,7 @@ export interface FormSubmitOptions {
 }
 
 /** Magic data attribute to note that form submission is in progress */
-export const FORM_BUSY_ATTR = 'data-form__busy';
+export const FORM_BUSY_ATTR = 'data-c-form__busy';
 
 /**
  * Custom event that is fired when validation on submit is complete and successful
@@ -85,7 +85,7 @@ export type ResetCallback = (
 /**
  * Magic data attribute used to register a reset callback on a synthetic form element
  */
-export const RESET_ATTR = 'data-form__reset';
+export const RESET_ATTR = 'data-c-form__reset';
 
 const resetRegistry = createCallbackRegistry<ResetCallback>(RESET_ATTR);
 export const createResetCallback = resetRegistry.create;

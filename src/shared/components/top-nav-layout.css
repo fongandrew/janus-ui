@@ -29,12 +29,12 @@
 		z-index: var(--v-z-backdrop);
 
 		/* Top nav hides on scroll */
-		&[data-top-nav__scroll-hide] {
+		&[data-c-top-nav__scroll-hide] {
 			/* A little more than 100% to hide shadow */
 			transform: translateY(-110%);
 		}
 
-		&:has(.c-top-nav__list[data-sidebar__state='open']) {
+		&:has(.c-top-nav__list[data-c-sidebar__state='open']) {
 			/* Transform messes up position: fixed on drawer */
 			transform: unset;
 		}
@@ -47,7 +47,7 @@
 	.c-top-nav__list-close {
 		display: none;
 
-		.c-top-nav-layout:has(.c-top-nav__list[data-sidebar__state='open']) & {
+		.c-top-nav-layout:has(.c-top-nav__list[data-c-sidebar__state='open']) & {
 			@mixin o-input-container-box;
 
 			display: block;
@@ -72,7 +72,7 @@
 		/* Nav links hidden by default on mobile */
 		display: none;
 
-		&[data-sidebar__state='open'] {
+		&[data-c-sidebar__state='open'] {
 			display: block;
 			position: fixed;
 			top: 0;
@@ -88,7 +88,7 @@
 	.c-top-nav__overlay {
 		display: none;
 
-		.c-top-nav-layout:has(.c-top-nav__list[data-sidebar__state='open']) & {
+		.c-top-nav-layout:has(.c-top-nav__list[data-c-sidebar__state='open']) & {
 			display: block;
 			position: fixed;
 			inset: 0;
@@ -117,14 +117,14 @@
 		}
 
 		/* Leave space for close button */
-		.c-top-nav__list[data-sidebar__state='open'] li:first-child > & {
+		.c-top-nav__list[data-c-sidebar__state='open'] li:first-child > & {
 			margin-right: calc(var(--v-input-height) + var(--v-inline-gap));
 		}
 	}
 
 	/* Actual nav bar on desktop */
 	@mixin v-breakpoint-tablet-wide {
-		.c-top-nav-layout:not(:has(.c-top-nav__list[data-sidebar__state='open'])) {
+		.c-top-nav-layout:not(:has(.c-top-nav__list[data-c-sidebar__state='open'])) {
 			.c-top-nav__list-open {
 				display: none;
 			}

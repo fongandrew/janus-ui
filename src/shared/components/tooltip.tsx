@@ -13,8 +13,6 @@ import { FormElementButtonPropsProvider } from '~/shared/components/form-element
 import { attrs } from '~/shared/utility/attribute-list';
 import { callbackAttrMods } from '~/shared/utility/callback-attrs/callback-registry';
 
-export const TOOLTIP_ARROW_ATTR = 'data-tooltip-arrow';
-
 export interface TooltipContentProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	/** Make ID required for `aria-label` purposes */
 	id: string;

@@ -1,4 +1,4 @@
-import '~/shared/utility/use-data-kb-nav';
+import '~/shared/utility/use-data-c-kb-nav';
 
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createTextMatcherForElement } from '~/shared/utility/create-text-matcher';
@@ -9,7 +9,7 @@ import { nextIndex } from '~/shared/utility/next-index';
 /**
  * Data variable used to identify a highlighted item in a list
  */
-export const LIST_HIGHLIGHTED_ATTR = 'data-option-list__active';
+export const LIST_HIGHLIGHTED_ATTR = 'data-c-option-list__active';
 
 /**
  * Handle arrow key navigation and selection of options in a list

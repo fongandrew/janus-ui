@@ -49,8 +49,8 @@ export const tooltipMouseOver = Object.assign(
 		showTooltip(trigger, tooltip);
 	}),
 	{
-		ARROW_ATTR: 'data-tooltip-arrow',
-		PLACEMENT_ATTR: 'data-tooltip-placement',
+		ARROW_ATTR: 'data-c-tooltip__arrow',
+		PLACEMENT_ATTR: 'data-c-tooltip__placement',
 	},
 );
 

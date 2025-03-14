@@ -1,7 +1,7 @@
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { evtDoc } from '~/shared/utility/multi-view';
 
-export const KB_NAV_ATTR = 'data-kb-nav';
+export const KB_NAV_ATTR = 'data-v-kb-nav';
 
 let isKeyboardNavigating = false;
 

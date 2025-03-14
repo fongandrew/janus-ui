@@ -13,7 +13,7 @@ import { elmDoc } from '~/shared/utility/multi-view';
  * (empty string is considered the null or default state). This should go on the
  * sidebar element itself.
  */
-export const SIDEBAR_STATE_ATTR = 'data-sidebar__state';
+export const SIDEBAR_STATE_ATTR = 'data-c-sidebar__state';
 
 /**
  * We want to close the sidebar on narrow widths when focus leaves it but only if focus was

@@ -4,7 +4,7 @@ import { createMagicProp } from '~/shared/utility/magic-prop';
 import { onUnmount } from '~/shared/utility/unmount-observer';
 
 /** Magic data attr to set to signal we should hide top nav on scroll */
-export const TOP_NAV_SCROLL_HIDE_ATTR = 'data-top-nav__scroll-hide';
+export const TOP_NAV_SCROLL_HIDE_ATTR = 'data-c-top-nav__scroll-hide';
 
 /** Magic prop for memoizing memoized height (and measurement time) of header */
 export const [memoizedHeight, setMemoizedHeight] = createMagicProp<[number, number]>();

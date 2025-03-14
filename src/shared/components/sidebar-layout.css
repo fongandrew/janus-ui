@@ -40,7 +40,7 @@
 		container-type: inline-size;
 	}
 
-	.c-sidebar[data-sidebar__state='open'] {
+	.c-sidebar[data-c-sidebar__state='open'] {
 		position: fixed;
 		bottom: 0;
 		left: 0;
@@ -59,7 +59,7 @@
 		background-color: var(--v-backdrop);
 	}
 
-	.c-sidebar-layout:has(.c-sidebar[data-sidebar__state='open']) .c-sidebar__overlay {
+	.c-sidebar-layout:has(.c-sidebar[data-c-sidebar__state='open']) .c-sidebar__overlay {
 		display: block;
 	}
 
@@ -151,7 +151,7 @@
 	@mixin v-breakpoint-tablet-wide {
 		/* Default open on desktop */
 		.c-sidebar,
-		.c-sidebar[data-sidebar__state='open'] {
+		.c-sidebar[data-c-sidebar__state='open'] {
 			position: relative;
 			flex-shrink: 0;
 			display: flex;
@@ -159,12 +159,12 @@
 		}
 
 		.c-sidebar__overlay,
-		.c-sidebar-layout:has(.c-sidebar[data-sidebar__state='open']) .c-sidebar__overlay {
+		.c-sidebar-layout:has(.c-sidebar[data-c-sidebar__state='open']) .c-sidebar__overlay {
 			display: none;
 		}
 
 		/* Can be explicitly closed on desktop */
-		.c-sidebar[data-sidebar__state='closed'] {
+		.c-sidebar[data-c-sidebar__state='closed'] {
 			display: none;
 		}
 
@@ -177,7 +177,7 @@
 			display: none;
 		}
 
-		.c-sidebar-layout:has(.c-sidebar[data-sidebar__state='closed']) .c-sidebar__open-button {
+		.c-sidebar-layout:has(.c-sidebar[data-c-sidebar__state='closed']) .c-sidebar__open-button {
 			display: inline-flex;
 		}
 	}

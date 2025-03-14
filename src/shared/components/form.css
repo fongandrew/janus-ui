@@ -21,7 +21,7 @@
 		display: none;
 	}
 
-	[data-form__busy] {
+	[data-c-form__busy] {
 		button&,
 		input& {
 			@mixin t-disabled-button;
