@@ -11,8 +11,8 @@ import { Form, type FormProps } from '~/shared/components/form';
 import { SubmitButton } from '~/shared/components/form-buttons';
 import { ModalCloseButton, ModalContent } from '~/shared/components/modal';
 import { ModalSpeedBump, type ModalSpeedBumpProps } from '~/shared/components/modal-speed-bump';
+import { T } from '~/shared/components/t-components';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
-import { T } from '~/shared/utility/text/t-components';
 
 export interface ModalFormContentProps<TNames extends string> extends FormProps<TNames> {
 	/** Automatically close form on submit? Defaults to true */

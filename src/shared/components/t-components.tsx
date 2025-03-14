@@ -3,6 +3,7 @@
  */
 import { type JSX } from 'solid-js';
 
+import { useLocale } from '~/shared/utility/solid/locale-context';
 import {
 	formatDate,
 	formatDateTime,
@@ -10,7 +11,6 @@ import {
 	formatTime,
 } from '~/shared/utility/text/date-time';
 import { formatConjunctionParts, formatDisjunctionParts } from '~/shared/utility/text/list';
-import { LocaleContext, useLocale } from '~/shared/utility/text/locale';
 import { formatCurrency, formatInteger, formatPercentage } from '~/shared/utility/text/number';
 import { formatRelativeTime, formatRelativeTimeNarrow } from '~/shared/utility/text/relative-time';
 
@@ -18,18 +18,8 @@ import { formatRelativeTime, formatRelativeTimeNarrow } from '~/shared/utility/t
  * Generic text wrapper component. This is a placeholder for a real
  * translation component that would handle translation of text strings.
  */
-export function T(props: { children: JSX.Element; locale?: string }) {
-	return (
-		<>
-			{props.locale ? (
-				<LocaleContext.Provider value={props.locale}>
-					{props.children}
-				</LocaleContext.Provider>
-			) : (
-				<>{props.children}</>
-			)}
-		</>
-	);
+export function T(props: { children: JSX.Element }) {
+	return <>{props.children}</>;
 }
 
 /**

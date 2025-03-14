@@ -2,7 +2,7 @@ import cx from 'classix';
 import { ErrorBoundary, type JSX, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 
-import { T } from '~/shared/utility/text/t-components';
+import { T } from '~/shared/components/t-components';
 
 export type CardProps = JSX.IntrinsicAttributes &
 	JSX.HTMLAttributes<HTMLDivElement> & {

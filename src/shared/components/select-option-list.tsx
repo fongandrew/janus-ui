@@ -5,8 +5,8 @@ import { selectCloseOnClick } from '~/shared/components/callbacks/select';
 import { DropdownContent } from '~/shared/components/dropdown';
 import { ListBoxContext } from '~/shared/components/list-box';
 import { OptionList } from '~/shared/components/option-list';
+import { T } from '~/shared/components/t-components';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
-import { T } from '~/shared/utility/text/t-components';
 
 // Disallow ID, should be set via context
 export interface SelectOptionListProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'id'> {

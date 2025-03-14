@@ -19,12 +19,12 @@ import {
 } from '~/shared/components/callbacks/modal';
 import { FormElementPropsProvider } from '~/shared/components/form-element-context';
 import { ModalContext } from '~/shared/components/modal-context';
+import { T } from '~/shared/components/t-components';
 import { attrNoConflict } from '~/shared/utility/attribute';
 import { callbackAttrMods, callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { createAutoId } from '~/shared/utility/solid/auto-prop';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
-import { T } from '~/shared/utility/text/t-components';
-import { t } from '~/shared/utility/text/t-tag';
+import { useT } from '~/shared/utility/solid/locale-context';
 
 export type DialogProps = JSX.DialogHtmlAttributes<HTMLDialogElement> & {
 	/**
@@ -104,6 +104,7 @@ export function Modal(props: DialogProps) {
 
 /** X button in corner of modal */
 export function ModalXButton(props: ButtonProps) {
+	const t = useT();
 	return (
 		<IconButton
 			label={t`Close`}

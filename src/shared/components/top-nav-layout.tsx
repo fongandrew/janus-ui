@@ -19,7 +19,7 @@ import { topNavScroll } from '~/shared/components/callbacks/top-nav';
 import { TopNavContext } from '~/shared/components/top-nav-context';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
-import { t } from '~/shared/utility/text/t-tag';
+import { useT } from '~/shared/utility/solid/locale-context';
 
 /**
  * A layout component that provides a top navigation context
@@ -63,6 +63,7 @@ export function TopNav(props: JSX.HTMLAttributes<HTMLElement>) {
  * A button component that opens the nav drawer. Only visible on mobile.
  */
 export function TopNavMenuButton(props: ButtonProps) {
+	const t = useT();
 	return (
 		<IconButton
 			label={t`Open Menu`}
@@ -79,6 +80,7 @@ export function TopNavMenuButton(props: ButtonProps) {
  * Separate button to close top nav on mobile
  */
 export function TopNavCloseButton(props: ButtonProps) {
+	const t = useT();
 	const navId = useContext(TopNavContext);
 	return (
 		<div class="c-top-nav__list-close">

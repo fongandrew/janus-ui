@@ -12,10 +12,10 @@ import {
 	FormElementButtonPropsProvider,
 	FormElementResetProvider,
 } from '~/shared/components/form-element-context';
+import { T } from '~/shared/components/t-components';
 import { attrs } from '~/shared/utility/attribute-list';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
-import { T } from '~/shared/utility/text/t-components';
 
 // Omit the `id` attribute from the HTMLDivElement interface because it should be assigned
 // via context

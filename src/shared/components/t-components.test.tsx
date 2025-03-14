@@ -10,7 +10,8 @@ import {
 	FormatRelativeTime,
 	FormatTime,
 	T,
-} from '~/shared/utility/text/t-components';
+} from '~/shared/components/t-components';
+import { LocaleContext } from '~/shared/utility/solid/locale-context';
 
 describe('T components', () => {
 	it('renders text', () => {
@@ -35,7 +36,7 @@ describe('T components', () => {
 		vi.spyOn(Date, 'now').mockReturnValue(new Date(2021, 0, 1, 12, 36).getTime()); // Jan 1, 2021
 		render(() => (
 			<div data-testid="test-t-formatting">
-				<T locale="en-US">
+				<LocaleContext.Provider value="en-US">
 					<p>
 						I'd buy that for <FormatCurrency value={5.99} currency="USD" />.
 					</p>{' '}
@@ -61,7 +62,7 @@ describe('T components', () => {
 					<p>
 						My partners are <FormatList parts={['Alice', 'Bob', 'Scott']} />.
 					</p>
-				</T>
+				</LocaleContext.Provider>
 			</div>
 		));
 		expect(screen.getByTestId('test-t-formatting').textContent).toEqual(

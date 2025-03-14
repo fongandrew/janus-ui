@@ -18,7 +18,7 @@ import {
 import { SidebarContext } from '~/shared/components/sidebar-context';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
-import { t } from '~/shared/utility/text/t-tag';
+import { useT } from '~/shared/utility/solid/locale-context';
 
 /**
  * A layout component that provides a sidebar context
@@ -80,6 +80,7 @@ export function Sidebar(
  */
 export function SidebarOpenButton(props: ButtonProps) {
 	const contextId = useContext(SidebarContext);
+	const t = useT();
 	return (
 		<IconButton
 			aria-controls={contextId?.()}
@@ -99,6 +100,7 @@ export function SidebarOpenButton(props: ButtonProps) {
  * Will hide itself when the sidebar is open on desktop.
  */
 export function SidebarCloseButton(props: ButtonProps) {
+	const t = useT();
 	return (
 		<IconButton
 			label={t`Close Sidebar`}

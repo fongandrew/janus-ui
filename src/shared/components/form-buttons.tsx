@@ -4,7 +4,7 @@ import { splitProps, useContext } from 'solid-js';
 import { Button, type ButtonProps } from '~/shared/components/button';
 import { FormContext } from '~/shared/components/form-context';
 import { Spinner } from '~/shared/components/spinner';
-import { T } from '~/shared/utility/text/t-components';
+import { T } from '~/shared/components/t-components';
 
 export function ResetButton(props: ButtonProps) {
 	const formId = useContext(FormContext);

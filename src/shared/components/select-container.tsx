@@ -7,7 +7,7 @@ import { selectClear } from '~/shared/components/callbacks/select';
 import { Dropdown } from '~/shared/components/dropdown';
 import { FormElementResetProvider } from '~/shared/components/form-element-context';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
-import { t } from '~/shared/utility/text/t-tag';
+import { useT } from '~/shared/utility/solid/locale-context';
 
 export interface SelectContainerProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	/** Input ID, if any */
@@ -19,6 +19,7 @@ export interface SelectContainerProps extends JSX.HTMLAttributes<HTMLDivElement>
 }
 
 export function SelectContainer(props: SelectContainerProps) {
+	const t = useT();
 	const [local, rest] = splitProps(props, ['children', 'inputId', 'listId']);
 
 	return (

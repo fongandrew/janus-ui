@@ -10,7 +10,7 @@ import {
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createValidator } from '~/shared/utility/callback-attrs/validate';
 import { elmDoc } from '~/shared/utility/multi-view';
-import { t } from '~/shared/utility/text/t-tag';
+import { elmT } from '~/shared/utility/text/t-tag';
 
 /** Custom validator for ListBox-like things -- returns error or nothing if fine */
 export type ListBoxValidator = (values: Set<string>, event: Event) => string | undefined | null;
@@ -57,6 +57,7 @@ export const listBoxRequired = createValidator('$c-list-box__required', function
 	const listElm = getList(this);
 	if (!listElm) return;
 
+	const t = elmT(listElm);
 	if (listBoxValues(listElm).size === 0) {
 		return t`Please fill out this field.`;
 	}

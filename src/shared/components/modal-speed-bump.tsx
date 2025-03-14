@@ -9,7 +9,7 @@ import {
 	ModalTitle,
 } from '~/shared/components/modal';
 import { ModalContext } from '~/shared/components/modal-context';
-import { T } from '~/shared/utility/text/t-components';
+import { T } from '~/shared/components/t-components';
 
 export interface ModalSpeedBumpProps extends Omit<DialogProps, 'children'> {
 	/** ID required for speed bump targeting to work */

@@ -17,7 +17,7 @@ import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createMounter } from '~/shared/utility/callback-attrs/mount';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { elmDoc, evtDoc } from '~/shared/utility/multi-view';
-import { t } from '~/shared/utility/text/t-tag';
+import { elmT } from '~/shared/utility/text/t-tag';
 
 /** Keydown handler for select button */
 export const selectButtonKeyDown = createHandler(
@@ -177,6 +177,7 @@ export const selectMountText = createMounter<[string]>(
 		const listElm = getList(elm.querySelector<HTMLElement>('[role="combobox"]') ?? elm);
 		if (!listElm) return;
 
+		const t = elmT(listElm);
 		const values = listBoxValues(listElm);
 		if (values.size === 0) {
 			updateTarget.textContent = '';
