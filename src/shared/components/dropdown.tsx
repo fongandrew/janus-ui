@@ -73,11 +73,7 @@ export function DropdownContent(props: DropdownContentProps) {
 			>
 				<div class="c-dropdown__children">{local.children}</div>
 				<div class="c-dropdown__footer">
-					<GhostButton
-						class="v-input-sm"
-						unsetFormInput
-						{...callbackAttrs(props, dropdownClose)}
-					>
+					<GhostButton class="v-input-sm" {...callbackAttrs(props, dropdownClose)}>
 						<T>Close</T>
 					</GhostButton>
 				</div>
