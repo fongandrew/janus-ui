@@ -12,6 +12,7 @@ import { DetailsDemo } from '~/demos/details-demo';
 import { FooterDemo } from '~/demos/footer-demo';
 import { FormValidationGroupDemo } from '~/demos/form-validation-group-demo';
 import { InputsDemo } from '~/demos/inputs-demo';
+import { IntlDemo } from '~/demos/intl-demo';
 import { LabelledActionDemo } from '~/demos/labelled-action-demo';
 import { ListBoxDemo } from '~/demos/list-box-demo';
 import { MenuDemo } from '~/demos/menu-demo';
@@ -106,6 +107,7 @@ function Main() {
 						<AsyncFormDemo />
 						<FormValidationGroupDemo />
 						<SelectionValidationDemo />
+						<IntlDemo />
 						<FooterDemo />
 						<TabsDemo />
 					</main>
