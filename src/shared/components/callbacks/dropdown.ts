@@ -17,7 +17,6 @@ import {
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { createMagicProp } from '~/shared/utility/magic-prop';
-import { data } from '~/shared/utility/magic-strings';
 import { elmDoc, evtDoc } from '~/shared/utility/multi-view';
 import { parseIntOrNull } from '~/shared/utility/parse';
 import { onUnmount } from '~/shared/utility/unmount-observer';
@@ -172,7 +171,7 @@ function getTrigger(popover: HTMLElement) {
 }
 
 registerDocumentSetup((document) => {
-	const POPOVER_OPEN_ATTR = data('popover-open');
+	const POPOVER_OPEN_ATTR = 'data-popover-open';
 
 	//
 	// On desktop, the sequence of events for light dismiss is something like: mousedown,

@@ -12,7 +12,6 @@ import {
 
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createMagicProp } from '~/shared/utility/magic-prop';
-import { data } from '~/shared/utility/magic-strings';
 import { elmDoc } from '~/shared/utility/multi-view';
 import { onUnmount } from '~/shared/utility/unmount-observer';
 
@@ -50,8 +49,8 @@ export const tooltipMouseOver = Object.assign(
 		showTooltip(trigger, tooltip);
 	}),
 	{
-		ARROW_ATTR: data('tooltip-arrow'),
-		PLACEMENT_ATTR: data('tooltip-placement'),
+		ARROW_ATTR: 'data-tooltip-arrow',
+		PLACEMENT_ATTR: 'data-tooltip-placement',
 	},
 );
 

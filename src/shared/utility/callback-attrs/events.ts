@@ -11,10 +11,9 @@ import {
 	isPropagationStopped,
 	wrapStopPropagation,
 } from '~/shared/utility/event-propagation';
-import { data } from '~/shared/utility/magic-strings';
 
 /** Data attribute used to identify delegated event handlers */
-export const HANDLER_ATTR_PREFIX = data('on-');
+export const HANDLER_ATTR_PREFIX = 'data-on-';
 
 /**
  * List of supported delegatable events. If map is true, then we delegate via useCapture

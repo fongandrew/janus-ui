@@ -4,13 +4,12 @@
  */
 import { createCallbackRegistry } from '~/shared/utility/callback-attrs/callback-registry';
 import { createMagicProp } from '~/shared/utility/magic-prop';
-import { data } from '~/shared/utility/magic-strings';
 
 /** Mount functions */
 export type MountHandler = (this: HTMLElement, element: HTMLElement) => void;
 
 /** Data attribute used to identify delegated event handlers */
-const MOUNT_ATTR = data('mount');
+const MOUNT_ATTR = 'data-mount';
 
 const mountRegistry = createCallbackRegistry<MountHandler>(MOUNT_ATTR);
 export const createMounter = mountRegistry.create;

@@ -8,7 +8,6 @@ import {
 	type CallbackRegistry,
 	createCallbackRegistry,
 } from '~/shared/utility/callback-attrs/callback-registry';
-import { data } from '~/shared/utility/magic-strings';
 
 /** Basic callback, called after show/hide */
 export type VisibilityChangeCallback = (
@@ -18,13 +17,13 @@ export type VisibilityChangeCallback = (
 ) => void;
 
 /** Magic attribute to register a callback run before an element is hown */
-export const BEFORE_SHOW_ATTR = data('visibility__before-show');
+export const BEFORE_SHOW_ATTR = 'data-visibility__before-show';
 
 const beforeShowRegistry = createCallbackRegistry<VisibilityChangeCallback>(BEFORE_SHOW_ATTR);
 export const createBeforeShowCallback = beforeShowRegistry.create;
 
 /** Magic attribute to register a callback after an element is hidden */
-export const HIDE_ATTR = data('visibility__hide');
+export const HIDE_ATTR = 'data-visibility__hide';
 
 const afterHideRegistry = createCallbackRegistry<VisibilityChangeCallback>(HIDE_ATTR);
 export const createAfterHideCallback = afterHideRegistry.create;

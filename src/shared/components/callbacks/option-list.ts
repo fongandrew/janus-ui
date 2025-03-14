@@ -4,13 +4,12 @@ import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createTextMatcherForElement } from '~/shared/utility/create-text-matcher';
 import { isTextInput } from '~/shared/utility/element-types';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
-import { data } from '~/shared/utility/magic-strings';
 import { nextIndex } from '~/shared/utility/next-index';
 
 /**
  * Data variable used to identify a highlighted item in a list
  */
-export const LIST_HIGHLIGHTED_ATTR = data('option-list__active');
+export const LIST_HIGHLIGHTED_ATTR = 'data-option-list__active';
 
 /**
  * Handle arrow key navigation and selection of options in a list
