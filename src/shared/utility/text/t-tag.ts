@@ -1,5 +1,5 @@
 /**
- * Generic text wrapper tempalte tag. This is a placeholder for a real
+ * Generic text wrapper template tag. This is a placeholder for a real
  * translation tag that would handle translation of text strings.
  */
 export function t(strings: TemplateStringsArray, ...values: any[]): string {
