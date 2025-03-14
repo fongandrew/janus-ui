@@ -1,4 +1,4 @@
-import '~/shared/utility/use-data-c-kb-nav';
+import '~/shared/utility/use-data-kb-nav';
 
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createTextMatcherForElement } from '~/shared/utility/create-text-matcher';

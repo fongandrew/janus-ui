@@ -62,15 +62,15 @@
 		text-decoration: none;
 	}
 
-	body:not([data-c-v-kb-nav='true']) .c-option-list__item:hover,
-	body:not([data-c-v-kb-nav='true']) a.c-option-list__item:hover,
-	body[data-c-v-kb-nav='true'] .c-option-list__item:focus-visible,
-	body[data-c-v-kb-nav='true'] :focus-visible .c-option-list__item[data-c-option-list__active],
-	body[data-c-v-kb-nav='true']
+	body:not([data-v-kb-nav='true']) .c-option-list__item:hover,
+	body:not([data-v-kb-nav='true']) a.c-option-list__item:hover,
+	body[data-v-kb-nav='true'] .c-option-list__item:focus-visible,
+	body[data-v-kb-nav='true'] :focus-visible .c-option-list__item[data-c-option-list__active],
+	body[data-v-kb-nav='true']
 		:focus-visible
 		.c-option-list__item:has([data-c-option-list__active]),
-	body[data-c-v-kb-nav='true'] :popover-open .c-option-list__item[data-c-option-list__active],
-	body[data-c-v-kb-nav='true']
+	body[data-v-kb-nav='true'] :popover-open .c-option-list__item[data-c-option-list__active],
+	body[data-v-kb-nav='true']
 		:popover-open
 		.c-option-list__item:has([data-c-option-list__active]) {
 		@mixin v-colors-highlight;
