@@ -7,8 +7,8 @@ import {
 	optionListKeyDown,
 	optionListMatchText,
 } from '~/shared/components/callbacks/option-list';
-import { createValidator } from '~/shared/utility/callback-attrs/validate';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
+import { createValidator } from '~/shared/utility/callback-attrs/validate';
 import { elmDoc } from '~/shared/utility/multi-view';
 import { t } from '~/shared/utility/text/t-tag';
 

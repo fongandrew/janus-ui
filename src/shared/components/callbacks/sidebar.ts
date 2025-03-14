@@ -1,9 +1,9 @@
 import { callbackSelector } from '~/shared/utility/callback-attrs/callback-registry';
-import { createHandler } from '~/shared/utility/callback-attrs/events';
 import {
 	runAfterHideCallbacks,
 	runBeforeShowCallbacks,
 } from '~/shared/utility/callback-attrs/display';
+import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { firstFocusable } from '~/shared/utility/focusables';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { elmDoc } from '~/shared/utility/multi-view';

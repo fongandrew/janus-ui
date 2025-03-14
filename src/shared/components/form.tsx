@@ -7,10 +7,10 @@ import {
 	formResetOnSuccess,
 	type SubmitHandler,
 } from '~/shared/components/callbacks/form';
-import { FORM_CONTROL_ERROR_ATTR, validateReset } from '~/shared/utility/callback-attrs/validate';
 import { FormContext } from '~/shared/components/form-context';
 import { attrs } from '~/shared/utility/attribute-list';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { FORM_CONTROL_ERROR_ATTR, validateReset } from '~/shared/utility/callback-attrs/validate';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
 
 export interface FormProps<TNames extends string>

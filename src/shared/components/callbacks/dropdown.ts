@@ -9,11 +9,11 @@ import {
 	size,
 } from '@floating-ui/dom';
 
-import { createHandler } from '~/shared/utility/callback-attrs/events';
 import {
 	runAfterHideCallbacks,
 	runBeforeShowCallbacks,
 } from '~/shared/utility/callback-attrs/display';
+import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { createMagicProp } from '~/shared/utility/magic-prop';

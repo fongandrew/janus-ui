@@ -1,10 +1,10 @@
 import { type JSX } from 'solid-js';
 
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import {
 	validateChildrenOnChange,
 	validateTouchedChildrenOnChange,
 } from '~/shared/utility/callback-attrs/validate';
-import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
 /**
  * Simple div wrapper to reuire that certain form controls validate together

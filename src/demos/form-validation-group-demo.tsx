@@ -3,7 +3,6 @@ import { isServer } from 'solid-js/web';
 
 import { formOutputClear, formOutputWrite } from '~/demos/callbacks/form-output';
 import { matchesPassword } from '~/demos/callbacks/form-validation-group';
-import { type Validator } from '~/shared/utility/callback-attrs/validate';
 import {
 	Card,
 	CardContent,
@@ -22,6 +21,7 @@ import { Label } from '~/shared/components/label';
 import { LabelledInput } from '~/shared/components/labelled-control';
 import { Password } from '~/shared/components/password';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { type Validator } from '~/shared/utility/callback-attrs/validate';
 
 export function FormValidationGroupDemo() {
 	const [formData, setFormData] = createSignal<{

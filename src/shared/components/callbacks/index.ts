@@ -17,9 +17,9 @@ import * as toggle from '~/shared/components/callbacks/toggle';
 import * as toggleSwitch from '~/shared/components/callbacks/toggle-switch';
 import * as tooltip from '~/shared/components/callbacks/tooltip';
 import * as topNav from '~/shared/components/callbacks/top-nav';
-import * as validation from '~/shared/utility/callback-attrs/validate';
 import { loadCallbacks } from '~/shared/utility/callback-attrs/callback-registry';
 import { processRoot } from '~/shared/utility/callback-attrs/mount';
+import * as validation from '~/shared/utility/callback-attrs/validate';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 
 loadCallbacks(

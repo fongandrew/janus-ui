@@ -1,8 +1,8 @@
-import { createHandler } from '~/shared/utility/callback-attrs/events';
 import {
 	runAfterHideCallbacks,
 	runBeforeShowCallbacks,
 } from '~/shared/utility/callback-attrs/display';
+import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { elmDoc } from '~/shared/utility/multi-view';
 import { nextIndex } from '~/shared/utility/next-index';
 

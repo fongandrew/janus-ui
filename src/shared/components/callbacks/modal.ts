@@ -1,12 +1,12 @@
 import { updateScrollState } from '~/shared/components/callbacks/scroll';
 import { createCallbackRegistry } from '~/shared/utility/callback-attrs/callback-registry';
-import { createHandler } from '~/shared/utility/callback-attrs/events';
 import {
 	createAfterHideCallback,
 	createBeforeShowCallback,
 	runAfterHideCallbacks,
 	runBeforeShowCallbacks,
 } from '~/shared/utility/callback-attrs/display';
+import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { firstFocusable } from '~/shared/utility/focusables';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { elmDoc } from '~/shared/utility/multi-view';

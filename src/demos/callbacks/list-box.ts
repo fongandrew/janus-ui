@@ -1,7 +1,7 @@
 import { listBoxValues } from '~/shared/components/callbacks/list-box';
 import { getList } from '~/shared/components/callbacks/option-list';
-import { createValidator } from '~/shared/utility/callback-attrs/validate';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
+import { createValidator } from '~/shared/utility/callback-attrs/validate';
 
 export const listBoxUpdateText = createHandler(
 	'change',
