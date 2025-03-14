@@ -18,7 +18,7 @@ export type ListBoxValidator = (values: Set<string>, event: Event) => string | u
 /**
  * Handle arrow navigation in list box and basic selection
  */
-export const listBoxKeyDown = createHandler('keydown', 'list-box__keydown', function (event) {
+export const listBoxKeyDown = createHandler('keydown', '$c-list-box__keydown', function (event) {
 	optionListKeyDown.do.call(this, event);
 	optionListMatchText.do.call(this, event);
 	syncActiveDescendant(event.target as HTMLElement);
@@ -28,7 +28,7 @@ export const listBoxKeyDown = createHandler('keydown', 'list-box__keydown', func
  * Synchronize aria-selected attribute with selection state and mark changed item
  * as highlighted
  */
-export const listBoxChange = createHandler('change', 'list-box__change', (event) => {
+export const listBoxChange = createHandler('change', '$c-list-box__change', (event) => {
 	// ListBox is meant to encapsulate its internal elements. We'll re-dispatch
 	// change event from listbox itself below, so ignore it here and stop further
 	// propagation.
@@ -53,7 +53,7 @@ export const listBoxChange = createHandler('change', 'list-box__change', (event)
 /**
  * Custom validator to handle "required" behavior for list boxes
  */
-export const listBoxRequired = createValidator('list-box__required', function () {
+export const listBoxRequired = createValidator('$c-list-box__required', function () {
 	const listElm = getList(this);
 	if (!listElm) return;
 
@@ -65,7 +65,7 @@ export const listBoxRequired = createValidator('list-box__required', function ()
 /**
  * Reset values for reset -- reset event should handle input, so just resynchonize
  */
-export const listBoxReset = createResetCallback('list-box__reset', function () {
+export const listBoxReset = createResetCallback('$c-list-box__reset', function () {
 	const listElm = getList(this);
 	if (!listElm) return;
 

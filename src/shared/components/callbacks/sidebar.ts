@@ -19,7 +19,7 @@ export const SIDEBAR_STATE_ATTR = 'data-c-sidebar__state';
  * We want to close the sidebar on narrow widths when focus leaves it but only if focus was
  * previously visible (that is, focus is shifting via keypress rather than mouse click).
  */
-export const sidebarFocusOut = createHandler('focusout', 'sidebar__focus-out', (event) => {
+export const sidebarFocusOut = createHandler('focusout', '$c-sidebar__focus-out', (event) => {
 	const sidebar = event.currentTarget;
 
 	if (
@@ -45,7 +45,7 @@ export const sidebarFocusOut = createHandler('focusout', 'sidebar__focus-out', (
 /**
  * Close sidebar on escape key
  */
-export const sidebarEscape = createHandler('keydown', 'sidebar__escape', (event) => {
+export const sidebarEscape = createHandler('keydown', '$c-sidebar__escape', (event) => {
 	if (event.key === 'Escape') {
 		closeSidebar(event.currentTarget);
 	}
@@ -54,7 +54,7 @@ export const sidebarEscape = createHandler('keydown', 'sidebar__escape', (event)
 /**
  * Click handler to show sidebar
  */
-export const sidebarTriggerOpen = createHandler('click', 'sidebar__open', (event) => {
+export const sidebarTriggerOpen = createHandler('click', '$c-sidebar__open', (event) => {
 	const sidebar = getSidebarFromTrigger(event.currentTarget);
 	if (sidebar) {
 		openSidebar(sidebar);
@@ -64,7 +64,7 @@ export const sidebarTriggerOpen = createHandler('click', 'sidebar__open', (event
 /**
  * Click handler to hide sidebar
  */
-export const sidebarTriggerClose = createHandler('click', 'sidebar__close', (event) => {
+export const sidebarTriggerClose = createHandler('click', '$c-sidebar__close', (event) => {
 	const sidebar = getSidebarFromTrigger(event.currentTarget);
 	if (sidebar) {
 		closeSidebar(sidebar);

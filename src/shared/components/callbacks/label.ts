@@ -7,7 +7,7 @@ import { elmDoc } from '~/shared/utility/multi-view';
  * `aria-labelledby` with a `span` element instead. This handler focuses
  * the input element on click, mimicking the behavior of `for`.
  */
-export const focusInputOnClick = createHandler('click', 'label__focus-input', (event) => {
+export const focusInputOnClick = createHandler('click', '$c-label__focus-input', (event) => {
 	const labelLike = event.target as HTMLSpanElement;
 	const document = elmDoc(labelLike);
 

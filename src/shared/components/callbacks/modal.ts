@@ -48,7 +48,7 @@ const [mouseDownDialog, setMouseDownDialog] = createMagicProp<boolean>();
  */
 export const modalBackdropMouseDown = createHandler(
 	'mousedown',
-	'modal__backdrop-mousedown',
+	'$c-modal__backdrop-mousedown',
 	(event) => {
 		const dialog = event.currentTarget as HTMLDialogElement;
 		setMouseDownDialog(dialog, event.target === dialog);
@@ -56,7 +56,7 @@ export const modalBackdropMouseDown = createHandler(
 );
 
 /** Close modal on backdrop click  */
-export const modalBackdropClick = createHandler('click', 'modal__backdrop-click', (event) => {
+export const modalBackdropClick = createHandler('click', '$c-modal__backdrop-click', (event) => {
 	const dialog = event.currentTarget as HTMLDialogElement;
 	if (mouseDownDialog(dialog)) {
 		// A click on the dialog itself is really a click on the backdrop. The visible
@@ -69,7 +69,7 @@ export const modalBackdropClick = createHandler('click', 'modal__backdrop-click'
 });
 
 /** Close current modal when escape key is pressed */
-export const modalEscapeKey = createHandler('keydown', 'modal__escape', (event) => {
+export const modalEscapeKey = createHandler('keydown', '$c-modal__escape', (event) => {
 	if (event.key !== 'Escape') return;
 
 	const dialog = (event.target as HTMLElement)?.closest(':modal') as HTMLDialogElement | null;
@@ -85,7 +85,7 @@ export const modalEscapeKey = createHandler('keydown', 'modal__escape', (event) 
  * Open the modal associated with this element's target attribute
  * Switch this to command / commandfor when tere's better support for that.
  */
-export const modalTriggerOpen = createHandler('click', 'modal__trigger-open', (event) => {
+export const modalTriggerOpen = createHandler('click', '$c-modal__trigger-open', (event) => {
 	const target = event.currentTarget as HTMLElement;
 	const dialogId = target.getAttribute('aria-controls');
 	if (!dialogId) return;
@@ -97,7 +97,7 @@ export const modalTriggerOpen = createHandler('click', 'modal__trigger-open', (e
 /** Request the modal associated with this trigger close */
 export const modalTriggerRequestClose = createHandler(
 	'click',
-	'modal__trigger-request-close',
+	'$c-modal__trigger-request-close',
 	(event) => {
 		const target = event.currentTarget as HTMLElement;
 		const dialogId = target.getAttribute('aria-controls');
@@ -110,7 +110,7 @@ export const modalTriggerRequestClose = createHandler(
 );
 
 /** Forcefully close the modal associated with trigger */
-export const modalTriggerClose = createHandler('click', 'modal__trigger-close', (event) => {
+export const modalTriggerClose = createHandler('click', '$c-modal__trigger-close', (event) => {
 	const target = event.currentTarget as HTMLElement;
 	const dialogId = target.getAttribute('aria-controls');
 	const dialog = dialogId ? elmDoc(target)?.getElementById(dialogId) : target.closest(':modal');

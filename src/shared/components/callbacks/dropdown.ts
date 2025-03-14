@@ -39,7 +39,7 @@ export const cleanUpPopover = (popover: HTMLElement) => {
 /**
  * Handle menu blur / focus out closing the parent popover
  */
-export const dropdownCloseOnBlur = createHandler('focusout', 'dropdown__focusout', (event) => {
+export const dropdownCloseOnBlur = createHandler('focusout', '$c-dropdown__focusout', (event) => {
 	if (!isFocusVisible()) return;
 
 	const relatedTarget = event.relatedTarget as HTMLElement | null;
@@ -56,7 +56,7 @@ export const dropdownCloseOnBlur = createHandler('focusout', 'dropdown__focusout
 /**
  * Close nearest popover
  */
-export const dropdownClose = createHandler('click', 'dropdown__close', (event) => {
+export const dropdownClose = createHandler('click', '$c-dropdown__close', (event) => {
 	const target = event.target as HTMLElement;
 	const popover = target.closest(':popover-open') as HTMLElement | null;
 	popover?.hidePopover();
@@ -67,7 +67,7 @@ export const dropdownClose = createHandler('click', 'dropdown__close', (event) =
  */
 export const dropdownBeforeToggleOpen = createHandler(
 	'beforetoggle',
-	'dropdown__before-toggle-open',
+	'$c-dropdown__before-toggle-open',
 	(event, placement?: Placement, offset?: string, fixedWidth?: 'fw') => {
 		if ((event as ToggleEvent & { currentTarget: HTMLElement }).newState !== 'open') return;
 		const target = event.target as HTMLElement;
@@ -98,7 +98,7 @@ export const dropdownBeforeToggleOpen = createHandler(
 );
 
 /** Run any cleanup callbacks after dropdown is closed */
-export const dropdownToggleClosed = createHandler('toggle', 'dropdown__toggle-closed', ((
+export const dropdownToggleClosed = createHandler('toggle', '$c-dropdown__toggle-closed', ((
 	event: ToggleEvent,
 ) => {
 	if (event.newState !== 'closed') return;

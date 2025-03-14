@@ -14,7 +14,7 @@ export const LIST_HIGHLIGHTED_ATTR = 'data-c-option-list__active';
 /**
  * Handle arrow key navigation and selection of options in a list
  */
-export const optionListKeyDown = createHandler('keydown', 'option-list__keydown', (event) => {
+export const optionListKeyDown = createHandler('keydown', '$c-option-list__keydown', (event) => {
 	const target = event.target as HTMLElement;
 	const listElm = getList(target);
 	if (!listElm) return;
@@ -62,21 +62,25 @@ export const optionListKeyDown = createHandler('keydown', 'option-list__keydown'
 /**
  * Highlight matching text when typing
  */
-export const optionListMatchText = createHandler('keydown', 'option-list__match-text', (event) => {
-	if (event.key === ' ') return;
-	if (event.key.length !== 1) return;
+export const optionListMatchText = createHandler(
+	'keydown',
+	'$c-option-list__match-text',
+	(event) => {
+		if (event.key === ' ') return;
+		if (event.key.length !== 1) return;
 
-	const target = event.target as HTMLElement;
-	const listElm = getList(target);
-	if (!listElm) return;
+		const target = event.target as HTMLElement;
+		const listElm = getList(target);
+		if (!listElm) return;
 
-	const textMatcher = getTextMatcherForList(listElm);
-	const nextHighlighted = textMatcher(event.key);
-	if (nextHighlighted) {
-		event.preventDefault();
-		highlightInList(listElm, nextHighlighted);
-	}
-});
+		const textMatcher = getTextMatcherForList(listElm);
+		const nextHighlighted = textMatcher(event.key);
+		if (nextHighlighted) {
+			event.preventDefault();
+			highlightInList(listElm, nextHighlighted);
+		}
+	},
+);
 
 /**
  * Get list element from an element inside the list, the element itself,

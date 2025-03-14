@@ -11,7 +11,7 @@ import { elmDoc } from '~/shared/utility/multi-view';
 
 export const modalFormCloseOnSuccess = createHandler(
 	VALID_SUBMIT_EVENT,
-	'modal-form__close-on-success',
+	'$c-modal-form__close-on-success',
 	(e) => {
 		const dialog = e.currentTarget.closest(':modal') as HTMLDialogElement | null;
 		if (!dialog) return;

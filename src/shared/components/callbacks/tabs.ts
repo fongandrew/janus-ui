@@ -11,7 +11,7 @@ import { nextIndex } from '~/shared/utility/next-index';
  */
 export const tabKeyDown = createHandler(
 	'keydown',
-	'tab__keydown',
+	'$c-tab__keydown',
 	(event, mode: 'auto' | 'manual' = 'auto') => {
 		const tabBtn = event.target as HTMLButtonElement;
 
@@ -67,7 +67,7 @@ export const tabKeyDown = createHandler(
 /**
  * Handle click events on tab bar
  */
-export const tabClick = createHandler('click', 'tab__click', (event) => {
+export const tabClick = createHandler('click', '$c-tab__click', (event) => {
 	const tabBtn = (event.target as HTMLElement)?.closest<HTMLButtonElement>('[role="tab"]');
 	if (!tabBtn) return;
 

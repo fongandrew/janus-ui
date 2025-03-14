@@ -12,7 +12,7 @@ import { createHandler } from '~/shared/utility/callback-attrs/events';
 /**
  * Handle arrow navigation in menu
  */
-export const menuKeyDown = createHandler('keydown', 'menu__keydown', function (this, event) {
+export const menuKeyDown = createHandler('keydown', '$c-menu__keydown', function (this, event) {
 	optionListKeyDown.do.call(this, event);
 	optionListMatchText.do.call(this, event);
 
@@ -38,7 +38,7 @@ export const menuKeyDown = createHandler('keydown', 'menu__keydown', function (t
 /**
  * Close on menu item selection
  */
-export const menuCloseOnSelect = createHandler('click', 'menu__close-on-select', (event) => {
+export const menuCloseOnSelect = createHandler('click', '$c-menu__close-on-select', (event) => {
 	const target = event.target as HTMLElement;
 	if (getClosestItem(target)) {
 		const popover = target.closest(':popover-open') as HTMLElement | null;
@@ -49,7 +49,7 @@ export const menuCloseOnSelect = createHandler('click', 'menu__close-on-select',
 /**
  * Autofocus first menu item on menu open
  */
-export const menuFocusOnOpen = createHandler('beforetoggle', 'menu__focus-on-open', (event) => {
+export const menuFocusOnOpen = createHandler('beforetoggle', '$c-menu__focus-on-open', (event) => {
 	if ((event as ToggleEvent & { currentTarget: HTMLElement }).newState !== 'open') return;
 
 	const dropdown = event.target as HTMLElement;
@@ -64,7 +64,7 @@ export const menuFocusOnOpen = createHandler('beforetoggle', 'menu__focus-on-ope
 /**
  * Autofocus menu on click
  */
-export const menuTriggerClick = createHandler('click', 'menu__trigger-click', (event) => {
+export const menuTriggerClick = createHandler('click', '$c-menu__trigger-click', (event) => {
 	// Popover="auto" should handle popover opening. We just need to set an autofocus
 	menuTriggerAutoFocus(event.target as HTMLButtonElement);
 });
@@ -72,7 +72,7 @@ export const menuTriggerClick = createHandler('click', 'menu__trigger-click', (e
 /**
  * Slightly autofocus handling for arrow keydowns (space and enter handled by click handler)
  */
-export const menuTriggerKeyDown = createHandler('keydown', 'menu__trigger-keydown', (event) => {
+export const menuTriggerKeyDown = createHandler('keydown', '$c-menu__trigger-keydown', (event) => {
 	if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
 		if (event.key === 'ArrowDown') {
 			menuTriggerAutoFocus(event.target as HTMLButtonElement, 'first');

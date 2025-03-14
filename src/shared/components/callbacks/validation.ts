@@ -61,7 +61,7 @@ export const createValidator = validationRegistry.create as <
 /**
  * Run any validators associated with this element on change
  */
-export const validateOnChange = createHandler('change', 'validate__change', (event) => {
+export const validateOnChange = createHandler('change', '$c-validate__change', (event) => {
 	validate(event.currentTarget, event);
 });
 
@@ -71,7 +71,7 @@ export const validateOnChange = createHandler('change', 'validate__change', (eve
  */
 export const validateChildrenOnChange = createHandler(
 	'change',
-	'validate__children-change',
+	'$c-validate__children-change',
 	(event) => {
 		for (const child of getValidatableElements(event.currentTarget)) {
 			validate(child as HTMLElement, event);
@@ -85,7 +85,7 @@ export const validateChildrenOnChange = createHandler(
  */
 export const validateTouchedChildrenOnChange = createHandler(
 	'change',
-	'validate__touched-children-change',
+	'$c-validate__touched-children-change',
 	(event) => {
 		for (const child of getValidatableElements(event.currentTarget)) {
 			if (touched(child as HTMLElement)) {
@@ -98,7 +98,7 @@ export const validateTouchedChildrenOnChange = createHandler(
 /**
  * Reset touched and error state for form
  */
-export const validateReset = createHandler('reset', 'validate__reset', (event) => {
+export const validateReset = createHandler('reset', '$c-validate__reset', (event) => {
 	const form = event.target as HTMLFormElement;
 	for (const child of getValidatableElements(form)) {
 		setTouched(child as HTMLElement, false);

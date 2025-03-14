@@ -22,7 +22,7 @@ import { t } from '~/shared/utility/text/t-tag';
 /** Keydown handler for select button */
 export const selectButtonKeyDown = createHandler(
 	'keydown',
-	'select__button-keydown',
+	'$c-select__button-keydown',
 	function (this, event) {
 		const popover = (event.target as HTMLButtonElement).popoverTargetElement;
 		let popoverOpen = popover?.matches(':popover-open');
@@ -46,7 +46,7 @@ export const selectButtonKeyDown = createHandler(
 /** Keydown handler for select input */
 export const selectInputKeyDown = createHandler(
 	'keydown',
-	'select__input-keydown',
+	'$c-select__input-keydown',
 	function (this, event) {
 		const popover = (event.target as HTMLInputElement).popoverTargetElement;
 		let popoverOpen = popover?.matches(':popover-open');
@@ -77,14 +77,14 @@ export const selectInputKeyDown = createHandler(
  * Toggle popover on input click -- this happens automatically with buttons with
  * popovertargets but not inputs
  */
-export const selectInputClick = createHandler('click', 'select__input-click', (event) => {
+export const selectInputClick = createHandler('click', '$c-select__input-click', (event) => {
 	const target = event.target as HTMLInputElement;
 	const popover = target.popoverTargetElement as HTMLElement;
 	popover?.togglePopover();
 });
 
 /** Blur / focusout handler to close dropdown when focus leaves input */
-export const selectFocusOut = createHandler('focusout', 'select__focusout', (event) => {
+export const selectFocusOut = createHandler('focusout', '$c-select__focusout', (event) => {
 	if (!isFocusVisible()) return;
 
 	const target = event.target as HTMLElement;
@@ -103,7 +103,7 @@ export const selectFocusOut = createHandler('focusout', 'select__focusout', (eve
  * Change handler to close select menu when item is selected. This should be attached
  * to the list box itself (input / button control triggers click there).
  */
-export const selectCloseOnClick = createHandler('click', 'select__close-on-click', (event) => {
+export const selectCloseOnClick = createHandler('click', '$c-select__close-on-click', (event) => {
 	const target = event.target as HTMLElement;
 	if (!getClosestItem(target)) return;
 
@@ -121,7 +121,7 @@ export const selectCloseOnClick = createHandler('click', 'select__close-on-click
  * Click handler for clearing selected values for select. Expects an `aria-controls`
  * attribute on the clear button to help find the listbox element.
  */
-export const selectClear = createHandler('click', 'select__clear', (event) => {
+export const selectClear = createHandler('click', '$c-select__clear', (event) => {
 	const target = event.target as HTMLElement;
 	const listElm = getList(target);
 	if (!listElm) return;
@@ -146,26 +146,30 @@ export const selectClear = createHandler('click', 'select__clear', (event) => {
 /**
  * Input handler that refocuses on first highlight item when typing
  */
-export const selectHighlightOnInput = createHandler('input', 'select__focus-on-input', (event) => {
-	const listElm = getList(event.target as HTMLElement);
-	if (!listElm) return;
+export const selectHighlightOnInput = createHandler(
+	'input',
+	'$c-select__focus-on-input',
+	(event) => {
+		const listElm = getList(event.target as HTMLElement);
+		if (!listElm) return;
 
-	// Queue microtask to ensure highlight happens after list is updated
-	// from input changes
-	queueMicrotask(() => {
-		const firstItem = getListItems(listElm)[0];
-		if (!firstItem) return;
-		highlightInList(listElm, firstItem);
-		syncActiveDescendant(listElm);
-	});
-});
+		// Queue microtask to ensure highlight happens after list is updated
+		// from input changes
+		queueMicrotask(() => {
+			const firstItem = getListItems(listElm)[0];
+			if (!firstItem) return;
+			highlightInList(listElm, firstItem);
+			syncActiveDescendant(listElm);
+		});
+	},
+);
 
 /**
  * Mounter to populate descriptive text for select button or input based on selected
  * elements in list box.
  */
 export const selectMountText = createMounter<[string]>(
-	'select__mount-text',
+	'$c-select__mount-text',
 	(elm, updateTargetId: string) => {
 		const updateTarget = elmDoc(elm)?.getElementById(updateTargetId);
 		if (!updateTarget) return;
@@ -192,7 +196,7 @@ export const selectMountText = createMounter<[string]>(
  */
 export const selectUpdateText = createHandler(
 	'change',
-	'select__update-text',
+	'$c-select__update-text',
 	(event, updateTargetId: string) => {
 		selectMountText.do.call(event.currentTarget, event.currentTarget, updateTargetId);
 	},
@@ -200,7 +204,7 @@ export const selectUpdateText = createHandler(
 
 /** Update text on form reset */
 export const selectResetText = createResetCallback(
-	'select__reset',
+	'$c-select__reset',
 	function (_event: Event, updateTargetId: string) {
 		// Queue microtask so we can process state *after* reset has happened
 		queueMicrotask(() => {
@@ -215,7 +219,7 @@ export const selectResetText = createResetCallback(
  */
 export const selectUpdateWithInput = createHandler(
 	'input',
-	'select__update-with-input',
+	'$c-select__update-with-input',
 	(event, targetId: string) => {
 		const updateTarget = evtDoc(event)?.getElementById(targetId);
 		if (!updateTarget) return;

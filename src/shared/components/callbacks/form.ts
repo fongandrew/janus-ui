@@ -91,7 +91,7 @@ const resetRegistry = createCallbackRegistry<ResetCallback>(RESET_ATTR);
 export const createResetCallback = resetRegistry.create;
 
 /** Handler to call all registered reset items when form resets */
-export const formResetChildren = createHandler('reset', 'form__reset-children', (event) => {
+export const formResetChildren = createHandler('reset', '$c-form__reset-children', (event) => {
 	const form = event.currentTarget as HTMLFormElement;
 	for (const handler of resetRegistry.iter(form)) {
 		handler(event);
@@ -108,7 +108,7 @@ export const formResetChildren = createHandler('reset', 'form__reset-children', 
 /** Handler to reset on successful (async) submit */
 export const formResetOnSuccess = createHandler(
 	VALID_SUBMIT_EVENT,
-	'form__reset-on-success',
+	'$c-form__reset-on-success',
 	(event) => {
 		const form = event.target as HTMLFormElement;
 		form.reset();

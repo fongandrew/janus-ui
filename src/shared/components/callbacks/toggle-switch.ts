@@ -5,7 +5,7 @@ import { createHandler } from '~/shared/utility/callback-attrs/events';
  * behavior is to ignore enter because enter is for submitting forms. But toggle switch
  * functions more like button than input (and is rarely in a form anyways).
  */
-export const toggleSwitchEnter = createHandler('keydown', 'toggle-switch__enter', (event) => {
+export const toggleSwitchEnter = createHandler('keydown', '$c-toggle-switch__enter', (event) => {
 	if (event.key === 'Enter') {
 		event.currentTarget.click();
 		event.preventDefault();
@@ -18,7 +18,7 @@ export const toggleSwitchEnter = createHandler('keydown', 'toggle-switch__enter'
  * but https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/switch_role
  * says `aria-checked` is required.
  */
-export const toggleSwitchChange = createHandler('change', 'toggle-switch__change', (event) => {
+export const toggleSwitchChange = createHandler('change', '$c-toggle-switch__change', (event) => {
 	const target = event.currentTarget as HTMLElement;
 	const checked = (target as HTMLInputElement).checked;
 	target.setAttribute('aria-checked', checked.toString());
