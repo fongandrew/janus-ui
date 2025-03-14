@@ -18,7 +18,7 @@ export interface OptionListProps extends JSX.HTMLAttributes<HTMLDivElement> {
  * `OptionListControl`. You probably want to use something like ListBox or Menu.
  */
 export function OptionList(props: OptionListProps) {
-	return <div {...props} class={cx(props.class, 'c-option-list')} />;
+	return <div {...props} class={cx('c-option-list', props.class)} />;
 }
 
 export type OptionListItemProps<TElement> = {
