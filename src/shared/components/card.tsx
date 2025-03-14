@@ -3,6 +3,7 @@ import { ErrorBoundary, type JSX, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 
 import { T } from '~/shared/components/t-components';
+import { useLogger } from '~/shared/utility/solid/use-logger';
 
 export type CardProps = JSX.IntrinsicAttributes &
 	JSX.HTMLAttributes<HTMLDivElement> & {
@@ -17,9 +18,15 @@ export type CardContentProps = JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTML
 export type CardFooterProps = JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTMLDivElement>;
 
 export function Card(props: CardProps) {
+	const logger = useLogger();
 	const [local, rest] = splitProps(props, ['as']);
 	return (
-		<ErrorBoundary fallback={<T>Something went wrong</T>}>
+		<ErrorBoundary
+			fallback={(err) => {
+				logger.error(err);
+				return <T>Something went wrong</T>;
+			}}
+		>
 			<Dynamic component={local.as || 'section'} {...rest} class={cx('c-card', props.class)}>
 				{props.children}
 			</Dynamic>
