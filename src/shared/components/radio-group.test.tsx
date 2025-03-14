@@ -7,9 +7,9 @@ import { RadioGroup } from '~/shared/components/radio-group';
 
 describe('RadioGroup', () => {
 	describe('uncontrolled', () => {
-		it('should work with defaultValue', () => {
+		it('should work with value', () => {
 			render(() => (
-				<RadioGroup name="test" defaultValue="2">
+				<RadioGroup name="test" value="2">
 					<div>
 						<Radio value="1" data-testid="radio-1" />
 						<Radio value="2" data-testid="radio-2" />
@@ -41,7 +41,7 @@ describe('RadioGroup', () => {
 		it('should update internal value when radio is clicked in uncontrolled mode', () => {
 			const onChange = vi.fn();
 			render(() => (
-				<RadioGroup name="test" defaultValue="1" onChange={onChange}>
+				<RadioGroup name="test" value="1" onChange={onChange}>
 					<div>
 						<Radio value="1" data-testid="radio-1" />
 						<Radio value="2" data-testid="radio-2" />
