@@ -28,9 +28,13 @@ export interface FormProps<TNames extends string>
 }
 
 export function Form<TNames extends string>(props: FormProps<TNames>) {
+	const context = useContext(FormContext);
 	const id = createMemo(() => {
-		const contextId = useContext(FormContext)?.();
+		const contextId = context?.id();
 		if (props.id && contextId && props.id !== contextId) {
+			// Complain if multiple inconsistent IDs because IDs are often referenced by
+			// other elements. We don't do this with context.action() though because
+			// overriding an action doesn't have the same subtle issue.
 			throw new Error('Form ID conflicts with parent context');
 		}
 		return props.id ?? contextId ?? createUniqueId();
@@ -49,7 +53,8 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 	return (
 		<form
 			// Default HTML validation interferes with our own custom handlers
-			noValidate={!isServer}
+			noValidate={isServer ? undefined : true}
+			action={context?.action()}
 			{...rest}
 			id={id()}
 			aria-describedby={attrs(props['aria-describedby'], errorId())}
@@ -62,10 +67,12 @@ export function Form<TNames extends string>(props: FormProps<TNames>) {
 				isServer && mountAttr('novalidate', ''),
 			)}
 		>
-			<div class="o-stack">
-				<DangerAlert alertId={errorId()} {...{ [FORM_CONTROL_ERROR_ATTR]: '' }} />
-				{rest.children}
-			</div>
+			<FormContext.Provider value={context ?? { id, action: () => props.action }}>
+				<div class="o-stack">
+					<DangerAlert alertId={errorId()} {...{ [FORM_CONTROL_ERROR_ATTR]: '' }} />
+					{rest.children}
+				</div>
+			</FormContext.Provider>
 		</form>
 	);
 }

@@ -10,6 +10,7 @@ import { ButtonsDemo } from '~/demos/buttons-demo';
 import { CheckboxesDemo } from '~/demos/checkboxes-demo';
 import { DetailsDemo } from '~/demos/details-demo';
 import { FooterDemo } from '~/demos/footer-demo';
+import { FormSubmitDemo } from '~/demos/form-submit-demo';
 import { FormValidationGroupDemo } from '~/demos/form-validation-group-demo';
 import { InputsDemo } from '~/demos/inputs-demo';
 import { IntlDemo } from '~/demos/intl-demo';
@@ -105,6 +106,7 @@ function Main() {
 						<SelectTypeaheadDemo />
 						<ModalDemo />
 						<AsyncFormDemo />
+						<FormSubmitDemo />
 						<FormValidationGroupDemo />
 						<SelectionValidationDemo />
 						<IntlDemo />
