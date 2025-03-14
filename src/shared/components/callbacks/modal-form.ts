@@ -6,7 +6,7 @@ import {
 } from '~/shared/components/callbacks/modal';
 import { getValidatableElements, touched } from '~/shared/utility/callback-attrs/validate';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
-import { createAfterHideCallback } from '~/shared/utility/callback-attrs/visibility';
+import { createAfterHideCallback } from '~/shared/utility/callback-attrs/display';
 import { elmDoc } from '~/shared/utility/multi-view';
 
 export const modalFormCloseOnSuccess = createHandler(

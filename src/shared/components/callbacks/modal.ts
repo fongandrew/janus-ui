@@ -6,7 +6,7 @@ import {
 	createBeforeShowCallback,
 	runAfterHideCallbacks,
 	runBeforeShowCallbacks,
-} from '~/shared/utility/callback-attrs/visibility';
+} from '~/shared/utility/callback-attrs/display';
 import { firstFocusable } from '~/shared/utility/focusables';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { elmDoc } from '~/shared/utility/multi-view';

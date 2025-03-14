@@ -15,7 +15,7 @@ import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry
 import {
 	createAfterHideCallback,
 	createBeforeShowCallback,
-} from '~/shared/utility/callback-attrs/visibility';
+} from '~/shared/utility/callback-attrs/display';
 import { useLogger } from '~/shared/utility/logger';
 
 export interface TabPanelProps extends JSX.HTMLAttributes<HTMLDivElement> {

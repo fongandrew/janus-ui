@@ -13,7 +13,7 @@ import { createHandler } from '~/shared/utility/callback-attrs/events';
 import {
 	runAfterHideCallbacks,
 	runBeforeShowCallbacks,
-} from '~/shared/utility/callback-attrs/visibility';
+} from '~/shared/utility/callback-attrs/display';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { createMagicProp } from '~/shared/utility/magic-prop';
