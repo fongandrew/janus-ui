@@ -16,7 +16,7 @@ import {
 	createAfterHideCallback,
 	createBeforeShowCallback,
 } from '~/shared/utility/callback-attrs/display';
-import { useLogger } from '~/shared/utility/logger';
+import { useLogger } from '~/shared/utility/solid/use-logger';
 
 export interface TabPanelProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	/** ID is required since this is how we connect tab button */

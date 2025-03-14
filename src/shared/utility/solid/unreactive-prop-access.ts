@@ -1,7 +1,7 @@
 import { createEffect } from 'solid-js';
 
 import { isDev } from '~/shared/utility/is-dev';
-import { useLogger } from '~/shared/utility/logger';
+import { useLogger } from '~/shared/utility/solid/use-logger';
 
 /**
  * A helper to access multiple props that we don't expect to change. If they do change,

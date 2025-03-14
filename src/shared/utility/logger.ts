@@ -1,5 +1,3 @@
-import { createContext, useContext } from 'solid-js';
-
 import { isDev } from '~/shared/utility/is-dev';
 
 /** Route all calls to console through this interface / middleware for customization */
@@ -34,17 +32,4 @@ export function setDefaultLogger(logger: Logger) {
  */
 export function getDefaultLogger(): Logger {
 	return defaultLogger;
-}
-
-/**
- * Solid context to override logger
- */
-export const LoggerContext = createContext<Logger | undefined>(undefined);
-
-/**
- * Get the logger for  the application
- */
-export function useLogger(): Logger {
-	const logger = useContext(LoggerContext) ?? getDefaultLogger();
-	return logger;
 }
