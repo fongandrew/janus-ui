@@ -1,6 +1,4 @@
-import { prop } from '~/shared/utility/magic-strings';
-
-const prefix = prop('mp');
+const prefix = '$$mp';
 let nameCounter = 0;
 
 /**

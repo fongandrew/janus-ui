@@ -6,7 +6,6 @@ import {
 	setErrorsByName,
 } from '~/shared/utility/callback-attrs/validate';
 import { getDefaultLogger } from '~/shared/utility/logger';
-import { evt } from '~/shared/utility/magic-strings';
 import { elmDoc } from '~/shared/utility/multi-view';
 
 export interface FormSubmitResponse {
@@ -60,14 +59,14 @@ export const FORM_BUSY_ATTR = 'data-c-form__busy';
  * Custom event that is fired when validation on submit is complete and successful
  * Prefer this event over submit for custom onSubmit behavior.
  */
-export const VALID_SUBMIT_EVENT = evt('validate__submit-valid');
+export const VALID_SUBMIT_EVENT = 'c-form__submit-valid';
 
 /**
  * Custom event that is fired when validation on submit is complete and unsuccessful.
  * Distinguish from `invalid` event in that invalid is fired on invididual elements
  * but this is fired on the form itself.
  */
-export const INVALID_SUBMIT_EVENT = evt('validate__submit-invalid');
+export const INVALID_SUBMIT_EVENT = 'c-form__submit-invalid';
 
 declare module '~/shared/utility/callback-attrs/events' {
 	interface CustomEventDetails {
