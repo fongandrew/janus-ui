@@ -2,7 +2,7 @@ import {
 	focusOrScrollToError,
 	setError,
 	setErrorsByName,
-} from '~/shared/components/callbacks/validation';
+} from '~/shared/utility/callback-attrs/validate';
 import { createCallbackRegistry } from '~/shared/utility/callback-attrs/callback-registry';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { getDefaultLogger } from '~/shared/utility/logger';

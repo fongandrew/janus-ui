@@ -9,7 +9,7 @@ import {
 	EXTERNAL_ERROR_ATTR,
 	validateOnChange,
 	type Validator,
-} from '~/shared/components/callbacks/validation';
+} from '~/shared/utility/callback-attrs/validate';
 import { useFormElementProps } from '~/shared/components/form-element-context';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 

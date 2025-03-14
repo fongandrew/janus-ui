@@ -3,7 +3,7 @@ import { isServer } from 'solid-js/web';
 
 import { formOutputClear, formOutputWrite } from '~/demos/callbacks/form-output';
 import { matchesPassword } from '~/demos/callbacks/form-validation-group';
-import { type Validator } from '~/shared/components/callbacks/validation';
+import { type Validator } from '~/shared/utility/callback-attrs/validate';
 import {
 	Card,
 	CardContent,

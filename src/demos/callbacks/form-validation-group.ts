@@ -1,4 +1,4 @@
-import { createValidator } from '~/shared/components/callbacks/validation';
+import { createValidator } from '~/shared/utility/callback-attrs/validate';
 import { evtDoc } from '~/shared/utility/multi-view';
 
 /** Validates that password element matches value in element */

@@ -24,18 +24,18 @@ export type Validator<T extends HTMLElement = HTMLElement> = (
 /**
  * Magic data attribute used to identify an error element associated with a control
  */
-export const FORM_CONTROL_ERROR_ATTR = 'data-c-validation__error';
+export const FORM_CONTROL_ERROR_ATTR = 'data-t-validate__error';
 
 /**
  * Magic data attribute for marking an input-like element as invalid. Set this to prevent
  * change validation from clearing errors set via reactive frameworks.
  */
-export const EXTERNAL_ERROR_ATTR = 'data-c-validation__external-error';
+export const EXTERNAL_ERROR_ATTR = 'data-t-validate__external-error';
 
 /**
  * Magic data attribute used to identify elements with custom validators
  */
-export const VALIDATE_ATTR = 'data-c-validation';
+export const VALIDATE_ATTR = 'data-t-validate';
 
 /**
  * Magic prop for marking an input as having been "touched" for validation purposes
@@ -61,7 +61,7 @@ export const createValidator = validationRegistry.create as <
 /**
  * Run any validators associated with this element on change
  */
-export const validateOnChange = createHandler('change', '$c-validate__change', (event) => {
+export const validateOnChange = createHandler('change', '$t-validate__change', (event) => {
 	validate(event.currentTarget, event);
 });
 
@@ -71,7 +71,7 @@ export const validateOnChange = createHandler('change', '$c-validate__change', (
  */
 export const validateChildrenOnChange = createHandler(
 	'change',
-	'$c-validate__children-change',
+	'$t-validate__children-change',
 	(event) => {
 		for (const child of getValidatableElements(event.currentTarget)) {
 			validate(child as HTMLElement, event);
@@ -85,7 +85,7 @@ export const validateChildrenOnChange = createHandler(
  */
 export const validateTouchedChildrenOnChange = createHandler(
 	'change',
-	'$c-validate__touched-children-change',
+	'$t-validate__touched-children-change',
 	(event) => {
 		for (const child of getValidatableElements(event.currentTarget)) {
 			if (touched(child as HTMLElement)) {
@@ -98,7 +98,7 @@ export const validateTouchedChildrenOnChange = createHandler(
 /**
  * Reset touched and error state for form
  */
-export const validateReset = createHandler('reset', '$c-validate__reset', (event) => {
+export const validateReset = createHandler('reset', '$t-validate__reset', (event) => {
 	const form = event.target as HTMLFormElement;
 	for (const child of getValidatableElements(form)) {
 		setTouched(child as HTMLElement, false);
