@@ -9,7 +9,6 @@ import {
 import { getList } from '~/shared/components/callbacks/option-list';
 import {
 	selectFocusOut,
-	selectHighlightOnInput,
 	selectInputClick,
 	selectInputKeyDown,
 	selectMountText,
@@ -26,20 +25,22 @@ import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
 
 export interface SelectTypeaheadProps extends Omit<InputProps, 'onValidate'> {
 	/** Name for form submission */
-	name?: string;
+	name?: string | undefined;
 	/** Placeholder text when no selection */
-	placeholder?: string;
+	placeholder?: string | undefined;
+	/** Signal that async typeahead is busy */
+	busy?: boolean | undefined;
 	/**
 	 * Currently selected values (or if never changed, default values -- see
 	 * https://github.com/solidjs/solid/discussions/416 for Solid and controlled state
 	 */
-	values?: Set<string>;
+	values?: Set<string> | undefined;
 	/** Called when selection changes */
-	onValues?: (value: Set<string>, event: Event) => void;
+	onValues?: ((value: Set<string>, event: Event) => void) | undefined;
 	/** Called when typing happens */
-	onValueInput?: (value: string, event: Event) => void;
+	onValueInput?: ((value: string, event: Event) => void) | undefined;
 	/** Whether multiple selection is allowed */
-	multiple?: boolean;
+	multiple?: boolean | undefined;
 	/** Custom validation function for this element */
 	onValidate?: ListBoxValidator | undefined;
 }
@@ -86,6 +87,7 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 		<SelectContainer
 			listId={listId}
 			inputId={id()}
+			aria-busy={props.busy}
 			{...callbackAttrs(
 				selectMountText(selectUpdateTextId),
 				selectUpdateText(selectUpdateTextId),
@@ -94,13 +96,7 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 		>
 			<Input
 				{...inputProps}
-				{...callbackAttrs(
-					inputProps,
-					selectInputClick,
-					selectInputKeyDown,
-					selectFocusOut,
-					selectHighlightOnInput,
-				)}
+				{...callbackAttrs(inputProps, selectInputClick, selectInputKeyDown, selectFocusOut)}
 				{...extendHandler(props, 'onChange', handleChange)}
 				{...extendHandler(props, 'onInput', handleInput)}
 				id={id()}
@@ -118,6 +114,7 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 				<SelectText id={selectUpdateTextId} placeholder={local.placeholder} />
 			</div>
 			<SelectOptionList
+				busy={props.busy}
 				listBoxId={listId}
 				selectInputTextId={selectInputTextId}
 				input={inputProps.value ? String(inputProps.value) : undefined}

@@ -92,29 +92,52 @@
 		}
 	}
 
-	/* Select dropdown empty state */
-	.c-select__empty_state {
+	.c-select__items[aria-busy='true'] {
+		display: none;
+	}
+
+	/* Select dropdown status / empty state */
+	.c-select__status {
 		@mixin v-text-sm;
 		@mixin t-text-muted;
 		@mixin t-overflow-x;
 
-		display: block;
+		display: none;
 		width: 100%;
 		overflow: hidden auto;
 		padding: calc(var(--v-spacing) - var(--v-inner-radius)) var(--v-spacing);
 		text-align: center;
 
-		.c-select__no_match:has(.c-select__no_match_value:empty) {
+		[aria-busy='true'] + &,
+		.c-select__items:empty + & {
+			display: block;
+		}
+
+		.c-select__no_match,
+		.c-select__no_value,
+		.c-select__busy {
 			display: none;
 		}
 
-		.c-select__no_match:not(:has(.c-select__no_match_value:empty)) + .c-select__no_value {
-			display: none;
-		}
-	}
+		/* Busy - hide empty state, show spinner */
+		[aria-busy='true'] + & {
+			.c-select__busy {
+				@mixin o-group;
 
-	* + .c-select__empty_state {
-		display: none;
+				justify-content: center;
+			}
+		}
+
+		/* Different empty states depending on whether there's input */
+		.c-select__items:empty:not([aria-busy='true']) + & {
+			.c-select__no_match:not(:has(.c-select__no_match_value:empty)) {
+				display: block;
+			}
+
+			.c-select__no_match:has(.c-select__no_match_value:empty) + .c-select__no_value {
+				display: block;
+			}
+		}
 	}
 
 	/* Select typeahead */

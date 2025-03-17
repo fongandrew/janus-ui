@@ -25,18 +25,18 @@ import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
 
 export interface SelectProps extends Omit<FormElementProps<'button'>, 'onValidate'> {
 	/** Name for form submission */
-	name?: string;
+	name?: string | undefined;
 	/** Placeholder text when no selection */
-	placeholder?: string;
+	placeholder?: string | undefined;
 	/**
 	 * Currently selected values (or if never changed, default values -- see
 	 * https://github.com/solidjs/solid/discussions/416 for Solid and controlled state
 	 */
-	values?: Set<string>;
+	values?: Set<string> | undefined;
 	/** Called when selection changes */
-	onValues?: (values: Set<string>, event: Event) => void;
+	onValues?: ((values: Set<string>, event: Event) => void) | undefined;
 	/** Whether multiple selection is allowed */
-	multiple?: boolean;
+	multiple?: boolean | undefined;
 	/** Make children required */
 	children: JSX.Element;
 	/** Custom validation function for this element */

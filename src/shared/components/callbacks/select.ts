@@ -16,8 +16,10 @@ import {
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createMounter } from '~/shared/utility/callback-attrs/mount';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
+import { createMagicProp } from '~/shared/utility/magic-prop';
 import { elmDoc, evtDoc } from '~/shared/utility/multi-view';
 import { elmT } from '~/shared/utility/text/t-tag';
+import { onUnmount } from '~/shared/utility/unmount-observer';
 
 /** Keydown handler for select button */
 export const selectButtonKeyDown = createHandler(
@@ -144,23 +146,23 @@ export const selectClear = createHandler('click', '$c-select__clear', (event) =>
 });
 
 /**
- * Input handler that refocuses on first highlight item when typing
+ * Attach a mutation observer to select dropdown when it opens to auto-highlight
+ * first item when it changes
  */
-export const selectHighlightOnInput = createHandler(
-	'input',
-	'$c-select__focus-on-input',
+export const selectToggleHighlight = createHandler(
+	'beforetoggle',
+	'$c-select__toggle-highlight',
 	(event) => {
-		const listElm = getList(event.target as HTMLElement);
+		const target = event.target as HTMLElement;
+		const listElm = target.querySelector<HTMLElement>('[role="listbox"]');
 		if (!listElm) return;
 
-		// Queue microtask to ensure highlight happens after list is updated
-		// from input changes
-		queueMicrotask(() => {
-			const firstItem = getListItems(listElm)[0];
-			if (!firstItem) return;
-			highlightInList(listElm, firstItem);
-			syncActiveDescendant(listElm);
-		});
+		// Use the one selectObserver instance because we aassume there any
+		if ((event as ToggleEvent & { currentTarget: HTMLElement }).newState === 'open') {
+			getSelectObserver(target).observe(listElm, { childList: true, subtree: true });
+		} else {
+			getSelectObserver(target).disconnect();
+		}
 	},
 );
 
@@ -227,6 +229,39 @@ export const selectUpdateWithInput = createHandler(
 		updateTarget.textContent = (event.target as HTMLInputElement).value;
 	},
 );
+
+/** Magic prop for tracking mutation observers created */
+const [selectObserver, setSelectObserver] = createMagicProp<MutationObserver>();
+
+/**
+ * Create mutation observer that can monitor a select listbox and update its highlight state
+ */
+function getSelectObserver(elm: HTMLElement) {
+	const current = selectObserver(elm);
+	if (current) return current;
+
+	const observer = new MutationObserver((mutations) => {
+		const listBoxes = new Set<HTMLElement>();
+		for (const mutation of mutations) {
+			if (mutation.target instanceof HTMLElement) {
+				const listBox = mutation.target.closest<HTMLElement>('[role="listbox"]');
+				if (listBox && !listBoxes.has(listBox)) {
+					listBoxes.add(listBox);
+
+					const firstItem = getListItems(listBox)[0];
+					if (!firstItem) continue;
+					highlightInList(listBox, firstItem);
+					syncActiveDescendant(getControllingElement(listBox));
+				}
+			}
+		}
+	});
+
+	setSelectObserver(elm, observer);
+	onUnmount(elm, () => observer.disconnect());
+
+	return observer;
+}
 
 /**
  * Maybe clear the select element when pressing escape. Do this only if there is
