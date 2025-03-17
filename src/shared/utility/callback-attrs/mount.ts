@@ -53,8 +53,8 @@ export function process(node: HTMLElement) {
 /**
  * Process all mount attributes for a given root
  */
-export function processRoot(root: Window) {
-	root.document.querySelectorAll<HTMLElement>(`[${MOUNT_ATTR}]`).forEach(process);
+export function processRoot(root: HTMLElement | Document) {
+	root.querySelectorAll<HTMLElement>(`[${MOUNT_ATTR}]`).forEach(process);
 	setRaf(root, undefined);
 }
 
@@ -62,11 +62,11 @@ export function processRoot(root: Window) {
  * Schedule a processRoot call for a given root (called as part of update cycle).
  * Call `addMounterRenderEffect` to use this.
  */
-export function scheduleProcessRoot(root: Window) {
-	if (raf(root)) return;
+export function scheduleProcessRoot(win: Window) {
+	if (raf(win.document)) return;
 	setRaf(
-		root,
-		root.requestAnimationFrame(() => processRoot(root)),
+		win.document,
+		win.requestAnimationFrame(() => processRoot(win.document)),
 	);
 }
 

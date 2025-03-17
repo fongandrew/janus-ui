@@ -44,7 +44,7 @@ export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'
 }
 
 export const ListBoxContext = createContext<
-	Pick<ListBoxProps, 'name' | 'values' | 'multiple'> | undefined
+	(Pick<ListBoxProps, 'name' | 'values' | 'multiple'> & { rendered?: Set<string> }) | undefined
 >();
 
 export function ListBox(props: ListBoxProps) {

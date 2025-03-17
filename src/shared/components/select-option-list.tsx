@@ -1,7 +1,12 @@
 import { createUniqueId, type JSX, mergeProps, splitProps } from 'solid-js';
 
 import { listBoxChange, listBoxMount, listBoxReset } from '~/shared/components/callbacks/list-box';
-import { selectCloseOnClick, selectToggleHighlight } from '~/shared/components/callbacks/select';
+import {
+	SELECT_HIDDEN_CONTAINER_ATTR,
+	SELECT_VISIBLE_CONTAINER_ATTR,
+	selectCloseOnClick,
+	selectToggleObserve,
+} from '~/shared/components/callbacks/select';
 import { DropdownContent } from '~/shared/components/dropdown';
 import { ListBoxContext } from '~/shared/components/list-box';
 import { OptionList } from '~/shared/components/option-list';
@@ -34,6 +39,12 @@ export function SelectOptionList(props: SelectOptionListProps) {
 		['name', 'values', 'multiple'],
 	);
 
+	// IDs for visible + hidden input containers. When content of visible input container
+	// changes, we update hidden input to reflect any items that are still selected but
+	// no longer visible.
+	const visibleInputContainerId = createUniqueId();
+	const hiddenInputContainerId = createUniqueId();
+
 	// Create default name for radio group if not provided
 	const context = mergeProps({ name: createUniqueId() }, listBoxContextProps);
 
@@ -45,13 +56,13 @@ export function SelectOptionList(props: SelectOptionListProps) {
 			// normal dropdowns
 			offset={8}
 			{...rest}
-			{...callbackAttrs(rest, selectToggleHighlight)}
+			{...callbackAttrs(rest, selectToggleObserve)}
 		>
 			<ListBoxContext.Provider value={context}>
 				<OptionList
 					role="listbox"
 					id={local.listBoxId}
-					class="c-select__items t-unstyled"
+					class="t-unstyled"
 					aria-busy={local.busy}
 					{...callbackAttrs(
 						listBoxChange,
@@ -60,7 +71,20 @@ export function SelectOptionList(props: SelectOptionListProps) {
 						selectCloseOnClick,
 					)}
 				>
-					{local.children}
+					<div
+						id={visibleInputContainerId}
+						class="c-select__items"
+						{...{ [SELECT_VISIBLE_CONTAINER_ATTR]: '' }}
+					>
+						{local.children}
+					</div>
+					<div
+						id={hiddenInputContainerId}
+						class="t-hidden"
+						{...{
+							[SELECT_HIDDEN_CONTAINER_ATTR]: '',
+						}}
+					/>
 				</OptionList>
 			</ListBoxContext.Provider>
 			<div role="status" class="c-select__status">

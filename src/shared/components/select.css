@@ -65,22 +65,14 @@
 		}
 	}
 
-	/* Show clear button only is there's something to clear (and not required) */
-	.c-select__container:has([role='listbox'] [aria-selected='true']):not(
-			:has([aria-required]:not([aria-required='false'])),
-			:has(:required)
-		)
-		.c-select__clear {
+	/* Show clear button only is there's something to clear */
+	.c-select__container:has(:checked, [type='hidden']) .c-select__clear {
 		cursor: pointer;
 		display: flex;
 	}
 
 	/* Hide chevron if clear button is shown */
-	.c-select__container:has([role='listbox'] [aria-selected='true']):not(
-			:has([aria-required]:not([aria-required='false'])),
-			:has(:required)
-		)
-		.c-select__chevron {
+	.c-select__container:has(:checked, [type='hidden']) .c-select__chevron {
 		display: none;
 	}
 
@@ -92,7 +84,7 @@
 		}
 	}
 
-	.c-select__items[aria-busy='true'] {
+	[aria-busy='true'] .c-select__items {
 		display: none;
 	}
 
@@ -109,7 +101,7 @@
 		text-align: center;
 
 		[aria-busy='true'] + &,
-		.c-select__items:empty + & {
+		:has(.c-select__items:empty) + & {
 			display: block;
 		}
 
@@ -129,7 +121,7 @@
 		}
 
 		/* Different empty states depending on whether there's input */
-		.c-select__items:empty:not([aria-busy='true']) + & {
+		:has(.c-select__items:empty):not([aria-busy='true']) + & {
 			.c-select__no_match:not(:has(.c-select__no_match_value:empty)) {
 				display: block;
 			}

@@ -2,6 +2,7 @@ import { createEffect, createSignal, createUniqueId, For } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import { listBoxNoRed, listBoxUpdateText } from '~/demos/callbacks/list-box';
+import { selectQuery } from '~/demos/callbacks/select';
 import {
 	Card,
 	CardContent,
@@ -10,7 +11,7 @@ import {
 	CardTitle,
 } from '~/shared/components/card';
 import { LabelledInput } from '~/shared/components/labelled-control';
-import { ListBoxItem } from '~/shared/components/list-box';
+import { ListBoxContext, ListBoxItem } from '~/shared/components/list-box';
 import { SelectTypeahead } from '~/shared/components/select-typeahead';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
@@ -38,62 +39,76 @@ function SelectTypeaheadDemo() {
 
 function SingleTypeahead() {
 	const descriptionId = createUniqueId();
+	const templateId = createUniqueId();
 	const [value, setValue] = createSignal<Set<string>>(new Set());
 	const [query, setQuery] = createSignal('');
 	const [busy, parts] = useAsyncParts(query);
 
 	return (
-		<LabelledInput
-			label="Single selection"
-			description={`Selected: ${Array.from(value()).join(', ') || 'None'}`}
-			descriptionId={descriptionId}
-		>
-			<SelectTypeahead
-				busy={busy()}
-				placeholder="Select a color..."
-				values={value()}
-				onValues={setValue}
-				onValueInput={setQuery}
-				{...callbackAttrs(isServer && listBoxUpdateText(descriptionId))}
+		<>
+			<LabelledInput
+				label="Single selection"
+				description={`Selected: ${Array.from(value()).join(', ') || 'None'}`}
+				descriptionId={descriptionId}
 			>
-				<For each={parts()}>
-					{(part) => <ListBoxItem value={part.toLowerCase()}>{part}</ListBoxItem>}
-				</For>
-			</SelectTypeahead>
-		</LabelledInput>
+				<SelectTypeahead
+					busy={busy()}
+					name="select-typeahead__single"
+					placeholder="Select a color..."
+					values={value()}
+					onValues={setValue}
+					onValueInput={setQuery}
+					{...callbackAttrs(
+						isServer && listBoxUpdateText(descriptionId),
+						isServer && selectQuery(templateId),
+					)}
+				>
+					<For each={parts()}>
+						{(part) => <ListBoxItem value={part.toLowerCase()}>{part}</ListBoxItem>}
+					</For>
+				</SelectTypeahead>
+			</LabelledInput>
+			<ResultsTemplate id={templateId} name="select-typeahead__single" />
+		</>
 	);
 }
 
 function MultiTypeahead() {
 	const descriptionId = createUniqueId();
+	const templateId = createUniqueId();
 	const [value, setValue] = createSignal<Set<string>>(new Set());
 	const [query, setQuery] = createSignal('');
 	const [busy, parts] = useAsyncParts(query);
 
 	return (
-		<LabelledInput
-			label="Multiple selection"
-			description={`Selected: ${Array.from(value()).join(', ') || 'None'}`}
-			descriptionId={descriptionId}
-			errorMessage={value().has('red') ? "Don't pick red." : null}
-		>
-			<SelectTypeahead
-				busy={busy()}
-				placeholder="Select colors..."
-				values={value()}
-				onValues={setValue}
-				onValueInput={setQuery}
-				multiple
-				{...callbackAttrs(
-					isServer && listBoxNoRed,
-					isServer && listBoxUpdateText(descriptionId),
-				)}
+		<>
+			<LabelledInput
+				label="Multiple selection"
+				description={`Selected: ${Array.from(value()).join(', ') || 'None'}`}
+				descriptionId={descriptionId}
+				errorMessage={value().has('red') ? "Don't pick red." : null}
 			>
-				<For each={parts()}>
-					{(part) => <ListBoxItem value={part.toLowerCase()}>{part}</ListBoxItem>}
-				</For>
-			</SelectTypeahead>
-		</LabelledInput>
+				<SelectTypeahead
+					busy={busy()}
+					name="select-typeahead__multiple"
+					placeholder="Select colors..."
+					values={value()}
+					onValues={setValue}
+					onValueInput={setQuery}
+					multiple
+					{...callbackAttrs(
+						isServer && listBoxNoRed,
+						isServer && listBoxUpdateText(descriptionId),
+						isServer && selectQuery(templateId),
+					)}
+				>
+					<For each={parts()}>
+						{(part) => <ListBoxItem value={part.toLowerCase()}>{part}</ListBoxItem>}
+					</For>
+				</SelectTypeahead>
+			</LabelledInput>
+			<ResultsTemplate id={templateId} name="select-typeahead__multiple" multiple />
+		</>
 	);
 }
 
@@ -136,6 +151,19 @@ function EmptyTypeahead() {
 		<LabelledInput label="Select with no matches">
 			<SelectTypeahead placeholder="Won't match" />
 		</LabelledInput>
+	);
+}
+
+/** Used to approximate an XHR response with SSR demos */
+function ResultsTemplate(props: { id: string; name: string; multiple?: boolean }) {
+	return (
+		<template {...props}>
+			<ListBoxContext.Provider value={props}>
+				<For each={COLORS}>
+					{(part) => <ListBoxItem value={part.toLowerCase()}>{part}</ListBoxItem>}
+				</For>
+			</ListBoxContext.Provider>
+		</template>
 	);
 }
 

@@ -102,6 +102,9 @@ export function listBoxValues(listElm: HTMLElement) {
 	for (const option of listElm.querySelectorAll<HTMLInputElement>(':checked')) {
 		values.add(option.value);
 	}
+	for (const option of listElm.querySelectorAll<HTMLInputElement>('[type="hidden"]')) {
+		values.add(option.value);
+	}
 	return values;
 }
 
