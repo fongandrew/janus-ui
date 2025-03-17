@@ -11,7 +11,7 @@ export const AsyncFormNames = {
 export const asyncFormSubmit = createSubmitHandler(
 	'async-form-ssr__submit',
 	async function (event, targetId?: string) {
-		await new Promise((resolve) => setTimeout(resolve, 3000));
+		await new Promise((resolve) => setTimeout(resolve, 1000));
 
 		if (event.data.get(AsyncFormNames.shouldError)) {
 			throw new Error('Form submission failed (as requested)');

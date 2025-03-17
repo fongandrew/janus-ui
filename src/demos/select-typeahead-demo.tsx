@@ -159,7 +159,7 @@ function useAsyncParts(query: () => string) {
 				);
 				setBusy(false);
 			},
-			normalized ? 2000 : 0,
+			normalized ? 1000 : 0,
 		);
 	});
 	return [busy, results] as const;

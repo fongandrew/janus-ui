@@ -35,7 +35,7 @@ export function AsyncFormDemo() {
 		e.preventDefault();
 
 		// Artificial delay
-		await new Promise((resolve) => setTimeout(resolve, 3000));
+		await new Promise((resolve) => setTimeout(resolve, 1000));
 
 		if (e.data.get(AsyncFormNames.shouldError)) {
 			setFormData(null);
