@@ -16,30 +16,24 @@ import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry
 
 const COLORS = ['Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Indigo', 'Violet'];
 
-function useAsyncParts(query: () => string) {
-	const [busy, setBusy] = createSignal(false);
-	const [results, setResults] = createSignal<string[]>([]);
-	createEffect((prevTimeout?: ReturnType<typeof setTimeout>) => {
-		if (prevTimeout) {
-			clearTimeout(prevTimeout);
-		}
-
-		const normalized = query().trim().toLowerCase();
-		if (normalized) setBusy(true);
-
-		return setTimeout(
-			() => {
-				setResults(
-					normalized
-						? COLORS.filter((color) => color.toLowerCase().includes(normalized))
-						: [],
-				);
-				setBusy(false);
-			},
-			normalized ? 2000 : 0,
-		);
-	});
-	return [busy, results] as const;
+function SelectTypeaheadDemo() {
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Typeahead</CardTitle>
+				<CardDescription>Search input with single and multiple selection</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<div class="o-stack">
+					<SingleTypeahead />
+					<MultiTypeahead />
+					<LongTypeahead />
+					<DisabledTypeahead />
+					<EmptyTypeahead />
+				</div>
+			</CardContent>
+		</Card>
+	);
 }
 
 function SingleTypeahead() {
@@ -126,33 +120,49 @@ function LongTypeahead() {
 	);
 }
 
-function SelectTypeaheadDemo() {
+function DisabledTypeahead() {
 	return (
-		<Card>
-			<CardHeader>
-				<CardTitle>Typeahead</CardTitle>
-				<CardDescription>Search input with single and multiple selection</CardDescription>
-			</CardHeader>
-			<CardContent>
-				<div class="o-stack">
-					<SingleTypeahead />
-					<MultiTypeahead />
-					<LongTypeahead />
-
-					<LabelledInput label="Disabled selection">
-						<SelectTypeahead disabled values={new Set(['fixed'])}>
-							<ListBoxItem value="fixed">Can't change me</ListBoxItem>
-							<ListBoxItem value="different">Can't pick me</ListBoxItem>
-						</SelectTypeahead>
-					</LabelledInput>
-
-					<LabelledInput label="Select with no matches">
-						<SelectTypeahead placeholder="Won't match" />
-					</LabelledInput>
-				</div>
-			</CardContent>
-		</Card>
+		<LabelledInput label="Disabled selection">
+			<SelectTypeahead disabled values={new Set(['fixed'])}>
+				<ListBoxItem value="fixed">Can't change me</ListBoxItem>
+				<ListBoxItem value="different">Can't pick me</ListBoxItem>
+			</SelectTypeahead>
+		</LabelledInput>
 	);
+}
+
+function EmptyTypeahead() {
+	return (
+		<LabelledInput label="Select with no matches">
+			<SelectTypeahead placeholder="Won't match" />
+		</LabelledInput>
+	);
+}
+
+function useAsyncParts(query: () => string) {
+	const [busy, setBusy] = createSignal(false);
+	const [results, setResults] = createSignal<string[]>([]);
+	createEffect((prevTimeout?: ReturnType<typeof setTimeout>) => {
+		if (prevTimeout) {
+			clearTimeout(prevTimeout);
+		}
+
+		const normalized = query().trim().toLowerCase();
+		if (normalized) setBusy(true);
+
+		return setTimeout(
+			() => {
+				setResults(
+					normalized
+						? COLORS.filter((color) => color.toLowerCase().includes(normalized))
+						: [],
+				);
+				setBusy(false);
+			},
+			normalized ? 2000 : 0,
+		);
+	});
+	return [busy, results] as const;
 }
 
 export { SelectTypeaheadDemo };
