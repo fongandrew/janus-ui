@@ -1,4 +1,4 @@
-import { createUniqueId, type JSX, mergeProps, splitProps } from 'solid-js';
+import { createUniqueId, For, type JSX, mergeProps, splitProps } from 'solid-js';
 
 import { listBoxChange, listBoxMount, listBoxReset } from '~/shared/components/callbacks/list-box';
 import {
@@ -46,7 +46,13 @@ export function SelectOptionList(props: SelectOptionListProps) {
 	const hiddenInputContainerId = createUniqueId();
 
 	// Create default name for radio group if not provided
-	const context = mergeProps({ name: createUniqueId() }, listBoxContextProps);
+	const context = mergeProps(
+		{ name: createUniqueId(), rendered: new Set<string>() },
+		listBoxContextProps,
+	);
+
+	// eslint-disable-next-line solid/reactivity
+	const initialValues = listBoxContextProps.values;
 
 	return (
 		<DropdownContent
@@ -84,7 +90,11 @@ export function SelectOptionList(props: SelectOptionListProps) {
 						{...{
 							[SELECT_HIDDEN_CONTAINER_ATTR]: '',
 						}}
-					/>
+					>
+						<For each={Array.from(initialValues ?? [])}>
+							{(value) => <input type="hidden" name={context.name} value={value} />}
+						</For>
+					</div>
 				</OptionList>
 			</ListBoxContext.Provider>
 			<div role="status" class="c-select__status">

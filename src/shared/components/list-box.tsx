@@ -122,6 +122,10 @@ export interface ListBoxItemProps extends JSX.HTMLAttributes<HTMLInputElement> {
 export function ListBoxItem(props: ListBoxItemProps) {
 	const context = useContext(ListBoxContext);
 	const value = createAuto(props, 'value');
+
+	// Track initial rendered state so we can populate hidden inputs for initial render
+	context?.rendered?.add(value());
+
 	return (
 		<OptionListSelectable
 			{...props}

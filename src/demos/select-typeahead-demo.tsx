@@ -30,7 +30,7 @@ function SelectTypeaheadDemo() {
 					<MultiTypeahead />
 					<LongTypeahead />
 					<DisabledTypeahead />
-					<EmptyTypeahead />
+					<InitialSelectionTypeahead />
 				</div>
 			</CardContent>
 		</Card>
@@ -73,27 +73,27 @@ function SingleTypeahead() {
 	);
 }
 
-function MultiTypeahead() {
+function MultiTypeahead(props: { label?: string | undefined; initialValues?: Set<string> }) {
 	const descriptionId = createUniqueId();
 	const templateId = createUniqueId();
-	const [value, setValue] = createSignal<Set<string>>(new Set());
+	const [values, setValues] = createSignal<Set<string>>(props.initialValues ?? new Set());
 	const [query, setQuery] = createSignal('');
 	const [busy, parts] = useAsyncParts(query);
 
 	return (
 		<>
 			<LabelledInput
-				label="Multiple selection"
-				description={`Selected: ${Array.from(value()).join(', ') || 'None'}`}
+				label={props.label ?? 'Multiple selection'}
+				description={`Selected: ${Array.from(values()).join(', ') || 'None'}`}
 				descriptionId={descriptionId}
-				errorMessage={value().has('red') ? "Don't pick red." : null}
+				errorMessage={values().has('red') ? "Don't pick red." : null}
 			>
 				<SelectTypeahead
 					busy={busy()}
 					name="select-typeahead__multiple"
 					placeholder="Select colors..."
-					values={value()}
-					onValues={setValue}
+					values={values()}
+					onValues={setValues}
 					onValueInput={setQuery}
 					multiple
 					{...callbackAttrs(
@@ -146,11 +146,9 @@ function DisabledTypeahead() {
 	);
 }
 
-function EmptyTypeahead() {
+function InitialSelectionTypeahead() {
 	return (
-		<LabelledInput label="Select with no matches">
-			<SelectTypeahead placeholder="Won't match" />
-		</LabelledInput>
+		<MultiTypeahead label="With initial selection" initialValues={new Set(['blue', 'green'])} />
 	);
 }
 
