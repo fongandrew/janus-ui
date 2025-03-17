@@ -22,6 +22,10 @@
 		cursor: pointer;
 		list-style: none;
 
+		&::-webkit-details-marker {
+			display: none;
+		}
+
 		&::before {
 			content: '▶';
 			display: inline-block;
