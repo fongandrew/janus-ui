@@ -48,9 +48,9 @@
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.0",
     "typescript-plugin-css-modules": "^5.1.0",
-    "vite": "^5.4.11",
+    "vite": "^6.2.2",
     "vite-plugin-solid": "^2.11.0",
-    "vitest": "^2.1.5"
+    "vitest": "^3.0.9"
   },
   "dependencies": {
     "@floating-ui/dom": "^1.6.12",
@@ -58,6 +58,7 @@
     "classix": "^2.2.0",
     "colorparsley": "^0.1.8",
     "dayjs": "^1.11.13",
+    "eslint-plugin-async-event": "github:fongandrew/eslint-plugin-async-event",
     "js-sha256": "^0.11.0",
     "lucide-solid": "^0.468.0",
     "solid-js": "^1.9.3"

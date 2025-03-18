@@ -11,13 +11,14 @@ export const AsyncFormNames = {
 export const asyncFormSubmit = createSubmitHandler(
 	'async-form-ssr__submit',
 	async function (event, targetId?: string) {
+		const data = event.data;
 		await new Promise((resolve) => setTimeout(resolve, 1000));
 
-		if (event.data.get(AsyncFormNames.shouldError)) {
+		if (data.get(AsyncFormNames.shouldError)) {
 			throw new Error('Form submission failed (as requested)');
 		}
 
-		if (String(event.data.get(AsyncFormNames.name)).toLowerCase() === 'bob') {
+		if (String(data.get(AsyncFormNames.name)).toLowerCase() === 'bob') {
 			return {
 				ok: false,
 				fieldErrors: {

@@ -33,18 +33,19 @@ export function AsyncFormDemo() {
 		e: TypedSubmitEvent<(typeof AsyncFormNames)[keyof typeof AsyncFormNames]>,
 	) => {
 		e.preventDefault();
+		const data = e.data;
 
 		// Artificial delay
 		await new Promise((resolve) => setTimeout(resolve, 1000));
 
-		if (e.data.get(AsyncFormNames.shouldError)) {
+		if (data.get(AsyncFormNames.shouldError)) {
 			setFormData(null);
 			throw new Error('Form submission failed (as requested)');
 		}
 
 		setFormData({
-			name: e.data.get(AsyncFormNames.name) as string,
-			message: e.data.get(AsyncFormNames.message) as string,
+			name: data.get(AsyncFormNames.name) as string,
+			message: data.get(AsyncFormNames.message) as string,
 		});
 	};
 

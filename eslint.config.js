@@ -1,6 +1,7 @@
 import eslint from '@eslint/js';
 import * as tsParser from '@typescript-eslint/parser';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import asyncEventPlugin from 'eslint-plugin-async-event';
 import cssClassUsagePlugin from 'eslint-plugin-css-class-usage';
 import importPlugin from 'eslint-plugin-import';
 import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths';
@@ -41,10 +42,13 @@ export default tseslint.config(
 	{
 		ignores: ['**/*.test.*'],
 		plugins: {
+			'async-event': asyncEventPlugin,
 			'css-class-usage': cssClassUsagePlugin,
 		},
 		rules: {
 			'css-class-usage/no-unknown-classes': 'error',
+			'async-event/no-async-event-properties': 'error',
+			'async-event/no-async-event-reference': 'error',
 		},
 	},
 
