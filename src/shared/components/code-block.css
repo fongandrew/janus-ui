@@ -1,0 +1,37 @@
+@import '~/shared/styles/common.css';
+
+@layer components {
+	.c-code-block {
+		position: relative;
+	}
+
+	.c-code-block__copy {
+		@mixin v-input-sm;
+		@mixin t-radius-inner;
+
+		position: absolute;
+		top: var(--v-space-xs);
+		right: var(--v-space-xs);
+		color: var(--v-pre-fg);
+		background: color-mix(in hsl, var(--v-pre-bg) 85%, transparent);
+
+		span {
+			display: flex;
+			gap: var(--v-space-xs);
+			align-items: center;
+		}
+
+		.c-code-block__copy-label {
+			display: none;
+		}
+
+		&:hover,
+		&:focus {
+			background: var(--v-pre-bg);
+
+			.c-code-block__copy-label {
+				display: inline;
+			}
+		}
+	}
+}

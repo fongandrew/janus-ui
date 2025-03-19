@@ -1,10 +1,18 @@
 import cx from 'classix';
 import { AlertTriangle } from 'lucide-solid';
-import { createUniqueId, ErrorBoundary, type JSX, onMount, splitProps } from 'solid-js';
+import {
+	createUniqueId,
+	ErrorBoundary,
+	type JSX,
+	onMount,
+	sharedConfig,
+	splitProps,
+} from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import { Button } from '~/shared/components/button';
 import { reloadPage } from '~/shared/components/callbacks/error-fallback';
+import { CodeBlock } from '~/shared/components/code-block';
 import { T } from '~/shared/components/t-components';
 import { attrs } from '~/shared/utility/attribute-list';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
@@ -39,6 +47,11 @@ export function ErrorFallback(props: ErrorFallbackProps) {
 	 */
 	let prevError = false;
 
+	// Solid resets the context in error boundaries but we want to reuse it so
+	// `createUniqueId` doesn't reset. We'll store the context here and restore it
+	// in the fallback.
+	const solidContext = isServer ? sharedConfig?.context : null;
+
 	const handleError = (err: Error & { code: string }, eventId: string) => {
 		if (prevError) {
 			window?.location.reload();
@@ -59,6 +72,11 @@ export function ErrorFallback(props: ErrorFallbackProps) {
 	return (
 		<ErrorBoundary
 			fallback={(err, reset) => {
+				// Restore shared config so `createUniqueId` keeps working
+				if (isServer && sharedConfig && solidContext) {
+					sharedConfig.context = solidContext;
+				}
+
 				// Error code is just a hashed version of error message. It's intended
 				// to aggregate multiple user reports of a given error. Event ID is unique
 				// to this error and can be used to look up specific logs.
@@ -97,13 +115,13 @@ export function ErrorFallback(props: ErrorFallbackProps) {
 									persists, please contact support and include the details below.
 								</T>
 							</p>
-							<pre>
+							<CodeBlock>
 								Error code: {code}
 								{'\n'}
 								Event ID: {eventId}
 								{'\n'}
 								User agent: {isServer ? 'Server' : navigator.userAgent}
-							</pre>
+							</CodeBlock>
 							<div class="c-error-fallback__actions">
 								{supportLink && (
 									<a href={supportLink}>
