@@ -16,6 +16,7 @@ import {
 	sidebarTriggerOpen,
 } from '~/shared/components/callbacks/sidebar';
 import { topNavScroll } from '~/shared/components/callbacks/top-nav';
+import { ErrorFallback } from '~/shared/components/error-fallback';
 import { TopNavContext } from '~/shared/components/top-nav-context';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
@@ -35,7 +36,7 @@ export function TopNavLayout(
 				{...callbackAttrs(props, topNavScroll)}
 				class={cx('c-top-nav-layout', props.class)}
 			>
-				{props.children}
+				<ErrorFallback>{props.children}</ErrorFallback>
 			</div>
 		</TopNavContext.Provider>
 	);

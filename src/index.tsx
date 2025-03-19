@@ -10,6 +10,7 @@ import { ButtonLinksDemo } from '~/demos/button-links-demo';
 import { ButtonsDemo } from '~/demos/buttons-demo';
 import { CheckboxesDemo } from '~/demos/checkboxes-demo';
 import { DetailsDemo } from '~/demos/details-demo';
+import { ErrorFallbackDemo } from '~/demos/error-fallback-demo';
 import { FooterDemo } from '~/demos/footer-demo';
 import { FormValidationGroupDemo } from '~/demos/form-validation-group-demo';
 import { InputsDemo } from '~/demos/inputs-demo';
@@ -113,10 +114,12 @@ function Main() {
 						<FooterDemo />
 						<TabsDemo />
 						<TabsPersistDemo />
+						<ErrorFallbackDemo />
 					</main>
 				</App>
 			</SidebarLayoutContent>
 		</SidebarLayout>
 	);
 }
+
 mountRoot(Main);

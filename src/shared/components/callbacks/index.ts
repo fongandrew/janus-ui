@@ -3,6 +3,7 @@ import '~/shared/utility/callback-attrs/index';
 
 import * as comboBox from '~/shared/components/callbacks/combo-box';
 import * as dropdown from '~/shared/components/callbacks/dropdown';
+import * as errorFallback from '~/shared/components/callbacks/error-fallback';
 import * as form from '~/shared/components/callbacks/form';
 import * as label from '~/shared/components/callbacks/label';
 import * as listBox from '~/shared/components/callbacks/list-box';
@@ -23,6 +24,7 @@ import { loadCallbacks } from '~/shared/utility/callback-attrs/load-callbacks';
 loadCallbacks(
 	comboBox,
 	dropdown,
+	errorFallback,
 	form,
 	label,
 	listBox,

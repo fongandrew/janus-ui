@@ -73,6 +73,7 @@ function TriggeredModal() {
 		</>
 	);
 }
+
 function LongModal() {
 	const dialogId = createUniqueId();
 	const manyParagraphs = [];

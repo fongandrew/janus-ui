@@ -1,13 +1,16 @@
 import cx from 'classix';
-import { ErrorBoundary, type JSX, splitProps } from 'solid-js';
+import { type JSX, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 
-import { T } from '~/shared/components/t-components';
-import { useLogger } from '~/shared/utility/solid/use-logger';
+import { ErrorFallback } from '~/shared/components/error-fallback';
 
 export type CardProps = JSX.IntrinsicAttributes &
-	JSX.HTMLAttributes<HTMLDivElement> & {
+	Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onError'> & {
 		as?: 'article' | 'div' | 'section';
+		/** Error boundary render callback */
+		onError?: ((err: Error & { code: string }, eventId: string) => void) | undefined;
+		/** Error boundary reload callback */
+		onReload?: (() => void) | undefined;
 	};
 
 export type CardHeaderProps = JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTMLElement>;
@@ -18,19 +21,13 @@ export type CardContentProps = JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTML
 export type CardFooterProps = JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTMLDivElement>;
 
 export function Card(props: CardProps) {
-	const logger = useLogger();
-	const [local, rest] = splitProps(props, ['as']);
+	const [local, rest] = splitProps(props, ['as', 'onError', 'onReload']);
 	return (
-		<ErrorBoundary
-			fallback={(err) => {
-				logger.error(err);
-				return <T>Something went wrong</T>;
-			}}
-		>
-			<Dynamic component={local.as || 'section'} {...rest} class={cx('c-card', props.class)}>
+		<Dynamic component={local.as || 'section'} {...rest} class={cx('c-card', props.class)}>
+			<ErrorFallback onError={local.onError} onReload={local.onReload} stretch>
 				{props.children}
-			</Dynamic>
-		</ErrorBoundary>
+			</ErrorFallback>
+		</Dynamic>
 	);
 }
 

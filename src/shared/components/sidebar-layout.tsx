@@ -15,6 +15,7 @@ import {
 	sidebarTriggerClose,
 	sidebarTriggerOpen,
 } from '~/shared/components/callbacks/sidebar';
+import { ErrorFallback } from '~/shared/components/error-fallback';
 import { SidebarContext } from '~/shared/components/sidebar-context';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
@@ -31,7 +32,7 @@ export function SidebarLayout(
 	return (
 		<SidebarContext.Provider value={sidebarId}>
 			<div {...rest} class={cx('c-sidebar-layout', rest.class)}>
-				{props.children}
+				<ErrorFallback>{props.children}</ErrorFallback>
 				<div
 					class="c-sidebar__overlay"
 					{...callbackAttrs(sidebarTriggerClose)}

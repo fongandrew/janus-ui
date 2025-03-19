@@ -17,6 +17,7 @@ import {
 	modalTriggerRequestClose,
 	openModal,
 } from '~/shared/components/callbacks/modal';
+import { ErrorFallback } from '~/shared/components/error-fallback';
 import { FormElementPropsProvider } from '~/shared/components/form-element-context';
 import { ModalContext } from '~/shared/components/modal-context';
 import { T } from '~/shared/components/t-components';
@@ -27,11 +28,10 @@ import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { useT } from '~/shared/utility/solid/locale-context';
 
 export type DialogProps = JSX.DialogHtmlAttributes<HTMLDialogElement> & {
-	/**
-	 * Callback for when closing the dialog is requested. Return false to prevent
-	 * the dialog from closing. This is useful for speed bumps or other confirmations.
-	 */
-	onRequestClose?: (() => boolean | void) | undefined;
+	/** Error boundary render callback */
+	onError?: ((err: Error & { code: string }, eventId: string) => void) | undefined;
+	/** Error boundary reload callback */
+	onReload?: (() => void) | undefined;
 	/** Require children */
 	children: JSX.Element;
 } & (
@@ -54,7 +54,7 @@ export type DialogProps = JSX.DialogHtmlAttributes<HTMLDialogElement> & {
 
 export function Modal(props: DialogProps) {
 	const [dialog, setDialog] = createSignal<HTMLDialogElement | null>(null);
-	const [local, rest] = splitProps(props, ['children', 'id', 'open']);
+	const [local, rest] = splitProps(props, ['children', 'id', 'open', 'onError', 'onReload']);
 
 	// Auto-generate ID if needed
 	const id = createAutoId(local);
@@ -95,7 +95,11 @@ export function Modal(props: DialogProps) {
 					ref={combineRefs(setDialog, props.ref)}
 					class={cx('c-modal', props.class)}
 				>
-					<div class="c-modal__body">{local.children}</div>
+					<div class="c-modal__body">
+						<ErrorFallback onError={local.onError} onReload={local.onReload} stretch>
+							{local.children}
+						</ErrorFallback>
+					</div>
 				</dialog>
 			</ModalContext.Provider>
 		</Show>
