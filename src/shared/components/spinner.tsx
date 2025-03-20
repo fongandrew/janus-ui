@@ -1,6 +1,7 @@
 import cx from 'classix';
 import { Loader2, type LucideProps } from 'lucide-solid';
 import { createRenderEffect, type JSX, onCleanup, splitProps, Suspense } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
 import { T } from '~/shared/components/t-components';
 
@@ -38,5 +39,13 @@ export function SpinnerBlock(props: SpinnerBlockProps) {
 /** SolidJS suspense wrapper */
 export function SpinnerSuspense(props: SpinnerBlockProps) {
 	const [local, rest] = splitProps(props, ['children']);
-	return <Suspense fallback={<SpinnerBlock {...rest} />}>{local.children}</Suspense>;
+	return (
+		<>
+			{isServer ? (
+				<>{local.children}</>
+			) : (
+				<Suspense fallback={<SpinnerBlock {...rest} />}>{local.children}</Suspense>
+			)}
+		</>
+	);
 }

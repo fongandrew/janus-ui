@@ -44,7 +44,15 @@ export function InlinePlaceholder(props: JSX.HTMLAttributes<HTMLSpanElement>) {
 /** Suspense wrapper for inline placeholder elements */
 export function InlineSuspense(props: JSX.HTMLAttributes<HTMLSpanElement>) {
 	const [local, rest] = splitProps(props, ['children']);
-	return <Suspense fallback={<InlinePlaceholder {...rest} />}>{local.children}</Suspense>;
+	return (
+		<>
+			{isServer ? (
+				<>{local.children}</>
+			) : (
+				<Suspense fallback={<InlinePlaceholder {...rest} />}>{local.children}</Suspense>
+			)}
+		</>
+	);
 }
 
 /**
