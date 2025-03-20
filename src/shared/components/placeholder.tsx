@@ -99,7 +99,7 @@ export function ChatPlaceholder() {
 export function ParagraphPlaceholder(props: { lines?: number | undefined }) {
 	const length = () => props.lines ?? 3;
 	return (
-		<p>
+		<div>
 			<For each={Array.from({ length: length() })}>
 				{(_val, index) => (
 					<Placeholder
@@ -111,6 +111,6 @@ export function ParagraphPlaceholder(props: { lines?: number | undefined }) {
 					/>
 				)}
 			</For>
-		</p>
+		</div>
 	);
 }
