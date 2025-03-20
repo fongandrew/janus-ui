@@ -57,8 +57,8 @@ export function ImagePlaceholder(props: ImagePlaceholderProps) {
 	const style = () => {
 		if (local.aspectRatio) {
 			return {
-				width: local.width ? `${local.width}px` : '100%',
-				'aspect-ratio': String(local.aspectRatio),
+				'--c-placeholder__image-aspect-ratio': String(local.aspectRatio),
+				width: local.width ? `${local.width}px` : undefined,
 			};
 		}
 

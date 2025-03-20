@@ -8,8 +8,7 @@ import {
 import {
 	ChatPlaceholder,
 	ImagePlaceholder,
-	InlinePlaceholder,
-	Placeholder,
+	ParagraphPlaceholder,
 } from '~/shared/components/placeholder';
 
 export function PlaceholderDemo() {
@@ -22,15 +21,12 @@ export function PlaceholderDemo() {
 			<CardContent>
 				<div class="o-text-stack">
 					<ChatPlaceholder />
-					<ImagePlaceholder aspectRatio={16 / 9} />
-
-					<p>
-						Here is some text with a <InlinePlaceholder /> inside of it. You can use
-						this for loading <InlinePlaceholder /> or other inline elements.
-					</p>
-
-					<ImagePlaceholder height={150} width={300} />
+					<div class="o-group">
+						<ImagePlaceholder aspectRatio={3 / 4} />
+						<ImagePlaceholder aspectRatio={16 / 9} />
+					</div>
 					<ParagraphPlaceholder />
+					<ImagePlaceholder height={150} width={300} />
 				</div>
 			</CardContent>
 		</Card>

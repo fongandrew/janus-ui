@@ -49,6 +49,12 @@
 
 		/* Default, can be overridden */
 		width: 100%;
+
+		/* May be declared via placeholder.tsx */
+		/* stylelint-disable csstools/value-no-unknown-custom-properties */
+		aspect-ratio: var(--c-placeholder__image-aspect-ratio);
+		flex: var(--c-placeholder__image-aspect-ratio) var(--c-placeholder__image-aspect-ratio) 0;
+		/* stylelint-enable csstools/value-no-unknown-custom-properties */
 	}
 
 	.c-placeholder--circle {
