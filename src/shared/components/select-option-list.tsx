@@ -110,7 +110,7 @@ export function SelectOptionList(props: SelectOptionListProps) {
 					<T>Type something</T>
 				</span>
 				<div class="c-select__busy">
-					<Spinner aria-hidden="true" />
+					<Spinner />
 					<span>
 						<T>Loading…</T>
 					</span>

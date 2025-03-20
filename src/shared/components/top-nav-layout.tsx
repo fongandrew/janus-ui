@@ -15,8 +15,9 @@ import {
 	sidebarTriggerClose,
 	sidebarTriggerOpen,
 } from '~/shared/components/callbacks/sidebar';
-import { topNavScroll } from '~/shared/components/callbacks/top-nav';
+import { resetScrollPosition, topNavScroll } from '~/shared/components/callbacks/top-nav';
 import { ErrorFallback } from '~/shared/components/error-fallback';
+import { SpinnerSuspense } from '~/shared/components/spinner';
 import { TopNavContext } from '~/shared/components/top-nav-context';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
@@ -28,15 +29,22 @@ import { useT } from '~/shared/utility/solid/locale-context';
 export function TopNavLayout(
 	props: JSX.HTMLAttributes<HTMLDivElement> & { navId?: string | undefined },
 ) {
+	let ref: HTMLDivElement | undefined;
 	const navId = createAuto(props, 'navId');
+
 	return (
 		<TopNavContext.Provider value={navId}>
 			<div
+				ref={ref}
 				{...props}
 				{...callbackAttrs(props, topNavScroll)}
 				class={cx('c-top-nav-layout', props.class)}
 			>
-				<ErrorFallback>{props.children}</ErrorFallback>
+				<ErrorFallback>
+					<SpinnerSuspense onEnd={() => ref && resetScrollPosition(ref)}>
+						{props.children}
+					</SpinnerSuspense>
+				</ErrorFallback>
 			</div>
 		</TopNavContext.Provider>
 	);

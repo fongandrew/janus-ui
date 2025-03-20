@@ -1,10 +1,42 @@
 import cx from 'classix';
 import { Loader2, type LucideProps } from 'lucide-solid';
-import { splitProps } from 'solid-js';
+import { createRenderEffect, type JSX, onCleanup, splitProps, Suspense } from 'solid-js';
+
+import { T } from '~/shared/components/t-components';
 
 export interface SpinnerProps extends LucideProps {}
 
+export interface SpinnerBlockProps extends JSX.HTMLAttributes<HTMLDivElement> {
+	/** Callback for when the spinner block initially loads */
+	onStart?: () => void;
+	/** Callback for when the spinner block is removed */
+	onEnd?: () => void;
+}
+
+/** Simple spinner icon */
 export function Spinner(props: SpinnerProps) {
 	const [local, rest] = splitProps(props, ['class']);
-	return <Loader2 {...rest} class={cx('t-spin', local.class)} />;
+	return <Loader2 aria-hidden="true" {...rest} class={cx('t-spin', 'c-spinner', local.class)} />;
+}
+
+/** Spinner icon centered within a larger, expanding block */
+export function SpinnerBlock(props: SpinnerBlockProps) {
+	const [local, rest] = splitProps(props, ['onStart', 'onEnd']);
+	createRenderEffect(() => {
+		local.onStart?.();
+	});
+	onCleanup(() => {
+		local.onEnd?.();
+	});
+	return (
+		<div {...rest} class={cx('c-spinner__block', props.class)}>
+			<Spinner /> <T>Loading…</T>
+		</div>
+	);
+}
+
+/** SolidJS suspense wrapper */
+export function SpinnerSuspense(props: SpinnerBlockProps) {
+	const [local, rest] = splitProps(props, ['children']);
+	return <Suspense fallback={<SpinnerBlock {...rest} />}>{local.children}</Suspense>;
 }

@@ -1,13 +1,30 @@
 import { createMounter } from '~/shared/utility/callback-attrs/mount';
 import { getScrollableParent } from '~/shared/utility/get-scrollable-parent';
 import { createMagicProp } from '~/shared/utility/magic-prop';
+import { elmWin } from '~/shared/utility/multi-view';
 import { onUnmount } from '~/shared/utility/unmount-observer';
 
 /** Magic data attr to set to signal we should hide top nav on scroll */
 export const TOP_NAV_SCROLL_HIDE_ATTR = 'data-c-top-nav__scroll-hide';
 
 /** Magic prop for memoizing memoized height (and measurement time) of header */
-export const [memoizedHeight, setMemoizedHeight] = createMagicProp<[number, number]>();
+const [memoizedHeight, setMemoizedHeight] = createMagicProp<[number, number]>();
+
+/** Magic prop for memoizing last scroll top of container element */
+const [lastScrollTop, setLastScrollTop] = createMagicProp<number>();
+
+/**
+ * Attach scroll handler to scrollable parent of top nav layout
+ */
+export const topNavScroll = createMounter('modal__open-scroll-state', (elm) => {
+	const parent = getScrollableParent(elm);
+	if (!parent) return;
+
+	parent.addEventListener('scroll', handleScroll, { passive: true });
+	onUnmount(elm, () => {
+		parent.removeEventListener('scroll', handleScroll);
+	});
+});
 
 /** Get height of header */
 const getHeaderHeight = (header: HTMLElement) => {
@@ -22,9 +39,6 @@ const getHeaderHeight = (header: HTMLElement) => {
 	setMemoizedHeight(header, [height, Date.now()]);
 	return height;
 };
-
-/** Magic prop for memoizing last scroll top of container element */
-export const [lastScrollTop, setLastScrollTop] = createMagicProp<number>();
 
 /**
  * Scroll handler to attach to scrollable area in top nav layout.
@@ -48,14 +62,17 @@ function handleScroll(e: Event) {
 }
 
 /**
- * Attach scroll handler to scrollable parent of top nav layout
+ * Stuff like suspense callback messes up scroll position -- we can fix by
+ * forcing the scroll (and recalc) before suspense unmounts everything though.
  */
-export const topNavScroll = createMounter('modal__open-scroll-state', (elm) => {
-	const parent = getScrollableParent(elm);
-	if (!parent) return;
+export function resetScrollPosition(elm: HTMLElement) {
+	// Wrap in requestAnimationFrame to ensure header has chance to mount before we reset
+	elmWin(elm)?.requestAnimationFrame(() => {
+		const parent = getScrollableParent(elm);
+		if (!parent) return;
 
-	parent.addEventListener('scroll', handleScroll, { passive: true });
-	onUnmount(elm, () => {
-		parent.removeEventListener('scroll', handleScroll);
+		setLastScrollTop(parent, parent.scrollTop);
+		const header = elm.querySelector('header');
+		header?.toggleAttribute(TOP_NAV_SCROLL_HIDE_ATTR, false);
 	});
-});
+}

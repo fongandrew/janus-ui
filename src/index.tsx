@@ -24,6 +24,7 @@ import { RadioGroupDemo } from '~/demos/radio-group-demo';
 import { SelectDemo } from '~/demos/select-demo';
 import { SelectTypeaheadDemo } from '~/demos/select-typeahead-demo';
 import { SelectionValidationDemo } from '~/demos/selection-validation-demo';
+import { SuspenseDemo } from '~/demos/suspense-demo';
 import { TabsDemo } from '~/demos/tabs-demo';
 import { TabsPersistDemo } from '~/demos/tabs-persist-demo';
 import { TextareasDemo } from '~/demos/textareas-demo';
@@ -117,6 +118,7 @@ function Main() {
 						<TabsDemo />
 						<TabsPersistDemo />
 						<ErrorFallbackDemo />
+						<SuspenseDemo />
 					</main>
 				</App>
 			</SidebarLayoutContent>

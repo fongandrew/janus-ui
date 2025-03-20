@@ -20,6 +20,7 @@ import {
 import { ErrorFallback } from '~/shared/components/error-fallback';
 import { FormElementPropsProvider } from '~/shared/components/form-element-context';
 import { ModalContext } from '~/shared/components/modal-context';
+import { SpinnerSuspense } from '~/shared/components/spinner';
 import { T } from '~/shared/components/t-components';
 import { attrNoConflict } from '~/shared/utility/attribute';
 import { callbackAttrMods, callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
@@ -97,7 +98,7 @@ export function Modal(props: DialogProps) {
 				>
 					<div class="c-modal__body">
 						<ErrorFallback onError={local.onError} onReload={local.onReload} stretch>
-							{local.children}
+							<SpinnerSuspense>{local.children}</SpinnerSuspense>
 						</ErrorFallback>
 					</div>
 				</dialog>

@@ -1,0 +1,54 @@
+@import '~/shared/styles/common.css';
+
+@layer components {
+	.c-spinner__block {
+		@mixin t-text-muted;
+
+		min-height: 12rem;
+		flex-grow: 1;
+		font-size: var(--v-font-size-md);
+		font-variant: all-petite-caps;
+		gap: var(--v-inline-gap);
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	@mixin v-container-tablet {
+		.c-spinner__block {
+			font-size: var(--v-font-size-lg);
+			flex-direction: column;
+			min-height: 14rem;
+
+			.c-spinner {
+				height: 2.5lh;
+				width: 2.5lh;
+			}
+		}
+	}
+
+	@mixin v-container-tablet-wide {
+		.c-spinner__block {
+			font-size: var(--v-font-size-xl);
+			min-height: 16rem;
+
+			.c-spinner {
+				height: 3.5lh;
+				width: 3.5lh;
+			}
+		}
+	}
+
+	@mixin v-container-desktop {
+		.c-spinner__block {
+			font-size: var(--v-font-size-2xl);
+			min-height: 18rem;
+
+			.c-spinner {
+				height: 5lh;
+				width: 5lh;
+			}
+		}
+	}
+}

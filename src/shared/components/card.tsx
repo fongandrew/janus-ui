@@ -3,6 +3,7 @@ import { type JSX, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 
 import { ErrorFallback } from '~/shared/components/error-fallback';
+import { SpinnerSuspense } from '~/shared/components/spinner';
 
 export type CardProps = JSX.IntrinsicAttributes &
 	Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onError'> & {
@@ -25,7 +26,7 @@ export function Card(props: CardProps) {
 	return (
 		<Dynamic component={local.as || 'section'} {...rest} class={cx('c-card', props.class)}>
 			<ErrorFallback onError={local.onError} onReload={local.onReload} stretch>
-				{props.children}
+				<SpinnerSuspense>{props.children}</SpinnerSuspense>
 			</ErrorFallback>
 		</Dynamic>
 	);

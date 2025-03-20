@@ -29,7 +29,7 @@ export function SubmitButton(props: SubmitButtonProps) {
 			noJSDisabled={context?.action() ? false : undefined}
 			class={cx('c-form__submit', props.class)}
 		>
-			<Spinner aria-hidden="true" class="c-form__busy" />
+			<Spinner class="c-form__busy" />
 			<span>{local.children ?? <T>Submit</T>}</span>
 			<span class="c-form__busy t-sr-only">
 				<T>In progress</T>
