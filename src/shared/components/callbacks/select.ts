@@ -381,7 +381,17 @@ function getSelectObserver(hiddenInputContainer: HTMLElement) {
 			const firstItem = getListItems(listBox)[0];
 			if (!firstItem) return;
 			highlightInList(listBox, firstItem);
-			syncActiveDescendant(getControllingElement(listBox));
+
+			const controllingElement = getControllingElement(listBox);
+
+			// For single selection, highlighting basically acts as selection so clear hidden
+			// inputs to avoid multi-selecting in single select case
+			const multiple = controllingElement.getAttribute('aria-multiselectable') === 'true';
+			if (!multiple) {
+				hiddenInputContainer.replaceChildren();
+			}
+
+			syncActiveDescendant(controllingElement);
 		}
 	});
 
