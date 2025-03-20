@@ -35,7 +35,7 @@
 
 	.c-placeholder--inline {
 		display: inline-block;
-		width: 6em;
+		width: 9em;
 		vertical-align: baseline;
 
 		/* Nudge down a little -- don't know why but it looks better this way */
