@@ -114,9 +114,7 @@
 		/* Busy - hide empty state, show spinner */
 		[aria-busy='true'] + & {
 			.c-select__busy {
-				@mixin o-group;
-
-				justify-content: center;
+				display: block;
 			}
 		}
 

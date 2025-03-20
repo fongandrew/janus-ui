@@ -10,7 +10,7 @@ import {
 import { DropdownContent } from '~/shared/components/dropdown';
 import { ListBoxContext } from '~/shared/components/list-box';
 import { OptionList } from '~/shared/components/option-list';
-import { Spinner } from '~/shared/components/spinner';
+import { Placeholder } from '~/shared/components/placeholder';
 import { T } from '~/shared/components/t-components';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
@@ -110,10 +110,12 @@ export function SelectOptionList(props: SelectOptionListProps) {
 					<T>Type something</T>
 				</span>
 				<div class="c-select__busy">
-					<Spinner />
-					<span>
+					<span class="t-sr-only">
 						<T>Loading…</T>
 					</span>
+					<Placeholder />
+					<Placeholder width="80%" />
+					<Placeholder width="90%" />
 				</div>
 			</div>
 		</DropdownContent>
