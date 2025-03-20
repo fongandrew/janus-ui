@@ -101,7 +101,6 @@ function Main() {
 						<MenuDemo />
 						<CheckboxesDemo />
 						<RadioGroupDemo />
-						<PlaceholderDemo />
 						<TooltipDemo />
 						<InputsDemo />
 						<LabelledActionDemo />
@@ -117,6 +116,7 @@ function Main() {
 						<FooterDemo />
 						<TabsDemo />
 						<TabsPersistDemo />
+						<PlaceholderDemo />
 						<ErrorFallbackDemo />
 						<SuspenseDemo />
 					</main>
