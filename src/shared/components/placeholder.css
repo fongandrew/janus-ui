@@ -1,0 +1,73 @@
+@import '~/shared/styles/common.css';
+
+@layer components {
+	.c-placeholder::before,
+	.c-placeholder--inline,
+	.c-placeholder--image,
+	.c-placeholder--circle {
+		@mixin v-colors-secondary;
+
+		position: relative;
+		overflow: hidden;
+		animation: c-placeholder__shimmer 2.4s infinite linear;
+	}
+
+	.c-placeholder::before,
+	.c-placeholder--inline {
+		border-radius: 1lh;
+		height: 0.85em;
+	}
+
+	.c-placeholder {
+		display: flex;
+		align-items: center;
+
+		/* Default, can be overridden */
+		width: 100%;
+		height: 1lh;
+
+		&::before {
+			content: '';
+			display: block;
+			width: 100%;
+		}
+	}
+
+	.c-placeholder--inline {
+		display: inline-block;
+		width: 6em;
+		vertical-align: baseline;
+
+		/* Nudge down a little -- don't know why but it looks better this way */
+		top: 2px;
+	}
+
+	.c-placeholder--image {
+		@mixin t-radius-inner;
+
+		min-height: 2em;
+
+		/* Default, can be overridden */
+		width: 100%;
+	}
+
+	.c-placeholder--circle {
+		border-radius: 100%;
+		height: 2lh;
+		width: 2lh;
+	}
+}
+
+@keyframes c-placeholder__shimmer {
+	0% {
+		opacity: 0.8;
+	}
+
+	50% {
+		opacity: 1;
+	}
+
+	100% {
+		opacity: 0.8;
+	}
+}

@@ -11,6 +11,8 @@ export default {
 		'media-query-no-invalid': null,
 		// Allow more flexibility with custom property names (e.g. BEM-ish names)
 		'custom-property-pattern': null,
+		// BEM-ish keyframe names
+		'keyframes-name-pattern': null,
 
 		'at-rule-no-unknown': [
 			true,

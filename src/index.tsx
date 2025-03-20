@@ -19,6 +19,7 @@ import { LabelledActionDemo } from '~/demos/labelled-action-demo';
 import { ListBoxDemo } from '~/demos/list-box-demo';
 import { MenuDemo } from '~/demos/menu-demo';
 import { ModalDemo } from '~/demos/modal-demo';
+import { PlaceholderDemo } from '~/demos/placeholder-demo';
 import { RadioGroupDemo } from '~/demos/radio-group-demo';
 import { SelectDemo } from '~/demos/select-demo';
 import { SelectTypeaheadDemo } from '~/demos/select-typeahead-demo';
@@ -99,6 +100,7 @@ function Main() {
 						<MenuDemo />
 						<CheckboxesDemo />
 						<RadioGroupDemo />
+						<PlaceholderDemo />
 						<TooltipDemo />
 						<InputsDemo />
 						<LabelledActionDemo />
