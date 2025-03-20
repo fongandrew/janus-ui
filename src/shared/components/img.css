@@ -1,0 +1,16 @@
+@import '~/shared/styles/common.css';
+
+@layer components {
+	.c-img {
+		position: relative;
+	}
+
+	.c-img__error {
+		@mixin t-text-muted;
+
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+}

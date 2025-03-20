@@ -2,20 +2,20 @@ import '~/shared/components/placeholder.css';
 
 import cx from 'classix';
 import { For, type JSX, splitProps, Suspense } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
 import { randInt } from '~/shared/utility/random';
 
-export type PlaceholderProps = {
-	class?: string;
-	width?: string;
-} & JSX.HTMLAttributes<HTMLDivElement>;
+export interface PlaceholderProps extends JSX.HTMLAttributes<HTMLDivElement> {
+	width?: string | undefined;
+}
 
-export type ImagePlaceholderProps = {
-	class?: string;
-	height?: number;
-	width?: number;
-	aspectRatio?: number;
-} & JSX.HTMLAttributes<HTMLDivElement>;
+export interface ImgPlaceholderProps extends JSX.HTMLAttributes<HTMLDivElement> {
+	class?: string | undefined;
+	height?: string | number | undefined;
+	width?: string | number | undefined;
+	aspectRatio?: number | undefined;
+}
 
 /**
  * Full width placeholder used for block elements like a card
@@ -58,31 +58,25 @@ export function InlineSuspense(props: JSX.HTMLAttributes<HTMLSpanElement>) {
 /**
  * Image placeholder block with optional height, width, or aspect ratio
  */
-export function ImagePlaceholder(props: ImagePlaceholderProps) {
+export function ImgPlaceholder(props: ImgPlaceholderProps) {
 	const [local, others] = splitProps(props, ['class', 'height', 'width', 'aspectRatio']);
-
-	// Set style based on provided props
-	const style = () => {
-		if (local.aspectRatio) {
-			return {
-				'--c-placeholder__image-aspect-ratio': String(local.aspectRatio),
-				width: local.width ? `${local.width}px` : undefined,
-			};
-		}
-
-		return {
-			height: local.height ? `${local.height}px` : 'auto',
-			width: local.width ? `${local.width}px` : '100%',
-		};
-	};
-
-	return <div class={cx('c-placeholder--image', local.class)} style={style()} {...others} />;
+	return (
+		<div
+			class={cx('c-placeholder--img', local.class)}
+			style={{
+				'--c-placeholder__img-aspect-ratio': String(local.aspectRatio),
+				height: local.height ? `${local.height}px` : 'auto',
+				width: local.width ? `${local.width}px` : '100%',
+			}}
+			{...others}
+		/>
+	);
 }
 
 /**
  * Circular placeholder used for avatars or other circular elements
  */
-export function CirclePlaceholder(props: ImagePlaceholderProps) {
+export function CirclePlaceholder(props: ImgPlaceholderProps) {
 	return <div {...props} class={cx('c-placeholder--circle', props.class)} />;
 }
 

@@ -3,7 +3,7 @@
 @layer components {
 	.c-placeholder::before,
 	.c-placeholder--inline,
-	.c-placeholder--image,
+	.c-placeholder--img,
 	.c-placeholder--circle {
 		@mixin v-colors-secondary;
 
@@ -42,18 +42,23 @@
 		top: 2px;
 	}
 
-	.c-placeholder--image {
+	.c-placeholder--img {
 		@mixin t-radius-inner;
 
 		min-height: 2em;
 
 		/* Default, can be overridden */
 		width: 100%;
+		max-width: 100%;
 
 		/* May be declared via placeholder.tsx */
 		/* stylelint-disable csstools/value-no-unknown-custom-properties */
-		aspect-ratio: var(--c-placeholder__image-aspect-ratio);
-		flex: var(--c-placeholder__image-aspect-ratio) var(--c-placeholder__image-aspect-ratio) 0;
+		aspect-ratio: var(--c-placeholder__img-aspect-ratio);
+
+		/* Make masonry layout work */
+		.o-group > & {
+			flex: var(--c-placeholder__img-aspect-ratio) var(--c-placeholder__img-aspect-ratio) 0;
+		}
 		/* stylelint-enable csstools/value-no-unknown-custom-properties */
 	}
 

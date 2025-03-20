@@ -7,7 +7,7 @@ import {
 } from '~/shared/components/card';
 import {
 	ChatPlaceholder,
-	ImagePlaceholder,
+	ImgPlaceholder,
 	ParagraphPlaceholder,
 } from '~/shared/components/placeholder';
 
@@ -22,11 +22,11 @@ export function PlaceholderDemo() {
 				<div class="o-text-stack">
 					<ChatPlaceholder />
 					<div class="o-group">
-						<ImagePlaceholder aspectRatio={3 / 4} />
-						<ImagePlaceholder aspectRatio={16 / 9} />
+						<ImgPlaceholder aspectRatio={3 / 4} />
+						<ImgPlaceholder aspectRatio={16 / 9} />
 					</div>
 					<ParagraphPlaceholder />
-					<ImagePlaceholder height={150} width={300} />
+					<ImgPlaceholder height={150} width={300} />
 				</div>
 			</CardContent>
 		</Card>

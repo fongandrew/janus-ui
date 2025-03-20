@@ -13,6 +13,7 @@ import { ErrorFallbackDemo } from '~/demos/error-fallback-demo';
 import { FooterDemo } from '~/demos/footer-demo';
 import { FormSubmitDemo } from '~/demos/form-submit-demo';
 import { FormValidationGroupDemo } from '~/demos/form-validation-group-demo';
+import { ImgDemo } from '~/demos/img-demo';
 import { InputsDemo } from '~/demos/inputs-demo';
 import { IntlDemo } from '~/demos/intl-demo';
 import { LabelledActionDemo } from '~/demos/labelled-action-demo';
@@ -114,6 +115,7 @@ function Main() {
 						<IntlDemo />
 						<FooterDemo />
 						<TabsDemo />
+						<ImgDemo />
 						<PlaceholderDemo />
 						<ErrorFallbackDemo />
 					</main>

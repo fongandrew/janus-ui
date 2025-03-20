@@ -3,7 +3,12 @@
 		"target": "ESNext",
 		"useDefineForClassFields": true,
 		"lib": ["DOM", "DOM.Iterable", "ESNext"],
-		"types": ["vitest/globals", "@testing-library/jest-dom/vitest", "./types/colorparsley"],
+		"types": [
+			"vitest/globals",
+			"@testing-library/jest-dom/vitest",
+			"./types/assets",
+			"./types/colorparsley"
+		],
 		"allowJs": false,
 		"module": "ESNext",
 		"skipLibCheck": true,
@@ -33,10 +38,11 @@
 		/* Paths */
 		"baseUrl": ".",
 		"paths": {
+			"@/*": ["assets/*"],
 			"~/*": ["src/*"],
 		}
 	},
-	"include": ["src", "vitest.setup.ts"],
+	"include": ["assets", "src", "vitest.setup.ts"],
 	"exclude": [
 		"node_modules",
 		// This is annoying since it breaks type refs to the solid-js equivalents

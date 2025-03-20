@@ -6,6 +6,7 @@ import * as comboBox from '~/shared/components/callbacks/combo-box';
 import * as dropdown from '~/shared/components/callbacks/dropdown';
 import * as errorFallback from '~/shared/components/callbacks/error-fallback';
 import * as form from '~/shared/components/callbacks/form';
+import * as img from '~/shared/components/callbacks/img';
 import * as label from '~/shared/components/callbacks/label';
 import * as listBox from '~/shared/components/callbacks/list-box';
 import * as menu from '~/shared/components/callbacks/menu';
@@ -28,6 +29,7 @@ loadCallbacks(
 	dropdown,
 	errorFallback,
 	form,
+	img,
 	label,
 	listBox,
 	menu,

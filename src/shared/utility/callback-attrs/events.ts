@@ -28,6 +28,7 @@ const DELEGATABLE_EVENTS = {
 	click: false,
 	cut: false,
 	dblclick: false,
+	error: true,
 	focusin: true,
 	focusout: true,
 	input: false,
