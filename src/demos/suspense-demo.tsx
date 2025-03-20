@@ -1,7 +1,7 @@
 import { createResource, createSignal } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
-import { Button } from '~/shared/components/button';
+import { Button, LinkButton } from '~/shared/components/button';
 import {
 	Card,
 	CardContent,
@@ -16,6 +16,7 @@ import {
 	ModalFooter,
 	ModalTitle,
 } from '~/shared/components/modal';
+import { InlineSuspense } from '~/shared/components/placeholder';
 import { combineEventHandlers } from '~/shared/utility/solid/combine-event-handlers';
 
 export function SuspenseDemo() {
@@ -27,12 +28,18 @@ export function SuspenseDemo() {
 					<CardTitle>Suspense Loaders</CardTitle>
 					<CardDescription>Click to trigger loading state</CardDescription>
 				</CardHeader>
-				<CardContent>
+				<CardContent class="o-text-stack">
 					<div class="o-group">
 						<CardLoadButton />
 						<Button onClick={incr}>Page Load</Button>
 						<ModalLoadButton />
 					</div>
+					<p>
+						<span class="t-text-weight-label">Inline load:</span>{' '}
+						<InlineSuspense>
+							<InlineLoadButton />
+						</InlineSuspense>
+					</p>
 					{(() => {
 						// Test error thrown during SSR
 						if (isServer) {
@@ -81,6 +88,17 @@ function ModalLoadButton() {
 	);
 }
 
+/** Link button that forces reload state */
+function InlineLoadButton() {
+	const [count, incr] = createIncrResource();
+	return (
+		<>
+			<LinkButton onClick={incr}>Click to trigger load</LinkButton>
+			{count() && null}
+		</>
+	);
+}
+
 function createIncrResource() {
 	const initialValue = 1;
 	const [signal, setSignal] = createSignal(initialValue);
@@ -88,7 +106,7 @@ function createIncrResource() {
 		signal,
 		(n) =>
 			new Promise<number>((resolve) => {
-				setTimeout(() => resolve(n), 60000);
+				setTimeout(() => resolve(n), 1000);
 			}),
 	);
 	return [

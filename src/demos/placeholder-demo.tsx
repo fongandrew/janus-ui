@@ -30,12 +30,7 @@ export function PlaceholderDemo() {
 					</p>
 
 					<ImagePlaceholder height={150} width={300} />
-
-					<p>
-						<Placeholder width="95%" />
-						<Placeholder width="100%" />
-						<Placeholder width="66%" />
-					</p>
+					<ParagraphPlaceholder />
 				</div>
 			</CardContent>
 		</Card>

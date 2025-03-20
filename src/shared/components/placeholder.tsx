@@ -1,7 +1,9 @@
 import '~/shared/components/placeholder.css';
 
 import cx from 'classix';
-import { type JSX, splitProps } from 'solid-js';
+import { For, type JSX, splitProps, Suspense } from 'solid-js';
+
+import { randInt } from '~/shared/utility/random';
 
 export type PlaceholderProps = {
 	class?: string;
@@ -37,6 +39,12 @@ export function InlinePlaceholder(props: JSX.HTMLAttributes<HTMLSpanElement>) {
 	const [local, rest] = splitProps(props, ['class']);
 
 	return <span class={cx('c-placeholder--inline', local.class)} {...rest} />;
+}
+
+/** Suspense wrapper for inline placeholder elements */
+export function InlineSuspense(props: JSX.HTMLAttributes<HTMLSpanElement>) {
+	const [local, rest] = splitProps(props, ['children']);
+	return <Suspense fallback={<InlinePlaceholder {...rest} />}>{local.children}</Suspense>;
 }
 
 /**
@@ -82,5 +90,27 @@ export function ChatPlaceholder() {
 				<Placeholder width="85%" />
 			</div>
 		</div>
+	);
+}
+
+/**
+ * Placeholder for multiple lines in a paragraph
+ */
+export function ParagraphPlaceholder(props: { lines?: number | undefined }) {
+	const length = () => props.lines ?? 3;
+	return (
+		<p>
+			<For each={Array.from({ length: length() })}>
+				{(_val, index) => (
+					<Placeholder
+						width={
+							index() === 0
+								? '100%'
+								: `${randInt(index() === length() - 1 ? 66 : 85, 100)}%`
+						}
+					/>
+				)}
+			</For>
+		</p>
 	);
 }
