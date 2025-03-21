@@ -194,7 +194,7 @@
 			The !important is annoying but Lucide insists on setting a stroke width on the
 			element itself and sometimes we want to override it.
 		*/
-		stroke-width: clamp(2, var(--v-font-weight) / 200, 3) !important;
+		stroke-width: clamp(2, var(--v-font-weight) / 200, 3);
 	}
 
 	table {
