@@ -15,8 +15,8 @@
 	}
 
 	.c-tabs__button {
-		@mixin t-font-weight var(--v-font-weight-label);
-		@mixin t-text-muted;
+		@mixin v-font-weight var(--v-font-weight-label);
+		@mixin v-text-muted;
 
 		border-width: 0 0 var(--v-border-width-lg) 0;
 		display: block;

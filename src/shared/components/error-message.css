@@ -3,7 +3,7 @@
 @layer components {
 	.c-error-message {
 		@mixin t-overflow-x;
-		@mixin t-text-danger;
+		@mixin v-text-danger;
 
 		&::before {
 			content: '✗';

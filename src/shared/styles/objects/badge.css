@@ -1,6 +1,6 @@
 /* Badge styles for displaying status or notifications */
 @define-mixin o-badge {
-	@mixin t-font-weight var(--v-font-weight-label);
+	@mixin v-font-weight var(--v-font-weight-label);
 
 	display: inline-block;
 	font-size: var(--v-font-size-sm);

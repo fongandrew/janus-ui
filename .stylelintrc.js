@@ -30,7 +30,7 @@ export default {
 	},
 	overrides: [
 		{
-			files: ['!**/tools/**/*.css'],
+			files: ['!**/variables/**/*.css'],
 			rules: {
 				'declaration-property-value-disallowed-list': [
 					{

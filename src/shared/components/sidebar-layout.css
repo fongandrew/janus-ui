@@ -120,8 +120,8 @@
 
 	.c-sidebar__list-link,
 	.c-sidebar__list-button {
+		@mixin v-font-weight var(--v-font-weight-normal);
 		@mixin o-input-box;
-		@mixin t-font-weight var(--v-font-weight-normal);
 
 		text-align: left;
 		justify-content: flex-start;
@@ -129,19 +129,18 @@
 
 		/* Selected */
 		&[aria-current]:not([aria-current='false']) {
-			@mixin t-font-weight var(--v-font-weight-selected);
+			@mixin v-font-weight var(--v-font-weight-selected);
 		}
 	}
 
 	.c-sidebar-list__heading {
-		@mixin o-input-box;
 		@mixin v-text-sm;
-		@mixin t-font-weight var(--v-font-weight-label);
+		@mixin v-text-muted;
+		@mixin v-font-weight var(--v-font-weight-label);
+		@mixin o-input-box;
 
 		border-color: transparent;
 		border-width: var(--v-border-width);
-
-		@mixin t-text-muted;
 
 		+ .c-sidebar__list {
 			padding-top: 0;

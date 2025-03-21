@@ -56,7 +56,7 @@
 	}
 
 	a.c-option-list__item {
-		@mixin t-font-weight var(--v-font-weight-normal);
+		@mixin v-font-weight var(--v-font-weight-normal);
 
 		color: var(--v-popover-fg);
 		text-decoration: none;
@@ -78,8 +78,8 @@
 
 	.c-option-list__heading {
 		@mixin v-text-sm;
-		@mixin t-font-weight var(--v-font-weight-subtitle);
-		@mixin t-text-muted;
+		@mixin v-text-muted;
+		@mixin v-font-weight var(--v-font-weight-subtitle);
 
 		padding-bottom: 0;
 	}

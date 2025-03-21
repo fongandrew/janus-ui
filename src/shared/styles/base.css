@@ -25,12 +25,11 @@
 
 	a[href] {
 		@mixin t-link-style;
-		@mixin t-font-weight var(--v-font-weight-label);
 	}
 
 	b,
 	strong {
-		@mixin t-font-weight var(--v-font-weight-strong);
+		@mixin v-font-weight var(--v-font-weight-strong);
 	}
 
 	/*
@@ -74,28 +73,28 @@
 	/* At most 1, the page title (or site if this is the main hero page) */
 	h1 {
 		@mixin v-text-2xl;
-		@mixin t-font-weight var(--v-font-weight-title);
+		@mixin v-font-weight var(--v-font-weight-title);
 	}
 
 	/* h2 = top level  */
 	header h1,
 	h2 {
 		@mixin v-text-xl;
-		@mixin t-font-weight var(--v-font-weight-title);
+		@mixin v-font-weight var(--v-font-weight-title);
 	}
 
 	/* Card headings basically */
 	header h2,
 	h3 {
 		@mixin v-text-lg;
-		@mixin t-font-weight var(--v-font-weight-subtitle);
+		@mixin v-font-weight var(--v-font-weight-subtitle);
 	}
 
 	/* Everything else */
 	h4,
 	h5,
 	h6 {
-		@mixin t-font-weight var(--v-font-weight-label);
+		@mixin v-font-weight var(--v-font-weight-label);
 	}
 
 	/*
@@ -106,12 +105,12 @@
 	aside {
 		h4 {
 			@mixin v-text-xl;
-			@mixin t-font-weight var(--v-font-weight-title);
+			@mixin v-font-weight var(--v-font-weight-title);
 		}
 
 		h5 {
 			@mixin v-text-lg;
-			@mixin t-font-weight var(--v-font-weight-subtitle);
+			@mixin v-font-weight var(--v-font-weight-subtitle);
 		}
 	}
 
@@ -190,6 +189,12 @@
 		height: 1lh;
 		width: 1em;
 		flex-shrink: 0;
+
+		/*
+			The !important is annoying but Lucide insists on setting a stroke width on the
+			element itself and sometimes we want to override it.
+		*/
+		stroke-width: clamp(2, var(--v-font-weight) / 200, 3) !important;
 	}
 
 	table {
@@ -217,7 +222,7 @@
 
 	th {
 		@mixin v-colors-secondary;
-		@mixin t-font-weight var(--v-font-weight-label);
+		@mixin v-font-weight var(--v-font-weight-label);
 
 		text-align: left;
 	}

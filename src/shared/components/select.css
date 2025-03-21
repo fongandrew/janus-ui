@@ -38,6 +38,8 @@
 
 	.c-select__chevron,
 	.c-select__clear {
+		@mixin v-text-muted;
+
 		position: absolute;
 		inset-block: 0;
 		right: 0;
@@ -48,8 +50,6 @@
 		border: 0;
 		background-color: transparent;
 		padding: 0;
-
-		@mixin t-text-muted;
 	}
 
 	.c-select__chevron {
@@ -77,7 +77,7 @@
 	}
 
 	.c-select__placeholder {
-		@mixin t-text-muted;
+		@mixin v-text-muted;
 
 		*:not(:empty) + & {
 			display: none;
@@ -91,7 +91,7 @@
 	/* Select dropdown status / empty state */
 	.c-select__status {
 		@mixin v-text-sm;
-		@mixin t-text-muted;
+		@mixin v-text-muted;
 		@mixin t-overflow-x;
 
 		display: none;

@@ -39,5 +39,5 @@
 }
 
 .c-slider__unit {
-	@mixin t-text-muted;
+	@mixin v-text-muted;
 }

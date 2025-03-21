@@ -35,7 +35,7 @@ export function SuspenseDemo() {
 						<ModalLoadButton />
 					</div>
 					<p>
-						<span class="t-text-weight-label">Inline load:</span>{' '}
+						<span class="v-text-weight-label">Inline load:</span>{' '}
 						<InlineSuspense>
 							<InlineLoadButton />
 						</InlineSuspense>

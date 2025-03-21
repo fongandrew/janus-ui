@@ -2,7 +2,7 @@
 
 @layer components {
 	.c-spinner__block {
-		@mixin t-text-muted;
+		@mixin v-text-muted;
 
 		min-height: 12rem;
 		flex-grow: 1;

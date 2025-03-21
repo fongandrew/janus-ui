@@ -27,7 +27,7 @@ function RadioGroupDemo() {
 			</CardHeader>
 			<CardContent>
 				<div class="o-stack">
-					<output id={outputId} class="t-text-weight-strong">
+					<output id={outputId} class="v-text-weight-strong">
 						Selected: {value()}
 					</output>
 					<RadioGroup

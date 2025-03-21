@@ -43,7 +43,7 @@
 
 	.c-error-fallback__heading {
 		@mixin o-group;
-		@mixin t-text-danger;
+		@mixin v-text-danger;
 	}
 
 	.c-error-fallback__actions {

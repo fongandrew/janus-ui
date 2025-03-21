@@ -19,7 +19,7 @@
 	}
 
 	.c-card__description {
-		@mixin t-text-muted;
+		@mixin v-text-muted;
 	}
 
 	.c-card__content {

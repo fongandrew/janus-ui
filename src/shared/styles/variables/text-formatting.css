@@ -1,0 +1,71 @@
+@define-mixin v-font-weight $weight {
+	--v-font-weight: $(weight);
+
+	font-weight: var(--v-font-weight);
+}
+
+@define-mixin v-text-weight-label {
+	@mixin v-font-weight var(--v-font-weight-label);
+}
+
+@define-mixin v-text-weight-selected {
+	@mixin v-font-weight var(--v-font-weight-selected);
+}
+
+@define-mixin v-text-weight-strong {
+	@mixin v-font-weight var(--v-font-weight-strong);
+}
+
+@define-mixin v-text-weight-subtitle {
+	@mixin v-font-weight var(--v-font-weight-subtitle);
+}
+
+@define-mixin v-text-weight-title {
+	@mixin v-font-weight var(--v-font-weight-title);
+}
+
+@define-mixin v-text-muted {
+	@mixin v-font-weight var(--v-font-weight-muted, var(--v-font-weight-label));
+
+	color: var(--v-muted);
+}
+
+@define-mixin v-text-danger {
+	@mixin v-font-weight var(--v-font-weight-danger, var(--v-font-weight-label));
+
+	color: var(--v-danger-text);
+}
+
+@layer variables {
+	:root {
+		@mixin v-font-weight var(--v-font-weight-normal);
+	}
+
+	.v-text-weight-label {
+		@mixin v-text-weight-label;
+	}
+
+	.v-text-weight-selected {
+		@mixin v-text-weight-selected;
+	}
+
+	.v-text-weight-strong {
+		@mixin v-text-weight-strong;
+	}
+
+	.v-text-weight-subtitle {
+		@mixin v-text-weight-subtitle;
+	}
+
+	.v-text-weight-title {
+		@mixin v-text-weight-title;
+	}
+
+	.v-text-muted {
+		@mixin v-text-muted;
+	}
+
+	.v-text-danger {
+		@mixin v-text-danger;
+	}
+}

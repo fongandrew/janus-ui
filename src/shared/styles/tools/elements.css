@@ -3,6 +3,8 @@
 */
 
 @define-mixin t-link-style {
+	@mixin v-font-weight var(--v-font-weight-label);
+
 	color: var(--v-link);
 	text-decoration-line: underline;
 	text-underline-offset: var(--v-underline-offset);

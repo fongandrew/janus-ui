@@ -3,7 +3,7 @@
 @layer components {
 	.c-description {
 		@mixin t-overflow-x;
-		@mixin t-text-muted;
+		@mixin v-text-muted;
 
 		.c-label-stack:not(:has(.t-label-stack--no-indent)) > & {
 			padding-inline: var(--v-space-xs);

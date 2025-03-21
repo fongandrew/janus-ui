@@ -3,7 +3,7 @@
 @layer components {
 	.c-button,
 	.c-button--ghost {
-		@mixin t-font-weight var(--v-font-weight-label);
+		@mixin v-font-weight var(--v-font-weight-label);
 
 		padding-inline: var(--v-spacing);
 	}

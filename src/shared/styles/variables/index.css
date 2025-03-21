@@ -3,6 +3,7 @@
 @import './color-blocks.css';
 @import './composition.css';
 @import './spacing.css';
+@import './text-formatting.css';
 @import './text-size.css';
 
 /* These mixins depend on other mixins so define them later */

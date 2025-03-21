@@ -105,7 +105,7 @@
 	.c-top-nav__list-link,
 	.c-top-nav__list-button {
 		@mixin o-input-box;
-		@mixin t-font-weight var(--v-font-weight-normal);
+		@mixin v-font-weight var(--v-font-weight-normal);
 
 		display: flex; /* Override inline-flex */
 		text-align: left;
@@ -113,7 +113,7 @@
 
 		/* Selected */
 		&[aria-current]:not([aria-current='false']) {
-			@mixin t-font-weight var(--v-font-weight-selected);
+			@mixin v-font-weight var(--v-font-weight-selected);
 		}
 
 		/* Leave space for close button */

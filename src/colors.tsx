@@ -149,7 +149,7 @@ function ColorBox(props: {
 		<section class={cx('o-text-box', 't-radius-outer', props.class)}>
 			<ColorWithAPCA usage={props.usage}>{props.label}</ColorWithAPCA>
 			{!props.noDanger && (
-				<ColorWithAPCA class="t-text-danger" usage="label">
+				<ColorWithAPCA class="v-text-danger" usage="label">
 					Danger text
 				</ColorWithAPCA>
 			)}
@@ -159,7 +159,7 @@ function ColorBox(props: {
 				</ColorWithAPCA>
 			)}
 			{!props.noMuted && (
-				<ColorWithAPCA class="t-text-muted" usage="label">
+				<ColorWithAPCA class="v-text-muted" usage="label">
 					Muted text
 				</ColorWithAPCA>
 			)}

@@ -19,75 +19,74 @@
 	);
 
 	border-color: var(--v-border-color);
+
+	/* Default font weights for special muted, error cases */
+	--v-font-weight-muted: var(--v-font-weight-label);
+	--v-font-weight-danger: var(--v-font-weight-label);
 }
 
 /* Cards are used to create sectioned content in the "main" UI */
 @define-mixin v-colors-card {
+	@mixin v-color-block;
+
 	--v-bg: var(--v-card-bg);
 	--v-fg: var(--v-card-fg);
-
-	@mixin v-color-block;
+	--v-font-weight-muted: var(--v-font-weight-normal);
 }
 
 /* Inline code highlight */
 @define-mixin v-colors-code {
+	@mixin v-color-block;
+
 	--v-bg: var(--v-code-bg);
 	--v-fg: var(--v-code-fg);
-
-	@mixin v-color-block;
 }
 
 /* Code block */
 @define-mixin v-colors-pre {
+	@mixin v-color-block;
+
 	--v-bg: var(--v-pre-bg);
 	--v-fg: var(--v-pre-fg);
 	--v-danger-text: var(--v-pre-danger);
-	--v-font-weight-danger: var(--v-font-weight-label);
 	--v-muted: var(--v-pre-muted);
-	--v-font-weight-muted: var(--v-font-weight-label);
 	--v-link: var(--v-fg);
-
-	@mixin v-color-block;
 }
 
 /* Menu and dropdowns colors */
 @define-mixin v-colors-popover {
+	@mixin v-color-block;
+
 	--v-bg: var(--v-popover-bg);
 	--v-fg: var(--v-popover-fg);
-
-	@mixin v-color-block;
 }
 
 /* Hovering tooltip colors */
 @define-mixin v-colors-tooltip {
+	@mixin v-color-block;
+
 	--v-bg: var(--v-tooltip-bg);
 	--v-fg: var(--v-tooltip-fg);
 	--v-danger-text: var(--v-tooltip-danger);
-	--v-font-weight-danger: var(--v-font-weight-label);
 	--v-muted: var(--v-tooltip-muted);
-	--v-font-weight-muted: var(--v-font-weight-label);
-
-	@mixin v-color-block;
 }
 
 /* Primary colors are used for submit buttons and other "main" actions */
 @define-mixin v-colors-primary {
+	@mixin v-color-block;
+
 	--v-bg: var(--v-primary-bg);
 	--v-fg: var(--v-primary-fg);
-
-	@mixin v-color-block;
 }
 
 /* Secondary colors are used for secondary actions like reset or cancel */
 @define-mixin v-colors-secondary {
+	@mixin v-color-block;
+
 	--v-bg: var(--v-secondary-bg);
 	--v-fg: var(--v-secondary-fg);
 	--v-danger-text: var(--v-secondary-danger);
-	--v-font-weight-danger: var(--v-font-weight-label);
 	--v-muted: var(--v-secondary-muted);
-	--v-font-weight-muted: var(--v-font-weight-label);
-
-	@mixin v-color-block;
 }
 
 /*
@@ -107,59 +106,57 @@
 	--v-font-weight-label: 600;
 	--v-font-weight-strong: 800;
 
-	@mixin t-font-weight var(--v-font-weight-normal);
+	@mixin v-font-weight var(--v-font-weight-normal);
 	@mixin v-color-block;
 }
 
 /* Highlight colors are used for highlighting text (e.g. in a menu) */
 @define-mixin v-colors-highlight {
+	@mixin v-color-block;
+
 	--v-bg: var(--v-highlight-bg);
 	--v-fg: var(--v-highlight-fg);
 	--v-muted: var(--v-highlight-muted);
 	--v-danger-text: var(--v-highlight-danger);
-
-	@mixin v-color-block;
 }
 
 /* Color for input elements */
 @define-mixin v-colors-input {
+	@mixin v-color-block;
+
 	--v-bg: var(--v-input-bg);
 	--v-fg: var(--v-input-fg);
-
-	@mixin v-color-block;
+	--v-font-weight-muted: var(--v-font-weight-normal);
 }
 
 /* Color to provide feedback for successful actions */
 @define-mixin v-colors-success {
+	@mixin v-color-block;
+
 	--v-bg: var(--v-success-bg);
 	--v-fg: var(--v-success-fg);
 	--v-link: var(--v-fg);
 	--v-muted: var(--v-success-muted);
-	--v-font-weight-muted: var(--v-font-weight-label);
-
-	@mixin v-color-block;
 }
 
 /* Color to provide feedback that something is maybe wrong but still permissible */
 @define-mixin v-colors-warning {
+	@mixin v-color-block;
+
 	--v-bg: var(--v-warning-bg);
 	--v-fg: var(--v-warning-fg);
 	--v-link: var(--v-fg);
 	--v-muted: var(--v-warning-muted);
-	--v-font-weight-muted: var(--v-font-weight-label);
-
-	@mixin v-color-block;
 }
 
 /* Color to provide feedback that something is wrong and not permissible */
 @define-mixin v-colors-danger {
+	@mixin v-color-block;
+
 	--v-bg: var(--v-danger-bg);
 	--v-fg: var(--v-danger-fg);
 	--v-link: var(--v-fg);
 	--v-muted: var(--v-danger-muted);
-	--v-font-weight-muted: var(--v-font-weight-label);
-
-	@mixin v-color-block;
 }
 
 /*
@@ -167,10 +164,10 @@
 	defined variable definition for highlgihting.
 */
 @define-mixin v-colors-default {
+	@mixin v-color-block;
+
 	--v-bg: var(--v-default-bg);
 	--v-fg: var(--v-default-fg);
-
-	@mixin v-color-block;
 }
 
 @layer variables {

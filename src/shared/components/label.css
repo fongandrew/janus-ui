@@ -2,13 +2,13 @@
 
 @layer components {
 	.c-label {
-		@mixin t-font-weight var(--v-font-weight-label);
+		@mixin v-font-weight var(--v-font-weight-label);
 
 		display: inline-block;
 		cursor: pointer;
 
 		&:has(input) {
-			@mixin t-font-weight var(--v-font-weight-normal);
+			@mixin v-font-weight var(--v-font-weight-normal);
 
 			display: inline-flex;
 			align-items: flex-start;
@@ -18,13 +18,13 @@
 		&:has([aria-disabled='true']),
 		&:has(+ [aria-disabled='true']),
 		.c-label-stack:has([aria-disabled='true']) > & {
-			@mixin t-text-muted;
+			@mixin v-text-muted;
 		}
 
 		&:has([aria-invalid='true']),
 		&:has(+ [aria-invalid='true']),
 		.c-label-stack:has([aria-invalid='true']) > & {
-			@mixin t-text-danger;
+			@mixin v-text-danger;
 		}
 
 		.c-label-stack:not(:has(.t-label-stack--no-indent)) > & {

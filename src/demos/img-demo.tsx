@@ -19,12 +19,12 @@ export function ImgDemo() {
 				<CardDescription>Images with placeholders</CardDescription>
 			</CardHeader>
 			<CardContent class="o-text-stack">
-				<p class="t-text-weight-label">Click to reload</p>
+				<p class="v-text-weight-label">Click to reload</p>
 				<div class="o-group">
 					<Img aspectRatio={3 / 4} src={sky34} {...callbackAttrs(imgReload)} />
 					<Img aspectRatio={4 / 3} src={sky43} {...callbackAttrs(imgReload)} />
 				</div>
-				<p class="t-text-weight-label">Intentionally broken image</p>
+				<p class="v-text-weight-label">Intentionally broken image</p>
 				<Img width={400} height={300} src="" />
 			</CardContent>
 		</Card>

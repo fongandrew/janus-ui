@@ -6,7 +6,7 @@
 	}
 
 	.c-img__error {
-		@mixin t-text-muted;
+		@mixin v-text-muted;
 
 		position: absolute;
 		top: 50%;

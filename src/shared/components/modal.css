@@ -89,7 +89,7 @@
 	}
 
 	.c-modal__x {
-		@mixin t-text-muted;
+		@mixin v-text-muted;
 	}
 
 	.c-modal__content:not([data-c-scroll__top]) {
@@ -106,7 +106,7 @@
 
 	.c-modal__title {
 		@mixin v-text-xl;
-		@mixin t-font-weight var(--v-font-weight-title);
+		@mixin v-font-weight var(--v-font-weight-title);
 
 		flex-grow: 1;
 	}
