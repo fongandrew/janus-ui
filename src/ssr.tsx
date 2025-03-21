@@ -9,7 +9,6 @@ import { ButtonsDemo } from '~/demos/buttons-demo';
 import { CheckboxesDemo } from '~/demos/checkboxes-demo';
 import { DetailsDemo } from '~/demos/details-demo';
 import { ErrorFallbackDemo } from '~/demos/error-fallback-demo';
-import { FooterDemo } from '~/demos/footer-demo';
 import { FormSubmitDemo } from '~/demos/form-submit-demo';
 import { FormValidationGroupDemo } from '~/demos/form-validation-group-demo';
 import { ImgDemo } from '~/demos/img-demo';
@@ -111,7 +110,6 @@ function Main() {
 						<FormValidationGroupDemo />
 						<SelectionValidationDemo />
 						<IntlDemo />
-						<FooterDemo />
 						<TabsDemo />
 						<ImgDemo />
 						<PlaceholderDemo />
