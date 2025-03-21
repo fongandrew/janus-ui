@@ -7,11 +7,12 @@ import {
 	RadioGroupContext,
 	type RadioGroupContextValue,
 } from '~/shared/components/radio-group-context';
+import { createAuto } from '~/shared/utility/solid/auto-prop';
 import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
 
 export interface RadioGroupProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	/** Shared name to use across radio elements */
-	name: string;
+	name?: string;
 	/** Value of selected radio button */
 	value?: string;
 	/** Change handler with value set */
@@ -22,6 +23,7 @@ export interface RadioGroupProps extends JSX.HTMLAttributes<HTMLDivElement> {
 
 export function RadioGroup(props: RadioGroupProps) {
 	const [local, rest] = splitProps(props, ['name', 'value', 'onValue', 'children']);
+	const name = createAuto(local, 'name');
 
 	const handleChange = (event: Event) => {
 		const target = event.target;
@@ -33,7 +35,7 @@ export function RadioGroup(props: RadioGroupProps) {
 	const radioGroupProps = mergeFormElementProps<'div'>(rest);
 
 	const context: RadioGroupContextValue = {
-		name: () => local.name,
+		name,
 		value: () => local.value,
 	};
 

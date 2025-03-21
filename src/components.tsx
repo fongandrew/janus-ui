@@ -1,4 +1,5 @@
-import { Info, Settings, SquareCode } from 'lucide-solid';
+import { Globe, Settings, SquareCode } from 'lucide-solid';
+import { createUniqueId } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import { App } from '~/app';
@@ -28,6 +29,8 @@ import { SuspenseDemo } from '~/demos/suspense-demo';
 import { TabsDemo } from '~/demos/tabs-demo';
 import { TextareasDemo } from '~/demos/textareas-demo';
 import { TooltipsDemo } from '~/demos/tooltips-demo';
+import { PrefsModal } from '~/prefs-modal';
+import { ModalOpenTrigger } from '~/shared/components/modal';
 import {
 	Sidebar,
 	SidebarCloseButton,
@@ -50,6 +53,8 @@ interface ComponentsProps {
 }
 
 export function Components(props: ComponentsProps) {
+	const prefsModalId = createUniqueId();
+
 	return (
 		<SidebarLayout>
 			<Sidebar>
@@ -161,15 +166,18 @@ export function Components(props: ComponentsProps) {
 							<SquareCode />
 							Tooltips
 						</SidebarListLink>
-						<SidebarListGroup heading="Sidebar Group Test">
-							<SidebarListLink href="#">
-								<Info />
-								This is a link
+						<SidebarListGroup heading="Other stuff">
+							<SidebarListLink href="https://github.com/fongandrew/solid-base">
+								<Globe />
+								GitHub
 							</SidebarListLink>
-							<SidebarListButton>
-								<Settings />
-								This is a button
-							</SidebarListButton>
+							<ModalOpenTrigger targetId={prefsModalId}>
+								<SidebarListButton>
+									<Settings />
+									Preferences
+								</SidebarListButton>
+							</ModalOpenTrigger>
+							<PrefsModal id={prefsModalId} />
 						</SidebarListGroup>
 					</SidebarList>
 				</SidebarContent>

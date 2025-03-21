@@ -12,7 +12,7 @@ const setupFunctions = new Set<DocumentSetupFunction>();
  * Track which documents are open (so when adding a new setup function, we can call the
  * function on all open documents).
  */
-const activeDocuments = new Set<Document>(parentDocument ? [parentDocument] : []);
+export const activeDocuments = new Set<Document>(parentDocument ? [parentDocument] : []);
 
 /**
  * A thin wrapper for a setup function to run whenever a document is ready. By default, runs
