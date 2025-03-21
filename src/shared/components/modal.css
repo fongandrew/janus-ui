@@ -67,8 +67,10 @@
 	}
 
 	.c-modal__header {
+		@mixin o-group;
 		@mixin o-text-box;
 
+		align-items: center;
 		flex: none;
 	}
 

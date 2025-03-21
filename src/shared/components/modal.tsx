@@ -154,7 +154,7 @@ export function ModalOpenTrigger(props: { children: JSX.Element; targetId: strin
 export function ModalTitle(props: JSX.HTMLAttributes<HTMLDivElement>) {
 	const [local, rest] = splitProps(props, ['children']);
 	return (
-		<div {...rest} class={cx('o-group', 'c-modal__header', rest.class)}>
+		<div {...rest} class={cx('c-modal__header', rest.class)}>
 			<h2 class="c-modal__title">{local.children}</h2>
 			<ModalXButton />
 		</div>
