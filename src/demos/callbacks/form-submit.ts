@@ -8,8 +8,8 @@ export const AsyncFormNames = {
 } as const;
 
 /** Delayed submit, error if shouldError set */
-export const asyncFormSubmit = createSubmitHandler(
-	'async-form-ssr__submit',
+export const formAsyncSubmit = createSubmitHandler(
+	'$p-form__async-submit',
 	async function (event, targetId?: string) {
 		const data = event.data;
 		await new Promise((resolve) => setTimeout(resolve, 1000));

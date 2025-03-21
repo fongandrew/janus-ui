@@ -4,7 +4,7 @@ import { evtDoc } from '~/shared/utility/multi-view';
 
 /** Write form data to output */
 export const formOutputWrite = createSubmitHandler(
-	'form-output__write',
+	'$p-form-output__write',
 	(event, targetId?: string) => {
 		const form = event.target as HTMLFormElement;
 		const data = new FormData(form);
@@ -39,7 +39,7 @@ export const formOutputWrite = createSubmitHandler(
 );
 
 /** Clear output element reset */
-export const formOutputClear = createHandler('click', 'form-output__clear', (event) => {
+export const formOutputClear = createHandler('click', '$p-form-output__clear', (event) => {
 	const button = event.currentTarget as HTMLButtonElement;
 	const form = button.form;
 	if (!form) return;
@@ -53,7 +53,7 @@ export const formOutputClear = createHandler('click', 'form-output__clear', (eve
 /** Update output text when form element changes */
 export const formChangeOutputWrite = createHandler(
 	'change',
-	'form-output__change-write',
+	'$p-form-output__change-write',
 	(event, writeTargetId: string) => {
 		const inputElm = event.target as HTMLElement;
 		if (!inputElm || !(inputElm instanceof HTMLInputElement)) return;

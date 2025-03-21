@@ -2,7 +2,7 @@ import { createSelectInputHandler } from '~/shared/components/callbacks/select';
 
 // Non-framework typeahead that simulates XHR
 export const selectQuery = createSelectInputHandler(
-	'select__query',
+	'$p-select__query',
 	async (event, _abortSignal, templateId: string) => {
 		const target = event.target;
 		const template = target.ownerDocument?.getElementById(

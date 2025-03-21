@@ -5,7 +5,7 @@ import { createValidator } from '~/shared/utility/callback-attrs/validate';
 
 export const listBoxUpdateText = createHandler(
 	'change',
-	'list-box__update-text',
+	'$p-list-box__update-text',
 	(event, targetId: string) => {
 		const listElm = getList(event.currentTarget);
 		if (!listElm) return;
@@ -19,7 +19,7 @@ export const listBoxUpdateText = createHandler(
 	},
 );
 
-export const listBoxNoRed = createValidator('list-box__no-red', (event) => {
+export const listBoxNoRed = createValidator('$p-list-box__no-red', (event) => {
 	const listElm = getList(event.currentTarget);
 	if (!listElm) return;
 	const values = listBoxValues(listElm);
@@ -29,7 +29,7 @@ export const listBoxNoRed = createValidator('list-box__no-red', (event) => {
 });
 
 export const listBoxMinMax = createValidator(
-	'list-box__min-max',
+	'$p-list-box__min-max',
 	(event, minStr: string, maxStr: string) => {
 		const target = event.currentTarget;
 		const list = getList(target);

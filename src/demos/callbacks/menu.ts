@@ -3,7 +3,7 @@ import { elmDoc } from '~/shared/utility/multi-view';
 
 export const menuUpdateText = createHandler(
 	'click',
-	'menu__update-text',
+	'$p-menu__update-text',
 	(event, writeTargetId: string) => {
 		const clickTarget = event.target as HTMLElement;
 		const writeTarget = elmDoc(clickTarget)?.getElementById(writeTargetId);

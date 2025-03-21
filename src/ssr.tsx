@@ -3,7 +3,6 @@ import { NoHydration, renderToString } from 'solid-js/web';
 
 import { App } from '~/app';
 import { AlertsDemo } from '~/demos/alerts-demo';
-import { AsyncFormDemo } from '~/demos/async-form-demo';
 import { BadgeAndCountDemo } from '~/demos/badge-and-count-demo';
 import { ButtonLinksDemo } from '~/demos/button-links-demo';
 import { ButtonsDemo } from '~/demos/buttons-demo';
@@ -108,7 +107,6 @@ function Main() {
 						<SelectDemo />
 						<SelectTypeaheadDemo />
 						<ModalDemo />
-						<AsyncFormDemo />
 						<FormSubmitDemo />
 						<FormValidationGroupDemo />
 						<SelectionValidationDemo />
