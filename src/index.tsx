@@ -26,7 +26,6 @@ import { SelectionValidationDemo } from '~/demos/selection-validation-demo';
 import { SelectsDemo } from '~/demos/selects-demo';
 import { SuspenseDemo } from '~/demos/suspense-demo';
 import { TabsDemo } from '~/demos/tabs-demo';
-import { TabsPersistDemo } from '~/demos/tabs-persist-demo';
 import { TextareasDemo } from '~/demos/textareas-demo';
 import { TooltipsDemo } from '~/demos/tooltips-demo';
 import {
@@ -147,10 +146,6 @@ function Main() {
 							<SquareCode />
 							Tabs
 						</SidebarListLink>
-						<SidebarListLink href="#tabs-persist-demo">
-							<SquareCode />
-							Tabs persist
-						</SidebarListLink>
 						<SidebarListLink href="#textareas-demo">
 							<SquareCode />
 							Textareas
@@ -209,7 +204,6 @@ function Main() {
 						<SelectTypeaheadsDemo />
 						<SuspenseDemo />
 						<TabsDemo />
-						<TabsPersistDemo />
 						<TextareasDemo />
 						<TooltipsDemo />
 					</main>
