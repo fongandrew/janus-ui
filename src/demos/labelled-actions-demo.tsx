@@ -9,12 +9,12 @@ import {
 import { LabelledActionCard } from '~/shared/components/labelled-action';
 import { ToggleSwitch } from '~/shared/components/toggle-switch';
 
-export function LabelledActionDemo() {
+export function LabelledActionsDemo() {
 	return (
-		<Card id="labelled-action-demo">
+		<Card id="labelled-actions-demo">
 			<CardHeader>
-				<CardTitle>Input states</CardTitle>
-				<CardDescription>Text input fields in different states</CardDescription>
+				<CardTitle>Labelled actions</CardTitle>
+				<CardDescription>Text with a button or toggle</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<div class="o-stack">

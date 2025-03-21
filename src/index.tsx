@@ -15,7 +15,7 @@ import { FormValidationGroupDemo } from '~/demos/form-validation-group-demo';
 import { ImgDemo } from '~/demos/img-demo';
 import { InputsDemo } from '~/demos/inputs-demo';
 import { IntlDemo } from '~/demos/intl-demo';
-import { LabelledActionDemo } from '~/demos/labelled-action-demo';
+import { LabelledActionsDemo } from '~/demos/labelled-actions-demo';
 import { ListBoxesDemo } from '~/demos/list-boxes-demo';
 import { MenusDemo } from '~/demos/menus-demo';
 import { ModalDemo } from '~/demos/modal-demo';
@@ -103,7 +103,7 @@ function Main() {
 							<SquareCode />
 							Internationalization & text formatting
 						</SidebarListLink>
-						<SidebarListLink href="#labelled-action-demo">
+						<SidebarListLink href="#labelled-actions-demo">
 							<SquareCode />
 							Labelled actions
 						</SidebarListLink>
@@ -198,7 +198,7 @@ function Main() {
 						<ImgDemo />
 						<InputsDemo />
 						<IntlDemo />
-						<LabelledActionDemo />
+						<LabelledActionsDemo />
 						<ListBoxesDemo />
 						<MenusDemo />
 						<ModalDemo />
