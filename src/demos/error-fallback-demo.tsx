@@ -28,7 +28,7 @@ export function ErrorFallbackDemo() {
 
 	return (
 		<>
-			<Card onError={isServer ? () => {} : undefined}>
+			<Card id="error-fallback-demo" onError={isServer ? () => {} : undefined}>
 				<CardHeader>
 					<CardTitle>Error Boundaries</CardTitle>
 					<CardDescription>Click to throw errors</CardDescription>

@@ -18,7 +18,7 @@ import {
 
 export function IntlDemo() {
 	return (
-		<Card>
+		<Card id="intl-demo">
 			<CardHeader>
 				<CardTitle>Text Formatting</CardTitle>
 				<CardDescription>

@@ -57,7 +57,7 @@ export function SelectionValidationDemo() {
 	};
 
 	return (
-		<Card>
+		<Card id="selection-validation-demo">
 			<CardHeader>
 				<CardTitle>Selection validation</CardTitle>
 				<CardDescription>Validation with ListBox and Select components</CardDescription>

@@ -26,7 +26,7 @@ function SelectsDemo() {
 	const descriptionId4 = createUniqueId();
 
 	return (
-		<Card>
+		<Card id="selects-demo">
 			<CardHeader>
 				<CardTitle>Select</CardTitle>
 				<CardDescription>

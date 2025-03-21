@@ -12,7 +12,7 @@ import { Tab, Tabs } from '~/shared/components/tabs';
 
 export function TabsPersistDemo() {
 	return (
-		<Card>
+		<Card id="tabs-persist-demo">
 			<CardHeader>
 				<CardTitle>Tab Persistence</CardTitle>
 				<CardDescription>Persist elements inside tab</CardDescription>

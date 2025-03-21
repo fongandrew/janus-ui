@@ -9,7 +9,7 @@ import { Tab, Tabs } from '~/shared/components/tabs';
 
 export function TabsDemo() {
 	return (
-		<Card>
+		<Card id="tabs-demo">
 			<CardHeader>
 				<CardTitle>Tabs</CardTitle>
 				<CardDescription>Basic tabbed content</CardDescription>

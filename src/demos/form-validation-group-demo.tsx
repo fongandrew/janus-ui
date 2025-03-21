@@ -69,7 +69,7 @@ export function FormValidationGroupDemo() {
 	};
 
 	return (
-		<Card>
+		<Card id="form-validation-group-demo">
 			<CardHeader>
 				<CardTitle>Form validation (inputs)</CardTitle>
 				<CardDescription>Password validation with FormValidationGroup</CardDescription>

@@ -18,7 +18,7 @@ function MenusDemo() {
 	const outputId = createUniqueId();
 
 	return (
-		<Card>
+		<Card id="menus-demo">
 			<CardHeader>
 				<CardTitle>Menu</CardTitle>
 				<CardDescription>Dropdown menu with groups and items</CardDescription>

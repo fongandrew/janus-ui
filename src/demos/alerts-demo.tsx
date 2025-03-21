@@ -21,7 +21,7 @@ export function AlertsDemo() {
 	const dangerId = createUniqueId();
 
 	return (
-		<Card>
+		<Card id="alerts-demo">
 			<CardHeader>
 				<CardTitle>Alerts</CardTitle>
 			</CardHeader>

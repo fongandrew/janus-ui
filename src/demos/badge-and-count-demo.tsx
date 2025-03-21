@@ -11,7 +11,7 @@ export function BadgeAndCountDemo() {
 	const countLabel = (n: string | number) => `${n} item${n === 1 ? '' : 's'}`;
 
 	return (
-		<Card>
+		<Card id="badge-and-count-demo">
 			<CardHeader>
 				<CardTitle>Badge & Count Demo</CardTitle>
 				<CardDescription>

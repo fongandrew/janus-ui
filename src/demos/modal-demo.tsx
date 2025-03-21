@@ -288,7 +288,7 @@ function AsyncForm(props: { outputId: string }) {
 function ModalDemo() {
 	const outputId = createUniqueId();
 	return (
-		<Card>
+		<Card id="modal-demo">
 			<CardHeader>
 				<CardTitle>Modal</CardTitle>
 				<CardDescription>Modal dialog with backdrop</CardDescription>

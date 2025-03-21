@@ -11,7 +11,7 @@ import { ToggleSwitch } from '~/shared/components/toggle-switch';
 
 export function LabelledActionDemo() {
 	return (
-		<Card>
+		<Card id="labelled-action-demo">
 			<CardHeader>
 				<CardTitle>Input states</CardTitle>
 				<CardDescription>Text input fields in different states</CardDescription>

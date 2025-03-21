@@ -21,7 +21,7 @@ function ListBoxesDemo() {
 	const descriptionId2 = createUniqueId();
 
 	return (
-		<Card>
+		<Card id="list-boxes-demo">
 			<CardHeader>
 				<CardTitle>List box</CardTitle>
 				<CardDescription>Single and multiple selection list boxes</CardDescription>

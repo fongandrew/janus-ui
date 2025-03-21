@@ -23,7 +23,7 @@ export function SuspenseDemo() {
 	const [count, incr] = createIncrResource();
 	return (
 		<>
-			<Card onError={isServer ? () => {} : undefined}>
+			<Card id="suspense-demo" onError={isServer ? () => {} : undefined}>
 				<CardHeader>
 					<CardTitle>Suspense Loaders</CardTitle>
 					<CardDescription>Click to trigger loading state</CardDescription>

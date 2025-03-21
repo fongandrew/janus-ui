@@ -19,7 +19,7 @@ const COLORS = ['Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Indigo', 'Violet'];
 
 function SelectTypeaheadsDemo() {
 	return (
-		<Card>
+		<Card id="select-typeaheads-demo">
 			<CardHeader>
 				<CardTitle>Typeahead</CardTitle>
 				<CardDescription>Search input with single and multiple selection</CardDescription>

@@ -13,7 +13,7 @@ import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry
 
 export function ImgDemo() {
 	return (
-		<Card>
+		<Card id="img-demo">
 			<CardHeader>
 				<CardTitle>Images</CardTitle>
 				<CardDescription>Images with placeholders</CardDescription>

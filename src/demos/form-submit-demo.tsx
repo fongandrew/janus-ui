@@ -32,36 +32,6 @@ export function FormSubmitDemo() {
 	);
 }
 
-function ServerFormDemo() {
-	const FormNames = {
-		q: 'q',
-	};
-
-	return (
-		<Card>
-			<CardHeader>
-				<CardTitle>Form Submit</CardTitle>
-				<CardDescription>Traditional form that submits to a server</CardDescription>
-			</CardHeader>
-			<FormContextProvider action="https://developer.mozilla.org/en-US/search">
-				<CardContent>
-					<div class="o-stack">
-						<Form names={FormNames}>
-							<LabelledInput label="Search query">
-								<Input type="search" name={FormNames.q} required />
-							</LabelledInput>
-						</Form>
-					</div>
-				</CardContent>
-				<CardFooter>
-					<ResetButton {...callbackAttrs(isServer && formOutputClear)} />
-					<SubmitButton />
-				</CardFooter>
-			</FormContextProvider>
-		</Card>
-	);
-}
-
 function AsyncFormDemo() {
 	const [formData, setFormData] = createSignal<{
 		name: string;
@@ -89,7 +59,7 @@ function AsyncFormDemo() {
 	};
 
 	return (
-		<Card>
+		<Card id="form-submit-demo">
 			<CardHeader>
 				<CardTitle>Async form</CardTitle>
 				<CardDescription>Form with async submission and loading state</CardDescription>
@@ -138,6 +108,36 @@ function AsyncFormDemo() {
 								</Card>
 							</output>
 						</Show>
+					</div>
+				</CardContent>
+				<CardFooter>
+					<ResetButton {...callbackAttrs(isServer && formOutputClear)} />
+					<SubmitButton />
+				</CardFooter>
+			</FormContextProvider>
+		</Card>
+	);
+}
+
+function ServerFormDemo() {
+	const FormNames = {
+		q: 'q',
+	};
+
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Form Submit</CardTitle>
+				<CardDescription>Traditional form that submits to a server</CardDescription>
+			</CardHeader>
+			<FormContextProvider action="https://developer.mozilla.org/en-US/search">
+				<CardContent>
+					<div class="o-stack">
+						<Form names={FormNames}>
+							<LabelledInput label="Search query">
+								<Input type="search" name={FormNames.q} required />
+							</LabelledInput>
+						</Form>
 					</div>
 				</CardContent>
 				<CardFooter>

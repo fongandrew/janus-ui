@@ -11,7 +11,7 @@ import { ToggleSwitch } from '~/shared/components/toggle-switch';
 
 export function CheckboxesDemo() {
 	return (
-		<Card>
+		<Card id="checkboxes-demo">
 			<CardHeader>
 				<CardTitle>Checkboxes</CardTitle>
 				<CardDescription>Different checkbox states and variations</CardDescription>

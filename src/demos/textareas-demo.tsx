@@ -10,7 +10,7 @@ import { Textarea } from '~/shared/components/textarea';
 
 function TextareasDemo() {
 	return (
-		<Card>
+		<Card id="textareas-demo">
 			<CardHeader>
 				<CardTitle>Text areas</CardTitle>
 				<CardDescription>Larger input areas</CardDescription>

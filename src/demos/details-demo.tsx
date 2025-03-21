@@ -3,7 +3,7 @@ import { Details } from '~/shared/components/details';
 
 export function DetailsDemo() {
 	return (
-		<Card>
+		<Card id="details-demo">
 			<CardHeader>
 				<CardTitle>Details component</CardTitle>
 			</CardHeader>

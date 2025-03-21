@@ -21,7 +21,7 @@ import { Slider } from '~/shared/components/slider';
 
 function InputStates() {
 	return (
-		<Card>
+		<Card id="inputs-demo">
 			<CardHeader>
 				<CardTitle>Input states</CardTitle>
 				<CardDescription>Text input fields in different states</CardDescription>

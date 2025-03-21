@@ -20,7 +20,7 @@ function RadioGroupsDemo() {
 	const outputId = createUniqueId();
 
 	return (
-		<Card>
+		<Card id="radio-groups-demo">
 			<CardHeader>
 				<CardTitle>Radio buttons</CardTitle>
 				<CardDescription>Different radio states and variations</CardDescription>

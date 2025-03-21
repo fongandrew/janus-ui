@@ -9,7 +9,7 @@ import {
 
 export function ButtonLinksDemo() {
 	return (
-		<Card>
+		<Card id="button-links-demo">
 			<CardHeader>
 				<CardTitle>Button Links</CardTitle>
 				<CardDescription>Links styled as buttons</CardDescription>

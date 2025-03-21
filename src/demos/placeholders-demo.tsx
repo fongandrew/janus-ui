@@ -13,7 +13,7 @@ import {
 
 export function PlaceholdersDemo() {
 	return (
-		<Card>
+		<Card id="placeholders-demo">
 			<CardHeader>
 				<CardTitle>Placeholders</CardTitle>
 				<CardDescription>Loading state placeholders for content</CardDescription>

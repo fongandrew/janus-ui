@@ -10,7 +10,7 @@ import { Tooltip } from '~/shared/components/tooltip';
 
 function TooltipsDemo() {
 	return (
-		<Card>
+		<Card id="tooltips-demo">
 			<CardHeader>
 				<CardTitle>Tooltips</CardTitle>
 				<CardDescription>Tooltips on hover</CardDescription>
