@@ -4,6 +4,7 @@ import * as img from '~/demos/callbacks/img';
 import * as listBox from '~/demos/callbacks/list-box';
 import * as menu from '~/demos/callbacks/menu';
 import * as select from '~/demos/callbacks/select';
+import * as sidebar from '~/demos/callbacks/sidebar';
 import { loadCallbacks } from '~/shared/utility/callback-attrs/load-callbacks';
 
-loadCallbacks(formOutput, formValidationGroup, img, listBox, menu, select);
+loadCallbacks(formOutput, formValidationGroup, img, listBox, menu, select, sidebar);

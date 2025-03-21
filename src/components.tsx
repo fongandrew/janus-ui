@@ -6,6 +6,7 @@ import { AlertsDemo } from '~/demos/alerts-demo';
 import { BadgeAndCountDemo } from '~/demos/badge-and-count-demo';
 import { ButtonLinksDemo } from '~/demos/button-links-demo';
 import { ButtonsDemo } from '~/demos/buttons-demo';
+import { sidebarHighlight } from '~/demos/callbacks/sidebar';
 import { CheckboxesDemo } from '~/demos/checkboxes-demo';
 import { DetailsDemo } from '~/demos/details-demo';
 import { ErrorFallbackDemo } from '~/demos/error-fallback-demo';
@@ -41,6 +42,7 @@ import {
 	SidebarListLink,
 	SidebarOpenButton,
 } from '~/shared/components/sidebar-layout';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
 interface ComponentsProps {
 	title: string;
@@ -56,7 +58,7 @@ export function Components(props: ComponentsProps) {
 					<SidebarCloseButton />
 				</SidebarHeader>
 				<SidebarContent>
-					<SidebarList>
+					<SidebarList {...callbackAttrs(sidebarHighlight)}>
 						<SidebarListLink href="#buttons-demo">
 							<SquareCode />
 							Buttons
