@@ -1,6 +1,6 @@
 import '~/shared/styles/index.css';
 
-import { AlertTriangle, Home, Info, Settings } from 'lucide-solid';
+import { Info, Settings, SquareCode } from 'lucide-solid';
 
 import { App } from '~/app';
 import { AlertsDemo } from '~/demos/alerts-demo';
@@ -10,6 +10,7 @@ import { ButtonsDemo } from '~/demos/buttons-demo';
 import { CheckboxesDemo } from '~/demos/checkboxes-demo';
 import { DetailsDemo } from '~/demos/details-demo';
 import { ErrorFallbackDemo } from '~/demos/error-fallback-demo';
+import { FormSubmitDemo } from '~/demos/form-submit-demo';
 import { FormValidationGroupDemo } from '~/demos/form-validation-group-demo';
 import { ImgDemo } from '~/demos/img-demo';
 import { InputsDemo } from '~/demos/inputs-demo';
@@ -49,31 +50,123 @@ function Main() {
 		<SidebarLayout>
 			<Sidebar>
 				<SidebarHeader>
-					<h2>Sidebar Header</h2>
+					<h2>Components</h2>
 					<SidebarCloseButton />
 				</SidebarHeader>
 				<SidebarContent>
 					<SidebarList>
-						<SidebarListLink href="#" aria-current="page">
-							<Home />
-							Pretend this is selected
+						<SidebarListLink href="#buttons-demo">
+							<SquareCode />
+							Buttons
 						</SidebarListLink>
-						<SidebarListLink href="#">
-							<Info />
-							Here is another link
+						<SidebarListLink href="#button-links-demo">
+							<SquareCode />
+							Button Links
 						</SidebarListLink>
-						<SidebarListGroup heading="Group Name">
-							<SidebarListLink href="#">
-								<AlertTriangle />
-								Some other stuff and this label is quite long for whatever reason
-							</SidebarListLink>
+						<SidebarListLink href="#alerts-demo">
+							<SquareCode />
+							Alerts
+						</SidebarListLink>
+						<SidebarListLink href="#badge-and-count-demo">
+							<SquareCode />
+							Badge and Count
+						</SidebarListLink>
+						<SidebarListLink href="#checkboxes-demo">
+							<SquareCode />
+							Checkboxes
+						</SidebarListLink>
+						<SidebarListLink href="#details-demo">
+							<SquareCode />
+							Details
+						</SidebarListLink>
+						<SidebarListLink href="#error-fallback-demo">
+							<SquareCode />
+							Error fallback
+						</SidebarListLink>
+						<SidebarListLink href="#form-submit-demo">
+							<SquareCode />
+							Form submit
+						</SidebarListLink>
+						<SidebarListLink href="#form-validation-group-demo">
+							<SquareCode />
+							Form validation group
+						</SidebarListLink>
+						<SidebarListLink href="#img-demo">
+							<SquareCode />
+							Images
+						</SidebarListLink>
+						<SidebarListLink href="#inputs-demo">
+							<SquareCode />
+							Inputs
+						</SidebarListLink>
+						<SidebarListLink href="#intl-demo">
+							<SquareCode />
+							Internationalization & text formatting
+						</SidebarListLink>
+						<SidebarListLink href="#labelled-action-demo">
+							<SquareCode />
+							Labelled actions
+						</SidebarListLink>
+						<SidebarListLink href="#list-boxes-demo">
+							<SquareCode />
+							List boxes
+						</SidebarListLink>
+						<SidebarListLink href="#menus-demo">
+							<SquareCode />
+							Menus
+						</SidebarListLink>
+						<SidebarListLink href="#modal-demo">
+							<SquareCode />
+							Modal
+						</SidebarListLink>
+						<SidebarListLink href="#placeholders-demo">
+							<SquareCode />
+							Placeholders
+						</SidebarListLink>
+						<SidebarListLink href="#radio-groups-demo">
+							<SquareCode />
+							Radio groups
+						</SidebarListLink>
+						<SidebarListLink href="#select-typeaheads-demo">
+							<SquareCode />
+							Select typeaheads
+						</SidebarListLink>
+						<SidebarListLink href="#selection-validation-demo">
+							<SquareCode />
+							Selection validation
+						</SidebarListLink>
+						<SidebarListLink href="#selects-demo">
+							<SquareCode />
+							Selects
+						</SidebarListLink>
+						<SidebarListLink href="#suspense-demo">
+							<SquareCode />
+							Suspense
+						</SidebarListLink>
+						<SidebarListLink href="#tabs-demo">
+							<SquareCode />
+							Tabs
+						</SidebarListLink>
+						<SidebarListLink href="#tabs-persist-demo">
+							<SquareCode />
+							Tabs persist
+						</SidebarListLink>
+						<SidebarListLink href="#textareas-demo">
+							<SquareCode />
+							Textareas
+						</SidebarListLink>
+						<SidebarListLink href="#tooltips-demo">
+							<SquareCode />
+							Tooltips
+						</SidebarListLink>
+						<SidebarListGroup heading="Sidebar Group Test">
 							<SidebarListLink href="#">
 								<Info />
-								Here is another link
+								This is a link
 							</SidebarListLink>
 							<SidebarListButton>
 								<Settings />
-								Button goes here
+								This is a button
 							</SidebarListButton>
 						</SidebarListGroup>
 					</SidebarList>
@@ -92,31 +185,33 @@ function Main() {
 					}
 				>
 					<main class="o-box o-grid">
+						{/* Alphabetically-ish but buttons first becase it's wide */}
 						<ButtonsDemo />
-						<BadgeAndCountDemo />
 						<ButtonLinksDemo />
 						<AlertsDemo />
-						<DetailsDemo />
-						<MenusDemo />
+						<BadgeAndCountDemo />
 						<CheckboxesDemo />
-						<RadioGroupsDemo />
-						<TooltipsDemo />
+						<DetailsDemo />
+						<ErrorFallbackDemo />
+						<FormSubmitDemo />
+						<FormValidationGroupDemo />
+						<ImgDemo />
 						<InputsDemo />
+						<IntlDemo />
 						<LabelledActionDemo />
-						<TextareasDemo />
 						<ListBoxesDemo />
+						<MenusDemo />
+						<ModalDemo />
+						<PlaceholdersDemo />
+						<RadioGroupsDemo />
+						<SelectionValidationDemo />
 						<SelectsDemo />
 						<SelectTypeaheadsDemo />
-						<ModalDemo />
-						<FormValidationGroupDemo />
-						<SelectionValidationDemo />
-						<IntlDemo />
+						<SuspenseDemo />
 						<TabsDemo />
 						<TabsPersistDemo />
-						<ImgDemo />
-						<PlaceholdersDemo />
-						<ErrorFallbackDemo />
-						<SuspenseDemo />
+						<TextareasDemo />
+						<TooltipsDemo />
 					</main>
 				</App>
 			</SidebarLayoutContent>
