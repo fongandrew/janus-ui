@@ -18,7 +18,7 @@ export function ImgDemo() {
 				<CardTitle>Images</CardTitle>
 				<CardDescription>Images with placeholders</CardDescription>
 			</CardHeader>
-			<CardContent class="o-text-stack">
+			<CardContent class="o-stack">
 				<p class="v-text-weight-label">Click to reload</p>
 				<div class="o-group">
 					<Img aspectRatio={3 / 4} src={sky34} {...callbackAttrs(imgReload)} />

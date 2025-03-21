@@ -48,7 +48,7 @@
 
 	.c-details__content {
 		@mixin o-text-box;
-		@mixin o-text-stack;
+		@mixin o-stack;
 
 		margin-top: calc((1em - 1lh) / 2);
 	}

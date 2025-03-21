@@ -28,7 +28,7 @@ export function SuspenseDemo() {
 					<CardTitle>Suspense Loaders</CardTitle>
 					<CardDescription>Click to trigger loading state</CardDescription>
 				</CardHeader>
-				<CardContent class="o-text-stack">
+				<CardContent class="o-stack">
 					<div class="o-group">
 						<CardLoadButton />
 						<Button onClick={incr}>Page Load</Button>

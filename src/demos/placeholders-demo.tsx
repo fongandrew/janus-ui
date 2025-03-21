@@ -19,7 +19,7 @@ export function PlaceholdersDemo() {
 				<CardDescription>Loading state placeholders for content</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<div class="o-text-stack">
+				<div class="o-stack">
 					<ChatPlaceholder />
 					<div class="o-group">
 						<ImgPlaceholder aspectRatio={3 / 4} />

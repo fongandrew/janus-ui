@@ -191,7 +191,7 @@ function Main() {
 					<CardHeader>
 						<CardTitle>Legend</CardTitle>
 					</CardHeader>
-					<CardContent class="o-text-box o-text-stack">
+					<CardContent class="o-text-box o-stack">
 						<p>
 							Values chosen to comply with the{' '}
 							<a href="https://readtech.org/ARC/tests/visual-readability-contrast/?tn=criterion#silver-level-conformance">
@@ -200,7 +200,7 @@ function Main() {
 							.
 						</p>
 						<div class="o-grid">
-							<div class="o-text-stack">
+							<div class="o-stack">
 								<h4>Commonly Used Font Sizes &amp; Weights</h4>
 								<table>
 									<thead>
@@ -251,7 +251,7 @@ function Main() {
 									</tbody>
 								</table>
 							</div>
-							<div class="o-text-stack">
+							<div class="o-stack">
 								<h4>Minimums</h4>
 								<table>
 									<thead>

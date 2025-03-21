@@ -6,7 +6,7 @@ import { mountRoot } from '~/shared/utility/solid/mount-root';
 function Main() {
 	return (
 		<App heading={<h1>Typography</h1>}>
-			<main class="o-container o-text-stack">
+			<main class="o-container o-stack">
 				<h2>A Second Level Heading</h2>
 				<p>
 					We don't use <code>&lt;h1&gt;</code> elements outside of the top-level heading.

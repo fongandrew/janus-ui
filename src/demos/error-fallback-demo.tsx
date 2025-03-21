@@ -33,7 +33,7 @@ export function ErrorFallbackDemo() {
 					<CardTitle>Error Boundaries</CardTitle>
 					<CardDescription>Click to throw errors</CardDescription>
 				</CardHeader>
-				<CardContent class="o-text-stack">
+				<CardContent class="o-stack">
 					<p>
 						The Section Error is recoverable because it's caught by the card error
 						boundary, which resets the error state. The other errors are set to always

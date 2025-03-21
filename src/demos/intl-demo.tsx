@@ -25,7 +25,7 @@ export function IntlDemo() {
 					Some wrappers around the <code>Intl</code> API
 				</CardDescription>
 			</CardHeader>
-			<CardContent class="o-text-stack">
+			<CardContent class="o-stack">
 				<p>
 					I'd buy that for <FormatCurrency value={5.99} currency="USD" />.
 				</p>{' '}
