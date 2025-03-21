@@ -15,17 +15,17 @@ import { ImgDemo } from '~/demos/img-demo';
 import { InputsDemo } from '~/demos/inputs-demo';
 import { IntlDemo } from '~/demos/intl-demo';
 import { LabelledActionDemo } from '~/demos/labelled-action-demo';
-import { ListBoxDemo } from '~/demos/list-box-demo';
-import { MenuDemo } from '~/demos/menu-demo';
+import { ListBoxesDemo } from '~/demos/list-boxes-demo';
+import { MenusDemo } from '~/demos/menus-demo';
 import { ModalDemo } from '~/demos/modal-demo';
-import { PlaceholderDemo } from '~/demos/placeholder-demo';
-import { RadioGroupDemo } from '~/demos/radio-group-demo';
-import { SelectDemo } from '~/demos/select-demo';
-import { SelectTypeaheadDemo } from '~/demos/select-typeahead-demo';
+import { PlaceholdersDemo } from '~/demos/placeholders-demo';
+import { RadioGroupsDemo } from '~/demos/radio-groups-demo';
+import { SelectTypeaheadsDemo } from '~/demos/select-typeaheads-demo';
 import { SelectionValidationDemo } from '~/demos/selection-validation-demo';
+import { SelectsDemo } from '~/demos/selects-demo';
 import { TabsDemo } from '~/demos/tabs-demo';
 import { TextareasDemo } from '~/demos/textareas-demo';
-import { TooltipDemo } from '~/demos/tooltip-demo';
+import { TooltipsDemo } from '~/demos/tooltips-demo';
 import {
 	Sidebar,
 	SidebarCloseButton,
@@ -95,16 +95,16 @@ function Main() {
 						<ButtonLinksDemo />
 						<AlertsDemo />
 						<DetailsDemo />
-						<MenuDemo />
+						<MenusDemo />
 						<CheckboxesDemo />
-						<RadioGroupDemo />
-						<TooltipDemo />
+						<RadioGroupsDemo />
+						<TooltipsDemo />
 						<InputsDemo />
 						<LabelledActionDemo />
 						<TextareasDemo />
-						<ListBoxDemo />
-						<SelectDemo />
-						<SelectTypeaheadDemo />
+						<ListBoxesDemo />
+						<SelectsDemo />
+						<SelectTypeaheadsDemo />
 						<ModalDemo />
 						<FormSubmitDemo />
 						<FormValidationGroupDemo />
@@ -112,7 +112,7 @@ function Main() {
 						<IntlDemo />
 						<TabsDemo />
 						<ImgDemo />
-						<PlaceholderDemo />
+						<PlaceholdersDemo />
 						<ErrorFallbackDemo />
 					</main>
 				</App>

@@ -8,7 +8,7 @@ import {
 } from '~/shared/components/card';
 import { Tooltip } from '~/shared/components/tooltip';
 
-function TooltipDemo() {
+function TooltipsDemo() {
 	return (
 		<Card>
 			<CardHeader>
@@ -35,4 +35,4 @@ function TooltipDemo() {
 	);
 }
 
-export { TooltipDemo };
+export { TooltipsDemo };

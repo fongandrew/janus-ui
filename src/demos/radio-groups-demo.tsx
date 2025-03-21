@@ -15,7 +15,7 @@ import { Radio } from '~/shared/components/radio';
 import { RadioGroup } from '~/shared/components/radio-group';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
-function RadioGroupDemo() {
+function RadioGroupsDemo() {
 	const [value, setValue] = createSignal('checked');
 	const outputId = createUniqueId();
 
@@ -69,4 +69,4 @@ function RadioGroupDemo() {
 	);
 }
 
-export { RadioGroupDemo };
+export { RadioGroupsDemo };

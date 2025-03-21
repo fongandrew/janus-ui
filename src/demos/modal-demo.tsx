@@ -1,8 +1,8 @@
 import { createSignal, createUniqueId } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
-import { asyncFormSubmit } from '~/demos/callbacks/async-form';
 import { formOutputWrite } from '~/demos/callbacks/form-output';
+import { formAsyncSubmit } from '~/demos/callbacks/form-submit';
 import { Button } from '~/shared/components/button';
 import { type TypedSubmitEvent } from '~/shared/components/callbacks/form';
 import {
@@ -263,7 +263,7 @@ function AsyncForm(props: { outputId: string }) {
 				<FormContextProvider>
 					<ModalFormContent
 						names={FormNames}
-						{...callbackAttrs(asyncFormSubmit(props.outputId))}
+						{...callbackAttrs(formAsyncSubmit(props.outputId))}
 					>
 						<LabelledInput label="Name">
 							<Input name={FormNames.name} />

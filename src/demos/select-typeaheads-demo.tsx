@@ -17,7 +17,7 @@ import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry
 
 const COLORS = ['Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Indigo', 'Violet'];
 
-function SelectTypeaheadDemo() {
+function SelectTypeaheadsDemo() {
 	return (
 		<Card>
 			<CardHeader>
@@ -191,4 +191,4 @@ function useAsyncParts(query: () => string) {
 	return [busy, results] as const;
 }
 
-export { SelectTypeaheadDemo };
+export { SelectTypeaheadsDemo };

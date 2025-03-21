@@ -14,7 +14,7 @@ import { ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
 import { Select } from '~/shared/components/select';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
-function SelectDemo() {
+function SelectsDemo() {
 	const [value, setValue] = createSignal<Set<string>>(new Set());
 	const [withInitValue, setWithInitValue] = createSignal<Set<string>>(new Set(['banana']));
 	const [longValue, setLongValue] = createSignal<Set<string>>(new Set());
@@ -125,4 +125,4 @@ function SelectDemo() {
 	);
 }
 
-export { SelectDemo };
+export { SelectsDemo };

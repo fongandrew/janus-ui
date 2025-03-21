@@ -13,7 +13,7 @@ import { LabelledInput } from '~/shared/components/labelled-control';
 import { ListBox, ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
-function ListBoxDemo() {
+function ListBoxesDemo() {
 	const [values, setValues] = createSignal<Set<string>>(new Set());
 	const [multiValues, setMultiValues] = createSignal<Set<string>>(new Set());
 
@@ -84,4 +84,4 @@ function ListBoxDemo() {
 	);
 }
 
-export { ListBoxDemo };
+export { ListBoxesDemo };

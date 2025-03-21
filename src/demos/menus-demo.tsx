@@ -13,7 +13,7 @@ import {
 import { Menu, MenuGroup, MenuItem, MenuItemLink, MenuTrigger } from '~/shared/components/menu';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
-function MenuDemo() {
+function MenusDemo() {
 	const [selection, setSelection] = createSignal<string | null>(null);
 	const outputId = createUniqueId();
 
@@ -79,4 +79,4 @@ function MenuDemo() {
 	);
 }
 
-export { MenuDemo };
+export { MenusDemo };

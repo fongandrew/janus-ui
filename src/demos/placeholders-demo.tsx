@@ -11,7 +11,7 @@ import {
 	ParagraphPlaceholder,
 } from '~/shared/components/placeholder';
 
-export function PlaceholderDemo() {
+export function PlaceholdersDemo() {
 	return (
 		<Card>
 			<CardHeader>
