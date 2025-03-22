@@ -1,8 +1,7 @@
 import { Globe, Settings, SquareCode } from 'lucide-solid';
-import { createUniqueId } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
-import { App } from '~/app';
+import { App, PREFS_MODAL_ID } from '~/app';
 import { AlertsDemo } from '~/demos/alerts-demo';
 import { BadgeAndCountDemo } from '~/demos/badge-and-count-demo';
 import { ButtonLinksDemo } from '~/demos/button-links-demo';
@@ -29,7 +28,6 @@ import { SuspenseDemo } from '~/demos/suspense-demo';
 import { TabsDemo } from '~/demos/tabs-demo';
 import { TextareasDemo } from '~/demos/textareas-demo';
 import { TooltipsDemo } from '~/demos/tooltips-demo';
-import { PrefsModal } from '~/prefs-modal';
 import { ModalOpenTrigger } from '~/shared/components/modal';
 import {
 	Sidebar,
@@ -53,8 +51,6 @@ interface ComponentsProps {
 }
 
 export function Components(props: ComponentsProps) {
-	const prefsModalId = createUniqueId();
-
 	return (
 		<SidebarLayout>
 			<Sidebar>
@@ -171,13 +167,12 @@ export function Components(props: ComponentsProps) {
 								<Globe />
 								GitHub
 							</SidebarListLink>
-							<ModalOpenTrigger targetId={prefsModalId}>
+							<ModalOpenTrigger targetId={PREFS_MODAL_ID}>
 								<SidebarListButton>
 									<Settings />
 									Preferences
 								</SidebarListButton>
 							</ModalOpenTrigger>
-							<PrefsModal id={prefsModalId} />
 						</SidebarListGroup>
 					</SidebarList>
 				</SidebarContent>

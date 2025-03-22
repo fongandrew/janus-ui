@@ -110,6 +110,7 @@
 		display: flex; /* Override inline-flex */
 		text-align: left;
 		justify-content: flex-start;
+		width: 100%;
 
 		/* Selected */
 		&[aria-current]:not([aria-current='false']) {
@@ -119,6 +120,7 @@
 		/* Leave space for close button */
 		.c-top-nav__list[data-c-sidebar__state='open'] li:first-child > & {
 			margin-right: calc(var(--v-input-height) + var(--v-inline-gap));
+			max-width: calc(100% - var(--v-input-height) - var(--v-inline-gap));
 		}
 	}
 

@@ -1,14 +1,20 @@
 import '~/shared/styles/index.css';
 
+import { Settings } from 'lucide-solid';
 import { type JSX } from 'solid-js';
 
+import { PrefsModal } from '~/prefs-modal';
+import { ModalOpenTrigger } from '~/shared/components/modal';
 import {
 	TopNav,
 	TopNavLayout,
 	TopNavList,
+	TopNavListButton,
 	TopNavListLink,
 } from '~/shared/components/top-nav-layout';
 import { useWindow } from '~/shared/utility/solid/window-context';
+
+export const PREFS_MODAL_ID = 'prefs-modal-dialog-id';
 
 export interface AppProps {
 	/** Heading element */
@@ -50,6 +56,13 @@ export function App(props: AppProps) {
 					<NavLink current={props.current} href="/ssr">
 						SSR
 					</NavLink>
+					<ModalOpenTrigger targetId={PREFS_MODAL_ID}>
+						<TopNavListButton>
+							<Settings class="t-hidden-lt-tablet-wide" />
+							<span class="t-hidden-gte-tablet-wide">Settings</span>
+						</TopNavListButton>
+					</ModalOpenTrigger>
+					<PrefsModal id={PREFS_MODAL_ID} />
 				</TopNavList>
 			</TopNav>
 			{props.children}
