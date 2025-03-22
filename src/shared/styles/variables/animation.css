@@ -1,0 +1,27 @@
+/*
+    Animation speed & types
+*/
+@define-mixin v-reduced-motion {
+	--v-animation-none: none;
+}
+
+@layer variables {
+	:root {
+		--v-animation-duration-short: 120ms;
+		--v-animation-duration-medium: 240ms;
+		--v-animation-duration-long: 480ms;
+		--v-animation-duration-xl: 1s;
+	}
+
+	/* Explicit reduced motion */
+	@media (prefers-reduced-motion) {
+		:root:not([data-animation='true']) {
+			@mixin v-reduced-motion;
+		}
+	}
+
+	/* Reduced motion */
+	:root[data-animation='false'] {
+		@mixin v-reduced-motion;
+	}
+}

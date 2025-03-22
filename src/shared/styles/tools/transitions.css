@@ -1,14 +1,14 @@
 /* Transition helpers */
 
 @define-mixin t-transition-timings {
-	transition-duration: 150ms;
+	transition-duration: var(--v-animation-duration-short);
 	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @define-mixin t-transition $properties {
 	@mixin t-transition-timings;
 
-	transition-property: $(properties);
+	transition-property: var(--v-animation-none, $(properties));
 }
 
 @define-mixin t-transition-color {

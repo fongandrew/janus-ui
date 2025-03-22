@@ -4,8 +4,13 @@
 	}
 }
 
+/* Simple wrapper around t-animation that applies prefers-reduced-motion guard */
+@define-mixin t-animation $args {
+	animation: var(--v-animation-none, $(args));
+}
+
 @define-mixin t-spin {
-	animation: t-animation-spin 1s linear infinite;
+	@mixin t-animation t-animation-spin var(--v-animation-duration-xl) linear infinite;
 }
 
 @layer tools {
