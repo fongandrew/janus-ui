@@ -16,6 +16,7 @@
 		@mixin v-colors-card;
 		@mixin o-input-container-box;
 		@mixin t-border-bottom;
+		@mixin t-transition transform;
 
 		display: flex;
 		align-items: center;
@@ -34,6 +35,8 @@
 			transform: translateY(-110%);
 		}
 
+		&:hover,
+		&:focus-within,
 		&:has(.c-top-nav__list[data-c-sidebar__state='open']) {
 			/* Transform messes up position: fixed on drawer */
 			transform: unset;
@@ -62,6 +65,22 @@
 		@mixin v-colors-card;
 		@mixin o-input-container-box;
 		@mixin t-border-left;
+		@mixin t-transition-slide;
+
+		/* Longer duration because sidebar is a large-ish element. */
+		@mixin t-transition-duration var(--v-animation-duration-md);
+
+		/* Nav links hidden by default on mobile */
+		@mixin t-slide-out-right;
+
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		overflow: auto;
+		z-index: var(--v-z-above-backdrop);
+		width: 90vw;
+		max-width: var(--c-top-nav__drawer-width);
 
 		ul {
 			list-style: none;
@@ -69,31 +88,25 @@
 			flex-direction: column;
 		}
 
-		/* Nav links hidden by default on mobile */
-		display: none;
-
 		&[data-c-sidebar__state='open'] {
-			display: block;
-			position: fixed;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			overflow: auto;
-			z-index: var(--v-z-above-backdrop);
-			width: 90vw;
-			max-width: var(--c-top-nav__drawer-width);
+			@mixin t-slide-in;
 		}
 	}
 
 	.c-top-nav__overlay {
-		display: none;
+		@mixin t-transition-fade;
+		@mixin t-fade-out;
+
+		/* Sync duration with sidebar */
+		@mixin t-transition-duration var(--v-animation-duration-md);
+
+		position: fixed;
+		inset: 0;
+		z-index: var(--v-z-backdrop);
+		background-color: var(--v-backdrop);
 
 		.c-top-nav-layout:has(.c-top-nav__list[data-c-sidebar__state='open']) & {
-			display: block;
-			position: fixed;
-			inset: 0;
-			z-index: var(--v-z-backdrop);
-			background-color: var(--v-backdrop);
+			@mixin t-fade-in;
 		}
 	}
 
@@ -136,11 +149,15 @@
 			}
 
 			.c-top-nav__list {
+				@mixin t-slide-in;
+
 				display: block;
 				border: 0;
 				margin-left: auto;
 				padding: 0;
 				position: relative;
+				max-width: unset;
+				width: unset;
 
 				ul {
 					display: flex;

@@ -58,6 +58,11 @@ export function TopNav(props: JSX.HTMLAttributes<HTMLElement>) {
 	return (
 		<header {...props} class={cx('c-top-nav', props.class)}>
 			{props.children}
+			{/*
+				Overlay is inside header because it needs to go under the nav list (header child),
+				above everything else in the header, and also everything not in the header.
+				Some issues with stack context if we move it outside the header.
+			*/}
 			<div
 				class="c-top-nav__overlay"
 				{...callbackAttrs(sidebarTriggerClose)}

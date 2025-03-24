@@ -1,16 +1,76 @@
 /* Transition helpers */
 
-@define-mixin t-transition-timings {
-	transition-duration: var(--v-animation-duration-short);
-	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@define-mixin t-transition $properties {
-	@mixin t-transition-timings;
-
+@define-mixin t-transition $properties, $timing: cubic-bezier(0.4, 0, 0.2, 1) {
 	transition-property: var(--v-animation-none, $(properties));
+	transition-timing-function: $(timing);
 }
 
 @define-mixin t-transition-color {
 	@mixin t-transition single-arg(color, background-color, border-color);
+}
+
+/* Combine a transition with a visibility flip (e.g. to remove focus, find, etc.) */
+@define-mixin t-transition-visibility $property, $timing: cubic-bezier(0.4, 0, 0.2, 1) {
+	transition: var(
+		--v-animation-none,
+		visibility var(--v-transition-duration),
+		$(property) var(--v-transition-duration) $(timing)
+	);
+}
+
+/*
+	Combine opacity transition with visibility change (to remove focus, find, etc.)
+	Opacity transitions should use a linear timing function
+*/
+@define-mixin t-transition-fade {
+	@mixin t-transition-visibility opacity, linear;
+}
+
+/* Fade out, combine with with t-transition-fade */
+@define-mixin t-fade-out {
+	opacity: 0;
+	visibility: hidden;
+}
+
+/* Fade in, combine with with t-transition-fade */
+@define-mixin t-fade-in {
+	opacity: 1;
+	visibility: visible;
+}
+
+/* Transition for sliding in and out of view */
+@define-mixin t-transition-slide {
+	@mixin t-transition-visibility transform;
+}
+
+/* Extend transition duraiton (e.g. for larger elements) */
+@define-mixin t-transition-duration $duration {
+	--v-transition-duration: $duration;
+}
+
+@define-mixin t-slide-in {
+	transform: translate(0, 0);
+	visibility: visible;
+}
+
+@define-mixin t-slide-out-left {
+	transform: translate(-100%, 0);
+	visibility: hidden;
+}
+
+@define-mixin t-slide-out-right {
+	transform: translate(100%, 0);
+	visibility: hidden;
+}
+
+@layer variables {
+	:root {
+		--v-transition-duration: var(--v-animation-duration-sm);
+	}
+}
+
+@layer base {
+	* {
+		transition-duration: var(--v-transition-duration);
+	}
 }

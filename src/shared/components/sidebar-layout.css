@@ -13,7 +13,6 @@
 		everything is inside a container.
 	*/
 	.c-sidebar-layout {
-		display: flex;
 		height: 100vh;
 		width: 100vw;
 		overflow: hidden;
@@ -23,7 +22,8 @@
 	}
 
 	.c-sidebar-layout__content {
-		flex: 1 1 0;
+		position: absolute;
+		inset: 0;
 		overflow: auto;
 		container-type: inline-size;
 	}
@@ -32,35 +32,43 @@
 	.c-sidebar {
 		@mixin v-colors-card;
 		@mixin t-border-right;
+		@mixin t-transition-slide;
+		@mixin t-transition-duration var(--v-animation-duration-md);
+		@mixin t-slide-out-left;
 
-		display: none;
-		overflow: auto;
-		box-shadow: var(--v-shadow-md);
-		flex-direction: column;
 		container-type: inline-size;
-	}
-
-	.c-sidebar[data-c-sidebar__state='open'] {
+		display: flex;
+		flex-direction: column;
 		position: fixed;
 		bottom: 0;
 		left: 0;
 		top: 0;
 		z-index: var(--v-z-above-backdrop);
-		display: flex;
 		width: 90vw;
 		max-width: var(--v-sidebar-width);
+		overflow: auto;
+		box-shadow: var(--v-shadow-md);
+	}
+
+	.c-sidebar[data-c-sidebar__state='open'] {
+		@mixin t-slide-in;
 	}
 
 	.c-sidebar__overlay {
+		@mixin t-transition-fade;
+		@mixin t-fade-out;
+
+		/* Sync with sidebar slide duration */
+		@mixin t-transition-duration var(--v-animation-duration-md);
+
 		position: fixed;
 		inset: 0;
 		z-index: var(--v-z-backdrop);
-		display: none;
 		background-color: var(--v-backdrop);
 	}
 
 	.c-sidebar-layout:has(.c-sidebar[data-c-sidebar__state='open']) .c-sidebar__overlay {
-		display: block;
+		@mixin t-fade-in;
 	}
 
 	.c-sidebar__header,
@@ -151,20 +159,45 @@
 		/* Default open on desktop */
 		.c-sidebar,
 		.c-sidebar[data-c-sidebar__state='open'] {
-			position: relative;
-			flex-shrink: 0;
+			@mixin t-slide-in;
+
 			display: flex;
 			width: var(--v-sidebar-width);
 		}
 
+		.c-sidebar-layout__content {
+			/*
+				Update duration to made sidebar t-transition-slide.
+				Default is sidebar open. We use step-end so that we don't resize the
+				content area until sidebar is done opening (this avoids a gap of empty
+				space where the sidebar was). Note that we don't do a continuous animation
+				of left to avoid reflow costs.
+			*/
+			@mixin t-transition left, step-end;
+
+			left: var(--v-sidebar-width);
+		}
+
 		.c-sidebar__overlay,
 		.c-sidebar-layout:has(.c-sidebar[data-c-sidebar__state='open']) .c-sidebar__overlay {
-			display: none;
+			@mixin t-fade-out;
 		}
 
 		/* Can be explicitly closed on desktop */
 		.c-sidebar[data-c-sidebar__state='closed'] {
-			display: none;
+			@mixin t-slide-out-left;
+
+			position: fixed;
+		}
+
+		.c-sidebar-layout:has(.c-sidebar[data-c-sidebar__state='closed'])
+			.c-sidebar-layout__content {
+			/*
+				Opposite of step-end above -- when closing the sidebar, immediately
+				expand the content area to avoid gap of empty space.
+			*/
+			transition-timing-function: step-start;
+			left: 0;
 		}
 
 		/*

@@ -7,9 +7,9 @@
 
 @layer variables {
 	:root {
-		--v-animation-duration-short: 120ms;
-		--v-animation-duration-medium: 240ms;
-		--v-animation-duration-long: 480ms;
+		--v-animation-duration-sm: 120ms;
+		--v-animation-duration-md: 240ms;
+		--v-animation-duration-lg: 480ms;
 		--v-animation-duration-xl: 1s;
 	}
 
