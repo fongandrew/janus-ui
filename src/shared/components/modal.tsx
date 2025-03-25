@@ -1,6 +1,14 @@
 import cx from 'classix';
 import { X } from 'lucide-solid';
-import { createEffect, createSignal, type JSX, onCleanup, Show, splitProps } from 'solid-js';
+import {
+	createEffect,
+	createRenderEffect,
+	createSignal,
+	type JSX,
+	onCleanup,
+	Show,
+	splitProps,
+} from 'solid-js';
 
 import { Button, type ButtonProps, IconButton } from '~/shared/components/button';
 import {
@@ -27,6 +35,9 @@ import { callbackAttrMods, callbackAttrs } from '~/shared/utility/callback-attrs
 import { createAutoId } from '~/shared/utility/solid/auto-prop';
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { useT } from '~/shared/utility/solid/locale-context';
+
+/** How long between open prop changes before syncing show state to allow for transitions */
+const MODAL_CLOSE_SYNC_DELAY = 5 * 1000;
 
 export type DialogProps = JSX.DialogHtmlAttributes<HTMLDialogElement> & {
 	/** Error boundary render callback */
@@ -57,6 +68,19 @@ export function Modal(props: DialogProps) {
 	const [dialog, setDialog] = createSignal<HTMLDialogElement | null>(null);
 	const [local, rest] = splitProps(props, ['children', 'id', 'open', 'onError', 'onReload']);
 
+	// Open state
+	const [open, setOpen] = createSignal<boolean | undefined>();
+	createRenderEffect(() => {
+		if (local.open !== false) {
+			setOpen(true);
+		}
+
+		// Defer updating closed state for a set amount of time to allow for transitions
+		// This can be long since there are other things
+		const timeout = setTimeout(() => setOpen(false), MODAL_CLOSE_SYNC_DELAY);
+		onCleanup(() => clearTimeout(timeout));
+	});
+
 	// Auto-generate ID if needed
 	const id = createAutoId(local);
 
@@ -82,7 +106,7 @@ export function Modal(props: DialogProps) {
 	return (
 		// local.open being undefined implies we should show and rely on the dialog's
 		// own open state to control visibility
-		<Show when={local.open !== false}>
+		<Show when={open()}>
 			<ModalContext.Provider value={id}>
 				<dialog
 					{...rest}

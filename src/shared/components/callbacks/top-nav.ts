@@ -10,8 +10,14 @@ export const TOP_NAV_SCROLL_HIDE_ATTR = 'data-c-top-nav__scroll-hide';
 /** Magic prop for memoizing memoized height (and measurement time) of header */
 const [memoizedHeight, setMemoizedHeight] = createMagicProp<[number, number]>();
 
-/** Magic prop for memoizing last scroll top of container element */
+/** Magic prop for tracking last scroll top of container element */
 const [lastScrollTop, setLastScrollTop] = createMagicProp<number>();
+
+/** Magic prop for tracking last scroll event of container element */
+const [lastScrollEvent, setLastScrollEvent] = createMagicProp<number>();
+
+/** Threshold bewtween scroll events to consider "real" scrolling */
+const TOP_NAV_SCROLL_THRESHOLD = 500;
 
 /**
  * Attach scroll handler to scrollable parent of top nav layout
@@ -51,12 +57,22 @@ function handleScroll(e: Event) {
 	const header = container.querySelector('header');
 	if (!header) return;
 
+	// This basically forces us to have two scroll events in quick succession
+	// to trigger the header. This is to avoid "fake" scrolling triggered by
+	// navigation, progrmatic scrolling, etc.
+	const lastEvent = lastScrollEvent(container) ?? 0;
+	if (Date.now() - lastEvent > TOP_NAV_SCROLL_THRESHOLD) {
+		setLastScrollEvent(container, Date.now());
+		return;
+	}
+
 	const headerHeight = getHeaderHeight(header);
 	const scrollDiff = container.scrollTop - (lastScrollTop(container) ?? 0);
 
 	if (Math.abs(scrollDiff) < headerHeight) return;
 
 	setLastScrollTop(container, container.scrollTop);
+	setLastScrollEvent(container, Date.now());
 
 	header.toggleAttribute(TOP_NAV_SCROLL_HIDE_ATTR, scrollDiff > 0);
 }
