@@ -73,6 +73,7 @@ export function Modal(props: DialogProps) {
 	createRenderEffect(() => {
 		if (local.open !== false) {
 			setOpen(true);
+			return;
 		}
 
 		// Defer updating closed state for a set amount of time to allow for transitions
