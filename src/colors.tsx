@@ -3,13 +3,24 @@ import '~/shared/styles/index.css';
 import { alphaBlend, APCAcontrast, sRGBtoY } from 'apca-w3';
 import cx from 'classix';
 import { colorParsley } from 'colorparsley';
-import { createEffect, createSignal, type JSX, onCleanup, Show } from 'solid-js';
+import {
+	createContext,
+	createEffect,
+	createSignal,
+	type JSX,
+	onCleanup,
+	useContext,
+} from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 
 import { App } from '~/app';
 import { Card, CardContent, CardHeader, CardTitle } from '~/shared/components/card';
+import { elmDoc, elmWin } from '~/shared/utility/multi-view';
 import { createIncrSignal } from '~/shared/utility/solid/create-incr-signal';
 import { mountRoot } from '~/shared/utility/solid/mount-root';
+
+/** Context to pass down signal that reforces recalc of color context on change */
+export const RenderCountContext = createContext<() => number>(() => 0);
 
 /** Returns minimum APCA threshold for font size / weight combo for "fluent" text */
 function minContrast(fontSizePx: number, fontWeight: number) {
@@ -85,12 +96,16 @@ function ColorWithAPCA(props: {
 	usage?: 'body' | 'descriptive' | 'label' | 'subheading' | 'heading' | undefined;
 	children: JSX.Element;
 }) {
+	const renderCount = useContext(RenderCountContext);
 	const [apca, setAPCA] = createSignal<number | undefined>();
 	const [minAPCA, setMinAPCA] = createSignal<number>(Infinity);
 
 	let ref: HTMLDivElement | undefined;
 
 	createEffect(() => {
+		// Invoke so we re-run this effect when something happens
+		renderCount();
+
 		if (!ref) return;
 		const section = ref.closest('section');
 		if (!section) return;
@@ -168,17 +183,26 @@ function ColorBox(props: {
 }
 
 function Main() {
-	// Force rerender when styles change
 	const [value, incr] = createIncrSignal(1);
-	const observer = new MutationObserver(incr);
 
-	const setMain = (el: HTMLElement | null) => {
-		const styles = el?.ownerDocument.querySelectorAll('style');
-		if (!styles) return;
-		for (const style of styles) {
-			observer.observe(style, { childList: true });
+	// Force update on hot reload (so CSS-only changes trigger contrast recalc)
+	import.meta.hot?.on('vite:afterUpdate', incr);
+
+	let main: HTMLElement | undefined;
+	const observer = new MutationObserver(incr);
+	createEffect(() => {
+		// Re-render if explicit color scheme changes
+		const html = elmDoc(main)?.documentElement;
+		if (html) {
+			observer.observe(html, {
+				attributes: true,
+				attributeFilter: ['data-color-scheme'],
+			});
 		}
-	};
+
+		// Re-render if system pref changes
+		elmWin(main)?.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', incr);
+	});
 
 	onCleanup(() => {
 		observer.disconnect();
@@ -186,192 +210,175 @@ function Main() {
 
 	return (
 		<App heading={<h1>Colors</h1>}>
-			<main ref={setMain} class="o-box o-stack">
-				<Card>
-					<CardHeader>
-						<CardTitle>Legend</CardTitle>
-					</CardHeader>
-					<CardContent class="o-text-box o-stack">
-						<p>
-							Values chosen to comply with the{' '}
-							<a href="https://readtech.org/ARC/tests/visual-readability-contrast/?tn=criterion#silver-level-conformance">
-								silver level font weight tables here
-							</a>
-							.
-						</p>
-						<div class="o-grid">
-							<div class="o-stack">
-								<h4>Commonly Used Font Sizes &amp; Weights</h4>
-								<table>
-									<thead>
-										<tr>
-											<th>Font Size</th>
-											<th>Font Weight</th>
-											<th>Notes</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>15px (medium)</td>
-											<td>400 (normal)</td>
-											<td>Body text</td>
-										</tr>
-										<tr>
-											<td>14px (small)</td>
-											<td>400 (normal)</td>
-											<td>
-												Descriptive text. May be body (many lines) or fluent
-												(fewer lines). Single-ish lines used in menus,
-												inputs, and other UI interfaces.
-											</td>
-										</tr>
-										<tr>
-											<td>15px (medium)</td>
-											<td>500 (medium)</td>
-											<td>Labels and subheadings for inputs</td>
-										</tr>
-										<tr>
-											<td>14px (small)</td>
-											<td>500 (medium)</td>
-											<td>
-												Labels for subheadings inside menus or other
-												constrained containers
-											</td>
-										</tr>
-										<tr>
-											<td>16px (large)</td>
-											<td>600 (semibold)</td>
-											<td>Subheadings</td>
-										</tr>
-										<tr>
-											<td>20px (xlarge)</td>
-											<td>700 (bold)</td>
-											<td>Headings</td>
-										</tr>
-									</tbody>
-								</table>
+			<RenderCountContext.Provider value={value}>
+				<main ref={main} class="o-box o-stack">
+					<Card>
+						<CardHeader>
+							<CardTitle>Legend</CardTitle>
+						</CardHeader>
+						<CardContent class="o-text-box o-stack">
+							<p>
+								Values chosen to comply with the{' '}
+								<a href="https://readtech.org/ARC/tests/visual-readability-contrast/?tn=criterion#silver-level-conformance">
+									silver level font weight tables here
+								</a>
+								.
+							</p>
+							<div class="o-grid">
+								<div class="o-stack">
+									<h4>Commonly Used Font Sizes &amp; Weights</h4>
+									<table>
+										<thead>
+											<tr>
+												<th>Font Size</th>
+												<th>Font Weight</th>
+												<th>Notes</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>15px (medium)</td>
+												<td>400 (normal)</td>
+												<td>Body text</td>
+											</tr>
+											<tr>
+												<td>14px (small)</td>
+												<td>400 (normal)</td>
+												<td>
+													Descriptive text. May be body (many lines) or
+													fluent (fewer lines). Single-ish lines used in
+													menus, inputs, and other UI interfaces.
+												</td>
+											</tr>
+											<tr>
+												<td>15px (medium)</td>
+												<td>500 (medium)</td>
+												<td>Labels and subheadings for inputs</td>
+											</tr>
+											<tr>
+												<td>14px (small)</td>
+												<td>500 (medium)</td>
+												<td>
+													Labels for subheadings inside menus or other
+													constrained containers
+												</td>
+											</tr>
+											<tr>
+												<td>16px (large)</td>
+												<td>600 (semibold)</td>
+												<td>Subheadings</td>
+											</tr>
+											<tr>
+												<td>20px (xlarge)</td>
+												<td>700 (bold)</td>
+												<td>Headings</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="o-stack">
+									<h4>Minimums</h4>
+									<table>
+										<thead>
+											<tr>
+												<th>Dots</th>
+												<th>
+													APCA L<sup>c</sup> Value
+												</th>
+												<th>Notes</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>●●●●●</td>
+												<td>100+</td>
+												<td>
+													<ul>
+														<li>15px/400 body text</li>
+														<li>14px/400 fluent/body text</li>
+													</ul>
+												</td>
+											</tr>
+											<tr>
+												<td>●●●●</td>
+												<td>85+</td>
+												<td>
+													<ul>
+														<li>15px/400 descriptive text</li>
+														<li>14px/400 descriptive text</li>
+														<li>14px/500 labels</li>
+													</ul>
+												</td>
+											</tr>
+											<tr>
+												<td>●●●</td>
+												<td>75+</td>
+												<td>
+													<ul>
+														<li>15px/500 labels</li>
+													</ul>
+												</td>
+											</tr>
+											<tr>
+												<td>●●</td>
+												<td>55+</td>
+												<td>
+													<ul>
+														<li>16px/600 subheadings</li>
+													</ul>
+												</td>
+											</tr>
+											<tr>
+												<td>●●</td>
+												<td>40+</td>
+												<td>
+													<ul>
+														<li>20px/700 headings</li>
+													</ul>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</div>
-							<div class="o-stack">
-								<h4>Minimums</h4>
-								<table>
-									<thead>
-										<tr>
-											<th>Dots</th>
-											<th>
-												APCA L<sup>c</sup> Value
-											</th>
-											<th>Notes</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>●●●●●</td>
-											<td>100+</td>
-											<td>
-												<ul>
-													<li>15px/400 body text</li>
-													<li>14px/400 fluent/body text</li>
-												</ul>
-											</td>
-										</tr>
-										<tr>
-											<td>●●●●</td>
-											<td>85+</td>
-											<td>
-												<ul>
-													<li>15px/400 descriptive text</li>
-													<li>14px/400 descriptive text</li>
-													<li>14px/500 labels</li>
-												</ul>
-											</td>
-										</tr>
-										<tr>
-											<td>●●●</td>
-											<td>75+</td>
-											<td>
-												<ul>
-													<li>15px/500 labels</li>
-												</ul>
-											</td>
-										</tr>
-										<tr>
-											<td>●●</td>
-											<td>55+</td>
-											<td>
-												<ul>
-													<li>16px/600 subheadings</li>
-												</ul>
-											</td>
-										</tr>
-										<tr>
-											<td>●●</td>
-											<td>40+</td>
-											<td>
-												<ul>
-													<li>20px/700 headings</li>
-												</ul>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</CardContent>
-				</Card>
-				<Show when={value()} keyed>
-					{(_count: number) => (
-						<Card class="o-box o-grid">
-							<ColorBox class="v-colors-card" label="Card" usage="body" />
-							<ColorBox class="v-colors-default" label="Default" usage="body" />
-							<ColorBox
-								class="v-colors-code"
-								label="Code"
-								noDanger
-								noLink
-								noMuted
-								usage="label"
-							/>
-							<ColorBox class="v-colors-pre" label="Pre" usage="label" />
-							<ColorBox class="v-colors-popover" label="Popover" />
-							<ColorBox class="v-colors-tooltip" label="Tooltip" noLink />
-							<ColorBox
-								class="v-colors-primary"
-								label="Primary"
-								noDanger
-								noLink
-								noMuted
-							/>
-							<ColorBox class="v-colors-secondary" label="Secondary" usage="label" />
-							<ColorBox class="v-colors-callout" label="Callout" />
-							<ColorBox
-								class="v-colors-highlight"
-								label="Highlight"
-								noLink
-								usage="label"
-							/>
-							<ColorBox class="v-colors-input" label="Input" />
-							<ColorBox
-								class="v-colors-success"
-								label="Success"
-								noDanger
-								usage="label"
-							/>
-							<ColorBox
-								class="v-colors-warning"
-								label="Warning"
-								noDanger
-								usage="label"
-							/>
-							<ColorBox
-								class="v-colors-danger"
-								label="Danger"
-								noDanger
-								usage="label"
-							/>
-						</Card>
-					)}
-				</Show>
-			</main>
+						</CardContent>
+					</Card>
+					<Card class="o-box o-grid">
+						<ColorBox class="v-colors-card" label="Card" usage="body" />
+						<ColorBox class="v-colors-default" label="Default" usage="body" />
+						<ColorBox
+							class="v-colors-code"
+							label="Code"
+							noDanger
+							noLink
+							noMuted
+							usage="label"
+						/>
+						<ColorBox class="v-colors-pre" label="Pre" usage="label" />
+						<ColorBox class="v-colors-popover" label="Popover" />
+						<ColorBox class="v-colors-tooltip" label="Tooltip" noLink />
+						<ColorBox
+							class="v-colors-primary"
+							label="Primary"
+							noDanger
+							noLink
+							noMuted
+						/>
+						<ColorBox class="v-colors-secondary" label="Secondary" usage="label" />
+						<ColorBox class="v-colors-callout" label="Callout" />
+						<ColorBox
+							class="v-colors-highlight"
+							label="Highlight"
+							noLink
+							usage="label"
+						/>
+						<ColorBox class="v-colors-input" label="Input" />
+						<ColorBox class="v-colors-success" label="Success" noDanger usage="label" />
+						<ColorBox class="v-colors-warning" label="Warning" noDanger usage="label" />
+						<ColorBox class="v-colors-danger" label="Danger" noDanger usage="label" />
+					</Card>
+				</main>
+			</RenderCountContext.Provider>
 		</App>
 	);
 }
