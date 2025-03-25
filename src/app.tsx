@@ -40,32 +40,34 @@ function NavLink(props: { current?: string | undefined; href: string; children: 
 
 export function App(props: AppProps) {
 	return (
-		<TopNavLayout>
-			<TopNav>
-				{props.heading ?? <h1>Solid Base</h1>}
-				<TopNavList>
-					<NavLink current={props.current} href="/">
-						Components
-					</NavLink>
-					<NavLink current={props.current} href="/colors">
-						Colors
-					</NavLink>
-					<NavLink current={props.current} href="/typography">
-						Typography
-					</NavLink>
-					<NavLink current={props.current} href="/ssr">
-						SSR
-					</NavLink>
-					<ModalOpenTrigger targetId={PREFS_MODAL_ID}>
-						<TopNavListButton>
-							<Settings class="t-hidden-lt-tablet-wide" />
-							<span class="t-hidden-gte-tablet-wide">Settings</span>
-						</TopNavListButton>
-					</ModalOpenTrigger>
-					<PrefsModal id={PREFS_MODAL_ID} />
-				</TopNavList>
-			</TopNav>
-			{props.children}
-		</TopNavLayout>
+		<>
+			<TopNavLayout>
+				<TopNav>
+					{props.heading ?? <h1>Solid Base</h1>}
+					<TopNavList>
+						<NavLink current={props.current} href="/">
+							Components
+						</NavLink>
+						<NavLink current={props.current} href="/colors">
+							Colors
+						</NavLink>
+						<NavLink current={props.current} href="/typography">
+							Typography
+						</NavLink>
+						<NavLink current={props.current} href="/ssr">
+							SSR
+						</NavLink>
+						<ModalOpenTrigger targetId={PREFS_MODAL_ID}>
+							<TopNavListButton>
+								<Settings class="t-hidden-lt-tablet-wide" />
+								<span class="t-hidden-gte-tablet-wide">Settings</span>
+							</TopNavListButton>
+						</ModalOpenTrigger>
+					</TopNavList>
+				</TopNav>
+				{props.children}
+			</TopNavLayout>
+			<PrefsModal id={PREFS_MODAL_ID} />
+		</>
 	);
 }
