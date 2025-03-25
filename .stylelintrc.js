@@ -41,5 +41,17 @@ export default {
 				],
 			},
 		},
+		{
+			files: ['!**/tools/**/*.css'],
+			rules: {
+				'declaration-property-value-allowed-list': [
+					{
+						animation: ['none'],
+						transition: ['none'],
+					},
+					{ message: 'Prefer tool mixins' },
+				],
+			},
+		},
 	],
 };
