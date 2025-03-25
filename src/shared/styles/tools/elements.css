@@ -24,7 +24,7 @@
 @define-mixin t-button-style {
 	@mixin o-input-box;
 	@mixin t-overflow-x;
-	@mixin t-transition single-arg(color, background-color, border-color, box-shadow);
+	@mixin t-transition-color-plus box-shadow;
 
 	cursor: pointer;
 	display: inline-flex;

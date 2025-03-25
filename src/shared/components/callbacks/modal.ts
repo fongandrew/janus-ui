@@ -9,7 +9,7 @@ import {
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { firstFocusable } from '~/shared/utility/focusables';
 import { createMagicProp } from '~/shared/utility/magic-prop';
-import { elmDoc } from '~/shared/utility/multi-view';
+import { elmDoc, elmWin } from '~/shared/utility/multi-view';
 
 /**
  * A request-to-close callback is a function that can return false to interrupt
@@ -34,6 +34,14 @@ export const MODAL_FOOTER_ATTR = 'data-c-modal__footer';
  * Magic data attribute used to register a "request to close" callback on a modal
  */
 export const REQUEST_CLOSE_ATTR = 'data-c-modal__request-close';
+
+/**
+ * Magic attr to switch modal from display: none to display: block *before* showing
+ * so the CSS transitions can work. We avoid just displaying block all the time to
+ * avoid small bit of work from having to do some DOM calcs for modal that user might
+ * not ever open.
+ */
+export const MODAL_ACTIVE_ATTR = 'data-c-modal__active';
 
 const requestCloseRegistry = createCallbackRegistry<RequestCloseCallback>(REQUEST_CLOSE_ATTR);
 export const createRequestCloseCallback = requestCloseRegistry.create;
@@ -133,7 +141,9 @@ export const modalClosedScrollState = createAfterHideCallback(
 /**
  * Open a modal dialog
  */
-export function openModal(dialog: HTMLDialogElement) {
+export async function openModal(dialog: HTMLDialogElement) {
+	dialog.setAttribute(MODAL_ACTIVE_ATTR, '');
+	await new Promise((resolve) => elmWin(dialog)?.requestAnimationFrame(resolve));
 	runBeforeShowCallbacks(dialog);
 	dialog.showModal();
 	focusModal(dialog);

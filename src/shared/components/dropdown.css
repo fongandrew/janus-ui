@@ -49,6 +49,33 @@
 		@mixin v-colors-popover;
 		@mixin t-radius-inner;
 
+		/*
+			Border looks weird with highlighting but is necessary to distinguish card from
+			identically colored background, so use this "shadow border"
+		*/
+		@mixin t-border-inner var(--v-shadow-lg);
+
+		/* Transition support for fade-in / fade-out */
+		@mixin t-transition-fade;
+
+		&[data-c-dropdown__positioned] {
+			@mixin t-fade-out;
+
+			/*
+				Display as soon as positioned but rely on visibility property from
+				t-fade-slide-out to hide so transitions work. We don't just do diplay: flex
+				by default to avoid unnecessary work for unopened popovers.
+			*/
+			display: flex;
+		}
+
+		&:popover-open {
+			@mixin t-fade-in;
+
+			/* Duplicates above so popover still opens without JavaScript adding data-attr */
+			display: flex;
+		}
+
 		--c-dropdown__spacing: var(--v-inner-radius);
 
 		position: fixed;
@@ -64,16 +91,6 @@
 		width: 100%;
 		max-height: calc(100vh - 2 * var(--v-spacing));
 		max-width: calc(100vw - 2 * var(--v-spacing));
-
-		/*
-			Border looks weird with highlighting but is necessary to distinguish card from
-			identically colored background, so use this "shadow border"
-		*/
-		@mixin t-border-inner var(--v-shadow-lg);
-	}
-
-	.c-dropdown__content:popover-open {
-		display: flex;
 	}
 
 	.c-dropdown__children {

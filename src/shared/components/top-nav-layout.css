@@ -71,7 +71,7 @@
 		@mixin t-transition-duration var(--v-animation-duration-md);
 
 		/* Nav links hidden by default on mobile */
-		@mixin t-slide-out-right;
+		@mixin t-slide-out 100%, 0; /* right */
 
 		position: fixed;
 		top: 0;

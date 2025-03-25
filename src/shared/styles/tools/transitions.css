@@ -1,12 +1,24 @@
 /* Transition helpers */
 
+/* Single property transition with defaults */
 @define-mixin t-transition $properties, $timing: cubic-bezier(0.4, 0, 0.2, 1) {
 	transition-property: var(--v-animation-none, $(properties));
 	transition-timing-function: $(timing);
 }
 
+/* Extend transition duration (e.g. for larger elements) */
+@define-mixin t-transition-duration $duration {
+	--v-transition-duration: $duration;
+}
+
+/* Target multiple color attributes */
 @define-mixin t-transition-color {
 	@mixin t-transition single-arg(color, background-color, border-color);
+}
+
+/* Target multiple color attributes plus other prop */
+@define-mixin t-transition-color-plus $properties {
+	@mixin t-transition single-arg(color, background-color, border-color, $(properties));
 }
 
 /* Combine a transition with a visibility flip (e.g. to remove focus, find, etc.) */
@@ -43,24 +55,34 @@
 	@mixin t-transition-visibility transform;
 }
 
-/* Extend transition duraiton (e.g. for larger elements) */
-@define-mixin t-transition-duration $duration {
-	--v-transition-duration: $duration;
-}
-
 @define-mixin t-slide-in {
 	transform: translate(0, 0);
 	visibility: visible;
 }
 
-@define-mixin t-slide-out-left {
-	transform: translate(-100%, 0);
+@define-mixin t-slide-out $x: 0, $y: -100% {
+	transform: translate($x, $y);
 	visibility: hidden;
 }
 
-@define-mixin t-slide-out-right {
-	transform: translate(100%, 0);
-	visibility: hidden;
+@define-mixin t-transition-fade-transform {
+	transition: var(
+		--v-animation-none,
+		visibility var(--v-transition-duration),
+		opacity var(--v-transition-duration) linear,
+		transform var(--v-transition-duration) cubic-bezier(0.4, 0, 0.2, 1)
+	);
+}
+
+@define-mixin t-fade-slide-in {
+	@mixin t-fade-in;
+	@mixin t-slide-in;
+}
+
+@define-mixin t-fade-slide-out $x: 0, $y: -100% {
+	@mixin t-fade-out;
+
+	transform: translate($x, $y);
 }
 
 @layer variables {
@@ -72,5 +94,6 @@
 @layer base {
 	* {
 		transition-duration: var(--v-transition-duration);
+		transition-property: none;
 	}
 }

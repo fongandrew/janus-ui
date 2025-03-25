@@ -129,6 +129,9 @@ const updatePosition = async (
 		return;
 	}
 
+	// Technically we're setting this before it's positioned but this also enables
+	// the popover to be handle transitions correctly before it's visible
+	popover.setAttribute(POPOVER_POSITIONED_ATTR, '');
 	const { x, y } = await computePosition(trigger, popover, {
 		placement: opts?.placement || 'bottom-start',
 		middleware: opts?.middleware ?? [
@@ -166,7 +169,6 @@ const updatePosition = async (
 		],
 		strategy: 'fixed',
 	});
-	popover.setAttribute(POPOVER_POSITIONED_ATTR, '');
 	popover.style.setProperty('--c-dropdown__left', `${x}px`);
 	popover.style.setProperty('--c-dropdown__top', `${y}px`);
 };

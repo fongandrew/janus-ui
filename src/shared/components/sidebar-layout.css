@@ -34,7 +34,7 @@
 		@mixin t-border-right;
 		@mixin t-transition-slide;
 		@mixin t-transition-duration var(--v-animation-duration-md);
-		@mixin t-slide-out-left;
+		@mixin t-slide-out -100%, 0; /* left */
 
 		container-type: inline-size;
 		display: flex;
@@ -163,6 +163,9 @@
 
 			display: flex;
 			width: var(--v-sidebar-width);
+
+			/* Unset z-index to avoid sidebar sitting above overlay in other contexts */
+			z-index: unset;
 		}
 
 		.c-sidebar-layout__content {
@@ -185,7 +188,7 @@
 
 		/* Can be explicitly closed on desktop */
 		.c-sidebar[data-c-sidebar__state='closed'] {
-			@mixin t-slide-out-left;
+			@mixin t-slide-out -100%, 0; /* left */
 
 			position: fixed;
 		}
