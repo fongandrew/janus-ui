@@ -12,10 +12,9 @@
         element they are applied to. This mixin is used to define the border color based on
         the background color.
     */
-	--v-border-color: color-mix(
-		in hsl,
-		var(--v-border-dynamic-base) var(--v-border-dynamic-mix),
-		var(--v-bg)
+	--v-border-color: var(
+		--v-border-color-override,
+		color-mix(in hsl, var(--v-border-dynamic-base) var(--v-border-dynamic-mix), var(--v-bg))
 	);
 
 	border-color: var(--v-border-color);
@@ -133,6 +132,7 @@
 @define-mixin v-colors-success {
 	@mixin v-color-block;
 
+	--v-border-color-override: var(--v-success-border);
 	--v-bg: var(--v-success-bg);
 	--v-fg: var(--v-success-fg);
 	--v-link: var(--v-fg);
@@ -143,6 +143,7 @@
 @define-mixin v-colors-warning {
 	@mixin v-color-block;
 
+	--v-border-color-override: var(--v-warning-border);
 	--v-bg: var(--v-warning-bg);
 	--v-fg: var(--v-warning-fg);
 	--v-link: var(--v-fg);
@@ -153,6 +154,7 @@
 @define-mixin v-colors-danger {
 	@mixin v-color-block;
 
+	--v-border-color-override: var(--v-danger-border);
 	--v-bg: var(--v-danger-bg);
 	--v-fg: var(--v-danger-fg);
 	--v-link: var(--v-fg);

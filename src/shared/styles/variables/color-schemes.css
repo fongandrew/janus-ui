@@ -2,43 +2,59 @@
     Light and dark mode colors
 */
 @define-mixin v-dark {
-	--v-default-bg: hsl(0deg 0% 1.9%);
-	--v-default-fg: hsl(0deg 0% 98%);
-	--v-card-bg: hsl(0deg 0% 15%);
+	--v-body-bg: linear-gradient(102deg, hsl(0deg 0% 100% / 0%), rgb(25 204 255 / 15%)),
+		linear-gradient(12deg, rgb(41 37 33 / 15%), hsl(0deg 0% 100% / 0%)), var(--v-bg);
+	--v-default-bg: hsl(0deg 0% 2%);
+	--v-default-fg: hsl(0deg 0% 99%);
+	--v-card-bg: hsl(0deg 0% 2%);
 	--v-card-fg: hsl(0deg 0% 98%);
-	--v-code-bg: hsl(0deg 0% 14.9%);
+	--v-code-bg: hsl(0deg 0% 15%);
 	--v-code-fg: hsl(0deg 0% 98%);
-	--v-pre-bg: hsla(0deg 0% 14.9% / 80%);
+	--v-pre-bg: hsla(0deg 0% 15%);
 	--v-pre-fg: hsl(210deg 100% 90%);
-	--v-popover-bg: hsl(0deg 0% 3.9%);
+	--v-pre-danger: hsl(32deg 100% 80%);
+	--v-pre-muted: hsl(0deg 0% 86.5%);
+	--v-popover-bg: hsl(0deg 0% 2%);
 	--v-popover-fg: hsl(0deg 0% 98%);
-	--v-tooltip-bg: hsl(0deg 0% 3.9%);
+	--v-tooltip-bg: hsl(0deg 0% 2%);
 	--v-tooltip-fg: hsl(0deg 0% 98%);
-	--v-primary-bg: hsl(0deg 0% 98%);
+	--v-tooltip-danger: hsl(32deg 100% 76%);
+	--v-tooltip-muted: hsl(0deg 0% 86.5%);
+	--v-primary-bg: hsl(0deg 0% 99%);
 	--v-primary-fg: hsl(0deg 0% 9%);
-	--v-secondary-bg: hsl(0deg 0% 14.9%);
+	--v-secondary-bg: hsl(0deg 0% 15%);
 	--v-secondary-fg: hsl(0deg 0% 98%);
-	--v-callout-bg: hsl(0deg 0% 14.9%);
+	--v-secondary-danger: hsl(32deg 100% 76%);
+	--v-secondary-muted: hsl(0deg 0% 86.5%);
+	--v-callout-bg: hsl(0deg 0% 15%);
 	--v-callout-fg: hsl(0deg 0% 98%);
-	--v-highlight-bg: hsl(210deg 80% 80%);
+	--v-highlight-bg: hsl(210deg 90% 92%);
 	--v-highlight-fg: hsl(0deg 0% 9%);
+	--v-highlight-danger: hsl(16deg 95% 25%);
+	--v-highlight-muted: hsl(210deg 80% 20%);
 	--v-input-bg: hsl(0deg 0% 3.9%);
 	--v-input-fg: hsl(0deg 0% 98%);
-	--v-success-bg: hsl(120deg 80% 30%);
-	--v-success-fg: hsl(0deg 0% 98%);
-	--v-warning-bg: hsl(50deg 85% 75%);
-	--v-warning-fg: hsl(0deg 0% 0%);
-	--v-danger-bg: hsl(29deg 100% 65%);
-	--v-danger-fg: hsl(0deg 0% 1.9%);
-	--v-danger-text: hsl(29deg 100% 65%);
-	--v-input-disabled-bg: hsl(0deg 0% 14.9%);
+	--v-success-bg: hsl(120deg 60% 12%);
+	--v-success-fg: hsl(0deg 0% 99%);
+	--v-success-muted: hsl(120deg 0% 86.5%);
+	--v-success-border: hsl(120deg 60% 40%);
+	--v-warning-bg: hsl(50deg 100% 10%);
+	--v-warning-fg: hsl(0deg 0% 99%);
+	--v-warning-muted: hsl(50deg 0% 86.5%);
+	--v-warning-border: hsl(50deg 100% 50%);
+	--v-danger-bg: hsl(32deg 100% 8%);
+	--v-danger-fg: hsl(32deg 100% 83.5%);
+	--v-danger-muted: hsl(32deg 25% 82.5%);
+	--v-danger-border: hsl(32deg 100% 50%);
+	--v-danger-text: hsl(32deg 100% 73%);
+	--v-input-disabled-bg: hsl(0deg 0% 15%);
 	--v-backdrop: hsla(0deg 0% 0% / 50%);
-	--v-muted: hsl(0deg 0% 54.9%);
-	--v-link: hsl(210deg 80% 80%);
+	--v-muted: hsl(0deg 0% 86.5%);
+	--v-link: hsl(210deg 80% 83.1%);
 	--v-ring: hsl(0deg 0% 83.1%);
 	--v-ring-alt: hsl(210deg 0% 14.9%);
 	--v-border-dynamic-base: white;
-	--v-border-dynamic-mix: 25%;
+	--v-border-dynamic-mix: 50%;
 }
 
 /*
@@ -46,6 +62,8 @@
     extension I use for CSS variables prefers later mentions of a variable.
 */
 @define-mixin v-light {
+	--v-body-bg: linear-gradient(102deg, hsl(0deg 0% 100% / 0%), rgb(255 204 0 / 5%)),
+		linear-gradient(12deg, rgb(33 37 41 / 5%), hsl(0deg 0% 100% / 0%)), var(--v-bg);
 	--v-default-bg: hsl(0deg 0% 99%);
 	--v-default-fg: hsl(0deg 0% 3%);
 	--v-card-bg: hsl(0deg 0% 99%);
@@ -54,13 +72,13 @@
 	--v-code-fg: hsl(0deg 0% 9%);
 	--v-pre-bg: hsl(0deg 0% 14%);
 	--v-pre-fg: hsl(210deg 89% 89%);
-	--v-pre-danger: hsl(30deg 100% 80%);
+	--v-pre-danger: hsl(32deg 100% 80%);
 	--v-pre-muted: hsl(0deg 0% 82%);
 	--v-popover-bg: hsl(0deg 0% 99%);
 	--v-popover-fg: hsl(0deg 0% 3%);
 	--v-tooltip-bg: hsl(0deg 0% 3%);
 	--v-tooltip-fg: hsl(0deg 0% 98%);
-	--v-tooltip-danger: hsl(30deg 100% 75%);
+	--v-tooltip-danger: hsl(32deg 100% 75%);
 	--v-tooltip-muted: hsl(0deg 0% 80%);
 	--v-primary-bg: hsl(0deg 0% 9%);
 	--v-primary-fg: hsl(0deg 0% 99%);
@@ -99,10 +117,14 @@
 @layer variables {
 	:root {
 		@mixin v-light;
+
+		color-scheme: light dark;
 	}
 
 	.v-inverted {
 		@mixin v-dark;
+
+		color-scheme: dark;
 	}
 
 	/* System Dark Mode */
@@ -110,8 +132,12 @@
 		:root:not([data-color-scheme='light']) {
 			@mixin v-dark;
 
+			color-scheme: dark;
+
 			.v-inverted {
 				@mixin v-light;
+
+				color-scheme: light;
 			}
 		}
 	}
@@ -120,8 +146,12 @@
 	:root[data-color-scheme='dark'] {
 		@mixin v-dark;
 
+		color-scheme: dark;
+
 		.v-inverted {
 			@mixin v-light;
+
+			color-scheme: light;
 		}
 	}
 }

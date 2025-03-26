@@ -1,7 +1,7 @@
 @define-mixin v-font-weight $weight {
 	--v-font-weight: $(weight);
 
-	font-weight: var(--v-font-weight);
+	font-weight: max(var(--v-font-weight), var(--v-font-weight-min, 0));
 }
 
 @define-mixin v-text-weight-label {
@@ -25,15 +25,21 @@
 }
 
 @define-mixin v-text-muted {
-	@mixin v-font-weight var(--v-font-weight-muted, var(--v-font-weight-label));
+	--v-font-weight-min: var(--v-font-weight-muted, --v-font-weight-label);
 
 	color: var(--v-muted);
+
+	/* Reapply since vars have changed */
+	font-weight: max(var(--v-font-weight), var(--v-font-weight-min, 0));
 }
 
 @define-mixin v-text-danger {
-	@mixin v-font-weight var(--v-font-weight-danger, var(--v-font-weight-label));
+	--v-font-weight-min: var(--v-font-weight-danger, --v-font-weight-label);
 
 	color: var(--v-danger-text);
+
+	/* Reapply since vars have changed */
+	font-weight: max(var(--v-font-weight), var(--v-font-weight-min, 0));
 }
 
 @layer variables {

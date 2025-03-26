@@ -1,10 +1,13 @@
 /* Badge styles for displaying status or notifications */
 @define-mixin o-badge {
 	@mixin v-font-weight var(--v-font-weight-label);
+	@mixin t-border;
 
-	display: inline-block;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center; /* Might seem redundant with justify but inner span is fixed width */
 	font-size: var(--v-font-size-sm);
-	text-align: center;
 	border-radius: 0.5lh;
 	padding: 0 0.5lh;
 	height: 1lh;

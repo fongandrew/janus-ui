@@ -12,9 +12,9 @@
 }
 
 @define-mixin t-error {
-	--v-border-color: var(--v-danger-bg);
+	--v-border-color: var(--v-danger-text);
 
-	border-color: var(--v-danger-bg);
+	border-color: var(--v-danger-text);
 }
 
 @define-mixin t-focus-ring {

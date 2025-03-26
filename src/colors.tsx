@@ -146,7 +146,7 @@ function ColorWithAPCA(props: {
 				{apcaNorm() >= 55 && '●'}
 				{apcaNorm() >= 40 && '●'}
 			</span>
-			<span style={{ width: '7ch' }}>({apca()?.toFixed(2)})</span>
+			<span style={{ width: '7ch' }}>({apcaNorm().toFixed(2)})</span>
 			<span title={`Minimum: ${minAPCA()}`}>{apcaNorm() >= minAPCA() ? '✓' : '✗'}</span>
 		</div>
 	);
@@ -161,7 +161,7 @@ function ColorBox(props: {
 	usage?: 'body' | 'descriptive' | 'label' | 'subheading' | 'heading';
 }) {
 	return (
-		<section class={cx('o-text-box', 't-radius-outer', props.class)}>
+		<section class={cx('o-text-box', 't-radius-outer', 't-border', props.class)}>
 			<ColorWithAPCA usage={props.usage}>{props.label}</ColorWithAPCA>
 			{!props.noDanger && (
 				<ColorWithAPCA class="v-text-danger" usage="label">
