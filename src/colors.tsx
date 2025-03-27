@@ -84,7 +84,7 @@ function minContrastForUsage(
 	// APCA rules are actually to add 15 if min is less than 75 but this is sort of weird since
 	// it means increasing font size (which lowers the required contrast on the table) can
 	// increase contrast requirements.
-	if (usage === 'body') return Math.min(base, 75);
+	if (usage === 'body') return Math.max(base, 75);
 	if (usage === 'descriptive') return base;
 	return Math.max(base - 15, 40);
 }
@@ -363,6 +363,7 @@ function Main() {
 							noDanger
 							noLink
 							noMuted
+							usage="label"
 						/>
 						<ColorBox class="v-colors-secondary" label="Secondary" usage="label" />
 						<ColorBox class="v-colors-callout" label="Callout" />
