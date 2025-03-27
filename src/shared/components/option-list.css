@@ -29,6 +29,7 @@
 		*/
 		@mixin t-no-focus-ring;
 
+		border-width: var(--v-border-width);
 		cursor: pointer;
 
 		/*
@@ -36,6 +37,10 @@
 			in a highlight item context.
 		*/
 		transition: none;
+
+		+ .c-option-list__item {
+			margin-top: calc(-1 * var(--v-border-width));
+		}
 	}
 
 	.c-option-list__check-box {
