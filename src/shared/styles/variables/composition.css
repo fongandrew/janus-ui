@@ -40,7 +40,7 @@
 	/* Borders */
 	--v-border-width-sm: 1px;
 	--v-border-width-md: max(0.0625rem, 1px);
-	--v-border-width-lg: 0.125rem;
+	--v-border-width-lg: max(0.125rem, 2px);
 
 	/*
 		Outer border radius is dynamic based on padding but inner border radius is

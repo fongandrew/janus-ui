@@ -8,8 +8,6 @@
 
 @layer components {
 	.c-tabs__bar {
-		@mixin t-border-bottom;
-
 		display: flex;
 		overflow: auto;
 	}
@@ -18,12 +16,16 @@
 		@mixin v-font-weight var(--v-font-weight-label);
 		@mixin v-text-muted;
 
-		border-width: 0 0 var(--v-border-width-lg) 0;
 		display: block;
 		flex-grow: 1;
 		flex-basis: 0;
 		max-width: var(--c-tabs__max-width);
 		white-space: nowrap;
+
+		/* Unset normal button borders before setting bottom */
+		border-width: 0;
+
+		@mixin t-border-bottom;
 
 		&:hover,
 		&:focus-visible {
@@ -44,8 +46,16 @@
 		}
 
 		&[aria-selected='true'] {
-			border-color: var(--v-primary-bg);
+			--v-border-color: color-mix(
+				in hsl,
+				var(--v-border-dynamic-base) var(--v-border-dynamic-mix),
+				var(--v-primary-bg)
+			);
+
 			color: var(--v-fg);
+
+			/* Use box shadow to thicken border without shifting things around */
+			box-shadow: inset 0 -1px 0 var(--v-border-color);
 		}
 
 		&:first-child {
