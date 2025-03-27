@@ -33,7 +33,9 @@ export function Img(
 				{...callbackAttrs(rest, imgError(errorId), isServer && imgMountError(errorId))}
 			/>
 			<span id={errorId} class="c-img__error t-hidden" aria-label={t`Image failed to load`}>
-				<Ban aria-hidden="true" />
+				<span>
+					<Ban aria-hidden="true" />
+				</span>
 			</span>
 		</ImgPlaceholder>
 	);
