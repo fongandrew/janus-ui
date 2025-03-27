@@ -25,7 +25,8 @@
 	}
 
 	.c-radio__circle:has(input:checked) {
-		@mixin v-colors-primary;
+		--v-bg: var(--v-primary-fg);
+		--v-border-color: var(--v-primary-bg);
 	}
 
 	.c-radio input {
@@ -38,9 +39,9 @@
 
 	.c-radio input:checked ~ .c-radio__dot {
 		display: block;
-		height: 66.6667%;
-		width: 66.6667%;
-		border-radius: 100%;
-		background-color: var(--v-primary-fg);
+		height: 60%;
+		width: 60%;
+		border-radius: 1lh;
+		background-color: var(--v-primary-bg);
 	}
 }
