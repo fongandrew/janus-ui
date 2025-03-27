@@ -71,7 +71,8 @@ function handleScroll(e: Event) {
 
 	if (Math.abs(scrollDiff) < headerHeight) return;
 
-	setLastScrollTop(container, container.scrollTop);
+	// Safari can have negative scrollTop from bounceback
+	setLastScrollTop(container, Math.max(container.scrollTop, 0));
 	setLastScrollEvent(container, Date.now());
 
 	header.toggleAttribute(TOP_NAV_SCROLL_HIDE_ATTR, scrollDiff > 0);
