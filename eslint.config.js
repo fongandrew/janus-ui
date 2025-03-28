@@ -1,5 +1,6 @@
 import eslint from '@eslint/js';
 import * as tsParser from '@typescript-eslint/parser';
+import vitest from '@vitest/eslint-plugin';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import asyncEventPlugin from 'eslint-plugin-async-event';
 import cssClassUsagePlugin from 'eslint-plugin-css-class-usage';
@@ -49,6 +50,26 @@ export default tseslint.config(
 			'css-class-usage/no-unknown-classes': 'error',
 			'async-event/no-async-event-properties': 'error',
 			'async-event/no-async-event-reference': 'error',
+		},
+	},
+
+	// Test rules
+	{
+		files: ['**/*.test.*'],
+		plugins: { vitest },
+		rules: {
+			...vitest.configs.recommended.rules,
+			'vitest/consistent-test-it': 'error',
+			'vitest/no-focused-tests': 'error',
+			'vitest/no-identical-title': 'error',
+			'no-restricted-properties': [
+				'error',
+				{
+					object: 'screen',
+					property: 'debug',
+					message: "Don't commit screen.debug()",
+				},
+			],
 		},
 	},
 

@@ -7,6 +7,7 @@ describe('bindCallback', () => {
 		expect(bound).toEqual([callback, 'test']);
 	});
 
+	// eslint-disable-next-line vitest/expect-expect
 	it('should catch type errors', () => {
 		// @ts-expect-error: Data doesn't match
 		bindCallback((data: string, num: number) => `${data} ${num}`, 42);
