@@ -4,7 +4,7 @@ import { Components } from '~/components';
 import { mountRoot } from '~/shared/utility/solid/mount-root';
 
 function Main() {
-	return <Components title="Solid Base" />;
+	return <Components title="Janus UI" />;
 }
 
 mountRoot(Main);

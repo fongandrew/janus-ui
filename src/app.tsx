@@ -43,7 +43,7 @@ export function App(props: AppProps) {
 		<>
 			<TopNavLayout>
 				<TopNav>
-					{props.heading ?? <h1>Solid Base</h1>}
+					{props.heading ?? <h1>Janus UI</h1>}
 					<TopNavList>
 						<NavLink current={props.current} href="/">
 							Components

@@ -1,7 +1,7 @@
 {
-  "name": "solid-base",
+  "name": "janus-ui",
   "version": "1.0.0",
-  "description": "Base package for Solid apps",
+  "description": "Scaffolding / UI components meant for use with both SolidJS and vanilla JS",
   "main": "index.js",
   "type": "module",
   "scripts": {
