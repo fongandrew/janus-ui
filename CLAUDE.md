@@ -10,6 +10,7 @@
 - `npm run typecheck`: Run TypeScript type checking
 
 ## Code Style
+- **Formatting**: Use tabs and single quotes. See .prettierrc for details.
 - **Imports**: Use path aliases (`~/`) instead of relative paths. Sort imports with simple-import-sort.
 - **CSS Classes**: Follow BEM with prefixes: `t-` (tools), `o-` (objects), `c-` (components), `p-` (project). CSS modules may need to be imported into an `index.css` file.
 - **Naming**: Use camelCase for variables/functions, PascalCase for components/types.
