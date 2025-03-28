@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/vitest';
-import '~/shared/utility/vitest/custom-matchers';
+import '~/shared/utility/test-utils/custom-matchers';
 
 import { vi } from 'vitest';
 

@@ -41,7 +41,7 @@ export default tseslint.config(
 	eslintConfigPrettier,
 	solid.configs['flat/typescript'],
 	{
-		ignores: ['**/*.test.*'],
+		ignores: ['**/test-utils/**', '**/*.test.*'],
 		plugins: {
 			'async-event': asyncEventPlugin,
 			'css-class-usage': cssClassUsagePlugin,
@@ -55,7 +55,7 @@ export default tseslint.config(
 
 	// Test rules
 	{
-		files: ['**/*.test.*'],
+		files: ['**/test-utils/**', '**/*.test.*'],
 		plugins: { vitest },
 		rules: {
 			...vitest.configs.recommended.rules,

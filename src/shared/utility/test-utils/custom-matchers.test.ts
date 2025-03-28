@@ -1,4 +1,4 @@
-import '~/shared/utility/vitest/custom-matchers';
+import '~/shared/utility/test-utils/custom-matchers';
 
 import { describe, expect, it, vi } from 'vitest';
 
