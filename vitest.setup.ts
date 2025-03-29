@@ -3,6 +3,22 @@ import '~/shared/utility/test-utils/custom-matchers';
 
 import { vi } from 'vitest';
 
+// Fake isServer for SSR tests. This doesn't actually make the tests run in SSR mode.
+// We're still running tests as if they were in a browser environment (including the
+// using the Solid client-side render) but setting `isServer` forces any of *our* Solid
+// rendering code to go down SSR-specific paths. This is convenient if we want to test
+// that SSR generated HTML + vanilla JS client code play nice without spinning up two
+// different processes. See render-ssr.tsx.
+if ((process.env as Record<string, string | undefined>)['TEST_MODE'] === 'ssr') {
+	vi.mock('solid-js/web', async (importActual) => {
+		const actual = await (importActual() as any);
+		return {
+			...actual,
+			isServer: true,
+		};
+	});
+}
+
 window.HTMLElement.prototype.scrollIntoView = () => {};
 
 process.env.TZ = 'UTC';

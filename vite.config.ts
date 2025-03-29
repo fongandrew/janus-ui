@@ -5,12 +5,14 @@ import { defineConfig } from 'vitest/config';
 import purgeCSSPlugin from './plugins/vite-plugin-purgecss';
 import viteSSGPlugin from './plugins/vite-plugin-ssg';
 
+const TEST_MODE = (process.env as Record<string, string | undefined>)['TEST_MODE'];
+
 export default defineConfig(({ mode }) => {
 	const isTest = mode === 'test';
 
 	return {
 		plugins: [
-			solidPlugin({ ssr: !isTest }),
+			solidPlugin({ ssr: TEST_MODE === 'ssr' || !isTest }),
 			purgeCSSPlugin({
 				variables: true,
 				keyframes: true,
@@ -51,6 +53,15 @@ export default defineConfig(({ mode }) => {
 			environment: 'jsdom',
 			clearMocks: true,
 			setupFiles: 'vitest.setup.ts',
+
+			// Two test modes: SPA and SSR. SPA is normal and incudes all tests. SSR
+			// is an extra layer of checks for component code to make sure it renders
+			// correctly in SSR mode and that the HTML works with non-Solid JS code.
+			...(TEST_MODE === 'ssr'
+				? {
+						include: ['**/*.test.tsx'],
+					}
+				: {}),
 		},
 	};
 });
