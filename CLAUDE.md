@@ -18,6 +18,6 @@
 - **TypeScript**: Prefer type imports. Use strict type checking.
 - **Error Handling**: Avoid throwing errors in components. Use error boundaries.
 - **Browser Globals**: Don't use `window`/`document` directly. Use utility functions.
-- **Testing**: Use Vitest with `it()` (not `test()`). Colocate tests in same directory as source. `describe` and `it` are globals and do not need to be imported.
+- **Testing**: Use Vitest with `it()` (not `test()`). Colocate tests in same directory as source. `describe`, `it`, `vi`, and other test helpers are globals and do not need to be imported.
 
 Consult README.md for architecture details on SSR and progressive enhancement patterns.

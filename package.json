@@ -14,8 +14,7 @@
     "lint": "npm run eslint && npm run stylelint",
     "stylelint": "stylelint \"src/**/*.css\"",
     "stylelint:fix": "stylelint --fix \"src/**/*.css\"",
-    "test": "npm run test:spa && npm run test:ssr",
-    "test:spa": "TEST_MODE=spa vitest run",
+    "test": "vitest run",
     "test:ssr": "TEST_MODE=ssr vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc -p tsconfig.json --noEmit"
