@@ -10,12 +10,31 @@ function t(strings: TemplateStringsArray, ...values: any[]): string {
 	}, '');
 }
 
+// Registry to store custom t functions for testing
+const tFunctionRegistry: Record<string, typeof t> = {};
+
+/**
+ * Register a custom t function for a specific locale (for testing purposes)
+ */
+export function registerTFunction(locale: string, tFunction: typeof t) {
+	tFunctionRegistry[locale] = tFunction;
+}
+
+/**
+ * Clear all registered custom t functions (for testing cleanup)
+ */
+export function clearTFunctions() {
+	Object.keys(tFunctionRegistry).forEach((key) => {
+		delete tFunctionRegistry[key];
+	});
+}
+
 /**
  * Get the translation function associated with a given locale. This is a placeholder
  * for a real translation function that would handle translation of text strings.
  */
-export function getT(_locale: string) {
-	return t;
+export function getT(locale: string) {
+	return tFunctionRegistry[locale] || t;
 }
 
 /**
