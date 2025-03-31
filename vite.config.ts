@@ -52,7 +52,7 @@ export default defineConfig(({ mode }) => {
 			globals: true,
 			environment: 'jsdom',
 			clearMocks: true,
-			setupFiles: 'vitest.setup.ts',
+			setupFiles: './vitest.setup.ts',
 
 			// Two test modes: SPA and SSR. SPA is normal and incudes all tests. SSR
 			// is an extra layer of checks for component code to make sure it renders
