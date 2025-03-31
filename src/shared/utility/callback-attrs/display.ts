@@ -29,7 +29,7 @@ const afterHideRegistry = createCallbackRegistry<VisibilityChangeCallback>(HIDE_
 export const createAfterHideCallback = afterHideRegistry.create;
 
 /**
- * Run callbacks for a container after it's shown or hidden
+ * Run callbacks for a container after it's shown or before it's hidden
  */
 function runContainerCallbacks(
 	registry: CallbackRegistry<VisibilityChangeCallback>,
@@ -44,7 +44,7 @@ function runContainerCallbacks(
 		const closestVisBoundary = element.closest<HTMLElement>(
 			'[aria-hidden="true"],dialog:not(:modal),[popover]:not(:popover-open)',
 		);
-		if (!closestVisBoundary || closestVisBoundary.contains(element)) {
+		if (!closestVisBoundary || element === closestVisBoundary) {
 			for (const callback of registry.iter(element)) {
 				callback(element, container);
 			}
