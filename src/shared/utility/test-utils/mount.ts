@@ -16,3 +16,11 @@ export function mount(elm: HTMLElement) {
 	toRemove.push(elm);
 	document.body.appendChild(elm);
 }
+
+/** Test helper that renders string of stuff */
+export function mountStr(html: string) {
+	const elm = document.createElement('div');
+	elm.innerHTML = html;
+	mount(elm);
+	return elm;
+}
