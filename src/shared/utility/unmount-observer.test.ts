@@ -1,26 +1,7 @@
-import { vi } from 'vitest';
-
+import { mount } from '~/shared/utility/test-utils/mount';
 import { onUnmount } from '~/shared/utility/unmount-observer';
 
 describe('onUnmount', () => {
-	let toRemove: HTMLElement[] = [];
-
-	const mount = (elm: HTMLElement) => {
-		toRemove.push(elm);
-		document.body.appendChild(elm);
-	};
-
-	afterEach(() => {
-		// Clean up DOM
-		for (const elm of toRemove) {
-			if (elm.isConnected) {
-				elm.remove();
-			}
-		}
-
-		toRemove = [];
-	});
-
 	it('should call callback when element is removed from DOM', async () => {
 		const element = document.createElement('div');
 		mount(element);
