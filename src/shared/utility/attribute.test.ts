@@ -1,4 +1,4 @@
-import { attrIsTruthy, attrNoConflict } from '~/shared/utility/attribute';
+import { attrIsTruthy, attrNoConflict, setAttrs } from '~/shared/utility/attribute';
 
 describe('attrIsTruthy', () => {
 	it('returns true for attribute with empty string value', () => {
@@ -69,5 +69,74 @@ describe('attrNoConflict', () => {
 		expect(() => attrNoConflict<boolean>(true, false)).toThrow(
 			'Conflicting attributes: true and false',
 		);
+	});
+});
+
+describe('setAttrs', () => {
+	it('sets string attributes correctly', () => {
+		const element = document.createElement('div');
+		setAttrs(element, {
+			'data-test': 'value',
+			'aria-label': 'Test label',
+		});
+
+		expect(element.getAttribute('data-test')).toBe('value');
+		expect(element.getAttribute('aria-label')).toBe('Test label');
+	});
+
+	it('sets number attributes as strings', () => {
+		const element = document.createElement('div');
+		setAttrs(element, {
+			'data-count': 42,
+			tabindex: 0,
+		});
+
+		expect(element.getAttribute('data-count')).toBe('42');
+		expect(element.getAttribute('tabindex')).toBe('0');
+	});
+
+	it('sets boolean attributes as strings', () => {
+		const element = document.createElement('div');
+		setAttrs(element, {
+			'aria-expanded': true,
+			disabled: false,
+		});
+
+		expect(element.getAttribute('aria-expanded')).toBe('true');
+		expect(element.getAttribute('disabled')).toBe('false');
+	});
+
+	it('skips undefined values', () => {
+		const element = document.createElement('div');
+		element.setAttribute('data-test', 'original');
+
+		setAttrs(element, {
+			'data-test': undefined,
+			'data-new': 'value',
+		});
+
+		expect(element.getAttribute('data-test')).toBe('original');
+		expect(element.getAttribute('data-new')).toBe('value');
+	});
+
+	it('removes attributes when value is null', () => {
+		const element = document.createElement('div');
+		element.setAttribute('data-test', 'value');
+		element.setAttribute('aria-label', 'label');
+
+		setAttrs(element, {
+			'data-test': null,
+			'aria-label': 'new label',
+		});
+
+		expect(element.hasAttribute('data-test')).toBe(false);
+		expect(element.getAttribute('aria-label')).toBe('new label');
+	});
+
+	it('returns the element for chaining', () => {
+		const element = document.createElement('div');
+		const result = setAttrs(element, { 'data-test': 'value' });
+
+		expect(result).toBe(element);
 	});
 });

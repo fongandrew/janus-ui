@@ -28,3 +28,25 @@ export function attrNoConflict<T = string>(
 	}
 	return a || b;
 }
+
+/**
+ * Set multiple attributes on an element. Generally use something like Solid or
+ * a rendering framework for this but this works when we want vanilla JS
+ */
+export function setAttrs(
+	element: HTMLElement,
+	attributes: Record<string, string | number | boolean | null | undefined>,
+) {
+	for (const key in attributes) {
+		const value = attributes[key];
+		if (value === undefined) {
+			continue;
+		}
+		if (value === null) {
+			element.removeAttribute(key);
+			continue;
+		}
+		element.setAttribute(key, String(value));
+	}
+	return element;
+}
