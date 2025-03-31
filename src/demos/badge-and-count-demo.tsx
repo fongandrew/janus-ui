@@ -22,20 +22,20 @@ export function BadgeAndCountDemo() {
 			<CardContent>
 				<div class="o-stack">
 					<div class="o-group">
-						<span class="o-badge">Badge</span>
-						<span class="o-badge v-colors-primary">Primary</span>
-						<span class="o-badge v-colors-danger">Danger</span>
-						<span class="o-badge v-colors-warning">Warning</span>
-						<span class="o-badge v-colors-success">Success</span>
+						<span class="o-badge" data-testid="generic-badge">Badge</span>
+						<span class="o-badge v-colors-primary" data-testid="primary-badge">Primary</span>
+						<span class="o-badge v-colors-danger" data-testid="danger-badge">Danger</span>
+						<span class="o-badge v-colors-warning" data-testid="warning-badge">Warning</span>
+						<span class="o-badge v-colors-success" data-testid="success-badge">Success</span>
 					</div>
 					<div class="o-group">
 						<span>Counts</span>
-						<Count value={1} label={countLabel} />
-						<Count value={10} label={countLabel} />
-						<Count value={12} label={countLabel} digits={2} />
-						<Count value={100} label={countLabel} digits={2} />
-						<Count value={125} label={countLabel} digits={3} />
-						<Count value={1000} label={countLabel} digits={3} />
+						<Count value={1} label={countLabel} data-testid="count-1" />
+						<Count value={10} label={countLabel} data-testid="count-10" />
+						<Count value={12} label={countLabel} digits={2} data-testid="count-12-2digits" />
+						<Count value={100} label={countLabel} digits={2} data-testid="count-100-2digits" />
+						<Count value={125} label={countLabel} digits={3} data-testid="count-125-3digits" />
+						<Count value={1000} label={countLabel} digits={3} data-testid="count-1000-3digits" />
 					</div>
 				</div>
 			</CardContent>

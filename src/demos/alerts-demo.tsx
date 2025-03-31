@@ -27,28 +27,29 @@ export function AlertsDemo() {
 			</CardHeader>
 			<CardContent>
 				<div class="o-stack">
-					<ToggleBox id={infoId}>
-						<InfoAlert>This is an info alert with useful information</InfoAlert>
+					<ToggleBox id={infoId} data-testid="info-alert-container">
+						<InfoAlert data-testid="info-alert">This is an info alert with useful information</InfoAlert>
 					</ToggleBox>
-					<ToggleBox id={calloutId}>
-						<Callout>
+					<ToggleBox id={calloutId} data-testid="callout-container">
+						<Callout data-testid="callout">
 							This is a callout with useful information that does not trigger ARIA
 							alerts
 						</Callout>
 					</ToggleBox>
-					<ToggleBox id={successId}>
-						<SuccessAlert>Operation completed successfully</SuccessAlert>
+					<ToggleBox id={successId} data-testid="success-alert-container">
+						<SuccessAlert data-testid="success-alert">Operation completed successfully</SuccessAlert>
 					</ToggleBox>
-					<ToggleBox id={warningId}>
-						<WarningAlert>Please review your input before proceeding</WarningAlert>
+					<ToggleBox id={warningId} data-testid="warning-alert-container">
+						<WarningAlert data-testid="warning-alert">Please review your input before proceeding</WarningAlert>
 					</ToggleBox>
-					<ToggleBox id={dangerId}>
-						<DangerAlert>An error occurred while processing your request</DangerAlert>
+					<ToggleBox id={dangerId} data-testid="danger-alert-container">
+						<DangerAlert data-testid="danger-alert">An error occurred while processing your request</DangerAlert>
 					</ToggleBox>
 					<div class="o-group">
 						<Button
 							aria-controls={infoId}
 							aria-expanded="false"
+							data-testid="toggle-info-button"
 							{...callbackAttrs(toggle)}
 						>
 							Toggle Info Alert
@@ -56,6 +57,7 @@ export function AlertsDemo() {
 						<Button
 							aria-controls={calloutId}
 							aria-expanded="false"
+							data-testid="toggle-callout-button"
 							{...callbackAttrs(toggle)}
 						>
 							Toggle Callout
@@ -63,6 +65,7 @@ export function AlertsDemo() {
 						<Button
 							aria-controls={successId}
 							aria-expanded="false"
+							data-testid="toggle-success-button"
 							{...callbackAttrs(toggle)}
 						>
 							Toggle Success Alert
@@ -70,6 +73,7 @@ export function AlertsDemo() {
 						<Button
 							aria-controls={warningId}
 							aria-expanded="false"
+							data-testid="toggle-warning-button"
 							{...callbackAttrs(toggle)}
 						>
 							Toggle Warning Alert
@@ -77,6 +81,7 @@ export function AlertsDemo() {
 						<Button
 							aria-controls={dangerId}
 							aria-expanded="false"
+							data-testid="toggle-danger-button"
 							{...callbackAttrs(toggle)}
 						>
 							Toggle Danger Alert
