@@ -17,10 +17,10 @@ export function onUnmount(element: HTMLElement, callback: (element: HTMLElement)
 	let lst = elmList(document);
 	if (!lst) {
 		lst = [];
-		if (lst.indexOf(element) === -1) {
-			lst.push(element);
-		}
 		setElmList(document, lst);
+	}
+	if (lst.indexOf(element) === -1) {
+		lst.push(element);
 	}
 
 	let callbackList = callbacks(element);
@@ -40,7 +40,7 @@ export function onUnmount(element: HTMLElement, callback: (element: HTMLElement)
 		const lst = elmList(document);
 		if (!lst) return;
 
-		const toRemoved: HTMLElement[] = [];
+		const toRemove: HTMLElement[] = [];
 
 		// Squeeze a little extra speed out of this since we're maybe calling
 		// this particular loop a lot (on every mutation)
@@ -49,7 +49,7 @@ export function onUnmount(element: HTMLElement, callback: (element: HTMLElement)
 			const elm = lst[i];
 			if (!elm || elm.isConnected) continue;
 
-			toRemoved.push(elm);
+			toRemove.push(elm);
 
 			const callbackList = callbacks(elm);
 			if (!callbackList) continue;
@@ -59,8 +59,8 @@ export function onUnmount(element: HTMLElement, callback: (element: HTMLElement)
 			}
 		}
 
-		if (toRemoved.length) {
-			for (const elm of toRemoved) {
+		if (toRemove.length) {
+			for (const elm of toRemove) {
 				const idx = lst.indexOf(elm);
 				if (idx !== -1) {
 					lst.splice(idx, 1);
