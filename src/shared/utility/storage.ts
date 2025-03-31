@@ -13,14 +13,14 @@ export interface Storage {
 
 /** Local storage implementation */
 export const asyncLocalStorage: Storage = {
-	get: async (key: string) => parentWindow?.localStorage.getItem(key) ?? '',
+	get: async (key: string) => parentWindow?.localStorage.getItem(key) ?? null,
 	set: async (key: string, value: string) => parentWindow?.localStorage.setItem(key, value),
 	remove: async (key: string) => parentWindow?.localStorage.removeItem(key),
 };
 
 /** Session storage implementation */
 export const asyncSessionStorage: Storage = {
-	get: async (key: string) => parentWindow?.sessionStorage.getItem(key) ?? '',
+	get: async (key: string) => parentWindow?.sessionStorage.getItem(key) ?? null,
 	set: async (key: string, value: string) => parentWindow?.sessionStorage.setItem(key, value),
 	remove: async (key: string) => parentWindow?.sessionStorage.removeItem(key),
 };
