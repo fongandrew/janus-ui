@@ -1,5 +1,3 @@
-import { vi } from 'vitest';
-
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createMounter } from '~/shared/utility/callback-attrs/mount';

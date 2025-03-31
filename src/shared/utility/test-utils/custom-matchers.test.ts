@@ -1,7 +1,5 @@
 import '~/shared/utility/test-utils/custom-matchers';
 
-import { describe, expect, it, vi } from 'vitest';
-
 describe('toHaveBeenCalledWithFirstArgs', () => {
 	it('should pass when the first argument matches', () => {
 		const mockFn = vi.fn();
