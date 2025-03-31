@@ -12,6 +12,7 @@
     - We are not using Jest. Do not use Jest mocks
     - Colocate tests in same directory as source.
     - `describe`, `it`, `expect`, `vi.fn`, and other test helpers are globals and do not need to be imported. Do not import from `vitest` unnecessarily.
+    - When testing Solid JS components, render using the `renderContainer` helper in `~/shared/utility/test-utils/render`, which returns a promise of a container element with the rendered JSX as children.
     - Avoid mocking as much as possible in favor of using JSDOM implementations of things. When asked to write tests, do not assume implementation is correct and suggest fixes if appropriate.
 
 Consult README.md for architecture details on SSR and progressive enhancement patterns.

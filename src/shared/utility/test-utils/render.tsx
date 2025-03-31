@@ -19,7 +19,7 @@ afterEach(() => {
  * the HTML string. But it allows us to test that the HTML works with non-Solid JS handler
  * code without spinning up a second process or server.
  */
-export async function render(cb: () => JSX.Element) {
+export async function renderContainer(cb: () => JSX.Element) {
 	const { container, unmount } = testRender(cb);
 	if (!isServer) {
 		// Mount callbacks don't run synchronously
