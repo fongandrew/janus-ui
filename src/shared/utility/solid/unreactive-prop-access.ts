@@ -1,4 +1,4 @@
-import { createEffect } from 'solid-js';
+import { createRenderEffect } from 'solid-js';
 
 import { isDev } from '~/shared/utility/is-dev';
 import { useLogger } from '~/shared/utility/solid/use-logger';
@@ -18,7 +18,7 @@ export function unreactivePropAccess<
 
 	if (isDev()) {
 		const logger = useLogger();
-		createEffect(() => {
+		createRenderEffect(() => {
 			keys.forEach((key, index) => {
 				if (current[index] !== props[key]) {
 					logger.warn(
