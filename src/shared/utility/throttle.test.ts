@@ -6,7 +6,7 @@ describe('throttle', () => {
 	});
 
 	afterEach(() => {
-		vi.restoreAllMocks();
+		vi.useRealTimers();
 	});
 
 	it('should execute function immediately by default', () => {

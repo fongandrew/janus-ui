@@ -7,7 +7,7 @@ describe('createQueryEffect', () => {
 	});
 
 	afterEach(() => {
-		vi.restoreAllMocks();
+		vi.useRealTimers();
 	});
 
 	it('should call the fetcher function with the provided query and signal', async () => {
