@@ -81,7 +81,9 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 			// Prefer `aria-disabled` over disabled. Better screenreader experience if you
 			// can focus disabled element and see that it's disabled.
 			get disabled() {
-				if (isServer && formProps.noJSDisabled) return true;
+				if (!isServer) return null;
+				if (formProps.disabled) return true;
+				if (formProps.noJSDisabled) return true;
 				return null;
 			},
 			// Set aria-disabled if disabled
@@ -120,6 +122,7 @@ export function mergeFormElementProps<TTag extends keyof JSX.HTMLElementTags>(
 				!(formProps.disabled ?? formProps['aria-disabled'])
 					? [mountRmAttr('disabled'), mountRmAttr('aria-disabled')]
 					: []),
+				...(isServer && formProps.disabled ? [mountRmAttr('disabled')] : []),
 			),
 	);
 

@@ -3,6 +3,7 @@ import type { JSX } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import { processRoot } from '~/shared/utility/callback-attrs/mount';
+import { raf } from '~/shared/utility/test-utils/raf';
 
 /** Auto clean up between tests */
 const cleanUps = new Set<() => void>();
@@ -23,12 +24,7 @@ export async function renderContainer(cb: () => JSX.Element) {
 	const { container, unmount } = testRender(cb);
 	if (!isServer) {
 		// Mount callbacks don't run synchronously
-		await new Promise((resolve) => {
-			requestAnimationFrame(resolve);
-			if (vi.isFakeTimers()) {
-				vi.advanceTimersToNextFrame();
-			}
-		});
+		await raf();
 
 		// This normally happens via `addMounterRenderEffect` but not guarantee
 		// that's loaded in test, so do it manually here
@@ -43,6 +39,10 @@ export async function renderContainer(cb: () => JSX.Element) {
 	const tempContainer = document.createElement('div');
 	tempContainer.innerHTML = html;
 	document.body.appendChild(tempContainer);
+
+	// Keep async so server tests can test pre-mount code by just
+	// checking DOM synchronously
+	await raf();
 
 	// Run mount callbacks
 	processRoot(tempContainer);
