@@ -23,7 +23,17 @@ export async function renderContainer(cb: () => JSX.Element) {
 	const { container, unmount } = testRender(cb);
 	if (!isServer) {
 		// Mount callbacks don't run synchronously
-		await new Promise((resolve) => requestAnimationFrame(resolve));
+		await new Promise((resolve) => {
+			requestAnimationFrame(resolve);
+			if (vi.isFakeTimers()) {
+				vi.advanceTimersToNextFrame();
+			}
+		});
+
+		// This normally happens via `addMounterRenderEffect` but not guarantee
+		// that's loaded in test, so do it manually here
+		processRoot(container);
+
 		return container;
 	}
 

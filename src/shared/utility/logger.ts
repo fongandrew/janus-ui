@@ -15,9 +15,12 @@ export interface Logger {
 }
 
 let defaultLogger: Logger = {
-	...console,
-	debug: isDev() ? console.debug : () => {},
-	debugWarn: isDev() ? console.warn : () => {},
+	// Wrap everything so tests can still mock console.<method>
+	debug: (...args) => (isDev() ? console.debug(...args) : undefined),
+	debugWarn: (...args) => (isDev() ? console.warn(...args) : undefined),
+	info: (...args) => console.info(...args),
+	warn: (...args) => console.warn(...args),
+	error: (...args) => console.error(...args),
 };
 
 /**

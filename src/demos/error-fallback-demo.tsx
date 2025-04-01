@@ -17,6 +17,11 @@ setSupportLink('https://example.com/support');
 /** Set this top-level variable to always throw */
 let topLevelShouldThrow = false;
 
+/** Reset the top-level variable for testing purposes */
+export function resetErrorState() {
+	topLevelShouldThrow = false;
+}
+
 export function ErrorFallbackDemo() {
 	// Signal to force re-render but also set top-level variable to put things in
 	// an unrecoverable state
@@ -41,7 +46,9 @@ export function ErrorFallbackDemo() {
 					</p>
 					<div class="o-group">
 						<RecoverableErrorButton />
-						<Button onClick={setUnrecoverableError}>Page Error</Button>
+						<Button onClick={setUnrecoverableError} data-testid="page-error-button">
+							Page Error
+						</Button>
 						<ErrorModalButton />
 					</div>
 					{(() => {
@@ -71,7 +78,9 @@ function RecoverableErrorButton() {
 	const [shouldThrow, setShouldThrow] = createSignal(false);
 	return (
 		<>
-			<Button onClick={[setShouldThrow, true]}>Section Error</Button>
+			<Button onClick={[setShouldThrow, true]} data-testid="section-error-button">
+				Section Error
+			</Button>
 			{(() => {
 				if (shouldThrow()) {
 					throw new Error('This is a demo error thrown on purpose');
@@ -87,7 +96,9 @@ function ErrorModalButton() {
 	const [isOpen, setIsOpen] = createSignal(false);
 	return (
 		<>
-			<Button onClick={[setIsOpen, true]}>Modal Error</Button>
+			<Button onClick={[setIsOpen, true]} data-testid="modal-error-button">
+				Modal Error
+			</Button>
 			<Modal open={isOpen()} onClose={[setIsOpen, false]}>
 				{(() => {
 					throw new Error('This is a demo error thrown on purpose');

@@ -9,15 +9,13 @@ import { vi } from 'vitest';
 // rendering code to go down SSR-specific paths. This is convenient if we want to test
 // that SSR generated HTML + vanilla JS client code play nice without spinning up two
 // different processes. See render-ssr.tsx.
-if ((process.env as Record<string, string | undefined>)['TEST_MODE'] === 'ssr') {
-	vi.mock('solid-js/web', async (importActual) => {
-		const actual = await (importActual() as any);
-		return {
-			...actual,
-			isServer: true,
-		};
-	});
-}
+vi.mock('solid-js/web', async (importActual) => {
+	const actual = await (importActual() as any);
+	return {
+		...actual,
+		isServer: (process.env as Record<string, string | undefined>)['TEST_MODE'] === 'ssr',
+	};
+});
 
 window.HTMLElement.prototype.scrollIntoView = () => {};
 

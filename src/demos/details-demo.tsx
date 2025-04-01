@@ -9,7 +9,7 @@ export function DetailsDemo() {
 			</CardHeader>
 			<CardContent>
 				<div class="o-stack">
-					<Details>
+					<Details data-testid="details-1">
 						{() => <>Click to expand</>}
 						{() => (
 							<>
@@ -18,7 +18,7 @@ export function DetailsDemo() {
 							</>
 						)}
 					</Details>
-					<Details>
+					<Details data-testid="details-2">
 						{() => <>Here is another example</>}
 						{() => (
 							<>

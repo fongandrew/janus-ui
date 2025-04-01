@@ -70,16 +70,27 @@ function AsyncFormDemo() {
 						<Form
 							names={AsyncFormNames}
 							onSubmit={handleSubmit}
+							data-testid="async-form"
 							{...callbackAttrs(isServer && formAsyncSubmit)}
 						>
 							<LabelledInput label="Name">
-								<Input name={AsyncFormNames.name} autocomplete="none" />
+								<Input
+									name={AsyncFormNames.name}
+									autocomplete="none"
+									data-testid="name-input"
+								/>
 							</LabelledInput>
 							<LabelledInput label="Message">
-								<Textarea name={AsyncFormNames.message} />
+								<Textarea
+									name={AsyncFormNames.message}
+									data-testid="message-textarea"
+								/>
 							</LabelledInput>
 							<LabelledInline label="Force error">
-								<Checkbox name={AsyncFormNames.shouldError} />
+								<Checkbox
+									name={AsyncFormNames.shouldError}
+									data-testid="error-checkbox"
+								/>
 							</LabelledInline>
 						</Form>
 
@@ -93,13 +104,13 @@ function AsyncFormDemo() {
 										<div class="o-stack">
 											<div class="o-label-stack">
 												<Label>Name</Label>
-												<BaseDescription>
+												<BaseDescription data-testid="submitted-name">
 													{formData()?.name}
 												</BaseDescription>
 											</div>
 											<div class="o-label-stack">
 												<Label>Message</Label>
-												<BaseDescription>
+												<BaseDescription data-testid="submitted-message">
 													{formData()?.message}
 												</BaseDescription>
 											</div>
@@ -111,8 +122,11 @@ function AsyncFormDemo() {
 					</div>
 				</CardContent>
 				<CardFooter>
-					<ResetButton {...callbackAttrs(isServer && formOutputClear)} />
-					<SubmitButton />
+					<ResetButton
+						{...callbackAttrs(isServer && formOutputClear)}
+						data-testid="reset-button"
+					/>
+					<SubmitButton data-testid="submit-button" />
 				</CardFooter>
 			</FormContextProvider>
 		</Card>
@@ -125,7 +139,7 @@ function ServerFormDemo() {
 	};
 
 	return (
-		<Card>
+		<Card id="server-form-demo">
 			<CardHeader>
 				<CardTitle>Form Submit</CardTitle>
 				<CardDescription>Traditional form that submits to a server</CardDescription>
@@ -133,16 +147,24 @@ function ServerFormDemo() {
 			<FormContextProvider action="https://developer.mozilla.org/en-US/search">
 				<CardContent>
 					<div class="o-stack">
-						<Form names={FormNames}>
+						<Form names={FormNames} data-testid="server-form">
 							<LabelledInput label="Search query">
-								<Input type="search" name={FormNames.q} required />
+								<Input
+									type="search"
+									name={FormNames.q}
+									required
+									data-testid="search-input"
+								/>
 							</LabelledInput>
 						</Form>
 					</div>
 				</CardContent>
 				<CardFooter>
-					<ResetButton {...callbackAttrs(isServer && formOutputClear)} />
-					<SubmitButton />
+					<ResetButton
+						{...callbackAttrs(isServer && formOutputClear)}
+						data-testid="server-reset-button"
+					/>
+					<SubmitButton data-testid="server-submit-button" />
 				</CardFooter>
 			</FormContextProvider>
 		</Card>
