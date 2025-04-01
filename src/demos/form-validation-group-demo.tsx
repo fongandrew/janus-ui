@@ -35,7 +35,7 @@ export function FormValidationGroupDemo() {
 		const data = new FormData(form);
 		setFormData({
 			username: data.get('username') as string,
-			password: data.get('password') as string,
+			password: data.get('password1') as string,
 		});
 	};
 
@@ -124,13 +124,13 @@ export function FormValidationGroupDemo() {
 										<div class="o-stack">
 											<div class="o-label-stack">
 												<Label>Username</Label>
-												<BaseDescription>
+												<BaseDescription data-testid="output-username">
 													{formData()?.username}
 												</BaseDescription>
 											</div>
 											<div class="o-label-stack">
 												<Label>Password</Label>
-												<BaseDescription>
+												<BaseDescription data-testid="output-password">
 													{formData()?.password}
 												</BaseDescription>
 											</div>
