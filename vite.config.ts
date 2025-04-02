@@ -3,7 +3,9 @@ import solidPlugin from 'vite-plugin-solid';
 import { defineConfig } from 'vitest/config';
 
 import purgeCSSPlugin from './plugins/vite-plugin-purgecss';
-import viteSSGPlugin from './plugins/vite-plugin-ssg';
+import viteRenderHTMLPlugin from './plugins/vite-plugin-render-html';
+import viteSolidHTMLPlugin from './plugins/vite-plugin-solid-html';
+import viteSSRServerPlugin from './plugins/vite-plugin-ssr-server';
 
 const TEST_MODE = (process.env as Record<string, string | undefined>)['TEST_MODE'];
 
@@ -22,7 +24,9 @@ export default defineConfig(({ mode }) => {
 				// https://github.com/FullHuman/purgecss/issues/1153#issuecomment-2626375284
 				safelist: ['&'],
 			}),
-			viteSSGPlugin(),
+			viteSSRServerPlugin(),
+			viteSolidHTMLPlugin(),
+			viteRenderHTMLPlugin(),
 		],
 		resolve: {
 			alias: {
