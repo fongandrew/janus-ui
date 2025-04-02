@@ -1,11 +1,12 @@
 import { fireEvent, screen } from '@solidjs/testing-library';
 
-import { CheckboxesDemo } from '~/demos/checkboxes-demo';
-import { renderContainer } from '~/shared/utility/test-utils/render';
+import { renderImport } from '~/shared/utility/test-utils/render';
+
+const render = () => renderImport('~/demos/checkboxes-demo', 'CheckboxesDemo');
 
 describe('CheckboxesDemo', () => {
 	it('renders all checkbox variants with correct states', async () => {
-		await renderContainer(() => <CheckboxesDemo />);
+		await render();
 
 		const defaultCheckbox = screen.getByTestId('default-checkbox');
 		expect(defaultCheckbox).not.toBeChecked();
@@ -24,7 +25,7 @@ describe('CheckboxesDemo', () => {
 	});
 
 	it('toggles checkbox when clicking the input element directly', async () => {
-		await renderContainer(() => <CheckboxesDemo />);
+		await render();
 
 		const defaultCheckbox = screen.getByTestId('default-checkbox');
 		expect(defaultCheckbox).not.toBeChecked();
@@ -39,7 +40,7 @@ describe('CheckboxesDemo', () => {
 	});
 
 	it('toggles checkbox when clicking the SVG/visual part of the checkbox', async () => {
-		await renderContainer(() => <CheckboxesDemo />);
+		await render();
 
 		const defaultCheckbox = screen.getByTestId('default-checkbox');
 		expect(defaultCheckbox).not.toBeChecked();
@@ -54,7 +55,7 @@ describe('CheckboxesDemo', () => {
 	});
 
 	it('respects disabled state when clicking on visual elements', async () => {
-		await renderContainer(() => <CheckboxesDemo />);
+		await render();
 
 		const disabledCheckbox = screen.getByTestId('disabled-checkbox');
 		expect(disabledCheckbox).toHaveAttribute('aria-disabled', 'true');
@@ -68,7 +69,7 @@ describe('CheckboxesDemo', () => {
 	});
 
 	it('renders toggle switch', async () => {
-		await renderContainer(() => <CheckboxesDemo />);
+		await render();
 
 		const toggleSwitch = screen.getByTestId('toggle-switch');
 		expect(toggleSwitch).toBeInTheDocument();
@@ -84,7 +85,7 @@ describe('CheckboxesDemo', () => {
 	});
 
 	it('toggles toggle switch which clicking div thumb', async () => {
-		await renderContainer(() => <CheckboxesDemo />);
+		await render();
 
 		const toggleSwitch = screen.getByTestId('toggle-switch');
 		const thumb = toggleSwitch.parentElement?.querySelector('div');

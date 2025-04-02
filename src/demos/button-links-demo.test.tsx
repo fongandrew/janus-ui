@@ -1,11 +1,12 @@
 import { screen } from '@solidjs/testing-library';
 
-import { ButtonLinksDemo } from '~/demos/button-links-demo';
-import { renderContainer } from '~/shared/utility/test-utils/render';
+import { renderImport } from '~/shared/utility/test-utils/render';
+
+const render = () => renderImport('~/demos/button-links-demo', 'ButtonLinksDemo');
 
 describe('ButtonLinksDemo', () => {
 	it('renders all button link variants', async () => {
-		await renderContainer(() => <ButtonLinksDemo />);
+		await render();
 
 		// Verify title renders
 		expect(screen.getByText('Button Links')).toBeInTheDocument();

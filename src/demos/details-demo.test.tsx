@@ -1,11 +1,12 @@
 import { fireEvent, screen } from '@solidjs/testing-library';
 
-import { DetailsDemo } from '~/demos/details-demo';
-import { renderContainer } from '~/shared/utility/test-utils/render';
+import { renderImport } from '~/shared/utility/test-utils/render';
+
+const render = () => renderImport('~/demos/details-demo', 'DetailsDemo');
 
 describe('DetailsDemo', () => {
 	it('renders details components in closed state by default', async () => {
-		await renderContainer(() => <DetailsDemo />);
+		await render();
 
 		// Check that both details elements are rendered
 		const details1 = screen.getByTestId('details-1');
@@ -29,7 +30,7 @@ describe('DetailsDemo', () => {
 	});
 
 	it('opens and closes the details when clicking the summary', async () => {
-		await renderContainer(() => <DetailsDemo />);
+		await render();
 
 		const details1 = screen.getByTestId('details-1');
 		const summary1 = screen.getByText('Click to expand');

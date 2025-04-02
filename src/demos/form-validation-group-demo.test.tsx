@@ -2,12 +2,13 @@ import { fireEvent, screen, waitFor } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 
-import { FormValidationGroupDemo } from '~/demos/form-validation-group-demo';
-import { renderContainer } from '~/shared/utility/test-utils/render';
+import { renderImport } from '~/shared/utility/test-utils/render';
+
+const render = () => renderImport('~/demos/form-validation-group-demo', 'FormValidationGroupDemo');
 
 describe('FormValidationGroupDemo', () => {
 	it('validates username input (no spaces)', async () => {
-		await renderContainer(() => <FormValidationGroupDemo />);
+		await render();
 
 		const usernameInput = screen.getByLabelText('Username');
 		const submitButton = screen.getByText('Submit');
@@ -34,7 +35,7 @@ describe('FormValidationGroupDemo', () => {
 	});
 
 	it('validates password confirmation', async () => {
-		await renderContainer(() => <FormValidationGroupDemo />);
+		await render();
 
 		const passwordInput = screen.getByLabelText('Password');
 		const confirmPasswordInput = screen.getByLabelText('Confirm Password');
@@ -64,7 +65,7 @@ describe('FormValidationGroupDemo', () => {
 	});
 
 	it('submits the form with valid data and displays output', async () => {
-		await renderContainer(() => <FormValidationGroupDemo />);
+		await render();
 
 		const usernameInput = screen.getByLabelText('Username');
 		const passwordInput = screen.getByLabelText('Password');
@@ -87,7 +88,7 @@ describe('FormValidationGroupDemo', () => {
 	});
 
 	it('clears the form and submitted data on reset', async () => {
-		await renderContainer(() => <FormValidationGroupDemo />);
+		await render();
 
 		const usernameInput = screen.getByLabelText('Username');
 		const passwordInput = screen.getByLabelText('Password');

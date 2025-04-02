@@ -1,11 +1,12 @@
 import { screen } from '@solidjs/testing-library';
 
-import { ButtonsDemo } from '~/demos/buttons-demo';
-import { renderContainer } from '~/shared/utility/test-utils/render';
+import { renderImport } from '~/shared/utility/test-utils/render';
+
+const render = () => renderImport('~/demos/buttons-demo', 'ButtonsDemo');
 
 describe('ButtonsDemo', () => {
 	it('renders all button variants', async () => {
-		await renderContainer(() => <ButtonsDemo />);
+		await render();
 
 		// Count total number of buttons
 		const buttons = screen.getAllByRole('button');

@@ -1,10 +1,11 @@
 import { fireEvent, screen, waitFor } from '@solidjs/testing-library';
-import { isServer } from 'solid-js/web';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { FormSubmitDemo } from '~/demos/form-submit-demo';
 import { FORM_BUSY_ATTR } from '~/shared/components/callbacks/form';
-import { renderContainer } from '~/shared/utility/test-utils/render';
+import { renderImport } from '~/shared/utility/test-utils/render';
+import { getTestMode } from '~/shared/utility/test-utils/test-mode';
+
+const render = () => renderImport('~/demos/form-submit-demo', 'FormSubmitDemo');
 
 describe('FormSubmitDemo', () => {
 	beforeEach(() => {
@@ -16,7 +17,7 @@ describe('FormSubmitDemo', () => {
 	});
 
 	it('shows busy state during form submission and displays submitted data', async () => {
-		const container = await renderContainer(() => <FormSubmitDemo />);
+		const container = await render();
 
 		// Fill in the form
 		const nameInput = screen.getByTestId('name-input');
@@ -42,7 +43,7 @@ describe('FormSubmitDemo', () => {
 		});
 
 		// Check that submitted data is displayed correctly
-		if (isServer) {
+		if (getTestMode() === 'ssr') {
 			const output = container.querySelector('output');
 			expect(JSON.parse(output?.textContent ?? '')).toEqual({
 				name: ['Test User'],
@@ -57,7 +58,7 @@ describe('FormSubmitDemo', () => {
 	});
 
 	it('clears the form when reset button is clicked', async () => {
-		await renderContainer(() => <FormSubmitDemo />);
+		await render();
 
 		// Fill in the form
 		const nameInput = screen.getByTestId('name-input');
@@ -80,7 +81,7 @@ describe('FormSubmitDemo', () => {
 	});
 
 	it('shows error message when error checkbox is checked', async () => {
-		await renderContainer(() => <FormSubmitDemo />);
+		await render();
 
 		// Fill in the form and check the error checkbox
 		const nameInput = screen.getByTestId('name-input');

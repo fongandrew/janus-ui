@@ -1,8 +1,10 @@
 import { fireEvent, screen } from '@solidjs/testing-library';
-import { isServer } from 'solid-js/web';
 
-import { ErrorFallbackDemo, resetErrorState } from '~/demos/error-fallback-demo';
-import { renderContainer } from '~/shared/utility/test-utils/render';
+import { resetErrorState } from '~/demos/error-fallback-demo';
+import { renderImport } from '~/shared/utility/test-utils/render';
+import { getTestMode } from '~/shared/utility/test-utils/test-mode';
+
+const render = () => renderImport('~/demos/error-fallback-demo', 'ErrorFallbackDemo');
 
 describe('ErrorFallbackDemo', () => {
 	beforeEach(() => {
@@ -13,9 +15,9 @@ describe('ErrorFallbackDemo', () => {
 		resetErrorState();
 	});
 
-	if (!isServer) {
+	if (getTestMode() !== 'ssr') {
 		it('renders the error fallback demo with all buttons', async () => {
-			await renderContainer(() => <ErrorFallbackDemo />);
+			await render();
 
 			// Check that all the buttons are rendered
 			expect(screen.getByTestId('section-error-button')).toBeInTheDocument();
@@ -29,10 +31,10 @@ describe('ErrorFallbackDemo', () => {
 	}
 
 	it('shows error fallback on section error', async () => {
-		await renderContainer(() => <ErrorFallbackDemo />);
+		await render();
 
 		// Click the section error button to trigger an error
-		if (!isServer) {
+		if (getTestMode() !== 'ssr') {
 			fireEvent.click(screen.getByTestId('section-error-button'));
 		}
 

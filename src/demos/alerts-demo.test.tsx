@@ -1,11 +1,12 @@
 import { fireEvent, screen } from '@solidjs/testing-library';
 
-import { AlertsDemo } from '~/demos/alerts-demo';
-import { renderContainer } from '~/shared/utility/test-utils/render';
+import { renderImport } from '~/shared/utility/test-utils/render';
+
+const render = () => renderImport('~/demos/alerts-demo', 'AlertsDemo');
 
 describe('AlertsDemo', () => {
 	it('renders all alert types hidden initially', async () => {
-		await renderContainer(() => <AlertsDemo />);
+		await render();
 
 		// All alerts should exist but be hidden initially
 		const infoAlertContainer = screen.getByTestId('info-alert-container');
@@ -22,7 +23,7 @@ describe('AlertsDemo', () => {
 	});
 
 	it('toggles info alert visibility when button is clicked', async () => {
-		await renderContainer(() => <AlertsDemo />);
+		await render();
 
 		const toggleButton = screen.getByTestId('toggle-info-button');
 		const infoAlertContainer = screen.getByTestId('info-alert-container');
@@ -44,7 +45,7 @@ describe('AlertsDemo', () => {
 	});
 
 	it('sets correct ARIA roles and attributes for different alert types', async () => {
-		await renderContainer(() => <AlertsDemo />);
+		await render();
 
 		// Toggle all alerts to make them visible
 		fireEvent.click(screen.getByTestId('toggle-info-button'));

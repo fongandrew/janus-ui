@@ -1,11 +1,12 @@
 import { fireEvent, screen } from '@solidjs/testing-library';
 
-import { ImgDemo } from '~/demos/img-demo';
-import { renderContainer } from '~/shared/utility/test-utils/render';
+import { renderImport } from '~/shared/utility/test-utils/render';
+
+const render = () => renderImport('~/demos/img-demo', 'ImgDemo');
 
 describe('ImgDemo', () => {
 	it('renders images correctly', async () => {
-		await renderContainer(() => <ImgDemo />);
+		await render();
 
 		// Check that all images are rendered initially
 		const images = screen.getAllByRole('img');
@@ -13,7 +14,7 @@ describe('ImgDemo', () => {
 	});
 
 	it('shows error state for broken image', async () => {
-		await renderContainer(() => <ImgDemo />);
+		await render();
 
 		// Find the intentionally broken image - the one with empty src
 		const brokenImg = screen.getAllByRole('img')[2]; // The third image is broken

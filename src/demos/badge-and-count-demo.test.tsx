@@ -1,11 +1,12 @@
 import { screen } from '@solidjs/testing-library';
 
-import { BadgeAndCountDemo } from '~/demos/badge-and-count-demo';
-import { renderContainer } from '~/shared/utility/test-utils/render';
+import { renderImport } from '~/shared/utility/test-utils/render';
+
+const render = () => renderImport('~/demos/badge-and-count-demo', 'BadgeAndCountDemo');
 
 describe('BadgeAndCountDemo', () => {
 	it('renders counts with correct values and truncation', async () => {
-		await renderContainer(() => <BadgeAndCountDemo />);
+		await render();
 
 		// Normal counts (not truncated)
 		expect(screen.getByTestId('count-1')).toHaveTextContent('1');
@@ -19,7 +20,7 @@ describe('BadgeAndCountDemo', () => {
 	});
 
 	it('sets correct aria-label on counts based on the label function', async () => {
-		await renderContainer(() => <BadgeAndCountDemo />);
+		await render();
 
 		expect(screen.getByTestId('count-1')).toHaveAttribute('aria-label', '1 item');
 		expect(screen.getByTestId('count-10')).toHaveAttribute('aria-label', '9+ items');

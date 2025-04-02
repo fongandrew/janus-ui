@@ -4,9 +4,7 @@ import { isServer } from 'solid-js/web';
 
 import { processRoot } from '~/shared/utility/callback-attrs/mount';
 import { raf } from '~/shared/utility/test-utils/raf';
-
-/** Env variable we use to opt components into SSR rendering */
-const TEST_MODE = (process.env as Record<string, string | undefined>)['TEST_MODE'];
+import { getTestMode } from '~/shared/utility/test-utils/test-mode';
 
 /** Auto clean up between tests */
 const cleanUps = new Set<() => void>();
@@ -66,7 +64,7 @@ export async function renderContainer(cb: () => JSX.Element) {
  * the CSR + SSR & vanilla JS variants of a component.
  */
 export async function renderImport(path: string, name = 'default') {
-	if (TEST_MODE === 'ssr') {
+	if (getTestMode() === 'ssr') {
 		const mod = (await import(`solid-html:${path}:${name}`)) as { default?: string };
 		const html = mod.default;
 		if (typeof html !== 'string') {

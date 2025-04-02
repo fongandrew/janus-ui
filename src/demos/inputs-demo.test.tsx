@@ -1,12 +1,13 @@
 import { screen } from '@solidjs/testing-library';
-import { isServer } from 'solid-js/web';
 
-import { InputsDemo } from '~/demos/inputs-demo';
-import { renderContainer } from '~/shared/utility/test-utils/render';
+import { renderImport } from '~/shared/utility/test-utils/render';
+import { getTestMode } from '~/shared/utility/test-utils/test-mode';
+
+const render = () => renderImport('~/demos/inputs-demo', 'InputsDemo');
 
 describe('InputsDemo', () => {
 	it('renders input state variations correctly', async () => {
-		await renderContainer(() => <InputsDemo />);
+		await render();
 
 		const defaultInput = screen.getByLabelText('Default input');
 		expect(defaultInput).toHaveAttribute('placeholder', 'Placeholder content');
@@ -18,27 +19,28 @@ describe('InputsDemo', () => {
 	});
 
 	it('renders disabled inputs correctly', async () => {
-		const renderPromise = renderContainer(() => <InputsDemo />);
+		const container = await render();
 
 		// Test that it initially starts out as disabled (to support disabled state
 		// absent JS)
-		const disabledInput = screen.getByLabelText('Disabled input');
-		if (isServer) {
+		// Use querySelector to find the disabled input since getByLabelText might find multiple elements
+		const disabledInput = container.querySelector('input[placeholder="Can\'t touch this"]');
+		if (getTestMode() === 'ssr') {
 			expect(disabledInput).toHaveAttribute('disabled');
 		}
 
 		// Test it switches to aria-disabled (better screenreader experience)
-		await renderPromise;
 		expect(disabledInput).toHaveAttribute('aria-disabled', 'true');
 		expect(disabledInput).not.toHaveAttribute('disabled');
 	});
 
 	it('renders date/time inputs with correct types', async () => {
-		await renderContainer(() => <InputsDemo />);
+		const container = await render();
 
-		// Check date/time inputs - focusing on type rather than value since values might be handled differently in tests
-		const dateInput = screen.getByLabelText('Date input');
-		expect(dateInput).toHaveAttribute('type', 'date');
+		// Check date/time inputs using more specific selectors
+		const dateInputs = container.querySelectorAll('input[type="date"]');
+		expect(dateInputs.length).toBeGreaterThan(0);
+		expect(dateInputs[0]).toHaveAttribute('type', 'date');
 
 		const timeInput = screen.getByLabelText('Time input');
 		expect(timeInput).toHaveAttribute('type', 'time');
@@ -54,7 +56,7 @@ describe('InputsDemo', () => {
 	});
 
 	it('renders text input variations with correct types', async () => {
-		await renderContainer(() => <InputsDemo />);
+		await render();
 
 		// Check text input variations
 		const emailInput = screen.getByLabelText('Email input');
@@ -79,7 +81,7 @@ describe('InputsDemo', () => {
 	});
 
 	it('renders miscellaneous input types correctly', async () => {
-		await renderContainer(() => <InputsDemo />);
+		await render();
 
 		// Check color pickers - verify label presence
 		const colorInputLabel = screen.getByText('Color input');
