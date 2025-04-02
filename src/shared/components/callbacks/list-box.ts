@@ -59,6 +59,15 @@ export const listBoxChange = createHandler('change', '$c-list-box__change', (eve
 	const listElm = getList(target);
 	if (!listElm) return;
 
+	// Multi-select = checkboxes, single-select = radio buttons. This naturally causes
+	// single-select to unselect a prior option but we need to sync aria-selected state too.
+	// too.
+	for (const prev of listElm.querySelectorAll<HTMLInputElement>(
+		'[role="option"][aria-selected="true"]:not(:checked)',
+	)) {
+		prev.setAttribute('aria-selected', 'false');
+	}
+
 	highlightInList(listElm, target);
 
 	const dispatcher = getControllingElement(listElm);
