@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { memoizeWeak } from '~/shared/utility/memoize/memoize-weak';
 
 describe('memoizeWeak', () => {

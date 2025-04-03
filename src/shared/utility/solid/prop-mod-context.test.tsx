@@ -1,5 +1,6 @@
 import { render } from '@solidjs/testing-library';
 import { type JSX } from 'solid-js';
+import { describe, expect, it } from 'vitest';
 
 import {
 	createPropModContext,

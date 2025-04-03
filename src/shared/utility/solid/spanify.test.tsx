@@ -1,4 +1,5 @@
 import { children, type JSX } from 'solid-js';
+import { describe, expect, it } from 'vitest';
 
 import { spanify } from '~/shared/utility/solid/spanify';
 import { renderContainer } from '~/shared/utility/test-utils/render';

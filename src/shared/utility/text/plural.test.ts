@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { plural, type PluralRules } from '~/shared/utility/text/plural';
 
 describe('plural', () => {

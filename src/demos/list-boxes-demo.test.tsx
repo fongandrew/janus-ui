@@ -1,4 +1,5 @@
 import { fireEvent, screen } from '@solidjs/testing-library';
+import { describe, expect, it } from 'vitest';
 
 import { renderImport } from '~/shared/utility/test-utils/render';
 

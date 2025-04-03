@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { LRUCache } from '~/shared/utility/lru-cache';
 
 describe('LRUCache', () => {

@@ -1,5 +1,6 @@
 import { fireEvent, render } from '@solidjs/testing-library';
 import { type JSX } from 'solid-js';
+import { describe, expect, it, vi } from 'vitest';
 
 import { bindProp, combineEventHandlers } from '~/shared/utility/solid/combine-event-handlers';
 

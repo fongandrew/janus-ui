@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { memoizeOne } from '~/shared/utility/memoize/memoize-one';
 
 describe('memoizeOne', () => {

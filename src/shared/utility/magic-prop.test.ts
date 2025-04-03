@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { createMagicProp } from '~/shared/utility/magic-prop';
 
 describe('createMagicProp', () => {

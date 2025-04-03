@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { findLastIndex } from '~/shared/utility/find-last-index';
 
 describe('findLastIndex', () => {

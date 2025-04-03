@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { normalizeText } from '~/shared/utility/normalize-text';
 
 describe('normalizeText', () => {

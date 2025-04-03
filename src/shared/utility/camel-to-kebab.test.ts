@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { camelToKebab } from '~/shared/utility/camel-to-kebab';
 
 describe('camelToKebab', () => {

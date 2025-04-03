@@ -1,5 +1,6 @@
 import { render } from '@solidjs/testing-library';
 import { type JSX } from 'solid-js';
+import { describe, expect, it, vi } from 'vitest';
 
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 

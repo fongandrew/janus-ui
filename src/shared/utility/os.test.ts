@@ -1,3 +1,5 @@
+import { afterEach, describe, expect, it } from 'vitest';
+
 import { isMac } from '~/shared/utility/os';
 
 describe('OS utility functions', () => {

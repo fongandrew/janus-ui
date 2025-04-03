@@ -1,4 +1,5 @@
 import { render, screen } from '@solidjs/testing-library';
+import { describe, expect, it, vi } from 'vitest';
 
 import {
 	FormatCurrency,

@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { setAttrs } from '~/shared/utility/attribute';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import {

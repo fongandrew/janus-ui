@@ -1,3 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { createTextMatcher } from '~/shared/utility/create-text-matcher';
 
 describe('createTextMatcher', () => {

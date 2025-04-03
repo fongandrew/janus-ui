@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { getScrollableParent } from '~/shared/utility/get-scrollable-parent';
 import { mount } from '~/shared/utility/test-utils/mount';
 

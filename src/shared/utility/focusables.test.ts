@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { firstFocusable, focusables } from '~/shared/utility/focusables';
 import { mountStr } from '~/shared/utility/test-utils/mount';
 

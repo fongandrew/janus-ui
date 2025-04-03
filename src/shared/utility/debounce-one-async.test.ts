@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { debounceOneAsync } from '~/shared/utility/debounce-one-async';
 
 describe('debounceOneAsync', () => {

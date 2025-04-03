@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { djb2Base36 } from '~/shared/utility/hash';
 
 describe('djb2Base36', () => {

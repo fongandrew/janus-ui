@@ -1,3 +1,5 @@
+import { describe, expect, it, vi } from 'vitest';
+
 import { randInt } from '~/shared/utility/random';
 
 describe('randInt', () => {

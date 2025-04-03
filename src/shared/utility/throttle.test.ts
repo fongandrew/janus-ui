@@ -1,3 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { throttle } from '~/shared/utility/throttle';
 
 describe('throttle', () => {

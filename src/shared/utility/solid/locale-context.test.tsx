@@ -1,4 +1,5 @@
 import { type Component } from 'solid-js';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { LocaleContext, useLocale, useT } from '~/shared/utility/solid/locale-context';
 import { renderContainer } from '~/shared/utility/test-utils/render';

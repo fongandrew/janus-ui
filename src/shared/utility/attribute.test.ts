@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { attrIsTruthy, attrNoConflict, setAttrs } from '~/shared/utility/attribute';
 
 describe('attrIsTruthy', () => {

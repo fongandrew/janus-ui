@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { isDialog, isInput, isTextInput } from '~/shared/utility/element-types';
 
 describe('element-types utility functions', () => {

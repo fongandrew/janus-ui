@@ -1,3 +1,5 @@
+import { afterEach } from 'vitest';
+
 let toRemove: HTMLElement[] = [];
 
 afterEach(() => {

@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { bindCallback, callBound } from '~/shared/utility/bound-callbacks';
 
 describe('bindCallback', () => {

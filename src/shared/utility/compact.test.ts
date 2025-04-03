@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { compact } from '~/shared/utility/compact';
 
 describe('compact', () => {

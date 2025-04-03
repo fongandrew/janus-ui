@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { combine } from '~/shared/utility/iterators';
 
 describe('combine', () => {

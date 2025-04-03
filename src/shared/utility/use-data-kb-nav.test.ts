@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { isKeyboardNavigatingActive, KB_NAV_ATTR } from '~/shared/utility/use-data-kb-nav';
 
 describe('use-data-kb-nav', () => {

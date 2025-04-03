@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { nextIndex } from '~/shared/utility/next-index';
 
 describe('nextIndex', () => {

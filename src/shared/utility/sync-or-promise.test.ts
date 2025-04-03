@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { syncOrPromise } from '~/shared/utility/sync-or-promise';
 
 describe('syncOrPromise', () => {

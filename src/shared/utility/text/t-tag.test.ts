@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { getT } from '~/shared/utility/text/t-tag';
 
 describe('t', () => {

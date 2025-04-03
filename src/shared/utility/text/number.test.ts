@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { formatCurrency, formatInteger, formatPercentage } from '~/shared/utility/text/number';
 
 describe('Number formatting', () => {

@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { createAuto, createAutoId } from '~/shared/utility/solid/auto-prop';
 import { renderContainer } from '~/shared/utility/test-utils/render';
 

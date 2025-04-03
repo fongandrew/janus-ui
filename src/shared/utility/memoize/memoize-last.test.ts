@@ -1,3 +1,5 @@
+import { describe, expect, it, vi } from 'vitest';
+
 import { memoizeLast } from '~/shared/utility/memoize/memoize-last';
 
 describe('memoizeLast', () => {

@@ -1,3 +1,5 @@
+import { describe, expect, it, vi } from 'vitest';
+
 import { mount } from '~/shared/utility/test-utils/mount';
 import { onUnmount } from '~/shared/utility/unmount-observer';
 

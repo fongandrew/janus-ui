@@ -1,3 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { createQueryEffect } from '~/shared/utility/create-query-effect';
 import { createDeferred, type Deferred } from '~/shared/utility/deferred';
 

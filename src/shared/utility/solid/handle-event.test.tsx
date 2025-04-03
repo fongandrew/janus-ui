@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import { type JSX } from 'solid-js';
+import { describe, expect, it, vi } from 'vitest';
 
 import { handleEvent } from '~/shared/utility/solid/handle-event';
 

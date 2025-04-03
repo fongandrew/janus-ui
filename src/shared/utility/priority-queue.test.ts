@@ -1,3 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { createDeferred } from '~/shared/utility/deferred';
 import { PriorityQueue } from '~/shared/utility/priority-queue';
 

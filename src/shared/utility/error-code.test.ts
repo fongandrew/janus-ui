@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { getErrorCode } from '~/shared/utility/error-code';
 
 describe('getErrorCode', () => {

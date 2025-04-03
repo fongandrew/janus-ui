@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { memoizeLRUMultiArg, memoizeLRUSingleArg } from '~/shared/utility/memoize/memoize-lru';
 
 describe('memoizeLRUSingleArg', () => {

@@ -1,4 +1,5 @@
 import { isServer } from 'solid-js/web';
+import { describe, expect, it } from 'vitest';
 
 import { createIncrSignal } from '~/shared/utility/solid/create-incr-signal';
 import { renderContainer } from '~/shared/utility/test-utils/render';
