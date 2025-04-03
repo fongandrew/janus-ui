@@ -8,25 +8,13 @@ import {
 	runAfterHideCallbacks,
 	runBeforeShowCallbacks,
 } from '~/shared/utility/callback-attrs/display';
+import { mockPseudoClass } from '~/shared/utility/test-utils/mock-pseudo-class';
 import { mount, mountStr } from '~/shared/utility/test-utils/mount';
 
 describe('display callbacks', () => {
 	beforeEach(() => {
-		const div = document.createElement('div');
-
-		// Verify these still aren't implemented yet before we mock it out
-		// See https://github.com/jsdom/jsdom/issues/3851
-		expect(() => div.closest(':modal')).toThrow();
-		expect(() => div.closest(':popover-open')).toThrow();
-
-		const closest = HTMLElement.prototype.closest;
-		vi.spyOn(HTMLElement.prototype, 'closest').mockImplementation(function (
-			this: any,
-			selector,
-		) {
-			// Doesn't have to be `:invalid`, just pick any pseudo-selector that makes sense
-			return closest.call(this, selector.replace(/(:modal|:popover-open)/g, ':invalid'));
-		});
+		mockPseudoClass(':modal', '[data-test-modal]');
+		mockPseudoClass(':popover-open', '[data-test-popover-open]');
 	});
 
 	describe.each([
