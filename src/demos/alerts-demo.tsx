@@ -28,7 +28,9 @@ export function AlertsDemo() {
 			<CardContent>
 				<div class="o-stack">
 					<ToggleBox id={infoId} data-testid="info-alert-container">
-						<InfoAlert data-testid="info-alert">This is an info alert with useful information</InfoAlert>
+						<InfoAlert data-testid="info-alert">
+							This is an info alert with useful information
+						</InfoAlert>
 					</ToggleBox>
 					<ToggleBox id={calloutId} data-testid="callout-container">
 						<Callout data-testid="callout">
@@ -37,13 +39,19 @@ export function AlertsDemo() {
 						</Callout>
 					</ToggleBox>
 					<ToggleBox id={successId} data-testid="success-alert-container">
-						<SuccessAlert data-testid="success-alert">Operation completed successfully</SuccessAlert>
+						<SuccessAlert data-testid="success-alert">
+							Operation completed successfully
+						</SuccessAlert>
 					</ToggleBox>
 					<ToggleBox id={warningId} data-testid="warning-alert-container">
-						<WarningAlert data-testid="warning-alert">Please review your input before proceeding</WarningAlert>
+						<WarningAlert data-testid="warning-alert">
+							Please review your input before proceeding
+						</WarningAlert>
 					</ToggleBox>
 					<ToggleBox id={dangerId} data-testid="danger-alert-container">
-						<DangerAlert data-testid="danger-alert">An error occurred while processing your request</DangerAlert>
+						<DangerAlert data-testid="danger-alert">
+							An error occurred while processing your request
+						</DangerAlert>
 					</ToggleBox>
 					<div class="o-group">
 						<Button
