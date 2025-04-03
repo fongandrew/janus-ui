@@ -7,20 +7,24 @@
 - **TypeScript**: Prefer type imports. Use strict type checking.
 - **Error Handling**: Avoid throwing errors in components. Use error boundaries.
 - **Browser Globals**: Don't use `window`/`document` directly. Use utility functions.
-- **Testing**:
+- **Unit Testing**:
+    - Use unit for simple utilities.
     - Use Vitest with `it()` (not `test()`).
     - Vitest helpers like `describe`, `it`, `expect`, and `vi.fn` must be imported from `vitest`.
     - We are not using Jest. Do not use Jest mocks.
-    - Colocate tests in same directory as source.
-    - When testing Solid JS components, render using the `renderContainer` helper in `~/shared/utility/test-utils/render`, which returns a promise of a container element with the rendered JSX as children.
-    - When updating input values, remember to call `fireEvent.change` since we rely heavily on change listeners.
-    - Avoid mocking as much as possible in favor of using JSDOM implementations of things. When asked to write tests, do not assume implementation is correct and suggest fixes if appropriate.
+    - Colocate unit tests in same directory as source with `*.test.ts(x)` extension.
+- **E2E Testing**:
+    - E2E tests are preferred for anything involving actual component rendering. Base components rely heavily on things not implemented in JSDOM.
+    - We use Playwright for E2E tests.
+    - Import Playwright helpers like `test` and `expect` from `@playwright/test`.
+    - Colocate E2E tests in same directory as source with `*.e2e.ts(x)` extension.
 
 Consult README.md for architecture details on SSR and progressive enhancement patterns.
 
 ## Commands
 - `npm run build`: Build for production
-- `npm run test`: Run all tests
+- `npm run test`: Run unit tests
+- `npm run test:e2e`: Run E2E tests
 - `npm run lint`: Run ESLint and StyleLint
 - `npm run eslint:fix` - Fix ESLint issues
 - `npm run stylelint:fix` - Fix StyleLint issues

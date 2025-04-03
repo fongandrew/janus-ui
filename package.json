@@ -15,12 +15,14 @@
     "stylelint": "stylelint \"src/**/*.css\"",
     "stylelint:fix": "stylelint --fix \"src/**/*.css\"",
     "test": "vitest run",
-    "test:ssr": "TEST_MODE=ssr vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test --project=chromium",
+    "test:e2e:all": "playwright test",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {
     "@eslint/js": "^9.16.0",
+    "@playwright/test": "^1.51.1",
     "@solidjs/testing-library": "^0.8.10",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/user-event": "^14.6.1",
