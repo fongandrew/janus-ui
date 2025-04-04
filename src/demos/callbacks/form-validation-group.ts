@@ -1,6 +1,18 @@
 import { createValidator } from '~/shared/utility/callback-attrs/validate';
 import { evtDoc } from '~/shared/utility/multi-view';
 
+/** Validates input value has no spaces */
+export const validateUserNameNoSpaces = createValidator(
+	'$p-form-validation-group__no-spaces',
+	(event: Event & { currentTarget: HTMLInputElement }) => {
+		const value = event.currentTarget.value;
+		if (value.includes(' ')) {
+			return 'Username cannot contain spaces';
+		}
+		return null;
+	},
+);
+
 /** Validates that password element matches value in element */
 export const matchesPassword = createValidator(
 	'$p-form-validation-group__matches',

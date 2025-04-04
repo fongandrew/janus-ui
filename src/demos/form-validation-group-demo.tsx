@@ -2,7 +2,7 @@ import { createSignal, createUniqueId, Show } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import { formOutputClear, formOutputWrite } from '~/demos/callbacks/form-output';
-import { matchesPassword } from '~/demos/callbacks/form-validation-group';
+import { matchesPassword, validateUserNameNoSpaces } from '~/demos/callbacks/form-validation-group';
 import {
 	Card,
 	CardContent,
@@ -89,6 +89,7 @@ export function FormValidationGroupDemo() {
 									onValidate={validateUserName}
 									autocomplete="username"
 									required
+									{...callbackAttrs(isServer && validateUserNameNoSpaces)}
 								/>
 							</LabelledInput>
 
