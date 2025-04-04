@@ -52,6 +52,15 @@ function AsyncFormDemo() {
 			throw new Error('Form submission failed (as requested)');
 		}
 
+		if (String(data.get(AsyncFormNames.name)).toLowerCase() === 'bob') {
+			return {
+				ok: false,
+				fieldErrors: {
+					name: 'We already have a Bob',
+				},
+			};
+		}
+
 		setFormData({
 			name: data.get(AsyncFormNames.name) as string,
 			message: data.get(AsyncFormNames.message) as string,
@@ -78,12 +87,14 @@ function AsyncFormDemo() {
 									name={AsyncFormNames.name}
 									autocomplete="none"
 									data-testid="name-input"
+									required
 								/>
 							</LabelledInput>
 							<LabelledInput label="Message">
 								<Textarea
 									name={AsyncFormNames.message}
 									data-testid="message-textarea"
+									required
 								/>
 							</LabelledInput>
 							<LabelledInline label="Force error">
