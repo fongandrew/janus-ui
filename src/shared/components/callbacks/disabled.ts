@@ -22,9 +22,14 @@ registerDocumentSetup((document) => {
 			if (event instanceof KeyboardEvent) {
 				// Need to allow tabbing off disabled element
 				if (event.key === 'Tab') return;
-				// For toolbars + radios, arrow key allows moving selection
+				// For toolbars, arrow key allows moving selection
 				// Exception for aria-haspopup elements since arrow means "open popup"
-				if (event.key.startsWith('Arrow') && !closestAriaDisabled.ariaHasPopup) return;
+				if (
+					event.target instanceof HTMLButtonElement &&
+					(event.key === 'ArrowLeft' || event.key === 'ArrowRight')
+				) {
+					return;
+				}
 			}
 			event.preventDefault();
 			event.stopImmediatePropagation();

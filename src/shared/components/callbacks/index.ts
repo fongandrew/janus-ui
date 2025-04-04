@@ -17,6 +17,7 @@ import * as optionList from '~/shared/components/callbacks/option-list';
 import * as scroll from '~/shared/components/callbacks/scroll';
 import * as select from '~/shared/components/callbacks/select';
 import * as sidebar from '~/shared/components/callbacks/sidebar';
+import * as slider from '~/shared/components/callbacks/slider';
 import * as tabs from '~/shared/components/callbacks/tabs';
 import * as toggle from '~/shared/components/callbacks/toggle';
 import * as toggleSwitch from '~/shared/components/callbacks/toggle-switch';
@@ -41,6 +42,7 @@ loadCallbacks(
 	scroll,
 	select,
 	sidebar,
+	slider,
 	tabs,
 	toggle,
 	toggleSwitch,

@@ -52,7 +52,7 @@ export function LabelledInput(props: LabelledInputProps) {
 	return (
 		<div {...rest} class={cx('c-label-stack', rest.class)}>
 			<LabelSpan id={labelId()}>{local.label}</LabelSpan>
-			{local.description ? (
+			{local.description || local.descriptionId ? (
 				<Description id={descriptionId()}>{local.description}</Description>
 			) : null}
 			<FormElementPropsProvider
@@ -62,7 +62,11 @@ export function LabelledInput(props: LabelledInputProps) {
 				// As of Dec 2024, aria-errormessage still isn't quite there in Voiceover at least,
 				// so using aria-describedby for error in addition to description
 				aria-describedby={(prev) =>
-					attrs(prev, props.description ? descriptionId() : undefined, errorId())
+					attrs(
+						prev,
+						props.description || props.descriptionId ? descriptionId() : undefined,
+						errorId(),
+					)
 				}
 				invalid={(prev) => !!local.errorMessage || prev}
 			>

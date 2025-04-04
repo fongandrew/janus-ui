@@ -5,6 +5,10 @@
 		@mixin t-overflow-x;
 		@mixin v-text-muted;
 
+		&:empty {
+			display: none;
+		}
+
 		.c-label-stack:not(:has(.t-label-stack--no-indent)) > & {
 			padding-inline: var(--v-space-xs);
 		}

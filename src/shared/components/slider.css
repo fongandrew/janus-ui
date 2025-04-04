@@ -53,6 +53,18 @@
 		}
 	}
 
+	.c-slider__range:disabled {
+		&::-webkit-slider-thumb {
+			cursor: unset;
+			background: var(--v-muted);
+		}
+
+		&::-moz-range-thumb {
+			cursor: unset;
+			background: var(--v-muted);
+		}
+	}
+
 	.c-slider__number {
 		@mixin t-no-focus-ring;
 

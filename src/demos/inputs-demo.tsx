@@ -1,3 +1,7 @@
+import { createSignal, createUniqueId } from 'solid-js';
+import { isServer } from 'solid-js/web';
+
+import { inputUpdateText } from '~/demos/callbacks/input';
 import {
 	Card,
 	CardContent,
@@ -18,6 +22,7 @@ import { Input } from '~/shared/components/input';
 import { LabelledInput } from '~/shared/components/labelled-control';
 import { Password } from '~/shared/components/password';
 import { Slider } from '~/shared/components/slider';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
 function InputStates() {
 	return (
@@ -45,7 +50,7 @@ function InputStates() {
 
 function DateTimeInputs() {
 	return (
-		<Card>
+		<Card id="date-time-inputs-demo">
 			<CardHeader>
 				<CardTitle>Date / time inputs</CardTitle>
 				<CardDescription>Text input fields for selecting dates and times</CardDescription>
@@ -75,11 +80,11 @@ function DateTimeInputs() {
 
 function TextInputVariations() {
 	return (
-		<Card>
+		<Card id="text-input-variations-demo">
 			<CardHeader>
 				<CardTitle>Text Inputs</CardTitle>
 				<CardDescription>
-					Text input fields with built-in validation or semnatic differences
+					Text input fields with built-in validation or semantic differences
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
@@ -109,8 +114,11 @@ function TextInputVariations() {
 }
 
 function MiscInputVariations() {
+	const sliderDescriptionId = createUniqueId();
+	const [sliderValue, setSliderValue] = createSignal<number | null>(null);
+
 	return (
-		<Card>
+		<Card id="misc-input-variations-demo">
 			<CardHeader>
 				<CardTitle>Miscellaneous inputs</CardTitle>
 				<CardDescription>Non-textual inputs</CardDescription>
@@ -131,8 +139,16 @@ function MiscInputVariations() {
 						<Input type="file" disabled />
 					</LabelledInput>
 
-					<LabelledInput label="Range / slider input">
-						<Slider unit="%" />
+					<LabelledInput
+						label="Range / slider input"
+						description={sliderValue() !== null ? `Value: ${sliderValue()}` : undefined}
+						descriptionId={sliderDescriptionId}
+					>
+						<Slider
+							unit="%"
+							onValue={setSliderValue}
+							{...callbackAttrs(isServer && inputUpdateText(sliderDescriptionId))}
+						/>
 					</LabelledInput>
 					<LabelledInput label="Range / slider input (disabled)">
 						<Slider unit="%" disabled />

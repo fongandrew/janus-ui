@@ -30,14 +30,18 @@ export function LabelledAction(props: LabelledInputProps) {
 		<div {...rest} class={cx('c-labelled-action', props.class)}>
 			<div class="c-labelled-action__label">
 				<LabelSpan id={labelId()}>{local.label}</LabelSpan>
-				{local.description ? (
+				{local.description || local.descriptionId ? (
 					<Description id={descriptionId()}>{local.description}</Description>
 				) : null}
 				<ErrorMessage id={errorId()}>{local.errorMessage}</ErrorMessage>
 			</div>
 			<FormElementPropsProvider
 				aria-describedby={(prev) =>
-					attrs(prev, props.description ? descriptionId() : null, errorId())
+					attrs(
+						prev,
+						props.description || props.descriptionId ? descriptionId() : null,
+						errorId(),
+					)
 				}
 				aria-labelledby={(prev) => attrs(prev, labelId())}
 			>
