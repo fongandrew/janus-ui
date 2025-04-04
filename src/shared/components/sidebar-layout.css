@@ -32,9 +32,8 @@
 	.c-sidebar {
 		@mixin v-colors-card;
 		@mixin t-border-right;
-		@mixin t-transition-slide;
 		@mixin t-transition-duration var(--v-animation-duration-md);
-		@mixin t-slide-out -100%, 0; /* left */
+		@mixin t-transition-slide-out -100%, 0; /* left */
 
 		container-type: inline-size;
 		display: flex;
@@ -51,12 +50,11 @@
 	}
 
 	.c-sidebar[data-c-sidebar__state='open'] {
-		@mixin t-slide-in;
+		@mixin t-transition-slide-in;
 	}
 
 	.c-sidebar__overlay {
-		@mixin t-transition-fade;
-		@mixin t-fade-out;
+		@mixin t-transition-fade-out;
 
 		/* Sync with sidebar slide duration */
 		@mixin t-transition-duration var(--v-animation-duration-md);
@@ -68,7 +66,7 @@
 	}
 
 	.c-sidebar-layout:has(.c-sidebar[data-c-sidebar__state='open']) .c-sidebar__overlay {
-		@mixin t-fade-in;
+		@mixin t-transition-fade-in;
 	}
 
 	.c-sidebar__header,
@@ -159,7 +157,7 @@
 		/* Default open on desktop */
 		.c-sidebar,
 		.c-sidebar[data-c-sidebar__state='open'] {
-			@mixin t-slide-in;
+			@mixin t-transition-slide-in;
 
 			display: flex;
 			width: var(--v-sidebar-width);
@@ -183,12 +181,12 @@
 
 		.c-sidebar__overlay,
 		.c-sidebar-layout:has(.c-sidebar[data-c-sidebar__state='open']) .c-sidebar__overlay {
-			@mixin t-fade-out;
+			@mixin t-transition-fade-out;
 		}
 
 		/* Can be explicitly closed on desktop */
 		.c-sidebar[data-c-sidebar__state='closed'] {
-			@mixin t-slide-out -100%, 0; /* left */
+			@mixin t-transition-slide-out -100%, 0; /* left */
 
 			position: fixed;
 		}

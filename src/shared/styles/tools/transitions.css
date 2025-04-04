@@ -21,48 +21,52 @@
 	@mixin t-transition single-arg(color, background-color, border-color, $(properties));
 }
 
-/* Combine a transition with a visibility flip (e.g. to remove focus, find, etc.) */
-@define-mixin t-transition-visibility $property, $timing: cubic-bezier(0.4, 0, 0.2, 1) {
+/* Combine a transition with a visibility flip off (e.g. to remove focus, find, etc.) */
+@define-mixin t-transition-visibility-hidden $property, $timing: cubic-bezier(0.4, 0, 0.2, 1) {
+	visibility: hidden;
 	transition: var(
 		--v-animation-none,
-		visibility var(--v-transition-duration),
+		visibility var(--v-transition-duration) step-end,
 		$(property) var(--v-transition-duration) $(timing)
 	);
 }
 
 /*
-	Combine opacity transition with visibility change (to remove focus, find, etc.)
-	Opacity transitions should use a linear timing function
+	Combine a transition with a visibility flip on. Separate from above because
+	we want to use step-start to make this visible immediately so it doesn't
+	interfere with focus, etc.
 */
-@define-mixin t-transition-fade {
-	@mixin t-transition-visibility opacity, linear;
+@define-mixin t-transition-visibility-visible $property, $timing: cubic-bezier(0.4, 0, 0.2, 1) {
+	visibility: visible;
+	transition: var(
+		--v-animation-none,
+		visibility var(--v-transition-duration) step-start,
+		$(property) var(--v-transition-duration) $(timing)
+	);
 }
 
-/* Fade out, combine with with t-transition-fade */
-@define-mixin t-fade-out {
+@define-mixin t-transition-fade-out {
+	@mixin t-transition-visibility-hidden opacity;
+
 	opacity: 0;
-	visibility: hidden;
 }
 
-/* Fade in, combine with with t-transition-fade */
-@define-mixin t-fade-in {
+@define-mixin t-transition-fade-in {
+	@mixin t-transition-visibility-visible opacity;
+
 	opacity: 1;
-	visibility: visible;
 }
 
-/* Transition for sliding in and out of view */
-@define-mixin t-transition-slide {
-	@mixin t-transition-visibility transform;
-}
+@define-mixin t-transition-slide-in {
+	@mixin t-transition-visibility-visible transform;
 
-@define-mixin t-slide-in {
 	transform: translate(0, 0);
-	visibility: visible;
 }
 
-@define-mixin t-slide-out $x: 0, $y: -100% {
+@define-mixin t-transition-slide-out $x: 0, $y: -100% {
+	@mixin t-transition-visibility-hidden transform;
+
 	transform: translate($x, $y);
-	visibility: hidden;
 }
 
 @define-mixin t-transition-fade-transform {
@@ -74,15 +78,28 @@
 	);
 }
 
-@define-mixin t-fade-slide-in {
-	@mixin t-fade-in;
-	@mixin t-slide-in;
+@define-mixin t-transition-fade-slide-in {
+	opacity: 1;
+	transform: translate(0, 0);
+	visibility: visible;
+	transition: var(
+		--v-animation-none,
+		visibility var(--v-transition-duration) step-start,
+		opacity var(--v-transition-duration) linear,
+		transform var(--v-transition-duration) cubic-bezier(0.4, 0, 0.2, 1)
+	);
 }
 
-@define-mixin t-fade-slide-out $x: 0, $y: -100% {
-	@mixin t-fade-out;
-
+@define-mixin t-transition-fade-slide-out $x: 0, $y: -100% {
+	opacity: 0;
 	transform: translate($x, $y);
+	visibility: hidden;
+	transition: var(
+		--v-animation-none,
+		visibility var(--v-transition-duration) step-end,
+		opacity var(--v-transition-duration) linear,
+		transform var(--v-transition-duration) cubic-bezier(0.4, 0, 0.2, 1)
+	);
 }
 
 @layer variables {

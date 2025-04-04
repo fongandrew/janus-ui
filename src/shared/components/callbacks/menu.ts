@@ -21,8 +21,8 @@ export const menuKeyDown = createHandler('keydown', '$c-menu__keydown', function
 	if (!listElm) return;
 
 	// WCAG guideline says tab closes menu if in popover
+	const popover = target.closest(':popover-open') as HTMLElement | null;
 	if (event.key === 'Tab') {
-		const popover = target.closest(':popover-open') as HTMLElement | null;
 		popover?.hidePopover();
 
 		// Remove highlight so next time arrow keys go to beginning (or end)
@@ -30,9 +30,11 @@ export const menuKeyDown = createHandler('keydown', '$c-menu__keydown', function
 		return;
 	}
 
-	// If not moving focus out of menu, then focus on highlighted item
-	const highlighted = getListHighlighted(listElm);
-	if (highlighted) highlighted.focus();
+	// If not moving focus out of menu (and popover still open), then focus on highlighted item
+	if (popover?.matches(':popover-open')) {
+		const highlighted = getListHighlighted(listElm);
+		if (highlighted) highlighted.focus();
+	}
 });
 
 /**
@@ -47,9 +49,9 @@ export const menuCloseOnSelect = createHandler('click', '$c-menu__close-on-selec
 });
 
 /**
- * Autofocus first menu item on menu open
+ * Maybe set autofocus on first menu item on menu open
  */
-export const menuFocusOnOpen = createHandler('beforetoggle', '$c-menu__focus-on-open', (event) => {
+export const menuAutoFocus = createHandler('beforetoggle', '$c-menu__autofocus', (event) => {
 	if ((event as ToggleEvent & { currentTarget: HTMLElement }).newState !== 'open') return;
 
 	const dropdown = event.target as HTMLElement;
@@ -79,19 +81,20 @@ export const menuTriggerKeyDown = createHandler('keydown', '$c-menu__trigger-key
 		} else {
 			menuTriggerAutoFocus(event.target as HTMLButtonElement, 'last');
 		}
+
 		const popover = (event.target as HTMLButtonElement)
 			.popoverTargetElement as HTMLElement | null;
-		popover?.showPopover();
+		if (!popover) return;
+
+		event.preventDefault();
+		popover.showPopover();
 	}
 });
 
 /**
  * Helper to autofocus item after trigger interacted with
  */
-export const menuTriggerAutoFocus = (
-	trigger: HTMLButtonElement,
-	position: 'first' | 'last' = 'first',
-) => {
+const menuTriggerAutoFocus = (trigger: HTMLButtonElement, position: 'first' | 'last' = 'first') => {
 	const popover = trigger.popoverTargetElement as HTMLElement;
 	if (!popover) return;
 

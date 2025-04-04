@@ -15,8 +15,7 @@
 
 @layer components {
 	.c-modal {
-		@mixin t-transition-fade;
-		@mixin t-fade-out;
+		@mixin t-transition-fade-out;
 
 		position: fixed;
 		inset: 0;
@@ -40,7 +39,7 @@
 		}
 
 		&:modal {
-			@mixin t-fade-in;
+			@mixin t-transition-fade-in;
 
 			/*
 				Duplicates above in case we somehow get to modal state without having set

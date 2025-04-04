@@ -3,8 +3,8 @@ import { createUniqueId } from 'solid-js';
 
 import { dropdownCloseOnBlur } from '~/shared/components/callbacks/dropdown';
 import {
+	menuAutoFocus,
 	menuCloseOnSelect,
-	menuFocusOnOpen,
 	menuKeyDown,
 	menuTriggerClick,
 	menuTriggerKeyDown,
@@ -47,7 +47,7 @@ export function Menu(props: MenuProps) {
 	return (
 		<DropdownContent
 			{...rest}
-			{...callbackAttrs(props, menuFocusOnOpen, dropdownCloseOnBlur)}
+			{...callbackAttrs(props, menuAutoFocus, dropdownCloseOnBlur)}
 			{...extendHandler(props, 'onClick', handleClick)}
 		>
 			<OptionList role="menu" {...callbackAttrs(menuKeyDown, menuCloseOnSelect)}>

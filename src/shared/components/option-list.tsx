@@ -60,7 +60,7 @@ export function OptionListButton(props: JSX.ButtonHTMLAttributes<HTMLButtonEleme
 	const id = createAutoId(props);
 	const resolved = children(() => props.children);
 	return (
-		<button {...props} id={id()} role="option" class={cx('c-option-list__item', props.class)}>
+		<button role="option" {...props} id={id()} class={cx('c-option-list__item', props.class)}>
 			{spanify(resolved.toArray())}
 		</button>
 	);

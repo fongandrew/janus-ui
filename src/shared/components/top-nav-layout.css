@@ -65,13 +65,12 @@
 		@mixin v-colors-card;
 		@mixin o-input-container-box;
 		@mixin t-border-left;
-		@mixin t-transition-slide;
 
 		/* Longer duration because sidebar is a large-ish element. */
 		@mixin t-transition-duration var(--v-animation-duration-md);
 
 		/* Nav links hidden by default on mobile */
-		@mixin t-slide-out 100%, 0; /* right */
+		@mixin t-transition-slide-out 100%, 0; /* right */
 
 		position: fixed;
 		top: 0;
@@ -89,13 +88,12 @@
 		}
 
 		&[data-c-sidebar__state='open'] {
-			@mixin t-slide-in;
+			@mixin t-transition-slide-in;
 		}
 	}
 
 	.c-top-nav__overlay {
-		@mixin t-transition-fade;
-		@mixin t-fade-out;
+		@mixin t-transition-fade-out;
 
 		/* Sync duration with sidebar */
 		@mixin t-transition-duration var(--v-animation-duration-md);
@@ -106,7 +104,7 @@
 		background-color: var(--v-backdrop);
 
 		.c-top-nav-layout:has(.c-top-nav__list[data-c-sidebar__state='open']) & {
-			@mixin t-fade-in;
+			@mixin t-transition-fade-in;
 		}
 	}
 
@@ -149,7 +147,7 @@
 			}
 
 			.c-top-nav__list {
-				@mixin t-slide-in;
+				@mixin t-transition-slide-in;
 
 				display: block;
 				border: 0;
