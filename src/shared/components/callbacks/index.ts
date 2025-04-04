@@ -1,6 +1,7 @@
 import '~/shared/components/callbacks/disabled';
 import '~/shared/utility/callback-attrs/index';
 
+import * as checkbox from '~/shared/components/callbacks/checkbox';
 import * as codeBlock from '~/shared/components/callbacks/code-block';
 import * as comboBox from '~/shared/components/callbacks/combo-box';
 import * as dropdown from '~/shared/components/callbacks/dropdown';
@@ -24,6 +25,7 @@ import * as topNav from '~/shared/components/callbacks/top-nav';
 import { loadCallbacks } from '~/shared/utility/callback-attrs/load-callbacks';
 
 loadCallbacks(
+	checkbox,
 	codeBlock,
 	comboBox,
 	dropdown,

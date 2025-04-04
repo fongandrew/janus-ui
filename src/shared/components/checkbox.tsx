@@ -2,10 +2,12 @@ import cx from 'classix';
 import { Check, Minus } from 'lucide-solid';
 import { splitProps } from 'solid-js';
 
+import { checkboxEnter } from '~/shared/components/callbacks/checkbox';
 import {
 	type FormElementProps,
 	mergeFormElementProps,
 } from '~/shared/components/form-element-props';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
 export interface CheckboxProps extends Omit<FormElementProps<'input'>, 'type'> {
 	/**
@@ -42,6 +44,7 @@ export function Checkbox(props: CheckboxProps) {
 					type="checkbox"
 					checked={local.checked}
 					{...formProps}
+					{...callbackAttrs(formProps, checkboxEnter)}
 					ref={(el) => {
 						// Set indeterminate state on the input element
 						if (el) el.indeterminate = local.indeterminate ?? false;

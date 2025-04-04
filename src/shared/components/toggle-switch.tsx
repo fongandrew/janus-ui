@@ -1,7 +1,8 @@
 import cx from 'classix';
 import { splitProps } from 'solid-js';
 
-import { toggleSwitchChange, toggleSwitchEnter } from '~/shared/components/callbacks/toggle-switch';
+import { checkboxEnter } from '~/shared/components/callbacks/checkbox';
+import { toggleSwitchChange } from '~/shared/components/callbacks/toggle-switch';
 import { handleClick } from '~/shared/components/checkbox';
 import {
 	type FormElementProps,
@@ -23,7 +24,7 @@ export function ToggleSwitch(props: ToggleSwitchProps) {
 				aria-checked={props.checked}
 				aria-readonly={props.readOnly}
 				{...formProps}
-				{...callbackAttrs(props, toggleSwitchChange, toggleSwitchEnter)}
+				{...callbackAttrs(props, checkboxEnter, toggleSwitchChange)}
 			/>
 			<div class="c-toggle-switch__thumb" />
 		</div>

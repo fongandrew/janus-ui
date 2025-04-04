@@ -27,7 +27,7 @@ export function CheckboxesDemo() {
 					</Label>
 					<Label>
 						<Checkbox
-							name="indetermine"
+							name="indeterminate"
 							indeterminate
 							data-testid="indeterminate-checkbox"
 						/>{' '}
