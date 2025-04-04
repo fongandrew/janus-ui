@@ -10,7 +10,7 @@ export default defineConfig({
 	testMatch: '**/*.e2e.[tj]s?(x)',
 
 	// Reporter to use
-	reporter: [['html'], ['list']],
+	reporter: [['html', { open: 'never' }], ['list']],
 
 	// Each test is given 30 seconds
 	timeout: 30000,
