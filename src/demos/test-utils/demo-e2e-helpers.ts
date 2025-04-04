@@ -7,32 +7,35 @@ import { expect, type Locator, type Page, test } from '@playwright/test';
  * @param id The HTML ID of the demo section
  * @param fn The test function to run, which receives a locator function
  */
-export function describeComponent(id: string, fn: (locator: () => Locator) => void): void;
+export function describeComponent(
+	id: string,
+	fn: (locator: () => Locator, page: string) => void,
+): void;
 export function describeComponent(
 	pages: string[],
 	id: string,
-	fn: (locator: () => Locator) => void,
+	fn: (locator: () => Locator, page: string) => void,
 ): void;
 export function describeComponent(
-	idOrPages: string | string[],
-	idOrFn: string | ((locator: () => Locator) => void),
-	fn?: (locator: () => Locator) => void,
+	idOrPaths: string | string[],
+	idOrFn: string | ((locator: () => Locator, page: string) => void),
+	fn?: (locator: () => Locator, page: string) => void,
 ): void {
 	// By default, test both main component page and SSR specific one
-	const pages = Array.isArray(idOrPages) ? idOrPages : ['/', '/ssr'];
-	const id = typeof idOrPages === 'string' ? idOrPages : (idOrFn as string);
+	const paths = Array.isArray(idOrPaths) ? idOrPaths : ['/', '/ssr'];
+	const id = typeof idOrPaths === 'string' ? idOrPaths : (idOrFn as string);
 	const testFn = typeof idOrFn === 'function' ? idOrFn : fn;
 	if (!testFn) return;
 
-	for (const page of pages) {
-		test.describe(`${page}#${id}`, () => {
+	for (const path of paths) {
+		test.describe(`${path}#${id}`, () => {
 			let locator: Locator;
 
 			test.beforeEach(async ({ page }) => {
-				locator = await navigateToDemo(page, id);
+				locator = await navigateToDemo(page, path, id);
 			});
 
-			testFn(() => locator);
+			testFn(() => locator, path);
 		});
 	}
 }
@@ -43,9 +46,8 @@ export function describeComponent(
  * @param demoId The HTML ID of the demo section
  * @returns The demo container locator
  */
-export async function navigateToDemo(page: Page, demoId: string): Promise<Locator> {
-	// Go to the main demo page
-	await page.goto('/');
+export async function navigateToDemo(page: Page, path: string, demoId: string): Promise<Locator> {
+	await page.goto(path);
 
 	// Find the demo element and scroll to it
 	const demoContainer = page.locator(`#${demoId}`);
