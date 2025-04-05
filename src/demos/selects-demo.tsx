@@ -39,11 +39,13 @@ function SelectsDemo() {
 						label="Single selection"
 						description={`Selected: ${Array.from(value()).join(', ') || 'None'}`}
 						descriptionId={descriptionId1}
+						data-testid="single-selection-container"
 					>
 						<Select
 							placeholder="Select a fruit..."
 							values={value()}
 							onValues={setValue}
+							data-testid="single-selection"
 							{...callbackAttrs(isServer && listBoxUpdateText(descriptionId1))}
 						>
 							<ListBoxItem value="apple">Apple</ListBoxItem>
@@ -56,11 +58,13 @@ function SelectsDemo() {
 						label="Single selection with initial value"
 						description={`Selected: ${Array.from(withInitValue()).join(', ') || 'None'}`}
 						descriptionId={descriptionId2}
+						data-testid="initial-value-container"
 					>
 						<Select
 							placeholder="Select a fruit..."
 							values={withInitValue()}
 							onValues={setWithInitValue}
+							data-testid="initial-value-selection"
 							{...callbackAttrs(isServer && listBoxUpdateText(descriptionId2))}
 						>
 							<ListBoxItem value="apple">Apple</ListBoxItem>
@@ -74,6 +78,7 @@ function SelectsDemo() {
 						description={`Selected: ${Array.from(multiValue()).join(', ') || 'None'}`}
 						descriptionId={descriptionId3}
 						errorMessage={multiValue().has('red') ? "Don't pick red." : null}
+						data-testid="multiple-selection-container"
 					>
 						<Select
 							aria-invalid={multiValue().has('red')}
@@ -81,6 +86,7 @@ function SelectsDemo() {
 							values={multiValue()}
 							onValues={setMultiValue}
 							multiple
+							data-testid="multiple-selection"
 							{...callbackAttrs(
 								isServer && listBoxNoRed,
 								isServer && listBoxUpdateText(descriptionId3),
@@ -100,11 +106,13 @@ function SelectsDemo() {
 						label="Long selection list"
 						description={`Selected: ${Array.from(longValue()).join(', ') || 'None'}`}
 						descriptionId={descriptionId4}
+						data-testid="long-selection-container"
 					>
 						<Select
 							placeholder="Select an option..."
 							values={longValue()}
 							onValues={setLongValue}
+							data-testid="long-selection"
 							{...callbackAttrs(isServer && listBoxUpdateText(descriptionId4))}
 						>
 							<For each={[...Array(100).keys()]}>
@@ -113,8 +121,15 @@ function SelectsDemo() {
 						</Select>
 					</LabelledInput>
 
-					<LabelledInput label="Disabled selection">
-						<Select disabled values={new Set(['fixed'])}>
+					<LabelledInput
+						label="Disabled selection"
+						data-testid="disabled-selection-container"
+					>
+						<Select
+							disabled
+							values={new Set(['fixed'])}
+							data-testid="disabled-selection"
+						>
 							<ListBoxItem value="fixed">Can't change me</ListBoxItem>
 							<ListBoxItem value="different">Can't pick me</ListBoxItem>
 						</Select>
