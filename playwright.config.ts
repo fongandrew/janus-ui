@@ -12,8 +12,8 @@ export default defineConfig({
 	// Reporter to use
 	reporter: [['html', { open: 'never' }], ['list']],
 
-	// Each test is given 30 seconds
-	timeout: 30000,
+	// Give CI a bit more time, fail faster locally to make dev less annoying
+	timeout: isCI ? 30000 : 10000,
 
 	// Fail the build on CI if you accidentally left test.only in the source code.
 	forbidOnly: !!isCI,
