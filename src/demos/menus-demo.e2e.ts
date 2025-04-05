@@ -73,4 +73,26 @@ describeComponent('menus-demo', (getContainer) => {
 		await page.keyboard.press('Escape');
 		await expect(menu).not.toBeVisible();
 	});
+
+	test('text matching works in menu', async ({ page }) => {
+		const container = getContainer();
+
+		const menuButton = container.getByRole('button', { name: 'Menu with Groups' });
+		await menuButton.focus();
+		await page.keyboard.press('ArrowDown');
+
+		// Menu should be visible
+		const menu = container.getByRole('menu');
+		await expect(menu).toBeVisible();
+
+		// Type to highlight
+		await page.keyboard.press('p');
+		await expect(menu.locator('[value="paste"]')).toHaveAttribute('data-c-option-list__active');
+		await page.keyboard.press('Enter');
+
+		// Menu should be closed after selection
+		await expect(menu).not.toBeVisible();
+		const output = container.locator('output');
+		await expect(output).toContainText('Selected: paste');
+	});
 });
