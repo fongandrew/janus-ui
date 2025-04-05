@@ -22,13 +22,21 @@ registerDocumentSetup((document) => {
 			if (event instanceof KeyboardEvent) {
 				// Need to allow tabbing off disabled element
 				if (event.key === 'Tab') return;
-				// For toolbars, arrow key allows moving selection
-				// Exception for aria-haspopup elements since arrow means "open popup"
-				if (
-					event.target instanceof HTMLButtonElement &&
-					(event.key === 'ArrowLeft' || event.key === 'ArrowRight')
-				) {
-					return;
+
+				if (event.key.startsWith('Arrow') || event.key === 'Home' || event.key === 'End') {
+					// Allow arrow keys to move focus off toolbar (unless popup menu)
+					const isToolbar = closestAriaDisabled.getAttribute('role') === 'toolbar';
+					if (isToolbar) {
+						const hasAriaPopup = closestAriaDisabled.getAttribute('aria-haspopup');
+						if (!hasAriaPopup || hasAriaPopup === 'false') return;
+						return event.key !== 'ArrowDown' && event.key !== 'ArrowUp';
+					}
+
+					// Allow arrow keys to move focus off radio group
+					const isRadio =
+						closestAriaDisabled.getAttribute('role') === 'radio' ||
+						(closestAriaDisabled as HTMLInputElement).type === 'radio';
+					if (isRadio) return;
 				}
 			}
 			event.preventDefault();

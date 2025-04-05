@@ -37,7 +37,7 @@ function RadioGroupsDemo() {
 						{...callbackAttrs(isServer && formChangeOutputWrite(outputId))}
 					>
 						<Label>
-							<Radio value="default" /> Default radio
+							<Radio value="first" /> First radio
 						</Label>
 						<Label>
 							<Radio value="checked" /> Checked radio
@@ -56,10 +56,10 @@ function RadioGroupsDemo() {
 					<LabelledInput label="Labelled radio group" description="Some description">
 						<RadioGroup name="demo2">
 							<Label>
-								<Radio value="default" /> Default radio
+								<Radio value="a" /> Radio Option A
 							</Label>
 							<Label>
-								<Radio value="checked" /> Checked radio
+								<Radio value="b" /> Radio Option B
 							</Label>
 						</RadioGroup>
 					</LabelledInput>
