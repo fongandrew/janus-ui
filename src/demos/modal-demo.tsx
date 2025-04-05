@@ -41,7 +41,7 @@ function ControlledModal() {
 	return (
 		<>
 			<Button onClick={() => setIsOpen(true)}>Controlled Modal</Button>
-			<Modal open={isOpen()} onClose={() => setIsOpen(false)}>
+			<Modal open={isOpen()} onClose={() => setIsOpen(false)} data-testid="controlled-modal">
 				<ModalTitle>Example Modal</ModalTitle>
 				<ModalContent>
 					<p>Click outside or the close button to dismiss</p>
@@ -61,44 +61,11 @@ function TriggeredModal() {
 			<ModalOpenTrigger targetId={dialogId}>
 				<Button>Triggered Modal</Button>
 			</ModalOpenTrigger>
-			<Modal id={dialogId}>
+			<Modal id={dialogId} data-testid="triggered-modal">
 				<ModalTitle>Example Modal</ModalTitle>
 				<ModalContent>
 					<p>Click outside or the close button to dismiss</p>
 				</ModalContent>
-				<ModalFooter>
-					<ModalCloseButton />
-				</ModalFooter>
-			</Modal>
-		</>
-	);
-}
-
-function LongModal() {
-	const dialogId = createUniqueId();
-	const manyParagraphs = [];
-	for (let i = 0; i < 20; i++) {
-		manyParagraphs.push(
-			<p>
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eu porttitor
-				leo. Vestibulum in gravida felis. Nulla eleifend vel massa in vestibulum. Curabitur
-				nisl ex, venenatis ut tempus nec, rhoncus pretium neque. Nullam dictum, ligula ut
-				faucibus efficitur, lacus elit lobortis ante, eget volutpat ex felis vitae dolor.
-				Maecenas enim sapien, bibendum a porttitor cursus, pharetra eget sem. Nulla sed
-				tincidunt ligula. Maecenas in libero eget ligula tincidunt fermentum. Nunc arcu
-				nulla, congue sit amet ultricies ac, scelerisque eget enim. Sed id neque sem.
-			</p>,
-		);
-	}
-
-	return (
-		<>
-			<ModalOpenTrigger targetId={dialogId}>
-				<Button>Open Modal (Long)</Button>
-			</ModalOpenTrigger>
-			<Modal id={dialogId}>
-				<ModalTitle>Example Modal</ModalTitle>
-				<ModalContent>{manyParagraphs}</ModalContent>
 				<ModalFooter>
 					<ModalCloseButton />
 				</ModalFooter>
@@ -138,7 +105,7 @@ function FormModal(props: { outputId: string }) {
 			<ModalOpenTrigger targetId={formDialogId}>
 				<Button>Open Modal (Form)</Button>
 			</ModalOpenTrigger>
-			<Modal id={formDialogId}>
+			<Modal id={formDialogId} data-testid="form-modal">
 				<ModalTitle>Form Example</ModalTitle>
 				<FormContextProvider>
 					<ModalFormContent
@@ -147,20 +114,20 @@ function FormModal(props: { outputId: string }) {
 						{...callbackAttrs(isServer && formOutputWrite(props.outputId))}
 					>
 						<LabelledInput label="Name">
-							<Input name={FormNames.name} required />
+							<Input name={FormNames.name} />
 						</LabelledInput>
 						<LabelledInput label="Email">
-							<Input name={FormNames.email} type="email" required />
+							<Input name={FormNames.email} type="email" />
 						</LabelledInput>
 						<LabelledInput label="How did you hear about us?">
-							<Select placeholder="Select an option" required>
+							<Select placeholder="Select an option">
 								<ListBoxItem value="friend">Friends & family</ListBoxItem>
 								<ListBoxItem value="aliens">Space aliens</ListBoxItem>
 								<ListBoxItem value="ads">Advertising</ListBoxItem>
 							</Select>
 						</LabelledInput>
 						<LabelledInput label="Message">
-							<Textarea name={FormNames.message} required />
+							<Textarea name={FormNames.message} />
 						</LabelledInput>
 						<LabelledInline label="Agree to the terms of service?">
 							<Checkbox name={FormNames.terms} required />
@@ -217,7 +184,7 @@ function ScrollableForm(props: { outputId: string }) {
 			<ModalOpenTrigger targetId={formId}>
 				<Button>Open Form Modal (Scrollable)</Button>
 			</ModalOpenTrigger>
-			<Modal id={formId}>
+			<Modal id={formId} data-testid="scrollable-form-modal">
 				<ModalTitle>Form Example</ModalTitle>
 				<FormContextProvider>
 					<ModalFormContent
@@ -258,7 +225,7 @@ function AsyncForm(props: { outputId: string }) {
 			<ModalOpenTrigger targetId={dialogId}>
 				<Button>Open Modal (Async Form)</Button>
 			</ModalOpenTrigger>
-			<Modal id={dialogId}>
+			<Modal id={dialogId} data-testid="async-form-modal">
 				<ModalTitle>Async Form Example</ModalTitle>
 				<FormContextProvider>
 					<ModalFormContent
@@ -297,7 +264,6 @@ function ModalDemo() {
 				<div class="o-group">
 					{!isServer && <ControlledModal />}
 					<TriggeredModal />
-					<LongModal />
 					<FormModal outputId={outputId} />
 					<ScrollableForm outputId={outputId} />
 					<AsyncForm outputId={outputId} />

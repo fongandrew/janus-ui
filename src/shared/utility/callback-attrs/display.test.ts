@@ -81,7 +81,7 @@ describe('display callbacks', () => {
 			const child = container.querySelector('#child') as HTMLElement;
 			setAttrs(child, callbackAttrs(callback2));
 
-			runCallbacks(container);
+			runCallbacks(parent);
 
 			expect(parentCallback).toHaveBeenCalledTimes(1);
 			expect(childCallback).not.toHaveBeenCalled();

@@ -44,7 +44,7 @@ function runContainerCallbacks(
 		const closestVisBoundary = element.closest<HTMLElement>(
 			'[aria-hidden="true"],dialog:not(:modal),[popover]:not(:popover-open)',
 		);
-		if (!closestVisBoundary || element === closestVisBoundary) {
+		if (!closestVisBoundary || closestVisBoundary === container) {
 			for (const callback of registry.iter(element)) {
 				callback(element, container);
 			}
