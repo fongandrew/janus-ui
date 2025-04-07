@@ -114,16 +114,23 @@ export const selectFocusOut = createHandler('focusout', '$c-select__focusout', (
  */
 export const selectCloseOnClick = createHandler('click', '$c-select__close-on-click', (event) => {
 	const target = event.target as HTMLElement;
-	if (!getClosestItem(target)) return;
-
 	const listElm = getList(target);
 	if (!listElm) return;
 
 	const control = getControllingElement(listElm);
 	const multiple = control.matches('[aria-multiselectable="true"]');
-	if (multiple) return;
 
-	listPopover(listElm)?.hidePopover();
+	// Single selection -- just close the popover
+	if (getClosestItem(target) && !multiple) {
+		// Single
+		listPopover(listElm)?.hidePopover();
+		return;
+	}
+
+	// Either no selection or multiple so refocus
+	if (control instanceof HTMLInputElement) {
+		control.focus();
+	}
 });
 
 /**
