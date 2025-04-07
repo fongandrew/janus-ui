@@ -71,6 +71,19 @@ export const sidebarTriggerClose = createHandler('click', '$c-sidebar__close', (
 	}
 });
 
+/**
+ * Close sidebar on link clicks inside this element
+ */
+export const sidebarLinkClick = createHandler('click', '$c-sidebar__link', (event) => {
+	const target = event.target as HTMLElement;
+	const closest = target.closest<HTMLElement>('a,button');
+	if (!closest) return;
+
+	const sidebar = getSidebarFromTrigger(event.currentTarget);
+	if (!sidebar) return;
+	closeSidebar(sidebar);
+});
+
 function openSidebar(sidebar: HTMLElement) {
 	runBeforeShowCallbacks(sidebar);
 	sidebar.setAttribute(SIDEBAR_STATE_ATTR, 'open');

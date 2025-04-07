@@ -12,6 +12,7 @@ import {
 	SIDEBAR_STATE_ATTR,
 	sidebarEscape,
 	sidebarFocusOut,
+	sidebarLinkClick,
 	sidebarTriggerClose,
 	sidebarTriggerOpen,
 } from '~/shared/components/callbacks/sidebar';
@@ -139,7 +140,11 @@ export function SidebarContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
  */
 export function SidebarList(props: JSX.HTMLAttributes<HTMLElement>) {
 	return (
-		<nav {...props} class={cx('c-sidebar__list', props.class)}>
+		<nav
+			{...props}
+			{...callbackAttrs(props, sidebarLinkClick)}
+			class={cx('c-sidebar__list', props.class)}
+		>
 			<ul>{props.children}</ul>
 		</nav>
 	);
