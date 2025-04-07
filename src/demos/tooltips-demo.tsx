@@ -17,16 +17,16 @@ function TooltipsDemo() {
 			</CardHeader>
 			<CardContent>
 				<div class="o-grid v-spacing-sm">
-					<Tooltip tip="Hello, I'm a tooltip" placement="top">
+					<Tooltip tip="Hello, I'm the top tooltip" placement="top">
 						<Button>Top</Button>
 					</Tooltip>
-					<Tooltip tip="Hello, I'm a tooltip" placement="bottom">
+					<Tooltip tip="Hello, I'm the bottom tooltip" placement="bottom">
 						<Button>Bottom</Button>
 					</Tooltip>
-					<Tooltip tip="Hello, I'm a tooltip" placement="left">
+					<Tooltip tip="Hello, I'm the left tooltip" placement="left">
 						<Button>Left</Button>
 					</Tooltip>
-					<Tooltip tip="Hello, I'm a tooltip" placement="right">
+					<Tooltip tip="Hello, I'm the right tooltip" placement="right">
 						<Button>Right</Button>
 					</Tooltip>
 				</div>
