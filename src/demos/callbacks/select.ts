@@ -10,7 +10,7 @@ export const selectQuery = createSelectInputHandler(
 		) as HTMLTemplateElement | null;
 		if (!template) return new DocumentFragment();
 
-		await new Promise((resolve) => setTimeout(resolve, 1000));
+		await new Promise((resolve) => setTimeout(resolve, 500));
 
 		const query = target.value?.trim().toLowerCase() ?? '';
 		const next = template.content.cloneNode(true) as DocumentFragment;
