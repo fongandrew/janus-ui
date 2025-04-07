@@ -85,7 +85,7 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 		await expect(container.getByText('Selected: blue')).toBeVisible();
 	});
 
-	test.only('keeps multi-select typeahead open after tapping on selection and input', async ({
+	test('keeps multi-select typeahead open after tapping on selection and input', async ({
 		page,
 	}) => {
 		const container = getContainer().getByTestId('multiple-typeahead-container');
