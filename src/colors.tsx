@@ -147,7 +147,9 @@ function ColorWithAPCA(props: {
 				{apcaNorm() >= 40 && '●'}
 			</span>
 			<span style={{ width: '7ch' }}>({apcaNorm().toFixed(2)})</span>
-			<span title={`Minimum: ${minAPCA()}`}>{apcaNorm() >= minAPCA() ? '✓' : '✗'}</span>
+			<span title={`Minimum: ${minAPCA()}`} data-testid="acpa-pass">
+				{apcaNorm() >= minAPCA() ? '✓' : '✗'}
+			</span>
 		</div>
 	);
 }
