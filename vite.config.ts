@@ -7,14 +7,12 @@ import viteRenderHTMLPlugin from './plugins/vite-plugin-render-html';
 import viteSolidHTMLPlugin from './plugins/vite-plugin-solid-html';
 import viteSSRServerPlugin from './plugins/vite-plugin-ssr-server';
 
-const TEST_MODE = (process.env as Record<string, string | undefined>)['TEST_MODE'];
-
 export default defineConfig(({ mode }) => {
 	const isTest = mode === 'test';
 
 	return {
 		plugins: [
-			solidPlugin({ ssr: TEST_MODE === 'ssr' || !isTest }),
+			solidPlugin({ ssr: !isTest }),
 			purgeCSSPlugin({
 				variables: true,
 				keyframes: true,
@@ -57,15 +55,6 @@ export default defineConfig(({ mode }) => {
 			clearMocks: true,
 			restoreMocks: true,
 			setupFiles: './vitest.setup.ts',
-
-			// Two test modes: SPA and SSR. SPA is normal and incudes all tests. SSR
-			// is an extra layer of checks for component code to make sure it renders
-			// correctly in SSR mode and that the HTML works with non-Solid JS code.
-			...(TEST_MODE === 'ssr'
-				? {
-						include: ['**/*.test.tsx'],
-					}
-				: {}),
 		},
 	};
 });

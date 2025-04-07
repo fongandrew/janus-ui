@@ -3,15 +3,6 @@ import '~/shared/utility/test-utils/custom-matchers';
 
 import { vi } from 'vitest';
 
-import { getTestMode } from '~/shared/utility/test-utils/test-mode';
-
-// For SSR testing, make sure our callbacks index file gets loaded
-if (getTestMode() === 'ssr') {
-	beforeAll(async () => {
-		import('~/ssr-callbacks');
-	});
-}
-
 window.HTMLElement.prototype.scrollIntoView = () => {};
 
 process.env.TZ = 'UTC';

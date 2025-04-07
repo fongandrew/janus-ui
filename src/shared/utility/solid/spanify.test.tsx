@@ -1,8 +1,8 @@
+import { render } from '@solidjs/testing-library';
 import { children, type JSX } from 'solid-js';
 import { describe, expect, it } from 'vitest';
 
 import { spanify } from '~/shared/utility/solid/spanify';
-import { renderContainer } from '~/shared/utility/test-utils/render';
 
 // Simple test component that uses spanify
 function TestComponent(props: { children: JSX.Element }) {
@@ -11,16 +11,16 @@ function TestComponent(props: { children: JSX.Element }) {
 }
 
 describe('spanify', () => {
-	it('wraps text nodes in spans', async () => {
-		const container = await renderContainer(() => <TestComponent>Hello World</TestComponent>);
+	it('wraps text nodes in spans', () => {
+		const { container } = render(() => <TestComponent>Hello World</TestComponent>);
 
 		const testContainer = container.querySelector('[data-testid="test-container"]');
 		const span = testContainer?.querySelector('span');
 		expect(span?.textContent).toBe('Hello World');
 	});
 
-	it('does not wrap JSX elements', async () => {
-		const container = await renderContainer(() => (
+	it('does not wrap JSX elements', () => {
+		const { container } = render(() => (
 			<TestComponent>
 				<div data-testid="inner-div">I am already an element</div>
 			</TestComponent>
@@ -35,8 +35,8 @@ describe('spanify', () => {
 		expect(spans?.length).toBe(0);
 	});
 
-	it('handles mixed content correctly', async () => {
-		const container = await renderContainer(() => (
+	it('handles mixed content correctly', () => {
+		const { container } = render(() => (
 			<TestComponent>
 				Text before
 				<div data-testid="inner-div">Element content</div>

@@ -1,8 +1,8 @@
+import { render } from '@solidjs/testing-library';
 import { type Component } from 'solid-js';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { LocaleContext, useLocale, useT } from '~/shared/utility/solid/locale-context';
-import { renderContainer } from '~/shared/utility/test-utils/render';
 import { clearTFunctions, registerTFunction } from '~/shared/utility/text/t-tag';
 
 const TestComponent: Component = () => {
@@ -41,8 +41,8 @@ describe('LocaleContext', () => {
 		clearTFunctions();
 	});
 
-	it('should use the document language by default', async () => {
-		const container = await renderContainer(() => <TestComponent />);
+	it('should use the document language by default', () => {
+		const { container } = render(() => <TestComponent />);
 
 		const localeEl = container.querySelector('[data-testid="locale"]');
 		const translatedEl = container.querySelector('[data-testid="translated"]');
@@ -51,8 +51,8 @@ describe('LocaleContext', () => {
 		expect(translatedEl?.textContent).toBe('[en-US] Hello world');
 	});
 
-	it('should use the locale provided via LocaleContext', async () => {
-		const container = await renderContainer(() => (
+	it('should use the locale provided via LocaleContext', () => {
+		const { container } = render(() => (
 			<LocaleContext.Provider value="fr-FR">
 				<TestComponent />
 			</LocaleContext.Provider>

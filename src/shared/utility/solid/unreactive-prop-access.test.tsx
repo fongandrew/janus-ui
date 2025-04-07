@@ -1,10 +1,10 @@
+import { render } from '@solidjs/testing-library';
 import { createSignal, type JSX } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import { describe, expect, it, vi } from 'vitest';
 
 import { unreactivePropAccess } from '~/shared/utility/solid/unreactive-prop-access';
 import { LoggerContext } from '~/shared/utility/solid/use-logger';
-import { renderContainer } from '~/shared/utility/test-utils/render';
 
 interface TestComponentProps {
 	name: string;
@@ -25,8 +25,8 @@ const TestComponent = (props: TestComponentProps): JSX.Element => {
 };
 
 describe('unreactivePropAccess', () => {
-	it('should correctly access the initial props', async () => {
-		const container = await renderContainer(() => (
+	it('should correctly access the initial props', () => {
+		const { container } = render(() => (
 			<TestComponent name="Alice" age={30} role="Developer" />
 		));
 
@@ -35,7 +35,7 @@ describe('unreactivePropAccess', () => {
 		expect(container.querySelector('[data-testid="role"]')?.textContent).toBe('Developer');
 	});
 
-	it('should warn when props change', async () => {
+	it('should warn when props change', () => {
 		if (isServer) return;
 
 		const mockWarn = vi.fn();
@@ -44,7 +44,7 @@ describe('unreactivePropAccess', () => {
 		const [name, setName] = createSignal('Bob');
 		const [age, setAge] = createSignal(25);
 
-		await renderContainer(() => (
+		render(() => (
 			<LoggerContext.Provider value={testLogger as any}>
 				<TestComponent name={name()} age={age()} />
 			</LoggerContext.Provider>

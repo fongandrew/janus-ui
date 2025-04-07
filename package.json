@@ -14,8 +14,8 @@
     "lint": "npm run eslint && npm run stylelint",
     "stylelint": "stylelint \"src/**/*.css\"",
     "stylelint:fix": "stylelint --fix \"src/**/*.css\"",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "npm run test:unit",
+    "test:unit": "vitest run",
     "test:e2e": "playwright test --project=chromium-*",
     "test:e2e:all": "playwright test",
     "typecheck": "tsc -p tsconfig.json --noEmit"

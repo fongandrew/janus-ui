@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@solidjs/testing-library';
+import { fireEvent, render } from '@solidjs/testing-library';
 import { type JSX } from 'solid-js';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -21,20 +21,20 @@ describe('handleEvent', () => {
 	}
 
 	it('should call the function handler', () => {
-		render(() => <TestButton onClick={propsClick} />);
+		const { container } = render(() => <TestButton onClick={propsClick} />);
 
-		const button = screen.getByRole('button');
-		fireEvent.click(button);
+		const button = container.querySelector('button');
+		fireEvent.click(button!);
 
 		expect(buttonClick).toHaveBeenCalledWith(expect.any(Event));
 		expect(propsClick).toHaveBeenCalledWith(expect.any(Event));
 	});
 
 	it('should call the bound handler', () => {
-		render(() => <TestButton onClick={[propsClick, 'hello']} />);
+		const { container } = render(() => <TestButton onClick={[propsClick, 'hello']} />);
 
-		const button = screen.getByRole('button');
-		fireEvent.click(button);
+		const button = container.querySelector('button');
+		fireEvent.click(button!);
 
 		expect(buttonClick).toHaveBeenCalledWith(expect.any(Event));
 		expect(propsClick).toHaveBeenCalledWith('hello', expect.any(Event));

@@ -1,8 +1,8 @@
+import { render } from '@solidjs/testing-library';
 import { isServer } from 'solid-js/web';
 import { describe, expect, it } from 'vitest';
 
 import { createIncrSignal } from '~/shared/utility/solid/create-incr-signal';
-import { renderContainer } from '~/shared/utility/test-utils/render';
 
 // Component to test basic functionality with default value
 const DefaultValueComponent = () => {
@@ -31,8 +31,8 @@ const CustomValueComponent = () => {
 };
 
 describe('createIncrSignal', () => {
-	it('should initialize with default value of 0 and increment on click', async () => {
-		const container = await renderContainer(() => <DefaultValueComponent />);
+	it('should initialize with default value of 0 and increment on click', () => {
+		const { container } = render(() => <DefaultValueComponent />);
 		const valueElement = container.querySelector('[data-testid="value"]');
 		expect(valueElement?.textContent).toBe('0');
 
@@ -44,8 +44,8 @@ describe('createIncrSignal', () => {
 		expect(valueElement?.textContent).toBe('1');
 	});
 
-	it('should initialize with a custom value', async () => {
-		const container = await renderContainer(() => <CustomValueComponent />);
+	it('should initialize with a custom value', () => {
+		const { container } = render(() => <CustomValueComponent />);
 		const valueElement = container.querySelector('[data-testid="value"]');
 		expect(valueElement?.textContent).toBe('10');
 
