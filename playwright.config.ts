@@ -6,9 +6,6 @@ const isCI = !!(process.env as Record<string, string>)['CI'];
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-	// Run tests in files ending with .e2e.ts, .e2e.tsx, .e2e.js, or .e2e.jsx
-	testMatch: '**/*.e2e.[tj]s?(x)',
-
 	// Reporter to use
 	reporter: [['html', { open: 'never' }], ['list']],
 
@@ -32,19 +29,35 @@ export default defineConfig({
 		timeout: 120000,
 	},
 
-	// Configure projects for major browsers
+	// Configure projects for desktop and mobile browsers
 	projects: [
+		// Desktop browser projects
 		{
-			name: 'chromium',
+			name: 'chromium-desktop',
+			testMatch: '**/*.desktop.e2e.[tj]s?(x)',
 			use: { ...devices['Desktop Chrome'] },
 		},
 		{
-			name: 'firefox',
+			name: 'firefox-desktop',
+			testMatch: '**/*.desktop.e2e.[tj]s?(x)',
 			use: { ...devices['Desktop Firefox'] },
 		},
 		{
-			name: 'webkit',
+			name: 'webkit-desktop',
+			testMatch: '**/*.desktop.e2e.[tj]s?(x)',
 			use: { ...devices['Desktop Safari'] },
+		},
+
+		// Mobile browser projects
+		{
+			name: 'chromium-mobile',
+			testMatch: '**/*.mobile.e2e.[tj]s?(x)',
+			use: { ...devices['Pixel 7'] },
+		},
+		{
+			name: 'webkit-mobile',
+			testMatch: '**/*.mobile.e2e.[tj]s?(x)',
+			use: { ...devices['iPhone 15'] },
 		},
 	],
 
