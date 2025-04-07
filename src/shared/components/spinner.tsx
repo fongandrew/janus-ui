@@ -30,7 +30,7 @@ export function SpinnerBlock(props: SpinnerBlockProps) {
 		local.onEnd?.();
 	});
 	return (
-		<div {...rest} class={cx('c-spinner__block', props.class)}>
+		<div {...rest} class={cx('c-spinner__block', props.class)} role="status">
 			<Spinner /> <T>Loading…</T>
 		</div>
 	);

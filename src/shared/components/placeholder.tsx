@@ -38,7 +38,9 @@ export function Placeholder(props: PlaceholderProps) {
 export function InlinePlaceholder(props: JSX.HTMLAttributes<HTMLSpanElement>) {
 	const [local, rest] = splitProps(props, ['class']);
 
-	return <span class={cx('c-placeholder--inline', local.class)} {...rest} />;
+	return (
+		<span class={cx('c-placeholder--inline', local.class)} aria-label="Loading…" {...rest} />
+	);
 }
 
 /** Suspense wrapper for inline placeholder elements */
