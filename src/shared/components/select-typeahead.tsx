@@ -11,6 +11,7 @@ import {
 	selectFocusOut,
 	selectInputClick,
 	selectInputKeyDown,
+	selectInputPointer,
 	selectMountText,
 	selectUpdateText,
 	selectUpdateWithInput,
@@ -96,7 +97,13 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 		>
 			<Input
 				{...inputProps}
-				{...callbackAttrs(inputProps, selectInputClick, selectInputKeyDown, selectFocusOut)}
+				{...callbackAttrs(
+					inputProps,
+					selectInputClick,
+					selectInputPointer,
+					selectInputKeyDown,
+					selectFocusOut,
+				)}
 				{...extendHandler(props, 'onChange', handleChange)}
 				{...extendHandler(props, 'onInput', handleInput)}
 				id={id()}

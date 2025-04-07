@@ -89,8 +89,37 @@ export const selectInputKeyDown = createHandler(
 export const selectInputClick = createHandler('click', '$c-select__input-click', (event) => {
 	const target = event.target as HTMLInputElement;
 	const popover = target.popoverTargetElement as HTMLElement;
-	popover?.togglePopover();
+	popover?.showPopover();
 });
+
+/**
+ * Additional pointerdown / pointerup handler for select typeahead interactions
+ * where click starts on input but maybe ends up off of it (e.g. drag to highlight)
+ * and instead of mousedown to support touch interactions better.
+ *
+ * In theory, should be redundant with `selectInputClick` but for some reason
+ * input doens't automatically focus if we open on pointerdown instead of
+ * click / mouseup.
+ */
+export const selectInputPointer = createHandler(
+	'pointerdown',
+	'$c-select__input-pointer',
+	(event) => {
+		const target = event.target as HTMLInputElement;
+		const popover = target.popoverTargetElement as HTMLElement | null;
+
+		// If already open, let click handler deal with it
+		if (!popover?.matches(':popover-open')) return;
+
+		elmDoc(popover)?.addEventListener(
+			'pointerup',
+			() => {
+				popover?.showPopover();
+			},
+			{ once: true },
+		);
+	},
+);
 
 /** Blur / focusout handler to close dropdown when focus leaves input */
 export const selectFocusOut = createHandler('focusout', '$c-select__focusout', (event) => {
