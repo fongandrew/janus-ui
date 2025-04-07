@@ -24,7 +24,7 @@
 	.c-sidebar-layout__content {
 		position: absolute;
 		inset: 0;
-		overflow: auto;
+		overflow: hidden auto;
 		container-type: inline-size;
 	}
 

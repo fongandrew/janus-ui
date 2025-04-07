@@ -76,7 +76,7 @@
 		top: 0;
 		right: 0;
 		bottom: 0;
-		overflow: auto;
+		overflow: hidden auto;
 		z-index: var(--v-z-above-backdrop);
 		width: 90vw;
 		max-width: var(--c-top-nav__drawer-width);
