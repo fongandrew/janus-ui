@@ -10,6 +10,7 @@ for (const path of ['/', '/ssr']) {
 			const topNav = page.locator('header:has(h1)');
 			await expect(topNav).toBeVisible();
 
+			// So scroll is on main area and not sidebar / body
 			const main = page.locator('main');
 			await main.hover();
 
