@@ -16,16 +16,10 @@ for (const path of ['/', '/ssr']) {
 
 			// Scroll down to hide the nav
 			await page.mouse.wheel(0, 300);
-			await page.waitForTimeout(20);
-			await page.mouse.wheel(0, 300);
-			await page.waitForTimeout(20);
 			await expect(topNav).not.toBeInViewport();
 
 			// Scroll back up to reveal the nav
 			await page.mouse.wheel(0, -200);
-			await page.waitForTimeout(20);
-			await page.mouse.wheel(0, -200);
-			await page.waitForTimeout(20);
 			await expect(topNav).toBeInViewport();
 		});
 	});
