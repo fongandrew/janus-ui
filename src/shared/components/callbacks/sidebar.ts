@@ -6,7 +6,7 @@ import {
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { firstFocusable } from '~/shared/utility/focusables';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
-import { elmDoc } from '~/shared/utility/multi-view';
+import { elmDoc, elmWin } from '~/shared/utility/multi-view';
 
 /**
  * Magic data attribute for sidebar layout state. Values should `"true"`` or `"false"`
@@ -81,7 +81,12 @@ export const sidebarLinkClick = createHandler('click', '$c-sidebar__link', (even
 
 	const sidebar = getSidebarFromTrigger(event.currentTarget);
 	if (!sidebar) return;
-	closeSidebar(sidebar);
+
+	// Use z-index as proxy for mobile drawer state for sidebar
+	const zIndex = elmWin(sidebar)?.getComputedStyle(sidebar)?.zIndex;
+	if (zIndex && zIndex !== 'auto') {
+		closeSidebar(sidebar);
+	}
 });
 
 function openSidebar(sidebar: HTMLElement) {
