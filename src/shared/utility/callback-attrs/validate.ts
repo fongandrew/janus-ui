@@ -5,6 +5,7 @@ import {
 } from '~/shared/utility/callback-attrs/callback-registry';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
+import { toggleEmptyAttr } from '~/shared/utility/empty-attr';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { elmDoc } from '~/shared/utility/multi-view';
 
@@ -122,6 +123,7 @@ export function setError(target: HTMLElement, msg: string | null) {
 	const errorElm = getErrorElement(target);
 	if (errorElm) {
 		errorElm.textContent = msg ?? '';
+		toggleEmptyAttr(errorElm);
 	}
 
 	// Dispatching invalid to mimic built-in navigation. No reason to make it

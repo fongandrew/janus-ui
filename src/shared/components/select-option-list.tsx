@@ -1,4 +1,4 @@
-import { createUniqueId, For, type JSX, mergeProps, splitProps } from 'solid-js';
+import { children, createUniqueId, For, type JSX, mergeProps, splitProps } from 'solid-js';
 
 import { listBoxChange, listBoxMount, listBoxReset } from '~/shared/components/callbacks/list-box';
 import {
@@ -13,6 +13,7 @@ import { OptionList } from '~/shared/components/option-list';
 import { Placeholder } from '~/shared/components/placeholder';
 import { T } from '~/shared/components/t-components';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { emptyAttr } from '~/shared/utility/empty-attr';
 
 // Disallow ID, should be set via context
 export interface SelectOptionListProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'id'> {
@@ -54,6 +55,8 @@ export function SelectOptionList(props: SelectOptionListProps) {
 	// eslint-disable-next-line solid/reactivity
 	const initialValues = listBoxContextProps.values;
 
+	let resolver: (() => JSX.Element) | undefined;
+
 	return (
 		<DropdownContent
 			// Dropdown width should match select input / button size
@@ -77,12 +80,18 @@ export function SelectOptionList(props: SelectOptionListProps) {
 						selectCloseOnClick,
 					)}
 				>
+					{(() => {
+						// Call children here so context is set properly
+						resolver = children(() => local.children);
+						return null;
+					})()}
 					<div
 						id={visibleInputContainerId}
 						class="c-select__items"
 						{...{ [SELECT_VISIBLE_CONTAINER_ATTR]: '' }}
+						{...emptyAttr(resolver())}
 					>
-						{local.children}
+						{resolver()}
 					</div>
 					<div
 						id={hiddenInputContainerId}
@@ -101,7 +110,11 @@ export function SelectOptionList(props: SelectOptionListProps) {
 				<span class="c-select__no_match">
 					<T>
 						No matches found for{' '}
-						<strong id={props.selectInputTextId} class="c-select__no_match_value">
+						<strong
+							id={props.selectInputTextId}
+							class="c-select__no_match_value"
+							{...emptyAttr(local.input?.trim())}
+						>
 							{local.input?.trim()}
 						</strong>
 					</T>

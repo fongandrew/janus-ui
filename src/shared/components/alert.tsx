@@ -1,7 +1,10 @@
 import cx from 'classix';
 import { AlertCircle, AlertTriangle, CheckCircle, Info, type LucideProps } from 'lucide-solid';
-import { type Component, type JSX, splitProps } from 'solid-js';
+import { children, type Component, type JSX, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
+
+import { emptyAttr } from '~/shared/utility/empty-attr';
+
 /** Base alert props shared by all alert variants */
 export type AlertBaseProps = Omit<JSX.HTMLAttributes<HTMLDivElement>, 'id'> & {
 	/** ID for container element */
@@ -24,6 +27,8 @@ function AlertBase(props: AlertBaseProps & { defaultIcon: typeof Info }) {
 		'style',
 	]);
 
+	const resolved = children(() => local.children);
+
 	return (
 		<div id={local.containerId} class={cx('c-alert', local.class)} style={local.style}>
 			<span class="t-flex-static">
@@ -34,9 +39,10 @@ function AlertBase(props: AlertBaseProps & { defaultIcon: typeof Info }) {
 				id={local.alertId}
 				aria-live="assertive"
 				class="c-alert__children t-flex-fill"
+				{...emptyAttr(resolved())}
 				{...rest}
 			>
-				{local.children}
+				{resolved()}
 			</div>
 		</div>
 	);

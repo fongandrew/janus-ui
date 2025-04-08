@@ -101,7 +101,7 @@
 		text-align: center;
 
 		[aria-busy='true'] + &,
-		:has(.c-select__items:empty) + & {
+		[role='listbox']:has(.c-select__items[data-t-empty]) + & {
 			display: block;
 		}
 
@@ -119,12 +119,12 @@
 		}
 
 		/* Different empty states depending on whether there's input */
-		:has(.c-select__items:empty):not([aria-busy='true']) + & {
-			.c-select__no_match:not(:has(.c-select__no_match_value:empty)) {
+		:has(.c-select__items[data-t-empty]):not([aria-busy='true']) + & {
+			.c-select__no_match:not(:has(.c-select__no_match_value[data-t-empty])) {
 				display: block;
 			}
 
-			.c-select__no_match:has(.c-select__no_match_value:empty) + .c-select__no_value {
+			.c-select__no_match:has(.c-select__no_match_value[data-t-empty]) + .c-select__no_value {
 				display: block;
 			}
 		}

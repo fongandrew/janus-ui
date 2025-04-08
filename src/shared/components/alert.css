@@ -8,7 +8,7 @@
 		@mixin t-border;
 		@mixin t-radius-inner;
 
-		&:has(.c-alert__children:empty) {
+		&:has(.c-alert__children[data-t-empty]) {
 			display: none;
 		}
 	}

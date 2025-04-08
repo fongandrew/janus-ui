@@ -16,6 +16,7 @@ import {
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createMounter, processRoot } from '~/shared/utility/callback-attrs/mount';
 import { createQueryEffect } from '~/shared/utility/create-query-effect';
+import { toggleEmptyAttr } from '~/shared/utility/empty-attr';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { elmDoc, elmWin, evtDoc } from '~/shared/utility/multi-view';
@@ -251,6 +252,7 @@ export const selectMountText = createMounter<[string]>(
 			const checked = listElm.querySelector<HTMLInputElement>(':checked');
 			updateTarget.textContent = checked?.closest('label')?.textContent ?? '';
 		}
+		toggleEmptyAttr(updateTarget);
 	},
 );
 
@@ -289,6 +291,7 @@ export const selectUpdateWithInput = createHandler(
 		const updateTarget = evtDoc(event)?.getElementById(targetId);
 		if (!updateTarget) return;
 		updateTarget.textContent = (event.target as HTMLInputElement).value;
+		toggleEmptyAttr(updateTarget);
 	},
 );
 
@@ -359,6 +362,7 @@ export function selectReplaceOptions(listElm: HTMLElement, ...newOptions: Docume
 	if (!visibleContainer) return;
 
 	visibleContainer.replaceChildren(...newOptions);
+	toggleEmptyAttr(visibleContainer);
 	processRoot(visibleContainer);
 }
 
