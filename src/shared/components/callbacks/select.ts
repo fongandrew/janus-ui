@@ -18,7 +18,7 @@ import { createMounter, processRoot } from '~/shared/utility/callback-attrs/moun
 import { createQueryEffect } from '~/shared/utility/create-query-effect';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { createMagicProp } from '~/shared/utility/magic-prop';
-import { elmDoc, evtDoc } from '~/shared/utility/multi-view';
+import { elmDoc, elmWin, evtDoc } from '~/shared/utility/multi-view';
 import { elmT } from '~/shared/utility/text/t-tag';
 import { onUnmount } from '~/shared/utility/unmount-observer';
 
@@ -159,6 +159,12 @@ export const selectCloseOnClick = createHandler('click', '$c-select__close-on-cl
 	// Either no selection or multiple so refocus
 	if (control instanceof HTMLInputElement) {
 		control.focus();
+
+		// For reasons unclear, Safari won't focus the input if we don't use
+		// requestAnimationFrame to delay it a bit
+		elmWin(control)?.requestAnimationFrame(() => {
+			control.focus();
+		});
 	}
 });
 

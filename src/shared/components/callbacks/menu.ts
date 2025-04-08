@@ -8,6 +8,8 @@ import {
 	optionListMatchText,
 } from '~/shared/components/callbacks/option-list';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
+import { registerDocumentSetup } from '~/shared/utility/document-setup';
+import { evtDoc } from '~/shared/utility/multi-view';
 
 /**
  * Handle arrow navigation in menu
@@ -88,6 +90,15 @@ export const menuTriggerKeyDown = createHandler('keydown', '$c-menu__trigger-key
 
 		event.preventDefault();
 		popover.showPopover();
+
+		// Fallback behavior for case where focus may end up outside menu. This _shouldn't_
+		// happen but sometimes stuff is weird and this is a bette fallback than letting
+		// the menu just float around with no way to get focus into it.
+		const activeElement = evtDoc(event)?.activeElement as HTMLElement | null;
+		if (popover.matches(':popover-open') && !popover.contains(activeElement)) {
+			const autoFocus = popover.querySelector<HTMLElement>('[autofocus]');
+			autoFocus?.focus();
+		}
 	}
 });
 
@@ -110,3 +121,19 @@ const menuTriggerAutoFocus = (trigger: HTMLButtonElement, position: 'first' | 'l
 
 	highlightInList(popover, item);
 };
+
+/**
+ * The visibility transition messes with Safari focusing autofocus elements
+ * in popovers, so do any
+ */
+registerDocumentSetup((document) => {
+	document.addEventListener(
+		'toggle',
+		(event) => {
+			if ((event as ToggleEvent).newState !== 'open') return;
+			const popover = event.target as HTMLElement;
+			popover.querySelector<HTMLElement>('[autofocus]')?.focus();
+		},
+		{ capture: true },
+	);
+});
