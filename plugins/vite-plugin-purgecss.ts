@@ -44,6 +44,7 @@ export default function vitePluginPurgeCSS(options: VitePurgeCSSOptions = {}): P
 
 				for (const fileName in bundle) {
 					const chunk = bundle[fileName];
+					if (!chunk) continue;
 
 					// Skip source maps
 					if (fileName.endsWith('.map')) continue;
@@ -97,8 +98,10 @@ export default function vitePluginPurgeCSS(options: VitePurgeCSSOptions = {}): P
 
 				// Update bundle with purged CSS
 				results.forEach((result, index) => {
-					const fileName = cssFiles[index].name;
+					const fileName = cssFiles[index]?.name;
+					if (!fileName) return;
 					const chunkOrAsset = bundle[fileName];
+					if (!chunkOrAsset) return;
 					if (chunkOrAsset.type === 'asset') {
 						chunkOrAsset.source = result.css;
 					} else {
@@ -109,7 +112,7 @@ export default function vitePluginPurgeCSS(options: VitePurgeCSSOptions = {}): P
 				if (verbose) {
 					// Calculate and log size reductions
 					const newSizes = results.map((result, index) => ({
-						name: cssFiles[index].name,
+						name: cssFiles[index]?.name,
 						size: Buffer.byteLength(result.css, 'utf8'),
 					}));
 
@@ -119,12 +122,12 @@ export default function vitePluginPurgeCSS(options: VitePurgeCSSOptions = {}): P
 					originalSizes.forEach((original, i) => {
 						const purged = newSizes[i];
 						const reduction = (
-							((original.size - purged.size) / original.size) *
+							((original.size - (purged?.size ?? 0)) / original.size) *
 							100
 						).toFixed(1);
 						console.log(`\n${original.name}:`);
 						console.log(`  Original: ${(original.size / 1024).toFixed(2)}kb`);
-						console.log(`  Purged: ${(purged.size / 1024).toFixed(2)}kb`);
+						console.log(`  Purged: ${((purged?.size ?? 0) / 1024).toFixed(2)}kb`);
 						console.log(`  Reduction: ${reduction}%`);
 					});
 

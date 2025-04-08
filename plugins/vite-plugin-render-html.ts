@@ -30,16 +30,17 @@ async function processHTML(html: string, server: ViteDevServer) {
 
 	for (const match of matches) {
 		const [fullMatch, importPath] = match;
+		if (!importPath) continue;
 
 		// Load and execute the module directly
-		const mod = await server.ssrLoadModule(importPath.trim());
+		const mod = (await server.ssrLoadModule(importPath.trim())) as any;
 
 		let rendered: string | null = null;
-		if (typeof mod.render === 'function') {
+		if (typeof mod?.render === 'function') {
 			rendered = await mod.render();
-		} else if (typeof mod.default === 'function') {
+		} else if (typeof mod?.default === 'function') {
 			rendered = await mod.default();
-		} else if (typeof mod.default === 'string') {
+		} else if (typeof mod?.default === 'string') {
 			rendered = mod.default;
 		}
 

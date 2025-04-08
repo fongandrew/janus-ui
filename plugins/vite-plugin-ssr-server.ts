@@ -37,7 +37,7 @@ export default function viteSSRServerPlugin(): Plugin {
 					mode,
 					server: {
 						middlewareMode: true,
-						port,
+						port: port ?? 3001,
 						hmr: false,
 					},
 				});

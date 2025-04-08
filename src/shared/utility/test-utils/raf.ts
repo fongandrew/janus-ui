@@ -1,3 +1,5 @@
+import { vi } from 'vitest';
+
 /**
  * Returns a requestAnimationFrame promise that plays nice with fake timers
  */

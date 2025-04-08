@@ -35,6 +35,9 @@ export default function viteSolidHTMLPlugin(): Plugin {
 				const server = await getServer(config);
 
 				const [_prefix, path, name] = id.split(SEPARATOR);
+				if (!path) {
+					throw new Error(`Invalid import path: ${id}`);
+				}
 				const module = await server.ssrLoadModule(path);
 				const str = renderToString(() =>
 					createComponent(NoHydration, {
