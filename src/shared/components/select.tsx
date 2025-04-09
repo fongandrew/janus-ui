@@ -20,6 +20,7 @@ import {
 import { type FormElementProps } from '~/shared/components/form-element-props';
 import { SelectContainer } from '~/shared/components/select-container';
 import { SelectOptionList } from '~/shared/components/select-option-list';
+import { SelectPopover } from '~/shared/components/select-popover';
 import { SelectText } from '~/shared/components/select-text';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
@@ -103,15 +104,17 @@ export function Select(props: SelectProps) {
 			>
 				<SelectText id={selectUpdateTextId} placeholder={local.placeholder} />
 			</Button>
-			<SelectOptionList
-				listBoxId={listId}
-				selectInputTextId={selectInputTextId}
-				name={local.name}
-				multiple={local.multiple}
-				values={local.values}
-			>
-				{local.children}
-			</SelectOptionList>
+			<SelectPopover>
+				<SelectOptionList
+					listBoxId={listId}
+					selectInputTextId={selectInputTextId}
+					name={local.name}
+					multiple={local.multiple}
+					values={local.values}
+				>
+					{local.children}
+				</SelectOptionList>
+			</SelectPopover>
 		</SelectContainer>
 	);
 }

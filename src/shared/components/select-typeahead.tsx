@@ -20,6 +20,7 @@ import { createFormElementId } from '~/shared/components/form-element-context';
 import { Input, type InputProps } from '~/shared/components/input';
 import { SelectContainer } from '~/shared/components/select-container';
 import { SelectOptionList } from '~/shared/components/select-option-list';
+import { SelectPopover } from '~/shared/components/select-popover';
 import { SelectText } from '~/shared/components/select-text';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
@@ -120,17 +121,19 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 			<div id={descriptionId} class="c-select__input_description">
 				<SelectText id={selectUpdateTextId} placeholder={local.placeholder} />
 			</div>
-			<SelectOptionList
-				busy={props.busy}
-				listBoxId={listId}
-				selectInputTextId={selectInputTextId}
-				input={inputProps.value ? String(inputProps.value) : undefined}
-				name={local.name}
-				multiple={local.multiple}
-				values={local.values}
-			>
-				{local.children}
-			</SelectOptionList>
+			<SelectPopover>
+				<SelectOptionList
+					busy={props.busy}
+					listBoxId={listId}
+					selectInputTextId={selectInputTextId}
+					input={inputProps.value ? String(inputProps.value) : undefined}
+					name={local.name}
+					multiple={local.multiple}
+					values={local.values}
+				>
+					{local.children}
+				</SelectOptionList>
+			</SelectPopover>
 		</SelectContainer>
 	);
 }

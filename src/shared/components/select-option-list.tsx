@@ -5,9 +5,8 @@ import {
 	SELECT_HIDDEN_CONTAINER_ATTR,
 	SELECT_VISIBLE_CONTAINER_ATTR,
 	selectCloseOnClick,
-	selectToggleObserve,
 } from '~/shared/components/callbacks/select';
-import { DropdownContent, DropdownPopover } from '~/shared/components/dropdown';
+import { DropdownContent } from '~/shared/components/dropdown';
 import { ListBoxContext } from '~/shared/components/list-box';
 import { OptionList } from '~/shared/components/option-list';
 import { Placeholder } from '~/shared/components/placeholder';
@@ -58,81 +57,71 @@ export function SelectOptionList(props: SelectOptionListProps) {
 	let resolver: (() => JSX.Element) | undefined;
 
 	return (
-		<DropdownPopover
-			class="c-select__popover"
-			// Dropdown width should match select input / button size
-			fixedWidth
-			{...rest}
-			{...callbackAttrs(rest, selectToggleObserve)}
-		>
-			<DropdownContent>
-				<ListBoxContext.Provider value={context}>
-					<OptionList
-						role="listbox"
-						id={local.listBoxId}
-						class="t-unstyled"
-						aria-busy={local.busy}
-						{...callbackAttrs(
-							listBoxChange,
-							listBoxMount,
-							listBoxReset,
-							selectCloseOnClick,
-						)}
+		<DropdownContent {...rest}>
+			<ListBoxContext.Provider value={context}>
+				<OptionList
+					role="listbox"
+					id={local.listBoxId}
+					class="t-unstyled"
+					aria-busy={local.busy}
+					{...callbackAttrs(
+						listBoxChange,
+						listBoxMount,
+						listBoxReset,
+						selectCloseOnClick,
+					)}
+				>
+					{(() => {
+						// Call children here so context is set properly
+						resolver = children(() => local.children);
+						return null;
+					})()}
+					<div
+						id={visibleInputContainerId}
+						class="c-select__items"
+						{...{ [SELECT_VISIBLE_CONTAINER_ATTR]: '' }}
+						{...emptyAttr(resolver())}
 					>
-						{(() => {
-							// Call children here so context is set properly
-							resolver = children(() => local.children);
-							return null;
-						})()}
-						<div
-							id={visibleInputContainerId}
-							class="c-select__items"
-							{...{ [SELECT_VISIBLE_CONTAINER_ATTR]: '' }}
-							{...emptyAttr(resolver())}
-						>
-							{resolver()}
-						</div>
-						<div
-							id={hiddenInputContainerId}
-							class="t-hidden"
-							{...{
-								[SELECT_HIDDEN_CONTAINER_ATTR]: '',
-							}}
-						>
-							<For each={Array.from(initialValues ?? [])}>
-								{(value) => (
-									<input type="hidden" name={context.name} value={value} />
-								)}
-							</For>
-						</div>
-					</OptionList>
-				</ListBoxContext.Provider>
-				<div role="status" class="c-select__status">
-					<span class="c-select__no_match">
-						<T>
-							No matches found for{' '}
-							<strong
-								id={local.selectInputTextId}
-								class="c-select__no_match_value"
-								{...emptyAttr(local.input?.trim())}
-							>
-								{local.input?.trim()}
-							</strong>
-						</T>
-					</span>
-					<span class="c-select__no_value">
-						<T>Type something</T>
-					</span>
-					<div class="c-select__busy">
-						<span class="t-sr-only">
-							<T>Loading…</T>
-						</span>
-						<Placeholder />
-						<Placeholder width="80%" />
-						<Placeholder width="90%" />
+						{resolver()}
 					</div>
+					<div
+						id={hiddenInputContainerId}
+						class="t-hidden"
+						{...{
+							[SELECT_HIDDEN_CONTAINER_ATTR]: '',
+						}}
+					>
+						<For each={Array.from(initialValues ?? [])}>
+							{(value) => <input type="hidden" name={context.name} value={value} />}
+						</For>
+					</div>
+				</OptionList>
+			</ListBoxContext.Provider>
+			<div role="status" class="c-select__status">
+				<span class="c-select__no_match">
+					<T>
+						No matches found for{' '}
+						<strong
+							id={local.selectInputTextId}
+							class="c-select__no_match_value"
+							{...emptyAttr(local.input?.trim())}
+						>
+							{local.input?.trim()}
+						</strong>
+					</T>
+				</span>
+				<span class="c-select__no_value">
+					<T>Type something</T>
+				</span>
+				<div class="c-select__busy">
+					<span class="t-sr-only">
+						<T>Loading…</T>
+					</span>
+					<Placeholder />
+					<Placeholder width="80%" />
+					<Placeholder width="90%" />
 				</div>
-			</DropdownContent>
-		</DropdownPopover>
+			</div>
+		</DropdownContent>
 	);
 }
