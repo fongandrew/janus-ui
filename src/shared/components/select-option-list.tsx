@@ -7,7 +7,7 @@ import {
 	selectCloseOnClick,
 	selectToggleObserve,
 } from '~/shared/components/callbacks/select';
-import { DropdownContent } from '~/shared/components/dropdown';
+import { DropdownContent, DropdownPopover } from '~/shared/components/dropdown';
 import { ListBoxContext } from '~/shared/components/list-box';
 import { OptionList } from '~/shared/components/option-list';
 import { Placeholder } from '~/shared/components/placeholder';
@@ -36,7 +36,7 @@ export interface SelectOptionListProps extends Omit<JSX.HTMLAttributes<HTMLDivEl
 export function SelectOptionList(props: SelectOptionListProps) {
 	const [local, listBoxContextProps, rest] = splitProps(
 		props,
-		['children', 'listBoxId', 'input', 'busy'],
+		['children', 'listBoxId', 'selectInputTextId', 'input', 'busy'],
 		['name', 'values', 'multiple'],
 	);
 
@@ -58,79 +58,81 @@ export function SelectOptionList(props: SelectOptionListProps) {
 	let resolver: (() => JSX.Element) | undefined;
 
 	return (
-		<DropdownContent
+		<DropdownPopover
+			class="c-select__popover"
 			// Dropdown width should match select input / button size
 			fixedWidth
-			// Selects have a focus ring so give a bit more space than
-			// normal dropdowns
-			offset={8}
 			{...rest}
 			{...callbackAttrs(rest, selectToggleObserve)}
 		>
-			<ListBoxContext.Provider value={context}>
-				<OptionList
-					role="listbox"
-					id={local.listBoxId}
-					class="t-unstyled"
-					aria-busy={local.busy}
-					{...callbackAttrs(
-						listBoxChange,
-						listBoxMount,
-						listBoxReset,
-						selectCloseOnClick,
-					)}
-				>
-					{(() => {
-						// Call children here so context is set properly
-						resolver = children(() => local.children);
-						return null;
-					})()}
-					<div
-						id={visibleInputContainerId}
-						class="c-select__items"
-						{...{ [SELECT_VISIBLE_CONTAINER_ATTR]: '' }}
-						{...emptyAttr(resolver())}
+			<DropdownContent>
+				<ListBoxContext.Provider value={context}>
+					<OptionList
+						role="listbox"
+						id={local.listBoxId}
+						class="t-unstyled"
+						aria-busy={local.busy}
+						{...callbackAttrs(
+							listBoxChange,
+							listBoxMount,
+							listBoxReset,
+							selectCloseOnClick,
+						)}
 					>
-						{resolver()}
-					</div>
-					<div
-						id={hiddenInputContainerId}
-						class="t-hidden"
-						{...{
-							[SELECT_HIDDEN_CONTAINER_ATTR]: '',
-						}}
-					>
-						<For each={Array.from(initialValues ?? [])}>
-							{(value) => <input type="hidden" name={context.name} value={value} />}
-						</For>
-					</div>
-				</OptionList>
-			</ListBoxContext.Provider>
-			<div role="status" class="c-select__status">
-				<span class="c-select__no_match">
-					<T>
-						No matches found for{' '}
-						<strong
-							id={props.selectInputTextId}
-							class="c-select__no_match_value"
-							{...emptyAttr(local.input?.trim())}
+						{(() => {
+							// Call children here so context is set properly
+							resolver = children(() => local.children);
+							return null;
+						})()}
+						<div
+							id={visibleInputContainerId}
+							class="c-select__items"
+							{...{ [SELECT_VISIBLE_CONTAINER_ATTR]: '' }}
+							{...emptyAttr(resolver())}
 						>
-							{local.input?.trim()}
-						</strong>
-					</T>
-				</span>
-				<span class="c-select__no_value">
-					<T>Type something</T>
-				</span>
-				<div class="c-select__busy">
-					<span class="t-sr-only">
-						<T>Loading…</T>
+							{resolver()}
+						</div>
+						<div
+							id={hiddenInputContainerId}
+							class="t-hidden"
+							{...{
+								[SELECT_HIDDEN_CONTAINER_ATTR]: '',
+							}}
+						>
+							<For each={Array.from(initialValues ?? [])}>
+								{(value) => (
+									<input type="hidden" name={context.name} value={value} />
+								)}
+							</For>
+						</div>
+					</OptionList>
+				</ListBoxContext.Provider>
+				<div role="status" class="c-select__status">
+					<span class="c-select__no_match">
+						<T>
+							No matches found for{' '}
+							<strong
+								id={local.selectInputTextId}
+								class="c-select__no_match_value"
+								{...emptyAttr(local.input?.trim())}
+							>
+								{local.input?.trim()}
+							</strong>
+						</T>
 					</span>
-					<Placeholder />
-					<Placeholder width="80%" />
-					<Placeholder width="90%" />
+					<span class="c-select__no_value">
+						<T>Type something</T>
+					</span>
+					<div class="c-select__busy">
+						<span class="t-sr-only">
+							<T>Loading…</T>
+						</span>
+						<Placeholder />
+						<Placeholder width="80%" />
+						<Placeholder width="90%" />
+					</div>
 				</div>
-			</div>
-		</DropdownContent>
+			</DropdownContent>
+		</DropdownPopover>
 	);
 }

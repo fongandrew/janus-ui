@@ -3,7 +3,6 @@ import {
 	computePosition,
 	flip,
 	type Middleware,
-	offset,
 	type Placement,
 	shift,
 	size,
@@ -18,11 +17,13 @@ import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { elmDoc, evtDoc } from '~/shared/utility/multi-view';
-import { parseIntOrNull } from '~/shared/utility/parse';
 import { onUnmount } from '~/shared/utility/unmount-observer';
 
-/** Magic attribute to signal popover has been positioend */
-const POPOVER_POSITIONED_ATTR = 'data-c-dropdown__positioned';
+/** Magic attribute to signal popover is about to be positioned */
+const POPOVER_ACTIVE_ATTR = 'data-c-dropdown__active';
+
+/** Magic attribute to signal placement of popover as positioned */
+const POPOVER_POSITION_ATTR = 'data-c-dropdown__position';
 
 /** Track whether there's a floating UI clean up function for a popover */
 const [cleanUpCallback, setCleanUpCallback] = createMagicProp<() => void>();
@@ -72,7 +73,7 @@ export const dropdownClose = createHandler('click', '$c-dropdown__close', (event
 export const dropdownBeforeToggleOpen = createHandler(
 	'beforetoggle',
 	'$c-dropdown__before-toggle-open',
-	(event, placement?: Placement, offset?: string, fixedWidth?: 'fw') => {
+	(event, placement?: Placement, fixedWidth?: 'fw') => {
 		if ((event as ToggleEvent & { currentTarget: HTMLElement }).newState !== 'open') return;
 		const target = event.target as HTMLElement;
 
@@ -89,7 +90,6 @@ export const dropdownBeforeToggleOpen = createHandler(
 
 		const opts = {
 			placement,
-			offset: parseIntOrNull(offset ?? null),
 			fixedWidth: !!fixedWidth,
 		};
 		updatePosition(trigger, target, opts);
@@ -119,7 +119,6 @@ const updatePosition = async (
 	popover: HTMLElement,
 	opts?: {
 		placement?: Placement | '' | undefined;
-		offset?: number | null;
 		fixedWidth?: boolean;
 		middleware?: Middleware[];
 	},
@@ -131,11 +130,10 @@ const updatePosition = async (
 
 	// Technically we're setting this before it's positioned but this also enables
 	// the popover to be handle transitions correctly before it's visible
-	popover.setAttribute(POPOVER_POSITIONED_ATTR, '');
-	const { x, y } = await computePosition(trigger, popover, {
+	popover.setAttribute(POPOVER_ACTIVE_ATTR, '');
+	const { x, y, placement } = await computePosition(trigger, popover, {
 		placement: opts?.placement || 'bottom-start',
 		middleware: opts?.middleware ?? [
-			offset(opts?.offset ?? 4),
 			flip({
 				// Somewhat large padding for flip because dropdown content is resizable
 				// (overflow: auto) and will technically "fit" in smaller spaces but look
@@ -171,6 +169,7 @@ const updatePosition = async (
 	});
 	popover.style.setProperty('--c-dropdown__left', `${x}px`);
 	popover.style.setProperty('--c-dropdown__top', `${y}px`);
+	popover.setAttribute(POPOVER_POSITION_ATTR, placement);
 };
 
 function getTrigger(popover: HTMLElement) {

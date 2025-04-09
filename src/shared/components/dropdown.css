@@ -2,15 +2,15 @@
 
 @layer base {
 	/* No scroll when dropdown open */
-	body:has(.c-dropdown__content:popover-open, .c-dropdown__content[data-v-popover-open]) {
+	body:has(.c-dropdown__popover:popover-open, .c-dropdown__popover[data-v-popover-open]) {
 		overflow: hidden;
 	}
 
 	/* Dropdown backdrop -- use this instead of ::backdrop because this blocks click-through */
-	body:has(.c-dropdown__content:popover-open, .c-dropdown__content[data-v-popover-open])::after,
+	body:has(.c-dropdown__popover:popover-open, .c-dropdown__popover[data-v-popover-open])::after,
 	:modal:has(
-			.c-dropdown__content:popover-open,
-			.c-dropdown__content[data-v-popover-open]
+			.c-dropdown__popover:popover-open,
+			.c-dropdown__popover[data-v-popover-open]
 		)::after {
 		content: ' ';
 		position: fixed;
@@ -24,12 +24,12 @@
 	/* Make backdrop transparent on larger screens */
 	@mixin v-breakpoint-tablet {
 		body:has(
-				.c-dropdown__content[data-c-dropdown__positioned]:popover-open,
-				.c-dropdown__content[data-c-dropdown__positioned][data-v-popover-open]
+				.c-dropdown__popover[data-c-dropdown__active]:popover-open,
+				.c-dropdown__popover[data-c-dropdown__active][data-v-popover-open]
 			)::after,
 		:modal:has(
-				.c-dropdown__content[data-c-dropdown__positioned]:popover-open,
-				.c-dropdown__content[data-c-dropdown__positioned][data-v-popover-open]
+				.c-dropdown__popover[data-c-dropdown__active]:popover-open,
+				.c-dropdown__popover[data-c-dropdown__active][data-v-popover-open]
 			)::after {
 			background-color: transparent;
 			backdrop-filter: none;
@@ -45,6 +45,25 @@
 }
 
 @layer components {
+	.c-dropdown__popover {
+		background: transparent;
+		position: fixed;
+		margin: 0 auto;
+		z-index: var(--v-z-above-backdrop);
+
+		/* Mobile specific styling */
+		inset: var(--v-spacing);
+		width: 100%;
+		max-height: calc(100vh - 2 * var(--v-spacing));
+		max-width: calc(100vw - 2 * var(--v-spacing));
+
+		&:popover-open,
+		&[data-v-popover-open] {
+			display: flex;
+			flex-direction: column;
+		}
+	}
+
 	.c-dropdown__content {
 		@mixin v-colors-popover;
 		@mixin t-radius-inner;
@@ -55,7 +74,7 @@
 		*/
 		@mixin t-border-inner var(--v-shadow-lg);
 
-		&[data-c-dropdown__positioned] {
+		[data-c-dropdown__active] & {
 			@mixin t-transition-fade-out;
 
 			/*
@@ -66,7 +85,7 @@
 			display: flex;
 		}
 
-		&:popover-open {
+		:popover-open & {
 			@mixin t-transition-fade-in;
 
 			/* Duplicates above so popover still opens without JavaScript adding data-attr */
@@ -75,19 +94,11 @@
 
 		--c-dropdown__spacing: var(--v-inner-radius);
 
-		position: fixed;
-		margin: 0 auto;
 		flex-direction: column;
 		overflow: hidden;
 		padding-top: var(--c-dropdown__spacing);
-		z-index: var(--v-z-above-backdrop);
 		min-width: var(--c-dropdown__min-width);
-
-		/* Mobile specific styling */
-		inset: var(--v-spacing);
-		width: 100%;
-		max-height: calc(100vh - 2 * var(--v-spacing));
-		max-width: calc(100vw - 2 * var(--v-spacing));
+		max-height: 100%;
 	}
 
 	.c-dropdown__children {
@@ -110,7 +121,7 @@
 
 	/* Dropdown positioning only on larger screens */
 	@mixin v-breakpoint-tablet {
-		.c-dropdown__content[data-c-dropdown__positioned] {
+		.c-dropdown__popover[data-c-dropdown__active] {
 			inset: unset;
 			width: auto;
 			padding-bottom: var(--c-dropdown__spacing);
@@ -129,6 +140,20 @@
 			);
 			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
 			min-width: max(var(--c-dropdown__computed-min-width, 0), var(--c-dropdown__min-width));
+		}
+
+		.c-dropdown__content {
+			/* Vertical orientation offset */
+			[data-c-dropdown__position^='top'] &,
+			[data-c-dropdown__position^='bottom'] & {
+				margin: var(--v-space-xs) 0;
+			}
+
+			/* Horizontal orientation offset */
+			[data-c-dropdown__position^='left'] &,
+			[data-c-dropdown__position^='right'] & {
+				margin: 0 var(--v-space-xs);
+			}
 		}
 
 		.c-dropdown__footer {

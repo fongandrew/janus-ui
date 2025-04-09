@@ -10,6 +10,7 @@ import {
 } from '~/shared/components/callbacks/list-box';
 import { getList } from '~/shared/components/callbacks/option-list';
 import {
+	selectButtonClick,
 	selectButtonKeyDown,
 	selectFocusOut,
 	selectMountText,
@@ -86,6 +87,7 @@ export function Select(props: SelectProps) {
 				{...buttonProps}
 				{...callbackAttrs(
 					buttonProps,
+					selectButtonClick,
 					selectButtonKeyDown,
 					selectFocusOut,
 					(props.required || props['aria-required']) && listBoxRequired,

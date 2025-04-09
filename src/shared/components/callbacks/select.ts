@@ -29,6 +29,20 @@ export const SELECT_VISIBLE_CONTAINER_ATTR = 'data-select__visible';
 /** Data attribute for marking part of select for hidden options */
 export const SELECT_HIDDEN_CONTAINER_ATTR = 'data-select__hidden';
 
+/**
+ * Focus button on click (for Safari)
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#clicking_and_focus
+ * https://bugs.webkit.org/show_bug.cgi?id=22261#c68
+ */
+export const selectButtonClick = createHandler('click', '$c-select__button-click', (event) => {
+	const target = event.target as HTMLButtonElement;
+	const popover = target.popoverTargetElement as HTMLElement;
+	if (popover?.matches(':popover-open')) return;
+
+	// Safari doesn't focus the button when we open the popover, so do it manually
+	target.focus();
+});
+
 /** Keydown handler for select button */
 export const selectButtonKeyDown = createHandler(
 	'keydown',

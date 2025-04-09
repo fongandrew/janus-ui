@@ -88,6 +88,11 @@
 		display: none;
 	}
 
+	/* Dropdown container, needs extra margin because of focus ring when */
+	.c-select__popover {
+		margin: var(--v-space-xs) 0;
+	}
+
 	/* Select dropdown status / empty state */
 	.c-select__status {
 		@mixin v-text-sm;

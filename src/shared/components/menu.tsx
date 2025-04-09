@@ -13,7 +13,8 @@ import { getItemValue } from '~/shared/components/callbacks/option-list';
 import {
 	Dropdown,
 	DropdownContent,
-	type DropdownContentProps,
+	DropdownPopover,
+	type DropdownPopoverProps,
 	type DropdownProps,
 } from '~/shared/components/dropdown';
 import { FormElementButtonPropsProvider } from '~/shared/components/form-element-context';
@@ -24,10 +25,9 @@ import {
 	OptionListGroup,
 } from '~/shared/components/option-list';
 import { callbackAttrMods, callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
-import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
 
 // Disallow ID since it should be set via context
-export interface MenuProps extends DropdownContentProps {
+export interface MenuProps extends DropdownPopoverProps {
 	/** Called when a menu item is selected */
 	onValue?: (value: string, event: Event) => void;
 	/** Make children required */
@@ -45,15 +45,13 @@ export function Menu(props: MenuProps) {
 	};
 
 	return (
-		<DropdownContent
-			{...rest}
-			{...callbackAttrs(props, menuAutoFocus, dropdownCloseOnBlur)}
-			{...extendHandler(props, 'onClick', handleClick)}
-		>
-			<OptionList role="menu" {...callbackAttrs(menuKeyDown, menuCloseOnSelect)}>
-				{local.children}
-			</OptionList>
-		</DropdownContent>
+		<DropdownPopover {...rest} {...callbackAttrs(rest, menuAutoFocus, dropdownCloseOnBlur)}>
+			<DropdownContent onClick={handleClick}>
+				<OptionList role="menu" {...callbackAttrs(menuKeyDown, menuCloseOnSelect)}>
+					{local.children}
+				</OptionList>
+			</DropdownContent>
+		</DropdownPopover>
 	);
 }
 
