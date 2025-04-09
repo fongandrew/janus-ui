@@ -100,10 +100,10 @@ export function ListBox(props: ListBoxProps) {
 				onChange={handleChange}
 			>
 				{/*
-				Note that there's no option to clear a selection here -- assumption
-				is that if we care about this, we'll have a separate button or list item
-				with the right text
-			*/}
+					Note that there's no option to clear a selection here -- assumption
+					is that if we care about this, we'll have a separate button or list item
+					with the right text
+				*/}
 				{local.children}
 			</OptionList>
 		</ListBoxContext.Provider>
