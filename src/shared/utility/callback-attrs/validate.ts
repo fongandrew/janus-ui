@@ -128,8 +128,15 @@ export function setError(target: HTMLElement, msg: string | null) {
 	if (target.hasAttribute(EXTERNAL_ERROR_ATTR)) return;
 	target.setAttribute('aria-invalid', msg ? 'true' : 'false');
 
+	// Set aria-invalid on control as well since this is probably where focus is
+	const control =
+		target.id && elmDoc(target)?.querySelector<HTMLElement>(`[aria-controls="${target.id}"]`);
+	if (control) {
+		control.setAttribute('aria-invalid', msg ? 'true' : 'false');
+	}
+
 	// Always remove the incomplete attribute since post-validation, we can
-	// rely on aria-invalid instead
+	// rely on aria-invalid instead. This lives on the target iself and not the control.
 	target.removeAttribute(INCOMPLETE_ATTR);
 
 	const currentMsg = (target as HTMLInputElement).validationMessage;

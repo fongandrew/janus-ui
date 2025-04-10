@@ -1,6 +1,6 @@
 import cx from 'classix';
 import { ChevronsUpDown, X } from 'lucide-solid';
-import { createUniqueId, type JSX, splitProps } from 'solid-js';
+import { createSignal, createUniqueId, type JSX, splitProps } from 'solid-js';
 
 import { Button } from '~/shared/components/button';
 import {
@@ -38,6 +38,8 @@ export interface SelectButtonContainerProps extends JSX.HTMLAttributes<HTMLDivEl
 	listId?: string | undefined;
 	/** Make children required */
 	children: JSX.Element;
+	/** Arbitrary data props */
+	[key: `data-${string}`]: string | undefined;
 }
 
 export function SelectButtonContainer(props: SelectButtonContainerProps) {
@@ -45,14 +47,23 @@ export function SelectButtonContainer(props: SelectButtonContainerProps) {
 	const [local, buttonProps, rest] = splitProps(
 		props,
 		['children', 'inputId', 'listId', 'placeholder', 'invalid', 'required'],
-		['aria-describedby', 'aria-label', 'aria-labelledby', 'disabled', 'aria-disabled'],
+		[
+			'aria-describedby',
+			'aria-label',
+			'aria-labelledby',
+			'disabled',
+			'aria-disabled',
+			'data-testid',
+		],
 	);
 
 	const selectRequiredId = createUniqueId();
 	const selectUpdateTextId = createUniqueId();
 
-	let required: boolean | undefined;
-	let invalid: boolean | undefined;
+	// Signals we'll use to "transfer" certain form element props from popover trigger
+	// button to listbox / combobox inside popover
+	const [required, setRequired] = createSignal<boolean | undefined>();
+	const [invalid, setInvalid] = createSignal<boolean | undefined>();
 
 	return (
 		<div
@@ -68,11 +79,11 @@ export function SelectButtonContainer(props: SelectButtonContainerProps) {
 			<Dropdown>
 				<FormElementPropsProvider
 					required={(prev) => {
-						required = prev;
+						setRequired(prev);
 						return undefined;
 					}}
 					invalid={(prev) => {
-						invalid = prev;
+						setInvalid(prev);
 						return undefined;
 					}}
 				>
@@ -104,7 +115,7 @@ export function SelectButtonContainer(props: SelectButtonContainerProps) {
 						using aria-describedby somehow (the one in LabelledInput works
 						well for this).
 					*/
-					(local.required || required) && (
+					(local.required || required()) && (
 						<span id={selectRequiredId} class="t-sr-only">
 							<T>(Required)</T>
 						</span>
@@ -126,8 +137,8 @@ export function SelectButtonContainer(props: SelectButtonContainerProps) {
 				</FormElementResetProvider>
 				<SelectPopover>
 					<FormElementPropsProvider
-						required={() => attrNoConflict(local.required, required)}
-						invalid={() => attrNoConflict(local.invalid, invalid)}
+						required={() => attrNoConflict(local.required, required())}
+						invalid={() => attrNoConflict(local.invalid, invalid())}
 					>
 						{local.children}
 					</FormElementPropsProvider>

@@ -6,7 +6,7 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 	test('can select an option from single typeahead via mouse', async ({ page }) => {
 		const container = getContainer().getByTestId('single-typeahead-container');
 		const singleTypeahead = container.getByTestId('single-typeahead');
-		const listBox = container.locator('[role="listbox"]');
+		const listBox = container.getByRole('listbox');
 
 		// Check for placeholder
 		await expect(container.getByText('Select a color...')).toBeVisible();
@@ -38,7 +38,7 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 		await page.keyboard.press('e');
 
 		// Should trigger async search
-		const listBox = container.locator('[role="listbox"]');
+		const listBox = container.getByRole('listbox');
 		await expect(listBox).toBeVisible();
 		await expect(listBox.locator('[value="red"]')).toHaveAttribute(
 			'data-c-option-list__active',
@@ -67,7 +67,7 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 
 		await singleTypeahead.focus();
 		await page.keyboard.press('g');
-		const listBox = container.locator('[role="listbox"]');
+		const listBox = container.getByRole('listbox');
 		await expect(listBox).toBeVisible();
 
 		await page.keyboard.press('r');
@@ -84,7 +84,7 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 		await singleTypeahead.focus();
 		await page.keyboard.press('r');
 
-		const listBox = container.locator('[role="listbox"]');
+		const listBox = container.getByRole('listbox');
 		await expect(listBox.getByText('Red')).toBeVisible();
 
 		await page.keyboard.press('Tab');
@@ -95,7 +95,8 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 	test('can select multiple options from typeahead', async ({ page }) => {
 		const container = getContainer().getByTestId('multiple-typeahead-container');
 		const multiTypeahead = container.getByTestId('multiple-typeahead');
-		const listBox = container.locator('[role="listbox"]');
+		const typeaheadInput = container.getByRole('combobox');
+		const listBox = container.getByRole('listbox');
 
 		// Check for placeholder
 		await expect(container.getByText('Select colors...')).toBeVisible();
@@ -114,6 +115,7 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 		await listBox.getByText('Green').click();
 
 		// Search for second color
+		await expect(typeaheadInput).toBeFocused();
 		await page.keyboard.press('Backspace');
 		await page.keyboard.press('Backspace');
 		await page.keyboard.press('b');
@@ -133,7 +135,8 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 		// Open the dropdown again
 		await multiTypeahead.click();
 
-		// Search for first color
+		// Search for color to unselect
+		await expect(typeaheadInput).toBeFocused();
 		await page.keyboard.press('Backspace');
 		await page.keyboard.press('Backspace');
 		await page.keyboard.press('g');
@@ -146,6 +149,27 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 		await expect(container.getByText('Selected: blue')).toBeVisible();
 	});
 
+	test('shows error when selecting invalid option', async ({ page }) => {
+		const container = getContainer().getByTestId('multiple-typeahead-container');
+		const multiTypeahead = container.getByTestId('multiple-typeahead');
+		const typeaheadInput = container.getByRole('combobox');
+		const listBox = container.getByRole('listbox');
+
+		// Click to open dropdown
+		await multiTypeahead.click();
+		await page.keyboard.press('r');
+		await expect(listBox).toBeVisible();
+
+		// Select the invalid option
+		await listBox.getByText('Red').click();
+
+		// Error message should be visible
+		await expect(container.getByText("Don't pick red.")).toBeVisible();
+
+		// Select should have invalid attribute
+		await expect(typeaheadInput).toHaveAttribute('aria-invalid', 'true');
+	});
+
 	test('respects disabled state', async ({ page }) => {
 		const container = getContainer().getByTestId('disabled-typeahead-container');
 		const disabledTypeahead = container.getByTestId('disabled-typeahead');
@@ -156,7 +180,7 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 		await page.keyboard.press('ArrowDown');
 		await page.keyboard.press('r');
 
-		const listBox = container.locator('[role="listbox"]');
+		const listBox = container.getByRole('listbox');
 		await page.waitForTimeout(250);
 		await expect(listBox).not.toBeVisible();
 	});

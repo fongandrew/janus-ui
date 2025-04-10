@@ -12,8 +12,7 @@ describeComponent('selects-demo', (getContainer) => {
 
 		// Click to open dropdown
 		await singleSelect.click();
-		const listboxId = await singleSelect.getAttribute('aria-controls');
-		const listbox = container.locator(`[id="${listboxId}"]`);
+		const listbox = container.getByRole('listbox');
 		await expect(listbox).toBeVisible();
 
 		// Select an option
@@ -35,8 +34,7 @@ describeComponent('selects-demo', (getContainer) => {
 
 		// Open dropdown
 		await page.keyboard.press('Enter');
-		const listboxId = await singleSelect.getAttribute('aria-controls');
-		const listbox = container.locator(`[id="${listboxId}"]`);
+		const listbox = container.getByRole('listbox');
 		await expect(listbox).toBeVisible();
 
 		// Selecting via arrow auto-selects
@@ -66,8 +64,7 @@ describeComponent('selects-demo', (getContainer) => {
 
 		// Click to open dropdown
 		await multiSelect.click();
-		const listboxId = await multiSelect.getAttribute('aria-controls');
-		const listbox = container.locator(`[id="${listboxId}"]`);
+		const listbox = container.getByRole('listbox');
 		await expect(listbox).toBeVisible();
 
 		// Select an option
@@ -91,8 +88,7 @@ describeComponent('selects-demo', (getContainer) => {
 
 		// Open dropdown (use arrow to auto-select last)
 		await page.keyboard.press('ArrowUp');
-		const listboxId = await multiSelect.getAttribute('aria-controls');
-		const listbox = container.locator(`[id="${listboxId}"]`);
+		const listbox = container.getByRole('listbox');
 		await expect(listbox).toBeVisible();
 
 		// Selecting via arrow auto-selects
@@ -134,8 +130,7 @@ describeComponent('selects-demo', (getContainer) => {
 		// Click to open dropdown
 		const multiSelect = container.getByTestId('multiple-selection');
 		await multiSelect.click();
-		const listboxId = await multiSelect.getAttribute('aria-controls');
-		const listbox = container.locator(`[id="${listboxId}"]`);
+		const listbox = container.getByRole('listbox');
 		await expect(listbox).toBeVisible();
 
 		// Select the invalid option
@@ -145,7 +140,7 @@ describeComponent('selects-demo', (getContainer) => {
 		await expect(container.getByText("Don't pick red.")).toBeVisible();
 
 		// Select should have invalid attribute
-		await expect(multiSelect).toHaveAttribute('aria-invalid', 'true');
+		await expect(listbox).toHaveAttribute('aria-invalid', 'true');
 	});
 
 	test('respects disabled state', async () => {
@@ -154,19 +149,18 @@ describeComponent('selects-demo', (getContainer) => {
 		// Can't open by clicking
 		const disabledSelect = container.getByTestId('disabled-selection');
 		await disabledSelect.click({ force: true });
-		await expect(container.locator('[role="listbox"]')).not.toBeVisible();
+		await expect(container.getByRole('listbox')).not.toBeVisible();
 
 		// Can't open with keyboard
 		await disabledSelect.focus();
 		await disabledSelect.press('Enter');
-		await expect(container.locator('[role="listbox"]')).not.toBeVisible();
+		await expect(container.getByRole('listbox')).not.toBeVisible();
 	});
 
 	test('can open long selection list and scroll', async ({ page }) => {
 		const container = getContainer().getByTestId('long-selection-container');
 		const longSelect = container.getByTestId('long-selection');
-		const listboxId = await longSelect.getAttribute('aria-controls');
-		const listbox = container.locator(`[id="${listboxId}"]`);
+		const listbox = container.getByRole('listbox');
 
 		// Click to open dropdown
 		await longSelect.click();

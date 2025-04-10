@@ -1,8 +1,9 @@
-import { createUniqueId, splitProps } from 'solid-js';
+import { createMemo, createUniqueId, splitProps } from 'solid-js';
 
 import { selectInputKeyDown, selectUpdateWithInput } from '~/shared/components/callbacks/select';
 import {
 	createFormElementId,
+	FormElementPropsContext,
 	FormElementResetProvider,
 } from '~/shared/components/form-element-context';
 import { type FormElementProps } from '~/shared/components/form-element-props';
@@ -12,6 +13,7 @@ import { SelectButtonContainer } from '~/shared/components/select-button-contain
 import { SelectOptionList } from '~/shared/components/select-option-list';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { VALIDATE_ATTR } from '~/shared/utility/callback-attrs/validate';
+import { useSingleProp } from '~/shared/utility/solid/prop-mod-context';
 
 export type SelectTypeaheadProps = Omit<FormElementProps<'div'>, 'onInput' | 'onValidate'> &
 	Pick<ListBoxProps, 'name' | 'multiple' | 'values' | 'onChange' | 'onValues' | 'onValidate'> & {
@@ -45,6 +47,11 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 	const listId = createUniqueId();
 	const selectInputTextId = createUniqueId();
 
+	const invalid = createMemo(() => {
+		const prevInvalid = useSingleProp(FormElementPropsContext, 'invalid');
+		return prevInvalid || inputProps.invalid;
+	});
+
 	return (
 		<SelectButtonContainer
 			listId={listId}
@@ -70,6 +77,7 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 					aria-autocomplete="list"
 					aria-controls={listId}
 					aria-multiselectable={props.multiple}
+					invalid={invalid()}
 					autofocus
 					unstyled
 				/>

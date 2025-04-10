@@ -6,7 +6,7 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 	test('can select an option from single typeahead', async ({ page }) => {
 		const container = getContainer().getByTestId('single-typeahead-container');
 		const singleTypeahead = container.getByTestId('single-typeahead');
-		const listBox = container.locator('[role="listbox"]');
+		const listBox = container.getByRole('listbox');
 
 		// Check for placeholder
 		await expect(container.getByText('Select a color...')).toBeVisible();
@@ -33,7 +33,7 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 	test('can select multiple options from typeahead', async ({ page }) => {
 		const container = getContainer().getByTestId('multiple-typeahead-container');
 		const multiTypeahead = container.getByTestId('multiple-typeahead');
-		const listBox = container.locator('[role="listbox"]');
+		const listBox = container.getByRole('listbox');
 
 		// Check for placeholder
 		await expect(container.getByText('Select colors...')).toBeVisible();
@@ -90,7 +90,8 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 	}) => {
 		const container = getContainer().getByTestId('multiple-typeahead-container');
 		const multiTypeahead = container.getByTestId('multiple-typeahead');
-		const listBox = container.locator('[role="listbox"]');
+		const typeaheadInput = container.getByRole('combobox');
+		const listBox = container.getByRole('listbox');
 
 		// Search for first color
 		await multiTypeahead.tap();
@@ -101,12 +102,12 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 		await expect(listBox).toBeVisible();
 		await listBox.getByText('Green').tap();
 
-		// Tap on the input again
-		await multiTypeahead.tap();
+		// Tap on the input (to simulate highlighting or something)
+		await typeaheadInput.tap();
 
 		// Make sure stuff doesn't disappear after a short delay
 		await page.waitForTimeout(240);
-		await expect(multiTypeahead).toBeFocused();
+		await expect(typeaheadInput).toBeFocused();
 		await expect(listBox).toBeVisible();
 	});
 });

@@ -14,10 +14,10 @@
 		.c-select__container:has(:popover-open) & {
 			@mixin t-focus-ring;
 		}
+	}
 
-		&:has(+ [popover] :invalid, + [popover] [aria-invalid='true']) {
-			@mixin t-error;
-		}
+	.c-select__container:has(:invalid, [aria-invalid='true']) .c-select__button {
+		@mixin t-error;
 	}
 
 	/* Select container parts */

@@ -36,7 +36,13 @@ export const selectButtonKeyDown = createHandler(
 
 		const popover = (event.target as HTMLButtonElement).popoverTargetElement;
 		if (!popover?.matches(':popover-open')) {
-			selectMaybeClearOnEsc.call(this, event);
+			if (event.key === 'Escape') {
+				const listElm = popover?.querySelector<HTMLElement>('[role="listbox"]');
+				if (listElm && listBoxValues(listElm).size) {
+					event.preventDefault();
+					listClear(listElm);
+				}
+			}
 		}
 	},
 );
@@ -98,25 +104,7 @@ export const selectClear = createHandler('click', '$c-select__clear', (event) =>
 	const target = event.target as HTMLElement;
 	const listElm = getList(target);
 	if (!listElm) return;
-
-	let didChange = false;
-	for (const item of listElm.querySelectorAll('[aria-selected="true"]')) {
-		item.setAttribute('aria-selected', 'false');
-		if (item instanceof HTMLInputElement) {
-			didChange = true;
-			item.checked = false;
-		}
-	}
-	for (const item of listElm.querySelectorAll<HTMLInputElement>('[type="hidden"]')) {
-		didChange = true;
-		item.remove();
-	}
-	if (!didChange) return;
-
-	listElm.dispatchEvent(new Event('change', { bubbles: true }));
-
-	// Clear unsets focus, so try to restore to controlling element
-	listTrigger(listElm)?.focus();
+	listClear(listElm);
 });
 
 /**
@@ -369,24 +357,6 @@ function getSelectObserver(hiddenInputContainer: HTMLElement) {
 	return observer;
 }
 
-/**
- * Maybe clear the select element when pressing escape. Do this only if there is
- * something to clear to avoid blocking escape functionality inside a modal or somthing.
- */
-function selectMaybeClearOnEsc(
-	this: HTMLElement,
-	event: KeyboardEvent & { currentTarget: HTMLElement },
-) {
-	if (event.key === 'Escape') {
-		const target = event.target as HTMLElement;
-		const listElm = getList(target);
-		if (listElm && listBoxValues(listElm).size) {
-			event.preventDefault();
-			selectClear.do.call(this, event);
-		}
-	}
-}
-
 /** Get popover for list element */
 function listPopover(listElm: HTMLElement) {
 	return listElm.closest('[popover]') as HTMLElement | null;
@@ -397,6 +367,28 @@ function listTrigger(listElm: HTMLElement) {
 	const popover = listPopover(listElm);
 	if (!popover) return null;
 	return elmDoc(popover)?.querySelector<HTMLElement>(`[popovertarget="${popover.id}"]`);
+}
+
+/** Clear listbox values */
+function listClear(listElm: HTMLElement) {
+	let didChange = false;
+	for (const item of listElm.querySelectorAll('[aria-selected="true"]')) {
+		item.setAttribute('aria-selected', 'false');
+		if (item instanceof HTMLInputElement) {
+			didChange = true;
+			item.checked = false;
+		}
+	}
+	for (const item of listElm.querySelectorAll<HTMLInputElement>('[type="hidden"]')) {
+		didChange = true;
+		item.remove();
+	}
+	if (!didChange) return;
+
+	listElm.dispatchEvent(new Event('change', { bubbles: true }));
+
+	// Clear unsets focus, so try to restore to controlling element
+	listTrigger(listElm)?.focus();
 }
 
 /** Show popover on keydown */
@@ -437,12 +429,9 @@ function showOnKeyDown(event: KeyboardEvent) {
 		// regardless of previous selection
 		if (event.key === 'ArrowUp') {
 			event.preventDefault();
-			const listElm = getList(event.target as HTMLElement);
-			if (listElm) {
-				const items = getListItems(listElm);
-				highlightInList(listElm, items[items.length - 1] ?? null);
-				syncActiveDescendant(listElm);
-			}
+			const items = getListItems(listElm);
+			highlightInList(listElm, items[items.length - 1] ?? null);
+			syncActiveDescendant(listElm);
 		}
 	}
 }

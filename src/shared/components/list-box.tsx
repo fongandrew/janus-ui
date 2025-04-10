@@ -91,7 +91,7 @@ export function ListBox(props: ListBoxProps) {
 					optionListProps['aria-required'] && listBoxRequired,
 					listBoxKeyDown,
 					listBoxReset,
-					isServer && mountAttr('tabindex', '0'),
+					isServer && mountAttr('tabindex', String(optionListProps['tabIndex'] ?? 0)),
 				)}
 				role="listbox"
 				class={cx(local.unstyled ? 't-unstyled' : 'c-list-box', rest.class)}
