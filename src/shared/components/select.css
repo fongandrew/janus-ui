@@ -5,29 +5,18 @@
 		@mixin t-input-style;
 
 		cursor: pointer;
-	}
-
-	.c-select__input_description {
-		@mixin t-input-base-style;
-		@mixin t-input-sibling-states;
-
-		pointer-events: none;
-	}
-
-	.c-select__button,
-	.c-select__input_description {
 		text-align: left;
 		width: 100%;
-	}
 
-	.c-select__button,
-	.c-select__input,
-	.c-select__input_description {
 		/* To avoid overlap with the chevron or clear */
 		padding-right: var(--v-input-height);
 
 		.c-select__container:has(:popover-open) & {
 			@mixin t-focus-ring;
+		}
+
+		&:has(+ [popover] :invalid, + [popover] [aria-invalid='true']) {
+			@mixin t-error;
 		}
 	}
 
@@ -89,8 +78,8 @@
 	}
 
 	/* Dropdown container, needs extra margin because of focus ring when */
-	.c-select__popover {
-		margin: var(--v-space-xs) 0;
+	.c-select__dropdown {
+		margin: calc(var(--v-space-xs) * 2) 0;
 	}
 
 	/* Select dropdown status / empty state */
@@ -135,46 +124,22 @@
 		}
 	}
 
-	/* Select typeahead */
-	.c-select__input {
-		position: absolute;
-		inset: 0;
-		opacity: 0;
-	}
-
-	.c-select__container:has(:popover-open) .c-select__input_description {
-		opacity: 0;
-	}
-
-	/* Mobile-specific fixed positioning for input + dropdown */
-	.c-select__container:has(:popover-open) .c-select__input {
-		opacity: 1;
-		position: fixed;
-		inset: var(--v-spacing) var(--v-spacing) auto var(--v-spacing);
-		z-index: var(--v-z-above-backdrop);
-		width: auto;
-	}
-
-	.c-select__input ~ .c-dropdown__content {
-		top: calc(var(--v-input-height) + 2 * var(--v-spacing));
-		margin-top: 0;
-		margin-bottom: 0;
-		max-height: calc(100vh - 3 * var(--v-spacing) - var(--v-input-height));
-	}
-
-	/* Undo mobile-specific positioning */
+	/* Undo mobile-specific positioning, shift up to cover button */
 	@mixin v-breakpoint-tablet {
-		.c-select__container:has(:popover-open) .c-select__input {
+		.c-select__input {
 			position: absolute;
-			inset: 0;
-			width: 100%;
-		}
+			left: 0;
+			right: 0;
 
-		.c-select__input ~ .c-dropdown__content {
-			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
-			top: var(--c-dropdown__top);
-			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
-			max-height: var(--c-dropdown__computed-max-height);
+			[data-c-dropdown__position^='top'] & {
+				bottom: 0;
+				transform: translateY(100%);
+			}
+
+			[data-c-dropdown__position^='bottom'] & {
+				top: 0;
+				transform: translateY(-100%);
+			}
 		}
 	}
 }

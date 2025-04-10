@@ -43,7 +43,7 @@ export const selectButtonClick = createHandler('click', '$c-select__button-click
 	target.focus();
 });
 
-/** Keydown handler for select button */
+/** Keydown handler for plain select (non-typeahead) button */
 export const selectButtonKeyDown = createHandler(
 	'keydown',
 	'$c-select__button-keydown',
@@ -67,25 +67,27 @@ export const selectButtonKeyDown = createHandler(
 	},
 );
 
+/** Keydown handler for select typeahead button */
+export const selectTypeaheadButtonKeyDown = createHandler(
+	'keydown',
+	'$c-select__typeahead-button-keydown',
+	function (this, event) {
+		showOnKeyDown(event);
+
+		const popover = (event.target as HTMLButtonElement).popoverTargetElement;
+		if (!popover?.matches(':popover-open')) {
+			selectMaybeClearOnEsc.call(this, event);
+		}
+	},
+);
+
 /** Keydown handler for select input */
 export const selectInputKeyDown = createHandler(
 	'keydown',
 	'$c-select__input-keydown',
 	function (this, event) {
-		const popover = (event.target as HTMLInputElement).popoverTargetElement;
-		let popoverOpen = popover?.matches(':popover-open');
-		if (popoverOpen) {
-			optionListKeyDown.do.call(this, event);
-		} else {
-			showOnKeyDown(event);
-		}
-
-		popoverOpen = popover?.matches(':popover-open');
-		if (popoverOpen) {
-			syncActiveDescendant(event.target as HTMLElement);
-		} else {
-			selectMaybeClearOnEsc.call(this, event);
-		}
+		optionListKeyDown.do.call(this, event);
+		syncActiveDescendant(event.target as HTMLElement);
 
 		// Prevent default so that we don't submit form if enter key is pressed while
 		// text input is focused. That may be the expected behavior for an actual
@@ -94,45 +96,6 @@ export const selectInputKeyDown = createHandler(
 		if (event.key === 'Enter') {
 			event.preventDefault();
 		}
-	},
-);
-
-/**
- * Toggle popover on input click -- this happens automatically with buttons with
- * popovertargets but not inputs
- */
-export const selectInputClick = createHandler('click', '$c-select__input-click', (event) => {
-	const target = event.target as HTMLInputElement;
-	const popover = target.popoverTargetElement as HTMLElement;
-	popover?.showPopover();
-});
-
-/**
- * Additional pointerdown / pointerup handler for select typeahead interactions
- * where click starts on input but maybe ends up off of it (e.g. drag to highlight)
- * and instead of mousedown to support touch interactions better.
- *
- * In theory, should be redundant with `selectInputClick` but for some reason
- * input doens't automatically focus if we open on pointerdown instead of
- * click / mouseup.
- */
-export const selectInputPointer = createHandler(
-	'pointerdown',
-	'$c-select__input-pointer',
-	(event) => {
-		const target = event.target as HTMLInputElement;
-		const popover = target.popoverTargetElement as HTMLElement | null;
-
-		// If already open, let click handler deal with it
-		if (!popover?.matches(':popover-open')) return;
-
-		elmDoc(popover)?.addEventListener(
-			'pointerup',
-			() => {
-				popover?.showPopover();
-			},
-			{ once: true },
-		);
 	},
 );
 
@@ -209,8 +172,8 @@ export const selectClear = createHandler('click', '$c-select__clear', (event) =>
 	const dispatcher = getControllingElement(listElm);
 	dispatcher.dispatchEvent(new Event('change', { bubbles: true }));
 
-	// Clear unsets focus, so restore to dispatching element
-	dispatcher.focus();
+	// Clear unsets focus, so try to restore to controlling element
+	listTrigger(listElm)?.focus();
 });
 
 /**
@@ -330,6 +293,8 @@ export function createSelectInputHandler<TExtra extends (string | undefined)[]>(
 ) {
 	return createHandler<'input', TExtra>('input', name, (event, ...extras: TExtra) => {
 		const target = event.target as HTMLInputElement;
+		if (!target.ariaAutoComplete) return;
+
 		const listElm = getList(target);
 		if (!listElm) return;
 
@@ -484,6 +449,13 @@ function listPopover(listElm: HTMLElement) {
 	return listElm.closest('[popover]') as HTMLElement | null;
 }
 
+/** Get trigger element for list popover */
+function listTrigger(listElm: HTMLElement) {
+	const popover = listPopover(listElm);
+	if (!popover) return null;
+	return elmDoc(popover)?.querySelector<HTMLElement>(`[popovertarget="${popover.id}"]`);
+}
+
 /** Show popover on keydown */
 function showOnKeyDown(event: KeyboardEvent) {
 	if (event.key.length === 1 || ['ArrowUp', 'ArrowDown', 'Enter'].includes(event.key)) {
@@ -491,7 +463,7 @@ function showOnKeyDown(event: KeyboardEvent) {
 			?.popoverTargetElement as HTMLElement;
 		popover?.showPopover();
 
-		const listElm = getList(event.target as HTMLElement);
+		const listElm = popover?.querySelector<HTMLElement>('[role="listbox"]');
 		if (!listElm) return;
 
 		// Arrow down should highlight first item only if there is no item already
@@ -508,12 +480,14 @@ function showOnKeyDown(event: KeyboardEvent) {
 				const checked = listElm.querySelector<HTMLInputElement>(':checked');
 				if (checked) {
 					highlightInList(listElm, checked);
+					syncActiveDescendant(listElm);
 					return;
 				}
 			}
 
 			const items = getListItems(listElm);
 			highlightInList(listElm, items[0] ?? null);
+			syncActiveDescendant(listElm);
 		}
 
 		// Arrow up is different in that it always highlights the last item in list,
@@ -524,6 +498,7 @@ function showOnKeyDown(event: KeyboardEvent) {
 			if (listElm) {
 				const items = getListItems(listElm);
 				highlightInList(listElm, items[items.length - 1] ?? null);
+				syncActiveDescendant(listElm);
 			}
 		}
 	}

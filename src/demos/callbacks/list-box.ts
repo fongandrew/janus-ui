@@ -7,7 +7,7 @@ export const listBoxUpdateText = createHandler(
 	'change',
 	'$p-list-box__update-text',
 	(event, targetId: string) => {
-		const listElm = getList(event.currentTarget);
+		const listElm = getList(event.target as HTMLElement);
 		if (!listElm) return;
 
 		const target = listElm.ownerDocument?.getElementById(targetId);
@@ -20,7 +20,7 @@ export const listBoxUpdateText = createHandler(
 );
 
 export const listBoxNoRed = createValidator('$p-list-box__no-red', (event) => {
-	const listElm = getList(event.currentTarget);
+	const listElm = getList(event.target as HTMLElement);
 	if (!listElm) return;
 	const values = listBoxValues(listElm);
 	if (values.has('red')) {
@@ -31,8 +31,7 @@ export const listBoxNoRed = createValidator('$p-list-box__no-red', (event) => {
 export const listBoxMinMax = createValidator(
 	'$p-list-box__min-max',
 	(event, minStr: string, maxStr: string) => {
-		const target = event.currentTarget;
-		const list = getList(target);
+		const list = getList(event.target as HTMLElement);
 		if (!list) return;
 
 		const values = listBoxValues(list);

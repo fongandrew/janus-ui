@@ -1,31 +1,36 @@
 import cx from 'classix';
 import { createUniqueId, splitProps } from 'solid-js';
 
+import { Button } from '~/shared/components/button';
 import {
 	createListBoxValidator,
+	listBoxRequired,
 	type ListBoxValidator,
 	listBoxValues,
 } from '~/shared/components/callbacks/list-box';
 import { getList } from '~/shared/components/callbacks/option-list';
 import {
-	selectFocusOut,
-	selectInputClick,
 	selectInputKeyDown,
-	selectInputPointer,
 	selectMountText,
+	selectTypeaheadButtonKeyDown,
 	selectUpdateText,
 	selectUpdateWithInput,
 } from '~/shared/components/callbacks/select';
 import { createFormElementId } from '~/shared/components/form-element-context';
+import { type FormElementProps } from '~/shared/components/form-element-props';
 import { Input, type InputProps } from '~/shared/components/input';
 import { SelectContainer } from '~/shared/components/select-container';
 import { SelectOptionList } from '~/shared/components/select-option-list';
 import { SelectPopover } from '~/shared/components/select-popover';
 import { SelectText } from '~/shared/components/select-text';
+import { T } from '~/shared/components/t-components';
+import { attrs } from '~/shared/utility/attribute-list';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { VALIDATE_ATTR } from '~/shared/utility/callback-attrs/validate';
 import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
 
-export interface SelectTypeaheadProps extends Omit<InputProps, 'onValidate'> {
+export interface SelectTypeaheadProps
+	extends Omit<FormElementProps<'div'>, 'onChange' | 'onInput' | 'onValidate'> {
 	/** Name for form submission */
 	name?: string | undefined;
 	/** Placeholder text when no selection */
@@ -37,6 +42,10 @@ export interface SelectTypeaheadProps extends Omit<InputProps, 'onValidate'> {
 	 * https://github.com/solidjs/solid/discussions/416 for Solid and controlled state
 	 */
 	values?: Set<string> | undefined;
+	/** Change handler, tied to input instead */
+	onChange?: InputProps['onChange'] | undefined;
+	/** Input handler, tied to typing */
+	onInput?: InputProps['onInput'] | undefined;
 	/** Called when selection changes */
 	onValues?: ((value: Set<string>, event: Event) => void) | undefined;
 	/** Called when typing happens */
@@ -48,18 +57,26 @@ export interface SelectTypeaheadProps extends Omit<InputProps, 'onValidate'> {
 }
 
 export function SelectTypeahead(props: SelectTypeaheadProps) {
-	const [local, inputProps] = splitProps(props, [
-		'children',
-		'name',
-		'placeholder',
-		'values',
-		'onValues',
-		'onValueInput',
-		'onValidate',
-		'multiple',
-	]);
+	const [local, inputProps, buttonProps, rest] = splitProps(
+		props,
+		[
+			'children',
+			'name',
+			'placeholder',
+			'values',
+			'required',
+			'aria-required',
+			'onChange',
+			'onInput',
+			'onValues',
+			'onValueInput',
+			'onValidate',
+			'multiple',
+		],
+		[VALIDATE_ATTR, 'invalid', 'aria-invalid'],
+		['aria-describedby', 'aria-labelledby'],
+	);
 
-	const descriptionId = createUniqueId();
 	const listId = createUniqueId();
 
 	const handleInput = (event: InputEvent) => {
@@ -84,49 +101,77 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 	const id = createFormElementId(props);
 	const selectInputTextId = createUniqueId();
 	const selectUpdateTextId = createUniqueId();
+	const selectRequiredId = createUniqueId();
 
 	return (
 		<SelectContainer
 			listId={listId}
 			inputId={id()}
 			aria-busy={props.busy}
+			{...rest}
 			{...callbackAttrs(
+				rest,
 				selectMountText(selectUpdateTextId),
 				selectUpdateText(selectUpdateTextId),
-				selectUpdateWithInput(selectInputTextId),
 			)}
 		>
-			<Input
-				{...inputProps}
-				{...callbackAttrs(
-					inputProps,
-					selectInputClick,
-					selectInputPointer,
-					selectInputKeyDown,
-					selectFocusOut,
+			<Button
+				{...buttonProps}
+				{...callbackAttrs(buttonProps, selectTypeaheadButtonKeyDown)}
+				class={cx('c-select__button', props.class)}
+				aria-describedby={attrs(
+					buttonProps['aria-describedby'],
+					(props.required || props['aria-required']) && selectRequiredId,
 				)}
-				{...extendHandler(props, 'onChange', handleChange)}
-				{...extendHandler(props, 'onInput', handleInput)}
-				id={id()}
-				role="combobox"
-				class={cx('c-select__input', props.class)}
-				onValidate={handleValidate}
-				aria-autocomplete="list"
-				aria-controls={listId}
-				aria-describedby={descriptionId}
-				aria-haspopup="listbox"
-				aria-multiselectable={props.multiple}
+				aria-haspopup="dialog"
 				unstyled
-			/>
-			<div id={descriptionId} class="c-select__input_description">
+			>
 				<SelectText id={selectUpdateTextId} placeholder={local.placeholder} />
-			</div>
-			<SelectPopover>
+			</Button>
+			{
+				/*
+					Mark required state with extra descriptive text because it's
+					sort of semantically incorrect to use aria-required on what's
+					just the popover trigger but it's also weird to stick it on
+					the input (not required to have something in the search field,
+					just that we select something) and the input is hidden anyways
+					if the popover is closed.
+
+					For error state, this should be also associated with the button
+					using aria-describedby somehow (the one in LabelledInput works
+					well for this).
+				*/
+				(props.required || props['aria-required']) && (
+					<span id={selectRequiredId} class="t-sr-only">
+						<T>(Required)</T>
+					</span>
+				)
+			}
+			<SelectPopover {...callbackAttrs(selectUpdateWithInput(selectInputTextId))}>
+				<Input
+					{...inputProps}
+					{...callbackAttrs(
+						inputProps,
+						selectInputKeyDown,
+						(props.required || props['aria-required']) && listBoxRequired,
+					)}
+					{...extendHandler(local, 'onChange', handleChange)}
+					{...extendHandler(local, 'onInput', handleInput)}
+					id={id()}
+					role="combobox"
+					class="c-select__input"
+					onValidate={handleValidate}
+					aria-autocomplete="list"
+					aria-controls={listId}
+					aria-haspopup="listbox"
+					aria-multiselectable={props.multiple}
+					autofocus={true}
+					unstyled
+				/>
 				<SelectOptionList
 					busy={props.busy}
 					listBoxId={listId}
 					selectInputTextId={selectInputTextId}
-					input={inputProps.value ? String(inputProps.value) : undefined}
 					name={local.name}
 					multiple={local.multiple}
 					values={local.values}

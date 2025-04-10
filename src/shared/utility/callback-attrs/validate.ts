@@ -210,6 +210,18 @@ export function getErrorElement(target: HTMLElement): HTMLElement | null {
 			return elm;
 		}
 	}
+
+	// Check if we're inside a popover that might have an error element
+	const popover = target.closest<HTMLElement>('[popover]');
+	if (popover?.id) {
+		const trigger = elmDoc(popover).querySelector<HTMLElement>(
+			`[popovertarget="${popover.id}"]`,
+		);
+		if (trigger) {
+			return getErrorElement(trigger);
+		}
+	}
+
 	return null;
 }
 
@@ -219,6 +231,16 @@ export function getErrorElement(target: HTMLElement): HTMLElement | null {
 export function focusOrScrollToError(container: HTMLElement) {
 	for (const child of getValidatableElements(container)) {
 		if (child.matches(':invalid,[aria-invalid="true"]')) {
+			// Special case for non-closed popover
+			const closedPopover = child.closest<HTMLElement>('[popover]:not(:popover-open)');
+			if (closedPopover?.id) {
+				elmDoc(closedPopover)
+					.querySelector<HTMLElement>(`[popovertarget="${closedPopover.id}"]`)
+					?.focus();
+				return;
+			}
+
+			// Regular, just focus input element
 			child.focus();
 			return;
 		}

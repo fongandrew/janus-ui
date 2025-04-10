@@ -126,11 +126,11 @@ export function syncActiveDescendant(target: HTMLElement) {
 	const listElm = getList(target);
 	if (!listElm) return;
 
+	const controller = getControllingElement(listElm);
 	const highlighted = getListHighlighted(listElm);
-	target.setAttribute('aria-activedescendant', highlighted?.id ?? '');
+	controller.setAttribute('aria-activedescendant', highlighted?.id ?? '');
 
 	// For single selection, highlighting basically acts as selection
-	const controller = getControllingElement(listElm);
 	const multiple = controller.getAttribute('aria-multiselectable') === 'true';
 	if (!multiple && highlighted instanceof HTMLInputElement) {
 		if (highlighted.checked) return;

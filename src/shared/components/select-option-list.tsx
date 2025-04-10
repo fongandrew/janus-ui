@@ -1,3 +1,4 @@
+import cx from 'classix';
 import { children, createUniqueId, For, type JSX, mergeProps, splitProps } from 'solid-js';
 
 import { listBoxChange, listBoxMount, listBoxReset } from '~/shared/components/callbacks/list-box';
@@ -12,6 +13,7 @@ import { OptionList } from '~/shared/components/option-list';
 import { Placeholder } from '~/shared/components/placeholder';
 import { T } from '~/shared/components/t-components';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { VALIDATE_ATTR } from '~/shared/utility/callback-attrs/validate';
 import { emptyAttr } from '~/shared/utility/empty-attr';
 
 // Disallow ID, should be set via context
@@ -28,15 +30,16 @@ export interface SelectOptionListProps extends Omit<JSX.HTMLAttributes<HTMLDivEl
 	values?: Set<string> | undefined;
 	/** Whether multiple selection is allowed */
 	multiple?: boolean | undefined;
-	/** Current (or initial, can be updated via `selectUpdateWithInput`) input value, if any */
-	input?: string | undefined;
+	/** Allow arbitrary data attributes */
+	[key: `data-${string}`]: string | undefined;
 }
 
 export function SelectOptionList(props: SelectOptionListProps) {
-	const [local, listBoxContextProps, rest] = splitProps(
+	const [local, listBoxContextProps, optionListProps, rest] = splitProps(
 		props,
-		['children', 'listBoxId', 'selectInputTextId', 'input', 'busy'],
+		['children', 'listBoxId', 'selectInputTextId', 'busy'],
 		['name', 'values', 'multiple'],
+		[VALIDATE_ATTR],
 	);
 
 	// IDs for visible + hidden input containers. When content of visible input container
@@ -57,14 +60,16 @@ export function SelectOptionList(props: SelectOptionListProps) {
 	let resolver: (() => JSX.Element) | undefined;
 
 	return (
-		<DropdownContent {...rest}>
+		<DropdownContent {...rest} class={cx('c-select__dropdown', rest.class)}>
 			<ListBoxContext.Provider value={context}>
 				<OptionList
 					role="listbox"
 					id={local.listBoxId}
 					class="t-unstyled"
 					aria-busy={local.busy}
+					{...optionListProps}
 					{...callbackAttrs(
+						optionListProps,
 						listBoxChange,
 						listBoxMount,
 						listBoxReset,
@@ -104,10 +109,8 @@ export function SelectOptionList(props: SelectOptionListProps) {
 						<strong
 							id={local.selectInputTextId}
 							class="c-select__no_match_value"
-							{...emptyAttr(local.input?.trim())}
-						>
-							{local.input?.trim()}
-						</strong>
+							{...emptyAttr()}
+						/>
 					</T>
 				</span>
 				<span class="c-select__no_value">
