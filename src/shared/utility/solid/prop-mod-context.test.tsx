@@ -2,6 +2,7 @@ import { render } from '@solidjs/testing-library';
 import { type JSX } from 'solid-js';
 import { describe, expect, it } from 'vitest';
 
+import { createIncrSignal } from '~/shared/utility/solid/create-incr-signal';
 import {
 	createPropModContext,
 	mergePropMods,
@@ -65,6 +66,32 @@ describe('createPropModContext', () => {
 		const element = getByTestId('test-element');
 		expect(element).toHaveClass('mod-class');
 		expect(element).toHaveAttribute('id', 'new-id');
+	});
+
+	it('updates mod values reactively', () => {
+		const [count, incr] = createIncrSignal();
+
+		const TestContext = createPropModContext<{ 'data-count'?: number | undefined }>();
+
+		function TestComponent(props: { 'data-count'?: number | undefined; onClick: () => void }) {
+			const mergedProps = mergePropMods(TestContext, props);
+			return <div data-testid="test-element" {...mergedProps} />;
+		}
+
+		const propMods: PropModGeneric<{ 'data-count'?: number | undefined }> = {
+			'data-count': () => count(),
+		};
+
+		const { getByTestId } = render(() => (
+			<TestContext.Provider {...propMods}>
+				<TestComponent onClick={incr} />
+			</TestContext.Provider>
+		));
+
+		const element = getByTestId('test-element');
+		expect(element).toHaveAttribute('data-count', '0');
+		element.click();
+		expect(element).toHaveAttribute('data-count', '1');
 	});
 
 	it('should stack multiple Provider contexts', () => {
