@@ -13,27 +13,21 @@ export type SelectProps = Omit<FormElementProps<'div'>, 'onValidate'> &
 	};
 
 export function Select(props: SelectProps) {
-	const [optionListProps, shared, rest] = splitProps(
-		props,
-		[
-			'children',
-			'name',
-			'multiple',
-			'values',
-			'onChange',
-			'onValues',
-			'onValidate',
-			'invalid',
-			'aria-invalid',
-			VALIDATE_ATTR,
-		],
-		['required', 'aria-required'],
-	);
+	const [optionListProps, rest] = splitProps(props, [
+		'children',
+		'name',
+		'multiple',
+		'values',
+		'onChange',
+		'onValues',
+		'onValidate',
+		VALIDATE_ATTR,
+	]);
 
 	const listId = createUniqueId();
 	return (
-		<SelectButtonContainer listId={listId} {...shared} {...rest}>
-			<SelectOptionList listBoxId={listId} {...shared} {...optionListProps} autofocus />
+		<SelectButtonContainer listId={listId} {...rest}>
+			<SelectOptionList listBoxId={listId} {...optionListProps} autofocus />
 		</SelectButtonContainer>
 	);
 }

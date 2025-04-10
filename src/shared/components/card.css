@@ -47,7 +47,9 @@
 	}
 
 	/* Show disabled state on footer buttons if form in body has invalid fields */
-	.c-card:has(:invalid) .c-card__footer [type='submit'] {
+	.c-card:has(:invalid, [aria-invalid='true'], [data-t-validate__incomplete])
+		.c-card__footer
+		[type='submit'] {
 		@mixin t-disabled-button;
 
 		/*

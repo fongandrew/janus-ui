@@ -25,6 +25,8 @@ export function SelectionValidationDemo() {
 	const [formData, setFormData] = createSignal<{
 		fruits: string[];
 		colors: string[];
+		animals: string[];
+		cities: string[];
 	} | null>(null);
 
 	const handleSubmit = (e: SubmitEvent) => {
@@ -34,6 +36,8 @@ export function SelectionValidationDemo() {
 		setFormData({
 			fruits: data.getAll('fruits') as string[],
 			colors: data.getAll('colors') as string[],
+			animals: data.getAll('animals') as string[],
+			cities: data.getAll('cities') as string[],
 		});
 	};
 
@@ -54,6 +58,8 @@ export function SelectionValidationDemo() {
 	const FormNames = {
 		colors: 'colors',
 		fruits: 'fruits',
+		animals: 'animals',
+		cities: 'cities',
 	};
 
 	return (
@@ -67,7 +73,6 @@ export function SelectionValidationDemo() {
 					<div class="o-stack">
 						<Form
 							onSubmit={handleSubmit}
-							onReset={handleReset}
 							names={FormNames}
 							{...callbackAttrs(isServer && formOutputWrite)}
 						>
@@ -100,6 +105,22 @@ export function SelectionValidationDemo() {
 									<ListBoxItem value="purple">Purple</ListBoxItem>
 								</Select>
 							</LabelledInput>
+
+							<LabelledInput label="Select Animals (At Least 1)" required>
+								<ListBox name={FormNames.animals} multiple>
+									<ListBoxItem value="dog">Dog</ListBoxItem>
+									<ListBoxItem value="cat">Cat</ListBoxItem>
+									<ListBoxItem value="rabbit">Rabbit</ListBoxItem>
+								</ListBox>
+							</LabelledInput>
+
+							<LabelledInput label="Select City (At Least 1)" required>
+								<Select name={FormNames.cities} multiple>
+									<ListBoxItem value="boston">Boston</ListBoxItem>
+									<ListBoxItem value="new-york">New York</ListBoxItem>
+									<ListBoxItem value="san-francisco">San Francisco</ListBoxItem>
+								</Select>
+							</LabelledInput>
 						</Form>
 
 						<Show when={formData()}>
@@ -122,6 +143,18 @@ export function SelectionValidationDemo() {
 													{formData()?.colors.join(', ')}
 												</BaseDescription>
 											</div>
+											<div class="o-label-stack">
+												<Label>Selected animals</Label>
+												<BaseDescription>
+													{formData()?.animals.join(', ')}
+												</BaseDescription>
+											</div>
+											<div class="o-label-stack">
+												<Label>Selected cities</Label>
+												<BaseDescription>
+													{formData()?.cities.join(', ')}
+												</BaseDescription>
+											</div>
 										</div>
 									</CardContent>
 								</Card>
@@ -130,7 +163,10 @@ export function SelectionValidationDemo() {
 					</div>
 				</CardContent>
 				<CardFooter>
-					<ResetButton {...callbackAttrs(isServer && formOutputClear)} />
+					<ResetButton
+						{...callbackAttrs(isServer && formOutputClear)}
+						onClick={handleReset}
+					/>
 					<SubmitButton />
 				</CardFooter>
 			</FormContextProvider>

@@ -21,6 +21,7 @@ import {
 import { OptionList, OptionListGroup, OptionListSelectable } from '~/shared/components/option-list';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { mountAttr } from '~/shared/utility/callback-attrs/no-js';
+import { INCOMPLETE_ATTR } from '~/shared/utility/callback-attrs/validate';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
 
 export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'> {
@@ -87,7 +88,7 @@ export function ListBox(props: ListBoxProps) {
 					optionListProps,
 					listBoxChange,
 					listBoxMount,
-					(props.required || props['aria-required']) && listBoxRequired,
+					optionListProps['aria-required'] && listBoxRequired,
 					listBoxKeyDown,
 					listBoxReset,
 					isServer && mountAttr('tabindex', '0'),
@@ -97,6 +98,10 @@ export function ListBox(props: ListBoxProps) {
 				tabIndex={optionListProps['tabIndex'] ?? (isServer ? -1 : 0)}
 				aria-multiselectable={props.multiple}
 				onChange={handleChange}
+				{...{
+					[INCOMPLETE_ATTR]:
+						optionListProps['aria-required'] && !props.values?.size ? '' : undefined,
+				}}
 			>
 				{/*
 					Note that there's no option to clear a selection here -- assumption

@@ -34,6 +34,13 @@ export const FORM_CONTROL_ERROR_ATTR = 'data-t-validate__error';
 export const EXTERNAL_ERROR_ATTR = 'data-t-validate__external-error';
 
 /**
+ * Magic data attribute that can be used to mark element as being incomplete.
+ * This functions like a quite "aria-invalid" that we can select on in CSS
+ * to see if a form has any synthetic inputs not filled out
+ */
+export const INCOMPLETE_ATTR = 'data-t-validate__incomplete';
+
+/**
  * Magic data attribute used to identify elements with custom validators
  */
 export const VALIDATE_ATTR = 'data-t-validate';
@@ -42,6 +49,12 @@ export const VALIDATE_ATTR = 'data-t-validate';
  * Magic prop for marking an input as having been "touched" for validation purposes
  */
 export const [touched, setTouched] = createMagicProp<boolean>();
+
+/**
+ * In case where error element referes to multiple inputs, this magic prop is used to
+ * identify the ID for which element the error is associated with.
+ */
+export const [errorFor, setErrorFor] = createMagicProp<string>();
 
 // Create validation registry using the callback registry utility
 const validationRegistry = createCallbackRegistry<Validator<any>>(VALIDATE_ATTR);
@@ -115,6 +128,10 @@ export function setError(target: HTMLElement, msg: string | null) {
 	if (target.hasAttribute(EXTERNAL_ERROR_ATTR)) return;
 	target.setAttribute('aria-invalid', msg ? 'true' : 'false');
 
+	// Always remove the incomplete attribute since post-validation, we can
+	// rely on aria-invalid instead
+	target.removeAttribute(INCOMPLETE_ATTR);
+
 	const currentMsg = (target as HTMLInputElement).validationMessage;
 	if ((msg ?? '') !== currentMsg) {
 		(target as Partial<HTMLInputElement>).setCustomValidity?.(msg ?? '');
@@ -122,8 +139,15 @@ export function setError(target: HTMLElement, msg: string | null) {
 
 	const errorElm = getErrorElement(target);
 	if (errorElm) {
-		errorElm.textContent = msg ?? '';
-		toggleEmptyAttr(errorElm);
+		// Any element can set error but can only clear if it's your own error message
+		const errorForId = errorFor(errorElm);
+		if (!errorForId || target.id === errorForId || msg) {
+			errorElm.textContent = msg ?? '';
+			toggleEmptyAttr(errorElm);
+			if (msg) {
+				setErrorFor(errorElm, target.id);
+			}
+		}
 	}
 
 	// Dispatching invalid to mimic built-in navigation. No reason to make it

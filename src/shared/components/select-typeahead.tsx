@@ -1,7 +1,10 @@
 import { createUniqueId, splitProps } from 'solid-js';
 
 import { selectInputKeyDown, selectUpdateWithInput } from '~/shared/components/callbacks/select';
-import { createFormElementId } from '~/shared/components/form-element-context';
+import {
+	createFormElementId,
+	FormElementResetProvider,
+} from '~/shared/components/form-element-context';
 import { type FormElementProps } from '~/shared/components/form-element-props';
 import { Input, type InputProps } from '~/shared/components/input';
 import { type ListBoxProps } from '~/shared/components/list-box';
@@ -23,10 +26,9 @@ export type SelectTypeaheadProps = Omit<FormElementProps<'div'>, 'onInput' | 'on
 	};
 
 export function SelectTypeahead(props: SelectTypeaheadProps) {
-	const [inputProps, buttonOptionListShared, optionListProps, rest] = splitProps(
+	const [inputProps, optionListProps, rest] = splitProps(
 		props,
 		['invalid', 'aria-invalid', 'onInput', 'onValueInput', 'placeholder'],
-		['required', 'aria-required'],
 		[
 			'children',
 			'name',
@@ -49,32 +51,34 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 			inputId={id()}
 			aria-busy={props.busy}
 			aria-haspopup="dialog"
+			aria-invalid={inputProps['aria-invalid']}
+			invalid={inputProps.invalid}
 			placeholder={inputProps.placeholder}
-			{...buttonOptionListShared}
 			{...rest}
 		>
-			<Input
-				{...inputProps}
-				{...callbackAttrs(
-					inputProps,
-					selectInputKeyDown,
-					selectUpdateWithInput(selectInputTextId),
-				)}
-				id={id()}
-				role="combobox"
-				class="c-select__input"
-				aria-autocomplete="list"
-				aria-controls={listId}
-				aria-multiselectable={props.multiple}
-				autofocus
-				unstyled
-			/>
+			<FormElementResetProvider>
+				<Input
+					{...inputProps}
+					{...callbackAttrs(
+						inputProps,
+						selectInputKeyDown,
+						selectUpdateWithInput(selectInputTextId),
+					)}
+					id={id()}
+					role="combobox"
+					class="c-select__input"
+					aria-autocomplete="list"
+					aria-controls={listId}
+					aria-multiselectable={props.multiple}
+					autofocus
+					unstyled
+				/>
+			</FormElementResetProvider>
 			<SelectOptionList
 				busy={props.busy}
 				listBoxId={listId}
 				selectInputTextId={selectInputTextId}
 				tabIndex={-1}
-				{...buttonOptionListShared}
 				{...optionListProps}
 			/>
 		</SelectButtonContainer>

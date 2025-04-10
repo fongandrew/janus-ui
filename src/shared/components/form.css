@@ -1,7 +1,7 @@
 @import '~/shared/styles/common.css';
 
 @layer base {
-	form:has(:invalid) [type='submit'] {
+	form:has(:invalid, [aria-invalid='true'], [data-t-validate__incomplete]) [type='submit'] {
 		@mixin t-disabled-button;
 
 		/*
