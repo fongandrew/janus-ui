@@ -4,7 +4,7 @@ import { createUniqueId } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import {
-	createListBoxValidator,
+	connectListBoxValidator,
 	listBoxChange,
 	listBoxKeyDown,
 	listBoxMount,
@@ -32,13 +32,17 @@ export interface ListBoxProps extends Omit<FormElementProps<'div'>, 'onValidate'
 	 */
 	values?: Set<string> | undefined;
 	/** Called when selection changes */
-	onValues?: (values: Set<string>, event: Event) => void;
+	onValues?: ((values: Set<string>, event: Event) => void) | undefined;
 	/** Autofocus listbox? */
 	autofocus?: boolean | undefined;
 	/** Whether multiple selection is allowed */
 	multiple?: boolean | undefined;
 	/** Make children required */
 	children: JSX.Element;
+	/** A rendered set to pass to list box context */
+	rendered?: Set<string>;
+	/** Unstyled version of listbox? This is used by select. */
+	unstyled?: boolean | undefined;
 	/** Custom validation function for this element */
 	onValidate?: ListBoxValidator | undefined;
 }
@@ -48,15 +52,11 @@ export const ListBoxContext = createContext<
 >();
 
 export function ListBox(props: ListBoxProps) {
-	const [local, rest] = splitProps(props, [
-		'children',
-		'name',
-		'values',
-		'onValues',
-		'onValidate',
-		'multiple',
-		'required',
-	]);
+	const [local, contextProps, rest] = splitProps(
+		props,
+		['children', 'onValues', 'onValidate', 'required', 'unstyled'],
+		['name', 'values', 'multiple', 'rendered'],
+	);
 
 	// Trigger values callback on JS change event
 	const handleChange = (event: Event) => {
@@ -71,14 +71,13 @@ export function ListBox(props: ListBoxProps) {
 	};
 
 	// Add values to validator
-	const handleValidate = createListBoxValidator((values, event) =>
-		local.onValidate?.(values, event),
-	);
-	const formElementProps = mergeProps(rest, { onValidate: handleValidate });
+	const formElementProps = mergeProps(rest, {
+		onValidate: connectListBoxValidator((values, event) => local.onValidate?.(values, event)),
+	});
 	const optionListProps = mergeFormElementProps<'div'>(formElementProps);
 
 	// Create default name for radio group if not provided
-	const context = mergeProps({ name: createUniqueId() }, props);
+	const context = mergeProps({ name: createUniqueId() }, contextProps);
 
 	return (
 		<ListBoxContext.Provider value={context}>
@@ -94,8 +93,8 @@ export function ListBox(props: ListBoxProps) {
 					isServer && mountAttr('tabindex', '0'),
 				)}
 				role="listbox"
-				class={cx('c-list-box', rest.class)}
-				tabIndex={isServer ? -1 : 0}
+				class={cx(local.unstyled ? 't-unstyled' : 'c-list-box', rest.class)}
+				tabIndex={optionListProps['tabIndex'] ?? (isServer ? -1 : 0)}
 				aria-multiselectable={props.multiple}
 				onChange={handleChange}
 			>

@@ -80,6 +80,11 @@
 	/* Dropdown container, needs extra margin because of focus ring when */
 	.c-select__dropdown {
 		margin: calc(var(--v-space-xs) * 2) 0;
+
+		/* Focus ring on button or input */
+		[role='listbox']:focus {
+			@mixin t-no-focus-ring;
+		}
 	}
 
 	/* Select dropdown status / empty state */

@@ -11,13 +11,11 @@ import {
 	getListItems,
 	highlightInList,
 	optionListKeyDown,
-	optionListMatchText,
 } from '~/shared/components/callbacks/option-list';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createMounter, processRoot } from '~/shared/utility/callback-attrs/mount';
 import { createQueryEffect } from '~/shared/utility/create-query-effect';
 import { toggleEmptyAttr } from '~/shared/utility/empty-attr';
-import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { elmDoc, elmWin, evtDoc } from '~/shared/utility/multi-view';
 import { elmT } from '~/shared/utility/text/t-tag';
@@ -29,48 +27,10 @@ export const SELECT_VISIBLE_CONTAINER_ATTR = 'data-select__visible';
 /** Data attribute for marking part of select for hidden options */
 export const SELECT_HIDDEN_CONTAINER_ATTR = 'data-select__hidden';
 
-/**
- * Focus button on click (for Safari)
- * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#clicking_and_focus
- * https://bugs.webkit.org/show_bug.cgi?id=22261#c68
- */
-export const selectButtonClick = createHandler('click', '$c-select__button-click', (event) => {
-	const target = event.target as HTMLButtonElement;
-	const popover = target.popoverTargetElement as HTMLElement;
-	if (popover?.matches(':popover-open')) return;
-
-	// Safari doesn't focus the button when we open the popover, so do it manually
-	target.focus();
-});
-
-/** Keydown handler for plain select (non-typeahead) button */
+/** Keydown handler for button that opens select popover */
 export const selectButtonKeyDown = createHandler(
 	'keydown',
 	'$c-select__button-keydown',
-	function (this, event) {
-		const popover = (event.target as HTMLButtonElement).popoverTargetElement;
-		let popoverOpen = popover?.matches(':popover-open');
-		if (popoverOpen) {
-			optionListKeyDown.do.call(this, event);
-		} else {
-			showOnKeyDown(event);
-		}
-
-		optionListMatchText.do.call(this, event);
-
-		popoverOpen = popover?.matches(':popover-open');
-		if (popoverOpen) {
-			syncActiveDescendant(event.target as HTMLElement);
-		} else {
-			selectMaybeClearOnEsc.call(this, event);
-		}
-	},
-);
-
-/** Keydown handler for select typeahead button */
-export const selectTypeaheadButtonKeyDown = createHandler(
-	'keydown',
-	'$c-select__typeahead-button-keydown',
 	function (this, event) {
 		showOnKeyDown(event);
 
@@ -99,22 +59,6 @@ export const selectInputKeyDown = createHandler(
 	},
 );
 
-/** Blur / focusout handler to close dropdown when focus leaves input */
-export const selectFocusOut = createHandler('focusout', '$c-select__focusout', (event) => {
-	if (!isFocusVisible()) return;
-
-	const target = event.target as HTMLElement;
-	const relatedTarget = event.relatedTarget as HTMLElement | null;
-	if (!relatedTarget) return;
-	if (target.contains(relatedTarget)) return;
-
-	const listElm = getList(target);
-	if (!listElm) return;
-	if (listElm.contains(relatedTarget)) return;
-
-	listPopover(listElm)?.hidePopover();
-});
-
 /**
  * Change handler to close select menu when item is selected. This should be attached
  * to the list box itself (input / button control triggers click there).
@@ -134,7 +78,7 @@ export const selectCloseOnClick = createHandler('click', '$c-select__close-on-cl
 		return;
 	}
 
-	// Either no selection or multiple so refocus
+	// Either no selection or multiple so refocus if this is a combobox input
 	if (control instanceof HTMLInputElement) {
 		control.focus();
 
@@ -169,8 +113,7 @@ export const selectClear = createHandler('click', '$c-select__clear', (event) =>
 	}
 	if (!didChange) return;
 
-	const dispatcher = getControllingElement(listElm);
-	dispatcher.dispatchEvent(new Event('change', { bubbles: true }));
+	listElm.dispatchEvent(new Event('change', { bubbles: true }));
 
 	// Clear unsets focus, so try to restore to controlling element
 	listTrigger(listElm)?.focus();
@@ -216,7 +159,7 @@ export const selectMountText = createMounter<[string]>(
 		const updateTarget = elmDoc(elm)?.getElementById(updateTargetId);
 		if (!updateTarget) return;
 
-		const listElm = getList(elm.querySelector<HTMLElement>('[role="combobox"]') ?? elm);
+		const listElm = getList(elm.querySelector<HTMLElement>('[role="listbox"]') ?? elm);
 		if (!listElm) return;
 
 		const t = elmT(listElm);

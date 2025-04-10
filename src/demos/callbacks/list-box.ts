@@ -1,5 +1,4 @@
-import { listBoxValues } from '~/shared/components/callbacks/list-box';
-import { getList } from '~/shared/components/callbacks/option-list';
+import { evtListBox, listBoxValues } from '~/shared/components/callbacks/list-box';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createValidator } from '~/shared/utility/callback-attrs/validate';
 
@@ -7,7 +6,7 @@ export const listBoxUpdateText = createHandler(
 	'change',
 	'$p-list-box__update-text',
 	(event, targetId: string) => {
-		const listElm = getList(event.target as HTMLElement);
+		const listElm = evtListBox(event);
 		if (!listElm) return;
 
 		const target = listElm.ownerDocument?.getElementById(targetId);
@@ -20,7 +19,7 @@ export const listBoxUpdateText = createHandler(
 );
 
 export const listBoxNoRed = createValidator('$p-list-box__no-red', (event) => {
-	const listElm = getList(event.target as HTMLElement);
+	const listElm = evtListBox(event);
 	if (!listElm) return;
 	const values = listBoxValues(listElm);
 	if (values.has('red')) {
@@ -31,7 +30,7 @@ export const listBoxNoRed = createValidator('$p-list-box__no-red', (event) => {
 export const listBoxMinMax = createValidator(
 	'$p-list-box__min-max',
 	(event, minStr: string, maxStr: string) => {
-		const list = getList(event.target as HTMLElement);
+		const list = evtListBox(event);
 		if (!list) return;
 
 		const values = listBoxValues(list);

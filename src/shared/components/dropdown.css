@@ -135,8 +135,6 @@
 			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
 			top: var(--c-dropdown__top);
 			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
-			max-height: var(--c-dropdown__computed-max-height);
-			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
 			max-width: min(
 				var(--c-dropdown__computed-max-width, 100vw),
 				var(--c-dropdown__max-width)
@@ -157,6 +155,13 @@
 			[data-c-dropdown__position^='right'] & {
 				margin: 0 var(--v-space-xs);
 			}
+
+			/*
+				This is set here rather than on c-dropdown__popover since popover allows
+				visible overflow (to shift combobox input in place)
+			 */
+			/* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
+			max-height: var(--c-dropdown__computed-max-height);
 		}
 
 		.c-dropdown__footer {

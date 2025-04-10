@@ -70,9 +70,9 @@ export const listBoxChange = createHandler('change', '$c-list-box__change', (eve
 
 	highlightInList(listElm, target);
 
-	const dispatcher = getControllingElement(listElm);
-	dispatcher.setAttribute('aria-activedescendant', target.id);
-	dispatcher.dispatchEvent(new Event('change', { bubbles: true }));
+	const controller = getControllingElement(listElm);
+	controller.setAttribute('aria-activedescendant', target.id);
+	listElm.dispatchEvent(new Event('change', { bubbles: true }));
 });
 
 /**
@@ -155,10 +155,22 @@ export function getControllingElement(listElm: HTMLElement) {
 /**
  * Create a custom validator for a list box that includes values
  */
-export function createListBoxValidator(onValidate: ListBoxValidator) {
+export function connectListBoxValidator(onValidate: ListBoxValidator) {
 	return (event: Event) => {
 		const listElm = getList(event.currentTarget as HTMLElement);
 		if (!listElm) return;
 		return onValidate(listBoxValues(listElm), event);
 	};
+}
+
+/**
+ * Helper to validate event target is a list box, returns the list box if so,
+ * otherwise null
+ */
+export function evtListBox(event: Event) {
+	const target = event.target as HTMLElement;
+	if (target.role === 'listbox' || target.role === 'menu') {
+		return target;
+	}
+	return null;
 }
