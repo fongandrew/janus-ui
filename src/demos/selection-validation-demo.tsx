@@ -71,12 +71,11 @@ export function SelectionValidationDemo() {
 							names={FormNames}
 							{...callbackAttrs(isServer && formOutputWrite)}
 						>
-							<LabelledInput label="Select Fruits (2-3)">
+							<LabelledInput label="Select Fruits (2-3)" required>
 								<ListBox
 									name={FormNames.fruits}
 									multiple
 									onValidate={validateMultiple}
-									required
 									{...callbackAttrs(isServer && listBoxMinMax('2', '3'))}
 								>
 									<ListBoxItem value="apple">Apple</ListBoxItem>
@@ -87,12 +86,11 @@ export function SelectionValidationDemo() {
 								</ListBox>
 							</LabelledInput>
 
-							<LabelledInput label="Select Colors (2-3)">
+							<LabelledInput label="Select Colors (2-3)" required>
 								<Select
 									name={FormNames.colors}
 									multiple
 									onValidate={validateMultiple}
-									required
 									{...callbackAttrs(isServer && listBoxMinMax('2', '3'))}
 								>
 									<ListBoxItem value="red">Red</ListBoxItem>

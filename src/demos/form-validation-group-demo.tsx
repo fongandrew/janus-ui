@@ -83,31 +83,28 @@ export function FormValidationGroupDemo() {
 							onReset={handleReset}
 							{...callbackAttrs(isServer && formOutputWrite)}
 						>
-							<LabelledInput label="Username">
+							<LabelledInput label="Username" required>
 								<Input
 									name={FormNames.username}
 									onValidate={validateUserName}
 									autocomplete="username"
-									required
 									{...callbackAttrs(isServer && validateUserNameNoSpaces)}
 								/>
 							</LabelledInput>
 
 							<FormValidationGroup>
 								<div class="o-stack">
-									<LabelledInput label="Password" id={password1Id}>
+									<LabelledInput label="Password" id={password1Id} required>
 										<Password
 											name={FormNames.password1}
 											autocomplete="new-password"
-											required
 										/>
 									</LabelledInput>
-									<LabelledInput label="Confirm Password">
+									<LabelledInput label="Confirm Password" required>
 										<Password
 											name={FormNames.password2}
 											onValidate={matchesPassword1}
 											autocomplete="new-password"
-											required
 											{...callbackAttrs(matchesPassword(password1Id))}
 										/>
 									</LabelledInput>

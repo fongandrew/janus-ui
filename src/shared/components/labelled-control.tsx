@@ -27,6 +27,8 @@ export interface LabelledInputProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	errorMessage?: JSX.Element;
 	/** Optional ID for error message element */
 	errorId?: string | undefined;
+	/** Is this input required? Will add a `*` to label */
+	required?: boolean | undefined;
 	/** Child required (this is the input) */
 	children: JSX.Element;
 }
@@ -41,6 +43,7 @@ export function LabelledInput(props: LabelledInputProps) {
 		'descriptionId',
 		'errorMessage',
 		'errorId',
+		'required',
 		'children',
 	]);
 
@@ -51,7 +54,9 @@ export function LabelledInput(props: LabelledInputProps) {
 
 	return (
 		<div {...rest} class={cx('c-label-stack', rest.class)}>
-			<LabelSpan id={labelId()}>{local.label}</LabelSpan>
+			<LabelSpan id={labelId()} required={local.required}>
+				{local.label}
+			</LabelSpan>
 			{local.description || local.descriptionId ? (
 				<Description id={descriptionId()}>{local.description}</Description>
 			) : null}
@@ -68,6 +73,7 @@ export function LabelledInput(props: LabelledInputProps) {
 						errorId(),
 					)
 				}
+				required={(prev) => attrNoConflict(prev, local.required)}
 				invalid={(prev) => !!local.errorMessage || prev}
 			>
 				{local.children}
@@ -88,6 +94,7 @@ export function LabelledInline(props: Omit<LabelledInputProps, 'description'>) {
 		'labelId',
 		'errorId',
 		'errorMessage',
+		'required',
 		'children',
 	]);
 
@@ -96,10 +103,12 @@ export function LabelledInline(props: Omit<LabelledInputProps, 'description'>) {
 
 	return (
 		<div {...rest} class={cx('c-label-stack', rest.class)}>
-			<Label id={local.labelId}>
+			<Label id={local.labelId} required={local.required}>
 				<FormElementPropsProvider
 					id={(prev) => attrNoConflict(prev, inputId())}
 					aria-describedby={(prev) => attrs(prev, errorId())}
+					required={(prev) => attrNoConflict(prev, local.required)}
+					invalid={(prev) => !!local.errorMessage || prev}
 				>
 					{local.children}
 				</FormElementPropsProvider>

@@ -82,19 +82,17 @@ function AsyncFormDemo() {
 							data-testid="async-form"
 							{...callbackAttrs(isServer && formAsyncSubmit)}
 						>
-							<LabelledInput label="Name">
+							<LabelledInput label="Name" required>
 								<Input
 									name={AsyncFormNames.name}
 									autocomplete="none"
 									data-testid="name-input"
-									required
 								/>
 							</LabelledInput>
-							<LabelledInput label="Message">
+							<LabelledInput label="Message" required>
 								<Textarea
 									name={AsyncFormNames.message}
 									data-testid="message-textarea"
-									required
 								/>
 							</LabelledInput>
 							<LabelledInline label="Force error">
@@ -159,11 +157,10 @@ function ServerFormDemo() {
 				<CardContent>
 					<div class="o-stack">
 						<Form names={FormNames} data-testid="server-form">
-							<LabelledInput label="Search query">
+							<LabelledInput label="Search query" required>
 								<Input
 									type="search"
 									name={FormNames.q}
-									required
 									data-testid="search-input"
 								/>
 							</LabelledInput>

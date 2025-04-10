@@ -1,16 +1,22 @@
 import cx from 'classix';
-import { children, type JSX } from 'solid-js';
+import { children, type JSX, splitProps } from 'solid-js';
 
 import { focusInputOnClick } from '~/shared/components/callbacks/label';
+import { useFormElementProps } from '~/shared/components/form-element-context';
+import { Tooltip } from '~/shared/components/tooltip';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { useT } from '~/shared/utility/solid/locale-context';
 import { spanify } from '~/shared/utility/solid/spanify';
 
 /** Default HTML label -- used for inline stuff mostly */
-export function Label(props: JSX.LabelHTMLAttributes<HTMLLabelElement>) {
+export function Label(
+	props: JSX.LabelHTMLAttributes<HTMLLabelElement> & { required?: boolean | undefined },
+) {
+	const [local, rest] = splitProps(props, ['required']);
 	const resolved = children(() => props.children);
 	return (
 		<label
-			{...(props as JSX.LabelHTMLAttributes<HTMLLabelElement>)}
+			{...(rest as JSX.LabelHTMLAttributes<HTMLLabelElement>)}
 			class={cx('c-label', props.class)}
 		>
 			{
@@ -18,6 +24,7 @@ export function Label(props: JSX.LabelHTMLAttributes<HTMLLabelElement>) {
 				// overflow in a way that doesn't result in focus ring clipping
 				spanify(resolved.toArray())
 			}
+			{local.required && <RequiredAsterisk />}
 		</label>
 	);
 }
@@ -27,11 +34,14 @@ export function Label(props: JSX.LabelHTMLAttributes<HTMLLabelElement>) {
  * quite sure whether the element labelled is a proper HTML input and therefore
  * must be linked via aria-labelledby.
  */
-export function LabelSpan(props: JSX.HTMLAttributes<HTMLSpanElement> & { id: string }) {
+export function LabelSpan(
+	props: JSX.HTMLAttributes<HTMLSpanElement> & { id: string; required?: boolean | undefined },
+) {
+	const [local, rest] = splitProps(props, ['required']);
 	const resolved = children(() => props.children);
 	return (
 		<span
-			{...props}
+			{...rest}
 			{...callbackAttrs(props, focusInputOnClick)}
 			class={cx('c-label', props.class)}
 		>
@@ -40,6 +50,27 @@ export function LabelSpan(props: JSX.HTMLAttributes<HTMLSpanElement> & { id: str
 				// overflow in a way that doesn't result in focus ring clipping
 				spanify(resolved.toArray())
 			}
+			{local.required && <RequiredAsterisk />}
 		</span>
+	);
+}
+
+/**
+ * Asterisk to mark label as required
+ */
+export function RequiredAsterisk() {
+	const t = useT();
+	return (
+		<Tooltip tip={t`Required`}>
+			<span
+				class="c-label__required"
+				{...useFormElementProps({
+					// aria-hidden because underlying element should have aria-required
+					'aria-hidden': true,
+				})}
+			>
+				*
+			</span>
+		</Tooltip>
 	);
 }

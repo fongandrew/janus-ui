@@ -31,4 +31,8 @@
 			padding-inline: var(--v-space-xs);
 		}
 	}
+
+	.c-label__required {
+		margin-left: var(--v-space-xs);
+	}
 }

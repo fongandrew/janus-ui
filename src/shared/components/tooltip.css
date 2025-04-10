@@ -9,6 +9,7 @@
 
 @layer components {
 	.c-tooltip {
+		@mixin v-spacing-sm;
 		@mixin v-text-sm;
 		@mixin v-colors-tooltip;
 		@mixin o-text-box;

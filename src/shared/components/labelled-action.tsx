@@ -19,6 +19,7 @@ export function LabelledAction(props: LabelledInputProps) {
 		'descriptionId',
 		'errorMessage',
 		'errorId',
+		'required',
 		'children',
 	]);
 
@@ -29,7 +30,9 @@ export function LabelledAction(props: LabelledInputProps) {
 	return (
 		<div {...rest} class={cx('c-labelled-action', props.class)}>
 			<div class="c-labelled-action__label">
-				<LabelSpan id={labelId()}>{local.label}</LabelSpan>
+				<LabelSpan id={labelId()} required={local.required}>
+					{local.label}
+				</LabelSpan>
 				{local.description || local.descriptionId ? (
 					<Description id={descriptionId()}>{local.description}</Description>
 				) : null}

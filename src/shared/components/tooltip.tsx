@@ -13,12 +13,12 @@ import { attrs } from '~/shared/utility/attribute-list';
 import { callbackAttrMods } from '~/shared/utility/callback-attrs/callback-registry';
 import { createAutoId } from '~/shared/utility/solid/auto-prop';
 
-export interface TooltipContentProps extends JSX.HTMLAttributes<HTMLDivElement> {
+export interface TooltipContentProps extends JSX.HTMLAttributes<HTMLSpanElement> {
 	/** Make ID required for `aria-label` purposes */
 	id: string;
 }
 
-export interface TooltipProps extends JSX.HTMLAttributes<HTMLDivElement> {
+export interface TooltipProps extends JSX.HTMLAttributes<HTMLSpanElement> {
 	/** Tooltip placement */
 	placement?: Placement | undefined;
 	/** Tooltip content */
@@ -27,10 +27,10 @@ export interface TooltipProps extends JSX.HTMLAttributes<HTMLDivElement> {
 
 export function TooltipContent(props: TooltipContentProps) {
 	return (
-		<div role="tooltip" popover="manual" class={cx('c-tooltip', props.class)} {...props}>
+		<span role="tooltip" popover="manual" class={cx('c-tooltip', props.class)} {...props}>
 			{props.children}
-			<div class="c-tooltip__arrow" {...{ [tooltipMouseOver.ARROW_ATTR]: true }} />
-		</div>
+			<span class="c-tooltip__arrow" {...{ [tooltipMouseOver.ARROW_ATTR]: true }} />
+		</span>
 	);
 }
 
