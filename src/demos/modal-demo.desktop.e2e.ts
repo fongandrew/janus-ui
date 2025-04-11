@@ -90,6 +90,9 @@ describeComponent('modal-demo', (getContainer) => {
 		const modal = container.getByTestId('form-modal');
 		await expect(modal).toBeVisible();
 
+		// Test we've autofocused the input
+		await expect(modal.getByLabel('Name')).toBeFocused();
+
 		// Fill in the form
 		await modal.getByLabel('Name').fill('John Doe');
 		await modal.getByLabel('Email').fill('john@example.com');

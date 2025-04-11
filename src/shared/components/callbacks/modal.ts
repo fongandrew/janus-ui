@@ -7,8 +7,9 @@ import {
 	runBeforeShowCallbacks,
 } from '~/shared/utility/callback-attrs/display';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
-import { isTextInput } from '~/shared/utility/element-types';
+import { focusAndSelect } from '~/shared/utility/focus-and-select';
 import { firstFocusable } from '~/shared/utility/focusables';
+import { isVisible } from '~/shared/utility/is-visible';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { elmDoc, elmWin } from '~/shared/utility/multi-view';
 
@@ -190,12 +191,9 @@ function closeJustOne(dialog: HTMLDialogElement) {
  */
 export function focusModal(dialog: HTMLDialogElement) {
 	// Always go with explicit autofocus
-	const autoFocusElement = dialog.querySelector<HTMLElement>('[autofocus]');
-	if (autoFocusElement) {
-		autoFocusElement.focus();
-		if (isTextInput(autoFocusElement)) {
-			autoFocusElement.select();
-		}
+	for (const autoFocusElement of dialog.querySelectorAll<HTMLElement>('[autofocus]')) {
+		if (!isVisible(autoFocusElement)) continue;
+		focusAndSelect(autoFocusElement);
 		return;
 	}
 
@@ -203,7 +201,7 @@ export function focusModal(dialog: HTMLDialogElement) {
 	const content = dialog.querySelector<HTMLElement>('[' + MODAL_CONTENT_ATTR + ']');
 	let target = content ? firstFocusable(content) : undefined;
 	if (target) {
-		target.focus();
+		focusAndSelect(target);
 		return;
 	}
 
@@ -211,12 +209,15 @@ export function focusModal(dialog: HTMLDialogElement) {
 	const footer = dialog.querySelector<HTMLElement>('[' + MODAL_FOOTER_ATTR + ']');
 	target = footer ? firstFocusable(footer) : undefined;
 	if (target) {
-		target.focus();
+		focusAndSelect(target);
 		return;
 	}
 
 	// Else just focus the first focusable in the dialog
-	firstFocusable(dialog)?.focus();
+	const focusable = firstFocusable(dialog);
+	if (focusable) {
+		focusAndSelect(focusable);
+	}
 }
 
 /** Toggle any aria-controls / aria-expanded options for trigger buttons */
