@@ -1,3 +1,4 @@
+import { setSkipSelect } from '~/shared/components/callbacks/dropdown';
 import { createResetCallback } from '~/shared/components/callbacks/form';
 import {
 	getControllingElement,
@@ -11,6 +12,7 @@ import {
 	getListItems,
 	highlightInList,
 	optionListKeyDown,
+	optionListMatchText,
 } from '~/shared/components/callbacks/option-list';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { createMounter, processRoot } from '~/shared/utility/callback-attrs/mount';
@@ -392,14 +394,32 @@ function listClear(listElm: HTMLElement) {
 }
 
 /** Show popover on keydown */
-function showOnKeyDown(event: KeyboardEvent) {
+function showOnKeyDown(event: KeyboardEvent & { currentTarget: HTMLElement }) {
 	if (event.key.length === 1 || ['ArrowUp', 'ArrowDown', 'Enter'].includes(event.key)) {
 		const popover = (event.target as HTMLButtonElement | HTMLInputElement)
 			?.popoverTargetElement as HTMLElement;
+
+		// Since we're pre-filling input with key being pressed, don't auto-select (so if
+		// user presses two keys, second doesn't clobber first). This must be done
+		// before showing popover since select happens in toggle event handler.
+		if (event.key.length === 1) {
+			const focusable = popover?.querySelector<HTMLElement>('[autofocus]');
+			if (focusable?.role === 'combobox') {
+				(focusable as HTMLInputElement).value = ''; // Actual key will fill in on keyup
+				setSkipSelect(focusable, true);
+			}
+		}
+
 		popover?.showPopover();
 
 		const listElm = popover?.querySelector<HTMLElement>('[role="listbox"]');
 		if (!listElm) return;
+
+		if (event.key.length === 1 && listElm.autofocus) {
+			optionListMatchText.do.call(listElm, event);
+			syncActiveDescendant(listElm);
+			return;
+		}
 
 		// Arrow down should highlight first item only if there is no item already
 		// highlighted (e.g. go to default)

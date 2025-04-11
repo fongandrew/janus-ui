@@ -132,13 +132,15 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 		await expect(container.getByText('2 selected')).toBeVisible();
 		await expect(container.getByText('Selected: blue, green')).toBeVisible();
 
-		// Open the dropdown again
-		await multiTypeahead.click();
+		// Open the dropdown again -- for reasons unclear, clicking the typeahead
+		// again doesn't reliably open it on Safari (although it seems to work when
+		// testing live?). So just focus and press enter to open it.
+		await multiTypeahead.focus();
+		await page.keyboard.press('Enter');
 
 		// Search for color to unselect
+		// No need to backspace -- test that input is blank or text is auto-selected
 		await expect(typeaheadInput).toBeFocused();
-		await page.keyboard.press('Backspace');
-		await page.keyboard.press('Backspace');
 		await page.keyboard.press('g');
 		await page.keyboard.press('r');
 		await expect(listBox.getByText('Green')).toBeVisible();

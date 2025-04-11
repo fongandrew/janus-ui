@@ -1,6 +1,7 @@
 import { type JSX, splitProps } from 'solid-js';
 
 import { dropdownCloseOnBlur } from '~/shared/components/callbacks/dropdown';
+import { optionListScrollToHighlighted } from '~/shared/components/callbacks/option-list';
 import { selectToggleObserve } from '~/shared/components/callbacks/select';
 import { DropdownPopover } from '~/shared/components/dropdown';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
@@ -16,7 +17,12 @@ export function SelectPopover(props: SelectPopoverProps) {
 			// Dropdown width should match select input / button size
 			fixedWidth
 			{...rest}
-			{...callbackAttrs(rest, dropdownCloseOnBlur, selectToggleObserve)}
+			{...callbackAttrs(
+				rest,
+				dropdownCloseOnBlur,
+				selectToggleObserve,
+				optionListScrollToHighlighted,
+			)}
 		>
 			{local.children}
 		</DropdownPopover>

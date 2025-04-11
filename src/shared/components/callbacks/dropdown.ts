@@ -14,6 +14,7 @@ import {
 } from '~/shared/utility/callback-attrs/display';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { registerDocumentSetup } from '~/shared/utility/document-setup';
+import { isTextInput } from '~/shared/utility/element-types';
 import { isFocusVisible } from '~/shared/utility/is-focus-visible';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { elmDoc, evtDoc } from '~/shared/utility/multi-view';
@@ -40,6 +41,10 @@ export const cleanUpPopover = (popover: HTMLElement) => {
 	cleanUp?.();
 	setCleanUpCallback(popover, undefined);
 };
+
+/** Magic prop to signal that we shouldn't select text on popover input on next open */
+const [skipSelect, setSkipSelect] = createMagicProp<boolean>();
+export { setSkipSelect };
 
 /**
  * Handle menu blur / focus out closing the parent popover
@@ -219,4 +224,26 @@ registerDocumentSetup((document) => {
 
 	// This is needed to make light dismiss work prior to iOS 18.3
 	document.addEventListener('pointerdown', function () {});
+
+	/**
+	 * The visibility transition messes with Safari focusing autofocus elements
+	 * in popovers, so do manually.
+	 *
+	 * Also a chance to auto-select input values too
+	 */
+	document.addEventListener(
+		'toggle',
+		(event) => {
+			if ((event as ToggleEvent).newState !== 'open') return;
+			const popover = event.target as HTMLElement;
+			const focusable = popover.querySelector<HTMLElement>('[autofocus]');
+			focusable?.focus();
+			if (skipSelect(focusable)) {
+				setSkipSelect(focusable, false);
+			} else if (isTextInput(focusable)) {
+				focusable.select();
+			}
+		},
+		{ capture: true },
+	);
 });

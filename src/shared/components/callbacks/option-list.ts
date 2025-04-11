@@ -65,12 +65,11 @@ export const optionListKeyDown = createHandler('keydown', '$c-option-list__keydo
 export const optionListMatchText = createHandler(
 	'keydown',
 	'$c-option-list__match-text',
-	(event) => {
+	function (this: HTMLElement, event) {
 		if (event.key === ' ') return;
 		if (event.key.length !== 1) return;
 
-		const target = event.target as HTMLElement;
-		const listElm = getList(target);
+		const listElm = getList(this || (event.target as HTMLElement));
 		if (!listElm) return;
 
 		const textMatcher = getTextMatcherForList(listElm);
@@ -79,6 +78,23 @@ export const optionListMatchText = createHandler(
 			event.preventDefault();
 			highlightInList(listElm, nextHighlighted);
 		}
+	},
+);
+
+/**
+ * Scroll to highlighted menu after popover with option list opens. This should happen
+ * automatically when highlighting in the beforetoggle / toggle event, there may be some
+ * issues with animations or positioning not being done yet. So do it after a short delay.
+ */
+export const optionListScrollToHighlighted = createHandler(
+	'toggle',
+	'$c-option-list__scroll-highlighted',
+	(event) => {
+		const popover = event.target as HTMLElement;
+		setTimeout(() => {
+			const itemElm = popover.querySelector<HTMLElement>(`[${LIST_HIGHLIGHTED_ATTR}]`);
+			(itemElm?.closest('label') ?? itemElm)?.scrollIntoView({ block: 'nearest' });
+		}, 80);
 	},
 );
 

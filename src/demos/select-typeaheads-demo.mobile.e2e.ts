@@ -33,6 +33,7 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 	test('can select multiple options from typeahead', async ({ page }) => {
 		const container = getContainer().getByTestId('multiple-typeahead-container');
 		const multiTypeahead = container.getByTestId('multiple-typeahead');
+		const comboBox = container.getByRole('combobox');
 		const listBox = container.getByRole('listbox');
 
 		// Check for placeholder
@@ -40,6 +41,7 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 
 		// Search for first color
 		await multiTypeahead.tap();
+		await expect(comboBox).toBeFocused();
 		await page.keyboard.press('r');
 		await page.keyboard.press('e');
 
@@ -52,6 +54,7 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 		await listBox.getByText('Green').tap();
 
 		// Search for second color
+		await expect(comboBox).toBeFocused();
 		await page.keyboard.press('Backspace');
 		await page.keyboard.press('Backspace');
 		await page.keyboard.press('b');
@@ -72,8 +75,8 @@ describeComponent('select-typeaheads-demo', (getContainer) => {
 		await multiTypeahead.tap();
 
 		// Search for first color
-		await page.keyboard.press('Backspace');
-		await page.keyboard.press('Backspace');
+		// No need to backspace -- test that input is blank or text is auto-selected
+		await expect(comboBox).toBeFocused();
 		await page.keyboard.press('g');
 		await page.keyboard.press('r');
 		await expect(listBox.getByText('Green')).toBeVisible();

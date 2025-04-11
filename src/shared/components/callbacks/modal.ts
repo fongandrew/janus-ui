@@ -7,6 +7,7 @@ import {
 	runBeforeShowCallbacks,
 } from '~/shared/utility/callback-attrs/display';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
+import { isTextInput } from '~/shared/utility/element-types';
 import { firstFocusable } from '~/shared/utility/focusables';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { elmDoc, elmWin } from '~/shared/utility/multi-view';
@@ -192,6 +193,9 @@ export function focusModal(dialog: HTMLDialogElement) {
 	const autoFocusElement = dialog.querySelector<HTMLElement>('[autofocus]');
 	if (autoFocusElement) {
 		autoFocusElement.focus();
+		if (isTextInput(autoFocusElement)) {
+			autoFocusElement.select();
+		}
 		return;
 	}
 

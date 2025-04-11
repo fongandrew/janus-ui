@@ -9,7 +9,10 @@ import {
 	menuTriggerClick,
 	menuTriggerKeyDown,
 } from '~/shared/components/callbacks/menu';
-import { getItemValue } from '~/shared/components/callbacks/option-list';
+import {
+	getItemValue,
+	optionListScrollToHighlighted,
+} from '~/shared/components/callbacks/option-list';
 import {
 	Dropdown,
 	DropdownContent,
@@ -45,7 +48,15 @@ export function Menu(props: MenuProps) {
 	};
 
 	return (
-		<DropdownPopover {...rest} {...callbackAttrs(rest, menuAutoFocus, dropdownCloseOnBlur)}>
+		<DropdownPopover
+			{...rest}
+			{...callbackAttrs(
+				rest,
+				menuAutoFocus,
+				dropdownCloseOnBlur,
+				optionListScrollToHighlighted,
+			)}
+		>
 			<DropdownContent onClick={handleClick}>
 				<OptionList role="menu" {...callbackAttrs(menuKeyDown, menuCloseOnSelect)}>
 					{local.children}

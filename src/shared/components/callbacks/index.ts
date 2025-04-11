@@ -3,7 +3,6 @@ import '~/shared/utility/callback-attrs/index';
 
 import * as checkbox from '~/shared/components/callbacks/checkbox';
 import * as codeBlock from '~/shared/components/callbacks/code-block';
-import * as comboBox from '~/shared/components/callbacks/combo-box';
 import * as dropdown from '~/shared/components/callbacks/dropdown';
 import * as errorFallback from '~/shared/components/callbacks/error-fallback';
 import * as form from '~/shared/components/callbacks/form';
@@ -28,7 +27,6 @@ import { loadCallbacks } from '~/shared/utility/callback-attrs/load-callbacks';
 loadCallbacks(
 	checkbox,
 	codeBlock,
-	comboBox,
 	dropdown,
 	errorFallback,
 	form,

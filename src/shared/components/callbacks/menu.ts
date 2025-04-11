@@ -8,7 +8,6 @@ import {
 	optionListMatchText,
 } from '~/shared/components/callbacks/option-list';
 import { createHandler } from '~/shared/utility/callback-attrs/events';
-import { registerDocumentSetup } from '~/shared/utility/document-setup';
 import { evtDoc } from '~/shared/utility/multi-view';
 
 /**
@@ -121,19 +120,3 @@ const menuTriggerAutoFocus = (trigger: HTMLButtonElement, position: 'first' | 'l
 
 	highlightInList(popover, item);
 };
-
-/**
- * The visibility transition messes with Safari focusing autofocus elements
- * in popovers, so do any
- */
-registerDocumentSetup((document) => {
-	document.addEventListener(
-		'toggle',
-		(event) => {
-			if ((event as ToggleEvent).newState !== 'open') return;
-			const popover = event.target as HTMLElement;
-			popover.querySelector<HTMLElement>('[autofocus]')?.focus();
-		},
-		{ capture: true },
-	);
-});
