@@ -30,7 +30,8 @@ describeComponent('form-validation-group-demo', (getContainer) => {
 		const container = getContainer();
 
 		// Find password inputs
-		const passwordInput = container.getByLabel('Password', { exact: true });
+		// "Password" matches "Confirm Password" too so use regex to force match on start
+		const passwordInput = container.getByLabel(/^Password/);
 		const confirmPasswordInput = container.getByLabel('Confirm Password');
 
 		// Input first password

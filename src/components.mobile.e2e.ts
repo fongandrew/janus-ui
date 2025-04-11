@@ -19,7 +19,9 @@ for (const path of ['/', '/ssr']) {
 			// Close sidebar by tapping overly
 			const viewport = page.viewportSize();
 			if (!viewport) throw new Error('Viewport size is not defined');
-			await page.touchscreen.tap(viewport.width - 10, viewport.height - 10);
+			// TODO: This should probably be page.touchscreen.tap but it seems
+			// to bug out in Safari for some reason
+			await page.mouse.click(viewport.width - 10, viewport.height - 10);
 			await expect(sidebar).not.toBeVisible();
 		});
 

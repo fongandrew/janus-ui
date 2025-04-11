@@ -99,7 +99,7 @@ describeComponent('modal-demo', (getContainer) => {
 		await modal.getByText('Agree to the terms of service?').click();
 
 		// Select an option
-		await modal.getByRole('combobox').click();
+		await modal.getByLabel('How did you hear about us?').click();
 		await modal.getByText('Friends & family').click();
 
 		// Submit the form
