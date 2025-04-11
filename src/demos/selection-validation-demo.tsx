@@ -47,10 +47,10 @@ export function SelectionValidationDemo() {
 
 	const validateMultiple = (values: Set<string>) => {
 		if (values.size < 2) {
-			return 'Please select at least 2 items';
+			return 'Select at least 2 options';
 		}
 		if (values.size > 3) {
-			return 'Please select no more than 3 items';
+			return 'Select at most 3 options';
 		}
 		return null;
 	};
@@ -124,7 +124,7 @@ export function SelectionValidationDemo() {
 						</Form>
 
 						<Show when={formData()}>
-							<div>
+							<output>
 								<Card>
 									<CardHeader>
 										<CardTitle>Submitted form data</CardTitle>
@@ -158,7 +158,7 @@ export function SelectionValidationDemo() {
 										</div>
 									</CardContent>
 								</Card>
-							</div>
+							</output>
 						</Show>
 					</div>
 				</CardContent>
