@@ -31,4 +31,11 @@
 
 @define-mixin t-hover {
 	filter: contrast(0.95) saturate(1.15);
+
+	/*
+		For some reason, Safari sometimes bugs out with the filter unless this is here.
+		This nudges it to use the GPU. We could use translateZ(0) instead, but since
+		this is a helper, it might clopper an existing transform if we're not careful.
+	*/
+	will-change: filter;
 }
