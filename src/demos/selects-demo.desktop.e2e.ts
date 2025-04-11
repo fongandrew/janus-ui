@@ -116,12 +116,24 @@ describeComponent('selects-demo', (getContainer) => {
 	});
 
 	test('can clear selection with Escape key', async ({ page }) => {
-		const container = getContainer();
-		const initialValueSelect = container.getByTestId('initial-value-selection');
-		await initialValueSelect.focus();
+		const container = getContainer().getByTestId('single-selection-container');
+		const singleSelect = container.getByTestId('single-selection');
+		await singleSelect.focus();
+		await page.keyboard.press('Enter');
+		await page.keyboard.press('b');
+		await page.keyboard.press('Escape');
+		await expect(singleSelect.getByText('Banana')).toBeVisible();
 
-		page.keyboard.press('Escape');
-		await expect(initialValueSelect.getByText('Select a fruit...')).toBeVisible();
+		// Test clearing selection with escape
+		await singleSelect.focus();
+		await page.keyboard.press('Escape');
+		await expect(singleSelect.getByText('Select a fruit...')).toBeVisible();
+
+		// Test re-opening modal doesn't reselect
+		await page.keyboard.press('Enter');
+		await page.keyboard.press('Escape');
+		await page.waitForTimeout(100);
+		await expect(singleSelect.getByText('Select a fruit...')).toBeVisible();
 	});
 
 	test('shows error when selecting invalid option', async () => {

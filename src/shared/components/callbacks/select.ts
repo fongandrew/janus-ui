@@ -385,8 +385,11 @@ function listClear(listElm: HTMLElement) {
 		didChange = true;
 		item.remove();
 	}
-	if (!didChange) return;
 
+	// Clear highlight so subsequent selection goes to beginning
+	highlightInList(listElm, null);
+
+	if (!didChange) return;
 	listElm.dispatchEvent(new Event('change', { bubbles: true }));
 
 	// Clear unsets focus, so try to restore to controlling element
