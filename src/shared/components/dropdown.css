@@ -53,7 +53,9 @@
 		z-index: var(--v-z-above-backdrop);
 
 		/* Mobile specific styling */
-		inset: var(--v-spacing);
+		top: var(--v-spacing);
+		left: var(--v-spacing);
+		right: var(--v-spacing);
 		width: 100%;
 		max-height: calc(100vh - 2 * var(--v-spacing));
 		max-width: calc(100vw - 2 * var(--v-spacing));
@@ -99,10 +101,10 @@
 
 		--c-dropdown__spacing: var(--v-inner-radius);
 
+		flex: 1 1 auto;
 		flex-direction: column;
 		overflow: hidden;
 		min-width: var(--c-dropdown__min-width);
-		max-height: 100%;
 	}
 
 	.c-dropdown__children {
