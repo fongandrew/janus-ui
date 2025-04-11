@@ -61,7 +61,12 @@ export const modalBackdropMouseDown = createHandler(
 	'$c-modal__backdrop-mousedown',
 	(event) => {
 		const dialog = event.currentTarget as HTMLDialogElement;
-		setMouseDownDialog(dialog, event.target === dialog);
+		setMouseDownDialog(
+			dialog,
+			event.target === dialog &&
+				// Popover overlay clicks may go directly to dialog, so ignore those
+				!dialog.querySelector(':popover-open'),
+		);
 	},
 );
 
@@ -87,6 +92,9 @@ export const modalEscapeKey = createHandler('keydown', '$c-modal__escape', (even
 
 	// Don't auto close on escape if popover is open (let light dismiss handle it)
 	if (dialog.querySelector(':popover-open')) return;
+
+	// Don't close if some other handler (like in the popover) signals we shouldn't
+	if (event.defaultPrevented) return;
 
 	requestModalClose(dialog, event);
 });
