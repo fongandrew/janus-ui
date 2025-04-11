@@ -238,7 +238,7 @@ registerDocumentSetup((document) => {
 			const popover = event.target as HTMLElement;
 			const focusable = popover.querySelector<HTMLElement>('[autofocus]');
 			focusable?.focus();
-			if (skipSelect(focusable)) {
+			if (focusable && skipSelect(focusable)) {
 				setSkipSelect(focusable, false);
 			} else if (isTextInput(focusable)) {
 				focusable.select();
