@@ -27,6 +27,15 @@ describeComponent('selects-demo', (getContainer) => {
 		await expect(container.getByText('Selected: apple')).toBeVisible();
 	});
 
+	test('can open select by clicking label', async () => {
+		const container = getContainer().getByTestId('single-selection-container');
+		const label = container.getByText('Single selection');
+
+		await label.click();
+		const listbox = container.getByRole('listbox');
+		await expect(listbox).toBeVisible();
+	});
+
 	test('can select an option from single select dropdown via keyboard', async ({ page }) => {
 		const container = getContainer().getByTestId('single-selection-container');
 		const singleSelect = container.getByTestId('single-selection');
