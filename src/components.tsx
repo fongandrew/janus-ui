@@ -1,4 +1,4 @@
-import { Globe, Settings, SquareCode } from 'lucide-solid';
+import { Box, Globe, Settings } from 'lucide-solid';
 import { isServer } from 'solid-js/web';
 
 import { App, PREFS_MODAL_ID } from '~/app';
@@ -61,105 +61,105 @@ export function Components(props: ComponentsProps) {
 				<SidebarContent>
 					<SidebarList {...callbackAttrs(sidebarHighlight)}>
 						<SidebarListLink href="#buttons-demo">
-							<SquareCode />
+							<Box />
 							Buttons
 						</SidebarListLink>
 						<SidebarListLink href="#button-links-demo">
-							<SquareCode />
+							<Box />
 							Button Links
 						</SidebarListLink>
 						<SidebarListLink href="#alerts-demo">
-							<SquareCode />
+							<Box />
 							Alerts
 						</SidebarListLink>
 						<SidebarListLink href="#badge-and-count-demo">
-							<SquareCode />
+							<Box />
 							Badge and Count
 						</SidebarListLink>
 						<SidebarListLink href="#checkboxes-demo">
-							<SquareCode />
+							<Box />
 							Checkboxes
 						</SidebarListLink>
 						<SidebarListLink href="#details-demo">
-							<SquareCode />
+							<Box />
 							Details
 						</SidebarListLink>
 						<SidebarListLink href="#error-fallback-demo">
-							<SquareCode />
+							<Box />
 							Error fallback
 						</SidebarListLink>
 						<SidebarListLink href="#form-submit-demo">
-							<SquareCode />
+							<Box />
 							Form submit
 						</SidebarListLink>
 						<SidebarListLink href="#form-validation-group-demo">
-							<SquareCode />
+							<Box />
 							Form validation group
 						</SidebarListLink>
 						<SidebarListLink href="#img-demo">
-							<SquareCode />
+							<Box />
 							Images
 						</SidebarListLink>
 						<SidebarListLink href="#inputs-demo">
-							<SquareCode />
+							<Box />
 							Inputs
 						</SidebarListLink>
 						<SidebarListLink href="#intl-demo">
-							<SquareCode />
+							<Box />
 							Internationalization & text formatting
 						</SidebarListLink>
 						<SidebarListLink href="#labelled-actions-demo">
-							<SquareCode />
+							<Box />
 							Labelled actions
 						</SidebarListLink>
 						<SidebarListLink href="#list-boxes-demo">
-							<SquareCode />
+							<Box />
 							List boxes
 						</SidebarListLink>
 						<SidebarListLink href="#menus-demo">
-							<SquareCode />
+							<Box />
 							Menus
 						</SidebarListLink>
 						<SidebarListLink href="#modal-demo">
-							<SquareCode />
+							<Box />
 							Modal
 						</SidebarListLink>
 						<SidebarListLink href="#placeholders-demo">
-							<SquareCode />
+							<Box />
 							Placeholders
 						</SidebarListLink>
 						<SidebarListLink href="#radio-groups-demo">
-							<SquareCode />
+							<Box />
 							Radio groups
 						</SidebarListLink>
 						<SidebarListLink href="#select-typeaheads-demo">
-							<SquareCode />
+							<Box />
 							Select typeaheads
 						</SidebarListLink>
 						<SidebarListLink href="#selection-validation-demo">
-							<SquareCode />
+							<Box />
 							Selection validation
 						</SidebarListLink>
 						<SidebarListLink href="#selects-demo">
-							<SquareCode />
+							<Box />
 							Selects
 						</SidebarListLink>
 						{!isServer && (
 							<SidebarListLink href="#suspense-demo">
-								<SquareCode />
+								<Box />
 								Suspense
 							</SidebarListLink>
 						)}
 						<SidebarListLink href="#tabs-demo">
-							<SquareCode />
+							<Box />
 							Tabs
 						</SidebarListLink>
 						<SidebarListLink href="#textareas-demo">
-							<SquareCode />
+							<Box />
 							Textareas
 						</SidebarListLink>
 						<SidebarListLink href="#tooltips-demo">
-							<SquareCode />
+							<Box />
 							Tooltips
 						</SidebarListLink>
 						<SidebarListGroup heading="Other stuff">
