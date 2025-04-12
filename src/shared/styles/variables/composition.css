@@ -74,3 +74,21 @@
 	--v-input-height-md: 2rem;
 	--v-input-height-lg: 2.25rem;
 }
+
+/* Embiggen things a bit on mobile */
+@media (resolution >= 200dpi) {
+	:root {
+		/* Typography */
+		--v-font-size-xs: 0.8125rem;
+		--v-font-size-sm: 0.9375rem;
+		--v-font-size-md: 1.0625rem;
+		--v-font-size-lg: 1.25rem;
+		--v-font-size-xl: 1.5rem;
+		--v-font-size-2xl: 1.75rem;
+
+		/* Component Specific */
+		--v-input-height-sm: 2rem;
+		--v-input-height-md: 2.5rem;
+		--v-input-height-lg: 3rem;
+	}
+}
