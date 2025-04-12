@@ -45,16 +45,16 @@ export function App(props: AppProps) {
 				<TopNav>
 					{props.heading ?? <h1>Janus UI</h1>}
 					<TopNavList>
-						<NavLink current={props.current} href="/">
+						<NavLink current={props.current} href="./">
 							Components
 						</NavLink>
-						<NavLink current={props.current} href="/colors">
+						<NavLink current={props.current} href="./colors">
 							Colors
 						</NavLink>
-						<NavLink current={props.current} href="/typography">
+						<NavLink current={props.current} href="./typography">
 							Typography
 						</NavLink>
-						<NavLink current={props.current} href="/ssr">
+						<NavLink current={props.current} href="./ssr">
 							SSR
 						</NavLink>
 						<ModalOpenTrigger targetId={PREFS_MODAL_ID}>
