@@ -35,7 +35,12 @@
 }
 
 @layer variables {
-	:root {
+	html {
+		/* Defines 1rem */
+		font-size: 16px;
+	}
+
+	body {
 		@mixin v-text-md;
 	}
 

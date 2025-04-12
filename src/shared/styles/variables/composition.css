@@ -8,7 +8,7 @@
 	/* Spacing */
 	--v-space-xs: 0.25rem;
 	--v-space-sm: 0.5rem;
-	--v-space-md: 1rem;
+	--v-space-md: 0.9375rem;
 	--v-space-lg: 1.5rem;
 	--v-space-xl: 2rem;
 	--v-space-2xl: 2.5rem;
@@ -78,6 +78,9 @@
 /* Embiggen things a bit on mobile */
 @media (resolution >= 200dpi) {
 	:root {
+		/* Spacing */
+		--v-space-md: 1rem;
+
 		/* Typography */
 		--v-font-size-xs: 0.8125rem;
 		--v-font-size-sm: 0.9375rem;
@@ -87,8 +90,8 @@
 		--v-font-size-2xl: 1.75rem;
 
 		/* Component Specific */
-		--v-input-height-sm: 2rem;
-		--v-input-height-md: 2.5rem;
-		--v-input-height-lg: 3rem;
+		--v-input-height-sm: 2.125rem;
+		--v-input-height-md: 2.625rem;
+		--v-input-height-lg: 3.125rem;
 	}
 }

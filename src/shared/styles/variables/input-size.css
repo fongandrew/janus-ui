@@ -24,7 +24,7 @@
 
 @layer variables {
 	:root {
-		@mixin v-input-md;
+		--v-input-height: var(--v-input-height-md);
 	}
 
 	.v-input-sm {
