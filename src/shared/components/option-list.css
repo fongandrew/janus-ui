@@ -2,7 +2,7 @@
 
 @layer components {
 	.c-option-list {
-		@mixin v-text-sm;
+		@mixin v-input-sm;
 
 		overflow: hidden auto;
 	}
@@ -10,7 +10,7 @@
 	.c-option-list__heading,
 	.c-option-list__item {
 		@mixin v-spacing-sm;
-		@mixin o-text-box;
+		@mixin o-input-box;
 
 		display: flex;
 		gap: var(--v-space-xs);

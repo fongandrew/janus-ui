@@ -41,6 +41,10 @@
 			/* Transform messes up position: fixed on drawer */
 			transform: unset;
 		}
+
+		> .c-button--icon {
+			font-size: var(--v-font-size-xl);
+		}
 	}
 
 	.c-top-nav__list-open {

@@ -116,7 +116,7 @@
 	.c-dropdown__footer {
 		@mixin v-input-sm;
 		@mixin v-text-sm;
-		@mixin o-input-box;
+		@mixin o-input-container-box;
 		@mixin t-border-top;
 
 		display: flex;
