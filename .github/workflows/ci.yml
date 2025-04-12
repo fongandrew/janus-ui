@@ -64,7 +64,6 @@ jobs:
 
   build:
     runs-on: macos-latest
-    needs: [unit, e2e]
 
     steps:
     - name: Checkout repository
@@ -80,8 +79,3 @@ jobs:
 
     - name: Build
       run: npm run build
-
-    - name: Deploy
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: dist/
