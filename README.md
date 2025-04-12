@@ -14,6 +14,10 @@ In addition, Janus UI is built with the following principles in mind:
 * Modern: As much as possible, rely on newer native HTML functionality (like dialogs and popovers) in lieu of JavaScript.
 * Simple: Minimize dependencies to keep bundle size down and keep things maintainable.
 
+## Preview
+
+The build for this generates a set of demo pages available at https://fongandrew.github.io/janus-ui/
+
 ## Getting Started
 
 ```bash
