@@ -19,26 +19,27 @@ export function CheckboxesDemo() {
 			<CardContent>
 				<div class="o-stack">
 					<Label>
-						<Checkbox name="default" data-testid="default-checkbox" /> Default checkbox
+						<Checkbox name="default" data-testid="default-checkbox" />
+						Default checkbox
 					</Label>
 					<Label>
-						<Checkbox name="checked" checked data-testid="checked-checkbox" /> Checked
-						checkbox
+						<Checkbox name="checked" checked data-testid="checked-checkbox" />
+						Checked checkbox
 					</Label>
 					<Label>
 						<Checkbox
 							name="indeterminate"
 							indeterminate
 							data-testid="indeterminate-checkbox"
-						/>{' '}
+						/>
 						Indeterminate checkbox
 					</Label>
 					<Label>
-						<Checkbox name="invalid" aria-invalid data-testid="invalid-checkbox" />{' '}
+						<Checkbox name="invalid" aria-invalid data-testid="invalid-checkbox" />
 						Error state checkbox
 					</Label>
 					<Label>
-						<Checkbox name="disabled" disabled data-testid="disabled-checkbox" />{' '}
+						<Checkbox name="disabled" disabled data-testid="disabled-checkbox" />
 						Disabled checkbox
 					</Label>
 					<Label>
