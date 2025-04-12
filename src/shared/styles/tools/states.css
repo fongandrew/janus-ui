@@ -8,6 +8,7 @@
 
 @define-mixin t-disabled-input {
 	background-color: var(--v-input-disabled-bg);
+	color: color-mix(in oklab, currentcolor 65%, transparent);
 	cursor: not-allowed;
 }
 
