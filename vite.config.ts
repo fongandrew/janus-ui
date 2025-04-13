@@ -9,8 +9,7 @@ export default defineConfig(({ mode }) => {
 	const isTest = mode === 'test';
 
 	return {
-		// Set the base path for deployment in a subdirectory
-		base: './',
+		base: process.env['BASE_URL'] || '/',
 		plugins: [
 			solidPlugin({ ssr: !isTest }),
 			purgeCSSPlugin({
