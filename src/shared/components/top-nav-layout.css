@@ -41,10 +41,6 @@
 			/* Transform messes up position: fixed on drawer */
 			transform: unset;
 		}
-
-		> .c-button--icon {
-			font-size: var(--v-font-size-xl);
-		}
 	}
 
 	.c-top-nav__list-open {
@@ -53,6 +49,7 @@
 
 	.c-top-nav__list-close {
 		display: none;
+		font-size: var(--v-font-size-lg);
 
 		.c-top-nav-layout:has(.c-top-nav__list[data-c-sidebar__state='open']) & {
 			@mixin o-input-container-box;

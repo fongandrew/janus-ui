@@ -39,6 +39,10 @@
 	.c-button--icon {
 		font-size: inherit;
 		align-items: center;
+
+		header:has(h1, h2) > & {
+			font-size: var(--v-font-size-lg);
+		}
 	}
 
 	.c-button--icon,
