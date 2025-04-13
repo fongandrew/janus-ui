@@ -50,7 +50,7 @@ export default function vitePluginMangleCss(options: CSSManglerOptions = {}): Pl
 	let isBuildEnabled: boolean;
 
 	return {
-		name: 'vite-plugin-css-mangler',
+		name: 'manglecss',
 
 		configResolved(config) {
 			isBuildEnabled = typeof enabled === 'function' ? enabled(config.mode) : enabled;

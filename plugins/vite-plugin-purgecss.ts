@@ -24,7 +24,7 @@ export default function vitePluginPurgeCSS(options: VitePurgeCSSOptions = {}): P
 	let isBuildEnabled: boolean;
 
 	return {
-		name: 'vite-purgecss',
+		name: 'purgecss',
 		apply: 'build',
 		enforce: 'post',
 
