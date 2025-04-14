@@ -1,6 +1,10 @@
 import { createMemo, createUniqueId, splitProps } from 'solid-js';
 
-import { selectInputKeyDown, selectUpdateWithInput } from '~/shared/components/callbacks/select';
+import {
+	selectInputKeyDown,
+	selectLabelClick,
+	selectUpdateWithInput,
+} from '~/shared/components/callbacks/select';
 import {
 	createFormElementId,
 	FormElementPropsContext,
@@ -88,6 +92,7 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 				selectInputTextId={selectInputTextId}
 				tabIndex={-1}
 				{...optionListProps}
+				{...callbackAttrs(optionListProps, selectLabelClick)}
 			/>
 		</SelectButtonContainer>
 	);

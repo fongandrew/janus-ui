@@ -205,6 +205,24 @@ export const selectUpdateWithInput = createHandler(
 	},
 );
 
+/**
+ * Workaround for Chrome bug (?) where clicks on labels don't toggle the input after
+ * a typeahead listbox is closed and reopened.
+ */
+export const selectLabelClick = createHandler('click', '$c-select__label-click', function (event) {
+	const target = event.target as HTMLElement;
+	if (target instanceof HTMLInputElement) return;
+
+	const input = target.closest('label')?.querySelector<HTMLInputElement>('input');
+	if (!input) return;
+
+	// When things work correctly label click gets processed *before* input
+	event.preventDefault();
+	event.stopImmediatePropagation();
+	event.stopPropagation();
+	input.click();
+});
+
 /** Magic prop to see if there's an associated input handler with an input already */
 const [selectInputHandler, setSelectInputHandler] =
 	createMagicProp<
