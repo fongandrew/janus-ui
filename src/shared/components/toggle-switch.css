@@ -2,22 +2,31 @@
 
 @layer components {
 	.c-toggle-switch {
+		@mixin v-input-sm;
 		@mixin v-colors-input;
 		@mixin t-border;
 		@mixin t-input-wrapper-states;
 
 		position: relative;
 		display: inline-flex;
-		height: 1lh;
-		width: 2.75em;
+		height: var(--v-input-height);
+		width: calc(var(--v-input-height) * 1.75);
 		cursor: pointer;
 		align-items: center;
 		border-radius: 9999em;
 		box-shadow: var(--v-shadow-inner);
-	}
 
-	.c-toggle-switch:has(input:checked) {
-		background-color: var(--v-primary-bg);
+		.c-label:has(&) {
+			align-items: center;
+		}
+
+		&:has(input:checked) {
+			background-color: var(--v-primary-bg);
+		}
+
+		.c-label > &:last-child {
+			margin-left: auto;
+		}
 	}
 
 	.c-toggle-switch input {
@@ -26,9 +35,9 @@
 
 	.c-toggle-switch__thumb {
 		position: absolute;
-		left: 0.125em;
-		height: 1em;
-		width: 1em;
+		margin-inline: calc(0.5 * var(--v-space-sm) - var(--v-border-width));
+		height: calc(var(--v-input-height) - var(--v-space-sm));
+		width: calc(var(--v-input-height) - var(--v-space-sm));
 		border-radius: 9999em;
 		background-color: var(--v-input-fg);
 
@@ -36,7 +45,7 @@
 	}
 
 	.c-toggle-switch:has(input:checked) .c-toggle-switch__thumb {
-		transform: translateX(1.375em);
+		transform: translateX(calc(0.75 * var(--v-input-height)));
 		background-color: var(--v-primary-fg);
 	}
 
