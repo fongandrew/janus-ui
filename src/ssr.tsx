@@ -5,7 +5,7 @@ import { Components } from '~/components';
 export function render() {
 	return renderToString(() => (
 		<NoHydration>
-			<Components title="Server Side Rendering" current="/ssr" />
+			<Components title="Server Side Rendering" current="./ssr" />
 		</NoHydration>
 	));
 }

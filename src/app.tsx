@@ -1,7 +1,7 @@
 import '~/shared/styles/index.css';
 
 import { Settings } from 'lucide-solid';
-import { type JSX } from 'solid-js';
+import { createMemo, type JSX } from 'solid-js';
 
 import { PrefsModal } from '~/prefs-modal';
 import { ModalOpenTrigger } from '~/shared/components/modal';
@@ -27,12 +27,15 @@ export interface AppProps {
 
 function NavLink(props: { current?: string | undefined; href: string; children: JSX.Element }) {
 	const window = useWindow();
-	const current = () => props.current ?? window?.location.pathname;
+	const isCurrent = createMemo(() => {
+		if (props.current === props.href) return true;
+		if (!window) return false;
+		return (
+			(new URL(props.href, window.location.href).pathname ?? '') === window.location.pathname
+		);
+	});
 	return (
-		<TopNavListLink
-			href={props.href}
-			aria-current={current() === props.href ? 'page' : undefined}
-		>
+		<TopNavListLink href={props.href} aria-current={isCurrent() ? 'page' : undefined}>
 			{props.children}
 		</TopNavListLink>
 	);
