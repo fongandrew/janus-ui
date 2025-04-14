@@ -55,13 +55,19 @@
 	}
 
 	/* Show clear button only is there's something to clear */
-	.c-select__container:has(:checked, [type='hidden']) .c-select__clear {
+	.c-select__container:has(:checked, [type='hidden']):not(
+			:has(.c-select__button[aria-disabled='true'], .c-select__button:disabled)
+		)
+		.c-select__clear {
 		cursor: pointer;
 		display: flex;
 	}
 
 	/* Hide chevron if clear button is shown */
-	.c-select__container:has(:checked, [type='hidden']) .c-select__chevron {
+	.c-select__container:has(:checked, [type='hidden']):not(
+			:has(.c-select__button[aria-disabled='true'], .c-select__button:disabled)
+		)
+		.c-select__chevron {
 		display: none;
 	}
 
