@@ -3,5 +3,13 @@
 @layer components {
 	.c-input {
 		width: 100%;
+
+		&[type='date'],
+		&[type='time'],
+		&[type='datetime-local'],
+		&[type='month'],
+		&[type='week'] {
+			appearance: none;
+		}
 	}
 }
