@@ -57,7 +57,7 @@
 		left: var(--v-spacing);
 		right: var(--v-spacing);
 		width: 100%;
-		max-height: calc(100vh - 2 * var(--v-spacing));
+		max-height: calc(100dvh - 2 * var(--v-spacing));
 		max-width: calc(100vw - 2 * var(--v-spacing));
 
 		&:popover-open,

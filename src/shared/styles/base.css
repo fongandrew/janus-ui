@@ -4,7 +4,7 @@
 @layer base {
 	body {
 		background: var(--v-body-bg, var(--v-bg));
-		min-height: 100vh;
+		min-height: 100dvh;
 
 		/* So container queries can fallback to the body as a container */
 		container-type: size;
