@@ -43,6 +43,7 @@
 
 	.c-select__chevron {
 		display: flex;
+		pointer-events: none;
 	}
 
 	.c-select__clear {
