@@ -14,17 +14,13 @@ for (const path of ['/', '/ssr']) {
 			// aren't supported in Safari, so so manully scroll element after sidebar
 			// to hide nav
 			await page.evaluate(() =>
-				document
-					.querySelector('[role="complementary"] + *')
-					?.scrollBy({ left: 0, top: 300, behavior: 'smooth' }),
+				document.body.scrollBy({ left: 0, top: 300, behavior: 'smooth' }),
 			);
 			await expect(topNav).not.toBeInViewport();
 
 			// Scroll back up to reveal the nav
 			await page.evaluate(() =>
-				document
-					.querySelector('[role="complementary"] + *')
-					?.scrollBy({ left: 0, top: -200, behavior: 'smooth' }),
+				document.body.scrollBy({ left: 0, top: -200, behavior: 'smooth' }),
 			);
 			await expect(topNav).toBeInViewport();
 		});
