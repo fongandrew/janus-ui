@@ -38,6 +38,8 @@
 		&:focus-within,
 		&:has(.c-top-nav__list[data-c-sidebar__state='open']) {
 			/* Transform messes up position: fixed on drawer */
+
+			transition: none;
 			transform: unset;
 		}
 
