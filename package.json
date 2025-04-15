@@ -33,7 +33,8 @@
     "eslint": "^9.16.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.7.0",
-    "eslint-plugin-css-class-usage": "github:fongandrew/eslint-plugin-css-class-usage",
+    "eslint-plugin-async-event": "^1.0.0",
+    "eslint-plugin-css-class-usage": "^1.0.2",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-no-relative-import-paths": "^1.5.5",
     "eslint-plugin-prettier": "^5.2.1",
@@ -62,9 +63,6 @@
     "apca-w3": "^0.1.9",
     "classix": "^2.2.0",
     "colorparsley": "^0.1.8",
-    "dayjs": "^1.11.13",
-    "eslint-plugin-async-event": "github:fongandrew/eslint-plugin-async-event",
-    "js-sha256": "^0.11.0",
     "lucide-solid": "^0.468.0",
     "solid-js": "^1.9.3"
   }
