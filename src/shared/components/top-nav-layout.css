@@ -63,6 +63,7 @@
 		.c-top-nav-layout:has(.c-top-nav__list[data-c-sidebar__state='open']) & {
 			@mixin v-spacing-lg;
 			@mixin o-input-container-box;
+			@mixin t-transition__delayed;
 
 			display: block;
 			position: fixed;

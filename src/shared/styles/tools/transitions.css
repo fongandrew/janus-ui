@@ -21,6 +21,8 @@
 	@mixin t-transition single-arg(color, background-color, border-color, $(properties));
 }
 
+/* Delay appearance
+
 /* Combine a transition with a visibility flip off (e.g. to remove focus, find, etc.) */
 @define-mixin t-transition-visibility-hidden $property, $timing: cubic-bezier(0.4, 0, 0.2, 1) {
 	visibility: hidden;
@@ -99,6 +101,24 @@
 		visibility var(--v-transition-duration) step-end,
 		opacity var(--v-transition-duration) linear,
 		transform var(--v-transition-duration) cubic-bezier(0.4, 0, 0.2, 1)
+	);
+}
+
+@keyframes t-transition__opacity-in {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+/* Delay appearance of element until transition is complete */
+@define-mixin t-transition__delayed {
+	animation: var(
+		--v-animation-none,
+		t-transition__opacity-in var(--v-transition-duration) step-end
 	);
 }
 
