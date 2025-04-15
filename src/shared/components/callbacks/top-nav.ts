@@ -28,7 +28,7 @@ export const topNavScroll = createMounter('modal__open-scroll-state', (elm) => {
 	const parent = getScrollableParent(elm);
 	if (!parent) return;
 
-	const onScroll = handleScroll.bind(null, elm);
+	const onScroll = (event: Event) => handleScroll(elm, event);
 	parent.addEventListener('scroll', onScroll, { passive: true });
 	onUnmount(elm, () => {
 		parent.removeEventListener('scroll', onScroll);

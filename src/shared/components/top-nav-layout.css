@@ -9,7 +9,6 @@
 @layer composite {
 	.c-top-nav-layout {
 		min-height: 100%;
-		overflow-x: hidden;
 	}
 
 	/* Top Navigation Bar */
@@ -22,11 +21,12 @@
 		display: flex;
 		align-items: center;
 		box-shadow: var(--v-shadow-md);
+		overflow: hidden;
 		position: sticky;
 		top: 0;
 		transform: translateY(0%);
 
-		/* Since this basically contains the backdrop tiself */
+		/* Since this basically contains the backdrop itself */
 		z-index: var(--v-z-backdrop);
 
 		/* Top nav hides on scroll */
@@ -39,7 +39,6 @@
 		&:focus-within,
 		&:has(.c-top-nav__list[data-c-sidebar__state='open']) {
 			/* Transform messes up position: fixed on drawer */
-
 			transition: none;
 			transform: unset;
 		}
