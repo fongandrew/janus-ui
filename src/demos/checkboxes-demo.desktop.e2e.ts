@@ -57,6 +57,24 @@ describeComponent('checkboxes-demo', (getContainer) => {
 		await expect(defaultCheckbox).not.toBeChecked();
 	});
 
+	test('can toggle by clicking directly on detached checkbox', async () => {
+		const container = getContainer();
+
+		// Get the detached checkbox's parent
+		const detachedCheckbox = container.getByTestId('detached-checkbox');
+		const detachedCheckboxContainer = container.locator(
+			'div:has(> [data-testid="detached-checkbox"])',
+		);
+		await expect(detachedCheckbox).not.toBeChecked();
+
+		// Click directly on the checkbox container (not the label) to toggle on and off
+		await detachedCheckboxContainer.click();
+		await expect(detachedCheckbox).toBeChecked();
+
+		await detachedCheckboxContainer.click();
+		await expect(detachedCheckbox).not.toBeChecked();
+	});
+
 	test('can toggle checkboxes with keyboard interaction', async ({ page }) => {
 		const container = getContainer();
 

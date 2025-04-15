@@ -1,9 +1,8 @@
 import cx from 'classix';
 import { splitProps } from 'solid-js';
 
-import { checkboxEnter } from '~/shared/components/callbacks/checkbox';
+import { checkboxClick, checkboxEnter } from '~/shared/components/callbacks/checkbox';
 import { toggleSwitchChange } from '~/shared/components/callbacks/toggle-switch';
-import { handleClick } from '~/shared/components/checkbox';
 import {
 	type FormElementProps,
 	mergeFormElementProps,
@@ -17,7 +16,7 @@ export function ToggleSwitch(props: ToggleSwitchProps) {
 	const formProps = mergeFormElementProps<'input'>(rest);
 
 	return (
-		<div class={cx('c-toggle-switch', local.class)} onClick={handleClick}>
+		<div class={cx('c-toggle-switch', local.class)} {...callbackAttrs(checkboxClick)}>
 			<input
 				type="checkbox"
 				role="switch"

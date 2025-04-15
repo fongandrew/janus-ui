@@ -20,3 +20,26 @@ export const checkboxEnter = createHandler('keydown', '$c-checkbox__enter', (eve
 export const checkboxIndeterminate = createMounter('$c-checkbox__indeterminate', (elm) => {
 	(elm as HTMLInputElement).indeterminate = true;
 });
+
+/**
+ * Update checked state on click. This is needed because the checkbox input itself is visually
+ * hidden, and we need to toggle it when the parent is clicked.
+ * Screenreaders will do this automatically when interacting with the input directly.
+ */
+export const checkboxClick = createHandler('click', '$c-checkbox__click', (event) => {
+	// If we clicked directly on the input, let the browser handle it
+	if (event.target instanceof HTMLInputElement) return;
+
+	// Find the input inside the checkbox container
+	const input = event.currentTarget.querySelector<HTMLInputElement>('input');
+	if (input) {
+		const prevState = input.checked;
+		// setTimeout in case click event triggers something further down
+		// the propagation chain that would change the input.checked value
+		// (like if it's inside a label)
+		setTimeout(() => {
+			input.indeterminate = false;
+			input.checked = !prevState;
+		}, 0);
+	}
+});
