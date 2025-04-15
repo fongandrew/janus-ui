@@ -7,6 +7,8 @@ import { onUnmount } from '~/shared/utility/unmount-observer';
 /** Magic data attr to set to signal we should hide top nav on scroll */
 export const TOP_NAV_SCROLL_HIDE_ATTR = 'data-c-top-nav__scroll-hide';
 
+/** Magic attribute to label the top nav layout element (since) */
+
 /** Magic prop for memoizing memoized height (and measurement time) of header */
 const [memoizedHeight, setMemoizedHeight] = createMagicProp<[number, number]>();
 
@@ -26,9 +28,10 @@ export const topNavScroll = createMounter('modal__open-scroll-state', (elm) => {
 	const parent = getScrollableParent(elm);
 	if (!parent) return;
 
-	parent.addEventListener('scroll', handleScroll, { passive: true });
+	const onScroll = handleScroll.bind(null, elm);
+	parent.addEventListener('scroll', onScroll, { passive: true });
 	onUnmount(elm, () => {
-		parent.removeEventListener('scroll', handleScroll);
+		parent.removeEventListener('scroll', onScroll);
 	});
 });
 
@@ -50,11 +53,11 @@ const getHeaderHeight = (header: HTMLElement) => {
  * Scroll handler to attach to scrollable area in top nav layout.
  * Sets hidden state on top nav based on scroll direction.
  */
-function handleScroll(e: Event) {
+function handleScroll(topNavLayout: HTMLElement, e: Event) {
 	const container = e.target as HTMLElement | null;
 	if (!container) return;
 
-	const header = container.querySelector('header');
+	const header = topNavLayout.querySelector('header');
 	if (!header) return;
 
 	// This basically forces us to have two scroll events in quick succession

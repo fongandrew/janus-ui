@@ -15,16 +15,12 @@
 	.c-sidebar-layout {
 		height: 100dvh;
 		width: 100vw;
-		overflow: hidden;
 
 		/* This is needed to keep absolute positioned children from doing dumb things */
 		position: relative;
 	}
 
 	.c-sidebar-layout__content {
-		position: absolute;
-		inset: 0;
-		overflow: hidden auto;
 		container-type: inline-size;
 	}
 
@@ -162,8 +158,11 @@
 			display: flex;
 			width: var(--v-sidebar-width);
 
-			/* Unset z-index to avoid sidebar sitting above overlay in other contexts */
-			z-index: unset;
+			/*
+				Set to backdrop z-index to avoid sitting above overlay in other contexts.
+				Should still be something though to avoid inline content on top.
+			*/
+			z-index: var(--v-z-backdrop);
 		}
 
 		.c-sidebar-layout__content {
@@ -174,9 +173,9 @@
 				space where the sidebar was). Note that we don't do a continuous animation
 				of left to avoid reflow costs.
 			*/
-			@mixin t-transition left, step-end;
+			@mixin t-transition margin-left, step-end;
 
-			left: var(--v-sidebar-width);
+			margin-left: var(--v-sidebar-width);
 		}
 
 		.c-sidebar__overlay,
@@ -198,7 +197,8 @@
 				expand the content area to avoid gap of empty space.
 			*/
 			transition-timing-function: step-start;
-			left: 0;
+			margin-left: 0;
+			z-index: var(--v-z-above-backdrop);
 		}
 
 		/*

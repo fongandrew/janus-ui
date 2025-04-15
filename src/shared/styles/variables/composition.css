@@ -59,6 +59,7 @@
 	--v-shadow-inner-bottom: inset 0 -2px 3px 0 rgb(0 0 0 / 10%);
 
 	/* Z-Index */
+	--v-z-sub-backdrop: 5;
 	--v-z-backdrop: 10;
 	--v-z-above-backdrop: 20;
 
