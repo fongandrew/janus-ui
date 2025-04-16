@@ -64,6 +64,53 @@ export type DialogProps = JSX.DialogHtmlAttributes<HTMLDialogElement> & {
 		  }
 	);
 
+/**
+ * Modal dialog component
+ *
+ * @example
+ * ```tsx
+ * // Triggered Modal (using element ID)
+ * const dialogId = createUniqueId();
+ *
+ * 	<ModalOpenTrigger targetId={dialogId}>
+ * 		<Button>Open Modal</Button>
+ * 	</ModalOpenTrigger>
+ *
+ * 	<Modal id={dialogId}>
+ * 		<ModalTitle>Example Modal</ModalTitle>
+ * 		<ModalContent>
+ * 			<p>Content goes here</p>
+ * 		</ModalContent>
+ * 		<ModalFooter>
+ * 			<ModalCloseButton />
+ * 		</ModalFooter>
+ * 	</Modal>
+ *
+ * // Form Modal
+ * const FormNames = {
+ * 		name: 'name',
+ * 		email: 'email',
+ * };
+ *
+ * 	<Modal>
+ * 		<ModalTitle>Form Example</ModalTitle>
+ * 		<FormContextProvider>
+ * 			<ModalFormContent names={FormNames} onSubmit={handleSubmit}>
+ * 				<LabelledInput label="Name">
+ * 					<Input name={FormNames.name} />
+ * 				</LabelledInput>
+ * 				<LabelledInput label="Email">
+ * 					<Input name={FormNames.email} type="email" />
+ * 				</LabelledInput>
+ * 			</ModalFormContent>
+ * 			<ModalFooter>
+ * 				<ModalCancelButton />
+ * 				<ModalSubmitButton />
+ * 			</ModalFooter>
+ * 		</FormContextProvider>
+ * 	</Modal>
+ * ```
+ */
 export function Modal(props: DialogProps) {
 	const [dialog, setDialog] = createSignal<HTMLDialogElement | null>(null);
 	const [local, rest] = splitProps(props, ['children', 'id', 'open', 'onError', 'onReload']);
@@ -132,7 +179,17 @@ export function Modal(props: DialogProps) {
 	);
 }
 
-/** X button in corner of modal */
+/**
+ * X button in corner of modal
+ *
+ * @example
+ * ```tsx
+ * 	<ModalTitle>
+ * 		Modal Title
+ * 		<ModalXButton />
+ * 	</ModalTitle>
+ * ```
+ */
 export function ModalXButton(props: ButtonProps) {
 	const t = useT();
 	return (
@@ -147,7 +204,22 @@ export function ModalXButton(props: ButtonProps) {
 	);
 }
 
-/** Generic button for closing current modal */
+/**
+ * Generic button for closing current modal
+ *
+ * @example
+ * ```tsx
+ * 	<ModalFooter>
+ * 		<ModalCloseButton>Cancel</ModalCloseButton>
+ * 	</ModalFooter>
+ *
+ * // With force close option
+ * 	<ModalCloseButton force>Close</ModalCloseButton>
+ *
+ * // Targeting a specific modal
+ * 	<ModalCloseButton targetId="my-modal-id">Close</ModalCloseButton>
+ * ```
+ */
 export function ModalCloseButton(
 	props: ButtonProps & { force?: boolean | undefined; targetId?: string | undefined } = {},
 ) {
@@ -162,7 +234,24 @@ export function ModalCloseButton(
 	);
 }
 
-/** Wrap around a button to make it open a particular modal */
+/**
+ * Wrapper component that makes its child open a particular modal
+ *
+ * @example
+ * ```tsx
+ * // Open a modal by ID
+ * const dialogId = createUniqueId();
+ *
+ * 	<ModalOpenTrigger targetId={dialogId}>
+ * 		<Button>Open Modal</Button>
+ * 	</ModalOpenTrigger>
+ *
+ * 	<Modal id={dialogId}>
+ * 		<ModalTitle>Example Modal</ModalTitle>
+ * 		<ModalContent>Content here...</ModalContent>
+ * 	</Modal>
+ * ```
+ */
 export function ModalOpenTrigger(props: { children: JSX.Element; targetId: string }) {
 	return (
 		<FormElementPropsProvider
@@ -176,6 +265,17 @@ export function ModalOpenTrigger(props: { children: JSX.Element; targetId: strin
 	);
 }
 
+/**
+ * Modal title component with header styling
+ *
+ * @example
+ * ```tsx
+ * 	<Modal id={dialogId}>
+ * 		<ModalTitle>Modal Title</ModalTitle>
+ * 		<ModalContent>Content goes here</ModalContent>
+ * 	</Modal>
+ * ```
+ */
 export function ModalTitle(props: JSX.HTMLAttributes<HTMLDivElement>) {
 	const [local, rest] = splitProps(props, ['children']);
 	return (
@@ -186,6 +286,20 @@ export function ModalTitle(props: JSX.HTMLAttributes<HTMLDivElement>) {
 	);
 }
 
+/**
+ * Modal content container with proper styling and scroll behavior
+ *
+ * @example
+ * ```tsx
+ * 	<Modal id={dialogId}>
+ * 		<ModalTitle>Modal Title</ModalTitle>
+ * 		<ModalContent>
+ * 			<p>This is the main content area of the modal.</p>
+ * 			<p>It can contain any elements or components.</p>
+ * 		</ModalContent>
+ * 	</Modal>
+ * ```
+ */
 export function ModalContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
 	return (
 		<div
@@ -197,6 +311,21 @@ export function ModalContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
 	);
 }
 
+/**
+ * Modal footer container for action buttons
+ *
+ * @example
+ * ```tsx
+ * 	<Modal id={dialogId}>
+ * 		<ModalTitle>Modal Title</ModalTitle>
+ * 		<ModalContent>Content goes here</ModalContent>
+ * 		<ModalFooter>
+ * 			<ModalCloseButton>Cancel</ModalCloseButton>
+ * 			<Button class="v-colors-primary">Confirm</Button>
+ * 		</ModalFooter>
+ * 	</Modal>
+ * ```
+ */
 export function ModalFooter(props: JSX.HTMLAttributes<HTMLDivElement>) {
 	return (
 		<div

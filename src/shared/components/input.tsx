@@ -27,7 +27,41 @@ export function BaseInput(props: BaseInputProps) {
 	return <input {...formControlProps} class={cx(!local.unstyled && 'c-input', props.class)} />;
 }
 
-/** General text input with additional value handler */
+/** General text input with additional value handler
+ *
+ * @example
+ * ```tsx
+ * // Basic text input
+ * 	<Input placeholder="Placeholder content" />
+ *
+ * // With different types
+ * 	<Input type="email" autocomplete="email" />
+ * 	<Input type="url" />
+ *
+ * // With states
+ * 	<Input invalid placeholder="Some wrong value" />
+ * 	<Input disabled placeholder="Can't touch this" />
+ *
+ * // Inside a LabelledInput
+ * 	<LabelledInput label="Input some value">
+ * 		<Input placeholder="Placeholder content" />
+ * 	</LabelledInput>
+ *
+ * // With handlers
+ * 	<Input
+ * 		onValueInput={(value, event) => {
+ * 			console.log('New value:', value);
+ * 		}}
+ * 		onValidate={(event) => {
+ * 			 const value = event.currentTarget.value;
+ *		if (value.includes(' ')) {
+ *			return 'Username cannot contain spaces';
+ *		}
+ *		return null;
+ * 		}}
+ * />
+ * ```
+ */
 export function Input(props: InputProps) {
 	const [local, rest] = splitProps(props, ['onValueInput']);
 

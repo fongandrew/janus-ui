@@ -34,6 +34,22 @@ export function TooltipContent(props: TooltipContentProps) {
 	);
 }
 
+/**
+ * Tooltip component that displays information on hover
+ *
+ * @example
+ * ```tsx
+ * // Basic tooltip with default placement
+ * 	<Tooltip tip="This is a tooltip">
+ * 		<Button>Hover me</Button>
+ * 	</Tooltip>
+ *
+ * // With specific placement
+ * 	<Tooltip tip="Appears below" placement="bottom">
+ * 		<Button>Bottom tooltip</Button>
+ * 	</Tooltip>
+ * ```
+ */
 export function Tooltip(props: TooltipProps) {
 	const [local, rest] = splitProps(props, ['children', 'tip']);
 	const tooltipId = createAutoId(props);

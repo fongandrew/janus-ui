@@ -25,6 +25,37 @@ import { useT } from '~/shared/utility/solid/locale-context';
 
 /**
  * A layout component that provides a top navigation context
+ *
+ * @example
+ * ```tsx
+ * 	<TopNavLayout>
+ * 		<TopNav>
+ * 			<h1>My Application</h1>
+ * 		 <TopNavList>
+ * 				<TopNavListLink
+ * 					href="/"
+ * 					aria-current={currentPath === '/' ? 'page' : undefined}
+ * 				>
+ * 					Home
+ * 				</TopNavListLink>
+ * 				<TopNavListLink
+ * 					href="/about"
+ * 					aria-current={currentPath === '/about' ? 'page' : undefined}
+ * 				>
+ * 					About
+ * 				</TopNavListLink>
+ * 				<TopNavListButton onClick={handleSettings}>
+ * 					<SettingsIcon />
+ * 					Settings
+ * 				</TopNavListButton>
+ * 			</TopNavList>
+ * 		</TopNav>
+ * 		<main>
+ * 			<h2>Page Content</h2>
+ * 			<p>Your page content goes here.</p>
+ * 		</main>
+ * 	</TopNavLayout>
+ * ```
  */
 export function TopNavLayout(
 	props: JSX.HTMLAttributes<HTMLDivElement> & { navId?: string | undefined },

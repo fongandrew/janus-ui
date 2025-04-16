@@ -35,6 +35,16 @@ export function setSupportLink(link: string) {
 	supportLink = link;
 }
 
+/**
+ * Error boundary component that displays a fallback UI when errors occur
+ *
+ * @example
+ * ```tsx
+ * 	<ErrorFallback>
+ * 		<YourComponent />
+ * 	</ErrorFallback>
+ * ```
+ */
 export function ErrorFallback(props: ErrorFallbackProps) {
 	const logger = useLogger();
 	const window = useWindow();

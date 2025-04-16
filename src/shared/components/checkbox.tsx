@@ -21,6 +21,29 @@ export interface CheckboxProps extends Omit<FormElementProps<'input'>, 'type'> {
 	indeterminate?: boolean;
 }
 
+/**
+ * Checkbox component with support for indeterminate state
+ *
+ * @example
+ * ```tsx
+ * // Basic checkbox
+ * 	<Label>
+ * 		<Checkbox name="default" />
+ * 		Default checkbox
+ * 	</Label>
+ *
+ * // Checked checkbox
+ * 	<Label>
+ * 		<Checkbox name="checked" checked />
+ * 		Checked checkbox
+ * 	</Label>
+ *
+ * // Indeterminate checkbox
+ * 	<Label>
+ * 		<Checkbox name="indeterminate" indeterminate />
+ * 		Indeterminate checkbox
+ * 	</Label>
+ */
 export function Checkbox(props: CheckboxProps) {
 	const [local, rest] = splitProps(props, ['indeterminate', 'checked', 'class']);
 	const formProps = mergeFormElementProps<'input'>(rest);

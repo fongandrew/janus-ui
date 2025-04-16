@@ -52,6 +52,22 @@ function useTabList() {
 
 /**
  * Convenience function for rendering tabs with matching tab buttons
+ *
+ * @example
+ * ```tsx
+ * // Basic tabs with automatic tab switching
+ * 	<Tabs>
+ * 		<Tab label="Tab 1">
+ * 			<div>Content for Tab 1</div>
+ * 		</Tab>
+ * 		<Tab label="Tab 2">
+ * 			<div>Content for Tab 2</div>
+ * 		</Tab>
+ * 		<Tab label="Tab 3">
+ * 			<div>Content for Tab 3</div>
+ * 		</Tab>
+ * 	</Tabs>
+ * ```
  */
 export function Tabs(props: TabsProps) {
 	const [tabList, setTabList] = createSignal<(() => JSX.Element)[]>([]);
@@ -82,7 +98,7 @@ export function Tabs(props: TabsProps) {
 }
 
 /**
- * A single Tab with a button label
+ * A single Tab with a button label and content
  */
 export function Tab(props: TabProps) {
 	const [local, rest] = splitProps(props, ['label']);

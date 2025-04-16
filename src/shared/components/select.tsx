@@ -12,6 +12,58 @@ export type SelectProps = Omit<FormElementProps<'div'>, 'onValidate'> &
 		placeholder?: string | undefined;
 	};
 
+/**
+ * Select dropdown component for single or multiple selection
+ *
+ * @example
+ * ```tsx
+ * // Basic single selection
+ * const [value, setValue] = createSignal<Set<string>>(new Set());
+ *
+ * 	<Select
+ * 		name="fruit"
+ * 		placeholder="Select a fruit..."
+ * 		values={value()}
+ * 		onValues={setValue}
+ * 	>
+ * 		<ListBoxItem value="apple">Apple</ListBoxItem>
+ * 		<ListBoxItem value="banana">Banana</ListBoxItem>
+ * 		<ListBoxItem value="orange">Orange</ListBoxItem>
+ * 	</Select>
+ *
+ * // Multiple selection
+ * 	<Select
+ * 		name="color"
+ * 		placeholder="Select colors..."
+ * 		values={value()}
+ * 		onValues={setValue}
+ * 		multiple
+ * 	>
+ * 		<ListBoxItem value="red">Red</ListBoxItem>
+ * 		<ListBoxItem value="green">Green</ListBoxItem>
+ * 		<ListBoxItem value="blue">Blue</ListBoxItem>
+ * 	</Select>
+ *
+ * // With grouped options
+ * 	<Select
+ * 		name="color"
+ * 		placeholder="Select a color..."
+ * 		values={value()}
+ * 		onValues={setValue}
+ * 	>
+ * 		<ListBoxGroup heading="Primary Colors">
+ * 			<ListBoxItem value="red">Red</ListBoxItem>
+ * 			<ListBoxItem value="blue">Blue</ListBoxItem>
+ * 			<ListBoxItem value="yellow">Yellow</ListBoxItem>
+ * 		</ListBoxGroup>
+ * 		<ListBoxGroup heading="Secondary Colors">
+ * 			<ListBoxItem value="green">Green</ListBoxItem>
+ * 			<ListBoxItem value="purple">Purple</ListBoxItem>
+ * 			<ListBoxItem value="orange">Orange</ListBoxItem>
+ * 		</ListBoxGroup>
+ * 	</Select>
+ * ```
+ */
 export function Select(props: SelectProps) {
 	const [optionListProps, rest] = splitProps(props, [
 		'children',

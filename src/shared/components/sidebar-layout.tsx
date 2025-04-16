@@ -24,6 +24,50 @@ import { useT } from '~/shared/utility/solid/locale-context';
 
 /**
  * A layout component that provides a sidebar context
+ *
+ * @example
+ * ```tsx
+ * 	<SidebarLayout>
+ * 		<Sidebar>
+ * 			<SidebarHeader>
+ * 				<h2>Navigation</h2>
+ * 				<SidebarCloseButton />
+ * 			</SidebarHeader>
+ * 			<SidebarContent>
+ * 				<SidebarList>
+ * 					<SidebarListLink href="/dashboard">
+ * 						<DashboardIcon />
+ * 						Dashboard
+ * 					</SidebarListLink>
+ * 					<SidebarListLink href="/settings">
+ * 						<SettingsIcon />
+ * 						Settings
+ * 					</SidebarListLink>
+ * 					<SidebarListGroup heading="Admin">
+ * 						<SidebarListLink href="/users">
+ * 							<UsersIcon />
+ * 							Users
+ * 						</SidebarListLink>
+ * 						<SidebarListButton onClick={handleLogout}>
+ * 							<LogoutIcon />
+ * 							Logout
+ * 						</SidebarListButton>
+ * 					</SidebarListGroup>
+ * 				</SidebarList>
+ * 			</SidebarContent>
+ * 			<SidebarFooter>
+ * 				<p>© 2025 My App</p>
+ * 			</SidebarFooter>
+ * 		</Sidebar>
+ * 		<SidebarLayoutContent>
+ * 			<header>
+ * 				<SidebarOpenButton />
+ * 				<h1>My Application</h1>
+ * 			</header>
+ * 			<main>Content goes here</main>
+ * 		</SidebarLayoutContent>
+ * 	</SidebarLayout>
+ * ```
  */
 export function SidebarLayout(
 	props: JSX.HTMLAttributes<HTMLDivElement> & { sidebarId?: string | undefined },

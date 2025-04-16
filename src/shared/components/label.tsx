@@ -8,7 +8,10 @@ import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry
 import { useT } from '~/shared/utility/solid/locale-context';
 import { spanify } from '~/shared/utility/solid/spanify';
 
-/** Default HTML label -- used for inline stuff mostly */
+/**
+ * Default HTML label component, used primarily for inline inputs. Generally prefer
+ * using LabelledInput and LabelledInline over using this directly.
+ */
 export function Label(
 	props: JSX.LabelHTMLAttributes<HTMLLabelElement> & { required?: boolean | undefined },
 ) {

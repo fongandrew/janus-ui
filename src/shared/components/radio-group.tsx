@@ -21,6 +21,26 @@ export interface RadioGroupProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	children: JSX.Element;
 }
 
+/**
+ * Radio group component for organizing related radio buttons
+ *
+ * @example
+ * ```tsx
+ * // Basic usage with state management + label
+ * const [value, setValue] = createSignal('option1');
+ *
+ * 	<LabelledInput label="Select an option" description="Please choose one">
+ * 		<RadioGroup name="options" value={value()} onValue={setValue}>
+ * 			<Label>
+ * 				<Radio value="a" /> Option A
+ * 			</Label>
+ * 			<Label>
+ * 				<Radio value="b" /> Option B
+ * 			</Label>
+ * 		</RadioGroup>
+ * 	</LabelledInput>
+ * ```
+ */
 export function RadioGroup(props: RadioGroupProps) {
 	const [local, rest] = splitProps(props, ['name', 'value', 'onValue', 'children']);
 	const name = createAuto(local, 'name');

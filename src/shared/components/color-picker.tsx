@@ -14,7 +14,32 @@ export interface ColorPickerProps extends Omit<FormElementProps<'input'>, 'type'
 }
 
 /**
- * Wrapper around a color input
+ * Wrapper around a color input that shows a color swatch and hex value
+ *
+ * @example
+ * ```tsx
+ * // Basic usage
+ * 	<ColorPicker />
+ *
+ * // With initial value
+ * 	<ColorPicker value="#ff0000" />
+ *
+ * // With default value (uncontrolled)
+ * 	<ColorPicker defaultValue="#00ff00" />
+ *
+ * // With change handler
+ * 	<ColorPicker
+ * 		onChange={(e) => console.log('New color:', e.currentTarget.value)}
+ * />
+ *
+ * // Disabled state
+ * 	<ColorPicker disabled />
+ *
+ * // Inside a labelled input
+ * 	<LabelledInput label="Choose a color">
+ * 		<ColorPicker name="color-selection" />
+ * 	</LabelledInput>
+ * ```
  */
 export function ColorPicker(props: ColorPickerProps) {
 	const [uncontrolledValue, setUncontrolledValue] = createSignal<string | undefined>(

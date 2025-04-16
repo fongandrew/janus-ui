@@ -27,6 +27,50 @@ export interface FormProps<TNames extends string>
 	resetOnSuccess?: boolean | undefined;
 }
 
+/**
+ * Form component with built-in error handling and validation
+ *
+ * @example
+ * ```tsx
+ * // Async form with typed form fields
+ * const FormNames = {
+ * 		name: 'name',
+ * 		message: 'message',
+ * };
+ *
+ * // Form with async submission handler
+ * const handleSubmit = async (e: TypedSubmitEvent<typeof FormNames[keyof typeof FormNames]>) => {
+ * 		e.preventDefault();
+ * 		const data = e.data;
+ *
+ * 		// Custom validation
+ * 		if (String(data.get(FormNames.name)).toLowerCase() === 'bob') {
+ * 			return {
+ * 				ok: false,
+ * 				fieldErrors: {
+ * 					name: 'We already have a Bob',
+ * 				},
+ * 			};
+ * 		}
+ *
+ * 		// Process form data...
+ * };
+ *
+ * 	<Form
+ * 		names={FormNames}
+ * 		onSubmit={handleSubmit}
+ * 	>
+ * 		<LabelledInput label="Name" required>
+ * 			<Input name={FormNames.name} />
+ * 		</LabelledInput>
+ * 		<LabelledInput label="Message" required>
+ * 			<Textarea name={FormNames.message} />
+ * 		</LabelledInput>
+ * 		<SubmitButton />
+ * 		<ResetButton />
+ * 	</Form>
+ * ```
+ */
 export function Form<TNames extends string>(props: FormProps<TNames>) {
 	const context = useContext(FormContext);
 	const id = createMemo(() => {

@@ -52,6 +52,53 @@ export const ListBoxContext = createContext<
 	(Pick<ListBoxProps, 'name' | 'values' | 'multiple'> & { rendered?: Set<string> }) | undefined
 >();
 
+/**
+ * A list box component for single or multiple selection
+ *
+ * @example
+ * ```tsx
+ * // Single selection list box
+ * const [values, setValues] = createSignal<Set<string>>(new Set());
+ *
+ * 	<ListBox
+ * 		name="single-listbox"
+ * 		values={values()}
+ * 		onValues={setValues}
+ * 	>
+ * 		<ListBoxItem value="apple">Apple</ListBoxItem>
+ * 		<ListBoxItem value="banana">Banana</ListBoxItem>
+ * 		<ListBoxItem value="orange">Orange</ListBoxItem>
+ * 	</ListBox>
+ *
+ * // Multiple selection list box
+ * 	<ListBox
+ * 		name="multi-listbox"
+ * 		values={values()}
+ * 		onValues={setValues}
+ * 		multiple
+ * 	>
+ * 		<ListBoxItem value="red">Red</ListBoxItem>
+ * 		<ListBoxItem value="green">Green</ListBoxItem>
+ * 		<ListBoxItem value="blue">Blue</ListBoxItem>
+ * 	</ListBox>
+ *
+ * // With grouped options
+ * 	<ListBox
+ * 		name="grouped-listbox"
+ * 		values={values()}
+ * 		onValues={setValues}
+ * 	>
+ * 		<ListBoxGroup heading="Fruits">
+ * 			<ListBoxItem value="apple">Apple</ListBoxItem>
+ * 			<ListBoxItem value="banana">Banana</ListBoxItem>
+ * 		</ListBoxGroup>
+ * 		<ListBoxGroup heading="Vegetables">
+ * 			<ListBoxItem value="carrot">Carrot</ListBoxItem>
+ * 			<ListBoxItem value="potato">Potato</ListBoxItem>
+ * 		</ListBoxGroup>
+ * 	</ListBox>
+ * ```
+ */
 export function ListBox(props: ListBoxProps) {
 	const [local, contextProps, rest] = splitProps(
 		props,
@@ -122,7 +169,22 @@ export interface ListBoxItemProps extends JSX.HTMLAttributes<HTMLInputElement> {
 	value?: string;
 }
 
-/** A single list box item */
+/**
+ * A single item within a ListBox component
+ *
+ * @example
+ * ```tsx
+ * 	<ListBox
+ * 		name="fruits"
+ * 		values={values()}
+ * 		onValues={setValues}
+ * 	>
+ * 		<ListBoxItem value="apple">Apple</ListBoxItem>
+ * 		<ListBoxItem value="banana">Banana</ListBoxItem>
+ * 		<ListBoxItem value="orange">Orange</ListBoxItem>
+ * 	</ListBox>
+ * ```
+ */
 export function ListBoxItem(props: ListBoxItemProps) {
 	const context = useContext(ListBoxContext);
 	const value = createAuto(props, 'value');

@@ -7,6 +7,22 @@ export interface DetailsProps
 	children: [() => JSX.Element, () => JSX.Element];
 }
 
+/**
+ * Expandable details component with summary and content sections
+ *
+ * @example
+ * ```tsx
+ * 	<Details>
+ * 		{() => <>Click to expand</>}
+ * 		{() => (
+ * 			<>
+ * 				<p>This is the first paragraph...</p>
+ * 				<p>Here is another paragraph...</p>
+ * 			</>
+ * 		)}
+ * 	</Details>
+ * ```
+ */
 export function Details(props: DetailsProps) {
 	const [local, rest] = splitProps(props, ['class', 'children']);
 	return (

@@ -37,22 +37,51 @@ export function BaseButton(props: ButtonProps) {
 	);
 }
 
-/** Basic button with border + background colors, use color block CSS helpers to change colors */
+/** Basic button with border + background colors, use color block CSS helpers to change colors
+ *
+ * @example
+ * ```tsx
+ * 	<Button>Default Button</Button>
+ * 	<Button class="v-colors-primary">Primary</Button>
+ * 	<Button class="v-colors-danger">Danger</Button>
+ * 	<Button disabled>Disabled</Button>
+ * ```
+ */
 export function Button(props: ButtonProps) {
 	return <BaseButton {...props} class={cx(!props.unstyled && 'c-button', props.class)} />;
 }
 
-/** A borderless, transparent button  */
+/** A borderless, transparent button
+ *
+ * @example
+ * ```tsx
+ * 	<GhostButton>Ghost</GhostButton>
+ * ```
+ */
 export function GhostButton(props: ButtonProps) {
 	return <BaseButton {...props} class={cx('c-button--ghost', props.class)} />;
 }
 
-/** A button that looks like a link */
+/** A button that looks like a link
+ *
+ * @example
+ * ```tsx
+ * 	<LinkButton>Link</LinkButton>
+ * ```
+ */
 export function LinkButton(props: ButtonProps) {
 	return <BaseButton {...props} class={cx('c-button--link', props.class)} />;
 }
 
-/** A borderless button with an icon in it */
+/** A borderless button with an icon in it
+ *
+ * @example
+ * ```tsx
+ * 	<IconButton label="Settings">
+ * 		<Settings />
+ * 	</IconButton>
+ * ```
+ */
 export function IconButton(props: ButtonProps & { label: string }) {
 	const [local, rest] = splitProps(props, ['label']);
 	return (
@@ -71,12 +100,24 @@ export function BaseButtonLink(props: JSX.AnchorHTMLAttributes<HTMLAnchorElement
 	return <a {...props}>{spanify(resolved.toArray())}</a>;
 }
 
-/** A button that looks like a link */
+/** A link that looks like a button
+ *
+ * @example
+ * ```tsx
+ * 	<ButtonLink href="/some/path">Button Link</ButtonLink>
+ * ```
+ */
 export function ButtonLink(props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) {
 	return <BaseButtonLink {...props} class={cx('c-button', props.class)} />;
 }
 
-/** A borderless, transparent button  */
+/** A borderless, transparent link styled as a button
+ *
+ * @example
+ * ```tsx
+ * 	<GhostButtonLink href="/some/path">Ghost Button Link</GhostButtonLink>
+ * ```
+ */
 export function GhostButtonLink(props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) {
 	return <BaseButtonLink {...props} class={cx('c-button--ghost', props.class)} />;
 }

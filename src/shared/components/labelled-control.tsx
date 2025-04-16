@@ -33,7 +33,38 @@ export interface LabelledInputProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	children: JSX.Element;
 }
 
-/** Label + block input (like select or text input) */
+/**
+ * Component for a block-level input with label and optional description/error
+ *
+ * @example
+ * ```tsx
+ * // Basic usage with an input
+ * 	<LabelledInput label="Username">
+ * 		<Input name="username" placeholder="Enter username" />
+ * 	</LabelledInput>
+ *
+ * // With description
+ * 	<LabelledInput
+ * 		label="Email address"
+ * 		description="We'll never share your email with anyone else."
+ * 	>
+ * 		<Input type="email" name="email" />
+ * 	</LabelledInput>
+ *
+ * // With error message
+ * 	<LabelledInput
+ * 		label="Password"
+ * 		errorMessage="Password must be at least 8 characters"
+ * 	>
+ * 		<Input type="password" name="password" invalid />
+ * 	</LabelledInput>
+ *
+ * // Required field
+ * 	<LabelledInput label="Full name" required>
+ * 		<Input name="name" />
+ * 	</LabelledInput>
+ * ```
+ */
 export function LabelledInput(props: LabelledInputProps) {
 	const [local, rest] = splitProps(props, [
 		'id',
@@ -84,8 +115,16 @@ export function LabelledInput(props: LabelledInputProps) {
 }
 
 /**
- * Label + inline input (like checkbox). Unlike `LabelledInput`, this uses
- * a regular label instead of a span with aria-labelledby.
+ * Component for an inline input with label, typically used for checkboxes and radio buttons
+ * Unlike `LabelledInput`, this uses a regular label instead of a span with aria-labelledby.
+ *
+ * @example
+ * ```tsx
+ * // Basic usage with a checkbox
+ * 	<LabelledInline label="I agree to the terms and conditions">
+ * 		<Checkbox name="agree" />
+ * 	</LabelledInline>
+ * ```
  */
 export function LabelledInline(props: Omit<LabelledInputProps, 'description'>) {
 	const [local, rest] = splitProps(props, [

@@ -11,6 +11,24 @@ import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry
 
 export interface ToggleSwitchProps extends Omit<FormElementProps<'input'>, 'type'> {}
 
+/**
+ * Toggle switch component for binary on/off selection
+ *
+ * @example
+ * ```tsx
+ * // Basic toggle switch
+ * 	<ToggleSwitch name="toggle" />
+ *
+ * // Pre-checked
+ * 	<ToggleSwitch name="active" checked />
+ *
+ * // With event handlers
+ * 	<ToggleSwitch
+ * 		name="mode"
+ * 		onChange={(e) => console.log('Toggle changed:', e.currentTarget.checked)}
+ * />
+ * ```
+ */
 export function ToggleSwitch(props: ToggleSwitchProps) {
 	const [local, rest] = splitProps(props, ['class']);
 	const formProps = mergeFormElementProps<'input'>(rest);

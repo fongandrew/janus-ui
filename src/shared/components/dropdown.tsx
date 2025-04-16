@@ -86,7 +86,24 @@ export function DropdownContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
 	);
 }
 
-/** The wrapper component that creates IDs and ties things together */
+/**
+ * The wrapper component that creates IDs and ties things together for dropdown functionality.
+ * This is a base component. In most cases, <Menu> or <Select> is probably a better fit
+ * for dropdowns.
+ *
+ * @example
+ * ```tsx
+ * // Basic dropdown with button trigger and content
+ * 	<Dropdown>
+ * 		<Button>Open dropdown</Button>
+ * 		<DropdownPopover>
+ * 			<DropdownContent>
+ * 				<p>Dropdown content goes here</p>
+ * 			</DropdownContent>
+ * 		</DropdownPopover>
+ * 	</Dropdown>
+ * ```
+ */
 export function Dropdown(props: DropdownProps) {
 	const triggerId = createAuto(props, 'triggerId');
 	const popoverId = createAuto(props, 'popoverId');

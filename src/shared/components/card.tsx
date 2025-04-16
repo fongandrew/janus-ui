@@ -21,6 +21,36 @@ export type CardDescriptionProps = JSX.IntrinsicAttributes &
 export type CardContentProps = JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTMLDivElement>;
 export type CardFooterProps = JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTMLDivElement>;
 
+/**
+ * Card container component with error boundary and suspense
+ *
+ * @example
+ * ```tsx
+ * // Basic card with header, content, and optional footer
+ * 	<Card>
+ * 		<CardHeader>
+ * 			<CardTitle>Card Title</CardTitle>
+ * 			<CardDescription>Optional card description</CardDescription>
+ * 		</CardHeader>
+ * 		<CardContent>
+ * 			<p>Card content goes here</p>
+ * 		</CardContent>
+ * 		<CardFooter>
+ * 			<Button>Action</Button>
+ * 		</CardFooter>
+ * 	</Card>
+ *
+ * // With different HTML element type
+ * 	<Card as="article" id="article-card">
+ * 		<CardHeader>
+ * 			<CardTitle>Article Title</CardTitle>
+ * 		</CardHeader>
+ * 		<CardContent>
+ * 			<p>Article content</p>
+ * 		</CardContent>
+ * 	</Card>
+ * ```
+ */
 export function Card(props: CardProps) {
 	const [local, rest] = splitProps(props, ['as', 'onError', 'onReload']);
 	return (
@@ -32,22 +62,74 @@ export function Card(props: CardProps) {
 	);
 }
 
+/**
+ * Card header component that contains the title and description
+ *
+ * @example
+ * ```tsx
+ * 	<CardHeader>
+ * 		<CardTitle>Card Title</CardTitle>
+ * 		<CardDescription>Optional card description</CardDescription>
+ * 	</CardHeader>
+ * ```
+ */
 export function CardHeader(props: CardHeaderProps) {
 	return <hgroup {...props} class={cx('c-card__header', props.class)} />;
 }
 
+/**
+ * Card title component
+ *
+ * @example
+ * ```tsx
+ * 	<CardTitle>Card Title</CardTitle>
+ * ```
+ */
 export function CardTitle(props: CardTitleProps) {
 	return <h3 {...props} />;
 }
 
+/**
+ * Card description component for additional information
+ *
+ * @example
+ * ```tsx
+ * 	<CardDescription>A brief description of this card's purpose</CardDescription>
+ * ```
+ */
 export function CardDescription(props: CardDescriptionProps) {
 	return <p {...props} class={cx('c-card__description', props.class)} />;
 }
 
+/**
+ * Card content component for the main content area
+ *
+ * @example
+ * ```tsx
+ * 	<CardContent>
+ * 		<p>Main content of the card goes here</p>
+ * 		<div class="o-stack">
+ * 			<p>You can include any components or content</p>
+ * 			<Button>Action</Button>
+ * 		</div>
+ * 	</CardContent>
+ * ```
+ */
 export function CardContent(props: CardContentProps) {
 	return <div {...props} class={cx('c-card__content', props.class)} />;
 }
 
+/**
+ * Card footer component typically used for actions
+ *
+ * @example
+ * ```tsx
+ * 	<CardFooter>
+ * 		<Button class="v-colors-primary">Save</Button>
+ * 		<Button>Cancel</Button>
+ * 	</CardFooter>
+ * ```
+ */
 export function CardFooter(props: CardFooterProps) {
 	return <div {...props} class={cx('c-card__footer', props.class)} />;
 }

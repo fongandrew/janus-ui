@@ -29,6 +29,29 @@ export interface SliderProps extends Omit<FormElementProps<'input'>, 'type'> {
 /**
  * Combination range + number input for typing. The number input is the actual thing that
  * gets focused for screenreader users. The range input is there for visual users.
+ *
+ * @example
+ * ```tsx
+ * // Basic slider with percentage unit
+ * const [value, setValue] = createSignal<number | null>(null);
+ *
+ * 	<Slider unit="%" value={value()} onValue={setValue} />
+ *
+ * // Inside a labelled input with description and custom range
+ * 	<LabelledInput
+ * 		label="Opacity"
+ * 		description={`Current value: ${value() ?? 0}%`}
+ * 	>
+ * 		<Slider
+ * 			unit="%"
+ * 			min={0}
+ * 			max={100}
+ * 			step={1}
+ * 			value={value()}
+ * 			onValue={setValue}
+ * 		/>
+ * 	</LabelledInput>
+ * ```
  */
 export function Slider(props: SliderProps) {
 	const [local, shared, rest] = splitProps(

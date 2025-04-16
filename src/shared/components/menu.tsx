@@ -37,6 +37,39 @@ export interface MenuProps extends DropdownPopoverProps {
 	children: JSX.Element;
 }
 
+/**
+ * Menu component for dropdown menus with selectable items
+ *
+ * @example
+ * ```tsx
+ * // Basic menu with items
+ * 	<MenuTrigger>
+ * 		<Button>Open Menu</Button>
+ * 		<Menu onValue={(value) => console.log(`Selected: ${value}`)}>
+ * 			<MenuItem value="option1">Option 1</MenuItem>
+ * 			<MenuItem value="option2">Option 2</MenuItem>
+ * 			<MenuItem value="option3">Option 3</MenuItem>
+ * 		</Menu>
+ * 	</MenuTrigger>
+ *
+ * // With grouped items
+ * 	<MenuTrigger>
+ * 		<Button>File Menu</Button>
+ * 		<Menu>
+ * 			<MenuGroup heading="File">
+ * 				<MenuItem value="new">New file</MenuItem>
+ * 				<MenuItem value="open">Open...</MenuItem>
+ * 				<MenuItem value="save">Save</MenuItem>
+ * 			</MenuGroup>
+ * 			<MenuGroup heading="Edit">
+ * 				<MenuItem value="cut">Cut</MenuItem>
+ * 				<MenuItem value="copy">Copy</MenuItem>
+ * 				<MenuItem value="paste">Paste</MenuItem>
+ * 			</MenuGroup>
+ * 		</Menu>
+ * 	</MenuTrigger>
+ * ```
+ */
 export function Menu(props: MenuProps) {
 	const [local, rest] = splitProps(props, ['children', 'onValue']);
 

@@ -31,6 +31,41 @@ export type SelectTypeaheadProps = Omit<FormElementProps<'div'>, 'onInput' | 'on
 		onValueInput?: ((value: string, event: Event) => void) | undefined;
 	};
 
+/**
+ * Typeahead select component allowing search with keyboard input
+ *
+ * @example
+ * ```tsx
+ * // Basic single selection typeahead
+ * const [values, setValues] = createSignal<Set<string>>(new Set());
+ * const [results, setResults] = createSignal([]);
+ * const [busy, setBusy] = createSignal(false);
+ *
+ * // See `src/shared/utility/create-query-effect`
+ * const queryFn = createQueryEffect(async (query) => {
+ * 		setBusy(true);
+ * 		try {
+ * 			const results = await someApiFetch(query)
+ * 			setResults(results);
+ * 		} finally {
+ * 			setBusy(false);
+ * 		}
+ * }));
+ *
+ * 	<SelectTypeahead
+ * 		name="colors"
+ * 		busy={busy()}
+ * 		placeholder="Select a color..."
+ * 		values={values()}
+ * 		onValues={setValues}
+ * 		onValueInput={(input) => queryFn(input)}
+ * 	>
+ * 		<For each={results()}>
+ * 			{(color) => <ListBoxItem value={color.value}>{color.label}</ListBoxItem>}
+ * 		</For>
+ * 	</SelectTypeahead>
+ * ```
+ */
 export function SelectTypeahead(props: SelectTypeaheadProps) {
 	const [inputProps, optionListProps, rest] = splitProps(
 		props,
