@@ -3,7 +3,7 @@
 - **Imports**: Use path aliases (`~/`) instead of relative paths. Sort imports with simple-import-sort.
 - **CSS Classes**: Follow BEM with prefixes: `t-` (tools), `o-` (objects), `c-` (components), `p-` (project). CSS modules may need to be imported into an `index.css` file.
 - **Naming**: Use camelCase for variables/functions, PascalCase for components/types.
-- **Components**: Component library uses SolidJS. Split interactivity into callback modules for SSR support.
+- **Components**: Component library uses SolidJS. Split interactivity into callback modules for SSR support. See src/shared/components/README.md for sample components.
 - **TypeScript**: Prefer type imports. Use strict type checking.
 - **Error Handling**: Avoid throwing errors in components. Use error boundaries.
 - **Browser Globals**: Don't use `window`/`document` directly. Use utility functions.
