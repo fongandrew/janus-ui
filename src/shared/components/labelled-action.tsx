@@ -10,7 +10,39 @@ import { type LabelledInputProps } from '~/shared/components/labelled-control';
 import { attrs } from '~/shared/utility/attribute-list';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
 
-/** Label + squarish action trigger (like button or toggle) */
+/** Label + squarish action trigger (like button or toggle)
+ *
+ * Use this component to pair a label with an action element like a button or toggle switch.
+ * The label appears on the left and the action appears on the right.
+ *
+ * @example
+ * ```tsx
+ * 	// With a button
+ * 	<LabelledAction
+ *  	label="Delete account"
+ *  	description="This action cannot be undone"
+ * 	>
+ * 		<Button class="v-colors-danger">Delete</Button>
+ * 	</LabelledAction>
+ *
+ * 	// With a toggle switch
+ * 	<LabelledAction
+ *  	label="Dark mode"
+ *  	description="Use dark colors for UI elements"
+ * 	>
+ *  	<ToggleSwitch checked={isDarkMode()} onChange={toggleDarkMode} />
+ * 	</LabelledAction>
+ *
+ * 	// With an error message
+ * 	<LabelledAction
+ * 		label="Clear data"
+ * 		description="Remove all saved information"
+ * 		errorMessage="You don't have permission to clear data"
+ * 	>
+ * 		<Button disabled>Clear</Button>
+ *	</LabelledAction>
+ * ```
+ */
 export function LabelledAction(props: LabelledInputProps) {
 	const [local, rest] = splitProps(props, [
 		'label',
@@ -54,7 +86,30 @@ export function LabelledAction(props: LabelledInputProps) {
 	);
 }
 
-/** LabelledAciton wrapped in Card */
+/** LabelledAction wrapped in a Card component
+ *
+ * This is a convenience component that combines LabelledAction with a Card container.
+ * Use this when you need to display the action in a card-style container.
+ *
+ * @example
+ * ```tsx
+ * 	// Button in a card
+ * 	<LabelledActionCard
+ *  	label="Export data"
+ *  	description="Download all your data as a CSV file"
+ * 	>
+ * 		<Button>Export</Button>
+ * 	</LabelledActionCard>
+ *
+ * 	// Toggle in a card
+ * 	<LabelledActionCard
+ *  	label="Notifications"
+ *  	description="Receive alerts about important events"
+ * 	>
+ *  	<ToggleSwitch checked={notificationsEnabled()} onChange={toggleNotifications} />
+ *	</LabelledActionCard>
+ * ```
+ */
 export function LabelledActionCard(props: LabelledInputProps) {
 	return (
 		<Card>
