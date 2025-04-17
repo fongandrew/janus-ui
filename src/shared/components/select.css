@@ -65,7 +65,7 @@
 	}
 
 	/* Hide chevron if clear button is shown */
-	.c-select__container:has(:checked, [type='hidden']):not(
+	.c-select__container:has(.c-select__clear):has(:checked, [type='hidden']):not(
 			:has(.c-select__button[aria-disabled='true'], .c-select__button:disabled)
 		)
 		.c-select__chevron {
