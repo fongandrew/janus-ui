@@ -4,7 +4,9 @@
 	.c-label {
 		@mixin v-font-weight var(--v-font-weight-label);
 
-		display: inline-block;
+		display: inline-flex;
+		align-items: center;
+		gap: var(--v-inline-gap);
 		cursor: pointer;
 
 		&:has(input) {
