@@ -59,12 +59,18 @@ export function Slider(props: SliderProps) {
 		['class', 'classList', 'onValue', 'unit'],
 		['onInput'],
 	);
-	const withDefaults = mergeProps(rest, shared, {
-		class: 'c-slider__number t-unstyled',
-		min: 0,
-		max: 100,
-		step: 1,
-	});
+	const withDefaults = mergeProps(
+		{
+			min: 0,
+			max: 100,
+			step: 1,
+		},
+		rest,
+		shared,
+		{
+			class: 'c-slider__number t-unstyled',
+		},
+	);
 	const formControlProps = mergeFormElementProps<'input'>(withDefaults);
 
 	const defaultValue = () =>
