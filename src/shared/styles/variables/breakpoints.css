@@ -1,99 +1,133 @@
 /*
     Breakpoint names refer to the potrait width of the screen (if applicable), and
     *-wide variants refer to landscape mode.
+
+	Note that we use & in places to workaround https://github.com/FullHuman/purgecss/issues/1347
 */
 @define-mixin v-breakpoint-lt-mobile-wide {
 	@media (width < 640px) {
-		@mixin-content;
+		& {
+			@mixin-content;
+		}
 	}
 }
 
 @define-mixin v-breakpoint-mobile-wide {
 	@media (width >= 640px) {
-		@mixin-content;
+		& {
+			@mixin-content;
+		}
 	}
 }
 
 @define-mixin v-breakpoint-lt-tablet {
 	@media (width < 768px) {
-		@mixin-content;
+		& {
+			@mixin-content;
+		}
 	}
 }
 
 @define-mixin v-breakpoint-tablet {
 	@media (width >= 768px) {
-		@mixin-content;
+		& {
+			@mixin-content;
+		}
 	}
 }
 
 @define-mixin v-breakpoint-lt-tablet-wide {
 	@media (width < 1024px) {
-		@mixin-content;
+		& {
+			@mixin-content;
+		}
 	}
 }
 
 @define-mixin v-breakpoint-tablet-wide {
 	@media (width >= 1024px) {
-		@mixin-content;
+		& {
+			@mixin-content;
+		}
 	}
 }
 
 @define-mixin v-breakpoint-lt-desktop {
 	@media (width < 1200px) {
-		@mixin-content;
+		& {
+			@mixin-content;
+		}
 	}
 }
 
 @define-mixin v-breakpoint-desktop {
 	@media (width >= 1200px) {
-		@mixin-content;
+		& {
+			@mixin-content;
+		}
 	}
 }
 
 @define-mixin v-container-lt-mobile-wide {
 	@container (width < 640px) {
-		@mixin-content;
+		& {
+			@mixin-content;
+		}
 	}
 }
 
 @define-mixin v-container-mobile-wide {
 	@container (width >= 640px) {
-		@mixin-content;
+		& {
+			@mixin-content;
+		}
 	}
 }
 
 @define-mixin v-container-lt-tablet {
 	@container (width >= 768px) {
-		@mixin-content;
+		& {
+			@mixin-content;
+		}
 	}
 }
 
 @define-mixin v-container-tablet {
 	@container (width >= 768px) {
-		@mixin-content;
+		& {
+			@mixin-content;
+		}
 	}
 }
 
 @define-mixin v-container-lt-tablet-wide {
 	@container (width < 1024px) {
-		@mixin-content;
+		& {
+			@mixin-content;
+		}
 	}
 }
 
 @define-mixin v-container-tablet-wide {
 	@container (width >= 1024px) {
-		@mixin-content;
+		& {
+			@mixin-content;
+		}
 	}
 }
 
 @define-mixin v-container-lt-desktop {
 	@container (width < 1200px) {
-		@mixin-content;
+		& {
+			@mixin-content;
+		}
 	}
 }
 
 @define-mixin v-container-desktop {
 	@container (width >= 1200px) {
-		@mixin-content;
+		& {
+			@mixin-content;
+		}
 	}
 }
