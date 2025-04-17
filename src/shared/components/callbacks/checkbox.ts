@@ -33,13 +33,11 @@ export const checkboxClick = createHandler('click', '$c-checkbox__click', (event
 	// Find the input inside the checkbox container
 	const input = event.currentTarget.querySelector<HTMLInputElement>('input');
 	if (input) {
-		const prevState = input.checked;
-		// setTimeout in case click event triggers something further down
-		// the propagation chain that would change the input.checked value
-		// (like if it's inside a label)
-		setTimeout(() => {
-			input.indeterminate = false;
-			input.checked = !prevState;
-		}, 0);
+		// Stop propagation and prevent default to avoid double toggling a checkbox
+		event.stopImmediatePropagation();
+		event.preventDefault();
+
+		// Move click to input itself
+		input.click();
 	}
 });
