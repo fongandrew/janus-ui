@@ -100,6 +100,8 @@ export function SelectTypeahead(props: SelectTypeaheadProps) {
 			aria-invalid={inputProps['aria-invalid']}
 			invalid={inputProps.invalid}
 			placeholder={inputProps.placeholder}
+			// Typeahead is input-like, which lets us clear out selection even if required
+			clearable
 			{...rest}
 		>
 			<FormElementResetProvider>

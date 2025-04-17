@@ -24,6 +24,8 @@ import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry
 import { useT } from '~/shared/utility/solid/locale-context';
 
 export interface SelectButtonContainerProps extends JSX.HTMLAttributes<HTMLDivElement> {
+	/** Show clear button? */
+	clearable?: boolean | undefined;
 	/** Is select input disabled? */
 	disabled?: boolean | undefined;
 	/** Is select input value invalid? */
@@ -124,17 +126,19 @@ export function SelectButtonContainer(props: SelectButtonContainerProps) {
 				<span class="c-select__chevron">
 					<ChevronsUpDown />
 				</span>
-				<FormElementResetProvider>
-					<Button
-						class="c-select__clear"
-						aria-controls={[local.listId, local.inputId].join(' ')}
-						aria-label={t`Clear Selection`}
-						unstyled
-						{...callbackAttrs(selectClear)}
-					>
-						<X />
-					</Button>
-				</FormElementResetProvider>
+				{props.clearable && (
+					<FormElementResetProvider>
+						<Button
+							class="c-select__clear"
+							aria-controls={[local.listId, local.inputId].join(' ')}
+							aria-label={t`Clear Selection`}
+							unstyled
+							{...callbackAttrs(selectClear)}
+						>
+							<X />
+						</Button>
+					</FormElementResetProvider>
+				)}
 				<SelectPopover>
 					<FormElementPropsProvider
 						required={() => attrNoConflict(local.required, required())}

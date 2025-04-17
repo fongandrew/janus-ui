@@ -41,7 +41,7 @@ describeComponent('selection-validation-demo', (getContainer) => {
 		await fruitsListBox.getByText('Banana').click();
 
 		// Select at least 1 animal
-		const animalsListBox = container.getByLabel('Select Animals');
+		const animalsListBox = container.getByLabel('Select Animal');
 		await animalsListBox.getByText('Dog').click();
 
 		// Select valid number of colors (2-3)
@@ -52,7 +52,7 @@ describeComponent('selection-validation-demo', (getContainer) => {
 		await colorsListBox.getByText('Blue').click();
 		await page.mouse.click(0, 0); // Close select
 
-		// Select at least 1 city
+		// Select a city
 		// Use keyboard to open the select to workaround Safari issue where we can't
 		// seem to click things after closing a select
 		const citiesSelect = container.getByLabel('Select City');
@@ -60,7 +60,6 @@ describeComponent('selection-validation-demo', (getContainer) => {
 		await page.keyboard.press('Enter');
 		const citiesListBox = container.getByRole('listbox');
 		await citiesListBox.getByText('Boston').click();
-		await page.mouse.click(0, 0); // Close select
 
 		// Submit the form
 		const submit = container.getByRole('button', { name: 'Submit' });

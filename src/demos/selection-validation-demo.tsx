@@ -106,16 +106,16 @@ export function SelectionValidationDemo() {
 								</Select>
 							</LabelledInput>
 
-							<LabelledInput label="Select Animals (At Least 1)" required>
-								<ListBox name={FormNames.animals} multiple>
+							<LabelledInput label="Select Animal" required>
+								<ListBox name={FormNames.animals}>
 									<ListBoxItem value="dog">Dog</ListBoxItem>
 									<ListBoxItem value="cat">Cat</ListBoxItem>
 									<ListBoxItem value="rabbit">Rabbit</ListBoxItem>
 								</ListBox>
 							</LabelledInput>
 
-							<LabelledInput label="Select City (At Least 1)" required>
-								<Select name={FormNames.cities} multiple>
+							<LabelledInput label="Select City" required>
+								<Select name={FormNames.cities}>
 									<ListBoxItem value="boston">Boston</ListBoxItem>
 									<ListBoxItem value="new-york">New York</ListBoxItem>
 									<ListBoxItem value="san-francisco">San Francisco</ListBoxItem>

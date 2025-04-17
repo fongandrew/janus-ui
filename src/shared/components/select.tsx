@@ -1,10 +1,12 @@
-import { createUniqueId, splitProps } from 'solid-js';
+import { createMemo, createUniqueId, splitProps } from 'solid-js';
 
+import { FormElementPropsContext } from '~/shared/components/form-element-context';
 import { type FormElementProps } from '~/shared/components/form-element-props';
 import { type ListBoxProps } from '~/shared/components/list-box';
 import { SelectButtonContainer } from '~/shared/components/select-button-container';
 import { SelectOptionList } from '~/shared/components/select-option-list';
 import { VALIDATE_ATTR } from '~/shared/utility/callback-attrs/validate';
+import { useSingleProp } from '~/shared/utility/solid/prop-mod-context';
 
 export type SelectProps = Omit<FormElementProps<'div'>, 'onValidate'> &
 	Pick<ListBoxProps, 'name' | 'multiple' | 'values' | 'onChange' | 'onValues' | 'onValidate'> & {
@@ -76,9 +78,15 @@ export function Select(props: SelectProps) {
 		VALIDATE_ATTR,
 	]);
 
+	// Single select is listbox or radio-like, which don't allow clearing if required
+	const clearable = createMemo(() => {
+		const required = props.required || useSingleProp(FormElementPropsContext, 'required');
+		return !required || props.multiple;
+	});
+
 	const listId = createUniqueId();
 	return (
-		<SelectButtonContainer listId={listId} {...rest}>
+		<SelectButtonContainer listId={listId} clearable={clearable()} {...rest}>
 			<SelectOptionList listBoxId={listId} {...optionListProps} autofocus />
 		</SelectButtonContainer>
 	);
