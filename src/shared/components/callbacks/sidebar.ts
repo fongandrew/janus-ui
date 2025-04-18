@@ -16,6 +16,11 @@ import { elmDoc, elmWin } from '~/shared/utility/multi-view';
 export const SIDEBAR_STATE_ATTR = 'data-c-sidebar__state';
 
 /**
+ * Magic data attribute to identify overlay element
+ */
+export const SIDEBAR_OVERLAY_ATTR = 'data-c-sidebar__overlay';
+
+/**
  * We want to close the sidebar on narrow widths when focus leaves it but only if focus was
  * previously visible (that is, focus is shifting via keypress rather than mouse click).
  */
@@ -79,12 +84,15 @@ export const sidebarLinkClick = createHandler('click', '$c-sidebar__link', (even
 	const closest = target.closest<HTMLElement>('a,button');
 	if (!closest) return;
 
-	const sidebar = getSidebarFromTrigger(event.currentTarget);
-	if (!sidebar) return;
+	const overlay = elmDoc(closest)?.querySelector<HTMLElement>(`[${SIDEBAR_OVERLAY_ATTR}]`);
+	if (!overlay) return;
 
 	// Use z-index as proxy for mobile drawer state for sidebar
-	const zIndex = elmWin(sidebar)?.getComputedStyle(sidebar)?.zIndex;
-	if (zIndex && zIndex !== 'auto') {
+	const visibility = elmWin(overlay)?.getComputedStyle(overlay)?.visibility;
+	if (visibility === 'visible') {
+		const sidebar = getSidebarFromTrigger(event.currentTarget);
+		if (!sidebar) return;
+
 		closeSidebar(sidebar);
 	}
 });
