@@ -133,14 +133,13 @@ const updatePosition = async (trigger: HTMLElement, tooltip: HTMLElement) => {
 		return;
 	}
 
-	const middleware: Middleware[] = [offset(8), flip()];
+	const middleware: Middleware[] = [offset(8), flip(), shift({ padding: 8 })];
 	const arrowElm = tooltip.querySelector(
 		`[${tooltipMouseOver.ARROW_ATTR}]`,
 	) as HTMLElement | null;
 	if (arrowElm) {
 		middleware.push(arrow({ element: arrowElm }));
 	}
-	middleware.push(shift({ padding: 8 }));
 
 	const { x, y, placement, middlewareData } = await computePosition(trigger, tooltip, {
 		placement:
