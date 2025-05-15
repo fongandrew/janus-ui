@@ -119,14 +119,14 @@ describe('SuspenseFor', () => {
 		));
 
 		await vi.waitFor(() => {
-			expect(container.innerText).toContain('Custom Fallback');
+			expect(container.textContent).toContain('Custom Fallback');
 		});
 
 		deferred.resolve();
 		await vi.waitFor(() => {
 			expect(container.textContent).toContain('Item');
 		});
-		expect(container.innerText).not.toContain('Custom Fallback');
+		expect(container.textContent).not.toContain('Custom Fallback');
 	});
 
 	it('should handle fallback correctly', async () => {
