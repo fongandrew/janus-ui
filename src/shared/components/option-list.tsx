@@ -33,10 +33,10 @@ export type OptionListItemProps<TElement> = {
 
 /** Option list selectable input item, meant for use in Listbox-like components */
 export function OptionListSelectable(props: JSX.InputHTMLAttributes<HTMLInputElement>) {
-	const [local, rest] = splitProps(props, ['children', 'class', 'id']);
+	const [local, rest] = splitProps(props, ['children', 'class', 'style', 'id']);
 	const id = createAutoId(local);
 	return (
-		<label class={cx('t-unstyled', 'c-option-list__item', local.class)}>
+		<label class={cx('t-unstyled', 'c-option-list__item', local.class)} style={local.style}>
 			<input
 				id={id()}
 				role="option"
