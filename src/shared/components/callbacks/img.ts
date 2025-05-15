@@ -26,7 +26,7 @@ function setErrorState(img: HTMLImageElement, errorId: string) {
 }
 
 /**
- * 		An image that's complete but has no dimensions likely failed to load
+ * 	An image that's complete but has no dimensions likely failed to load
  */
 function isImgBroken(img: HTMLImageElement) {
 	return img.complete && (img.naturalWidth === 0 || img.naturalHeight === 0);
