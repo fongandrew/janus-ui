@@ -60,6 +60,7 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.6.12",
+    "@solid-primitives/promise": "^1.1.1",
     "apca-w3": "^0.1.9",
     "classix": "^2.2.0",
     "colorparsley": "^0.1.8",
