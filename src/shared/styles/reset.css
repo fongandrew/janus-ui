@@ -33,7 +33,7 @@
 		text-size-adjust: 100%; /* 2 */
 		tab-size: 4; /* 3 */
 		font-family: var(
-			--default-font-family,
+			--v-default-font-family,
 			ui-sans-serif,
 			system-ui,
 			sans-serif,
@@ -354,7 +354,7 @@
 	button,
 	input:where([type='button'], [type='reset'], [type='submit']),
 	::file-selector-button {
-		appearance: button;
+		appearance: auto;
 	}
 
 	/*
