@@ -48,7 +48,7 @@
 	--v-danger-border: hsl(30deg 100% 50%);
 	--v-danger-text: hsl(30deg 100% 76%);
 	--v-input-disabled-bg: hsl(0deg 0% 15%);
-	--v-backdrop: hsla(0deg 0% 0% / 50%);
+	--v-backdrop: hsl(0deg 0% 0% / 50%);
 	--v-muted: hsl(30deg 7% 86.5%);
 	--v-link: hsl(183deg 25% 85%);
 	--v-ring: hsl(183deg 25% 85%);
@@ -104,14 +104,14 @@
 	--v-danger-fg: hsl(0deg 0% 98%);
 	--v-danger-muted: hsl(0deg 89% 93%);
 	--v-input-disabled-bg: hsl(0deg 0% 95%);
-	--v-backdrop: hsla(0deg 0% 0% / 50%);
+	--v-backdrop: hsl(0deg 0% 0% / 50%);
 	--v-danger-text: hsl(0deg 89% 31%);
 	--v-muted: hsl(30deg 7% 31%);
 	--v-link: hsl(195deg 100% 20%);
 	--v-ring: hsl(195deg 100% 20%);
 	--v-ring-alt: hsl(183deg 25% 71%);
 	--v-border-dynamic-base: black;
-	--v-border-dynamic-mix: 15%;
+	--v-border-dynamic-mix: 17.5%;
 }
 
 @layer variables {

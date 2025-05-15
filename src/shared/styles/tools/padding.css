@@ -29,4 +29,16 @@
 	.t-pl-0 {
 		padding-left: 0;
 	}
+
+	.t-py-text {
+		padding-block: calc(var(--v-spacing) - (1lh - 1em) / 2);
+	}
+
+	.t-pt-text {
+		padding-top: calc(var(--v-spacing) - (1lh - 1em) / 2);
+	}
+
+	.t-pb-text {
+		padding-bottom: calc(var(--v-spacing) - (1lh - 1em) / 2);
+	}
 }

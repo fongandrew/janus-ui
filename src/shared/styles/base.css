@@ -4,13 +4,13 @@
 @layer base {
 	body {
 		background: var(--v-body-bg, var(--v-bg));
+		background-attachment: fixed;
 		min-height: 100dvh;
 
 		/* So container queries can fallback to the body as a container */
-		container-type: size;
+		container-type: inline-size;
 		height: 100%;
 		width: 100%;
-		overflow: auto;
 	}
 
 	* {
@@ -22,7 +22,7 @@
 		border-color: transparent;
 	}
 
-	a[href] {
+	a[href]:not(.t-unstyled) {
 		@mixin t-link-style;
 	}
 
@@ -186,9 +186,10 @@
 	/* Icons defaults */
 	.lucide {
 		display: inline-block;
-		height: 1lh;
+		height: 1em;
 		width: 1em;
 		flex-shrink: 0;
+		vertical-align: text-bottom;
 
 		/*
 			The !important is annoying but Lucide insists on setting a stroke width on the
@@ -239,5 +240,10 @@
 		&:last-child {
 			border-bottom: 0;
 		}
+	}
+
+	/* Divider styling */
+	hr {
+		@mixin t-border;
 	}
 }

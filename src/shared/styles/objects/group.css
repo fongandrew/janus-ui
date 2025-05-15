@@ -5,6 +5,10 @@
 	align-items: flex-start;
 	flex-wrap: wrap;
 
+	> .lucide {
+		height: 1lh;
+	}
+
 	> * {
 		min-height: 1lh;
 	}

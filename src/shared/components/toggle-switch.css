@@ -15,6 +15,7 @@
 		align-items: center;
 		border-radius: 9999em;
 		box-shadow: var(--v-shadow-inner);
+		flex-shrink: 0;
 
 		.c-label:has(&) {
 			align-items: center;

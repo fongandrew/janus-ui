@@ -32,6 +32,10 @@
 	justify-content: center;
 	gap: var(--v-inline-gap);
 
+	> .lucide {
+		height: 1lh;
+	}
+
 	.lucide + * {
 		text-align: left;
 	}
