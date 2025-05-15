@@ -9,6 +9,7 @@ import { ButtonsDemo } from '~/demos/buttons-demo';
 import { sidebarHighlight } from '~/demos/callbacks/sidebar';
 import { CheckboxesDemo } from '~/demos/checkboxes-demo';
 import { DetailsDemo } from '~/demos/details-demo';
+import { EmptyStateDemo } from '~/demos/empty-state-demo';
 import { ErrorFallbackDemo } from '~/demos/error-fallback-demo';
 import { FormSubmitDemo } from '~/demos/form-submit-demo';
 import { FormValidationGroupDemo } from '~/demos/form-validation-group-demo';
@@ -66,7 +67,7 @@ export function Components(props: ComponentsProps) {
 						</SidebarListLink>
 						<SidebarListLink href="#button-links-demo">
 							<Box />
-							Button Links
+							Button links
 						</SidebarListLink>
 						<SidebarListLink href="#alerts-demo">
 							<Box />
@@ -74,7 +75,7 @@ export function Components(props: ComponentsProps) {
 						</SidebarListLink>
 						<SidebarListLink href="#badge-and-count-demo">
 							<Box />
-							Badge and Count
+							Badge and count
 						</SidebarListLink>
 						<SidebarListLink href="#checkboxes-demo">
 							<Box />
@@ -83,6 +84,10 @@ export function Components(props: ComponentsProps) {
 						<SidebarListLink href="#details-demo">
 							<Box />
 							Details
+						</SidebarListLink>
+						<SidebarListLink href="#empty-state-demo">
+							<Box />
+							Empty state
 						</SidebarListLink>
 						<SidebarListLink href="#error-fallback-demo">
 							<Box />
@@ -198,6 +203,7 @@ export function Components(props: ComponentsProps) {
 						<BadgeAndCountDemo />
 						<CheckboxesDemo />
 						<DetailsDemo />
+						<EmptyStateDemo />
 						<ErrorFallbackDemo />
 						<FormSubmitDemo />
 						<FormValidationGroupDemo />

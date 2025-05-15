@@ -1,0 +1,19 @@
+/* Badge styles for displaying status or notifications */
+@define-mixin o-empty-state {
+	@mixin v-text-muted;
+	@mixin t-radius-outer;
+	@mixin t-border;
+
+	display: flex;
+	align-items: center;
+	min-height: 6lh;
+	justify-content: center;
+	padding: var(--v-spacing);
+}
+
+@layer objects {
+	.o-empty-state {
+		@mixin v-colors-card;
+		@mixin o-empty-state;
+	}
+}
