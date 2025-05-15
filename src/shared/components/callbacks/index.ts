@@ -13,6 +13,7 @@ import * as menu from '~/shared/components/callbacks/menu';
 import * as modal from '~/shared/components/callbacks/modal';
 import * as modalForm from '~/shared/components/callbacks/modal-form';
 import * as optionList from '~/shared/components/callbacks/option-list';
+import * as placeholder from '~/shared/components/callbacks/placeholder';
 import * as scroll from '~/shared/components/callbacks/scroll';
 import * as select from '~/shared/components/callbacks/select';
 import * as sidebar from '~/shared/components/callbacks/sidebar';
@@ -37,6 +38,7 @@ loadCallbacks(
 	modal,
 	modalForm,
 	optionList,
+	placeholder,
 	scroll,
 	select,
 	sidebar,

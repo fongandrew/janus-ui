@@ -4,6 +4,12 @@ import cx from 'classix';
 import { For, type JSX, splitProps, Suspense } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
+import {
+	PLACEHOLDER_DELAY_ATTR,
+	placeholderDelayedHide,
+	placeholderDelayedShow,
+} from '~/shared/components/callbacks/placeholder';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { randInt } from '~/shared/utility/random';
 import { useT } from '~/shared/utility/solid/locale-context';
 
@@ -36,6 +42,45 @@ export function Placeholder(props: PlaceholderProps) {
 /**
  * Fixed width pill placeholder, used for inline elements in text
  */
+export function MissingPlaceholder(props: JSX.HTMLAttributes<HTMLSpanElement>) {
+	const [local, rest] = splitProps(props, ['class']);
+	const t = useT();
+
+	return (
+		<span class={cx('c-placeholder--missing', local.class)} aria-label={t`Missing`} {...rest} />
+	);
+}
+
+/**
+ * Show placeholder for a given amount of time before rendering content
+ */
+export function DelayedPlaceholder(props: {
+	delay?: number | undefined;
+	fallback?: JSX.Element;
+	children: JSX.Element;
+}) {
+	return (
+		<>
+			<div
+				{...{ [PLACEHOLDER_DELAY_ATTR]: String(props.delay ?? 3000) }}
+				{...callbackAttrs(placeholderDelayedHide)}
+			>
+				{props.fallback ?? <Placeholder />}
+			</div>
+			<div
+				class="t-hidden"
+				{...{ [PLACEHOLDER_DELAY_ATTR]: String(props.delay ?? 3000) }}
+				{...callbackAttrs(placeholderDelayedShow)}
+			>
+				{props.children}
+			</div>
+		</>
+	);
+}
+
+/**
+ * Fixed width pill placeholder, used for inline elements in text
+ */
 export function InlinePlaceholder(props: JSX.HTMLAttributes<HTMLSpanElement>) {
 	const [local, rest] = splitProps(props, ['class']);
 	const t = useT();
@@ -53,7 +98,38 @@ export function InlineMissingPlaceholder(props: JSX.HTMLAttributes<HTMLSpanEleme
 	const t = useT();
 
 	return (
-		<span class={cx('c-placeholder--missing', local.class)} aria-label={t`Missing`} {...rest} />
+		<span
+			class={cx('c-placeholder--inline-missing', local.class)}
+			aria-label={t`Missing`}
+			{...rest}
+		/>
+	);
+}
+
+/**
+ * Show placeholder for a given amount of time before rendering content
+ */
+export function InlineDelayedPlaceholder(props: {
+	delay?: number | undefined;
+	fallback?: JSX.Element;
+	children: JSX.Element;
+}) {
+	return (
+		<>
+			<span
+				{...{ [PLACEHOLDER_DELAY_ATTR]: String(props.delay ?? 3000) }}
+				{...callbackAttrs(placeholderDelayedHide)}
+			>
+				{props.fallback ?? <InlinePlaceholder />}
+			</span>
+			<span
+				class="t-hidden"
+				{...{ [PLACEHOLDER_DELAY_ATTR]: String(props.delay ?? 3000) }}
+				{...callbackAttrs(placeholderDelayedShow)}
+			>
+				{props.children}
+			</span>
+		</>
 	);
 }
 

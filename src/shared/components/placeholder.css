@@ -7,19 +7,29 @@
 	.c-placeholder--circle {
 		@mixin v-colors-secondary;
 		@mixin t-shimmer;
+	}
 
+	.c-placeholder::after,
+	.c-placeholder--img::after,
+	.c-placeholder--inline,
+	.c-placeholder--circle,
+	.c-placeholder--missing::after,
+	.c-placeholder--inline-missing {
 		position: relative;
 		overflow: hidden;
 	}
 
 	.c-placeholder::after,
 	.c-placeholder--inline,
-	.c-placeholder--missing {
+	.c-placeholder--missing::after,
+	.c-placeholder--inline-missing {
 		border-radius: 1lh;
 		height: 0.85em;
+		min-height: auto;
 	}
 
-	.c-placeholder {
+	.c-placeholder,
+	.c-placeholder--missing {
 		display: flex;
 		align-items: center;
 
@@ -35,7 +45,7 @@
 	}
 
 	.c-placeholder--inline,
-	.c-placeholder--missing {
+	.c-placeholder--inline-missing {
 		display: inline-block;
 		width: 9em;
 		vertical-align: baseline;
@@ -44,7 +54,8 @@
 		top: 2px;
 	}
 
-	.c-placeholder--missing {
+	.c-placeholder--missing::after,
+	.c-placeholder--inline-missing {
 		@mixin v-colors-card;
 		@mixin t-border;
 	}
