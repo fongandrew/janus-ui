@@ -25,8 +25,27 @@ const TOP_NAV_SCROLL_THRESHOLD = 500;
  * Attach scroll handler to scrollable parent of top nav layout
  */
 export const topNavScroll = createMounter('modal__open-scroll-state', (elm) => {
-	const parent = getScrollableParent(elm);
+	let parent = getScrollableParent(elm) as {
+		addEventListener: (
+			type: string,
+			listener: EventListener,
+			options?: boolean | AddEventListenerOptions,
+		) => void;
+		removeEventListener: (
+			type: string,
+			listener: EventListener,
+			options?: boolean | AddEventListenerOptions,
+		) => void;
+		ownerDocument: Document | null;
+	};
 	if (!parent) return;
+
+	if (
+		parent === parent.ownerDocument?.scrollingElement ||
+		parent === parent.ownerDocument?.documentElement
+	) {
+		parent = parent.ownerDocument;
+	}
 
 	const onScroll = (event: Event) => handleScroll(elm, event);
 	parent.addEventListener('scroll', onScroll, { passive: true });
@@ -54,8 +73,11 @@ const getHeaderHeight = (header: HTMLElement) => {
  * Sets hidden state on top nav based on scroll direction.
  */
 function handleScroll(topNavLayout: HTMLElement, e: Event) {
-	const container = e.target as HTMLElement | null;
+	let container = e.target as Element | Document | null;
 	if (!container) return;
+	if (container === topNavLayout.ownerDocument) {
+		container = container.scrollingElement || container.documentElement;
+	}
 
 	const header = topNavLayout.querySelector('header');
 	if (!header) return;
@@ -70,12 +92,12 @@ function handleScroll(topNavLayout: HTMLElement, e: Event) {
 	}
 
 	const headerHeight = getHeaderHeight(header);
-	const scrollDiff = container.scrollTop - (lastScrollTop(container) ?? 0);
+	const scrollDiff = (container as Element).scrollTop - (lastScrollTop(container) ?? 0);
 
 	if (Math.abs(scrollDiff) < headerHeight) return;
 
 	// Safari can have negative scrollTop from bounceback
-	setLastScrollTop(container, Math.max(container.scrollTop, 0));
+	setLastScrollTop(container, Math.max((container as Element).scrollTop, 0));
 	setLastScrollEvent(container, Date.now());
 
 	header.toggleAttribute(TOP_NAV_SCROLL_HIDE_ATTR, scrollDiff > 0);

@@ -11,16 +11,15 @@ for (const path of ['/', '/ssr']) {
 			await expect(topNav).toBeVisible();
 
 			// Reliably simulating mobile swipe scrolling in finicky and wheel events
-			// aren't supported in Safari, so so manully scroll element after sidebar
-			// to hide nav
+			// aren't supported in Safari, so manully scroll element to hide nav
 			await page.evaluate(() =>
-				document.body.scrollBy({ left: 0, top: 300, behavior: 'smooth' }),
+				document.documentElement.scrollBy({ left: 0, top: 300, behavior: 'smooth' }),
 			);
 			await expect(topNav).not.toBeInViewport();
 
 			// Scroll back up to reveal the nav
 			await page.evaluate(() =>
-				document.body.scrollBy({ left: 0, top: -200, behavior: 'smooth' }),
+				document.documentElement.scrollBy({ left: 0, top: -200, behavior: 'smooth' }),
 			);
 			await expect(topNav).toBeInViewport();
 		});
