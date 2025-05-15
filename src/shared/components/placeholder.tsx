@@ -5,6 +5,7 @@ import { For, type JSX, splitProps, Suspense } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import { randInt } from '~/shared/utility/random';
+import { useT } from '~/shared/utility/solid/locale-context';
 
 export interface PlaceholderProps extends JSX.HTMLAttributes<HTMLDivElement> {
 	width?: string | undefined;
@@ -37,9 +38,22 @@ export function Placeholder(props: PlaceholderProps) {
  */
 export function InlinePlaceholder(props: JSX.HTMLAttributes<HTMLSpanElement>) {
 	const [local, rest] = splitProps(props, ['class']);
+	const t = useT();
 
 	return (
-		<span class={cx('c-placeholder--inline', local.class)} aria-label="Loading…" {...rest} />
+		<span class={cx('c-placeholder--inline', local.class)} aria-label={t`Loading…`} {...rest} />
+	);
+}
+
+/**
+ * Fixed width pill placeholder, used for inline elements in text
+ */
+export function InlineMissingPlaceholder(props: JSX.HTMLAttributes<HTMLSpanElement>) {
+	const [local, rest] = splitProps(props, ['class']);
+	const t = useT();
+
+	return (
+		<span class={cx('c-placeholder--missing', local.class)} aria-label={t`Missing`} {...rest} />
 	);
 }
 

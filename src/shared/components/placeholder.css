@@ -13,7 +13,8 @@
 	}
 
 	.c-placeholder::after,
-	.c-placeholder--inline {
+	.c-placeholder--inline,
+	.c-placeholder--missing {
 		border-radius: 1lh;
 		height: 0.85em;
 	}
@@ -33,13 +34,19 @@
 		}
 	}
 
-	.c-placeholder--inline {
+	.c-placeholder--inline,
+	.c-placeholder--missing {
 		display: inline-block;
 		width: 9em;
 		vertical-align: baseline;
 
 		/* Nudge down a little -- don't know why but it looks better this way */
 		top: 2px;
+	}
+
+	.c-placeholder--missing {
+		@mixin v-colors-card;
+		@mixin t-border;
 	}
 
 	.c-placeholder--img {
