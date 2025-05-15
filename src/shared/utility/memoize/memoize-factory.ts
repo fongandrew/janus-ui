@@ -7,20 +7,23 @@ export interface Cache<TKey, TValue> {
 export interface MemoizedFunction<
 	TArgs extends unknown[],
 	TReturn,
-	TCache extends Cache<any, any>,
+	TKey,
+	TCache extends Cache<TKey, any>,
 > {
 	(...args: TArgs): TReturn;
+	resolve: (...args: TArgs) => TKey;
 	cache: TCache;
 }
 
 export type Memoizer<
 	TResolverArgs extends unknown[],
-	TCache extends Cache<any, any>,
+	TKey,
+	TCache extends Cache<TKey, any>,
 	TOpts = void,
 > = <TArgs extends TResolverArgs, TReturn>(
 	func: (...args: TArgs) => TReturn,
 	opts?: TOpts,
-) => MemoizedFunction<TArgs, TReturn, TCache>;
+) => MemoizedFunction<TArgs, TReturn, TKey, TCache>;
 
 /**
  * Base function for creating alternatives to Ldoash's memoize.
@@ -33,12 +36,12 @@ export function memoizeFactory<
 >(
 	resolver: (...args: TResolverArgs) => TKey,
 	createCache: (opts?: TResolverOpts) => TCache,
-): Memoizer<TResolverArgs, TCache, TResolverOpts> {
+): Memoizer<TResolverArgs, TKey, TCache, TResolverOpts> {
 	return function memoize<TArgs extends TResolverArgs, TReturn, TOpts extends TResolverOpts>(
 		func: (...args: TArgs) => TReturn,
 		opts?: TOpts,
-	): MemoizedFunction<TArgs, TReturn, TCache> {
-		const memoized = function (...args: TArgs): TReturn {
+	): MemoizedFunction<TArgs, TReturn, TKey, TCache> {
+		function memoized(...args: TArgs): TReturn {
 			const key = resolver(...args);
 			if (memoized.cache.has(key)) {
 				return memoized.cache.get(key);
@@ -46,8 +49,9 @@ export function memoizeFactory<
 			const result = func(...args);
 			memoized.cache.set(key, result);
 			return result;
-		} as ((...args: TArgs) => TReturn) & { cache: TCache };
+		}
 
+		memoized.resolve = resolver;
 		memoized.cache = createCache(opts);
 
 		return memoized;

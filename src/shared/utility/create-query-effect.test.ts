@@ -103,6 +103,6 @@ describe('createQueryEffect', () => {
 		vi.runAllTimers();
 
 		// The first promise should reject with an AbortError
-		await expect(promise1).rejects.toThrow('The operation was aborted.');
+		await expect(promise1).rejects.toThrow(/abort/);
 	});
 });

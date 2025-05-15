@@ -1,5 +1,3 @@
-import { isDev } from '~/shared/utility/is-dev';
-
 /** Route all calls to console through this interface / middleware for customization */
 export interface Logger {
 	/** Log a dev only message */
@@ -16,9 +14,9 @@ export interface Logger {
 
 let defaultLogger: Logger = {
 	// Wrap everything so tests can still mock console.<method>
-	debug: (...args) => (isDev() ? console.debug(...args) : undefined),
-	debugWarn: (...args) => (isDev() ? console.warn(...args) : undefined),
-	info: (...args) => console.info(...args),
+	debug: (...args) => (import.meta.env.PROD ? undefined : console.debug(...args)),
+	debugWarn: (...args) => (import.meta.env.PROD ? undefined : console.warn(...args)),
+	info: (...args) => (import.meta.env.MODE === 'test' ? undefined : console.info(...args)),
 	warn: (...args) => console.warn(...args),
 	error: (...args) => console.error(...args),
 };

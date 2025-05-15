@@ -1,6 +1,5 @@
 import { createRenderEffect } from 'solid-js';
 
-import { isDev } from '~/shared/utility/is-dev';
 import { useLogger } from '~/shared/utility/solid/use-logger';
 
 /**
@@ -16,7 +15,7 @@ export function unreactivePropAccess<
 		current.push(props[key]);
 	}
 
-	if (isDev()) {
+	if (!import.meta.env.PROD) {
 		const logger = useLogger();
 		createRenderEffect(() => {
 			keys.forEach((key, index) => {
