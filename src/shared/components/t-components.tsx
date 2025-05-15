@@ -7,6 +7,8 @@ import { useLocale } from '~/shared/utility/solid/locale-context';
 import {
 	formatDate,
 	formatDateTime,
+	formatDateTimeContextual,
+	formatDateTimeContextualNumeric,
 	formatMonth,
 	formatTime,
 } from '~/shared/utility/text/date-time';
@@ -43,6 +45,16 @@ export const FormatDate = createMarkupComponent<{
 export const FormatDateTime = createMarkupComponent<{
 	value: Date | number;
 }>(({ value }, locale) => formatDateTime(value, locale));
+
+/** Contextual date time */
+export const FormatDateTimeContextual = createMarkupComponent<{
+	value: Date | number;
+	numeric?: boolean;
+}>(({ value, numeric }, locale) =>
+	numeric
+		? formatDateTimeContextual(value, locale)
+		: formatDateTimeContextualNumeric(value, locale),
+);
 
 /** Time formatting markup wrapper */
 export const FormatTime = createMarkupComponent<{
