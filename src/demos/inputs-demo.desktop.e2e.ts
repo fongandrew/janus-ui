@@ -188,3 +188,18 @@ describeComponent('misc-input-variations-demo', (getContainer) => {
 		await expect(numberInput).toHaveValue('50');
 	});
 });
+
+describeComponent('input-groups-demo', (getContainer) => {
+	test('focuses first input when group label is clicked', async () => {
+		const container = getContainer();
+
+		// Get the label element and click it
+		const label = container.getByText('Time range');
+		await label.click();
+
+		// Verify that the first input is focused
+		const group = container.locator('div[role="group"]').first();
+		const startTime = group.locator('#start-time');
+		await expect(startTime).toBeFocused();
+	});
+});

@@ -1,5 +1,6 @@
 import { createHandler } from '~/shared/utility/callback-attrs/events';
 import { focusAndSelect } from '~/shared/utility/focus-and-select';
+import { firstFocusable } from '~/shared/utility/focusables';
 import { elmDoc } from '~/shared/utility/multi-view';
 
 /**
@@ -13,6 +14,25 @@ export const focusInputOnClick = createHandler('click', '$c-label__focus-input',
 	const document = elmDoc(labelLike);
 
 	const input = document?.querySelector<HTMLInputElement>(`[aria-labelledby~="${labelLike.id}"]`);
+	clickAndFocus(input);
+});
+
+/**
+ * Similar but for groups (where there are multiple candidates so just pick the first focusable)
+ */
+export const focusGroupOnClick = createHandler('click', '$c-label__focus-group', (event) => {
+	const labelLike = event.currentTarget as HTMLSpanElement;
+	const document = elmDoc(labelLike);
+
+	const group = document?.querySelector<HTMLInputElement>(`[aria-labelledby~="${labelLike.id}"]`);
+	if (!group) return;
+
+	const input = firstFocusable(group);
+	clickAndFocus(input);
+});
+
+/** Helper to focus and do a bunch of other special stuff */
+function clickAndFocus(input: HTMLElement | null) {
 	if (!input) return;
 
 	input.click();
@@ -28,6 +48,6 @@ export const focusInputOnClick = createHandler('click', '$c-label__focus-input',
 	// Showing howing the popover in the same tick as a focus doesn't reliably work
 	// for reasons not entirely clear to me
 	setTimeout(() => {
-		document.getElementById(popoverTarget)?.showPopover();
+		elmDoc(input)?.getElementById(popoverTarget)?.showPopover();
 	}, 0);
-});
+}

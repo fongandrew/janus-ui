@@ -1,12 +1,14 @@
 import cx from 'classix';
 import { type JSX, splitProps } from 'solid-js';
 
+import { focusGroupOnClick } from '~/shared/components/callbacks/label';
 import { Description } from '~/shared/components/description';
 import { ErrorMessage } from '~/shared/components/error-message';
 import { FormElementPropsProvider } from '~/shared/components/form-element-context';
 import { Label, LabelSpan } from '~/shared/components/label';
 import { attrNoConflict } from '~/shared/utility/attribute';
 import { attrs } from '~/shared/utility/attribute-list';
+import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { createAuto, createAutoId } from '~/shared/utility/solid/auto-prop';
 
 export interface LabelledInputProps extends JSX.HTMLAttributes<HTMLDivElement> {
@@ -109,6 +111,66 @@ export function LabelledInput(props: LabelledInputProps) {
 			>
 				{local.children}
 			</FormElementPropsProvider>
+			<ErrorMessage id={errorId()}>{local.errorMessage}</ErrorMessage>
+		</div>
+	);
+}
+
+/**
+ * Component for a label group for multiple inputs
+ *
+ * @example
+ * ```tsx
+ * 	<LabelledInputGroup
+ * 		label="Time"
+ * 		description="Start and end time"
+ * 	>
+ * 		<TimePicker id="start-time" />
+ * 		<span class="o-text-box"> to </span>
+ * 		<TimePicker id="end-time" />
+ * 	</LabelledInputGroup>
+ * ```
+ */
+export function LabelledInputGroup(props: LabelledInputProps) {
+	const [local, rest] = splitProps(props, [
+		'id',
+		'label',
+		'labelId',
+		'description',
+		'descriptionId',
+		'errorMessage',
+		'errorId',
+		'required',
+		'children',
+	]);
+
+	const labelId = createAuto(props, 'labelId');
+	const descriptionId = createAuto(props, 'descriptionId');
+	const errorId = createAuto(props, 'errorId');
+
+	return (
+		<div
+			{...rest}
+			role="group"
+			class={cx('c-label-stack', rest.class)}
+			aria-labelledby={labelId()}
+			aria-describedby={attrs(
+				local.description || local.descriptionId ? descriptionId() : null,
+				errorId(),
+			)}
+		>
+			<LabelSpan
+				id={labelId()}
+				required={local.required}
+				focusOnClick={false}
+				{...callbackAttrs(focusGroupOnClick)}
+			>
+				{local.label}
+			</LabelSpan>
+			{local.description || local.descriptionId ? (
+				<Description id={descriptionId()}>{local.description}</Description>
+			) : null}
+			{local.children}
 			<ErrorMessage id={errorId()}>{local.errorMessage}</ErrorMessage>
 		</div>
 	);

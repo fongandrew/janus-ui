@@ -19,7 +19,7 @@ import {
 } from '~/shared/components/date-time-picker';
 import { Form } from '~/shared/components/form';
 import { Input } from '~/shared/components/input';
-import { LabelledInput } from '~/shared/components/labelled-control';
+import { LabelledInput, LabelledInputGroup } from '~/shared/components/labelled-control';
 import { Password } from '~/shared/components/password';
 import { Slider } from '~/shared/components/slider';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
@@ -159,6 +159,41 @@ function MiscInputVariations() {
 	);
 }
 
+function InputGroups() {
+	return (
+		<Card id="input-groups-demo">
+			<CardHeader>
+				<CardTitle>Input groups</CardTitle>
+				<CardDescription>Groups of related inputs with a single label</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<div class="o-stack">
+					<LabelledInputGroup
+						label="Time range"
+						description="Specify start and end times"
+					>
+						<div class="o-group" style={{ 'align-items': 'center' }}>
+							<TimePicker
+								id="start-time"
+								placeholder="Start time"
+								value="09:00"
+								style={{ flex: '1 1 40%' }}
+							/>
+							<span>to</span>
+							<TimePicker
+								id="end-time"
+								placeholder="End time"
+								value="17:00"
+								style={{ flex: '1 1 40%' }}
+							/>
+						</div>
+					</LabelledInputGroup>
+				</div>
+			</CardContent>
+		</Card>
+	);
+}
+
 export function InputsDemo() {
 	return (
 		<>
@@ -166,6 +201,7 @@ export function InputsDemo() {
 			<DateTimeInputs />
 			<TextInputVariations />
 			<MiscInputVariations />
+			<InputGroups />
 		</>
 	);
 }
