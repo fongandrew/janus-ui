@@ -23,11 +23,16 @@
 
 	/* Font Weights */
 	--v-font-weight-normal: 400;
-	--v-font-weight-label: 500;
-	--v-font-weight-selected: 600;
-	--v-font-weight-subtitle: 600;
-	--v-font-weight-strong: 600;
-	--v-font-weight-title: 700;
+
+	/*
+		--v-font-weight-min-bold is a thing that can be set if changing the font
+		to something that doesn't support variable font weights.
+	*/
+	--v-font-weight-label: max(500, var(--v-font-weight-min-bold, 500));
+	--v-font-weight-selected: max(600, var(--v-font-weight-min-bold, 500));
+	--v-font-weight-subtitle: max(600, var(--v-font-weight-min-bold, 500));
+	--v-font-weight-strong: max(600, var(--v-font-weight-min-bold, 500));
+	--v-font-weight-title: max(700, var(--v-font-weight-min-bold, 500));
 
 	/* Line Heights */
 	--v-line-height-xs: 1.125rem;

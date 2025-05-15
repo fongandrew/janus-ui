@@ -18,6 +18,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '~/shared/components/ca
 import { elmDoc, elmWin } from '~/shared/utility/multi-view';
 import { createIncrSignal } from '~/shared/utility/solid/create-incr-signal';
 import { mountRoot } from '~/shared/utility/solid/mount-root';
+import { initUIPrefs } from '~/shared/utility/ui-prefs';
+
+initUIPrefs();
 
 /** Context to pass down signal that reforces recalc of color context on change */
 export const RenderCountContext = createContext<() => number>(() => 0);

@@ -2,6 +2,9 @@ import '~/shared/styles/index.css';
 
 import { App } from '~/app';
 import { mountRoot } from '~/shared/utility/solid/mount-root';
+import { initUIPrefs } from '~/shared/utility/ui-prefs';
+
+initUIPrefs();
 
 function Main() {
 	return (

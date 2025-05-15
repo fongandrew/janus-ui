@@ -1,11 +1,18 @@
+import { For } from 'solid-js';
+
 import {
 	prefsChangeAnimation,
 	prefsChangeColorScheme,
+	prefsChangeFontFamily,
+	prefsChangeFontSize,
 	prefsMountAnimation,
 	prefsMountColorScheme,
+	prefsMountFontFamily,
+	prefsMountFontSize,
 } from '~/demos/callbacks/prefs';
 import { Label } from '~/shared/components/label';
 import { LabelledInput } from '~/shared/components/labelled-control';
+import { ListBoxItem } from '~/shared/components/list-box';
 import {
 	Modal,
 	ModalCloseButton,
@@ -15,14 +22,20 @@ import {
 } from '~/shared/components/modal';
 import { Radio } from '~/shared/components/radio';
 import { RadioGroup } from '~/shared/components/radio-group';
+import { Select } from '~/shared/components/select';
+import { Slider } from '~/shared/components/slider';
 import { T } from '~/shared/components/t-components';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { useT } from '~/shared/utility/solid/locale-context';
+import { getFontFamilies } from '~/shared/utility/ui-prefs/font-family';
 
 export interface PrefsModalProps {
 	id: string;
 }
 
 export function PrefsModal(props: PrefsModalProps) {
+	const t = useT();
+
 	return (
 		<Modal id={props.id}>
 			<ModalTitle>
@@ -39,13 +52,13 @@ export function PrefsModal(props: PrefsModalProps) {
 							{...callbackAttrs(prefsMountColorScheme, prefsChangeColorScheme)}
 						>
 							<Label>
-								<Radio value="system" /> System preference
+								<Radio value="system" /> <T>System preference</T>
 							</Label>
 							<Label>
-								<Radio value="light" /> Light mode
+								<Radio value="light" /> <T>Light mode</T>
 							</Label>
 							<Label>
-								<Radio value="dark" /> Dark mode
+								<Radio value="dark" /> <T>Dark mode</T>
 							</Label>
 						</RadioGroup>
 					</LabelledInput>
@@ -53,15 +66,46 @@ export function PrefsModal(props: PrefsModalProps) {
 					<LabelledInput label="Animations" description="Interface animations">
 						<RadioGroup {...callbackAttrs(prefsMountAnimation, prefsChangeAnimation)}>
 							<Label>
-								<Radio value="system" /> System preference
+								<Radio value="system" /> <T>System preference</T>
 							</Label>
 							<Label>
-								<Radio value="true" /> Enabled
+								<Radio value="true" /> <T>Enabled</T>
 							</Label>
 							<Label>
-								<Radio value="false" /> Disabled
+								<Radio value="false" /> <T>Disabled</T>
 							</Label>
 						</RadioGroup>
+					</LabelledInput>
+
+					<LabelledInput
+						label={t`Font Family`}
+						description={t`Change the application font`}
+					>
+						<Select
+							required
+							{...callbackAttrs(prefsMountFontFamily, prefsChangeFontFamily)}
+						>
+							<For each={getFontFamilies()}>
+								{({ name, value }) => (
+									<ListBoxItem value={value} style={{ 'font-family': value }}>
+										{name}
+									</ListBoxItem>
+								)}
+							</For>
+						</Select>
+					</LabelledInput>
+
+					<LabelledInput
+						label={t`Font Size`}
+						description={t`Adjust the application font size`}
+					>
+						<Slider
+							unit="px"
+							min={12}
+							max={24}
+							step={1}
+							{...callbackAttrs(prefsMountFontSize, prefsChangeFontSize)}
+						/>
 					</LabelledInput>
 				</div>
 			</ModalContent>
