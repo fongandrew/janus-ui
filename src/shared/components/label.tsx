@@ -38,14 +38,18 @@ export function Label(
  * must be linked via aria-labelledby.
  */
 export function LabelSpan(
-	props: JSX.HTMLAttributes<HTMLSpanElement> & { id: string; required?: boolean | undefined },
+	props: JSX.HTMLAttributes<HTMLSpanElement> & {
+		id: string;
+		required?: boolean | undefined;
+		focusOnClick?: boolean | undefined;
+	},
 ) {
 	const [local, rest] = splitProps(props, ['required']);
 	const resolved = children(() => props.children);
 	return (
 		<span
 			{...rest}
-			{...callbackAttrs(props, focusInputOnClick)}
+			{...callbackAttrs(props, props.focusOnClick !== false && focusInputOnClick)}
 			class={cx('c-label', props.class)}
 		>
 			{
