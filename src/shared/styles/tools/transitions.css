@@ -104,22 +104,9 @@
 	);
 }
 
-@keyframes t-transition__opacity-in {
-	0% {
-		opacity: 0;
-	}
-
-	100% {
-		opacity: 1;
-	}
-}
-
 /* Delay appearance of element until transition is complete */
 @define-mixin t-transition__delayed {
-	animation: var(
-		--v-animation-none,
-		t-transition__opacity-in var(--v-transition-duration) step-end
-	);
+	animation: var(--v-animation-none, t-animation-fade-in var(--v-transition-duration) step-end);
 }
 
 @layer variables {

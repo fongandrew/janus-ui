@@ -18,6 +18,16 @@
 	}
 }
 
+@keyframes t-animation-fade-in {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
 /* Simple wrapper around t-animation that applies prefers-reduced-motion guard */
 @define-mixin t-animation $args {
 	animation: var(--v-animation-none, $(args));

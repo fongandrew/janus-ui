@@ -13,6 +13,13 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+
+		/*
+			Longish delay without pref check because quick flicker of spinner is
+			probably more disruptive to animation-sensitive users than this
+		*/
+		/* stylelint-disable-next-line declaration-property-value-allowed-list */
+		animation: t-animation-fade-in var(--v-animation-duration-xl) linear;
 	}
 
 	@mixin v-container-tablet {
