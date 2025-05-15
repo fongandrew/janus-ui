@@ -31,7 +31,7 @@ import { useT } from '~/shared/utility/solid/locale-context';
  * 	<TopNavLayout>
  * 		<TopNav>
  * 			<h1>My Application</h1>
- * 		 <TopNavList>
+ * 		 	<TopNavList>
  * 				<TopNavListLink
  * 					href="/"
  * 					aria-current={currentPath === '/' ? 'page' : undefined}
