@@ -9,6 +9,7 @@ import {
 	IconButton,
 } from '~/shared/components/button';
 import {
+	SIDEBAR_OVERLAY_ATTR,
 	SIDEBAR_STATE_ATTR,
 	sidebarEscape,
 	sidebarFocusOut,
@@ -18,6 +19,7 @@ import {
 } from '~/shared/components/callbacks/sidebar';
 import { ErrorFallback } from '~/shared/components/error-fallback';
 import { SidebarContext } from '~/shared/components/sidebar-context';
+import { SpinnerSuspense } from '~/shared/components/spinner';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
 import { useT } from '~/shared/utility/solid/locale-context';
@@ -80,6 +82,7 @@ export function SidebarLayout(
 				<ErrorFallback>{props.children}</ErrorFallback>
 				<div
 					class="c-sidebar__overlay"
+					{...{ [SIDEBAR_OVERLAY_ATTR]: '' }}
 					{...callbackAttrs(sidebarTriggerClose)}
 					// Not really necessary for screenreader since overlay isn't focusable
 					// but this is used by `sidebarTriggerClose`
@@ -249,5 +252,9 @@ export function SidebarListGroup(
  * The non-sidebar content area of the layout
  */
 export function SidebarLayoutContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
-	return <div {...props} class={cx('c-sidebar-layout__content', props.class)} />;
+	return (
+		<div {...props} class={cx('c-sidebar-layout__content', props.class)}>
+			<SpinnerSuspense>{props.children}</SpinnerSuspense>
+		</div>
+	);
 }
