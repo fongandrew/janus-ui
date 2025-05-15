@@ -86,7 +86,12 @@ export function Select(props: SelectProps) {
 
 	const listId = createUniqueId();
 	return (
-		<SelectButtonContainer listId={listId} clearable={clearable()} {...rest}>
+		<SelectButtonContainer
+			listId={listId}
+			clearable={clearable()}
+			values={props.values}
+			{...rest}
+		>
 			<SelectOptionList listBoxId={listId} {...optionListProps} autofocus />
 		</SelectButtonContainer>
 	);

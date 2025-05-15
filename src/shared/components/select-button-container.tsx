@@ -1,6 +1,6 @@
 import cx from 'classix';
 import { ChevronsUpDown, X } from 'lucide-solid';
-import { createSignal, createUniqueId, type JSX, splitProps } from 'solid-js';
+import { createEffect, createSignal, createUniqueId, type JSX, splitProps } from 'solid-js';
 
 import { Button } from '~/shared/components/button';
 import {
@@ -21,9 +21,12 @@ import { T } from '~/shared/components/t-components';
 import { attrNoConflict } from '~/shared/utility/attribute';
 import { attrs } from '~/shared/utility/attribute-list';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { useT } from '~/shared/utility/solid/locale-context';
 
 export interface SelectButtonContainerProps extends JSX.HTMLAttributes<HTMLDivElement> {
+	/** Values (used only to trigger dynamic update) */
+	values?: Set<string> | undefined;
 	/** Show clear button? */
 	clearable?: boolean | undefined;
 	/** Is select input disabled? */
@@ -48,7 +51,7 @@ export function SelectButtonContainer(props: SelectButtonContainerProps) {
 	const t = useT();
 	const [local, buttonProps, rest] = splitProps(
 		props,
-		['children', 'inputId', 'listId', 'placeholder', 'invalid', 'required'],
+		['children', 'inputId', 'listId', 'placeholder', 'invalid', 'required', 'values'],
 		[
 			'aria-describedby',
 			'aria-label',
@@ -67,6 +70,16 @@ export function SelectButtonContainer(props: SelectButtonContainerProps) {
 	const [required, setRequired] = createSignal<boolean | undefined>();
 	const [invalid, setInvalid] = createSignal<boolean | undefined>();
 
+	// Need to explicitly update placeholder text when values change since this isn't done
+	// reactively via Solid
+	let ref: HTMLElement | undefined;
+	createEffect((prev: Set<string> | undefined) => {
+		if (ref && prev !== props.values) {
+			selectMountText.do.call(ref, ref, selectUpdateTextId);
+		}
+		return props.values;
+	});
+
 	return (
 		<div
 			{...rest}
@@ -76,6 +89,7 @@ export function SelectButtonContainer(props: SelectButtonContainerProps) {
 				selectUpdateText(selectUpdateTextId),
 				selectResetText(selectUpdateTextId),
 			)}
+			ref={combineRefs(rest.ref, (el) => (ref = el))}
 			class={cx('c-select__container', rest.class)}
 		>
 			<Dropdown>
