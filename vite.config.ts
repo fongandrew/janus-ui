@@ -13,6 +13,8 @@ export default defineConfig(({ mode }) => {
 		plugins: [
 			solidPlugin({ ssr: !isTest }),
 			purgeCSSPlugin({
+				// Temp: This is pruning too aggressively at the moment. Need to debug.
+				enabled: false,
 				variables: true,
 				keyframes: true,
 				fontFace: true,
