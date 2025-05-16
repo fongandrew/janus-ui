@@ -13,15 +13,20 @@ export default defineConfig(({ mode }) => {
 		plugins: [
 			solidPlugin({ ssr: !isTest }),
 			purgeCSSPlugin({
-				// Temp: This is pruning too aggressively at the moment. Need to debug.
-				enabled: false,
 				variables: true,
 				keyframes: true,
 				fontFace: true,
 
-				// Needed to keep nested selectors from getting purged
-				// https://github.com/FullHuman/purgecss/issues/1153#issuecomment-2626375284
-				safelist: ['&'],
+				// Uncomment to debug PurgeCSS issues
+				// rejected: true,
+
+				safelist: [
+					// Needed to keep nested selectors from getting purged
+					// https://github.com/FullHuman/purgecss/issues/1153#issuecomment-2626375284
+					'&',
+					// See https://github.com/FullHuman/purgecss/issues/1282#issuecomment-2887364147
+					':is',
+				],
 			}),
 			viteSSGPlugin(),
 		],

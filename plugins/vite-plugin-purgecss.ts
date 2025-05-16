@@ -98,6 +98,11 @@ export default function vitePluginPurgeCSS(options: VitePurgeCSSOptions = {}): P
 
 				// Update bundle with purged CSS
 				results.forEach((result, index) => {
+					if (options.rejected) {
+						for (const r of result.rejected ?? []) {
+							console.log(`Purged: ${r}`);
+						}
+					}
 					const fileName = cssFiles[index]?.name;
 					if (!fileName) return;
 					const chunkOrAsset = bundle[fileName];
