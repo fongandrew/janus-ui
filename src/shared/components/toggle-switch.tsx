@@ -1,8 +1,9 @@
 import cx from 'classix';
+import { CheckIcon, CircleIcon } from 'lucide-solid';
 import { splitProps } from 'solid-js';
 
 import { checkboxClick, checkboxEnter } from '~/shared/components/callbacks/checkbox';
-import { toggleSwitchChange } from '~/shared/components/callbacks/toggle-switch';
+import { TOGGLE_ICON_ATTR, toggleSwitchChange } from '~/shared/components/callbacks/toggle-switch';
 import {
 	type FormElementProps,
 	mergeFormElementProps,
@@ -34,16 +35,29 @@ export function ToggleSwitch(props: ToggleSwitchProps) {
 	const formProps = mergeFormElementProps<'input'>(rest);
 
 	return (
-		<div class={cx('c-toggle-switch', local.class)} {...callbackAttrs(checkboxClick)}>
+		<div
+			class={cx('c-toggle-switch', local.class)}
+			{...callbackAttrs(checkboxClick, toggleSwitchChange)}
+		>
 			<input
 				type="checkbox"
 				role="switch"
 				aria-checked={props.checked}
 				aria-readonly={props.readOnly}
 				{...formProps}
-				{...callbackAttrs(props, checkboxEnter, toggleSwitchChange)}
+				{...callbackAttrs(props, checkboxEnter)}
 			/>
-			<div class="c-toggle-switch__thumb" />
+			<div class="c-toggle-switch__thumb">
+				<CheckIcon
+					{...{ [TOGGLE_ICON_ATTR]: 'on' }}
+					class={cx(!props.checked && 't-hidden')}
+				/>
+
+				<CircleIcon
+					{...{ [TOGGLE_ICON_ATTR]: 'off' }}
+					class={cx(props.checked && 't-hidden')}
+				/>
+			</div>
 		</div>
 	);
 }

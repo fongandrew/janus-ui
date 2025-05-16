@@ -35,12 +35,17 @@
 	}
 
 	.c-toggle-switch__thumb {
+		@mixin v-colors-tooltip;
+
 		position: absolute;
 		margin-inline: calc(0.5 * var(--v-space-sm) - var(--v-border-width));
 		height: calc(var(--v-input-height) - var(--v-space-sm));
 		width: calc(var(--v-input-height) - var(--v-space-sm));
 		border-radius: 9999em;
-		background-color: var(--v-input-fg);
+		color: color-mix(in hsl, var(--v-fg), transparent);
+		display: flex;
+		align-items: center;
+		justify-content: center;
 
 		@mixin t-transition transform;
 	}
@@ -48,6 +53,7 @@
 	.c-toggle-switch:has(input:checked) .c-toggle-switch__thumb {
 		transform: translateX(calc(0.75 * var(--v-input-height)));
 		background-color: var(--v-primary-fg);
+		color: var(--v-primary-bg);
 	}
 
 	.c-toggle-switch:has([aria-invalid='true']) {
