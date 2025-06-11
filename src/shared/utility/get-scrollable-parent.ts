@@ -3,7 +3,7 @@ import { elmDoc, elmWin } from '~/shared/utility/multi-view';
 /**
  * Get the immediately scrollable parent of an element
  */
-export function getScrollableParent(element: HTMLElement | null): Element | null {
+export function getScrollableParent(element: HTMLElement | null): HTMLElement | null {
 	const document = elmDoc(element);
 	const window = elmWin(element);
 	if (!document || !window) return null;
@@ -11,7 +11,7 @@ export function getScrollableParent(element: HTMLElement | null): Element | null
 	while (element) {
 		// Return document.scrollingElement for the <html> element
 		if (element === document.documentElement) {
-			return document.scrollingElement || document.documentElement;
+			return (document.scrollingElement || document.documentElement) as HTMLElement;
 		}
 
 		// Check if element itself is scrollable
@@ -30,4 +30,20 @@ export function getScrollableParent(element: HTMLElement | null): Element | null
 	}
 
 	return null;
+}
+
+/**
+ * Get the immediately scrollable parent of an element on which we should add
+ * the scroll listener
+ */
+export function getScrollListenerParent(element: HTMLElement | null) {
+	const elm = getScrollableParent(element);
+	if (
+		elm &&
+		(elm === elm?.ownerDocument?.scrollingElement ||
+			elm === elm?.ownerDocument?.documentElement)
+	) {
+		return elm.ownerDocument;
+	}
+	return elm;
 }

@@ -183,4 +183,46 @@ describe('SuspenseFor', () => {
 			expect(container.querySelector('[data-testid="item"]')).not.toBeNull();
 		});
 	});
+
+	it('should call onRender when an item is rendered', async () => {
+		const deferreds = [createDeferred<void>(), createDeferred<void>(), createDeferred<void>()];
+		const items = ['Item 1', 'Item 2', 'Item 3'];
+		const onRenderMock = vi.fn();
+
+		render(() => (
+			<SuspenseFor each={items} onRender={onRenderMock}>
+				{(item, index) => {
+					const [data] = createResource(async () => {
+						await deferreds[index()];
+						return item;
+					});
+					return <div data-testid={`item-${item}`}>{data()}</div>;
+				}}
+			</SuspenseFor>
+		));
+
+		// Resolve first deferred only
+		deferreds[0]?.resolve();
+
+		// Initially only first item is in the rendering queue, onRender should be called once
+		await vi.waitFor(() => {
+			expect(onRenderMock).toHaveBeenCalledTimes(1);
+			expect(onRenderMock).toHaveBeenCalledWith('Item 1', 0);
+		});
+
+		// Resolve all items
+		deferreds[1]?.resolve();
+		await vi.waitFor(() => {
+			expect(onRenderMock).toHaveBeenCalledTimes(2);
+		});
+		deferreds[2]?.resolve();
+		await vi.waitFor(() => {
+			expect(onRenderMock).toHaveBeenCalledTimes(3);
+		});
+
+		// Verify onRender was called for each item with correct parameters
+		expect(onRenderMock).toHaveBeenNthCalledWith(1, 'Item 1', 0);
+		expect(onRenderMock).toHaveBeenNthCalledWith(2, 'Item 2', 1);
+		expect(onRenderMock).toHaveBeenNthCalledWith(3, 'Item 3', 2);
+	});
 });

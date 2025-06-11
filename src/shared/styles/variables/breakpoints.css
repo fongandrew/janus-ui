@@ -6,7 +6,7 @@
 */
 @define-mixin v-breakpoint-lt-mobile-wide {
 	@media (width < 640px) {
-		& {
+		&:is(*) {
 			@mixin-content;
 		}
 	}
@@ -14,7 +14,7 @@
 
 @define-mixin v-breakpoint-mobile-wide {
 	@media (width >= 640px) {
-		& {
+		&:is(*) {
 			@mixin-content;
 		}
 	}
@@ -22,7 +22,7 @@
 
 @define-mixin v-breakpoint-lt-tablet {
 	@media (width < 768px) {
-		& {
+		&:is(*) {
 			@mixin-content;
 		}
 	}
@@ -30,7 +30,7 @@
 
 @define-mixin v-breakpoint-tablet {
 	@media (width >= 768px) {
-		& {
+		&:is(*) {
 			@mixin-content;
 		}
 	}
@@ -38,7 +38,7 @@
 
 @define-mixin v-breakpoint-lt-tablet-wide {
 	@media (width < 1024px) {
-		& {
+		&:is(*) {
 			@mixin-content;
 		}
 	}
@@ -46,7 +46,7 @@
 
 @define-mixin v-breakpoint-tablet-wide {
 	@media (width >= 1024px) {
-		& {
+		&:is(*) {
 			@mixin-content;
 		}
 	}
@@ -54,7 +54,7 @@
 
 @define-mixin v-breakpoint-lt-desktop {
 	@media (width < 1200px) {
-		& {
+		&:is(*) {
 			@mixin-content;
 		}
 	}
@@ -62,7 +62,7 @@
 
 @define-mixin v-breakpoint-desktop {
 	@media (width >= 1200px) {
-		& {
+		&:is(*) {
 			@mixin-content;
 		}
 	}
@@ -70,7 +70,7 @@
 
 @define-mixin v-container-lt-mobile-wide {
 	@container (width < 640px) {
-		& {
+		&:is(*) {
 			@mixin-content;
 		}
 	}
@@ -78,7 +78,7 @@
 
 @define-mixin v-container-mobile-wide {
 	@container (width >= 640px) {
-		& {
+		&:is(*) {
 			@mixin-content;
 		}
 	}
@@ -86,7 +86,7 @@
 
 @define-mixin v-container-lt-tablet {
 	@container (width >= 768px) {
-		& {
+		&:is(*) {
 			@mixin-content;
 		}
 	}
@@ -94,7 +94,7 @@
 
 @define-mixin v-container-tablet {
 	@container (width >= 768px) {
-		& {
+		&:is(*) {
 			@mixin-content;
 		}
 	}
@@ -102,7 +102,7 @@
 
 @define-mixin v-container-lt-tablet-wide {
 	@container (width < 1024px) {
-		& {
+		&:is(*) {
 			@mixin-content;
 		}
 	}
@@ -110,7 +110,7 @@
 
 @define-mixin v-container-tablet-wide {
 	@container (width >= 1024px) {
-		& {
+		&:is(*) {
 			@mixin-content;
 		}
 	}
@@ -118,7 +118,7 @@
 
 @define-mixin v-container-lt-desktop {
 	@container (width < 1200px) {
-		& {
+		&:is(*) {
 			@mixin-content;
 		}
 	}
@@ -126,7 +126,7 @@
 
 @define-mixin v-container-desktop {
 	@container (width >= 1200px) {
-		& {
+		&:is(*) {
 			@mixin-content;
 		}
 	}

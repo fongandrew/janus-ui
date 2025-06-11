@@ -9,16 +9,23 @@
 	@mixin v-colors-default;
 
 	max-width: var(--v-container-width);
+	min-height: 100vh;
 	margin-left: auto;
 	margin-right: auto;
 	padding: calc(var(--v-spacing) - (1lh - 1em) / 2) var(--v-spacing);
 
 	@mixin v-breakpoint-tablet {
-		padding-block: var(--v-space-xl);
+		@mixin t-radius-outer;
+
+		box-shadow: var(--v-shadow-lg);
+		margin-block: var(--v-space-xl);
+		min-height: auto;
+		padding: calc(var(--v-space-xl) - (1lh - 1em) / 2) var(--v-space-xl);
 	}
 
 	@mixin v-breakpoint-desktop {
-		padding-block: var(--v-space-2xl);
+		margin-block: var(--v-space-2xl);
+		padding: calc(var(--v-space-2xl) - (1lh - 1em) / 2) var(--v-space-2xl);
 	}
 }
 

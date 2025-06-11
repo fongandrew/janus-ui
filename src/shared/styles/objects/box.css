@@ -20,7 +20,10 @@
 */
 @define-mixin o-input-container-box {
 	padding: calc(var(--v-spacing) - var(--v-border-width) - (var(--v-input-height) - 1lh) / 2)
-		calc(var(--v-spacing) - var(--v-border-width) - (var(--v-input-height) - 1em) / 2);
+		max(
+			calc(var(--v-spacing) - var(--v-border-width) - (var(--v-input-height) - 1em) / 2),
+			calc(var(--v-border-width) * 2)
+		);
 }
 
 @layer objects {

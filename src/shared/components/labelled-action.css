@@ -4,7 +4,7 @@
 	.c-labelled-action {
 		display: flex;
 		align-items: center;
-		gap: var(--v-inline-gap);
+		gap: var(--v-spacing);
 	}
 
 	.c-labelled-action__label {

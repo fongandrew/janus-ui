@@ -14,8 +14,8 @@ registerDocumentSetup((document) => {
 
 	/** Listener that selectively disables event propagation if aria-disabled */
 	function preventDefaultIfAriaDisabled(event: Event) {
-		const target = event.target as HTMLElement;
-		if (!target) return;
+		const target = event.target;
+		if (!target || !(target instanceof HTMLElement)) return;
 
 		const closestAriaDisabled = target.closest('[aria-disabled]');
 		if (closestAriaDisabled && closestAriaDisabled?.getAttribute('aria-disabled') !== 'false') {

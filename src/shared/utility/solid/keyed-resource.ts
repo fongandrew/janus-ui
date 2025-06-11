@@ -10,6 +10,7 @@ import {
 
 import { memoizeLRUSingleArg } from '~/shared/utility/memoize/memoize-lru';
 import { type MemoizedResourceReturn } from '~/shared/utility/solid/memoized-resource';
+import { useResourceContext } from '~/shared/utility/solid/resource-context';
 
 /**
  * Factory for a SolidJS resource that's cached globally by key. The default SolidJS
@@ -125,5 +126,8 @@ export function createKeyedResource<TResource, TKey, TInfo = unknown>(
 
 	useResource.clear = () => getResourceForKey.cache.clear();
 	useResource.markAsStale = markAsStale;
+
+	useResourceContext().add(useResource);
+
 	return useResource;
 }

@@ -9,6 +9,7 @@ import {
 } from 'solid-js';
 
 import { memoizeOne } from '~/shared/utility/memoize/memoize-one';
+import { useResourceContext } from '~/shared/utility/solid/resource-context';
 
 export type MemoizedResourceReturn<TResource, TInfo> = readonly [
 	ResourceReturn<TResource, TInfo>[0],
@@ -117,6 +118,8 @@ export function createMemoizedResource<TResource, TInfo = unknown>(
 
 	useResource.clear = () => getResource.cache.clear();
 	useResource.markAsStale = markAsStale;
+
+	useResourceContext().add(useResource);
 
 	return useResource;
 }

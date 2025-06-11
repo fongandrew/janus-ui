@@ -7,7 +7,7 @@ import { SpinnerSuspense } from '~/shared/components/spinner';
 
 export type CardProps = JSX.IntrinsicAttributes &
 	Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onError'> & {
-		as?: 'article' | 'div' | 'section';
+		as?: 'article' | 'div' | 'section' | undefined;
 		/** Error boundary render callback */
 		onError?: ((err: Error & { code: string }, eventId: string) => void) | undefined;
 		/** Error boundary reload callback */

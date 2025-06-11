@@ -1,5 +1,8 @@
 import { createMounter } from '~/shared/utility/callback-attrs/mount';
-import { getScrollableParent } from '~/shared/utility/get-scrollable-parent';
+import {
+	getScrollableParent,
+	getScrollListenerParent,
+} from '~/shared/utility/get-scrollable-parent';
 import { createMagicProp } from '~/shared/utility/magic-prop';
 import { elmWin } from '~/shared/utility/multi-view';
 import { onUnmount } from '~/shared/utility/unmount-observer';
@@ -25,27 +28,8 @@ const TOP_NAV_SCROLL_THRESHOLD = 500;
  * Attach scroll handler to scrollable parent of top nav layout
  */
 export const topNavScroll = createMounter('modal__open-scroll-state', (elm) => {
-	let parent = getScrollableParent(elm) as {
-		addEventListener: (
-			type: string,
-			listener: EventListener,
-			options?: boolean | AddEventListenerOptions,
-		) => void;
-		removeEventListener: (
-			type: string,
-			listener: EventListener,
-			options?: boolean | AddEventListenerOptions,
-		) => void;
-		ownerDocument: Document | null;
-	};
+	const parent = getScrollListenerParent(elm);
 	if (!parent) return;
-
-	if (
-		parent === parent.ownerDocument?.scrollingElement ||
-		parent === parent.ownerDocument?.documentElement
-	) {
-		parent = parent.ownerDocument;
-	}
 
 	const onScroll = (event: Event) => handleScroll(elm, event);
 	parent.addEventListener('scroll', onScroll, { passive: true });

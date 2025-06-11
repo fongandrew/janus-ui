@@ -30,6 +30,32 @@
 		padding-left: 0;
 	}
 
+	.t-pl {
+		padding-left: var(--v-spacing);
+	}
+
+	.t-pr {
+		padding-right: var(--v-spacing);
+	}
+
+	.t-pt {
+		padding-top: var(--v-spacing);
+	}
+
+	.t-pb {
+		padding-bottom: var(--v-spacing);
+	}
+
+	.t-py {
+		padding-top: var(--v-spacing);
+		padding-bottom: var(--v-spacing);
+	}
+
+	.t-px {
+		padding-left: var(--v-spacing);
+		padding-right: var(--v-spacing);
+	}
+
 	.t-py-text {
 		padding-block: calc(var(--v-spacing) - (1lh - 1em) / 2);
 	}

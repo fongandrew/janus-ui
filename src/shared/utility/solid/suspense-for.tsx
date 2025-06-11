@@ -22,6 +22,8 @@ function SuspenseEffect(props: { onEffect: () => void }) {
 export function SuspenseFor<T>(props: {
 	/** List of items to render */
 	each: T[];
+	/** Callback when item is rendered */
+	onRender?: (item: T, index: number) => void;
 	/** Renderer for each item */
 	children: (item: T, index: Accessor<number>) => JSX.Element;
 	/** Artificial delay between each item */
@@ -33,7 +35,13 @@ export function SuspenseFor<T>(props: {
 }) {
 	const [count, setCount] = createSignal(1);
 	const incrEffect = () => setCount(incr);
-	const delayedIncrEffect = () => setTimeout(incrEffect, props.delay ?? 0);
+	const suspenseEffect = (item: T, index: number) => {
+		try {
+			props.onRender?.(item, index);
+		} finally {
+			setTimeout(incrEffect, props.delay ?? 0);
+		}
+	};
 	return (
 		<For each={props.each.slice(0, count())}>
 			{(item, index) => {
@@ -45,7 +53,7 @@ export function SuspenseFor<T>(props: {
 				return (
 					<SuspenseComponent fallback={fallback}>
 						{props.children(item, index)}
-						<SuspenseEffect onEffect={delayedIncrEffect} />
+						<SuspenseEffect onEffect={() => suspenseEffect(item, index())} />
 					</SuspenseComponent>
 				);
 			}}

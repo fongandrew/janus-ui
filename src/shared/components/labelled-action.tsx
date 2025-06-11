@@ -112,7 +112,7 @@ export function LabelledAction(props: LabelledInputProps) {
  */
 export function LabelledActionCard(props: LabelledInputProps) {
 	return (
-		<Card>
+		<Card as="div">
 			<CardContent>
 				<LabelledAction {...props} />
 			</CardContent>

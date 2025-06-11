@@ -115,17 +115,17 @@ export function Modal(props: DialogProps) {
 	const [dialog, setDialog] = createSignal<HTMLDialogElement | null>(null);
 	const [local, rest] = splitProps(props, ['children', 'id', 'open', 'onError', 'onReload']);
 
-	// Open state
-	const [open, setOpen] = createSignal<boolean | undefined>();
+	// Mounting state
+	const [mounted, setMounted] = createSignal<boolean | undefined>();
 	createRenderEffect(() => {
 		if (local.open !== false) {
-			setOpen(true);
+			setMounted(true);
 			return;
 		}
 
 		// Defer updating closed state for a set amount of time to allow for transitions
 		// This can be long since there are other things
-		const timeout = setTimeout(() => setOpen(false), MODAL_CLOSE_SYNC_DELAY);
+		const timeout = setTimeout(() => setMounted(false), MODAL_CLOSE_SYNC_DELAY);
 		onCleanup(() => clearTimeout(timeout));
 	});
 
@@ -135,7 +135,7 @@ export function Modal(props: DialogProps) {
 	// Handle open state changes after mount
 	createEffect(() => {
 		const dialogElm = dialog();
-		if (!dialogElm) return;
+		if (!dialogElm || !mounted()) return;
 		if (local.open) {
 			openModal(dialogElm);
 		} else if (local.open === false && dialogElm.open) {
@@ -154,7 +154,7 @@ export function Modal(props: DialogProps) {
 	return (
 		// local.open being undefined implies we should show and rely on the dialog's
 		// own open state to control visibility
-		<Show when={open()}>
+		<Show when={mounted()}>
 			<ModalContext.Provider value={id}>
 				<dialog
 					{...rest}

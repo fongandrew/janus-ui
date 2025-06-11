@@ -48,6 +48,8 @@ export async function evalAttrPrefs(document: Document) {
 		const value = await getStoredAttrPref(pref);
 		if (typeof value === 'string') {
 			document.documentElement.setAttribute(pref, value);
+		} else {
+			document.documentElement.removeAttribute(pref);
 		}
 	}
 }

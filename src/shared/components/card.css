@@ -15,6 +15,17 @@
 		&.o-grid {
 			container-type: normal;
 		}
+
+		@mixin v-breakpoint-tablet {
+			.o-container & {
+				box-shadow: none;
+			}
+
+			:modal &,
+			:popover-open & {
+				box-shadow: var(--v-shadow-md);
+			}
+		}
 	}
 
 	.c-card__header {

@@ -109,17 +109,17 @@ export function SelectOptionList(props: SelectOptionListProps) {
 			</ListBox>
 			{props.selectInputTextId ? (
 				<div role="status" class="c-select__status">
-					<span class="c-select__no_match">
+					<span class="c-select__no-match">
 						<T>
 							No matches found for{' '}
 							<strong
 								id={local.selectInputTextId}
-								class="c-select__no_match_value"
+								class="c-select__no-match-value"
 								{...emptyAttr()}
 							/>
 						</T>
 					</span>
-					<span class="c-select__no_value">
+					<span class="c-select__no-value">
 						<T>Type something</T>
 					</span>
 					<div class="c-select__busy">

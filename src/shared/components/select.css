@@ -111,8 +111,8 @@
 			display: block;
 		}
 
-		.c-select__no_match,
-		.c-select__no_value,
+		.c-select__no-match,
+		.c-select__no-value,
 		.c-select__busy {
 			display: none;
 		}
@@ -126,11 +126,11 @@
 
 		/* Different empty states depending on whether there's input */
 		:has(.c-select__items[data-t-empty]):not([aria-busy='true']) + & {
-			.c-select__no_match:not(:has(.c-select__no_match_value[data-t-empty])) {
+			.c-select__no-match:not(:has(.c-select__no-match-value[data-t-empty])) {
 				display: block;
 			}
 
-			.c-select__no_match:has(.c-select__no_match_value[data-t-empty]) + .c-select__no_value {
+			.c-select__no-match:has(.c-select__no-match-value[data-t-empty]) + .c-select__no-value {
 				display: block;
 			}
 		}

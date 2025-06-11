@@ -48,6 +48,8 @@ export async function evalStylePrefs(document: Document) {
 		const value = await getStoredStylePref(pref);
 		if (typeof value === 'string') {
 			document.documentElement.style.setProperty(pref, value);
+		} else {
+			document.documentElement.style.removeProperty(pref);
 		}
 	}
 }
