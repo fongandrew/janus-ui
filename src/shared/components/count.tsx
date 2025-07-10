@@ -1,7 +1,7 @@
 import cx from 'classix';
-import { createMemo, type JSX, splitProps } from 'solid-js';
+import { type ComponentProps, createMemo, splitProps } from 'solid-js';
 
-export interface CountProps extends JSX.HTMLAttributes<HTMLSpanElement> {
+export interface CountProps extends ComponentProps<'span'> {
 	/** Count */
 	value: number;
 	/**

@@ -1,5 +1,12 @@
 import cx from 'classix';
-import { createContext, type JSX, mergeProps, splitProps, useContext } from 'solid-js';
+import {
+	type ComponentProps,
+	createContext,
+	type JSX,
+	mergeProps,
+	splitProps,
+	useContext,
+} from 'solid-js';
 import { createUniqueId } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
@@ -161,7 +168,7 @@ export function ListBox(props: ListBoxProps) {
 	);
 }
 
-export interface ListBoxItemProps extends JSX.HTMLAttributes<HTMLInputElement> {
+export interface ListBoxItemProps extends ComponentProps<'input'> {
 	/**
 	 * Option value for this prop -- if not set, will be autoassigned one for
 	 * option list matching purposes

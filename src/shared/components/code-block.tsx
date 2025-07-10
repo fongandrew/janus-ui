@@ -1,6 +1,6 @@
 import cx from 'classix';
 import { CopyCheckIcon, CopyIcon } from 'lucide-solid';
-import { createUniqueId, type JSX } from 'solid-js';
+import { type ComponentProps, createUniqueId } from 'solid-js';
 
 import { codeBlockCopy } from '~/shared/components/callbacks/code-block';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
@@ -8,7 +8,7 @@ import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry
 /**
  * A code block with a copy button
  */
-export function CodeBlock(props: JSX.HTMLAttributes<HTMLDivElement>) {
+export function CodeBlock(props: ComponentProps<'div'>) {
 	const detailId = createUniqueId();
 	const beforeId = createUniqueId();
 	const afterId = createUniqueId();

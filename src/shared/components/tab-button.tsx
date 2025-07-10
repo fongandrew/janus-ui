@@ -1,5 +1,5 @@
 import cx from 'classix';
-import { children, createRenderEffect, type JSX, onCleanup } from 'solid-js';
+import { children, type ComponentProps, createRenderEffect, onCleanup } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import { useTabContext } from '~/shared/components/tab-context';
@@ -8,7 +8,7 @@ import { mountRmAttr } from '~/shared/utility/callback-attrs/no-js';
 import { createAutoId } from '~/shared/utility/solid/auto-prop';
 import { spanify } from '~/shared/utility/solid/spanify';
 
-interface TabButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
+interface TabButtonProps extends ComponentProps<'button'> {
 	/** Should match ID attribute on tab */
 	tabId: string;
 }

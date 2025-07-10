@@ -1,13 +1,13 @@
 import cx from 'classix';
 import { Loader2, type LucideProps } from 'lucide-solid';
-import { createRenderEffect, type JSX, onCleanup, splitProps, Suspense } from 'solid-js';
+import { type ComponentProps, createRenderEffect, onCleanup, splitProps, Suspense } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import { T } from '~/shared/components/t-components';
 
 export interface SpinnerProps extends LucideProps {}
 
-export interface SpinnerBlockProps extends JSX.HTMLAttributes<HTMLDivElement> {
+export interface SpinnerBlockProps extends ComponentProps<'div'> {
 	/** Callback for when the spinner block initially loads */
 	onStart?: () => void;
 	/** Callback for when the spinner block is removed */

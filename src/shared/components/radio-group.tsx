@@ -1,5 +1,5 @@
 import cx from 'classix';
-import { type JSX, splitProps } from 'solid-js';
+import { type ComponentProps, type JSX, splitProps } from 'solid-js';
 
 import { FormElementResetProvider } from '~/shared/components/form-element-context';
 import { mergeFormElementProps } from '~/shared/components/form-element-props';
@@ -10,7 +10,7 @@ import {
 import { createAuto } from '~/shared/utility/solid/auto-prop';
 import { extendHandler } from '~/shared/utility/solid/combine-event-handlers';
 
-export interface RadioGroupProps extends JSX.HTMLAttributes<HTMLDivElement> {
+export interface RadioGroupProps extends ComponentProps<'div'> {
 	/** Shared name to use across radio elements */
 	name?: string;
 	/** Value of selected radio button */

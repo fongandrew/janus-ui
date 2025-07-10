@@ -1,6 +1,6 @@
 import { type Placement } from '@floating-ui/dom';
 import cx from 'classix';
-import { type JSX, splitProps } from 'solid-js';
+import { type ComponentProps, type JSX, splitProps } from 'solid-js';
 
 import {
 	tooltipBlur,
@@ -13,12 +13,12 @@ import { attrs } from '~/shared/utility/attribute-list';
 import { callbackAttrMods } from '~/shared/utility/callback-attrs/callback-registry';
 import { createAutoId } from '~/shared/utility/solid/auto-prop';
 
-export interface TooltipContentProps extends JSX.HTMLAttributes<HTMLSpanElement> {
+export interface TooltipContentProps extends ComponentProps<'span'> {
 	/** Make ID required for `aria-label` purposes */
 	id: string;
 }
 
-export interface TooltipProps extends JSX.HTMLAttributes<HTMLSpanElement> {
+export interface TooltipProps extends ComponentProps<'span'> {
 	/** Tooltip placement */
 	placement?: Placement | undefined;
 	/** Tooltip content */

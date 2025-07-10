@@ -1,5 +1,5 @@
 import cx from 'classix';
-import { children, type JSX, splitProps } from 'solid-js';
+import { children, type ComponentProps, splitProps } from 'solid-js';
 
 import { focusInputOnClick } from '~/shared/components/callbacks/label';
 import { useFormElementProps } from '~/shared/components/form-element-context';
@@ -12,16 +12,11 @@ import { spanify } from '~/shared/utility/solid/spanify';
  * Default HTML label component, used primarily for inline inputs. Generally prefer
  * using LabelledInput and LabelledInline over using this directly.
  */
-export function Label(
-	props: JSX.LabelHTMLAttributes<HTMLLabelElement> & { required?: boolean | undefined },
-) {
+export function Label(props: ComponentProps<'label'> & { required?: boolean | undefined }) {
 	const [local, rest] = splitProps(props, ['required']);
 	const resolved = children(() => props.children);
 	return (
-		<label
-			{...(rest as JSX.LabelHTMLAttributes<HTMLLabelElement>)}
-			class={cx('c-label', props.class)}
-		>
+		<label {...(rest as ComponentProps<'label'>)} class={cx('c-label', props.class)}>
 			{
 				// Wrap text nodes and strings in spans to make it easier to apply
 				// overflow in a way that doesn't result in focus ring clipping
@@ -38,7 +33,7 @@ export function Label(
  * must be linked via aria-labelledby.
  */
 export function LabelSpan(
-	props: JSX.HTMLAttributes<HTMLSpanElement> & {
+	props: ComponentProps<'span'> & {
 		id: string;
 		required?: boolean | undefined;
 		focusOnClick?: boolean | undefined;

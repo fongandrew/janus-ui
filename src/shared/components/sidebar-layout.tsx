@@ -1,6 +1,6 @@
 import cx from 'classix';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-solid';
-import { createUniqueId, type JSX, splitProps, useContext } from 'solid-js';
+import { type ComponentProps, createUniqueId, type JSX, splitProps, useContext } from 'solid-js';
 
 import {
 	type ButtonProps,
@@ -71,9 +71,7 @@ import { useT } from '~/shared/utility/solid/locale-context';
  * 	</SidebarLayout>
  * ```
  */
-export function SidebarLayout(
-	props: JSX.HTMLAttributes<HTMLDivElement> & { sidebarId?: string | undefined },
-) {
+export function SidebarLayout(props: ComponentProps<'div'> & { sidebarId?: string | undefined }) {
 	const [local, rest] = splitProps(props, ['sidebarId']);
 	const sidebarId = createAuto(local, 'sidebarId');
 	return (
@@ -97,10 +95,7 @@ export function SidebarLayout(
  * A sidebar component that uses the sidebar context to determine its visibility.
  */
 export function Sidebar(
-	props: Omit<
-		JSX.HTMLAttributes<HTMLDivElement>,
-		/* No ID here, set within context provider */ 'id'
-	>,
+	props: Omit<ComponentProps<'div'>, /* No ID here, set within context provider */ 'id'>,
 ) {
 	const contextId = useContext(SidebarContext);
 	if (!contextId) {
@@ -164,28 +159,28 @@ export function SidebarCloseButton(props: ButtonProps) {
 /**
  * A header component for the sidebar. Statically sized.
  */
-export function SidebarHeader(props: JSX.HTMLAttributes<HTMLElement>) {
+export function SidebarHeader(props: ComponentProps<'header'>) {
 	return <header {...props} class={cx('c-sidebar__header', props.class)} />;
 }
 
 /**
  * A footer component for the sidebar. Statically sized.
  */
-export function SidebarFooter(props: JSX.HTMLAttributes<HTMLElement>) {
+export function SidebarFooter(props: ComponentProps<'footer'>) {
 	return <footer {...props} class={cx('c-sidebar__footer', props.class)} />;
 }
 
 /**
  * A content component for the sidebar. Resizes and scrolls as needed.
  */
-export function SidebarContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
+export function SidebarContent(props: ComponentProps<'div'>) {
 	return <div {...props} class={cx('c-sidebar__content', props.class)} />;
 }
 
 /**
  * A navigation component for the sidebar. An unordered list of links.
  */
-export function SidebarList(props: JSX.HTMLAttributes<HTMLElement>) {
+export function SidebarList(props: ComponentProps<'nav'>) {
 	return (
 		<nav
 			{...props}
@@ -200,14 +195,14 @@ export function SidebarList(props: JSX.HTMLAttributes<HTMLElement>) {
 /**
  * Nav item for sidebar navigation.
  */
-export function SidebarListItem(props: JSX.HTMLAttributes<HTMLLIElement>) {
+export function SidebarListItem(props: ComponentProps<'li'>) {
 	return <li {...props} class={cx('c-sidebar__list-item', props.class)} />;
 }
 
 /**
  * Nav item that is a button
  */
-export function SidebarListButton(props: JSX.ButtonHTMLAttributes<HTMLButtonElement>) {
+export function SidebarListButton(props: ComponentProps<'button'>) {
 	return (
 		<SidebarListItem>
 			<GhostButton {...props} class={cx('c-sidebar__list-button', props.class)} />
@@ -218,7 +213,7 @@ export function SidebarListButton(props: JSX.ButtonHTMLAttributes<HTMLButtonElem
 /**
  * Nav item that is a link
  */
-export function SidebarListLink(props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) {
+export function SidebarListLink(props: ComponentProps<'a'>) {
 	return (
 		<SidebarListItem>
 			<GhostButtonLink {...props} class={cx('c-sidebar__list-link', props.class)} />
@@ -229,9 +224,7 @@ export function SidebarListLink(props: JSX.AnchorHTMLAttributes<HTMLAnchorElemen
 /**
  * Group links together
  */
-export function SidebarListGroup(
-	props: JSX.HTMLAttributes<HTMLLIElement> & { heading: JSX.Element },
-) {
+export function SidebarListGroup(props: ComponentProps<'li'> & { heading: JSX.Element }) {
 	const headingId = createUniqueId();
 	const [local, rest] = splitProps(props, ['heading']);
 	return (
@@ -251,7 +244,7 @@ export function SidebarListGroup(
 /**
  * The non-sidebar content area of the layout
  */
-export function SidebarLayoutContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
+export function SidebarLayoutContent(props: ComponentProps<'div'>) {
 	return (
 		<div {...props} class={cx('c-sidebar-layout__content', props.class)}>
 			<SpinnerSuspense>{props.children}</SpinnerSuspense>

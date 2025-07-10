@@ -1,5 +1,5 @@
 import cx from 'classix';
-import { type JSX, splitProps } from 'solid-js';
+import { type ComponentProps, type JSX, splitProps } from 'solid-js';
 
 import { focusGroupOnClick } from '~/shared/components/callbacks/label';
 import { Description } from '~/shared/components/description';
@@ -11,7 +11,7 @@ import { attrs } from '~/shared/utility/attribute-list';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import { createAuto, createAutoId } from '~/shared/utility/solid/auto-prop';
 
-export interface LabelledInputProps extends JSX.HTMLAttributes<HTMLDivElement> {
+export interface LabelledInputProps extends ComponentProps<'div'> {
 	/**
 	 * ID for the input element (assign here if you don't want auto-generated so label
 	 * and description can properly line up

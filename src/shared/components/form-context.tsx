@@ -1,4 +1,4 @@
-import { type Accessor, createContext, type JSX } from 'solid-js';
+import { type Accessor, type ComponentProps, createContext, type JSX } from 'solid-js';
 
 import { createAutoId } from '~/shared/utility/solid/auto-prop';
 
@@ -8,7 +8,7 @@ import { createAutoId } from '~/shared/utility/solid/auto-prop';
 export const FormContext = createContext<
 	| {
 			id: Accessor<string | undefined>;
-			action: Accessor<JSX.FormHTMLAttributes<HTMLFormElement>['action'] | undefined>;
+			action: Accessor<ComponentProps<'form'>['action'] | undefined>;
 	  }
 	| undefined
 >();

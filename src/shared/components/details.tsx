@@ -1,10 +1,9 @@
 import cx from 'classix';
-import { type JSX, splitProps } from 'solid-js';
+import { type ComponentProps, type JSX, splitProps } from 'solid-js';
 
-export interface DetailsProps
-	extends Omit<JSX.DetailsHtmlAttributes<HTMLDetailsElement>, 'children'> {
+export interface DetailsProps extends Omit<ComponentProps<'details'>, 'children'> {
 	/** Summary props */
-	summary?: JSX.HTMLAttributes<HTMLElement>;
+	summary?: ComponentProps<'summary'>;
 	/** Two children in render funcs -- one for summary and one for details */
 	children: [() => JSX.Element, () => JSX.Element];
 }

@@ -1,7 +1,7 @@
 import '~/shared/components/placeholder.css';
 
 import cx from 'classix';
-import { For, type JSX, splitProps, Suspense } from 'solid-js';
+import { type ComponentProps, For, type JSX, splitProps, Suspense } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import {
@@ -13,11 +13,11 @@ import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry
 import { randInt } from '~/shared/utility/random';
 import { useT } from '~/shared/utility/solid/locale-context';
 
-export interface PlaceholderProps extends JSX.HTMLAttributes<HTMLDivElement> {
+export interface PlaceholderProps extends ComponentProps<'div'> {
 	width?: string | undefined;
 }
 
-export interface ImgPlaceholderProps extends JSX.HTMLAttributes<HTMLDivElement> {
+export interface ImgPlaceholderProps extends ComponentProps<'div'> {
 	class?: string | undefined;
 	height?: string | number | undefined;
 	width?: string | number | undefined;
@@ -42,7 +42,7 @@ export function Placeholder(props: PlaceholderProps) {
 /**
  * Fixed width pill placeholder, used for inline elements in text
  */
-export function MissingPlaceholder(props: JSX.HTMLAttributes<HTMLSpanElement>) {
+export function MissingPlaceholder(props: ComponentProps<'span'>) {
 	const [local, rest] = splitProps(props, ['class']);
 	const t = useT();
 
@@ -81,7 +81,7 @@ export function DelayedPlaceholder(props: {
 /**
  * Fixed width pill placeholder, used for inline elements in text
  */
-export function InlinePlaceholder(props: JSX.HTMLAttributes<HTMLSpanElement>) {
+export function InlinePlaceholder(props: ComponentProps<'span'>) {
 	const [local, rest] = splitProps(props, ['class']);
 	const t = useT();
 
@@ -93,7 +93,7 @@ export function InlinePlaceholder(props: JSX.HTMLAttributes<HTMLSpanElement>) {
 /**
  * Fixed width pill placeholder, used for inline elements in text
  */
-export function InlineMissingPlaceholder(props: JSX.HTMLAttributes<HTMLSpanElement>) {
+export function InlineMissingPlaceholder(props: ComponentProps<'span'>) {
 	const [local, rest] = splitProps(props, ['class']);
 	const t = useT();
 
@@ -134,7 +134,7 @@ export function InlineDelayedPlaceholder(props: {
 }
 
 /** Suspense wrapper for inline placeholder elements */
-export function InlineSuspense(props: JSX.HTMLAttributes<HTMLSpanElement>) {
+export function InlineSuspense(props: ComponentProps<'span'>) {
 	const [local, rest] = splitProps(props, ['children']);
 	return (
 		<>

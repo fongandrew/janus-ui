@@ -1,4 +1,4 @@
-import { type JSX } from 'solid-js';
+import { type ComponentProps } from 'solid-js';
 
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 import {
@@ -9,7 +9,7 @@ import {
 /**
  * Simple div wrapper to reuire that certain form controls validate together
  */
-export interface FormValidationGroupProps extends JSX.HTMLAttributes<HTMLDivElement> {
+export interface FormValidationGroupProps extends ComponentProps<'div'> {
 	/** Validate touched elements only (defaults to true) */
 	touchedOnly?: boolean;
 }

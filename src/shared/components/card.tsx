@@ -1,25 +1,23 @@
 import cx from 'classix';
-import { type JSX, splitProps } from 'solid-js';
+import { type ComponentProps, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 
 import { ErrorFallback } from '~/shared/components/error-fallback';
 import { SpinnerSuspense } from '~/shared/components/spinner';
 
-export type CardProps = JSX.IntrinsicAttributes &
-	Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onError'> & {
-		as?: 'article' | 'div' | 'section' | undefined;
-		/** Error boundary render callback */
-		onError?: ((err: Error & { code: string }, eventId: string) => void) | undefined;
-		/** Error boundary reload callback */
-		onReload?: (() => void) | undefined;
-	};
+export type CardProps = Omit<ComponentProps<'div'>, 'onError'> & {
+	as?: 'article' | 'div' | 'section' | undefined;
+	/** Error boundary render callback */
+	onError?: ((err: Error & { code: string }, eventId: string) => void) | undefined;
+	/** Error boundary reload callback */
+	onReload?: (() => void) | undefined;
+};
 
-export type CardHeaderProps = JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTMLElement>;
-export type CardTitleProps = JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTMLHeadingElement>;
-export type CardDescriptionProps = JSX.IntrinsicAttributes &
-	JSX.HTMLAttributes<HTMLParagraphElement>;
-export type CardContentProps = JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTMLDivElement>;
-export type CardFooterProps = JSX.IntrinsicAttributes & JSX.HTMLAttributes<HTMLDivElement>;
+export type CardHeaderProps = ComponentProps<'hgroup'>;
+export type CardTitleProps = ComponentProps<'h3'>;
+export type CardDescriptionProps = ComponentProps<'p'>;
+export type CardContentProps = ComponentProps<'div'>;
+export type CardFooterProps = ComponentProps<'div'>;
 
 /**
  * Card container component with error boundary and suspense

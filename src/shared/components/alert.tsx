@@ -1,12 +1,12 @@
 import cx from 'classix';
 import { AlertCircle, AlertTriangle, CheckCircle, Info, type LucideProps } from 'lucide-solid';
-import { children, type Component, type JSX, splitProps } from 'solid-js';
+import { children, type Component, type ComponentProps, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 
 import { emptyAttr } from '~/shared/utility/empty-attr';
 
 /** Base alert props shared by all alert variants */
-export type AlertBaseProps = Omit<JSX.HTMLAttributes<HTMLDivElement>, 'id'> & {
+export type AlertBaseProps = Omit<ComponentProps<'div'>, 'id'> & {
 	/** ID for container element */
 	containerId?: string | undefined;
 	/** ID for the actual thing with role="alert" */

@@ -1,10 +1,10 @@
 import cx from 'classix';
 import {
+	type ComponentProps,
 	createMemo,
 	createRenderEffect,
 	createSignal,
 	createUniqueId,
-	type JSX,
 	Show,
 } from 'solid-js';
 import { isServer } from 'solid-js/web';
@@ -18,7 +18,7 @@ import {
 } from '~/shared/utility/callback-attrs/display';
 import { useLogger } from '~/shared/utility/solid/use-logger';
 
-export interface TabPanelProps extends JSX.HTMLAttributes<HTMLDivElement> {
+export interface TabPanelProps extends ComponentProps<'div'> {
 	/** ID is required since this is how we connect tab button */
 	id: string;
 	/**

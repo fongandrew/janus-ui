@@ -1,7 +1,7 @@
 import cx from 'classix';
-import { type JSX } from 'solid-js';
+import { type ComponentProps, type JSX } from 'solid-js';
 
-export interface DescriptionProps extends JSX.HTMLAttributes<HTMLDivElement> {
+export interface DescriptionProps extends ComponentProps<'div'> {
 	/** ID required for linking to input element */
 	id: string;
 }
@@ -9,7 +9,7 @@ export interface DescriptionProps extends JSX.HTMLAttributes<HTMLDivElement> {
 /**
  * Description text, generally following a label
  */
-export function BaseDescription(props: JSX.HTMLAttributes<HTMLDivElement>) {
+export function BaseDescription(props: ComponentProps<'div'>) {
 	return <div {...props} class={cx('c-description', props.class)} />;
 }
 

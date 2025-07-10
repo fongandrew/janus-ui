@@ -1,5 +1,5 @@
 import { Ban } from 'lucide-solid';
-import { createUniqueId, type JSX, splitProps } from 'solid-js';
+import { type ComponentProps, createUniqueId, splitProps } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import { imgError, imgMountError } from '~/shared/components/callbacks/img';
@@ -10,9 +10,7 @@ import { useT } from '~/shared/utility/solid/locale-context';
 /**
  * Image with placeholder
  */
-export function Img(
-	props: JSX.ImgHTMLAttributes<HTMLImageElement> & { aspectRatio?: number | undefined },
-) {
+export function Img(props: ComponentProps<'img'> & { aspectRatio?: number | undefined }) {
 	const [local, rest] = splitProps(props, ['aspectRatio']);
 	const errorId = createUniqueId();
 	const t = useT();

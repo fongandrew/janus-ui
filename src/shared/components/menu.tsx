@@ -1,4 +1,4 @@
-import { type JSX, splitProps } from 'solid-js';
+import { type ComponentProps, type JSX, splitProps } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 
 import { dropdownCloseOnBlur } from '~/shared/components/callbacks/dropdown';
@@ -99,7 +99,7 @@ export function Menu(props: MenuProps) {
 	);
 }
 
-export interface MenuItemProps extends JSX.HTMLAttributes<HTMLButtonElement> {
+export interface MenuItemProps extends ComponentProps<'button'> {
 	/** URL for the menu item */
 	role?: 'menuitem' | 'menuitemcheckbox' | 'menuitemradio';
 	/**
@@ -115,7 +115,7 @@ export function MenuItem(props: MenuItemProps) {
 }
 
 /** Menu item variant that's a link */
-export function MenuItemLink(props: JSX.HTMLAttributes<HTMLAnchorElement> & { href: string }) {
+export function MenuItemLink(props: ComponentProps<'a'> & { href: string }) {
 	return <OptionListAnchor role="menuitem" {...props} />;
 }
 

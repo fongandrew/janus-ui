@@ -1,10 +1,10 @@
 import cx from 'classix';
-import { type JSX } from 'solid-js';
+import { type ComponentProps } from 'solid-js';
 
 import { tabClick, tabKeyDown } from '~/shared/components/callbacks/tabs';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
-export interface TabBarProps extends JSX.HTMLAttributes<HTMLDivElement> {
+export interface TabBarProps extends ComponentProps<'div'> {
 	/** Automatically activate tab on focus, defaults to true */
 	auto?: boolean | undefined;
 	/** Callback on tab change */

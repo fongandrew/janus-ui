@@ -1,9 +1,9 @@
 import cx from 'classix';
-import { type JSX } from 'solid-js';
+import { type ComponentProps } from 'solid-js';
 
 import { FORM_CONTROL_ERROR_ATTR } from '~/shared/utility/callback-attrs/validate';
 
-export interface ErrorMessageProps extends JSX.HTMLAttributes<HTMLDivElement> {
+export interface ErrorMessageProps extends ComponentProps<'div'> {
 	/** ID required for linking to input */
 	id: string;
 }

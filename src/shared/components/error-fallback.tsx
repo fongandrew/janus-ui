@@ -1,9 +1,9 @@
 import cx from 'classix';
 import { AlertTriangle } from 'lucide-solid';
 import {
+	type ComponentProps,
 	createUniqueId,
 	ErrorBoundary,
-	type JSX,
 	onMount,
 	sharedConfig,
 	splitProps,
@@ -20,7 +20,7 @@ import { getErrorCode } from '~/shared/utility/error-code';
 import { useLogger } from '~/shared/utility/solid/use-logger';
 import { useWindow } from '~/shared/utility/solid/window-context';
 
-export type ErrorFallbackProps = Omit<JSX.HTMLAttributes<HTMLElement>, 'onError'> & {
+export type ErrorFallbackProps = Omit<ComponentProps<'div'>, 'onError'> & {
 	/** Stretch variant makes error boundary fill container with no padding */
 	stretch?: boolean | undefined;
 	/** Callback on error, includes both error and some unique IDs for logging */

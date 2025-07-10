@@ -1,4 +1,4 @@
-import { type JSX, splitProps } from 'solid-js';
+import { type ComponentProps, splitProps } from 'solid-js';
 
 import { dropdownCloseOnBlur } from '~/shared/components/callbacks/dropdown';
 import { optionListScrollToHighlighted } from '~/shared/components/callbacks/option-list';
@@ -7,7 +7,7 @@ import { DropdownPopover } from '~/shared/components/dropdown';
 import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
 
 // Disallow ID, should be set via context
-export interface SelectPopoverProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'id'> {}
+export interface SelectPopoverProps extends Omit<ComponentProps<'div'>, 'id'> {}
 
 export function SelectPopover(props: SelectPopoverProps) {
 	const [local, rest] = splitProps(props, ['children']);

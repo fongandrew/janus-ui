@@ -1,5 +1,5 @@
 import cx from 'classix';
-import { children, type JSX, mergeProps, splitProps } from 'solid-js';
+import { children, type ComponentProps, mergeProps, splitProps } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import {
@@ -95,7 +95,7 @@ export function IconButton(props: ButtonProps & { label: string }) {
 // contains ways to make links that look like buttons, but are still links.
 
 /** Unstyled base for ButtonLink and GhostButtonLink */
-export function BaseButtonLink(props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) {
+export function BaseButtonLink(props: ComponentProps<'a'>) {
 	const resolved = children(() => props.children);
 	return <a {...props}>{spanify(resolved.toArray())}</a>;
 }
@@ -107,7 +107,7 @@ export function BaseButtonLink(props: JSX.AnchorHTMLAttributes<HTMLAnchorElement
  * 	<ButtonLink href="/some/path">Button Link</ButtonLink>
  * ```
  */
-export function ButtonLink(props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) {
+export function ButtonLink(props: ComponentProps<'a'>) {
 	return <BaseButtonLink {...props} class={cx('c-button', props.class)} />;
 }
 
@@ -118,6 +118,6 @@ export function ButtonLink(props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) {
  * 	<GhostButtonLink href="/some/path">Ghost Button Link</GhostButtonLink>
  * ```
  */
-export function GhostButtonLink(props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) {
+export function GhostButtonLink(props: ComponentProps<'a'>) {
 	return <BaseButtonLink {...props} class={cx('c-button--ghost', props.class)} />;
 }

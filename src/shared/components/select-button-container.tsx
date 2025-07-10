@@ -1,6 +1,13 @@
 import cx from 'classix';
 import { ChevronsUpDown, X } from 'lucide-solid';
-import { createEffect, createSignal, createUniqueId, type JSX, splitProps } from 'solid-js';
+import {
+	type ComponentProps,
+	createEffect,
+	createSignal,
+	createUniqueId,
+	type JSX,
+	splitProps,
+} from 'solid-js';
 
 import { Button } from '~/shared/components/button';
 import {
@@ -24,7 +31,7 @@ import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry
 import { combineRefs } from '~/shared/utility/solid/combine-refs';
 import { useT } from '~/shared/utility/solid/locale-context';
 
-export interface SelectButtonContainerProps extends JSX.HTMLAttributes<HTMLDivElement> {
+export interface SelectButtonContainerProps extends ComponentProps<'div'> {
 	/** Values (used only to trigger dynamic update) */
 	values?: Set<string> | undefined;
 	/** Show clear button? */

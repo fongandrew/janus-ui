@@ -1,6 +1,6 @@
 import cx from 'classix';
 import { Menu, X } from 'lucide-solid';
-import { type JSX, useContext } from 'solid-js';
+import { type ComponentProps, useContext } from 'solid-js';
 
 import {
 	type ButtonProps,
@@ -57,9 +57,7 @@ import { useT } from '~/shared/utility/solid/locale-context';
  * 	</TopNavLayout>
  * ```
  */
-export function TopNavLayout(
-	props: JSX.HTMLAttributes<HTMLDivElement> & { navId?: string | undefined },
-) {
+export function TopNavLayout(props: ComponentProps<'div'> & { navId?: string | undefined }) {
 	let ref: HTMLDivElement | undefined;
 	const navId = createAuto(props, 'navId');
 
@@ -84,7 +82,7 @@ export function TopNavLayout(
 /**
  * A top navigation component that adapts between horizontal nav and drawer
  */
-export function TopNav(props: JSX.HTMLAttributes<HTMLElement>) {
+export function TopNav(props: ComponentProps<'header'>) {
 	const navId = useContext(TopNavContext);
 	return (
 		<header {...props} class={cx('c-top-nav', props.class)}>
@@ -145,9 +143,7 @@ export function TopNavCloseButton(props: ButtonProps) {
 /**
  * A navigation list component for the top nav
  */
-export function TopNavList(
-	props: Omit<JSX.HTMLAttributes<HTMLElement>, /* Use ID from context */ 'id'>,
-) {
+export function TopNavList(props: Omit<ComponentProps<'nav'>, /* Use ID from context */ 'id'>) {
 	const navId = useContext(TopNavContext);
 
 	return (
@@ -170,7 +166,7 @@ export function TopNavList(
 /**
  * Nav item for top navigation
  */
-export function TopNavListItem(props: JSX.HTMLAttributes<HTMLLIElement>) {
+export function TopNavListItem(props: ComponentProps<'li'>) {
 	return (
 		<li {...props} class={cx('c-top-nav__list-item', props.class)}>
 			{props.children}
@@ -181,7 +177,7 @@ export function TopNavListItem(props: JSX.HTMLAttributes<HTMLLIElement>) {
 /**
  * Nav item that is a button
  */
-export function TopNavListButton(props: JSX.ButtonHTMLAttributes<HTMLButtonElement>) {
+export function TopNavListButton(props: ComponentProps<'button'>) {
 	return (
 		<TopNavListItem>
 			<GhostButton {...props} class={cx('c-top-nav__list-button', props.class)} />
@@ -192,7 +188,7 @@ export function TopNavListButton(props: JSX.ButtonHTMLAttributes<HTMLButtonEleme
 /**
  * Nav item that is a link
  */
-export function TopNavListLink(props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) {
+export function TopNavListLink(props: ComponentProps<'a'>) {
 	return (
 		<TopNavListItem>
 			<GhostButtonLink {...props} class={cx('c-top-nav__list-link', props.class)} />

@@ -1,6 +1,6 @@
 import { type Placement } from '@floating-ui/dom';
 import cx from 'classix';
-import { createContext, type JSX, splitProps, useContext } from 'solid-js';
+import { type ComponentProps, createContext, type JSX, splitProps, useContext } from 'solid-js';
 
 import { GhostButton } from '~/shared/components/button';
 import {
@@ -19,7 +19,7 @@ import { createAuto } from '~/shared/utility/solid/auto-prop';
 
 // Omit the `id` attribute from the HTMLDivElement interface because it should be assigned
 // via context
-export interface DropdownPopoverProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'id'> {
+export interface DropdownPopoverProps extends Omit<ComponentProps<'div'>, 'id'> {
 	/** Fixed width dropdown (vs expanding to fill available space up to some CSS max) */
 	fixedWidth?: boolean | undefined;
 	/** Placement of dropdown */
@@ -72,7 +72,7 @@ export function DropdownPopover(props: DropdownPopoverProps) {
 }
 
 /** Component with actual Dropdown styling */
-export function DropdownContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
+export function DropdownContent(props: ComponentProps<'div'>) {
 	const [local, rest] = splitProps(props, ['children']);
 	return (
 		<div {...rest} class={cx('c-dropdown__content', rest.class)}>

@@ -1,6 +1,7 @@
 import cx from 'classix';
 import { X } from 'lucide-solid';
 import {
+	type ComponentProps,
 	createEffect,
 	createRenderEffect,
 	createSignal,
@@ -276,7 +277,7 @@ export function ModalOpenTrigger(props: { children: JSX.Element; targetId: strin
  * 	</Modal>
  * ```
  */
-export function ModalTitle(props: JSX.HTMLAttributes<HTMLDivElement>) {
+export function ModalTitle(props: ComponentProps<'div'>) {
 	const [local, rest] = splitProps(props, ['children']);
 	return (
 		<div {...rest} class={cx('c-modal__header', rest.class)}>
@@ -300,7 +301,7 @@ export function ModalTitle(props: JSX.HTMLAttributes<HTMLDivElement>) {
  * 	</Modal>
  * ```
  */
-export function ModalContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
+export function ModalContent(props: ComponentProps<'div'>) {
 	return (
 		<div
 			{...props}
@@ -326,7 +327,7 @@ export function ModalContent(props: JSX.HTMLAttributes<HTMLDivElement>) {
  * 	</Modal>
  * ```
  */
-export function ModalFooter(props: JSX.HTMLAttributes<HTMLDivElement>) {
+export function ModalFooter(props: ComponentProps<'div'>) {
 	return (
 		<div
 			{...props}

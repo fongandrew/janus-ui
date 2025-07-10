@@ -1,6 +1,6 @@
 import cx from 'classix';
 import { Check } from 'lucide-solid';
-import { children, type JSX, splitProps } from 'solid-js';
+import { children, type ComponentProps, type JSX, splitProps } from 'solid-js';
 import { createUniqueId } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
@@ -9,7 +9,7 @@ import { mountAttr } from '~/shared/utility/callback-attrs/no-js';
 import { createAutoId } from '~/shared/utility/solid/auto-prop';
 import { spanify } from '~/shared/utility/solid/spanify';
 
-export interface OptionListProps extends JSX.HTMLAttributes<HTMLDivElement> {
+export interface OptionListProps extends ComponentProps<'div'> {
 	/** Make role required */
 	role: 'listbox' | 'menu';
 	/** Make children required */
@@ -27,12 +27,10 @@ export function OptionList(props: OptionListProps) {
 export type OptionListItemProps<TElement> = {
 	/** Value of the option */
 	value: string;
-} & (TElement extends HTMLInputElement
-	? JSX.InputHTMLAttributes<TElement>
-	: JSX.HTMLAttributes<TElement>);
+} & (TElement extends HTMLInputElement ? ComponentProps<'input'> : ComponentProps<'div'>);
 
 /** Option list selectable input item, meant for use in Listbox-like components */
-export function OptionListSelectable(props: JSX.InputHTMLAttributes<HTMLInputElement>) {
+export function OptionListSelectable(props: ComponentProps<'input'>) {
 	const [local, rest] = splitProps(props, ['children', 'class', 'style', 'id']);
 	const id = createAutoId(local);
 	return (
@@ -56,7 +54,7 @@ export function OptionListSelectable(props: JSX.InputHTMLAttributes<HTMLInputEle
 }
 
 /** Button list item, meant for use in Menu-like components */
-export function OptionListButton(props: JSX.ButtonHTMLAttributes<HTMLButtonElement>) {
+export function OptionListButton(props: ComponentProps<'button'>) {
 	const id = createAutoId(props);
 	const resolved = children(() => props.children);
 	return (
@@ -67,7 +65,7 @@ export function OptionListButton(props: JSX.ButtonHTMLAttributes<HTMLButtonEleme
 }
 
 /** Anchor link list item, meant for use in Menu-like components */
-export function OptionListAnchor(props: JSX.AnchorHTMLAttributes<HTMLAnchorElement>) {
+export function OptionListAnchor(props: ComponentProps<'a'>) {
 	const id = createAutoId(props);
 	const resolved = children(() => props.children);
 	return (
@@ -77,7 +75,7 @@ export function OptionListAnchor(props: JSX.AnchorHTMLAttributes<HTMLAnchorEleme
 	);
 }
 
-export interface OptionGroupProps extends JSX.HTMLAttributes<HTMLDivElement> {
+export interface OptionGroupProps extends ComponentProps<'div'> {
 	heading?: JSX.Element;
 }
 

@@ -1,4 +1,11 @@
-import { createMemo, createUniqueId, type JSX, onCleanup, splitProps, useContext } from 'solid-js';
+import {
+	type ComponentProps,
+	createMemo,
+	createUniqueId,
+	onCleanup,
+	splitProps,
+	useContext,
+} from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import { DangerAlert } from '~/shared/components/alert';
@@ -15,8 +22,7 @@ import { mountAttr } from '~/shared/utility/callback-attrs/no-js';
 import { FORM_CONTROL_ERROR_ATTR, validateReset } from '~/shared/utility/callback-attrs/validate';
 import { createAuto } from '~/shared/utility/solid/auto-prop';
 
-export interface FormProps<TNames extends string>
-	extends Omit<JSX.FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
+export interface FormProps<TNames extends string> extends Omit<ComponentProps<'form'>, 'onSubmit'> {
 	/** ID for form-wide error element */
 	errorId?: string | undefined;
 	/** Lookup map for field names, mostly used to type form field names */
