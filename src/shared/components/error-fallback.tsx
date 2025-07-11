@@ -20,7 +20,7 @@ import { getErrorCode } from '~/shared/utility/error-code';
 import { useLogger } from '~/shared/utility/solid/use-logger';
 import { useWindow } from '~/shared/utility/solid/window-context';
 
-export type ErrorFallbackProps = Omit<ComponentProps<'div'>, 'onError'> & {
+export type ErrorFallbackProps = Omit<ComponentProps<'section'>, 'onError'> & {
 	/** Stretch variant makes error boundary fill container with no padding */
 	stretch?: boolean | undefined;
 	/** Callback on error, includes both error and some unique IDs for logging */
