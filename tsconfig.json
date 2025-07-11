@@ -20,7 +20,6 @@
 		"isolatedModules": true,
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
-		"plugins": [{ "name": "typescript-plugin-css-modules" }],
 
 		/* Linting */
 		"strict": true,
