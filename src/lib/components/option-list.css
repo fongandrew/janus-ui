@@ -1,0 +1,107 @@
+@import '~/lib/styles/common.css';
+
+@layer components {
+	.c-option-list {
+		@mixin v-input-sm;
+
+		overflow: hidden auto;
+	}
+
+	.c-option-list__heading,
+	.c-option-list__item {
+		@mixin v-spacing-sm;
+		@mixin o-input-box;
+
+		display: flex;
+		gap: var(--v-space-xs);
+		align-items: flex-start;
+		justify-content: flex-start;
+		padding-inline: calc(var(--v-spacing) + var(--v-inner-radius));
+		text-align: left;
+		width: 100%;
+	}
+
+	.c-option-list__item {
+		@mixin v-text-sm;
+
+		/*
+			See v-colors-highlight usage below for highlighting
+		*/
+		@mixin t-no-focus-ring;
+
+		border-width: var(--v-border-width);
+		cursor: pointer;
+
+		/*
+			Undo default color transitions for buttons. It's a bit much when used
+			in a highlight item context.
+		*/
+		transition: none;
+
+		+ .c-option-list__item {
+			margin-top: calc(-1 * var(--v-border-width));
+		}
+	}
+
+	.c-option-list__check-box {
+		display: flex;
+		height: 1lh;
+		width: 1em;
+		align-items: center;
+		justify-content: center;
+
+		svg {
+			display: none;
+		}
+
+		:checked + & svg,
+		[aria-selected='true'] & svg {
+			display: block;
+		}
+	}
+
+	a.c-option-list__item {
+		@mixin v-font-weight var(--v-font-weight-normal);
+
+		color: var(--v-popover-fg);
+		text-decoration: none;
+	}
+
+	body:not([data-v-kb-nav='true']) .c-option-list__item:hover,
+	body:not([data-v-kb-nav='true']) a.c-option-list__item:hover,
+	body[data-v-kb-nav='true'] .c-option-list__item:focus-visible,
+	body[data-v-kb-nav='true'] :focus-visible .c-option-list__item[data-c-option-list__active],
+	body[data-v-kb-nav='true']
+		:focus-visible
+		.c-option-list__item:has([data-c-option-list__active]),
+	body[data-v-kb-nav='true'] :popover-open .c-option-list__item[data-c-option-list__active],
+	body[data-v-kb-nav='true']
+		:popover-open
+		.c-option-list__item:has([data-c-option-list__active]) {
+		@mixin v-colors-highlight;
+	}
+
+	.c-option-list__heading {
+		@mixin v-text-sm;
+		@mixin v-text-muted;
+		@mixin v-font-weight var(--v-font-weight-subtitle);
+
+		padding-bottom: 0;
+	}
+
+	.c-option-list__group + .c-option-list__group,
+	.c-option-list__group + .c-option-list__heading {
+		@mixin t-border-top;
+
+		margin-top: var(--v-space-xs);
+	}
+
+	.c-option-list__group + .c-option-list__group {
+		padding-top: var(--v-space-xs);
+	}
+
+	/* Fix "divider" padding clobbering heading padding */
+	.c-option-list__group + .c-option-list__heading {
+		padding-top: calc(var(--v-spacing) - (1lh - 1em) / 2 + var(--v-space-xs));
+	}
+}

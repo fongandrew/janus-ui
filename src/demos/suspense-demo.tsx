@@ -1,23 +1,17 @@
 import { createResource, createSignal } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
-import { Button, LinkButton } from '~/shared/components/button';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
+import { Button, LinkButton } from '~/lib/components/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
 import {
 	Modal,
 	ModalCloseButton,
 	ModalContent,
 	ModalFooter,
 	ModalTitle,
-} from '~/shared/components/modal';
-import { InlineSuspense } from '~/shared/components/placeholder';
-import { combineEventHandlers } from '~/shared/utility/solid/combine-event-handlers';
+} from '~/lib/components/modal';
+import { InlineSuspense } from '~/lib/components/placeholder';
+import { combineEventHandlers } from '~/lib/utility/solid/combine-event-handlers';
 
 export function SuspenseDemo() {
 	const [count, incr] = createIncrResource();

@@ -2,27 +2,21 @@ import { createSignal, createUniqueId } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import { inputUpdateText } from '~/demos/callbacks/input';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
-import { ColorPicker } from '~/shared/components/color-picker';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
+import { ColorPicker } from '~/lib/components/color-picker';
 import {
 	DatePicker,
 	DateTimePicker,
 	MonthPicker,
 	TimePicker,
 	WeekPicker,
-} from '~/shared/components/date-time-picker';
-import { Form } from '~/shared/components/form';
-import { Input } from '~/shared/components/input';
-import { LabelledInput, LabelledInputGroup } from '~/shared/components/labelled-control';
-import { Password } from '~/shared/components/password';
-import { Slider } from '~/shared/components/slider';
-import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+} from '~/lib/components/date-time-picker';
+import { Form } from '~/lib/components/form';
+import { Input } from '~/lib/components/input';
+import { LabelledInput, LabelledInputGroup } from '~/lib/components/labelled-control';
+import { Password } from '~/lib/components/password';
+import { Slider } from '~/lib/components/slider';
+import { callbackAttrs } from '~/lib/utility/callback-attrs/callback-registry';
 
 function InputStates() {
 	return (

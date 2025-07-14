@@ -6,8 +6,9 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "vite",
     "build": "vite build",
+    "clean": "rm -rf dist",
+    "dev": "vite",
     "eslint": "eslint --report-unused-disable-directives --max-warnings 0",
     "eslint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
@@ -18,7 +19,8 @@
     "test:unit": "vitest run",
     "test:e2e": "playwright test --project=chromium-*",
     "test:e2e:all": "playwright test",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "npm run typecheck:lib && tsc --noEmit -p tsconfig.json",
+    "typecheck:lib": "tsc -p src/lib/tsconfig.json --emitDeclarationOnly"
   },
   "devDependencies": {
     "@eslint/js": "^9.16.0",

@@ -1,0 +1,17 @@
+@import '~/lib/styles/common.css';
+
+@layer components {
+	.c-error-message {
+		@mixin t-overflow-x;
+		@mixin v-text-danger;
+
+		&::before {
+			content: '✗';
+			margin-right: var(--v-space-xs);
+		}
+
+		&:empty {
+			display: none;
+		}
+	}
+}

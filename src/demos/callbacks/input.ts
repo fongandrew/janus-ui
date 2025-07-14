@@ -1,4 +1,4 @@
-import { createHandler } from '~/shared/utility/callback-attrs/events';
+import { createHandler } from '~/lib/utility/callback-attrs/events';
 
 export const inputUpdateText = createHandler(
 	'change',

@@ -1,10 +1,4 @@
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
 import {
 	FormatCurrency,
 	FormatDate,
@@ -14,7 +8,7 @@ import {
 	FormatPercentage,
 	FormatRelativeTime,
 	FormatTime,
-} from '~/shared/components/t-components';
+} from '~/lib/components/t-components';
 
 export function IntlDemo() {
 	return (

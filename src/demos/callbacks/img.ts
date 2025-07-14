@@ -1,4 +1,4 @@
-import { createHandler } from '~/shared/utility/callback-attrs/events';
+import { createHandler } from '~/lib/utility/callback-attrs/events';
 
 /** Force an image reload on click */
 export const imgReload = createHandler('click', '$p-img__reload', function (event) {

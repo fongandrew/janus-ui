@@ -6,12 +6,12 @@ import {
 	InfoAlert,
 	SuccessAlert,
 	WarningAlert,
-} from '~/shared/components/alert';
-import { Button } from '~/shared/components/button';
-import { toggle } from '~/shared/components/callbacks/toggle';
-import { Card, CardContent, CardHeader, CardTitle } from '~/shared/components/card';
-import { ToggleBox } from '~/shared/components/toggle-box';
-import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+} from '~/lib/components/alert';
+import { Button } from '~/lib/components/button';
+import { toggle } from '~/lib/components/callbacks/toggle';
+import { Card, CardContent, CardHeader, CardTitle } from '~/lib/components/card';
+import { ToggleBox } from '~/lib/components/toggle-box';
+import { callbackAttrs } from '~/lib/utility/callback-attrs/callback-registry';
 
 export function AlertsDemo() {
 	const infoId = createUniqueId();

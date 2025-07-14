@@ -1,12 +1,6 @@
-import { Button } from '~/shared/components/button';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
-import { Tooltip } from '~/shared/components/tooltip';
+import { Button } from '~/lib/components/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
+import { Tooltip } from '~/lib/components/tooltip';
 
 function TooltipsDemo() {
 	return (

@@ -1,4 +1,4 @@
-import { createSelectInputHandler } from '~/shared/components/callbacks/select';
+import { createSelectInputHandler } from '~/lib/components/callbacks/select';
 
 // Non-framework typeahead that simulates XHR
 export const selectQuery = createSelectInputHandler(

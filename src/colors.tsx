@@ -1,4 +1,4 @@
-import '~/shared/styles/index.css';
+import '~/lib/styles/index.css';
 
 import { alphaBlend, APCAcontrast, sRGBtoY } from 'apca-w3';
 import cx from 'classix';
@@ -14,11 +14,11 @@ import {
 import { Dynamic } from 'solid-js/web';
 
 import { App } from '~/app';
-import { Card, CardContent, CardHeader, CardTitle } from '~/shared/components/card';
-import { elmDoc, elmWin } from '~/shared/utility/multi-view';
-import { createIncrSignal } from '~/shared/utility/solid/create-incr-signal';
-import { mountRoot } from '~/shared/utility/solid/mount-root';
-import { initUIPrefs } from '~/shared/utility/ui-prefs';
+import { Card, CardContent, CardHeader, CardTitle } from '~/lib/components/card';
+import { elmDoc, elmWin } from '~/lib/utility/multi-view';
+import { createIncrSignal } from '~/lib/utility/solid/create-incr-signal';
+import { mountRoot } from '~/lib/utility/solid/mount-root';
+import { initUIPrefs } from '~/lib/utility/ui-prefs';
 
 initUIPrefs();
 

@@ -3,22 +3,16 @@ import { isServer } from 'solid-js/web';
 
 import { formOutputWrite } from '~/demos/callbacks/form-output';
 import { formAsyncSubmit } from '~/demos/callbacks/form-submit';
-import { Button } from '~/shared/components/button';
-import { type TypedSubmitEvent } from '~/shared/components/callbacks/form';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
-import { Checkbox } from '~/shared/components/checkbox';
-import { BaseDescription } from '~/shared/components/description';
-import { FormContextProvider } from '~/shared/components/form-context';
-import { Input } from '~/shared/components/input';
-import { Label } from '~/shared/components/label';
-import { LabelledInline, LabelledInput } from '~/shared/components/labelled-control';
-import { ListBoxItem } from '~/shared/components/list-box';
+import { Button } from '~/lib/components/button';
+import { type TypedSubmitEvent } from '~/lib/components/callbacks/form';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
+import { Checkbox } from '~/lib/components/checkbox';
+import { BaseDescription } from '~/lib/components/description';
+import { FormContextProvider } from '~/lib/components/form-context';
+import { Input } from '~/lib/components/input';
+import { Label } from '~/lib/components/label';
+import { LabelledInline, LabelledInput } from '~/lib/components/labelled-control';
+import { ListBoxItem } from '~/lib/components/list-box';
 import {
 	Modal,
 	ModalCloseButton,
@@ -26,15 +20,15 @@ import {
 	ModalFooter,
 	ModalOpenTrigger,
 	ModalTitle,
-} from '~/shared/components/modal';
+} from '~/lib/components/modal';
 import {
 	ModalCancelButton,
 	ModalFormContent,
 	ModalSubmitButton,
-} from '~/shared/components/modal-form';
-import { Select } from '~/shared/components/select';
-import { Textarea } from '~/shared/components/textarea';
-import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+} from '~/lib/components/modal-form';
+import { Select } from '~/lib/components/select';
+import { Textarea } from '~/lib/components/textarea';
+import { callbackAttrs } from '~/lib/utility/callback-attrs/callback-registry';
 
 function ControlledModal() {
 	const [isOpen, setIsOpen] = createSignal(false);

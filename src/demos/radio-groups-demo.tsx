@@ -2,18 +2,12 @@ import { createSignal, createUniqueId } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import { formChangeOutputWrite } from '~/demos/callbacks/form-output';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
-import { Label } from '~/shared/components/label';
-import { LabelledInput } from '~/shared/components/labelled-control';
-import { Radio } from '~/shared/components/radio';
-import { RadioGroup } from '~/shared/components/radio-group';
-import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
+import { Label } from '~/lib/components/label';
+import { LabelledInput } from '~/lib/components/labelled-control';
+import { Radio } from '~/lib/components/radio';
+import { RadioGroup } from '~/lib/components/radio-group';
+import { callbackAttrs } from '~/lib/utility/callback-attrs/callback-registry';
 
 function RadioGroupsDemo() {
 	const [value, setValue] = createSignal('checked');

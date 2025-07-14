@@ -1,12 +1,6 @@
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
-import { LabelledInput } from '~/shared/components/labelled-control';
-import { Textarea } from '~/shared/components/textarea';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
+import { LabelledInput } from '~/lib/components/labelled-control';
+import { Textarea } from '~/lib/components/textarea';
 
 function TextareasDemo() {
 	return (

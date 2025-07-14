@@ -1,10 +1,4 @@
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
 import {
 	ChatPlaceholder,
 	DelayedPlaceholder,
@@ -13,7 +7,7 @@ import {
 	InlineMissingPlaceholder,
 	MissingPlaceholder,
 	ParagraphPlaceholder,
-} from '~/shared/components/placeholder';
+} from '~/lib/components/placeholder';
 
 export function PlaceholdersDemo() {
 	return (

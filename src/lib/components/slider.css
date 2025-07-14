@@ -1,0 +1,100 @@
+@import '~/lib/styles/common.css';
+
+@define-mixin c-slider__track {
+	appearance: none;
+	height: 0.25em;
+	width: 100%;
+	border-radius: 1lh;
+	background: color-mix(in hsl, var(--v-secondary-bg), var(--v-muted));
+}
+
+@define-mixin c-slider__thumb {
+	appearance: none;
+	height: 1em;
+	width: 1em;
+	border: 0;
+	border-radius: 1lh;
+	background: var(--v-primary-bg);
+	margin-top: -0.375em;
+	cursor: pointer;
+	box-shadow: var(--v-shadow-md);
+}
+
+@layer components {
+	.c-slider {
+		display: flex;
+		gap: var(--v-inline-gap);
+	}
+
+	.c-slider__range {
+		appearance: none;
+		flex-grow: 1;
+
+		&::-webkit-slider-runnable-track {
+			@mixin c-slider__track;
+		}
+
+		&::-webkit-slider-thumb {
+			@mixin c-slider__thumb;
+		}
+
+		/*
+			-moz nested selectors must be sequenced after -webkit because as of Safari 18.3.1,
+			not only is the nested -moz rule discarded, but any subsequent property-value pair
+			(i.e. everything preceding the next `;` is discarded as well).
+		*/
+
+		&::-moz-range-track {
+			@mixin c-slider__track;
+		}
+
+		&::-moz-range-thumb {
+			@mixin c-slider__thumb;
+		}
+	}
+
+	.c-slider__range:disabled {
+		&::-webkit-slider-thumb {
+			cursor: unset;
+			background: var(--v-muted);
+		}
+
+		&::-moz-range-thumb {
+			cursor: unset;
+			background: var(--v-muted);
+		}
+	}
+
+	.c-slider__number {
+		@mixin t-no-focus-ring;
+
+		border: 0;
+		background-color: transparent;
+		text-align: right;
+
+		/* Hide arrows since slider is there */
+
+		/* Firefox */
+		appearance: textfield;
+	}
+
+	/* Chrome, Safari, Edge, Opera */
+	.c-slider__number::-webkit-outer-spin-button,
+	.c-slider__number::-webkit-inner-spin-button {
+		appearance: none;
+		margin: 0;
+	}
+
+	.c-slider__input {
+		@mixin t-input-wrapper-style;
+
+		display: flex;
+		gap: var(--v-inline-gap);
+		flex-shrink: 1;
+		text-align: right;
+	}
+
+	.c-slider__unit {
+		@mixin v-text-muted;
+	}
+}

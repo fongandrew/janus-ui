@@ -1,15 +1,9 @@
 import sky34 from '@/sky-3x4.jpg';
 import sky43 from '@/sky-4x3.jpg';
 import { imgReload } from '~/demos/callbacks/img';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
-import { Img } from '~/shared/components/img';
-import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
+import { Img } from '~/lib/components/img';
+import { callbackAttrs } from '~/lib/utility/callback-attrs/callback-registry';
 
 export function ImgDemo() {
 	return (

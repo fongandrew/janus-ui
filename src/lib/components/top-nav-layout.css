@@ -1,0 +1,190 @@
+@import '~/lib/styles/common.css';
+
+@layer variables {
+	:root {
+		--c-top-nav__drawer-width: 16rem;
+	}
+}
+
+@layer composite {
+	.c-top-nav-layout {
+		min-height: 100%;
+	}
+
+	/* Top Navigation Bar */
+	.c-top-nav {
+		@mixin v-colors-card;
+		@mixin o-input-container-box;
+		@mixin t-border-bottom;
+		@mixin t-transition transform;
+
+		display: flex;
+		align-items: center;
+		box-shadow: var(--v-shadow-md);
+		overflow: hidden;
+		position: sticky;
+		top: 0;
+		transform: translateY(0%);
+
+		/* Since this basically contains the backdrop itself */
+		z-index: var(--v-z-backdrop);
+
+		/* Top nav hides on scroll */
+		&[data-c-top-nav__scroll-hide] {
+			/* A little more than 100% to hide shadow */
+			transform: translateY(-110%);
+		}
+
+		&:hover,
+		&:focus-within,
+		&:has(.c-top-nav__list[data-c-sidebar__state='open']) {
+			/* Transform messes up position: fixed on drawer */
+			transition: none;
+			transform: unset;
+		}
+
+		> h1,
+		> h2 {
+			padding-inline: calc(
+				var(--v-border-width) + 0.5 * var(--v-input-height) - 0.5 * var(--v-font-size-md)
+			);
+		}
+	}
+
+	.c-top-nav__list-open {
+		margin-left: auto;
+	}
+
+	.c-top-nav__list-close {
+		display: none;
+		font-size: var(--v-font-size-lg);
+
+		.c-top-nav-layout:has(.c-top-nav__list[data-c-sidebar__state='open']) & {
+			@mixin v-spacing-lg;
+			@mixin o-input-container-box;
+			@mixin t-transition__delayed;
+
+			display: block;
+			position: fixed;
+			top: 0;
+			right: 0;
+			z-index: var(--v-z-above-backdrop);
+		}
+	}
+
+	.c-top-nav__list {
+		@mixin v-spacing-lg;
+		@mixin v-colors-card;
+		@mixin o-input-container-box;
+		@mixin t-border-left;
+
+		/* Longer duration because sidebar is a large-ish element. */
+		@mixin t-transition-duration var(--v-animation-duration-md);
+
+		/* Nav links hidden by default on mobile */
+		@mixin t-transition-slide-out 100%, 0; /* right */
+
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		overflow: hidden auto;
+		z-index: var(--v-z-above-backdrop);
+		width: 90vw;
+		max-width: var(--c-top-nav__drawer-width);
+
+		ul {
+			list-style: none;
+			display: flex;
+			flex-direction: column;
+			padding-left: 0;
+		}
+
+		&[data-c-sidebar__state='open'] {
+			@mixin t-transition-slide-in;
+		}
+	}
+
+	.c-top-nav__overlay {
+		@mixin t-transition-fade-out;
+
+		/* Sync duration with sidebar */
+		@mixin t-transition-duration var(--v-animation-duration-md);
+
+		position: fixed;
+		inset: 0;
+		z-index: var(--v-z-backdrop);
+		background-color: var(--v-backdrop);
+
+		.c-top-nav-layout:has(.c-top-nav__list[data-c-sidebar__state='open']) & {
+			@mixin t-transition-fade-in;
+		}
+	}
+
+	.c-top-nav__list-item {
+		padding: 0;
+		text-align: left;
+	}
+
+	.c-top-nav__list-link,
+	.c-top-nav__list-button {
+		@mixin o-input-box;
+		@mixin v-font-weight var(--v-font-weight-normal);
+
+		display: flex; /* Override inline-flex */
+		text-align: left;
+		justify-content: flex-start;
+		width: 100%;
+
+		/* Selected */
+		&[aria-current]:not([aria-current='false']) {
+			@mixin v-font-weight var(--v-font-weight-selected);
+		}
+
+		/* Leave space for close button */
+		.c-top-nav__list[data-c-sidebar__state='open'] li:first-child > & {
+			margin-right: calc(var(--v-input-height) + var(--v-inline-gap));
+			max-width: calc(100% - var(--v-input-height) - var(--v-inline-gap));
+		}
+	}
+
+	/* Actual nav bar on desktop */
+	@mixin v-breakpoint-tablet-wide {
+		.c-top-nav-layout:not(:has(.c-top-nav__list[data-c-sidebar__state='open'])) {
+			.c-top-nav__list-open {
+				display: none;
+			}
+
+			.c-top-nav {
+				padding-inline: var(--v-spacing);
+
+				/*
+					Needs to be something so it sits on top of content but less than
+					backdrop to avoid covering it up (or sidebar)
+				*/
+				z-index: var(--v-z-sub-backdrop);
+			}
+
+			.c-top-nav__list {
+				@mixin v-spacing-md;
+				@mixin t-transition-slide-in;
+
+				display: block;
+				border: 0;
+				margin-left: auto;
+				padding: 0;
+				position: relative;
+				max-width: unset;
+				width: unset;
+
+				ul {
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					gap: var(--v-inline-gap);
+					padding: 0;
+				}
+			}
+		}
+	}
+}

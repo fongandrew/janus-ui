@@ -1,18 +1,18 @@
-import '~/shared/styles/index.css';
+import '~/lib/styles/index.css';
 
 import { Settings } from 'lucide-solid';
 import { createMemo, type JSX } from 'solid-js';
 
-import { PrefsModal } from '~/prefs-modal';
-import { ModalOpenTrigger } from '~/shared/components/modal';
+import { ModalOpenTrigger } from '~/lib/components/modal';
 import {
 	TopNav,
 	TopNavLayout,
 	TopNavList,
 	TopNavListButton,
 	TopNavListLink,
-} from '~/shared/components/top-nav-layout';
-import { useWindow } from '~/shared/utility/solid/window-context';
+} from '~/lib/components/top-nav-layout';
+import { useWindow } from '~/lib/utility/solid/window-context';
+import { PrefsModal } from '~/prefs-modal';
 
 export const PREFS_MODAL_ID = 'prefs-modal-dialog-id';
 

@@ -1,6 +1,6 @@
-import { createSubmitHandler } from '~/shared/components/callbacks/form';
-import { createHandler } from '~/shared/utility/callback-attrs/events';
-import { evtDoc } from '~/shared/utility/multi-view';
+import { createSubmitHandler } from '~/lib/components/callbacks/form';
+import { createHandler } from '~/lib/utility/callback-attrs/events';
+import { evtDoc } from '~/lib/utility/multi-view';
 
 /** Write form data to output */
 export const formOutputWrite = createSubmitHandler(

@@ -1,13 +1,7 @@
-import { Button } from '~/shared/components/button';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
-import { LabelledActionCard } from '~/shared/components/labelled-action';
-import { ToggleSwitch } from '~/shared/components/toggle-switch';
+import { Button } from '~/lib/components/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
+import { LabelledActionCard } from '~/lib/components/labelled-action';
+import { ToggleSwitch } from '~/lib/components/toggle-switch';
 
 export function LabelledActionsDemo() {
 	return (

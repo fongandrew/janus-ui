@@ -10,16 +10,16 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from '~/shared/components/card';
-import { BaseDescription } from '~/shared/components/description';
-import { Form } from '~/shared/components/form';
-import { ResetButton, SubmitButton } from '~/shared/components/form-buttons';
-import { FormContextProvider } from '~/shared/components/form-context';
-import { Label } from '~/shared/components/label';
-import { LabelledInput } from '~/shared/components/labelled-control';
-import { ListBox, ListBoxItem } from '~/shared/components/list-box';
-import { Select } from '~/shared/components/select';
-import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+} from '~/lib/components/card';
+import { BaseDescription } from '~/lib/components/description';
+import { Form } from '~/lib/components/form';
+import { ResetButton, SubmitButton } from '~/lib/components/form-buttons';
+import { FormContextProvider } from '~/lib/components/form-context';
+import { Label } from '~/lib/components/label';
+import { LabelledInput } from '~/lib/components/labelled-control';
+import { ListBox, ListBoxItem } from '~/lib/components/list-box';
+import { Select } from '~/lib/components/select';
+import { callbackAttrs } from '~/lib/utility/callback-attrs/callback-registry';
 
 export function SelectionValidationDemo() {
 	const [formData, setFormData] = createSignal<{

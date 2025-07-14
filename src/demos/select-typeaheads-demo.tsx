@@ -3,17 +3,11 @@ import { isServer } from 'solid-js/web';
 
 import { listBoxNoRed, listBoxUpdateText } from '~/demos/callbacks/list-box';
 import { selectQuery } from '~/demos/callbacks/select';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
-import { LabelledInput } from '~/shared/components/labelled-control';
-import { ListBoxContext, ListBoxItem } from '~/shared/components/list-box';
-import { SelectTypeahead } from '~/shared/components/select-typeahead';
-import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
+import { LabelledInput } from '~/lib/components/labelled-control';
+import { ListBoxContext, ListBoxItem } from '~/lib/components/list-box';
+import { SelectTypeahead } from '~/lib/components/select-typeahead';
+import { callbackAttrs } from '~/lib/utility/callback-attrs/callback-registry';
 
 const COLORS = ['Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Indigo', 'Violet'];
 

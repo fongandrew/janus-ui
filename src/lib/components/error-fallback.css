@@ -1,0 +1,58 @@
+@import '~/lib/styles/common.css';
+
+@layer components {
+	.c-error-fallback {
+		@mixin o-box;
+
+		section {
+			@mixin v-colors-card;
+			@mixin o-text-box;
+			@mixin t-border;
+			@mixin t-radius-outer;
+
+			box-shadow: var(--v-shadow-md);
+			container-type: inline-size;
+			display: flex;
+			flex-direction: column;
+			gap: var(--v-spacing);
+		}
+	}
+
+	.c-error-fallback--stretch {
+		padding: 0;
+		flex-grow: 1;
+
+		section {
+			border: 0;
+			box-shadow: none;
+			height: 100%;
+		}
+	}
+
+	@mixin v-container-tablet {
+		.c-error-fallback:not(.c-error-fallback--stretch) {
+			padding: var(--v-space-xl);
+
+			section {
+				max-width: 48rem;
+				margin-left: auto;
+				margin-right: auto;
+			}
+		}
+	}
+
+	.c-error-fallback__heading {
+		@mixin o-group;
+		@mixin v-text-danger;
+	}
+
+	.c-error-fallback__actions {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
+		.c-error-fallback--stretch & {
+			margin-top: auto;
+		}
+	}
+}

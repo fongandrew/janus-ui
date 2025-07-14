@@ -1,4 +1,4 @@
-import { createHandler } from '~/shared/utility/callback-attrs/events';
+import { createHandler } from '~/lib/utility/callback-attrs/events';
 
 /**
  * Highlight with current aria-current on click. This isn't quite correct within the

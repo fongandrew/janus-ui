@@ -85,9 +85,9 @@ Handler attributes are also prefixed with `$`, so something like `$c-tooltip__mo
 ## Directory Structure
 
 * `plugins` - Custom Vite plugins for SSR, PurgeCSS, etc.
-* `src/shared` - Shared UI components + utils. The "shared" here reflects things I want to (eventually) reuse with other projects. When using this as a template, stick project-specific code in some directory other than `shared`.
-* `src/shared/components` - Basic SolidJS UI components
-* `src/shared/components/callbacks` - Interactivity code meant to work in both SPA and SSR modes.
-* `src/shared/styles` - CSS and styling helpers
-* `src/shared/utility` - A bunch of more-or-less standalone helper JavaScript.
+* `src/lib` - Shared UI components + utils. The "shared" here reflects things I want to (eventually) reuse with other projects. When using this as a template, stick project-specific code in some directory other than `shared`.
+* `src/lib/components` - Basic SolidJS UI components
+* `src/lib/components/callbacks` - Interactivity code meant to work in both SPA and SSR modes.
+* `src/lib/styles` - CSS and styling helpers
+* `src/lib/utility` - A bunch of more-or-less standalone helper JavaScript.
 * `src/demos` - Example implementations of all components

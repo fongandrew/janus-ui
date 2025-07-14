@@ -4,3 +4,4 @@ dist
 playwright-report
 test-results
 .vscode/settings.json
+*.tsbuildinfo

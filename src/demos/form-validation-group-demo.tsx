@@ -10,18 +10,18 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from '~/shared/components/card';
-import { BaseDescription } from '~/shared/components/description';
-import { Form } from '~/shared/components/form';
-import { ResetButton, SubmitButton } from '~/shared/components/form-buttons';
-import { FormContextProvider } from '~/shared/components/form-context';
-import { FormValidationGroup } from '~/shared/components/form-validation-group';
-import { Input } from '~/shared/components/input';
-import { Label } from '~/shared/components/label';
-import { LabelledInput } from '~/shared/components/labelled-control';
-import { Password } from '~/shared/components/password';
-import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
-import { type Validator } from '~/shared/utility/callback-attrs/validate';
+} from '~/lib/components/card';
+import { BaseDescription } from '~/lib/components/description';
+import { Form } from '~/lib/components/form';
+import { ResetButton, SubmitButton } from '~/lib/components/form-buttons';
+import { FormContextProvider } from '~/lib/components/form-context';
+import { FormValidationGroup } from '~/lib/components/form-validation-group';
+import { Input } from '~/lib/components/input';
+import { Label } from '~/lib/components/label';
+import { LabelledInput } from '~/lib/components/labelled-control';
+import { Password } from '~/lib/components/password';
+import { callbackAttrs } from '~/lib/utility/callback-attrs/callback-registry';
+import { type Validator } from '~/lib/utility/callback-attrs/validate';
 
 export function FormValidationGroupDemo() {
 	const [formData, setFormData] = createSignal<{

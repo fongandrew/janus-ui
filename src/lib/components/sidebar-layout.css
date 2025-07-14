@@ -1,0 +1,217 @@
+@import '~/lib/styles/common.css';
+
+@layer variables {
+	:root {
+		--v-sidebar-width: 16rem;
+	}
+}
+
+@layer composite {
+	/*
+		We can do this without wrapping all content in the layout on mobile but it makes it
+		harder to understand scroll state and whatnot, so assume with a sidebay layout
+		everything is inside a container.
+	*/
+	.c-sidebar-layout {
+		min-height: 100dvh;
+		width: 100vw;
+
+		/* This is needed to keep absolute positioned children from doing dumb things */
+		position: relative;
+	}
+
+	.c-sidebar-layout__content {
+		container-type: inline-size;
+	}
+
+	/* Default closed on mobile */
+	.c-sidebar {
+		@mixin v-colors-card;
+		@mixin t-border-right;
+		@mixin t-transition-duration var(--v-animation-duration-md);
+		@mixin t-transition-slide-out -100%, 0; /* left */
+
+		container-type: inline-size;
+		display: flex;
+		flex-direction: column;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		top: 0;
+		z-index: var(--v-z-above-backdrop);
+		width: 90vw;
+		max-width: var(--v-sidebar-width);
+		overflow: auto;
+		box-shadow: var(--v-shadow-md);
+	}
+
+	.c-sidebar[data-c-sidebar__state='open'] {
+		@mixin t-transition-slide-in;
+	}
+
+	.c-sidebar__overlay {
+		@mixin t-transition-fade-out;
+
+		/* Sync with sidebar slide duration */
+		@mixin t-transition-duration var(--v-animation-duration-md);
+
+		position: fixed;
+		inset: 0;
+		z-index: var(--v-z-backdrop);
+		background-color: var(--v-backdrop);
+	}
+
+	.c-sidebar-layout:has(.c-sidebar[data-c-sidebar__state='open']) .c-sidebar__overlay {
+		@mixin t-transition-fade-in;
+	}
+
+	.c-sidebar__header,
+	.c-sidebar__footer {
+		@mixin o-text-box;
+
+		flex: 0 0 auto;
+		display: flex;
+		align-items: center;
+		gap: var(--v-inline-gap);
+
+		&:has(button, input) {
+			@mixin o-input-container-box;
+
+			padding-left: var(--v-spacing);
+		}
+	}
+
+	.c-sidebar__header {
+		@mixin t-border-bottom;
+
+		> * {
+			flex: 0 0 auto;
+		}
+
+		> h1,
+		> h2,
+		> h3 {
+			flex: 1 1 auto;
+			overflow-x: hidden;
+			text-overflow: ellipsis;
+		}
+	}
+
+	.c-sidebar__footer {
+		@mixin t-border-top;
+	}
+
+	.c-sidebar__content {
+		flex: 1 1 auto;
+		overflow-y: auto;
+	}
+
+	.c-sidebar__list {
+		@mixin o-input-container-box;
+
+		> ul {
+			list-style: none;
+			padding: 0;
+		}
+	}
+
+	.c-sidebar__list-item {
+		padding: 0;
+		text-align: left;
+	}
+
+	.c-sidebar__list-link,
+	.c-sidebar__list-button {
+		@mixin v-font-weight var(--v-font-weight-normal);
+		@mixin o-input-box;
+
+		text-align: left;
+		justify-content: flex-start;
+		width: 100%;
+
+		/* Selected */
+		&[aria-current]:not([aria-current='false']) {
+			@mixin v-font-weight var(--v-font-weight-selected);
+		}
+	}
+
+	.c-sidebar-list__heading {
+		@mixin v-text-sm;
+		@mixin v-text-muted;
+		@mixin v-font-weight var(--v-font-weight-label);
+		@mixin o-input-box;
+
+		border-color: transparent;
+		border-width: var(--v-border-width);
+
+		+ .c-sidebar__list {
+			padding-top: 0;
+		}
+	}
+
+	@mixin v-breakpoint-tablet-wide {
+		/* Default open on desktop */
+		.c-sidebar,
+		.c-sidebar[data-c-sidebar__state='open'] {
+			@mixin t-transition-slide-in;
+
+			display: flex;
+			width: var(--v-sidebar-width);
+
+			/*
+				Set to backdrop z-index to avoid sitting above overlay in other contexts.
+				Should still be something though to avoid inline content on top.
+			*/
+			z-index: var(--v-z-backdrop);
+		}
+
+		.c-sidebar-layout__content {
+			/*
+				Update duration to made sidebar t-transition-slide.
+				Default is sidebar open. We use step-end so that we don't resize the
+				content area until sidebar is done opening (this avoids a gap of empty
+				space where the sidebar was). Note that we don't do a continuous animation
+				of left to avoid reflow costs.
+			*/
+			@mixin t-transition margin-left, step-end;
+
+			margin-left: var(--v-sidebar-width);
+		}
+
+		.c-sidebar__overlay,
+		.c-sidebar-layout:has(.c-sidebar[data-c-sidebar__state='open']) .c-sidebar__overlay {
+			@mixin t-transition-fade-out;
+		}
+
+		/* Can be explicitly closed on desktop */
+		.c-sidebar[data-c-sidebar__state='closed'] {
+			@mixin t-transition-slide-out -100%, 0; /* left */
+
+			position: fixed;
+		}
+
+		.c-sidebar-layout:has(.c-sidebar[data-c-sidebar__state='closed'])
+			.c-sidebar-layout__content {
+			/*
+				Opposite of step-end above -- when closing the sidebar, immediately
+				expand the content area to avoid gap of empty space.
+			*/
+			transition-timing-function: step-start;
+			margin-left: 0;
+			z-index: var(--v-z-above-backdrop);
+		}
+
+		/*
+			Open button is conditionally visible on desktop. Not really relevant on
+			mobile or for close button since those get automatically shown / hidden
+			based on sidebar visibility.
+		*/
+		.c-sidebar__open-button {
+			display: none;
+		}
+
+		.c-sidebar-layout:has(.c-sidebar[data-c-sidebar__state='closed']) .c-sidebar__open-button {
+			display: inline-flex;
+		}
+	}
+}

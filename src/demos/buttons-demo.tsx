@@ -1,13 +1,7 @@
 import { Ellipsis, Settings } from 'lucide-solid';
 
-import { Button, GhostButton, IconButton, LinkButton } from '~/shared/components/button';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
+import { Button, GhostButton, IconButton, LinkButton } from '~/lib/components/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
 
 export function ButtonsDemo() {
 	return (

@@ -8,7 +8,7 @@ import * as menu from '~/demos/callbacks/menu';
 import * as prefs from '~/demos/callbacks/prefs';
 import * as select from '~/demos/callbacks/select';
 import * as sidebar from '~/demos/callbacks/sidebar';
-import { loadCallbacks } from '~/shared/utility/callback-attrs/load-callbacks';
+import { loadCallbacks } from '~/lib/utility/callback-attrs/load-callbacks';
 
 loadCallbacks(
 	formOutput,

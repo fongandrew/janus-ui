@@ -2,17 +2,11 @@ import { createSignal, createUniqueId, For } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import { listBoxNoRed, listBoxUpdateText } from '~/demos/callbacks/list-box';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
-import { LabelledInput } from '~/shared/components/labelled-control';
-import { ListBoxGroup, ListBoxItem } from '~/shared/components/list-box';
-import { Select } from '~/shared/components/select';
-import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
+import { LabelledInput } from '~/lib/components/labelled-control';
+import { ListBoxGroup, ListBoxItem } from '~/lib/components/list-box';
+import { Select } from '~/lib/components/select';
+import { callbackAttrs } from '~/lib/utility/callback-attrs/callback-registry';
 
 function SelectsDemo() {
 	const [value, setValue] = createSignal<Set<string>>(new Set());

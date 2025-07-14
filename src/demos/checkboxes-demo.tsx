@@ -1,15 +1,9 @@
 import { createUniqueId } from 'solid-js';
 
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
-import { Checkbox } from '~/shared/components/checkbox';
-import { Label } from '~/shared/components/label';
-import { ToggleSwitch } from '~/shared/components/toggle-switch';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
+import { Checkbox } from '~/lib/components/checkbox';
+import { Label } from '~/lib/components/label';
+import { ToggleSwitch } from '~/lib/components/toggle-switch';
 
 export function CheckboxesDemo() {
 	const detachedLabelId = createUniqueId();

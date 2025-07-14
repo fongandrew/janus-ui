@@ -1,19 +1,19 @@
-import { createHandler } from '~/shared/utility/callback-attrs/events';
-import { createMounter } from '~/shared/utility/callback-attrs/mount';
-import { parseIntOrNull } from '~/shared/utility/parse';
-import { getStoredAnimationPref, setAnimationPref } from '~/shared/utility/ui-prefs/animation';
-import { getStoredColorScheme, setColorScheme } from '~/shared/utility/ui-prefs/color-scheme';
+import { createHandler } from '~/lib/utility/callback-attrs/events';
+import { createMounter } from '~/lib/utility/callback-attrs/mount';
+import { parseIntOrNull } from '~/lib/utility/parse';
+import { getStoredAnimationPref, setAnimationPref } from '~/lib/utility/ui-prefs/animation';
+import { getStoredColorScheme, setColorScheme } from '~/lib/utility/ui-prefs/color-scheme';
 import {
 	type FontFamilyOption,
 	getFontFamilies,
 	getStoredFontFamily,
 	setFontFamily,
-} from '~/shared/utility/ui-prefs/font-family';
+} from '~/lib/utility/ui-prefs/font-family';
 import {
 	DEFAULT_FONT_SIZE,
 	getStoredFontSize,
 	setFontSize,
-} from '~/shared/utility/ui-prefs/font-size';
+} from '~/lib/utility/ui-prefs/font-size';
 
 /** Mounter to set initial color scheme value */
 export const prefsMountColorScheme = createMounter('$p-prefs__color-scheme-mount', async (el) => {

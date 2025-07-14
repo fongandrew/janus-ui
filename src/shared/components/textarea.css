@@ -1,9 +1,0 @@
-@import '~/shared/styles/common.css';
-
-@layer components {
-	.c-textarea {
-		min-height: 6em;
-		width: 100%;
-		resize: vertical;
-	}
-}

@@ -1,16 +1,10 @@
 import { isServer } from 'solid-js/web';
 
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
-import { Form } from '~/shared/components/form';
-import { Input } from '~/shared/components/input';
-import { LabelledInput } from '~/shared/components/labelled-control';
-import { Tab, Tabs } from '~/shared/components/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
+import { Form } from '~/lib/components/form';
+import { Input } from '~/lib/components/input';
+import { LabelledInput } from '~/lib/components/labelled-control';
+import { Tab, Tabs } from '~/lib/components/tabs';
 
 function BaseDemo() {
 	return (

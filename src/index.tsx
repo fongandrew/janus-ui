@@ -1,8 +1,8 @@
-import '~/shared/styles/index.css';
+import '~/lib/styles/index.css';
 
 import { Components } from '~/components';
-import { mountRoot } from '~/shared/utility/solid/mount-root';
-import { initUIPrefs } from '~/shared/utility/ui-prefs';
+import { mountRoot } from '~/lib/utility/solid/mount-root';
+import { initUIPrefs } from '~/lib/utility/ui-prefs';
 
 initUIPrefs();
 

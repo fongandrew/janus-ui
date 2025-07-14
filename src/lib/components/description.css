@@ -1,0 +1,20 @@
+@import '~/lib/styles/common.css';
+
+@layer components {
+	.c-description {
+		@mixin t-overflow-x;
+		@mixin v-text-muted;
+
+		&:empty {
+			display: none;
+		}
+
+		.c-label-stack:not(:has(.t-label-stack--no-indent)) > & {
+			padding-inline: var(--v-space-xs);
+		}
+
+		.c-label-stack > .c-label + & {
+			margin-top: 0;
+		}
+	}
+}

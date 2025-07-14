@@ -1,8 +1,0 @@
-@import '~/shared/styles/common.css';
-
-@layer components {
-	/* Component variation of object class that is easier to override */
-	.c-label-stack {
-		@mixin o-label-stack;
-	}
-}

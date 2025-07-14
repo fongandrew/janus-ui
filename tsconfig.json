@@ -6,7 +6,8 @@
 		"types": [
 			"@testing-library/jest-dom/vitest",
 			"./types/assets",
-			"./types/colorparsley"
+			"./types/colorparsley",
+			"vite/client"
 		],
 		"allowJs": false,
 		"module": "ESNext",
@@ -36,13 +37,20 @@
 		/* Paths */
 		"baseUrl": ".",
 		"paths": {
-			"@/*": ["assets/*"],
+			"~/lib/*": ["dist/types/lib/*"],
 			"~/*": ["src/*"],
+			"@/*": ["assets/*"]
 		}
 	},
-	"include": ["assets", "src", "vitest.setup.ts", "types", "*.ts"],
+	"include": ["assets", "dist/types/lib/**/*", "src", "vitest.setup.ts", "types"],
 	"exclude": [
 		"node_modules",
+		"plugins",
+		"scripts",
+		"src/lib",
+		"*.config.js",
+		"*.config.ts",
+		"*rc.js",
 		// This is annoying since it breaks type refs to the solid-js equivalents
 		"solid-js/types/server",
 	]

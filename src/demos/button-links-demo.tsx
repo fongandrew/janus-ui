@@ -1,11 +1,5 @@
-import { ButtonLink, GhostButtonLink } from '~/shared/components/button';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
+import { ButtonLink, GhostButtonLink } from '~/lib/components/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
 
 export function ButtonLinksDemo() {
 	return (

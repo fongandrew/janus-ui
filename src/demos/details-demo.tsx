@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from '~/shared/components/card';
-import { Details } from '~/shared/components/details';
+import { Card, CardContent, CardHeader, CardTitle } from '~/lib/components/card';
+import { Details } from '~/lib/components/details';
 
 export function DetailsDemo() {
 	return (

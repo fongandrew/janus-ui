@@ -29,7 +29,7 @@ import { SuspenseDemo } from '~/demos/suspense-demo';
 import { TabsDemo } from '~/demos/tabs-demo';
 import { TextareasDemo } from '~/demos/textareas-demo';
 import { TooltipsDemo } from '~/demos/tooltips-demo';
-import { ModalOpenTrigger } from '~/shared/components/modal';
+import { ModalOpenTrigger } from '~/lib/components/modal';
 import {
 	Sidebar,
 	SidebarCloseButton,
@@ -43,8 +43,8 @@ import {
 	SidebarListGroup,
 	SidebarListLink,
 	SidebarOpenButton,
-} from '~/shared/components/sidebar-layout';
-import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+} from '~/lib/components/sidebar-layout';
+import { callbackAttrs } from '~/lib/utility/callback-attrs/callback-registry';
 
 interface ComponentsProps {
 	title: string;

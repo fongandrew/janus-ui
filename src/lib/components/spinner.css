@@ -1,0 +1,61 @@
+@import '~/lib/styles/common.css';
+
+@layer components {
+	.c-spinner__block {
+		@mixin v-text-muted;
+
+		min-height: 12rem;
+		flex-grow: 1;
+		font-size: var(--v-font-size-md);
+		font-variant: all-petite-caps;
+		gap: var(--v-inline-gap);
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		/*
+			Longish delay without pref check because quick flicker of spinner is
+			probably more disruptive to animation-sensitive users than this
+		*/
+		/* stylelint-disable-next-line declaration-property-value-allowed-list */
+		animation: t-animation-fade-in var(--v-animation-duration-xl) linear;
+	}
+
+	@mixin v-container-tablet {
+		.c-spinner__block {
+			font-size: var(--v-font-size-lg);
+			flex-direction: column;
+			min-height: 14rem;
+
+			.c-spinner {
+				height: 2.5lh;
+				width: 2.5lh;
+			}
+		}
+	}
+
+	@mixin v-container-tablet-wide {
+		.c-spinner__block {
+			font-size: var(--v-font-size-xl);
+			min-height: 16rem;
+
+			.c-spinner {
+				height: 3.5lh;
+				width: 3.5lh;
+			}
+		}
+	}
+
+	@mixin v-container-desktop {
+		.c-spinner__block {
+			font-size: var(--v-font-size-2xl);
+			min-height: 18rem;
+
+			.c-spinner {
+				height: 5lh;
+				width: 5lh;
+			}
+		}
+	}
+}

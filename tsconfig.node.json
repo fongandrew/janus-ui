@@ -4,6 +4,7 @@
 		"allowSyntheticDefaultImports": true,
 		"module": "ESNext",
 		"moduleResolution": "bundler",
+		"noEmit": true,
 		"strict": true
 	},
 	"exclude": ["dist", "src", "vitest.setup.ts"],

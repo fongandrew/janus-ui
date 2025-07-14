@@ -1,0 +1,72 @@
+@import '~/lib/styles/common.css';
+
+@layer components {
+	.c-details {
+		@mixin v-colors-card;
+		@mixin t-radius-inner;
+
+		/* Capture "details" border color for summary */
+		--v-outer-border-color: var(--v-border-color);
+
+		overflow: hidden;
+		width: 100%;
+	}
+
+	.c-details:has(.c-details__summary:focus-visible) {
+		@mixin t-focus-ring;
+	}
+
+	.c-details__summary {
+		@mixin v-colors-secondary;
+		@mixin v-font-weight var(--v-font-weight-label);
+		@mixin o-text-box;
+		@mixin t-border;
+		@mixin t-radius-inner;
+
+		--v-border-color: var(--v-outer-border-color);
+
+		cursor: pointer;
+		list-style: none;
+
+		/* To fix border overlap issues with negative margin */
+		position: relative;
+		z-index: 1;
+
+		&::-webkit-details-marker {
+			display: none;
+		}
+
+		&::before {
+			content: '▶';
+			display: inline-block;
+			margin-right: var(--v-inline-gap);
+			transform: scale(0.8);
+		}
+
+		[open] &::before {
+			transform: rotate(90deg) scale(0.8);
+		}
+
+		[open] & {
+			border-radius: var(--v-inner-radius) var(--v-inner-radius) 0 0;
+		}
+
+		&:focus-visible {
+			@mixin t-no-focus-ring;
+		}
+
+		&:hover {
+			@mixin t-hover;
+		}
+	}
+
+	.c-details__content {
+		@mixin o-text-box;
+		@mixin o-stack;
+		@mixin t-border;
+
+		border-top: 0;
+		border-radius: 0 0 var(--v-inner-radius) var(--v-inner-radius);
+		margin-top: calc((1em - 1lh) / 2);
+	}
+}

@@ -1,11 +1,5 @@
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
-import { Count } from '~/shared/components/count';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
+import { Count } from '~/lib/components/count';
 
 export function BadgeAndCountDemo() {
 	const countLabel = (n: string | number) => `${n} item${n === 1 ? '' : 's'}`;

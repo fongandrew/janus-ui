@@ -1,10 +1,4 @@
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
 
 export function EmptyStateDemo() {
 	return (

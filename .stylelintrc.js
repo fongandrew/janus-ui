@@ -24,7 +24,7 @@ export default {
 		'csstools/value-no-unknown-custom-properties': [
 			true,
 			{
-				importFrom: ['src/shared/styles/variables/index.css'],
+				importFrom: ['src/lib/styles/variables/index.css'],
 			},
 		],
 	},

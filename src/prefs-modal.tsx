@@ -10,24 +10,24 @@ import {
 	prefsMountFontFamily,
 	prefsMountFontSize,
 } from '~/demos/callbacks/prefs';
-import { Label } from '~/shared/components/label';
-import { LabelledInput } from '~/shared/components/labelled-control';
-import { ListBoxItem } from '~/shared/components/list-box';
+import { Label } from '~/lib/components/label';
+import { LabelledInput } from '~/lib/components/labelled-control';
+import { ListBoxItem } from '~/lib/components/list-box';
 import {
 	Modal,
 	ModalCloseButton,
 	ModalContent,
 	ModalFooter,
 	ModalTitle,
-} from '~/shared/components/modal';
-import { Radio } from '~/shared/components/radio';
-import { RadioGroup } from '~/shared/components/radio-group';
-import { Select } from '~/shared/components/select';
-import { Slider } from '~/shared/components/slider';
-import { T } from '~/shared/components/t-components';
-import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
-import { useT } from '~/shared/utility/solid/locale-context';
-import { getFontFamilies } from '~/shared/utility/ui-prefs/font-family';
+} from '~/lib/components/modal';
+import { Radio } from '~/lib/components/radio';
+import { RadioGroup } from '~/lib/components/radio-group';
+import { Select } from '~/lib/components/select';
+import { Slider } from '~/lib/components/slider';
+import { T } from '~/lib/components/t-components';
+import { callbackAttrs } from '~/lib/utility/callback-attrs/callback-registry';
+import { useT } from '~/lib/utility/solid/locale-context';
+import { getFontFamilies } from '~/lib/utility/ui-prefs/font-family';
 
 export interface PrefsModalProps {
 	id: string;

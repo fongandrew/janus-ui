@@ -1,5 +1,5 @@
-import { createValidator } from '~/shared/utility/callback-attrs/validate';
-import { evtDoc } from '~/shared/utility/multi-view';
+import { createValidator } from '~/lib/utility/callback-attrs/validate';
+import { evtDoc } from '~/lib/utility/multi-view';
 
 /** Validates input value has no spaces */
 export const validateUserNameNoSpaces = createValidator(

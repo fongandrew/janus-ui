@@ -1,0 +1,72 @@
+@import '~/lib/styles/common.css';
+
+@layer components {
+	.c-card {
+		@mixin v-colors-card;
+		@mixin t-border;
+		@mixin t-radius-outer;
+
+		box-shadow: var(--v-shadow-md);
+		display: flex;
+		flex-direction: column;
+		container-type: inline-size;
+
+		/* Fixes Safari-specific issue when combining these */
+		&.o-grid {
+			container-type: normal;
+		}
+
+		@mixin v-breakpoint-tablet {
+			.o-container & {
+				box-shadow: none;
+			}
+
+			:modal &,
+			:popover-open & {
+				box-shadow: var(--v-shadow-md);
+			}
+		}
+	}
+
+	.c-card__header {
+		@mixin o-text-box;
+
+		padding-bottom: 0;
+	}
+
+	.c-card__description {
+		@mixin v-text-muted;
+	}
+
+	.c-card__content {
+		@mixin o-box;
+		@mixin t-flex-fill;
+	}
+
+	.c-card__footer {
+		@mixin o-box;
+
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--v-inline-gap);
+		padding-top: 0;
+	}
+
+	.c-card__footer > :only-child {
+		margin-left: auto;
+	}
+
+	/* Show disabled state on footer buttons if form in body has invalid fields */
+	.c-card:has(:invalid, [aria-invalid='true'], [data-t-validate__incomplete])
+		.c-card__footer
+		[type='submit'] {
+		@mixin t-disabled-button;
+
+		/*
+			Visually disable buttons only so clicking on the disabled button lets us shift focus
+			to the first invalid element (especially useful with screenreaders).
+		*/
+		pointer-events: unset;
+	}
+}

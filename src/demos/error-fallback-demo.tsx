@@ -1,16 +1,10 @@
 import { createSignal } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
-import { Button } from '~/shared/components/button';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
-import { setSupportLink } from '~/shared/components/error-fallback';
-import { Modal } from '~/shared/components/modal';
+import { Button } from '~/lib/components/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
+import { setSupportLink } from '~/lib/components/error-fallback';
+import { Modal } from '~/lib/components/modal';
 
 setSupportLink('https://example.com/support');
 

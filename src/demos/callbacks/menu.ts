@@ -1,5 +1,5 @@
-import { createHandler } from '~/shared/utility/callback-attrs/events';
-import { elmDoc } from '~/shared/utility/multi-view';
+import { createHandler } from '~/lib/utility/callback-attrs/events';
+import { elmDoc } from '~/lib/utility/multi-view';
 
 export const menuUpdateText = createHandler(
 	'click',

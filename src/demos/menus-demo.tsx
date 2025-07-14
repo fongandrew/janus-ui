@@ -2,16 +2,10 @@ import { createSignal, createUniqueId } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import { menuUpdateText } from '~/demos/callbacks/menu';
-import { Button } from '~/shared/components/button';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '~/shared/components/card';
-import { Menu, MenuGroup, MenuItem, MenuItemLink, MenuTrigger } from '~/shared/components/menu';
-import { callbackAttrs } from '~/shared/utility/callback-attrs/callback-registry';
+import { Button } from '~/lib/components/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/lib/components/card';
+import { Menu, MenuGroup, MenuItem, MenuItemLink, MenuTrigger } from '~/lib/components/menu';
+import { callbackAttrs } from '~/lib/utility/callback-attrs/callback-registry';
 
 function MenusDemo() {
 	const [selection, setSelection] = createSignal<string | null>(null);
