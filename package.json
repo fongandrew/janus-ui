@@ -20,7 +20,7 @@
     "test:e2e": "playwright test --project=chromium-*",
     "test:e2e:all": "playwright test",
     "typecheck": "npm run typecheck:lib && tsc --noEmit -p tsconfig.json",
-    "typecheck:lib": "tsc -p src/lib/tsconfig.json --emitDeclarationOnly"
+    "typecheck:lib": "tsc -p src/lib/tsconfig.json --emitDeclarationOnly --noEmit false"
   },
   "devDependencies": {
     "@eslint/js": "^9.16.0",
