@@ -1,12 +1,12 @@
 import { parentDocument } from '~/lib/utility/multi-view';
 
-export type DocumentSetupFunction = (document: Document) => void;
+export type DocumentCallbackFunction = (document: Document) => void;
 
 /**
  * Track all the setup functions (so we don't run twice and can re-run on all new
  * open documents).
  */
-const setupFunctions = new Set<DocumentSetupFunction>();
+const setupFunctions = new Set<DocumentCallbackFunction>();
 
 /**
  * Track which documents are open (so when adding a new setup function, we can call the
@@ -19,7 +19,7 @@ export const activeDocuments = new Set<Document>(parentDocument ? [parentDocumen
  * on the current document after idle period. Will also be triggered for new documents (if
  * doing child windows or something like that).
  */
-export const registerDocumentSetup = (setup: DocumentSetupFunction) => {
+export const registerDocumentSetup = (setup: DocumentCallbackFunction) => {
 	if (!setupFunctions.has(setup)) {
 		setupFunctions.add(setup);
 		for (const document of activeDocuments) {
@@ -40,5 +40,12 @@ export function registerDocument(document: Document) {
 		for (const setup of setupFunctions) {
 			setup(document);
 		}
+	}
+}
+
+/** Run a function on all active documents */
+export function evalWithDocument(cb: DocumentCallbackFunction) {
+	for (const document of activeDocuments) {
+		cb(document);
 	}
 }

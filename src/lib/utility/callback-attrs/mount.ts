@@ -25,7 +25,7 @@ const [processed, setProcessed] = createMagicProp<boolean>();
  * Special property to stock on window or document to mark that a mount request
  * has been scheduled.
  */
-const [raf, setRaf] = createMagicProp<ReturnType<typeof requestAnimationFrame>>();
+const [raf, setRaf] = createMagicProp<number>();
 
 /**
  * Process all mount attributes for a given node

@@ -225,10 +225,12 @@ export default tseslint.config(
 		rules: {
 			'no-restricted-globals': [
 				'error',
-				...['window', 'document', 'history', 'location'].map((name) => ({
-					name,
-					message: `Use the document-setup utility instead`,
-				})),
+				...['window', 'document', 'history', 'location', 'requestAnimationFrame'].map(
+					(name) => ({
+						name,
+						message: `Use the document-setup utility instead`,
+					}),
+				),
 			],
 		},
 	},
