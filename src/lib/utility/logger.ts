@@ -12,14 +12,19 @@ export interface Logger {
 	error: typeof console.error;
 }
 
-let defaultLogger: Logger = {
-	// Wrap everything so tests can still mock console.<method>
+/**
+ * Original console logger that preserves the console logging behavior
+ * including not logging debug levels in prod and not logging info in test.
+ */
+export const consoleLogger: Logger = {
 	debug: (...args) => (import.meta.env.PROD ? undefined : console.debug(...args)),
 	debugWarn: (...args) => (import.meta.env.PROD ? undefined : console.warn(...args)),
 	info: (...args) => (import.meta.env.MODE === 'test' ? undefined : console.info(...args)),
 	warn: (...args) => console.warn(...args),
 	error: (...args) => console.error(...args),
 };
+
+let defaultLogger: Logger = consoleLogger;
 
 /**
  * Set the default logger for the application.
@@ -29,8 +34,22 @@ export function setDefaultLogger(logger: Logger) {
 }
 
 /**
+ * Dynamic logger wrapper that always delegates to the current default logger.
+ * This ensures that early references to getDefaultLogger() continue to work
+ * even after setDefaultLogger() is called.
+ */
+const dynamicLogger: Logger = {
+	debug: (...args) => defaultLogger.debug(...args),
+	debugWarn: (...args) => defaultLogger.debugWarn(...args),
+	info: (...args) => defaultLogger.info(...args),
+	warn: (...args) => defaultLogger.warn(...args),
+	error: (...args) => defaultLogger.error(...args),
+};
+
+/**
  * Get the default logger for the application.
+ * Returns a dynamic wrapper that always delegates to the current logger.
  */
 export function getDefaultLogger(): Logger {
-	return defaultLogger;
+	return dynamicLogger;
 }
