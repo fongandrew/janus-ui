@@ -25,7 +25,7 @@ registerDocumentSetup((document) => {
 
 				if (event.key.startsWith('Arrow') || event.key === 'Home' || event.key === 'End') {
 					// Allow arrow keys to move focus off toolbar (unless popup menu)
-					const isToolbar = closestAriaDisabled.getAttribute('role') === 'toolbar';
+					const isToolbar = !!closestAriaDisabled.closest('[role="toolbar"]');
 					if (isToolbar) {
 						const hasAriaPopup = closestAriaDisabled.getAttribute('aria-haspopup');
 						if (!hasAriaPopup || hasAriaPopup === 'false') return;
