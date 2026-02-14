@@ -14,7 +14,7 @@
 	*/
 	.c-sidebar-layout {
 		min-height: 100dvh;
-		width: 100vw;
+		width: 100%; /* Fix scrollbar width issue */
 
 		/* This is needed to keep absolute positioned children from doing dumb things */
 		position: relative;
