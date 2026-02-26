@@ -3,11 +3,14 @@
 @layer components {
 	.c-details {
 		@mixin v-colors-card;
-		@mixin t-radius-inner;
+
+		/* Default radius (overridable) */
+		--v-radius: var(--v-inner-radius);
 
 		/* Capture "details" border color for summary */
 		--v-outer-border-color: var(--v-border-color);
 
+		border-radius: var(--v-radius);
 		overflow: hidden;
 		width: 100%;
 	}
@@ -21,10 +24,10 @@
 		@mixin v-font-weight var(--v-font-weight-label);
 		@mixin o-text-box;
 		@mixin t-border;
-		@mixin t-radius-inner;
 
 		--v-border-color: var(--v-outer-border-color);
 
+		border-radius: var(--v-radius);
 		cursor: pointer;
 		list-style: none;
 
@@ -48,7 +51,7 @@
 		}
 
 		[open] & {
-			border-radius: var(--v-inner-radius) var(--v-inner-radius) 0 0;
+			border-radius: var(--v-radius) var(--v-radius) 0 0;
 		}
 
 		&:focus-visible {
@@ -66,7 +69,7 @@
 		@mixin t-border;
 
 		border-top: 0;
-		border-radius: 0 0 var(--v-inner-radius) var(--v-inner-radius);
+		border-radius: 0 0 var(--v-radius) var(--v-radius);
 		margin-top: calc((1em - 1lh) / 2);
 	}
 }
