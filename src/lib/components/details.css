@@ -61,7 +61,7 @@
 	}
 
 	.c-details__content {
-		@mixin o-text-box;
+		@mixin o-box;
 		@mixin o-stack;
 		@mixin t-border;
 
