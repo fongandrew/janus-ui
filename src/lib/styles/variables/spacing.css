@@ -4,6 +4,7 @@
 @define-mixin v-spacing-base $spacing, $border-width {
 	--v-spacing: $(spacing);
 	--v-border-width: $(border-width);
+	--v-radius: calc(var(--v-spacing) - (1lh - 1em) / 2);
 }
 
 @define-mixin v-spacing-sm {

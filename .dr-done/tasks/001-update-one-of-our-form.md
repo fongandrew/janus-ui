@@ -1,0 +1,1 @@
+Update one of our form demos to include an input that automatically errors on certain errors without having to hit submit. Make sure it works in both SolidJS and in the SSR / callback / progressive enhancement mode.

@@ -1,6 +1,6 @@
 /** Border radius for container elements / cards / etc. */
 @define-mixin t-radius-outer {
-	border-radius: calc(var(--v-spacing) - (1lh - 1em) / 2);
+	border-radius: var(--v-radius);
 }
 
 /* Smaller radius for things inside containers, inputs, etc. */
