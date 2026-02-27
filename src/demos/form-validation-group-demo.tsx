@@ -4,8 +4,7 @@ import { isServer } from 'solid-js/web';
 import { formOutputClear, formOutputWrite } from '~/demos/callbacks/form-output';
 import {
 	matchesPassword,
-	validateEmailFormat,
-	validateUserNameNoSpaces,
+	validateUserNameNotReserved,
 } from '~/demos/callbacks/form-validation-group';
 import {
 	Card,
@@ -30,7 +29,6 @@ import { type Validator, validateOnInput } from '~/lib/utility/callback-attrs/va
 export function FormValidationGroupDemo() {
 	const [formData, setFormData] = createSignal<{
 		username: string;
-		email: string;
 		password: string;
 	} | null>(null);
 
@@ -40,7 +38,6 @@ export function FormValidationGroupDemo() {
 		const data = new FormData(form);
 		setFormData({
 			username: data.get('username') as string,
-			email: data.get('email') as string,
 			password: data.get('password1') as string,
 		});
 	};
@@ -51,24 +48,19 @@ export function FormValidationGroupDemo() {
 
 	const FormNames = {
 		username: 'username',
-		email: 'email',
 		password1: 'password1',
 		password2: 'password2',
 	};
 
-	const validateEmail: Validator<HTMLInputElement> = (event) => {
-		const value = event.currentTarget.value;
-		if (!value) return null;
-		if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-			return 'Please enter a valid email address';
-		}
-		return null;
-	};
+	const reservedNames = ['root', 'admin'];
 
 	const validateUserName: Validator<HTMLInputElement> = (event) => {
 		const value = event.currentTarget.value;
 		if (value.includes(' ')) {
 			return 'Username cannot contain spaces';
+		}
+		if (reservedNames.includes(value.toLowerCase())) {
+			return 'Username cannot be a reserved name';
 		}
 		return null;
 	};
@@ -99,27 +91,18 @@ export function FormValidationGroupDemo() {
 							onReset={handleReset}
 							{...callbackAttrs(isServer && formOutputWrite)}
 						>
-							<LabelledInput label="Username" required>
-								<Input
-									name={FormNames.username}
-									onValidate={validateUserName}
-									autocomplete="username"
-									{...callbackAttrs(isServer && validateUserNameNoSpaces)}
-								/>
-							</LabelledInput>
-
 							<LabelledInput
-								label="Email"
+								label="Username"
 								description="Validates as you type without needing to submit"
 								required
 							>
 								<Input
-									name={FormNames.email}
-									onValidate={validateEmail}
-									autocomplete="email"
+									name={FormNames.username}
+									onValidate={validateUserName}
+									autocomplete="username"
 									{...callbackAttrs(
 										validateOnInput,
-										isServer && validateEmailFormat,
+										isServer && validateUserNameNotReserved,
 									)}
 								/>
 							</LabelledInput>
@@ -156,12 +139,6 @@ export function FormValidationGroupDemo() {
 												<Label>Username</Label>
 												<BaseDescription data-testid="output-username">
 													{formData()?.username}
-												</BaseDescription>
-											</div>
-											<div class="o-label-stack">
-												<Label>Email</Label>
-												<BaseDescription data-testid="output-email">
-													{formData()?.email}
 												</BaseDescription>
 											</div>
 											<div class="o-label-stack">
