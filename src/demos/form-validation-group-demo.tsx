@@ -2,7 +2,11 @@ import { createSignal, createUniqueId, Show } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 import { formOutputClear, formOutputWrite } from '~/demos/callbacks/form-output';
-import { matchesPassword, validateUserNameNoSpaces } from '~/demos/callbacks/form-validation-group';
+import {
+	matchesPassword,
+	validateEmailFormat,
+	validateUserNameNoSpaces,
+} from '~/demos/callbacks/form-validation-group';
 import {
 	Card,
 	CardContent,
@@ -21,11 +25,12 @@ import { Label } from '~/lib/components/label';
 import { LabelledInput } from '~/lib/components/labelled-control';
 import { Password } from '~/lib/components/password';
 import { callbackAttrs } from '~/lib/utility/callback-attrs/callback-registry';
-import { type Validator } from '~/lib/utility/callback-attrs/validate';
+import { type Validator, validateOnInput } from '~/lib/utility/callback-attrs/validate';
 
 export function FormValidationGroupDemo() {
 	const [formData, setFormData] = createSignal<{
 		username: string;
+		email: string;
 		password: string;
 	} | null>(null);
 
@@ -35,6 +40,7 @@ export function FormValidationGroupDemo() {
 		const data = new FormData(form);
 		setFormData({
 			username: data.get('username') as string,
+			email: data.get('email') as string,
 			password: data.get('password1') as string,
 		});
 	};
@@ -45,8 +51,18 @@ export function FormValidationGroupDemo() {
 
 	const FormNames = {
 		username: 'username',
+		email: 'email',
 		password1: 'password1',
 		password2: 'password2',
+	};
+
+	const validateEmail: Validator<HTMLInputElement> = (event) => {
+		const value = event.currentTarget.value;
+		if (!value) return null;
+		if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+			return 'Please enter a valid email address';
+		}
+		return null;
 	};
 
 	const validateUserName: Validator<HTMLInputElement> = (event) => {
@@ -92,6 +108,22 @@ export function FormValidationGroupDemo() {
 								/>
 							</LabelledInput>
 
+							<LabelledInput
+								label="Email"
+								description="Validates as you type without needing to submit"
+								required
+							>
+								<Input
+									name={FormNames.email}
+									onValidate={validateEmail}
+									autocomplete="email"
+									{...callbackAttrs(
+										validateOnInput,
+										isServer && validateEmailFormat,
+									)}
+								/>
+							</LabelledInput>
+
 							<FormValidationGroup>
 								<div class="o-stack">
 									<LabelledInput label="Password" id={password1Id} required>
@@ -124,6 +156,12 @@ export function FormValidationGroupDemo() {
 												<Label>Username</Label>
 												<BaseDescription data-testid="output-username">
 													{formData()?.username}
+												</BaseDescription>
+											</div>
+											<div class="o-label-stack">
+												<Label>Email</Label>
+												<BaseDescription data-testid="output-email">
+													{formData()?.email}
 												</BaseDescription>
 											</div>
 											<div class="o-label-stack">

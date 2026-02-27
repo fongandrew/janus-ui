@@ -26,6 +26,34 @@ describeComponent('form-validation-group-demo', (getContainer) => {
 		await expect(usernameInput).not.toHaveAttribute('aria-invalid', 'true');
 	});
 
+	test('validates email input in real-time as user types', async () => {
+		const container = getContainer();
+
+		// Find email input
+		const emailInput = container.getByLabel('Email');
+
+		// Type an incomplete email — error should appear while typing (before blur)
+		await emailInput.pressSequentially('notanemail');
+		await expect(container.getByText('Please enter a valid email address')).toBeVisible();
+		await expect(emailInput).toHaveAttribute('aria-invalid', 'true');
+
+		// Continue typing to make it valid — error should clear in real-time
+		await emailInput.pressSequentially('@example.com');
+		await expect(container.getByText('Please enter a valid email address')).not.toBeVisible();
+		await expect(emailInput).not.toHaveAttribute('aria-invalid', 'true');
+
+		// Clear and type another invalid value — should show error again
+		await emailInput.fill('');
+		await emailInput.pressSequentially('bad@');
+		await expect(container.getByText('Please enter a valid email address')).toBeVisible();
+		await expect(emailInput).toHaveAttribute('aria-invalid', 'true');
+
+		// Fix it
+		await emailInput.pressSequentially('test.com');
+		await expect(container.getByText('Please enter a valid email address')).not.toBeVisible();
+		await expect(emailInput).not.toHaveAttribute('aria-invalid', 'true');
+	});
+
 	test('validates password confirmation', async () => {
 		const container = getContainer();
 

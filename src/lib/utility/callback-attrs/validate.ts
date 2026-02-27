@@ -73,6 +73,14 @@ export const createValidator = validationRegistry.create as <
 ) => RegisteredCallback<Validator<TElement>, TExtra, TElement>;
 
 /**
+ * Run any validators associated with this element on input (fires on every keystroke).
+ * This enables real-time validation without waiting for blur or submit.
+ */
+export const validateOnInput = createHandler('input', '$t-validate__input', (event) => {
+	validate(event.currentTarget, event);
+});
+
+/**
  * Run any validators associated with this element on change
  */
 export const validateOnChange = createHandler('change', '$t-validate__change', (event) => {

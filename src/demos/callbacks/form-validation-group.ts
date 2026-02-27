@@ -13,6 +13,20 @@ export const validateUserNameNoSpaces = createValidator(
 	},
 );
 
+/** Validates that email input has a valid email format (realtime, on input) */
+export const validateEmailFormat = createValidator(
+	'$p-form-validation-group__email-format',
+	(event: Event & { currentTarget: HTMLInputElement }) => {
+		const value = event.currentTarget.value;
+		if (!value) return null;
+		// Basic email validation: must have text@text.text pattern
+		if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+			return 'Please enter a valid email address';
+		}
+		return null;
+	},
+);
+
 /** Validates that password element matches value in element */
 export const matchesPassword = createValidator(
 	'$p-form-validation-group__matches',
