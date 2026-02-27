@@ -3,7 +3,7 @@
 @layer components {
 	.c-list-box {
 		width: 100%;
-		padding: var(--v-inner-radius) 0;
+		padding: var(--v-radius) 0;
 
 		/*
 			Border looks weird with highlighting but is necessary to distinguish listbox from

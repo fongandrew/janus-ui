@@ -103,7 +103,7 @@
 		display: none;
 		width: 100%;
 		overflow: hidden auto;
-		padding: calc(var(--v-spacing) - var(--v-inner-radius)) var(--v-spacing);
+		padding: calc(var(--v-spacing) - var(--v-radius)) var(--v-spacing);
 		text-align: center;
 
 		[aria-busy='true'] + &,
