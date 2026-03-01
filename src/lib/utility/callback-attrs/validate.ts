@@ -160,7 +160,10 @@ export function setError(target: HTMLElement, msg: string | null) {
 			errorElm.textContent = msg ?? '';
 			toggleEmptyAttr(errorElm);
 			if (msg) {
+				errorElm.setAttribute('role', 'alert');
 				setErrorFor(errorElm, target.id);
+			} else {
+				errorElm.removeAttribute('role');
 			}
 		}
 	}

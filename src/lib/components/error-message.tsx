@@ -1,6 +1,5 @@
 import cx from 'classix';
 import { type ComponentProps } from 'solid-js';
-import { isServer } from 'solid-js/web';
 
 import { FORM_CONTROL_ERROR_ATTR } from '~/lib/utility/callback-attrs/validate';
 
@@ -15,7 +14,7 @@ export interface ErrorMessageProps extends ComponentProps<'div'> {
 export function ErrorMessage(props: ErrorMessageProps) {
 	return (
 		<div
-			role={isServer || props.children ? 'alert' : undefined}
+			role={props.children ? 'alert' : undefined}
 			aria-atomic="true"
 			{...{ [FORM_CONTROL_ERROR_ATTR]: '' }}
 			{...props}
