@@ -24,7 +24,7 @@ import { Label } from '~/lib/components/label';
 import { LabelledInput } from '~/lib/components/labelled-control';
 import { Password } from '~/lib/components/password';
 import { callbackAttrs } from '~/lib/utility/callback-attrs/callback-registry';
-import { type Validator, validateOnInput } from '~/lib/utility/callback-attrs/validate';
+import { validateOnInput, type Validator } from '~/lib/utility/callback-attrs/validate';
 
 export function FormValidationGroupDemo() {
 	const [formData, setFormData] = createSignal<{
