@@ -1,7 +1,7 @@
 /* Tools for controlling visibility of things */
 
 @define-mixin t-sr-only {
-	position: fixed;
+	position: absolute;
 	width: 1px;
 	height: 1px;
 	padding: 0;
