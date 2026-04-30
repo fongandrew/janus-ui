@@ -29,6 +29,14 @@ export type MemoizedResourceReturn<TResource, TInfo> = readonly [
  *
  * This caches the entire signal itself so subsequent fetches use the previously
  * stored value.
+ *
+ * **Divergence from stock Solid `Resource<T>`:** the call accessor returns
+ * `data.latest` semantics, not stock `data()`'s. See `keyed-resource.ts` for
+ * the full rationale — short version: stock `read()` increments the
+ * surrounding `<Suspense>` pending counter on every refetch, flashing the
+ * fallback even though the cached value is still available. Reading `latest`
+ * keeps the children mounted across refetches while still triggering Suspense
+ * on the initial cold load.
  */
 export function createMemoizedResource<TResource, TInfo = unknown>(
 	fetcher: ResourceFetcher<true, TResource, TInfo>,
@@ -65,7 +73,8 @@ export function createMemoizedResource<TResource, TInfo = unknown>(
 			if (stale) {
 				refetchStale();
 			}
-			return data();
+			// `latest` over `data()` — see factory docstring.
+			return data.latest;
 		}) as typeof data;
 
 		// Expose loading, error, and latest reactive properties on the accessor function
