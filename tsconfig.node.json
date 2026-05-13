@@ -2,11 +2,13 @@
 	"compilerOptions": {
 		"skipLibCheck": true,
 		"allowSyntheticDefaultImports": true,
+		"allowImportingTsExtensions": true,
 		"module": "ESNext",
 		"moduleResolution": "bundler",
 		"noEmit": true,
-		"strict": true
+		"strict": true,
+		"types": ["node"]
 	},
 	"exclude": ["dist", "src", "vitest.setup.ts"],
-	"include": ["*.config.js", "*.config.ts", "*rc.js", "plugins", "scripts"]
+	"include": ["*.config.js", "*.config.ts", "*rc.js", "plugins", "scripts", "types"]
 }

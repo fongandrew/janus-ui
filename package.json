@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "build": "vite build",
+    "check:apca": "node --experimental-strip-types --no-warnings scripts/check-apca.ts",
     "clean": "rm -rf dist",
     "dev": "vite",
     "eslint": "eslint --report-unused-disable-directives --max-warnings 0",
