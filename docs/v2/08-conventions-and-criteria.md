@@ -38,7 +38,7 @@ If `commandfor` or anchor positioning are not yet Baseline at build time, fall b
 ```
 src/lib/
   css/
-    janus.json                  # depends: [], configs: { stylelint }
+    janus.json                  # depends: []
     CHANGELOG.md
     README.md                   # what this pseudo-package is, how to fork it
     .stylelintrc.js             # CSS-only lint config
@@ -167,7 +167,7 @@ eslint.config.js                # extends per-pseudo-package configs; includes
 
 One CSS file per object, component, variant. No barrel `.css` files that import many siblings — the entry `index.css` is the single import point.
 
-Every pseudo-package directory under `src/lib/` carries the same four files at its root: `janus.json`, `CHANGELOG.md`, `README.md`, and the configs it needs. This uniformity lets a consumer's agent treat any pseudo-package the same way at sync time — read the manifest, read the changelog since the last sync, apply changes, copy any updated configs.
+Every pseudo-package directory under `src/lib/` carries the same four files at its root: `janus.json`, `CHANGELOG.md`, `README.md`, and the configs it needs. This uniformity lets a consumer's agent treat any pseudo-package the same way at sync time — read the manifest, diff the local `CHANGELOG.md` against this repo's to find new entries, apply the changes, and copy the updated `CHANGELOG.md` forward as the next sync's high-water mark.
 
 ## 17. Reference patterns to study from v1
 
@@ -185,7 +185,7 @@ v2 is considered complete when:
 - A static HTML page using only `src/lib/css/` renders a complete UI (buttons, cards, forms, modals via `commandfor`, dropdowns via native select) with no JS at all.
 - Adding `src/lib/dom/` enhances forms with validation and modals with focus management — and nothing else changes visually.
 - A consumer can copy any single pseudo-package (with its declared `depends`) into a fresh repo and it builds + lints + tests without touching the others. The boundary lint rule (§3.3) is what guarantees this.
-- An LLM agent, given only the root `README.md` and a consumer's `.janus-sync.json`, can produce a coherent diff of "what needs to change in the consumer's fork to pick up the latest Janus" — no human translation step.
+- An LLM agent, given only the root `README.md` and the consumer's fork (whose copied `CHANGELOG.md` files mark the last sync point), can produce a coherent diff of "what needs to change in the consumer's fork to pick up the latest Janus" — no human translation step.
 - A typical element carries 1–3 classes. The 95th percentile is ≤ 5.
 - The `--v-*` knob surface is ≤ 20 documented variables.
 - No `t-` class sets an arbitrary numeric scale (no `t-px-2`, `t-mb-4`, etc.).

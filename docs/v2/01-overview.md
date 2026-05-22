@@ -64,7 +64,7 @@ Typical consumer profiles:
 
 ### 3.2 Update mechanism (agent-driven sync)
 
-Without semver, consumers stay current via an **agent-driven sync**. The intended workflow is: a consumer tells their LLM agent "read the Janus repo's README and pull relevant changes for the pseudo-packages I've copied." Five artifacts make that workable.
+Without semver, consumers stay current via an **agent-driven sync**. The intended workflow is: a consumer tells their LLM agent "read the Janus repo's README and pull relevant changes for the pseudo-packages I've copied." Four artifacts make that workable.
 
 **Per-pseudo-package `janus.json`** — a small manifest at each pseudo-package root:
 
@@ -72,24 +72,17 @@ Without semver, consumers stay current via an **agent-driven sync**. The intende
 {
   "name": "dom",
   "summary": "Vanilla-JS progressive-enhancement layer.",
-  "depends": ["utils"],
-  "configs": {
-    "tsconfig": "./tsconfig.json",
-    "eslint": "./eslint.config.js",
-    "vitest": "./vitest.config.ts"
-  }
+  "depends": ["utils"]
 }
 ```
 
-Declares dependencies on sibling pseudo-packages and identifies which config files a consumer needs to wire into their own setup. Agents read this first when copying a pseudo-package to determine what else must come with it.
+Declares dependencies on sibling pseudo-packages. Agents read this first when copying a pseudo-package to determine what else must come with it; the boundary lint rule (§3.3) reads `depends` to validate cross-package imports.
 
-**Per-pseudo-package `CHANGELOG.md`** — dated entries with explicit `BREAKING` / `ADDED` / `CHANGED` labels. For breaking changes, a one-line "consumer action required" line describes the edit a forked copy needs (`rename --v-text-size to --v-font-size`, `c-button no longer reads --c-button-radius — set --o-input-box__radius instead`). The agent uses these lines to translate Janus changes into edits in the consumer's fork.
+**Per-pseudo-package `CHANGELOG.md`** — dated entries with explicit `BREAKING` / `ADDED` / `CHANGED` labels. For breaking changes, a one-line "consumer action required" line describes the edit a forked copy needs (`rename --v-text-size to --v-font-size`, `c-button no longer reads --c-button-radius — set --o-input-box__radius instead`). The agent uses these lines to translate Janus changes into edits in the consumer's fork. The CHANGELOG is also the sync anchor — its tail in the consumer's fork marks the last point they synced from.
 
 **Root `CHANGELOG.md`** — one line per release pointing at which pseudo-package changelogs to read. Lets an agent quickly scope what's relevant before drilling into per-package entries.
 
-**Root `README.md` "Updating your fork" section** — short, prescriptive instructions written *for the consumer's agent*: how to find the consumer's last-synced commit per pseudo-package, run `git log <sha>..HEAD -- src/lib/<name>/` against this repo, apply the changes per the changelogs, and bump the sync record. The intended consumer prompt is approximately "read the Janus README and do what it says for the pseudo-packages I've copied."
-
-**Consumer-side sync anchor** — a file (e.g. `.janus-sync.json`) the consumer's agent maintains in the consumer repo, recording the commit SHA each copied pseudo-package was last synced from. Janus doesn't enforce the shape — the README documents a suggested format and the agent populates it. Without an anchor, the agent has no way to scope "what's new since last time."
+**Root `README.md` "Updating your fork" section** — short, prescriptive instructions written *for the consumer's agent*: for each pseudo-package the consumer has copied, diff their local `CHANGELOG.md` against the one in this repo to find new entries, apply each entry's "consumer action required" line (consulting source files in this repo where the action line is insufficient), then copy the updated `CHANGELOG.md` forward so the next sync starts from the new high-water mark. The intended consumer prompt is approximately "read the Janus README and do what it says for the pseudo-packages I've copied."
 
 We deliberately use plain `README.md` per pseudo-package (and global) rather than `AGENTS.md` / `CLAUDE.md`: README is universal across agents and tools, and the global one is a single discoverable entry point. Consumers can mirror the relevant section into their own `CLAUDE.md` / `AGENTS.md` if their workflow benefits from autoload.
 
