@@ -9,7 +9,7 @@ This document specifies a clean-room rebuild of the Janus UI library. It is writ
 - **Semantic variants, not abstract scales.** No `v-spacing-md/lg/xl` t-shirt sizing. A variant ships with Janus only if a `c-` / `o-` class consumes its meaning (tone, surface, content-mode). For everything else — control heights, density, container widths — consumers define their *own* semantic scopes (`.v-cta`, `.v-dense`) that set the relevant knobs. Janus ships the mechanism and the defaults; consumers name the contexts.
 - **Small public surface, deep derivation.** A handful of documented CSS custom properties act as "knobs." Everything else is internal and derived via `calc()` / `color-mix()` / etc.
 - **Modern browsers only.** Target features that are Baseline 2024–2025: CSS layers, `:has()`, `color-mix()`, `light-dark()`, `1lh`, container queries, `popover`, anchor positioning, `commandfor`. No polyfills for these.
-- **Framework-agnostic core.** No coupling to Solid (or any framework). A separate package may later wrap the CSS in Solid components; that is not part of v2 core.
+- **Framework-agnostic core.** The CSS pseudo-package has no coupling to Solid or any framework. The Solid pseudo-package wraps it as an optional convenience layer; the DOM pseudo-package provides a vanilla-JS path. Consumers fork whichever combination they need (see §3).
 
 ## 2. Non-goals
 
@@ -20,26 +20,101 @@ This document specifies a clean-room rebuild of the Janus UI library. It is writ
 - A combobox / typeahead component. (See §14.)
 - Toast / notifications system. Not used in surveyed consumer apps; if needed later, `[popover]` + a queue pattern is straightforward to build outside Janus.
 
-## 3. Package layout
+## 3. Pseudo-package layout
 
-Three core packages plus one optional build plugin. Each is independently installable.
+Janus v2 ships as a **fork-and-copy template**, not as published npm packages. Consumers clone the directories they want into their own repo and own the code from there — same model as shadcn/ui. This eliminates the semver and dependency-update overhead a real package would carry, at the cost of a structured update process (see §3.2).
+
+### 3.1 The pseudo-packages
+
+The library is organized into **pseudo-packages**: directories under `src/lib/` that are each independently consumable. A consumer copies only the directories they need. There is a single root `package.json` for development; pseudo-packages do not have their own.
 
 ```
-@janus/css       Pure CSS. No JS. Default for static sites and frameworks
-                 that want to bring their own templating.
-@janus/dom       Vanilla-JS progressive-enhancement layer. Form validation,
-                 modal focus management, listbox keyboard nav. Reads
-                 prefixed data-* attributes (data-t-*, data-c-*) off DOM
-                 nodes — no framework required. See §4 for the prefix scheme.
-@janus/solid     Thin Solid wrappers around @janus/css + @janus/dom.
-                 Optional convenience layer.
-@janus/vite      Build plugin enabling the SSR-introspection bundling
-                 pattern (§12.4). Walks the SSR build's module graph and
-                 generates a precise client-side behavior bundle. Only
-                 needed for apps with separate SSR + client builds.
+src/lib/
+  css/        Pure CSS. No JS. Default for static sites and frameworks
+              that want to bring their own templating. Standalone.
+  utils/      Framework-agnostic JS/TS utilities (data structures, type
+              guards, DOM-free helpers). Depended on by dom/ and solid/.
+  dom/        Vanilla-JS progressive-enhancement layer. Form validation,
+              modal focus management, listbox keyboard nav. Reads
+              prefixed data-* attributes (data-t-*, data-c-*) off DOM
+              nodes — no framework required. See §4 for the prefix scheme.
+              Depends on utils/.
+  solid/      Thin Solid wrappers around css/ + dom/. Optional
+              convenience layer. Holds Solid-specific utilities
+              (signals, resources, etc.) internally in solid/utils/.
+              Depends on css/, dom/, utils/.
+
+plugins/      Vite plugins. Not pseudo-packaged as a unit — each file
+              is independently copyable. Consumers pull whichever
+              they need.
+  vite-plugin-purgecss.ts        Removes unused class names from emitted CSS.
+  vite-plugin-manglecss.ts       Shortens CSS class names in builds.
+  vite-plugin-ssg.ts             Static-site generation for SSR routes.
+  vite-plugin-janus-bundle.ts    SSR-introspection client bundling — §12.4.
 ```
 
-Consumers like a marketing site pull only `@janus/css`. App-shell consumers add `@janus/dom`. Solid apps add `@janus/solid`. SSR apps that care about client JS weight add `@janus/vite`.
+Pseudo-packages are addressed via tsconfig path aliases (`~/lib/css/*`, `~/lib/dom/*`, etc., matching the existing repo convention). Consumers who fork a pseudo-package keep, rewrite, or rename the alias in their own tsconfig as they prefer.
+
+Typical consumer profiles:
+
+- **Static marketing site** — `src/lib/css/` only.
+- **Vanilla-JS app with progressive enhancement** — `src/lib/css/` + `src/lib/utils/` + `src/lib/dom/`.
+- **Solid SPA / SSR app** — all four pseudo-packages.
+- **SSR app that cares about client JS weight** — additionally copy `plugins/vite-plugin-janus-bundle.ts` (and `vite-plugin-purgecss.ts` / `vite-plugin-manglecss.ts` for CSS pruning).
+
+### 3.2 Update mechanism (agent-driven sync)
+
+Without semver, consumers stay current via an **agent-driven sync**. The intended workflow is: a consumer tells their LLM agent "read the Janus repo's README and pull relevant changes for the pseudo-packages I've copied." Five artifacts make that workable.
+
+**Per-pseudo-package `janus.json`** — a small manifest at each pseudo-package root:
+
+```json
+{
+  "name": "dom",
+  "summary": "Vanilla-JS progressive-enhancement layer.",
+  "depends": ["utils"],
+  "configs": {
+    "tsconfig": "./tsconfig.json",
+    "eslint": "./eslint.config.js",
+    "vitest": "./vitest.config.ts"
+  }
+}
+```
+
+Declares dependencies on sibling pseudo-packages and identifies which config files a consumer needs to wire into their own setup. Agents read this first when copying a pseudo-package to determine what else must come with it.
+
+**Per-pseudo-package `CHANGELOG.md`** — dated entries with explicit `BREAKING` / `ADDED` / `CHANGED` labels. For breaking changes, a one-line "consumer action required" line describes the edit a forked copy needs (`rename --v-text-size to --v-font-size`, `c-button no longer reads --c-button-radius — set --o-input-box__radius instead`). The agent uses these lines to translate Janus changes into edits in the consumer's fork.
+
+**Root `CHANGELOG.md`** — one line per release pointing at which pseudo-package changelogs to read. Lets an agent quickly scope what's relevant before drilling into per-package entries.
+
+**Root `README.md` "Updating your fork" section** — short, prescriptive instructions written *for the consumer's agent*: how to find the consumer's last-synced commit per pseudo-package, run `git log <sha>..HEAD -- src/lib/<name>/` against this repo, apply the changes per the changelogs, and bump the sync record. The intended consumer prompt is approximately "read the Janus README and do what it says for the pseudo-packages I've copied."
+
+**Consumer-side sync anchor** — a file (e.g. `.janus-sync.json`) the consumer's agent maintains in the consumer repo, recording the commit SHA each copied pseudo-package was last synced from. Janus doesn't enforce the shape — the README documents a suggested format and the agent populates it. Without an anchor, the agent has no way to scope "what's new since last time."
+
+We deliberately use plain `README.md` per pseudo-package (and global) rather than `AGENTS.md` / `CLAUDE.md`: README is universal across agents and tools, and the global one is a single discoverable entry point. Consumers can mirror the relevant section into their own `CLAUDE.md` / `AGENTS.md` if their workflow benefits from autoload.
+
+### 3.3 Enforcing pseudo-package boundaries
+
+Cross-pseudo-package imports are enforced by a custom ESLint rule. The alternative — relying on convention — silently drifts: a contributor adds `css/` → `dom/` somewhere innocuous, and now `css/` is no longer forkable in isolation.
+
+The rule:
+
+1. Determines which pseudo-package each file belongs to (by path).
+2. Parses imports and identifies any pointing at a different pseudo-package.
+3. Rejects imports whose target pseudo-package isn't listed in the source pseudo-package's `janus.json` `depends`.
+
+Runs in CI on every PR. Adding a new cross-pseudo-package dependency requires editing `depends` explicitly, which surfaces the choice for review. Plugins under `plugins/` aren't pseudo-packaged — they're individually copyable files and their cross-imports are reviewed by hand.
+
+### 3.4 Per-pseudo-package configs
+
+Each pseudo-package has its own `tsconfig.json` extending the root config, and (where applicable) its own `eslint.config.js` and `vitest.config.ts`. Each tightens or relaxes rules to match its constraints:
+
+- `css/` has no TypeScript at all; only stylelint applies.
+- `utils/` forbids DOM types and any framework import — keeps it portable.
+- `dom/` allows DOM types but forbids framework imports.
+- `solid/` allows everything; this is the framework-coupled layer.
+
+These configs double as executable documentation: a consumer LLM agent reading `src/lib/dom/tsconfig.json` learns "this code may not assume Solid is available" without having to be told.
 
 ## 4. Cascade architecture
 
@@ -511,7 +586,7 @@ Approved tools:
 
 Drop from v1: the broader text-overflow-with-tooltip machinery. If consumers need it they can compose `t-truncate` with `c-tooltip`.
 
-## 12. The JS layer (`@janus/dom`)
+## 12. The JS layer (`src/lib/dom`)
 
 The JS layer is a toolkit of small, composable behaviors that attach to DOM elements. Components ship as thin compositions of these utilities. Consumers can use the same utilities directly to build custom controls (toolbars, command palettes, navigable lists) without leaving the Janus model.
 
@@ -538,7 +613,7 @@ Field-level constraints use native HTML5 attributes — `required`, `pattern`, `
 
 ```ts
 // 1. Named validators — registered once at module load. Lives for page lifetime.
-import { registerValidator } from '@janus/dom/form';
+import { registerValidator } from '~/lib/dom/form';
 
 registerValidator('match-password', (el: HTMLInputElement) => {
   const target = el.form?.elements.namedItem('password') as HTMLInputElement | null;
@@ -556,7 +631,7 @@ registerValidator('match-password', (el: HTMLInputElement) => {
 // 2. Inline closures — stored in a WeakMap keyed by element identity.
 //    No IDs. Element GC cleans up automatically; the returned cleanup() is
 //    only needed if you want to remove a validator while the element is alive.
-import { addValidator } from '@janus/dom/form';
+import { addValidator } from '~/lib/dom/form';
 
 const cleanup = addValidator(inputEl, (el) => {
   if (el.value.includes('bob')) return 'No Bobs allowed';
@@ -596,7 +671,7 @@ When a child of a `data-t-validate-group` changes, every other touched child re-
 **Server-fed errors.**
 
 ```ts
-import { setErrors } from '@janus/dom/form';
+import { setErrors } from '~/lib/dom/form';
 setErrors(formEl, { email: 'Already taken', username: 'Reserved' });
 ```
 
@@ -605,7 +680,7 @@ Errors keyed by field `name`. Each persists until the user changes that field, a
 **Submit handlers — same registry + WeakMap pattern as validators.**
 
 ```ts
-import { registerSubmitHandler, addSubmitHandler, type SubmitHandler } from '@janus/dom/form';
+import { registerSubmitHandler, addSubmitHandler, type SubmitHandler } from '~/lib/dom/form';
 
 // 1. Named — registered once at module load, referenced from markup
 registerSubmitHandler('signup', async (data, form) => {
@@ -699,10 +774,10 @@ Each utility does one job, attaches to an element, returns a `cleanup()` functio
 | `activeDescendant` | `activeDescendant(el, { items, onActive })` | Manages `aria-activedescendant` based on arrow keys without moving DOM focus. Used by listbox / combobox patterns. |
 | `anchorShim` | `anchorShim(el, { anchor })` | JS fallback for CSS anchor positioning. Only needed if §15 indicates the browser lacks native support. |
 
-**Module shape.** Each utility ships in its own file (`@janus/dom/behaviors/roving-focus`, etc.) as a function-with-property — callable as the imperative API, with its `data-t-*` attribute name on `.attr`:
+**Module shape.** Each utility ships in its own file (`src/lib/dom/behaviors/roving-focus.ts`, etc.) as a function-with-property — callable as the imperative API, with its `data-t-*` attribute name on `.attr`:
 
 ```ts
-// @janus/dom/behaviors/roving-focus.ts
+// src/lib/dom/behaviors/roving-focus.ts
 export function rovingFocus(el: HTMLElement, opts: RovingFocusOptions) { /* ... */ }
 rovingFocus.attr = 'data-t-roving-focus';
 ```
@@ -710,7 +785,7 @@ rovingFocus.attr = 'data-t-roving-focus';
 The dual role is load-bearing for the SSR-introspection bundling pattern (§12.4): SSR-time code that renders a behavior's attribute imports the module and reads `.attr` to compose the data attribute — that read pins the module into the SSR bundle's import graph, where the build plugin can discover it. For framework-agnostic consumption a tiny helper does the spread:
 
 ```ts
-// @janus/dom
+// src/lib/dom/data-attr.ts
 export function dataAttr(b: { attr: string }, value: string | true = true) {
   return { [b.attr]: value === true ? '' : value };
 }
@@ -733,7 +808,7 @@ The Solid wrappers (§13) import behaviors directly inside their component bodie
 ```
 
 ```ts
-import { mount } from '@janus/dom'
+import { mount } from '~/lib/dom'
 mount() // scans document and wires
 ```
 
@@ -752,18 +827,89 @@ c-styled-select = [popover] + rovingFocus + activeDescendant + typeaheadFilter +
 
 A consumer building a custom toolbar, command palette, or any list-with-keyboard-nav reaches for the same utilities directly. There is no "private" JS in Janus components that consumers can't replicate.
 
-## 13. Solid layer (@janus/solid)
+### 12.4 Bundling patterns
+
+`src/lib/dom` ships two ways to get behaviors into the client. Pick one per app.
+
+The default entry (`~/lib/dom`) exports the API surface (`mount`, `dataAttr`, `registerValidator`, `registerSubmitHandler`, etc.) and **does not** side-effect-import any behaviors. Pulling behaviors in is a separate step, satisfied by exactly one of the patterns below.
+
+**Pattern A — static HTML + everything bundle.** Side-effect-import the catchall `~/lib/dom/all` entry, which pulls in every behavior + component utility. `mount()` then discovers them by scanning attributes. No build tooling required.
+
+```html
+<script type="module">
+  import '~/lib/dom/all';
+  import { mount } from '~/lib/dom';
+  mount();
+</script>
+```
+
+Right for static sites, CMS pages, demos, prototypes — anywhere a bundler isn't in play. Ships more JS than strictly needed, but the base bundle is small enough that this is rarely a concern.
+
+**Pattern B — SSR-introspection bundle.** For apps with separate SSR and client builds, `plugins/vite-plugin-janus-bundle.ts` produces a per-app client bundle containing exactly the behaviors the SSR pass referenced. The mechanism rests on §12.2's module shape: SSR-time code reads `behavior.attr` to compose data attributes (via Solid wrappers, or `dataAttr()` for custom controls). That read pins the behavior module in the SSR build's import graph; tree-shaking can't eliminate it.
+
+The plugin attaches to the SSR build, walks the post-tree-shake `bundle`, and writes a manifest:
+
+```ts
+// plugins/vite-plugin-janus-bundle.ts (SSR-side, sketch)
+generateBundle(_opts, bundle) {
+  const used = new Set<string>();
+  for (const chunk of Object.values(bundle)) {
+    if (chunk.type !== 'chunk') continue;
+    for (const id of chunk.moduleIds) {
+      const m = id.match(/lib\/dom\/(behaviors|components)\/([a-z-]+)/);
+      if (m) used.add(`${m[1]}/${m[2]}`);
+    }
+  }
+  this.emitFile({
+    type: 'asset',
+    fileName: '.janus/manifest.json',
+    source: JSON.stringify([...used].sort()),
+  });
+}
+```
+
+The same plugin, configured on the client build, reads the manifest and serves a virtual module:
+
+```ts
+// virtual:janus-dom (generated from manifest.json)
+import '~/lib/dom/behaviors/roving-focus';
+import '~/lib/dom/behaviors/request-close';
+// ...exactly the modules the SSR bundle referenced
+```
+
+Client entry:
+
+```ts
+import 'virtual:janus-dom';   // Pattern B's equivalent of ~/lib/dom/all
+import { mount } from '~/lib/dom';
+mount();
+```
+
+Each behavior module self-registers as a side effect — the same registration `~/lib/dom/all` relies on. The client therefore contains exactly the set of behaviors any SSR-rendered template could plausibly produce.
+
+**Why not source scanning.** The SSR build's import graph already encodes exactly what gets rendered. Source-scanning for `data-t-*` literals would dual-maintain the convention (filename ↔ attribute name) and miss dynamic cases (`dataAttr(someBehavior)` where `someBehavior` is runtime-chosen). Module-graph introspection is precise without that overhead.
+
+**Dev mode.** `vite dev` doesn't run the SSR-build step against a static `bundle` object. Default: treat dev as Pattern A — ship the everything bundle. Simple, fast HMR, no surprise dev-vs-prod *behavior* divergence (only bundle composition differs, which is a prod-build concern). For teams that want strict parity, a second plugin mode walks Vite's `server.moduleGraph` on the SSR side and regenerates the virtual module from there; invalidate on SSR module updates and Vite's HMR cascades the client.
+
+**Form-engine inclusion.** The dispatcher and `registerValidator` / `registerSubmitHandler` APIs sit under `~/lib/dom/form`. They land in the client iff some SSR-time code path imports them (Solid's `<Form>` / `<Input>` do automatically; pure-DOM consumers `import { registerValidator } from '~/lib/dom/form'` at module load). Validator and submit-handler bodies themselves live in consumer code and tree-shake by normal means — the plugin doesn't enumerate names.
+
+**Multi-bundle / lazy-loading direction.** The manifest mechanism extends naturally; only the codegen that turns it into the virtual module's contents changes.
+
+- **Per-route splitting.** When the SSR build emits one entry chunk per route, the plugin writes one manifest per chunk and the client virtual module becomes per-route. Behaviors used only on `/settings` aren't bundled into `/marketing`. Behaviors common to multiple routes hoist via Rollup's `manualChunks` — the same problem-and-solution as any other code split.
+- **Per-behavior dynamic loading.** Generate `loaders[attr] = () => import(...)` instead of static imports. `mount()` resolves each scanned attribute lazily. Wins when individual behaviors are large (`c-styled-select` is the obvious candidate) or rarely used; loses first-interaction latency on cheap behaviors. A `lazy: ['styled-select']` allowlist makes the choice granular without forcing it on every behavior.
+
+## 13. Solid layer (`src/lib/solid`)
 
 The Solid wrapper is the thinnest possible mapping from props to DOM plus the JS layer's `data-t-*` activation attributes. Two design rules:
 
 1. **No prop-mod context.** Wrapper-to-leaf wiring uses a render-prop + hook pattern. No upward-merging context, no `(prev) => newValue` prop transforms. Layering across wrappers happens by explicit `attrs(prev, ...)` merges at the consumer's call site.
-2. **No component-side behavior wiring.** Behaviors are activated by `data-t-*` attributes (§12). The Solid component renders the attr; `@janus/dom`'s `mount()` registers handlers. Components never call `createValidator` or push callbacks into a registry.
+2. **No component-side behavior wiring.** Behaviors are activated by `data-t-*` attributes (§12). The Solid component renders the attr; `dom/`'s `mount()` registers handlers. Components never call `createValidator` or push callbacks into a registry.
 
 ### 13.1 Two shared helpers
 
 ```ts
 /** Enforced: `disabled` -> `aria-disabled`. Native `disabled` is never emitted
- *  by a Janus component — keeps controls focusable + announced. @janus/dom's
+ *  by a Janus component — keeps controls focusable + announced. dom/'s
  *  form engine must filter aria-disabled inputs from submission. */
 export function ariaize(p: { disabled?: boolean; required?: boolean; invalid?: boolean }): {
   'aria-disabled'?: true; 'aria-required'?: true; 'aria-invalid'?: true;
@@ -773,7 +919,7 @@ export function ariaize(p: { disabled?: boolean; required?: boolean; invalid?: b
 export function attrs(...parts: (string | false | null | undefined)[]): string | undefined;
 ```
 
-`ariaize` is **opinionated and non-negotiable at the framework boundary**. `<Input disabled />` renders `<input aria-disabled="true">` — never the native HTML `disabled` attribute. A consumer who genuinely needs native `disabled` drops to a raw `<input>`. Rationale: a Janus-styled disabled control should behave the same way every time; aria-disabled keeps tab order intact and gives screen-reader users a clearer signal than vanishing focus. The SSR / no-JS edge case (a form submitted before `mount()` runs) is accepted — Solid implies JS at runtime, and the static-HTML path is `@janus/css` + raw HTML where the consumer writes their own attributes.
+`ariaize` is **opinionated and non-negotiable at the framework boundary**. `<Input disabled />` renders `<input aria-disabled="true">` — never the native HTML `disabled` attribute. A consumer who genuinely needs native `disabled` drops to a raw `<input>`. Rationale: a Janus-styled disabled control should behave the same way every time; aria-disabled keeps tab order intact and gives screen-reader users a clearer signal than vanishing focus. The SSR / no-JS edge case (a form submitted before `mount()` runs) is accepted — Solid implies JS at runtime, and the static-HTML path is `css/` + raw HTML where the consumer writes their own attributes.
 
 ### 13.2 Labelling: `useLabelledInput` hook + thin layout components
 
@@ -825,7 +971,7 @@ When the consumer needs to merge their own ARIA contribution with the wrapper's,
 interface InputProps extends Omit<ComponentProps<'input'>, 'type'> {
   /** Space-separated names of validators registered via registerValidator(). */
   validators?: string;
-  /** Inline closure validator. Stored in @janus/dom's WeakMap via ref. */
+  /** Inline closure validator. Stored in dom/'s WeakMap via ref. */
   onValidate?: Validator<HTMLInputElement>;
   // ...native attrs, invalid, onValueInput, etc.
 }
@@ -840,7 +986,7 @@ If pain emerges around parameterized built-ins, the path is to add them as pre-r
 
 ### 13.5 Form wrappers
 
-The Solid form components mirror the `@janus/dom/form` contract — each is ~5–20 LOC of attribute rendering plus a single conditional ref for the closure case.
+The Solid form components mirror the `~/lib/dom/form` contract — each is ~5–20 LOC of attribute rendering plus a single conditional ref for the closure case.
 
 ```tsx
 export interface FormProps extends Omit<ComponentProps<'form'>, 'onSubmit'> {
@@ -976,9 +1122,9 @@ The render-prop + hook shape ports mechanically:
 - **React**: `createUniqueId` → `useId`; identical render-prop signature.
 - **Vue 3**: render-prop becomes a scoped slot.
 - **Svelte 5**: render-prop becomes a snippet prop.
-- **No framework**: consumers write IDs in HTML and use `@janus/css` + `@janus/dom` directly.
+- **No framework**: consumers write IDs in HTML and use `css/` + `dom/` directly.
 
-No Solid-specific reactive primitive (signals, `splitProps`, etc.) leaks into the public API of `@janus/solid` beyond the prop accessors themselves. A future `@janus/react` would be near-1:1.
+No Solid-specific reactive primitive (signals, `splitProps`, etc.) leaks into the public API of `src/lib/solid/` beyond the prop accessors themselves. A future `src/lib/react/` pseudo-package would be near-1:1.
 
 ## 14. Explicitly dropped from v1
 
@@ -1009,92 +1155,143 @@ The build assumes the following are available without fallback. Verify against t
 - `commandfor` / `command` attributes (verify: still relatively new)
 - CSS anchor positioning (`anchor-name`, `position-anchor`, `position-try`)
 
-If `commandfor` or anchor positioning are not yet Baseline at build time, fall back to thin JS shims in `@janus/dom` (open/close handlers, JS-driven anchor math). Do NOT polyfill — shim only where the framework cannot function.
+If `commandfor` or anchor positioning are not yet Baseline at build time, fall back to thin JS shims in `src/lib/dom/` (open/close handlers, JS-driven anchor math). Do NOT polyfill — shim only where the framework cannot function.
 
 ## 16. Naming & file conventions
 
 ```
-packages/
+src/lib/
   css/
-    src/
-      index.css                 # @layer declaration + imports
-      reset.css
-      base.css
-      tokens/
-        spacing.css             # --v-spacing knob + derivations
-        color.css               # --v-color-* palette
-        typography.css
-        radius.css
-        shadow.css
-      objects/
-        box.css                 # .o-box
-        text-box.css            # .o-text-box
-        input-box.css           # .o-input-box  (shared base for button/input/textarea)
-        dialog.css              # .o-dialog
-        square.css              # .o-square
-        stack.css               # .o-stack
-        row.css                 # .o-row
-        group.css
-        grid.css
-        container.css           # .o-container with --o-container__max
-        split.css
-        centric.css             # .o-centric
-        ...
-      components/
-        button.css              # .c-button
-        card.css
-        modal.css
-        ...
-      variants/
-        colors.css              # .v-colors-* (tones consumed by c- components)
-        surface.css             # .v-surface-* (chrome treatments)
-        radius.css              # .v-radius-flat (cascade-step override — see §8.2)
-        text.css                # .v-text-display / .v-text-meta (role-based, sparingly)
-        # No .v-spacing-*, .v-input-size-*, or other t-shirt-scaled variants.
-        # Consumers define those in their own CSS as semantic scopes.
-      tools/
-        padding.css
-        flex.css
-        ...
-  dom/
-    src/
-      form/                     # form engine — §12.1
-        index.ts
-        validate.ts
-        submit.ts
-      behaviors/                # composable utilities — §12.2
-        roving-focus.ts
-        focus-trap.ts
-        restore-focus.ts
-        request-close.ts
-        typeahead-filter.ts
-        active-descendant.ts
-        anchor-shim.ts          # only if needed per §14
-      components/               # thin compositions — §12.3
-        tabs.ts
-        modal.ts
-        drawer.ts
-        popover.ts
-        menu.ts
-        styled-select.ts
-      mount.ts                  # declarative-mode scanner
-      index.ts
-  solid/
-    src/
-      aria.ts                   # ariaize + attrs — the only cross-cutting helpers
-      use-labelled-input.ts     # hook: returns {labelProps, descriptionProps,
-                                #                errorProps, inputProps, ids}
-      labelled-input.tsx        # LabelledInput / LabelledInline / LabelledInputGroup
-      input.tsx
-      button.tsx
-      card.tsx
+    janus.json                  # depends: [], configs: { stylelint }
+    CHANGELOG.md
+    README.md                   # what this pseudo-package is, how to fork it
+    .stylelintrc.js             # CSS-only lint config
+    index.css                   # @layer declaration + imports
+    reset.css
+    base.css
+    tokens/
+      spacing.css                # --v-spacing knob + derivations
+      color.css                  # --v-color-* palette
+      typography.css
+      radius.css
+      shadow.css
+    objects/
+      box.css                    # .o-box
+      text-box.css               # .o-text-box
+      input-box.css              # .o-input-box  (shared base for button/input/textarea)
+      dialog.css                 # .o-dialog
+      square.css                 # .o-square
+      stack.css                  # .o-stack
+      row.css                    # .o-row
+      group.css
+      grid.css
+      container.css              # .o-container with --o-container__max
+      split.css
+      centric.css                # .o-centric
       ...
-      # No prop-mod-context, no form-element-props, no auto-prop. Validators
-      # live in @janus/dom's registry (§12.1); Solid components just render
-      # data-t-validate attrs or ref-attach closures. See §13.
+    components/
+      button.css                 # .c-button
+      card.css
+      modal.css
+      ...
+    variants/
+      colors.css                 # .v-colors-* (tones consumed by c- components)
+      surface.css                # .v-surface-* (chrome treatments)
+      radius.css                 # .v-radius-flat (cascade-step override — see §8.2)
+      text.css                   # .v-text-display / .v-text-meta (role-based, sparingly)
+      # No .v-spacing-*, .v-input-size-*, or other t-shirt-scaled variants.
+      # Consumers define those in their own CSS as semantic scopes.
+    tools/
+      padding.css
+      flex.css
+      ...
+
+  utils/
+    janus.json                  # depends: []
+    CHANGELOG.md
+    README.md
+    tsconfig.json               # forbids DOM types + framework imports
+    eslint.config.js
+    vitest.config.ts
+    index.ts                    # re-exports
+    # framework-agnostic utilities (data structures, type guards, etc.)
+    # split into individual files by concern. No DOM, no framework.
+
+  dom/
+    janus.json                  # depends: ["utils"]
+    CHANGELOG.md
+    README.md
+    tsconfig.json               # allows DOM types, forbids framework imports
+    eslint.config.js
+    vitest.config.ts
+    form/                       # form engine — §12.1
+      index.ts
+      validate.ts
+      submit.ts
+    behaviors/                  # composable utilities — §12.2
+      roving-focus.ts
+      focus-trap.ts
+      restore-focus.ts
+      request-close.ts
+      typeahead-filter.ts
+      active-descendant.ts
+      anchor-shim.ts            # only if needed per §15
+    components/                 # thin compositions — §12.3
+      tabs.ts
+      modal.ts
+      drawer.ts
+      popover.ts
+      menu.ts
+      styled-select.ts
+    mount.ts                    # declarative-mode scanner
+    data-attr.ts                # dataAttr() helper — §12.2
+    index.ts                    # API surface only — no behavior side-effects
+    all.ts                      # Pattern A entry — side-effect-imports every
+                                #   behavior + component — §12.4
+
+  solid/
+    janus.json                  # depends: ["css", "dom", "utils"]
+    CHANGELOG.md
+    README.md
+    tsconfig.json               # full Solid + DOM types
+    eslint.config.js
+    vitest.config.ts
+    utils/                      # Solid-specific helpers (signals, resources,
+                                #   etc.) — kept internal to the solid/
+                                #   pseudo-package so utils/ stays framework-free
+    aria.ts                     # ariaize + attrs — the only cross-cutting helpers
+    use-labelled-input.ts       # hook: returns {labelProps, descriptionProps,
+                                #                errorProps, inputProps, ids}
+    labelled-input.tsx          # LabelledInput / LabelledInline / LabelledInputGroup
+    input.tsx
+    button.tsx
+    card.tsx
+    ...
+    # No prop-mod-context, no form-element-props, no auto-prop. Validators
+    # live in dom/'s registry (§12.1); Solid components just render
+    # data-t-validate attrs or ref-attach closures. See §13.
+
+plugins/                        # Individually copyable Vite plugins.
+                                # Not pseudo-packaged — each file standalone.
+  vite-plugin-purgecss.ts
+  vite-plugin-manglecss.ts
+  vite-plugin-ssg.ts
+  vite-plugin-janus-bundle.ts   # SSR-introspection bundling — §12.4
+
+# Root-level files (apply to the whole repo)
+CHANGELOG.md                    # one-line summary per release pointing at
+                                #   per-pseudo-package CHANGELOGs
+README.md                       # includes the "Updating your fork" section
+                                #   that drives the agent-driven sync — §3.2
+package.json                    # single root package.json — no per-pkg variants
+tsconfig.json                   # extends, with path aliases ~/lib/*
+eslint.config.js                # extends per-pseudo-package configs; includes
+                                #   the boundary-enforcing rule — §3.3
 ```
 
 One CSS file per object, component, variant. No barrel `.css` files that import many siblings — the entry `index.css` is the single import point.
+
+Every pseudo-package directory under `src/lib/` carries the same four files at its root: `janus.json`, `CHANGELOG.md`, `README.md`, and the configs it needs. This uniformity lets a consumer's agent treat any pseudo-package the same way at sync time — read the manifest, read the changelog since the last sync, apply changes, copy any updated configs.
 
 ## 17. Reference patterns to study from v1
 
@@ -1109,8 +1306,10 @@ The implementing agent should NOT read v1 source as a template, but the followin
 
 v2 is considered complete when:
 
-- A static HTML page using only `@janus/css` renders a complete UI (buttons, cards, forms, modals via `commandfor`, dropdowns via native select) with no JS at all.
-- Adding `@janus/dom` enhances forms with validation and modals with focus management — and nothing else changes visually.
+- A static HTML page using only `src/lib/css/` renders a complete UI (buttons, cards, forms, modals via `commandfor`, dropdowns via native select) with no JS at all.
+- Adding `src/lib/dom/` enhances forms with validation and modals with focus management — and nothing else changes visually.
+- A consumer can copy any single pseudo-package (with its declared `depends`) into a fresh repo and it builds + lints + tests without touching the others. The boundary lint rule (§3.3) is what guarantees this.
+- An LLM agent, given only the root `README.md` and a consumer's `.janus-sync.json`, can produce a coherent diff of "what needs to change in the consumer's fork to pick up the latest Janus" — no human translation step.
 - A typical element carries 1–3 classes. The 95th percentile is ≤ 5.
 - The `--v-*` knob surface is ≤ 20 documented variables.
 - No `t-` class sets an arbitrary numeric scale (no `t-px-2`, `t-mb-4`, etc.).
