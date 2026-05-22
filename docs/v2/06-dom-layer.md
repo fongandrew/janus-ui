@@ -188,7 +188,6 @@ Each utility does one job, attaches to an element, returns a `cleanup()` functio
 | `requestClose` | `requestClose(el, { onRequestClose? })` | Intercepts ESC, outside-click, and `commandfor close` invocations. Callback returns boolean to allow/cancel close (e.g. "discard unsaved changes?"). |
 | `typeaheadFilter` | `typeaheadFilter(el, { match })` | Buffers keystrokes (~500ms window) and calls `match(buffer)` to find / focus matching items. |
 | `activeDescendant` | `activeDescendant(el, { items, onActive })` | Manages `aria-activedescendant` based on arrow keys without moving DOM focus. Used by listbox / combobox patterns. |
-| `anchorShim` | `anchorShim(el, { anchor })` | JS fallback for CSS anchor positioning. Only needed if §15 indicates the browser lacks native support. |
 
 **Module shape.** Each utility ships in its own file (`src/lib/dom/behaviors/roving-focus.ts`, etc.) as a function-with-property — callable as the imperative API, with its `data-t-*` attribute name on `.attr`:
 
@@ -236,7 +235,7 @@ Janus's own components are thin wrappers over the toolkit:
 c-tabs          = rovingFocus(horizontal) + aria-selected sync
 c-modal         = native <dialog> + requestClose
 c-drawer        = native <dialog> + o-dialog chrome + edge-anchored CSS + requestClose
-c-popover       = [popover] + (anchorShim?) + requestClose
+c-popover       = [popover] + requestClose
 c-menu          = [popover] + rovingFocus(vertical) + typeaheadFilter
 c-styled-select = [popover] + rovingFocus + activeDescendant + typeaheadFilter + form engine
 ```

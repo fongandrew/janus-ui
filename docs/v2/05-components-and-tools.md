@@ -34,7 +34,7 @@ These use a native HTML element (`<dialog>`, `[popover]`) for most of their beha
 | `c-tabs` | `<div role="tablist">` with `role="tab"` buttons | `rovingFocus` (horizontal) for arrow / Home / End navigation; small JS syncs `aria-selected` and panel visibility. |
 | `c-modal` | `<dialog class="o-dialog">` | Layers modal-typical chrome on `o-dialog`: centered viewport positioning, backdrop tint, focus halo, header/body/footer slot conventions. `requestClose` for ESC / outside-click / `commandfor close` hooks. Focus trapping is native to `<dialog>`. |
 | `c-drawer` | `<dialog class="o-dialog c-drawer c-drawer--left">` | Composes `o-dialog`'s chrome with edge-anchored positioning + slide transition. Side variants: `c-drawer--left`, `c-drawer--right`, `c-drawer--top`, `c-drawer--bottom` set the anchor edge and the slide direction. A `--c-drawer__side` custom property mirrors the modifier for cases where you need to switch sides via inline style or scoped variable (rare). Same `requestClose` protocol as `c-modal`. |
-| `c-popover` | `[popover]` | `requestClose`; anchor positioning native (or `anchorShim` if browser lacks support). |
+| `c-popover` | `[popover]` | `requestClose`; native CSS anchor positioning. |
 | `c-menu` | `[popover]` with `role="menu"` | `rovingFocus` (vertical), `typeaheadFilter` for letter-jump. |
 
 ### 10.3 Composite components (substantial toolkit composition)

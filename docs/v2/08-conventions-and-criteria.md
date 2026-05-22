@@ -31,7 +31,7 @@ The build assumes the following are available without fallback. Verify against t
 - `commandfor` / `command` attributes (verify: still relatively new)
 - CSS anchor positioning (`anchor-name`, `position-anchor`, `position-try`)
 
-If `commandfor` or anchor positioning are not yet Baseline at build time, fall back to thin JS shims in `src/lib/dom/` (open/close handlers, JS-driven anchor math). Do NOT polyfill — shim only where the framework cannot function.
+If `commandfor` is not yet Baseline at build time, fall back to a thin JS shim in `src/lib/dom/` (open/close handlers). Do NOT polyfill — shim only where the framework cannot function. Anchor positioning is treated as a hard requirement; consumers whose target browsers don't support it should pick a different library.
 
 ## 16. Naming & file conventions
 
@@ -111,7 +111,6 @@ src/lib/
       request-close.ts
       typeahead-filter.ts
       active-descendant.ts
-      anchor-shim.ts            # only if needed per §15
     components/                 # thin compositions — §12.3
       tabs.ts
       modal.ts
