@@ -50,7 +50,7 @@ plugins/      Vite plugins. Not pseudo-packaged as a unit — each file
   vite-plugin-purgecss.ts        Removes unused class names from emitted CSS.
   vite-plugin-manglecss.ts       Shortens CSS class names in builds.
   vite-plugin-ssg.ts             Static-site generation for SSR routes.
-  vite-plugin-janus-bundle.ts    SSR-introspection client bundling — §12.4.
+  vite-plugin-janus-bundle.ts    SSR-driven handler purge for client bundle — §12.4.
 ```
 
 Pseudo-packages are addressed via tsconfig path aliases (`~/lib/css/*`, `~/lib/dom/*`, etc., matching the existing repo convention). Consumers who fork a pseudo-package keep, rewrite, or rename the alias in their own tsconfig as they prefer.

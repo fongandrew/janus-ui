@@ -6,10 +6,12 @@ Part 7 of the [Janus v2 build plan](./README.md). Covers the optional Solid wrap
 
 The Solid wrapper is the thinnest possible mapping from props to DOM plus the JS layer's `data-t-*` activation attributes. Two design rules:
 
-1. **No prop-mod context.** Wrapper-to-leaf wiring uses a render-prop + hook pattern. No upward-merging context, no `(prev) => newValue` prop transforms. Layering across wrappers happens by explicit `attrs(prev, ...)` merges at the consumer's call site.
+1. **No prop-mod context.** Wrapper-to-leaf wiring uses a render-prop + hook pattern. No upward-merging context, no `(prev) => newValue` prop transforms. Layering across wrappers happens by explicit `ca(prev, ...)` merges at the consumer's call site (§12.2.1).
 2. **No component-side behavior wiring.** Behaviors are activated by `data-t-*` attributes (§12). The Solid component renders the attr; `dom/`'s `mount()` registers handlers. Components never call `createValidator` or push callbacks into a registry.
 
-### 13.1 Two shared helpers
+### 13.1 Helpers at the framework boundary
+
+The DOM layer's `ca` (§12.2.1) is the workhorse for combining attribute objects produced by wrappers, handler producers, and consumer-passed props. Solid wrappers internally use `ca` to merge their own contributions with `...rest`. Two Solid-specific helpers sit alongside:
 
 ```ts
 /** Enforced: `disabled` -> `aria-disabled`. Native `disabled` is never emitted
@@ -19,7 +21,9 @@ export function ariaize(p: { disabled?: boolean; required?: boolean; invalid?: b
   'aria-disabled'?: true; 'aria-required'?: true; 'aria-invalid'?: true;
 };
 
-/** Space-join ARIA token attrs (aria-describedby, aria-labelledby). Skips falsy. */
+/** Space-join ARIA token strings (aria-describedby, aria-labelledby) for the
+ *  narrow inline case where you've already destructured one attr value and
+ *  just need a join. Prefer `ca` when merging whole prop objects. */
 export function attrs(...parts: (string | false | null | undefined)[]): string | undefined;
 ```
 
@@ -44,15 +48,19 @@ IDs are deterministic — `${inputId}-label`, `-desc`, `-err` — for debuggabil
 </LabelledInput>
 ```
 
-When the consumer needs to merge their own ARIA contribution with the wrapper's, the merge is explicit at the call site — no hidden context magic:
+When the consumer needs to merge their own ARIA contribution with the wrapper's, the merge is explicit at the call site — no hidden context magic. Use `ca` with a `concat`-wrapped contribution:
 
 ```tsx
+import { ca, concat } from '~/lib/dom/compose-attrs';
+
 <LabelledInput label="Email">
   {(p) => (
-    <Input {...p} aria-describedby={attrs(p['aria-describedby'], 'global-tip-id')} />
+    <Input {...ca(p, { 'aria-describedby': concat('global-tip-id') })} />
   )}
 </LabelledInput>
 ```
+
+For the narrower case of joining string values you've already destructured, `attrs(p['aria-describedby'], 'global-tip-id')` is fine — but reach for `ca` when merging whole prop objects.
 
 **Deep ARIA contribution across multiple wrapper layers is not supported.** A `<FormSection>` does *not* push aria-describedby into descendant inputs — section-level descriptions belong on the section element (`<section aria-describedby=...>`). If per-input contribution is genuinely needed, the consumer nests render-props by hand.
 

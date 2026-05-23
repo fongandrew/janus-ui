@@ -13,7 +13,7 @@ Part 8 of the [Janus v2 build plan](./README.md). Covers what was deliberately d
 | Text-overflow tooltip machinery | Replaced by `t-truncate` + manual `c-tooltip` when needed. |
 | Empty-state object class | Compose with stack + center. |
 | Sass-style `@define-mixin` system | All composition through CSS layers + custom properties; no preprocessor mixins. |
-| v1's behavior callback registry (`data-callback-*` plumbing) | Validators / submit handlers still use a registry (§12.1), but referenced by stable name from `data-t-validate` / `data-t-submit` — no per-render generated IDs. Closures go in a WeakMap. |
+| v1's behavior callback registry (`data-callback-*` plumbing) | Two patterns under one dispatcher (§12.2.2–§12.2.4): event callbacks referenced by `$`-prefixed name from `data-t-on-*` values, and activation attributes (`data-t-*`) for stateful behaviors. Callback names are stable strings tied to module filenames — no per-render generated IDs. Validators / submit handlers still use a name registry (§12.1). Closures go in a WeakMap. |
 | `o-top-nav-layout`, `o-sidebar-layout` (whole-page layouts) | Reframed as compositions of primitives (§10.4). The realistic needs — auto-hiding top nav, sidebar-to-drawer — decompose into recipes over `o-split`, `o-container`, `c-drawer` + CSS scroll-state / container queries. |
 
 ## 15. Browser feature gates
@@ -100,17 +100,47 @@ src/lib/
     tsconfig.json               # allows DOM types, forbids framework imports
     eslint.config.js
     vitest.config.ts
+    compose-attrs.ts            # ca / only / concat / override — §12.2.1
+    dispatch.ts                 # registerCallback + registerActivation +
+                                #   the document-level dispatchers — §12.2.2,
+                                #   §12.2.3, §12.2.4
+    mount.ts                    # initial DOM scan + MutationObserver wiring
     form/                       # form engine — §12.1
       index.ts
       validate.ts
       submit.ts
-    behaviors/                  # composable utilities — §12.2
-      roving-focus.ts
-      focus-trap.ts
-      restore-focus.ts
-      request-close.ts
-      typeahead-filter.ts
-      active-descendant.ts
+    handlers/                   # one file per activation attribute or callback
+                                #   name. Filename IS the manifest (§12.2.2 /
+                                #   §12.2.3) — the bundling plugin (§12.4)
+                                #   text-scans the SSR output for attribute
+                                #   names + $callback values and imports the
+                                #   matching modules. Each module top-level-
+                                #   calls registerCallback / registerActivation
+                                #   (side effect) and exports producers.
+
+      # Activation attributes (filename = attribute name).
+      data-t-roving-focus.ts
+      data-t-focus-trap.ts
+      data-t-restore-focus.ts
+      data-t-request-close.ts
+      data-t-typeahead-filter.ts
+      data-t-active-descendant.ts
+      data-t-validate.ts        # form engine's activation attrs use the same
+      data-t-submit.ts          #   filename-as-manifest convention so the
+      data-t-validate-group.ts  #   bundling story is uniform across the
+      data-t-validate-error.ts  #   library.
+      data-t-reset-on-close.ts
+      data-t-close-on-success.ts
+      data-c-modal-speed-bump.ts
+
+      # Event callbacks (filename = $name from data-t-on-* values).
+      # Names follow the BEM prefix scheme: $t-* for toolkit, $c-*__* for
+      # component-internal (see §12.2.2).
+      $t-focus-on-click.ts
+      $t-open-tab.ts
+      $c-modal__close.ts
+      $c-tabs__select.ts
+      ...
     components/                 # thin compositions — §12.3
       tabs.ts
       modal.ts
@@ -118,11 +148,9 @@ src/lib/
       popover.ts
       menu.ts
       styled-select.ts
-    mount.ts                    # declarative-mode scanner
-    data-attr.ts                # dataAttr() helper — §12.2
-    index.ts                    # API surface only — no behavior side-effects
+    index.ts                    # API surface only — no handler side-effects
     all.ts                      # Pattern A entry — side-effect-imports every
-                                #   behavior + component — §12.4
+                                #   handler module — §12.4
 
   solid/
     janus.json                  # depends: ["css", "dom", "utils"]
