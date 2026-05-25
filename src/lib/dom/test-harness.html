@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>DOM Layer Test Harness</title>
+	<link rel="stylesheet" href="/src/lib/css/index.css" />
+</head>
+<body data-js="t-kb-nav">
+	<!-- Tabs -->
+	<section id="test-tabs">
+		<div class="c-tabs">
+			<div role="tablist" data-js="t-roving-focus c-tabs__select" aria-orientation="horizontal">
+				<button role="tab" aria-selected="true" aria-controls="tab-panel-1" id="tab-1">Tab 1</button>
+				<button role="tab" aria-selected="false" aria-controls="tab-panel-2" id="tab-2">Tab 2</button>
+				<button role="tab" aria-selected="false" aria-controls="tab-panel-3" id="tab-3">Tab 3</button>
+			</div>
+			<div role="tabpanel" id="tab-panel-1" aria-labelledby="tab-1">Panel 1 content</div>
+			<div role="tabpanel" id="tab-panel-2" aria-labelledby="tab-2" hidden>Panel 2 content</div>
+			<div role="tabpanel" id="tab-panel-3" aria-labelledby="tab-3" hidden>Panel 3 content</div>
+		</div>
+	</section>
+
+	<!-- Modal -->
+	<section id="test-modal">
+		<button id="modal-trigger" commandfor="test-dialog" command="show-modal">Open Modal</button>
+		<dialog id="test-dialog" class="c-modal o-dialog" data-js="t-request-close t-restore-focus">
+			<div class="o-stack" style="padding: 1rem">
+				<h2>Test Modal</h2>
+				<p>Modal content here</p>
+				<button id="modal-close" onclick="this.closest('dialog').close()">Close</button>
+			</div>
+		</dialog>
+	</section>
+
+	<!-- Menu -->
+	<section id="test-menu">
+		<button id="menu-trigger" popovertarget="test-menu-popover">Open Menu</button>
+		<div id="test-menu-popover" role="menu" popover="auto"
+			data-js="t-roving-focus t-typeahead-filter t-request-close"
+			aria-orientation="vertical" class="c-menu o-menu">
+			<button role="menuitem">Apple</button>
+			<button role="menuitem">Banana</button>
+			<button role="menuitem">Cherry</button>
+			<button role="menuitem">Date</button>
+		</div>
+	</section>
+
+	<!-- Form validation -->
+	<section id="test-form">
+		<form data-js="t-validate t-submit" data-submit-handler="test-form-handler">
+			<div class="o-stack">
+				<label for="test-name">Name</label>
+				<input id="test-name" name="name" required aria-describedby="test-name-err" />
+				<span id="test-name-err" data-js="t-validate-error"></span>
+
+				<label for="test-email">Email</label>
+				<input id="test-email" name="email" type="email" required aria-describedby="test-email-err" />
+				<span id="test-email-err" data-js="t-validate-error"></span>
+
+				<div data-js="t-form-error"></div>
+
+				<button type="submit" class="c-button o-input-box v-colors-primary">Submit</button>
+				<div id="form-result"></div>
+			</div>
+		</form>
+	</section>
+
+	<!-- Roving focus toolbar -->
+	<section id="test-toolbar">
+		<div role="toolbar" data-js="t-roving-focus" aria-orientation="horizontal">
+			<button class="c-button o-input-box">Cut</button>
+			<button class="c-button o-input-box">Copy</button>
+			<button class="c-button o-input-box">Paste</button>
+		</div>
+	</section>
+
+	<script type="module">
+		import '~/lib/dom/all';
+		import { mount, registerSubmitHandler } from '~/lib/dom';
+
+		registerSubmitHandler('test-form-handler', async (data, form) => {
+			const resultEl = document.getElementById('form-result');
+			resultEl.textContent = `Submitted: ${data.get('name')} / ${data.get('email')}`;
+			return { ok: true };
+		});
+
+		mount();
+	</script>
+</body>
+</html>

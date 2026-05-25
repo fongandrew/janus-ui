@@ -13,6 +13,8 @@ import unusedImports from 'eslint-plugin-unused-imports';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
+import boundaryPlugin from './plugins/eslint/boundary-rule.js';
+
 export default tseslint.config(
 	{
 		ignores: ['dist/**/*', 'node_modules/**/*', '.*/**/*'],
@@ -221,7 +223,7 @@ export default tseslint.config(
 	// Restrict certain window-specific globals to avoid SSR or multi-window issues
 	{
 		files: ['src/**/*.{js,ts,jsx,tsx}'],
-		ignores: ['src/lib/utility/multi-view.ts', '**/test-utils/**', '**/*.test.*', '**/*.e2e.*'],
+		ignores: ['src/lib/utility/multi-view.ts', 'src/lib/dom/**', '**/test-utils/**', '**/*.test.*', '**/*.e2e.*'],
 		rules: {
 			'no-restricted-globals': [
 				'error',
@@ -232,6 +234,16 @@ export default tseslint.config(
 					}),
 				),
 			],
+		},
+	},
+
+	// Boundary rule for pseudo-package imports
+	{
+		files: ['src/lib/**/*.{js,ts,jsx,tsx}'],
+		ignores: ['**/*.test.*', '**/*.e2e.*'],
+		plugins: { boundary: boundaryPlugin },
+		rules: {
+			'boundary/no-cross-package': 'error',
 		},
 	},
 
