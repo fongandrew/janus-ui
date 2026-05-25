@@ -1,6 +1,6 @@
 # Janus v2 — Cascade and Variables
 
-Part 2 of the [Janus v2 build plan](./README.md). Covers the CSS layer architecture and the custom-property variable system.
+Part 2 of the [Janus v2 design spec](./README.md). Covers the CSS layer architecture and the custom-property variable system.
 
 ## 4. Cascade architecture
 
@@ -214,4 +214,4 @@ The bar for shipping a new mixin is high: it must bundle a fixed set of knobs th
 - `v-spacing $size` — the spacing bundle above.
 - `v-breakpoint-*` / `v-container-*` — media-/container-query wrappers (carried forward from v1's `variables/breakpoints.css`).
 
-Mixins were dropped wholesale in an earlier draft of this plan; the revised position is "use sparingly, only for irreducibly-bundled knob sets" (see §14).
+Mixins were dropped wholesale in an earlier draft of this spec; the revised position is "use sparingly, only for irreducibly-bundled knob sets" (see §14).

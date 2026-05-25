@@ -1,6 +1,6 @@
 # Janus v2 — Conventions and Success Criteria
 
-Part 8 of the [Janus v2 build plan](./README.md). Covers what was deliberately dropped from v1, browser feature gates, file layout, reference patterns, and the bar for considering v2 complete.
+Part 8 of the [Janus v2 design spec](./README.md). Covers what was deliberately dropped from v1, browser feature gates, file layout, reference patterns, and the bar for considering v2 complete.
 
 ## 14. Explicitly dropped from v1
 
@@ -29,11 +29,11 @@ The build assumes the following are available without fallback. Verify against t
 - Container queries (`@container`, `cqw` units)
 - `<dialog>` + `showModal()`
 - `popover` attribute + Popover API
-- `commandfor` / `command` attributes (verify: still relatively new)
+- `commandfor` / `command` attributes
 - CSS anchor positioning (`anchor-name`, `position-anchor`, `position-try`)
 - `scroll-state()` container queries — used by the auto-hiding-nav recipe in §10.4. Optional: the recipe degrades gracefully (nav stays visible) where unsupported.
 
-If `commandfor` is not yet Baseline at build time, fall back to a thin JS shim in `src/lib/dom/` (open/close handlers). Do NOT polyfill — shim only where the framework cannot function. Anchor positioning is treated as a hard requirement; consumers whose target browsers don't support it should pick a different library.
+`commandfor` and anchor positioning are both hard requirements — no shim, no polyfill. Consumers whose target browsers don't support them should pick a different library.
 
 ## 16. Naming & file conventions
 

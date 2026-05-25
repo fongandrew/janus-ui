@@ -1,6 +1,6 @@
 # Janus v2 — The DOM Layer
 
-Part 6 of the [Janus v2 build plan](./README.md). Covers the framework-agnostic JS layer under `src/lib/dom`.
+Part 6 of the [Janus v2 design spec](./README.md). Covers the framework-agnostic JS layer under `src/lib/dom`.
 
 ## 12. The JS layer (`src/lib/dom`)
 

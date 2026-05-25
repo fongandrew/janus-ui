@@ -1,6 +1,6 @@
 # Janus v2 — The Solid Layer
 
-Part 7 of the [Janus v2 build plan](./README.md). Covers the optional Solid wrappers under `src/lib/solid`.
+Part 7 of the [Janus v2 design spec](./README.md). Covers the optional Solid wrappers under `src/lib/solid`.
 
 ## 13. Solid layer (`src/lib/solid`)
 

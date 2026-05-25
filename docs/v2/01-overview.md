@@ -1,6 +1,6 @@
 # Janus v2 — Overview
 
-Part 1 of the [Janus v2 build plan](./README.md). Covers goals, non-goals, and how the library is packaged.
+Part 1 of the [Janus v2 design spec](./README.md). Covers goals, non-goals, and how the library is packaged.
 
 ## 1. Goals
 

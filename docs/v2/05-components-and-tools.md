@@ -1,6 +1,6 @@
 # Janus v2 — Components and Tools
 
-Part 5 of the [Janus v2 build plan](./README.md). Covers the `c-` component classes and the narrow `t-` tools layer.
+Part 5 of the [Janus v2 design spec](./README.md). Covers the `c-` component classes and the narrow `t-` tools layer.
 
 ## 10. Components
 

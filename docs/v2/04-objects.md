@@ -1,6 +1,6 @@
 # Janus v2 — Objects
 
-Part 4 of the [Janus v2 build plan](./README.md). Covers the pure-CSS layout / structural primitives.
+Part 4 of the [Janus v2 design spec](./README.md). Covers the pure-CSS layout / structural primitives.
 
 ## 9. Objects (zero JS, pure CSS)
 

@@ -1,8 +1,12 @@
-# Janus v2 — Build Plan
+# Janus v2 — Design Spec
 
-This document specifies a clean-room rebuild of the Janus UI library. It is written so an agent with no prior context can build it from scratch in a fresh repository. There is no migration path from v1; learn from v1 but do not preserve its structure.
+This document specifies a clean-room rebuild of the Janus UI library. It describes the finished state of the system — what every layer looks like, how the pieces compose, and why each decision was made. It is written so an agent with no prior context can understand the full design.
 
-The plan is split across the files below. Read top-to-bottom for the full design, or jump to a part. Internal cross-references use the original §-section numbers — e.g. "see §5.2" refers to section 5.2 inside [02-cascade-and-variables.md](./02-cascade-and-variables.md).
+There is no migration path from v1; learn from v1 but do not preserve its structure.
+
+For **implementation sequencing** — what to build in what order — see [PLAN.md](./PLAN.md).
+
+The spec is split across the files below. Read top-to-bottom for the full design, or jump to a part. Internal cross-references use the original §-section numbers — e.g. "see §5.2" refers to section 5.2 inside [02-cascade-and-variables.md](./02-cascade-and-variables.md).
 
 ## Contents
 

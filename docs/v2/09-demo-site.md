@@ -1,6 +1,6 @@
 # Janus v2 — Demo Site
 
-Part 9 of the [Janus v2 build plan](./README.md). Covers the demo / marketing site that ships alongside the library.
+Part 9 of the [Janus v2 design spec](./README.md). Covers the demo / marketing site that ships alongside the library.
 
 The demo site serves two roles: a short marketing page explaining what Janus is and how to adopt it, and a live playground for exploring the design system's knobs, colors, and components.
 

@@ -1,6 +1,6 @@
 # Janus v2 — Spacing, Color, and Radius
 
-Part 3 of the [Janus v2 build plan](./README.md). Covers the three knob systems that drive most of Janus's visual rhythm.
+Part 3 of the [Janus v2 design spec](./README.md). Covers the three knob systems that drive most of Janus's visual rhythm.
 
 ## 6. Spacing & padding primitives
 
