@@ -18,7 +18,7 @@
 		"jsxImportSource": "solid-js",
 
 		/* Linting */
-		"ignoreDeprecations": "6.0",
+		"ignoreDeprecations": "5.0",
 		"strict": true,
 		"allowUnreachableCode": false,
 		"exactOptionalPropertyTypes": true,

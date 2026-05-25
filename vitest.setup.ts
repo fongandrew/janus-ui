@@ -1,6 +1,4 @@
 import '@testing-library/jest-dom/vitest';
-import '~/lib/utility/test-utils/custom-matchers';
-
 import { vi } from 'vitest';
 
 window.HTMLElement.prototype.scrollIntoView = () => {};

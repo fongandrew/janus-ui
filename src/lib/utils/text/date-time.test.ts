@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import * as dateTime from './date-time';
 import {
 	formatDate,
 	formatDateContextual,
@@ -60,30 +59,42 @@ describe('Date time formatting', () => {
 	});
 
 	describe('formatDateContextual', () => {
+		beforeEach(() => {
+			vi.useFakeTimers();
+		});
+
+		afterEach(() => {
+			vi.useRealTimers();
+		});
+
 		it('formats dates without year when it is this year', () => {
-			vi.spyOn(dateTime, 'isThisYear').mockReturnValue(true);
+			vi.setSystemTime(new Date(2021, 5, 15));
 			expect(formatDateContextual(new Date(2021, 0, 1), 'en-US')).toEqual('Jan 1');
-			vi.restoreAllMocks();
 		});
 
 		it('formats dates with year when it is not this year', () => {
-			vi.spyOn(dateTime, 'isThisYear').mockReturnValue(false);
+			vi.setSystemTime(new Date(2022, 5, 15));
 			expect(formatDateContextual(new Date(2021, 0, 1), 'en-US')).toEqual('Jan 1, 2021');
-			vi.restoreAllMocks();
 		});
 	});
 
 	describe('formatDateContextualNumeric', () => {
+		beforeEach(() => {
+			vi.useFakeTimers();
+		});
+
+		afterEach(() => {
+			vi.useRealTimers();
+		});
+
 		it('formats dates numerically without year when it is this year', () => {
-			vi.spyOn(dateTime, 'isThisYear').mockReturnValue(true);
+			vi.setSystemTime(new Date(2021, 5, 15));
 			expect(formatDateContextualNumeric(new Date(2021, 0, 1), 'en-US')).toEqual('1/1');
-			vi.restoreAllMocks();
 		});
 
 		it('formats dates numerically with year when it is not this year', () => {
-			vi.spyOn(dateTime, 'isThisYear').mockReturnValue(false);
+			vi.setSystemTime(new Date(2022, 5, 15));
 			expect(formatDateContextualNumeric(new Date(2021, 0, 1), 'en-US')).toEqual('1/1/2021');
-			vi.restoreAllMocks();
 		});
 	});
 
