@@ -1,13 +1,12 @@
 {
   "name": "janus-ui",
-  "version": "1.0.0",
-  "description": "Scaffolding / UI components meant for use with both SolidJS and vanilla JS",
+  "version": "2.0.0",
+  "description": "A CSS-first UI design system with layered SolidJS integration",
   "main": "index.js",
   "type": "module",
   "license": "MIT",
   "scripts": {
     "build": "vite build",
-    "check:apca": "node --experimental-strip-types --no-warnings scripts/check-apca.ts",
     "clean": "rm -rf dist",
     "dev": "vite",
     "eslint": "eslint --report-unused-disable-directives --max-warnings 0",
@@ -20,12 +19,11 @@
     "test:unit": "vitest run",
     "test:e2e": "playwright test --project=chromium-*",
     "test:e2e:all": "playwright test",
-    "typecheck": "npm run typecheck:lib && tsc --noEmit -p tsconfig.json",
-    "typecheck:lib": "tsc -p src/lib/tsconfig.json --emitDeclarationOnly --noEmit false"
+    "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "devDependencies": {
     "@eslint/js": "^9.16.0",
-    "@playwright/test": "^1.51.1",
+    "@playwright/test": "^1.52.0",
     "@solidjs/testing-library": "^0.8.10",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/user-event": "^14.6.1",
@@ -61,12 +59,9 @@
     "vitest": "^3.0.9"
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.6.12",
     "@solid-primitives/promise": "^1.1.1",
     "apca-w3": "^0.1.9",
-    "classix": "^2.2.0",
     "colorparsley": "^0.1.8",
-    "lucide-solid": "^0.468.0",
     "solid-js": "^1.9.3"
   }
 }

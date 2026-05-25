@@ -3,12 +3,7 @@
 		"target": "ESNext",
 		"useDefineForClassFields": true,
 		"lib": ["DOM", "DOM.Iterable", "ESNext"],
-		"types": [
-			"@testing-library/jest-dom/vitest",
-			"./types/assets",
-			"./types/colorparsley",
-			"vite/client"
-		],
+		"types": ["vite/client"],
 		"allowJs": false,
 		"module": "ESNext",
 		"skipLibCheck": true,
@@ -23,6 +18,7 @@
 		"jsxImportSource": "solid-js",
 
 		/* Linting */
+		"ignoreDeprecations": "6.0",
 		"strict": true,
 		"allowUnreachableCode": false,
 		"exactOptionalPropertyTypes": true,
@@ -37,21 +33,20 @@
 		/* Paths */
 		"baseUrl": ".",
 		"paths": {
-			"~/lib/*": ["dist/types/lib/*"],
+			"~/lib/css/*": ["src/lib/css/*"],
+			"~/lib/utils/*": ["src/lib/utils/*"],
+			"~/lib/dom/*": ["src/lib/dom/*"],
+			"~/lib/solid/*": ["src/lib/solid/*"],
 			"~/*": ["src/*"],
 			"@/*": ["assets/*"]
 		}
 	},
-	"include": ["assets", "dist/types/lib/**/*", "src", "vitest.setup.ts", "types"],
+	"include": ["assets", "src", "vitest.setup.ts"],
 	"exclude": [
 		"node_modules",
 		"plugins",
-		"scripts",
-		"src/lib",
 		"*.config.js",
 		"*.config.ts",
-		"*rc.js",
-		// This is annoying since it breaks type refs to the solid-js equivalents
-		"solid-js/types/server",
+		"*rc.js"
 	]
 }
