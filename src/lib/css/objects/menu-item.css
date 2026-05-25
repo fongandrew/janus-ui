@@ -1,0 +1,20 @@
+@layer objects {
+	.o-menu-item {
+		--o-menu-item__height: var(--v-input-height);
+		--o-menu-item__font-size: var(--v-font-size);
+
+		display: flex;
+		align-items: center;
+		gap: var(--v-inline-gap);
+		min-height: var(--o-menu-item__height);
+		padding: calc((var(--o-menu-item__height) - 1lh) / 2)
+			var(--v-pad-inline);
+		font-size: var(--o-menu-item__font-size);
+		cursor: pointer;
+		border-radius: var(--o-input-box__radius, var(--v-radius));
+		border: none;
+		background: none;
+		width: 100%;
+		text-align: start;
+	}
+}

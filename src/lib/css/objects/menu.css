@@ -1,0 +1,11 @@
+@layer objects {
+	.o-menu {
+		--o-menu__pad-block: calc(var(--v-pad-block) * 0.5);
+		--o-menu__pad-inline: 0;
+
+		display: flex;
+		flex-direction: column;
+		padding: var(--o-menu__pad-block) var(--o-menu__pad-inline);
+		list-style: none;
+	}
+}

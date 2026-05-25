@@ -1,0 +1,16 @@
+@layer components {
+	.c-alert {
+		padding: calc(var(--v-pad-block) - (1lh - 1em) / 2)
+			var(--v-pad-inline);
+		border-radius: var(--v-radius);
+		border: var(--v-border-width) solid var(--v-border-color);
+	}
+
+	.c-error-message:empty {
+		display: none;
+	}
+
+	.c-alert:has(.c-alert__children[data-t-empty]) {
+		display: none;
+	}
+}

@@ -1,0 +1,9 @@
+@layer objects {
+	.o-code {
+		--o-code__font-size: var(--v-font-size-code);
+
+		font-family: var(--v-font-family-mono);
+		font-size: var(--o-code__font-size);
+		line-height: var(--v-line-height-code);
+	}
+}

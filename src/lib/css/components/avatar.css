@@ -1,0 +1,21 @@
+@layer components {
+	.c-avatar {
+		width: var(--v-input-height);
+		height: var(--v-input-height);
+		border-radius: var(--v-radius);
+		overflow: hidden;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		background-color: color-mix(in hsl, var(--v-accent) 20%, var(--v-bg));
+		color: var(--v-accent);
+		font-weight: var(--v-font-weight-label);
+		font-size: calc(var(--v-input-height) * 0.4);
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+}

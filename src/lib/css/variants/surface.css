@@ -1,0 +1,43 @@
+@layer variants {
+	.v-surface-card {
+		background-color: var(--v-bg);
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--o-box__radius, var(--v-radius));
+		box-shadow: var(--v-shadow-outer);
+	}
+
+	.v-surface-elevated {
+		background-color: var(--v-bg);
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--o-box__radius, var(--v-radius));
+		box-shadow:
+			0 6px 9px -2px rgb(0 0 0 / 10%),
+			0 3px 5px -3px rgb(0 0 0 / 10%);
+	}
+
+	.v-surface-sunken {
+		background-color: color-mix(in hsl, var(--v-muted) 6%, var(--v-bg));
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--o-box__radius, var(--v-radius));
+		box-shadow: var(--v-shadow-inner);
+	}
+
+	.v-surface-glass {
+		background-color: color-mix(in hsl, var(--v-bg) 80%, transparent);
+		backdrop-filter: blur(8px);
+		border: var(--v-border-width) solid
+			color-mix(in hsl, var(--v-border-color) 50%, transparent);
+		border-radius: var(--o-box__radius, var(--v-radius));
+	}
+
+	.v-surface-gradient {
+		background: linear-gradient(
+			135deg,
+			var(--v-bg),
+			color-mix(in hsl, var(--v-accent) 8%, var(--v-bg))
+		);
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--o-box__radius, var(--v-radius));
+		box-shadow: var(--v-shadow-outer);
+	}
+}

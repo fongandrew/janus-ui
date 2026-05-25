@@ -1,0 +1,46 @@
+@layer components {
+	.c-menu {
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--o-box__radius, var(--v-radius));
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+		box-shadow: var(--v-shadow-outer);
+		position: fixed;
+		inset: unset;
+		margin: 0;
+		z-index: 50;
+		overflow: auto;
+		min-width: 10rem;
+		max-width: min(20rem, calc(100vw - 1rem));
+		max-height: min(20rem, calc(100vh - 1rem));
+
+		/* Anchor positioning (Chromium only) */
+		position-anchor: var(--c-menu__anchor);
+		top: anchor(bottom);
+		left: anchor(start);
+		position-try-fallbacks: flip-block, flip-inline;
+
+		/* Mouse mode: hover highlights */
+		body:not([data-v-kb-nav='true']) & .o-menu-item:hover {
+			background-color: color-mix(
+				in hsl,
+				var(--v-accent) 10%,
+				var(--v-bg)
+			);
+		}
+
+		/* Keyboard mode: active-descendant highlights */
+		body[data-v-kb-nav='true'] & .o-menu-item[data-active] {
+			background-color: color-mix(
+				in hsl,
+				var(--v-accent) 10%,
+				var(--v-bg)
+			);
+		}
+
+		.o-menu-item {
+			transition: background-color calc(var(--v-duration) * 0.5)
+				var(--v-ease);
+		}
+	}
+}

@@ -1,0 +1,9 @@
+@layer objects {
+	.o-row {
+		--o-row__gap: var(--v-gap-inline);
+
+		display: flex;
+		align-items: center;
+		gap: var(--o-row__gap);
+	}
+}

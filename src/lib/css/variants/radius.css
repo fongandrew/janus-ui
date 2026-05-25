@@ -1,0 +1,9 @@
+@layer variants {
+	.v-radius-flat {
+		--v-radius: 0;
+		--o-box__radius: 0;
+		--o-input-box__radius: 0;
+
+		border-radius: 0;
+	}
+}

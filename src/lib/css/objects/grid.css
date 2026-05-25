@@ -1,0 +1,21 @@
+@layer objects {
+	.o-grid {
+		--o-grid__min: 16rem;
+		--o-grid__gap-block: var(--v-gap-block);
+		--o-grid__gap-inline: var(--v-gap-inline);
+
+		display: grid;
+		grid-template-columns: repeat(
+			auto-fill,
+			minmax(min(var(--o-grid__min), 100%), 1fr)
+		);
+		gap: var(--o-grid__gap-block) var(--o-grid__gap-inline);
+	}
+
+	.o-grid--fit {
+		grid-template-columns: repeat(
+			auto-fit,
+			minmax(min(var(--o-grid__min), 100%), 1fr)
+		);
+	}
+}

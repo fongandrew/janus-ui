@@ -1,0 +1,56 @@
+@layer components {
+	.c-button {
+		cursor: pointer;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--v-inline-gap);
+		text-decoration: none;
+		overflow-x: hidden;
+		text-overflow: ellipsis;
+		transition:
+			color calc(var(--v-duration) * 0.5) var(--v-ease),
+			background-color calc(var(--v-duration) * 0.5) var(--v-ease),
+			border-color calc(var(--v-duration) * 0.5) var(--v-ease),
+			box-shadow calc(var(--v-duration) * 0.5) var(--v-ease),
+			filter calc(var(--v-duration) * 0.5) var(--v-ease),
+			opacity calc(var(--v-duration) * 0.5) var(--v-ease);
+
+		> .lucide,
+		> .icon {
+			height: 1lh;
+		}
+
+		.lucide + *,
+		.icon + * {
+			text-align: left;
+		}
+
+		&:hover {
+			@mixin t-hover;
+
+			box-shadow: var(--v-shadow-outer);
+		}
+
+		&:active {
+			box-shadow: none;
+			filter: none;
+		}
+
+		&:focus-visible {
+			@mixin t-focus-ring;
+		}
+
+		&:disabled,
+		&[aria-disabled='true'] {
+			@mixin t-disabled-button;
+		}
+	}
+
+	.c-button--icon {
+		aspect-ratio: 1;
+		padding: 0;
+		width: var(--v-input-height);
+		justify-content: center;
+	}
+}

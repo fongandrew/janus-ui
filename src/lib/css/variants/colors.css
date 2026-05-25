@@ -1,0 +1,161 @@
+@layer variants {
+	/* Tonal variants */
+	.v-colors-primary {
+		--v-bg: hsl(195deg 100% 20%);
+		--v-fg: hsl(30deg 100% 96%);
+		--v-link: hsl(183deg 25% 90%);
+		--v-accent: hsl(183deg 25% 90%);
+		--v-muted: hsl(183deg 25% 86%);
+		--v-danger-text: hsl(30deg 100% 85%);
+		--v-border-color: color-mix(
+			in hsl,
+			white 30%,
+			var(--v-bg)
+		);
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	.v-colors-danger {
+		--v-bg: hsl(0deg 89% 31%);
+		--v-fg: hsl(0deg 0% 98%);
+		--v-link: hsl(0deg 89% 93%);
+		--v-accent: hsl(0deg 89% 93%);
+		--v-muted: hsl(0deg 89% 93%);
+		--v-danger-text: hsl(0deg 89% 93%);
+		--v-border-color: color-mix(
+			in hsl,
+			white 30%,
+			var(--v-bg)
+		);
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	.v-colors-success {
+		--v-bg: hsl(158deg 77% 15%);
+		--v-fg: hsl(30deg 100% 96%);
+		--v-link: hsl(158deg 77% 90%);
+		--v-accent: hsl(158deg 77% 90%);
+		--v-muted: hsl(158deg 0% 86.5%);
+		--v-danger-text: hsl(30deg 100% 85%);
+		--v-border-color: color-mix(
+			in hsl,
+			white 30%,
+			var(--v-bg)
+		);
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+
+		--v-font-weight-normal: 500;
+		--v-font-weight-label: 600;
+		--v-font-weight-strong: 800;
+	}
+
+	.v-colors-warn {
+		--v-bg: light-dark(hsl(50deg 77% 86%), hsl(50deg 100% 10%));
+		--v-fg: light-dark(hsl(216deg 16% 8%), hsl(30deg 12% 98.5%));
+		--v-link: light-dark(hsl(195deg 100% 20%), hsl(183deg 25% 85%));
+		--v-accent: light-dark(hsl(195deg 100% 20%), hsl(183deg 25% 85%));
+		--v-muted: light-dark(hsl(50deg 77% 21.5%), hsl(50deg 0% 86.5%));
+		--v-danger-text: light-dark(hsl(0deg 89% 31%), hsl(30deg 100% 76%));
+		--v-border-color: light-dark(
+			color-mix(in hsl, black 17.5%, hsl(50deg 77% 86%)),
+			color-mix(in hsl, white 50%, hsl(50deg 100% 10%))
+		);
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+
+		--v-font-weight-normal: 500;
+		--v-font-weight-label: 600;
+		--v-font-weight-strong: 800;
+	}
+
+	.v-colors-info {
+		--v-bg: light-dark(hsl(210deg 50% 90%), hsl(210deg 50% 15%));
+		--v-fg: light-dark(hsl(216deg 16% 8%), hsl(30deg 12% 98.5%));
+		--v-link: light-dark(hsl(195deg 100% 20%), hsl(183deg 25% 85%));
+		--v-accent: light-dark(hsl(195deg 100% 20%), hsl(183deg 25% 85%));
+		--v-muted: light-dark(hsl(210deg 30% 35%), hsl(210deg 30% 75%));
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+
+		--v-font-weight-normal: 500;
+		--v-font-weight-label: 600;
+		--v-font-weight-strong: 800;
+	}
+
+	.v-colors-secondary {
+		--v-bg: light-dark(hsl(30deg 12% 92.5%), hsl(216deg 16% 18%));
+		--v-fg: light-dark(hsl(0deg 0% 3%), hsl(30deg 100% 96%));
+		--v-link: light-dark(hsl(195deg 100% 20%), hsl(183deg 25% 85%));
+		--v-accent: light-dark(hsl(195deg 100% 20%), hsl(183deg 25% 85%));
+		--v-muted: light-dark(hsl(30deg 7% 31%), hsl(0deg 0% 86.5%));
+		--v-danger-text: light-dark(hsl(0deg 100% 30.5%), hsl(30deg 100% 79%));
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	/* Surface-role variants */
+	.v-colors-tooltip {
+		--v-bg: light-dark(hsl(216deg 16% 8%), hsl(30deg 12% 98.5%));
+		--v-fg: light-dark(hsl(30deg 12% 98.5%), hsl(216deg 16% 8%));
+		--v-link: light-dark(hsl(183deg 25% 85%), hsl(195deg 100% 20%));
+		--v-accent: light-dark(hsl(183deg 25% 85%), hsl(195deg 100% 20%));
+		--v-muted: light-dark(hsl(30deg 7% 82.5%), hsl(30deg 7% 31%));
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	.v-colors-popover {
+		--v-bg: var(--v-card-bg, var(--v-bg));
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	.v-colors-code {
+		--v-bg: color-mix(in hsl, var(--v-muted) 8%, var(--v-bg));
+
+		background-color: var(--v-bg);
+	}
+
+	.v-colors-pre {
+		--v-bg: hsl(216deg 16% 18%);
+		--v-fg: hsl(30deg 100% 96%);
+		--v-muted: hsl(30deg 7% 82.5%);
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	.v-colors-callout {
+		--v-bg: light-dark(hsl(30deg 12% 92.5%), hsl(216deg 16% 18%));
+		--v-fg: light-dark(hsl(216deg 16% 8%), hsl(30deg 100% 96%));
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+
+		--v-font-weight-normal: 500;
+		--v-font-weight-label: 600;
+		--v-font-weight-strong: 800;
+	}
+
+	.v-colors-highlight {
+		--v-bg: hsl(195deg 100% 20%);
+		--v-fg: hsl(30deg 100% 96%);
+		--v-link: hsl(183deg 25% 86%);
+		--v-accent: hsl(183deg 25% 86%);
+		--v-muted: hsl(183deg 25% 86%);
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+}

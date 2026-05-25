@@ -1,0 +1,37 @@
+@define-mixin v-spacing $spacing, $border-width {
+	--v-spacing: $(spacing);
+	--v-border-width: $(border-width);
+	--v-pad-block: var(--v-spacing);
+	--v-pad-inline: var(--v-spacing);
+	--v-gap-block: var(--v-spacing);
+	--v-gap-inline: var(--v-spacing);
+}
+
+@layer base {
+	:root {
+		@mixin v-spacing 0.9375rem, max(0.0625rem, 1px);
+
+		--v-input-height: 2rem;
+		--v-inline-gap: 0.5em;
+	}
+
+	@media (resolution >= 200dpi) {
+		:root {
+			--v-input-height: 2.75rem;
+			--v-font-size: 1.0625rem;
+			@mixin v-spacing 1rem, max(0.0625rem, 1px);
+		}
+	}
+
+	.v-spacing-sm {
+		@mixin v-spacing 0.5rem, 1px;
+	}
+
+	.v-spacing-md {
+		@mixin v-spacing 0.9375rem, max(0.0625rem, 1px);
+	}
+
+	.v-spacing-lg {
+		@mixin v-spacing 1.5rem, max(0.125rem, 2px);
+	}
+}

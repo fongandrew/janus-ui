@@ -1,0 +1,55 @@
+@layer components {
+	.c-disclosure {
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--v-radius);
+
+		summary {
+			padding: calc(var(--v-pad-block) - (1lh - 1em) / 2)
+				var(--v-pad-inline);
+			cursor: pointer;
+			font-weight: var(--v-font-weight-label);
+			list-style: none;
+			display: flex;
+			align-items: center;
+			gap: var(--v-inline-gap);
+			transition: background-color calc(var(--v-duration) * 0.5)
+				var(--v-ease);
+
+			&::before {
+				content: '';
+				width: 0.5em;
+				height: 0.5em;
+				border-right: 2px solid currentcolor;
+				border-bottom: 2px solid currentcolor;
+				transform: rotate(-45deg);
+				transition: transform var(--v-duration) var(--v-ease);
+				flex-shrink: 0;
+			}
+
+			&::-webkit-details-marker {
+				display: none;
+			}
+
+			&:hover {
+				background-color: color-mix(
+					in hsl,
+					var(--v-muted) 6%,
+					var(--v-bg)
+				);
+			}
+
+			&:focus-visible {
+				@mixin t-focus-ring;
+			}
+		}
+
+		&[open] summary::before {
+			transform: rotate(45deg);
+		}
+
+		& > :not(summary) {
+			padding: var(--v-pad-block) var(--v-pad-inline);
+			border-top: var(--v-border-width) solid var(--v-border-color);
+		}
+	}
+}

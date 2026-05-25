@@ -1,0 +1,35 @@
+@layer components {
+	.c-skeleton {
+		background: linear-gradient(
+			90deg,
+			color-mix(in hsl, var(--v-muted) 10%, var(--v-bg)) 25%,
+			color-mix(in hsl, var(--v-muted) 20%, var(--v-bg)) 50%,
+			color-mix(in hsl, var(--v-muted) 10%, var(--v-bg)) 75%
+		);
+		background-size: 200% 100%;
+		animation: c-skeleton-shimmer calc(var(--v-duration) * 6) var(--v-ease)
+			infinite;
+		border-radius: var(--v-radius);
+		display: block;
+	}
+
+	.c-skeleton--circle {
+		border-radius: 50%;
+	}
+
+	@keyframes c-skeleton-shimmer {
+		0% {
+			background-position: 200% 0;
+		}
+
+		100% {
+			background-position: -200% 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.c-skeleton {
+			animation: none;
+		}
+	}
+}

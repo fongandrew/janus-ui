@@ -1,0 +1,11 @@
+@layer objects {
+	.o-container {
+		--o-container__max: 72rem;
+
+		width: 100%;
+		max-width: var(--o-container__max);
+		margin-inline: auto;
+		padding-inline: var(--v-pad-inline);
+		container-type: inline-size;
+	}
+}

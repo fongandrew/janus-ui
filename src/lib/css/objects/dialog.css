@@ -1,0 +1,15 @@
+@layer objects {
+	.o-dialog {
+		--o-dialog__radius: calc(var(--v-radius) * 2);
+		--o-dialog__offset: 1rem;
+		--o-box__radius: var(--o-dialog__radius);
+		--o-input-box__radius: calc(
+			var(--o-dialog__radius) - var(--v-pad-inline)
+		);
+
+		border-radius: var(--o-dialog__radius);
+		padding: var(--v-pad-block) var(--v-pad-inline);
+		max-width: calc(100vw - var(--o-dialog__offset) * 2);
+		max-height: calc(100vh - var(--o-dialog__offset) * 2);
+	}
+}

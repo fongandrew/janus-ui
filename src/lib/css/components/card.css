@@ -1,0 +1,50 @@
+@layer components {
+	.c-card {
+		background-color: var(--v-bg);
+		border: var(--v-border-width) solid var(--v-border-color);
+		box-shadow: var(--v-shadow-outer);
+		overflow: hidden;
+
+		.o-container & {
+			@mixin v-container-tablet-wide {
+				box-shadow: none;
+			}
+		}
+
+		:modal &,
+		:popover-open & {
+			box-shadow: var(--v-shadow-outer);
+		}
+
+		&:has(:invalid, [aria-invalid='true']) [type='submit'] {
+			opacity: 0.5;
+			pointer-events: unset;
+		}
+	}
+
+	.c-card__header {
+		padding: var(--v-pad-block) var(--v-pad-inline);
+		border-bottom: var(--v-border-width) solid var(--v-border-color);
+	}
+
+	.c-card__title {
+		font-size: var(--v-font-size-h3);
+		line-height: var(--v-line-height-h3);
+		font-weight: var(--v-font-weight-subtitle);
+	}
+
+	.c-card__description {
+		font-size: var(--v-font-size-caption);
+		line-height: var(--v-line-height-caption);
+		color: var(--v-muted);
+	}
+
+	.c-card__content {
+		padding: var(--v-pad-block) var(--v-pad-inline);
+	}
+
+	.c-card__footer {
+		padding: var(--v-pad-block) var(--v-pad-inline);
+		border-top: var(--v-border-width) solid var(--v-border-color);
+	}
+}

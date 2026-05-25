@@ -1,0 +1,48 @@
+@layer components {
+	.c-radio {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--v-inline-gap);
+		cursor: pointer;
+
+		input[type='radio'] {
+			appearance: none;
+			width: 1.125em;
+			height: 1.125em;
+			border: var(--v-border-width) solid var(--v-border-color);
+			border-radius: 50%;
+			background-color: var(--v-bg);
+			box-shadow: var(--v-shadow-inner);
+			cursor: pointer;
+			flex-shrink: 0;
+			position: relative;
+			transition:
+				background-color calc(var(--v-duration) * 0.5) var(--v-ease),
+				border-color calc(var(--v-duration) * 0.5) var(--v-ease);
+
+			&:checked {
+				border-color: var(--v-accent);
+
+				&::after {
+					content: '';
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					width: 0.5em;
+					height: 0.5em;
+					border-radius: 50%;
+					background-color: var(--v-accent);
+					transform: translate(-50%, -50%);
+				}
+			}
+
+			&:focus-visible {
+				@mixin t-focus-ring;
+			}
+
+			&:disabled {
+				@mixin t-disabled-input;
+			}
+		}
+	}
+}

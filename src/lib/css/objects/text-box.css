@@ -1,0 +1,14 @@
+@layer objects {
+	.o-text-box {
+		--o-box__pad-block: var(--v-pad-block);
+		--o-box__pad-inline: var(--v-pad-inline);
+		--o-box__radius: var(--v-radius);
+		--o-input-box__radius: calc(
+			var(--o-box__radius) - var(--o-box__pad-inline)
+		);
+
+		padding: calc(var(--o-box__pad-block) - (1lh - 1em) / 2)
+			max(var(--o-box__pad-inline), var(--o-box__radius));
+		border-radius: var(--o-box__radius);
+	}
+}

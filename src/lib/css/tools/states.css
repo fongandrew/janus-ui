@@ -1,0 +1,47 @@
+@define-mixin t-hover {
+	filter: contrast(0.95) saturate(1.15);
+	will-change: filter;
+}
+
+@define-mixin t-focus-ring {
+	box-shadow: var(--v-shadow-focus);
+	outline: 0.125rem solid var(--v-ring);
+	outline-offset: 0.125rem;
+}
+
+@define-mixin t-no-focus-ring {
+	box-shadow: none;
+	outline: none;
+}
+
+@define-mixin t-disabled-button {
+	pointer-events: none;
+	opacity: 0.5;
+}
+
+@define-mixin t-disabled-input {
+	background-color: var(--v-input-disabled-bg);
+	color: color-mix(in oklab, currentcolor 65%, transparent);
+	cursor: not-allowed;
+}
+
+@define-mixin t-error {
+	--v-border-color: var(--v-danger-text);
+
+	border-color: var(--v-danger-text);
+}
+
+@define-mixin t-transition-color {
+	transition:
+		color calc(var(--v-duration) * 0.5) var(--v-ease),
+		background-color calc(var(--v-duration) * 0.5) var(--v-ease),
+		border-color calc(var(--v-duration) * 0.5) var(--v-ease);
+}
+
+@define-mixin t-transition-color-plus $extra {
+	transition:
+		color calc(var(--v-duration) * 0.5) var(--v-ease),
+		background-color calc(var(--v-duration) * 0.5) var(--v-ease),
+		border-color calc(var(--v-duration) * 0.5) var(--v-ease),
+		$(extra) calc(var(--v-duration) * 0.5) var(--v-ease);
+}

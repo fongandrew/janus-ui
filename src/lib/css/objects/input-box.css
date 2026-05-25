@@ -1,0 +1,12 @@
+@layer objects {
+	.o-input-box {
+		min-height: var(--v-input-height);
+		padding: calc((var(--v-input-height) - 1lh) / 2)
+			var(--v-pad-inline);
+		border-radius: var(
+			--o-input-box__radius,
+			var(--v-radius)
+		);
+		border: var(--v-border-width) solid var(--v-border-color);
+	}
+}

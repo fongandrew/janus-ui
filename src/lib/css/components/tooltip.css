@@ -1,0 +1,30 @@
+@layer components {
+	.c-tooltip {
+		position: fixed;
+		inset: unset;
+		border: none;
+		padding: calc(var(--v-pad-block) * 0.5) var(--v-pad-inline);
+		border-radius: var(--v-radius);
+		font-size: var(--v-font-size-caption);
+		line-height: var(--v-line-height-caption);
+		max-width: 20rem;
+		width: max-content;
+		box-shadow: var(--v-shadow-outer);
+		pointer-events: none;
+		z-index: 50;
+
+		/* Always inverted */
+		background-color: light-dark(
+			hsl(216deg 16% 8%),
+			hsl(30deg 12% 98.5%)
+		);
+		color: light-dark(hsl(30deg 12% 98.5%), hsl(216deg 16% 8%));
+
+		/* Anchor positioning (Chromium only) */
+		position-anchor: var(--c-tooltip__anchor);
+		top: anchor(bottom);
+		left: anchor(center);
+		translate: -50% 0.5rem;
+		position-try-fallbacks: flip-block;
+	}
+}

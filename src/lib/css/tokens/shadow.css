@@ -1,0 +1,18 @@
+@layer base {
+	:root {
+		--v-shadow-outer: 0 1px 3px 0 rgb(0 0 0 / 10%),
+			0 1px 2px -1px rgb(0 0 0 / 10%);
+		--v-shadow-inner: inset 0 1px 2px 0 rgb(0 0 0 / 10%);
+		--v-shadow-inner-top: inset 0 6px 6px -4px rgb(0 0 0 / 15%);
+		--v-shadow-inner-bottom: inset 0 -6px 6px -4px rgb(0 0 0 / 15%);
+
+		--v-duration: 240ms;
+		--v-ease: cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:root {
+			--v-duration: 0ms;
+		}
+	}
+}

@@ -1,0 +1,22 @@
+@layer components {
+	.c-input {
+		box-shadow: var(--v-shadow-inner);
+		width: 100%;
+		@mixin t-transition-color;
+
+		&:focus,
+		&:focus-within {
+			@mixin t-focus-ring;
+		}
+
+		&:disabled,
+		&[aria-disabled='true'] {
+			@mixin t-disabled-input;
+		}
+
+		&[aria-invalid='true'],
+		&:has([aria-invalid='true']) {
+			@mixin t-error;
+		}
+	}
+}

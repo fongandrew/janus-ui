@@ -1,0 +1,9 @@
+@layer objects {
+	.o-square {
+		aspect-ratio: 1;
+		border-radius: var(--v-radius);
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+}

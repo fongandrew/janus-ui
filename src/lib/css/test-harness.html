@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>CSS Test Harness</title>
+	<link rel="stylesheet" href="./index.css" />
+	<style>
+		.demo-section { margin-bottom: 2rem; }
+		.demo-section h2 { margin-bottom: 0.5rem; }
+	</style>
+</head>
+<body>
+	<div class="o-container">
+		<div class="o-stack" style="padding-block: 2rem;">
+
+			<!-- Tokens test -->
+			<section class="demo-section" id="tokens">
+				<h1>CSS Test Harness</h1>
+				<p>This page tests the full CSS foundation.</p>
+			</section>
+
+			<!-- Typography -->
+			<section class="demo-section" id="typography">
+				<h2>Typography</h2>
+				<h1>Heading 1</h1>
+				<h2>Heading 2</h2>
+				<h3>Heading 3</h3>
+				<h4>Heading 4</h4>
+				<h5>Heading 5</h5>
+				<h6>Heading 6</h6>
+				<p>Body text paragraph with <a href="#">a link</a>, <strong>bold text</strong>, and <em>italic text</em>.</p>
+				<p>Text with <code>inline code</code> formatting.</p>
+				<pre><code>// Code block
+function hello() {
+  return 'world';
+}</code></pre>
+			</section>
+
+			<!-- Links -->
+			<section class="demo-section" id="links">
+				<h2>Links</h2>
+				<p><a href="#">Default link</a></p>
+				<p><a href="https://example.com">External link</a></p>
+			</section>
+
+			<!-- Forms -->
+			<section class="demo-section" id="forms">
+				<h2>Form Inputs</h2>
+				<div class="o-stack">
+					<input class="c-input o-input-box" type="text" placeholder="Text input" />
+					<input class="c-input o-input-box" type="email" placeholder="Email input" />
+					<textarea class="c-input o-input-box" placeholder="Textarea"></textarea>
+					<select class="c-select-native o-input-box">
+						<option>Option 1</option>
+						<option>Option 2</option>
+						<option>Option 3</option>
+					</select>
+				</div>
+			</section>
+
+			<!-- Objects -->
+			<section class="demo-section" id="objects">
+				<h2>Objects</h2>
+
+				<h3>o-box</h3>
+				<div class="o-box t-border" style="margin-bottom: 1rem;">
+					Box content with padding
+					<div class="o-input-box c-input" style="margin-top: 0.5rem;">
+						Inner input-box (radius should step down)
+					</div>
+				</div>
+
+				<h3>o-text-box</h3>
+				<div class="o-text-box t-border" style="margin-bottom: 1rem;">
+					Text box with 1lh-compensated padding
+				</div>
+
+				<h3>o-stack</h3>
+				<div class="o-stack" style="margin-bottom: 1rem;">
+					<div class="t-border t-p">Stack item 1</div>
+					<div class="t-border t-p">Stack item 2</div>
+					<div class="t-border t-p">Stack item 3</div>
+				</div>
+
+				<h3>o-group</h3>
+				<div class="o-group" style="margin-bottom: 1rem;">
+					<div class="t-border t-p">Group A</div>
+					<div class="t-border t-p">Group B</div>
+					<div class="t-border t-p">Group C</div>
+				</div>
+
+				<h3>o-row</h3>
+				<div class="o-row" style="margin-bottom: 1rem;">
+					<div class="t-border t-p">Row A</div>
+					<div class="t-border t-p">Row B</div>
+					<div class="t-border t-p t-flex-fill">Row C (fill)</div>
+				</div>
+
+				<h3>o-grid</h3>
+				<div class="o-grid" style="margin-bottom: 1rem;">
+					<div class="t-border t-p">Grid 1</div>
+					<div class="t-border t-p">Grid 2</div>
+					<div class="t-border t-p">Grid 3</div>
+					<div class="t-border t-p">Grid 4</div>
+				</div>
+
+				<h3>o-split</h3>
+				<div class="o-split t-border" style="padding: 0.5rem; margin-bottom: 1rem;">
+					<span>Left content</span>
+					<span>Right content</span>
+				</div>
+
+				<h3>o-dialog</h3>
+				<div class="o-dialog t-border" style="margin-bottom: 1rem;">
+					Dialog object with stepped radius
+					<div class="o-box t-border" style="margin-top: 0.5rem;">
+						Nested box
+						<div class="o-input-box c-input" style="margin-top: 0.5rem;">
+							Deeply nested input-box
+						</div>
+					</div>
+				</div>
+
+				<h3>o-menu</h3>
+				<div class="o-menu t-border" style="max-width: 16rem; margin-bottom: 1rem;">
+					<button class="o-menu-item">Menu item 1</button>
+					<button class="o-menu-item">Menu item 2</button>
+					<button class="o-menu-item">Menu item 3</button>
+				</div>
+			</section>
+
+			<!-- Components -->
+			<section class="demo-section" id="components">
+				<h2>Components</h2>
+
+				<h3>Buttons</h3>
+				<div class="o-group" style="margin-bottom: 1rem;">
+					<button class="c-button o-input-box">Default</button>
+					<button class="c-button o-input-box v-colors-primary">Primary</button>
+					<button class="c-button o-input-box v-colors-danger">Danger</button>
+					<button class="c-button o-input-box" aria-disabled="true">Disabled</button>
+					<button class="c-button c-button--icon o-input-box">+</button>
+				</div>
+
+				<h3>Cards</h3>
+				<div class="o-grid" style="margin-bottom: 1rem;">
+					<div class="c-card o-box">
+						<div class="c-card__header">
+							<div class="c-card__title">Card Title</div>
+							<div class="c-card__description">Card description text</div>
+						</div>
+						<div class="c-card__content">
+							<p class="t-wrap">Card content goes here.</p>
+						</div>
+					</div>
+					<div class="c-card o-box v-surface-elevated">
+						<div class="c-card__content">
+							<p class="t-wrap">Elevated card with stronger shadow.</p>
+						</div>
+					</div>
+				</div>
+
+				<h3>Alerts</h3>
+				<div class="o-stack" style="margin-bottom: 1rem;">
+					<div class="c-alert" role="alert">Default alert message.</div>
+					<div class="c-alert v-colors-success" role="alert">Success alert.</div>
+					<div class="c-alert v-colors-warn" role="alert">Warning alert.</div>
+					<div class="c-alert v-colors-danger" role="alert">Danger alert.</div>
+					<div class="c-alert v-colors-info" role="alert">Info alert.</div>
+				</div>
+
+				<h3>Inputs</h3>
+				<div class="o-stack" style="margin-bottom: 1rem; max-width: 24rem;">
+					<input class="c-input o-input-box" type="text" value="Text value" />
+					<input class="c-input o-input-box" type="text" placeholder="Placeholder" />
+					<input class="c-input o-input-box" type="text" value="Invalid" aria-invalid="true" />
+					<input class="c-input o-input-box" type="text" value="Disabled" disabled />
+				</div>
+
+				<h3>Checkboxes</h3>
+				<div class="o-stack" style="margin-bottom: 1rem;">
+					<label class="c-checkbox">
+						<input type="checkbox" />
+						<span>Unchecked</span>
+					</label>
+					<label class="c-checkbox">
+						<input type="checkbox" checked />
+						<span>Checked</span>
+					</label>
+					<label class="c-checkbox">
+						<input type="checkbox" disabled />
+						<span>Disabled</span>
+					</label>
+				</div>
+
+				<h3>Radios</h3>
+				<div class="o-stack" style="margin-bottom: 1rem;">
+					<label class="c-radio">
+						<input type="radio" name="demo-radio" value="1" checked />
+						<span>Option 1</span>
+					</label>
+					<label class="c-radio">
+						<input type="radio" name="demo-radio" value="2" />
+						<span>Option 2</span>
+					</label>
+					<label class="c-radio">
+						<input type="radio" name="demo-radio" value="3" disabled />
+						<span>Disabled</span>
+					</label>
+				</div>
+
+				<h3>Toggle</h3>
+				<div class="o-stack" style="margin-bottom: 1rem;">
+					<label class="c-toggle">
+						<input type="checkbox" />
+						<span>Toggle off</span>
+					</label>
+					<label class="c-toggle">
+						<input type="checkbox" checked />
+						<span>Toggle on</span>
+					</label>
+				</div>
+
+				<h3>Tags</h3>
+				<div class="o-group" style="margin-bottom: 1rem;">
+					<span class="c-tag">Default</span>
+					<span class="c-tag v-colors-primary">Primary</span>
+					<span class="c-tag v-colors-success">Success</span>
+					<span class="c-tag v-colors-danger">Danger</span>
+				</div>
+
+				<h3>Badges</h3>
+				<div class="o-group" style="margin-bottom: 1rem;">
+					<span class="c-badge v-colors-primary">3</span>
+					<span class="c-badge v-colors-danger">99+</span>
+					<span class="c-badge c-badge--dot v-colors-success"></span>
+				</div>
+
+				<h3>Avatar</h3>
+				<div class="o-group" style="margin-bottom: 1rem;">
+					<div class="c-avatar">AF</div>
+					<div class="c-avatar" style="--v-input-height: 3rem;">JD</div>
+				</div>
+
+				<h3>Spinner</h3>
+				<div class="o-group" style="margin-bottom: 1rem;">
+					<div class="c-spinner" aria-label="Loading"></div>
+				</div>
+
+				<h3>Skeleton</h3>
+				<div class="o-stack" style="margin-bottom: 1rem; max-width: 20rem;">
+					<div class="c-skeleton" style="height: 1rem;"></div>
+					<div class="c-skeleton" style="height: 1rem; width: 80%;"></div>
+					<div class="c-skeleton c-skeleton--circle" style="width: 3rem; height: 3rem;"></div>
+				</div>
+
+				<h3>Disclosure</h3>
+				<details class="c-disclosure" style="margin-bottom: 1rem; max-width: 24rem;">
+					<summary>Click to expand</summary>
+					<div>
+						<p class="t-wrap">Disclosure content here.</p>
+					</div>
+				</details>
+
+				<h3>Tabs</h3>
+				<div class="c-tabs" style="margin-bottom: 1rem;">
+					<div class="c-tabs__list" role="tablist">
+						<button class="c-tabs__tab" role="tab" aria-selected="true">Tab 1</button>
+						<button class="c-tabs__tab" role="tab" aria-selected="false">Tab 2</button>
+						<button class="c-tabs__tab" role="tab" aria-selected="false">Tab 3</button>
+					</div>
+				</div>
+			</section>
+
+			<!-- Variants -->
+			<section class="demo-section" id="variants">
+				<h2>Color Variants</h2>
+				<div class="o-grid" style="margin-bottom: 1rem;">
+					<div class="v-colors-primary t-p" style="border-radius: var(--v-radius);">Primary</div>
+					<div class="v-colors-danger t-p" style="border-radius: var(--v-radius);">Danger</div>
+					<div class="v-colors-success t-p" style="border-radius: var(--v-radius);">Success</div>
+					<div class="v-colors-warn t-p" style="border-radius: var(--v-radius);">Warning</div>
+					<div class="v-colors-info t-p" style="border-radius: var(--v-radius);">Info</div>
+					<div class="v-colors-secondary t-p" style="border-radius: var(--v-radius);">Secondary</div>
+					<div class="v-colors-tooltip t-p" style="border-radius: var(--v-radius);">Tooltip</div>
+					<div class="v-colors-callout t-p" style="border-radius: var(--v-radius);">Callout</div>
+				</div>
+
+				<h2>Surface Variants</h2>
+				<div class="o-grid" style="margin-bottom: 1rem;">
+					<div class="v-surface-card o-box">Card surface</div>
+					<div class="v-surface-elevated o-box">Elevated surface</div>
+					<div class="v-surface-sunken o-box">Sunken surface</div>
+					<div class="v-surface-glass o-box">Glass surface</div>
+					<div class="v-surface-gradient o-box">Gradient surface</div>
+				</div>
+			</section>
+
+			<!-- Table -->
+			<section class="demo-section" id="table">
+				<h2>Table</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Value</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>--v-spacing</td>
+							<td>0.9375rem</td>
+							<td>Default spacing</td>
+						</tr>
+						<tr>
+							<td>--v-radius</td>
+							<td>derived</td>
+							<td>Border radius</td>
+						</tr>
+						<tr>
+							<td>--v-accent</td>
+							<td>teal</td>
+							<td>Accent color</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+
+		</div>
+	</div>
+</body>
+</html>

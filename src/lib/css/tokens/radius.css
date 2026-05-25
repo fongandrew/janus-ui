@@ -1,0 +1,5 @@
+@layer base {
+	:root {
+		--v-radius: calc(var(--v-spacing) - (1lh - 1em) / 2);
+	}
+}

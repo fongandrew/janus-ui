@@ -1,0 +1,101 @@
+@define-mixin v-dark {
+	color-scheme: dark;
+
+	--v-bg: hsl(216deg 16% 8%);
+	--v-fg: hsl(30deg 12% 98.5%);
+	--v-link: hsl(183deg 25% 85%);
+	--v-accent: hsl(183deg 25% 85%);
+	--v-muted: hsl(30deg 7% 86.5%);
+	--v-danger-text: hsl(30deg 100% 76%);
+
+	--v-link-weight-min: 500;
+	--v-accent-weight-min: 500;
+	--v-muted-weight-min: 500;
+
+	--v-border-dynamic-base: white;
+	--v-border-dynamic-mix: 50%;
+	--v-border-color: color-mix(
+		in hsl,
+		var(--v-border-dynamic-base) var(--v-border-dynamic-mix),
+		var(--v-bg)
+	);
+
+	--v-ring: hsl(183deg 25% 85%);
+	--v-ring-alt: hsl(210deg 0% 14.9%);
+
+	--v-backdrop: hsl(0deg 0% 0% / 50%);
+	--v-input-disabled-bg: hsl(0deg 0% 15%);
+
+	--v-body-bg:
+		linear-gradient(
+			102deg,
+			hsl(0deg 0% 100% / 0%),
+			hsl(158deg 77% 15% / 15%)
+		),
+		linear-gradient(
+			12deg,
+			hsl(0deg 0% 100% / 0%),
+			hsl(195deg 100% 71% / 15%)
+		),
+		var(--v-bg);
+}
+
+@define-mixin v-light {
+	color-scheme: light;
+
+	--v-bg: hsl(30deg 12% 98.5%);
+	--v-fg: hsl(216deg 16% 8%);
+	--v-link: hsl(195deg 100% 20%);
+	--v-accent: hsl(195deg 100% 20%);
+	--v-muted: hsl(30deg 7% 31%);
+	--v-danger-text: hsl(0deg 89% 31%);
+
+	--v-link-weight-min: 500;
+	--v-accent-weight-min: 500;
+	--v-muted-weight-min: 500;
+
+	--v-border-dynamic-base: black;
+	--v-border-dynamic-mix: 17.5%;
+	--v-border-color: color-mix(
+		in hsl,
+		var(--v-border-dynamic-base) var(--v-border-dynamic-mix),
+		var(--v-bg)
+	);
+
+	--v-ring: hsl(195deg 100% 20%);
+	--v-ring-alt: hsl(183deg 25% 71%);
+
+	--v-backdrop: hsl(0deg 0% 0% / 50%);
+	--v-input-disabled-bg: hsl(0deg 0% 95%);
+
+	--v-body-bg:
+		linear-gradient(
+			102deg,
+			hsl(0deg 0% 100% / 0%),
+			hsl(30deg 75% 75% / 15%)
+		),
+		linear-gradient(
+			12deg,
+			hsl(0deg 0% 100% / 0%),
+			hsl(183deg 25% 71% / 7%)
+		),
+		var(--v-bg);
+}
+
+@layer base {
+	:root {
+		@mixin v-light;
+
+		--v-shadow-focus: 0 0 0 0.125rem var(--v-ring-alt);
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root:not([data-v-color-scheme='light']) {
+			@mixin v-dark;
+		}
+	}
+
+	:root[data-v-color-scheme='dark'] {
+		@mixin v-dark;
+	}
+}

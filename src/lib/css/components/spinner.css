@@ -1,0 +1,24 @@
+@layer components {
+	.c-spinner {
+		display: inline-block;
+		width: 1.5em;
+		height: 1.5em;
+		border: 0.2em solid color-mix(in hsl, var(--v-accent) 25%, transparent);
+		border-top-color: var(--v-accent);
+		border-radius: 50%;
+		animation: c-spinner-spin var(--v-duration, 240ms) linear infinite;
+		animation-duration: calc(var(--v-duration) * 3);
+	}
+
+	@keyframes c-spinner-spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.c-spinner {
+			animation-duration: 1.5s;
+		}
+	}
+}

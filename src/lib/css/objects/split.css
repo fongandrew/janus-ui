@@ -1,0 +1,27 @@
+@layer objects {
+	.o-split {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--v-gap-inline);
+
+		> * {
+			flex-grow: 1;
+		}
+
+		> :last-child {
+			text-align: end;
+		}
+
+		@container (width < 30rem) {
+			&:is(*) {
+				flex-direction: column;
+				align-items: stretch;
+
+				> :last-child {
+					text-align: start;
+				}
+			}
+		}
+	}
+}

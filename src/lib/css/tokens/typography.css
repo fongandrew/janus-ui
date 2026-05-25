@@ -1,0 +1,70 @@
+@define-mixin v-font-weight $weight {
+	font-weight: max($(weight), var(--v-font-weight-min-bold, $(weight)));
+}
+
+@layer base {
+	:root {
+		--v-font-family: ui-sans-serif, system-ui, sans-serif,
+			'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+			'Noto Color Emoji';
+		--v-font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco,
+			Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+		--v-font-size: 0.9375rem;
+		--v-line-height: 1.375rem;
+
+		--_font-size-floor: 0.75rem;
+
+		--v-font-size-h1: 1.5rem;
+		--v-font-size-h2: 1.25rem;
+		--v-font-size-h3: 1rem;
+		--v-font-size-h4: var(--v-font-size);
+		--v-font-size-h5: var(--v-font-size);
+		--v-font-size-h6: var(--v-font-size);
+		--v-font-size-caption: 0.8125rem;
+		--v-font-size-code: 0.875rem;
+
+		--v-line-height-h1: 2rem;
+		--v-line-height-h2: 1.75rem;
+		--v-line-height-h3: 1.5rem;
+		--v-line-height-h4: var(--v-line-height);
+		--v-line-height-h5: var(--v-line-height);
+		--v-line-height-h6: var(--v-line-height);
+		--v-line-height-caption: 1.125rem;
+		--v-line-height-code: 1.25rem;
+
+		--v-font-weight-normal: 400;
+		--v-font-weight-label: 500;
+		--v-font-weight-subtitle: 600;
+		--v-font-weight-strong: 600;
+		--v-font-weight-title: 700;
+	}
+
+	@media (resolution >= 200dpi) {
+		:root {
+			--v-font-size: 1.0625rem;
+			--v-line-height: 1.5rem;
+
+			--v-font-size-h1: 1.75rem;
+			--v-font-size-h2: 1.5rem;
+			--v-font-size-h3: 1.25rem;
+			--v-font-size-caption: 0.875rem;
+			--v-font-size-code: 0.9375rem;
+
+			--v-line-height-h1: 2.25rem;
+			--v-line-height-h2: 2rem;
+			--v-line-height-h3: 1.75rem;
+			--v-line-height-caption: 1.25rem;
+			--v-line-height-code: 1.375rem;
+		}
+	}
+
+	html {
+		font-size: 16px;
+	}
+
+	body {
+		font-size: var(--v-font-size);
+		line-height: var(--v-line-height);
+	}
+}

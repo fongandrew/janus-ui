@@ -1,0 +1,13 @@
+@layer variants {
+	.v-text-display {
+		font-size: var(--v-font-size-h1);
+		line-height: var(--v-line-height-h1);
+		font-weight: var(--v-font-weight-title);
+	}
+
+	.v-text-meta {
+		font-size: var(--v-font-size-caption);
+		line-height: var(--v-line-height-caption);
+		color: var(--v-muted);
+	}
+}

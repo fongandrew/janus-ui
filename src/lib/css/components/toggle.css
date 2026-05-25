@@ -1,0 +1,58 @@
+@layer components {
+	.c-toggle {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--v-inline-gap);
+		cursor: pointer;
+
+		input[type='checkbox'] {
+			appearance: none;
+			width: 2.5em;
+			height: 1.375em;
+			border-radius: 9999px;
+			background-color: color-mix(in hsl, var(--v-muted) 40%, var(--v-bg));
+			box-shadow: var(--v-shadow-inner);
+			cursor: pointer;
+			position: relative;
+			flex-shrink: 0;
+			transition:
+				background-color var(--v-duration) var(--v-ease);
+
+			&::after {
+				content: '';
+				position: absolute;
+				top: 0.125em;
+				left: 0.125em;
+				width: 1.125em;
+				height: 1.125em;
+				border-radius: 50%;
+				background-color: light-dark(
+					hsl(216deg 16% 8%),
+					hsl(30deg 12% 98.5%)
+				);
+				transition: transform var(--v-duration) var(--v-ease);
+				box-shadow: 0 1px 3px rgb(0 0 0 / 20%);
+			}
+
+			&:checked {
+				background-color: var(--v-accent);
+
+				&::after {
+					transform: translateX(1.125em);
+					background-color: light-dark(
+						hsl(30deg 12% 98.5%),
+						hsl(216deg 16% 8%)
+					);
+				}
+			}
+
+			&:focus-visible {
+				@mixin t-focus-ring;
+			}
+
+			&:disabled {
+				@mixin t-disabled-input;
+			}
+		}
+	}
+}

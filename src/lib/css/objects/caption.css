@@ -1,0 +1,8 @@
+@layer objects {
+	.o-caption {
+		--o-caption__font-size: var(--v-font-size-caption);
+
+		font-size: var(--o-caption__font-size);
+		line-height: var(--v-line-height-caption);
+	}
+}

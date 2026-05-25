@@ -1,0 +1,57 @@
+@layer components {
+	.c-tabs {
+		border-bottom: var(--v-border-width) solid var(--v-border-color);
+	}
+
+	.c-tabs__list {
+		display: flex;
+		gap: 0;
+		overflow-x: auto;
+	}
+
+	.c-tabs__tab {
+		appearance: none;
+		background: none;
+		border: none;
+		padding: calc(var(--v-pad-block) - (1lh - 1em) / 2)
+			var(--v-pad-inline);
+		cursor: pointer;
+		font-weight: var(--v-font-weight-label);
+		color: var(--v-muted);
+		white-space: nowrap;
+		position: relative;
+		transition:
+			color calc(var(--v-duration) * 0.5) var(--v-ease),
+			box-shadow calc(var(--v-duration) * 0.5) var(--v-ease);
+
+		&:hover {
+			color: var(--v-fg);
+		}
+
+		&:focus-visible {
+			@mixin t-focus-ring;
+		}
+
+		&[aria-selected='true'] {
+			color: var(--v-accent);
+			box-shadow: inset 0 -2px 0 0
+				color-mix(
+					in hsl,
+					var(--v-border-dynamic-base) var(--v-border-dynamic-mix),
+					var(--v-accent)
+				);
+		}
+
+		&[aria-disabled='true'] {
+			@mixin t-disabled-button;
+		}
+	}
+
+	.c-tabs__panel {
+		padding: var(--v-pad-block) 0;
+
+		&[hidden] {
+			display: none;
+		}
+	}
+}
