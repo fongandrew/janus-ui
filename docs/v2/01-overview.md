@@ -6,7 +6,7 @@ Part 1 of the [Janus v2 build plan](./README.md). Covers goals, non-goals, and h
 
 - **CSS-first.** The core library is a CSS package. Markup conventions are documented in plain HTML. JS is a strictly optional second layer.
 - **Opinionated knobs over granular utilities.** Consumers compose 1–3 classes per element, not 20. The framework owns sizing, rhythm, and surfaces; consumers pick from a short list of variants.
-- **Semantic variants, not abstract scales.** No `v-spacing-md/lg/xl` t-shirt sizing. A variant ships with Janus only if a `c-` / `o-` class consumes its meaning (tone, surface, content-mode). For everything else — control heights, density, container widths — consumers define their *own* semantic scopes (`.v-cta`, `.v-dense`) that set the relevant knobs. Janus ships the mechanism and the defaults; consumers name the contexts.
+- **Semantic names, not abstract scales.** No `sm/md/lg/xl` t-shirt sizing for spacing or typography. Spacing variants are consumer-defined (`.v-dense`, `.v-cta`). Font-size tokens name their purpose — `--v-font-size-h1`, `--v-font-size-caption`, `--v-font-size-code` — not their position on a scale. Objects that need their own proportions (`o-menu-item`, `o-caption`) define internal knobs rather than reaching for a global size step. Janus ships the mechanism and the defaults; consumers name the contexts.
 - **Small public surface, deep derivation.** A handful of documented CSS custom properties act as "knobs." Everything else is internal and derived via `calc()` / `color-mix()` / etc.
 - **Modern browsers only.** Target features that are Baseline 2024–2025: CSS layers, `:has()`, `color-mix()`, `light-dark()`, `1lh`, container queries, `popover`, anchor positioning, `commandfor`. No polyfills for these.
 - **Framework-agnostic core.** The CSS pseudo-package has no coupling to Solid or any framework. The Solid pseudo-package wraps it as an optional convenience layer; the DOM pseudo-package provides a vanilla-JS path. Consumers fork whichever combination they need (see §3).
@@ -48,7 +48,6 @@ plugins/      Vite plugins. Not pseudo-packaged as a unit — each file
               is independently copyable. Consumers pull whichever
               they need.
   vite-plugin-purgecss.ts        Removes unused class names from emitted CSS.
-  vite-plugin-manglecss.ts       Shortens CSS class names in builds.
   vite-plugin-ssg.ts             Static-site generation for SSR routes.
   vite-plugin-janus-bundle.ts    SSR-driven handler purge for client bundle — §12.4.
 ```
@@ -59,8 +58,8 @@ Typical consumer profiles:
 
 - **Static marketing site** — `src/lib/css/` only.
 - **Vanilla-JS app with progressive enhancement** — `src/lib/css/` + `src/lib/utils/` + `src/lib/dom/`.
-- **Solid SPA / SSR app** — all four pseudo-packages.
-- **SSR app that cares about client JS weight** — additionally copy `plugins/vite-plugin-janus-bundle.ts` (and `vite-plugin-purgecss.ts` / `vite-plugin-manglecss.ts` for CSS pruning).
+- **Solid SPA** — all four pseudo-packages.
+- **Solid SSR app** — all four pseudo-packages **plus** `plugins/vite-plugin-janus-bundle.ts`. The plugin is required, not optional: it purges unreferenced handlers from the client bundle (see §12.4). `vite-plugin-purgecss.ts` for CSS pruning is independent and optional.
 
 ### 3.2 Update mechanism (agent-driven sync)
 
@@ -103,8 +102,8 @@ Runs in CI on every PR. Adding a new cross-pseudo-package dependency requires ed
 Each pseudo-package has its own `tsconfig.json` extending the root config, and (where applicable) its own `eslint.config.js` and `vitest.config.ts`. Each tightens or relaxes rules to match its constraints:
 
 - `css/` has no TypeScript at all; only stylelint applies.
-- `utils/` forbids DOM types and any framework import — keeps it portable.
-- `dom/` allows DOM types but forbids framework imports.
+- `utils/` restricts available type libs (no `dom`) and the boundary lint rule (§3.3) keeps cross-package imports honest.
+- `dom/` allows DOM types but the boundary rule forbids importing from `solid/`.
 - `solid/` allows everything; this is the framework-coupled layer.
 
-These configs double as executable documentation: a consumer LLM agent reading `src/lib/dom/tsconfig.json` learns "this code may not assume Solid is available" without having to be told.
+The boundary rule is the actual enforcement mechanism for cross-package import rules; tsconfig only gates *types* (e.g. no `dom` lib in `utils/`).

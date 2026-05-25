@@ -4,31 +4,33 @@ Part 3 of the [Janus v2 build plan](./README.md). Covers the three knob systems 
 
 ## 6. Spacing & padding primitives
 
-One knob (`--v-spacing`). Three padding modes, two gap sizes — written **inline in each object's rule** (per §5.2) so they re-resolve at each matched element and follow any scoped `--v-spacing` / `--v-radius` override.
+Five root knobs cover the whole rhythm: `--v-spacing` (the scale lever) plus the four it derives — `--v-pad-block`, `--v-pad-inline`, `--v-gap-block`, `--v-gap-inline` (see §5.1).
+
+Three padding modes, each implemented as `--o-*__pad-*` defaults set in the owning object's own rule (per §5.2). They re-resolve at each matched element using inherited `--v-pad-*` / `--v-radius` inputs.
 
 | Padding mode | Block (top/bottom) | Inline (left/right) | Used by |
 |---|---|---|---|
-| **Block-mode** (default) | `var(--v-spacing)` | `var(--v-spacing)` | `o-box` — boxes whose children are other components / rows |
-| **Text-mode** (opt-in) | `calc(var(--v-spacing) - (1lh - 1em) / 2)` | `max(calc(var(--v-radius) / 2), var(--v-spacing))` | `o-text-box`, `o-input-box`, and text-bearing components that bring their own padding (`c-tag`, `c-badge`, `c-alert` — see §10.1) |
+| **Block-mode** (default) | `var(--v-pad-block)` | `var(--v-pad-inline)` | `o-box` — boxes whose children are other components / rows |
+| **Text-mode** (opt-in) | `calc(var(--v-pad-block) - (1lh - 1em) / 2)` | `max(calc(var(--v-radius) / 2), var(--v-pad-inline))` | `o-text-box`, `o-input-box`, and text-bearing components that bring their own padding (`c-tag`, `c-badge`, `c-alert` — see §10.1) |
 | **Square** (opt-in) | `0` (aspect-driven) | `0` | `o-square` for icon / avatar / 1:1 content |
 
-The text-mode block formula subtracts the line-height overhang `(1lh - 1em)/2` so the visual padding above and below the text matches the inline padding. The text-mode inline formula uses curvature clearance (`R/2`) when `--v-radius` is large enough to threaten the text (pill mode), and falls back to `--v-spacing` as a comfort floor otherwise.
+The text-mode block formula subtracts the line-height overhang `(1lh - 1em)/2` so the visual padding above and below the text matches the inline padding. The text-mode inline formula uses curvature clearance (`R/2`) when `--v-radius` is large enough to threaten the text (pill mode), and falls back to `--v-pad-inline` as a comfort floor otherwise.
 
 Layout gaps:
 
-- **Stack gap** (vertical flow): `var(--v-spacing)` — applied by `o-stack`.
-- **Inline gap** (horizontal flow): `calc(var(--v-spacing) * 0.5)` — applied by `o-group`, `o-row`.
+- **Stack gap** — `o-stack` exposes `--o-stack__gap`, defaulting to `var(--v-gap-block)`.
+- **Inline gap** — `o-group` / `o-row` expose `--o-group__gap` / `--o-row__gap`, defaulting to `var(--v-gap-inline)`.
 
-**No t-shirt size variants ship with Janus.** Consumers who want a tighter spacing for a specific context — a toolbar, a dense table, a nav bar — define their own semantic class:
+**No t-shirt size variants ship with Janus.** Consumers who want a tighter spacing for a specific context — a toolbar, a dense table, a nav bar — define their own semantic class. Because `--v-pad-*` and `--v-gap-*` are frozen at root, the `v-spacing` mixin (§5.3) is the one-liner that re-bundles all five knobs:
 
 ```css
 /* Consumer CSS, not framework CSS */
-.v-dense    { --v-spacing: 0.5rem; }
-.v-nav      { --v-spacing: 0.5rem; --v-input-height: 2rem; }
+.v-dense    { @mixin v-spacing 0.5rem; }
+.v-nav      { @mixin v-spacing 0.5rem; --v-input-height: 2rem; }
 .v-cta      { --v-input-height: 3rem; --v-radius: 9999px; }
 ```
 
-The framework cascade handles the rest: all four padding values and both gaps recompute automatically inside the scoped subtree.
+Inside the scoped subtree, every `--o-*__pad-*` / `--o-*__gap` default re-resolves against the new bundle. Consumers who'd rather avoid the mixin set the five knobs by hand — same effect.
 
 **Rule of thumb for consumers:** raw text never goes directly inside an `o-box`. Wrap it in `o-text-box`, or place it inside a text-bearing component. This keeps the radius cascade and curvature avoidance well-defined.
 
@@ -46,7 +48,7 @@ Five root color knobs (`--v-bg`, `--v-fg`, `--v-link`, `--v-accent`, `--v-muted`
 - `v-surface-elevated` — stronger shadow, no border
 - `v-surface-sunken` — slight tint inward, no shadow
 - `v-surface-glass` — translucent bg + `backdrop-filter: blur()`
-- `v-surface-gradient` — soft gradient bg; angle is controlled by `--v-gradient-angle` (default `to bottom right`)
+- `v-surface-gradient` — soft gradient bg. Exposes `--v-surface-gradient__angle` (default `to bottom right`) — variant-scoped knob, not a global root knob.
 
 This is the gap most worth closing from v1. v1 consumers reach for inline `background: linear-gradient(...)` because there is no recipe. Provide recipes.
 
@@ -64,7 +66,7 @@ This lets a designer ship a slightly desaturated link or a softer muted color wi
 
 ### 7.2 Color scheme (light/dark)
 
-`--v-bg` defaults via `light-dark(white, black)` (or whatever palette anchors are chosen); `--v-fg` defaults to `contrast-color(var(--v-bg))`. The active half of `light-dark()` is driven by the cascaded `color-scheme` property.
+`--v-bg` defaults via `light-dark(white, black)` (or whatever palette anchors are chosen); `--v-fg` defaults to a binary black-or-white derived from the bg's OKLCH lightness — see §5.1 for the formula. The active half of `light-dark()` is driven by the cascaded `color-scheme` property.
 
 Janus uses `data-v-color-scheme` on the root (or any subtree root) to control the scheme:
 
@@ -79,7 +81,7 @@ Naming note: the attribute is `data-v-color-scheme`, not `data-v-theme`, because
 
 ## 8. Border radius system
 
-Each rounded object owns its own `--o-*-radius` knob. Defaults at `:root` derive from `--v-radius` and `--v-spacing` (see §5.2). Outer objects can **redefine** an inner object's knob to drive context-aware radii — a button at the root reads its default; the same button inside an `o-box` reads the redefined value.
+Each rounded object owns its own `--o-*__radius` knob. Each object's own rule sets a default derived from `--v-radius` (and sometimes `--v-spacing`) — per §5.2, defaults live on the object, not at `:root`. Outer objects can **redefine** an inner object's knob to drive context-aware radii — a button at the root reads `o-input-box`'s default; the same button inside an `o-box` reads the box-redefined value.
 
 | Knob | Owned by | Reads as `border-radius` |
 |---|---|---|
@@ -104,8 +106,10 @@ Each rounded object owns its own `--o-*-radius` knob. Defaults at `:root` derive
   border-radius: var(--o-text-box__radius);
 }
 .o-input-box {
-  /* Reads inherited --o-input-box__radius — :root default OR ancestor override */
-  border-radius: var(--o-input-box__radius);
+  /* Reads inherited --o-input-box__radius if an ancestor object set one,
+     else falls back to --v-radius. The var() fallback chain avoids
+     pinning a default that would block ancestor overrides. */
+  border-radius: var(--o-input-box__radius, var(--v-radius));
 }
 .o-dialog {
   --o-dialog__radius:    max(0px, calc(var(--v-radius) - var(--v-spacing)));
@@ -116,13 +120,13 @@ Each rounded object owns its own `--o-*-radius` knob. Defaults at `:root` derive
 }
 ```
 
-`.o-box` / `.o-text-box` / `.o-dialog` each derive their *own* radius locally, so scoping `--v-radius` in an ancestor (`.theme-dense { --v-radius: 1rem }`) propagates correctly. `.o-input-box` deliberately does NOT derive locally — that lets parent objects' redefinitions reach it via inheritance.
+`.o-box` / `.o-text-box` / `.o-dialog` each derive their *own* radius locally, so scoping `--v-radius` in an ancestor (`.theme-dense { --v-radius: 1rem }`) propagates correctly. `.o-input-box` deliberately does NOT set its own knob — it reads the inherited value with a `var()` fallback to `--v-radius`. That fallback chain replaces the v1-style `:root { --o-input-box__radius: var(--v-radius) }` default that §5.2 ruled out, while still letting parent objects' redefinitions reach it via inheritance.
 
 **Why this pattern.** Each redefinition assigns a *different-named* custom property — `--o-input-box__radius` is set from `--o-box__radius`, not from itself. Standard CSS forbids a custom property from referencing itself (the declaration becomes invalid → falls back to inherited → no derivation happens). Object-namespaced knobs sidestep the cycle while still giving context-aware behavior. The `inherit(--name)` function from CSS Values 5 would unlock true recursion but is not yet Baseline.
 
 **No deeper nesting.** A nested `o-box` inside an `o-box` shares the outer's `--o-box__radius` — it does NOT shrink further. If a design genuinely needs two distinct rounded-box levels, introduce a new object (`o-panel`, etc.) with its own knob. This is a deliberate choice — see §5.2.
 
-**Curvature avoidance + comfort floor.** Objects that hold text (`o-text-box`, `o-input-box`) use `--_pad-inline-text: max(R/2, --v-spacing)` for inline padding, so text always clears the curve at pill widths and never sits below `--v-spacing` of breathing room.
+**Curvature avoidance + comfort floor.** Objects that hold text (`o-text-box`, `o-input-box`) compute their inline pad knob as `max(calc(var(--v-radius) / 2), var(--v-pad-inline))` — text always clears the curve at pill widths and never sits below `--v-pad-inline` of breathing room. The formula lives on the object (see §6's text-mode row).
 
 **Square / icon content.** `o-square`, `c-avatar`, `c-spinner`, `c-badge` (dot mode) read `--v-radius` directly. They don't chain through `--o-*-radius` because they're typically the leaf themselves and may need to go all the way to a circle (`--v-radius: 50%`).
 
@@ -162,7 +166,7 @@ For subtle rounding throughout the chain in the web archetype, raise the floor i
 
 ### 8.2 Flat radius mode
 
-`v-radius-flat` collapses the chain by overriding every `--o-*-radius` to `--v-radius`. The selector list covers the scope root AND each rounded object inside it (because `.o-box` / `.o-dialog` derive their knobs in their own rule, the variant has to outspecify those derivations):
+`v-radius-flat` collapses the chain by overriding every `--o-*__radius` to `--v-radius`. The selector list covers the scope root AND each rounded-object class inside it:
 
 ```css
 .v-radius-flat,
@@ -183,4 +187,6 @@ Consumers set the single value at the same scope:
 :root.v-radius-flat { --v-radius: 8px; }
 ```
 
-Specificity: `.v-radius-flat .o-box` (0,2,0) wins against `.o-box`'s own rule (0,1,0). Setting all four knobs in every selector is intentional — extras are harmless (`.o-text-box` getting `--o-dialog__radius` does nothing), and it keeps the rule a single, easy-to-grep block. Per-element exceptions remain possible by setting `--o-*-radius` directly on the element.
+**Why this works: layer order, not specificity.** `.v-radius-flat` lives in the `variants` layer; `.o-box` / `.o-text-box` / `.o-dialog` live in `objects`. Per §4, `variants` outranks `objects` in the cascade — so the variant's `--o-*__radius` declarations win against the objects' own derivations regardless of selector specificity. That holds both for descendant matches (`.v-radius-flat .o-box`) and for the same-element case (`<div class="o-box v-radius-flat">`, where the bare `.v-radius-flat` selector and `.o-box`'s rule have equal specificity but different layers).
+
+Setting all four knobs in every selector is intentional — extras are harmless (`.o-text-box` getting `--o-dialog__radius` does nothing), and it keeps the rule a single, easy-to-grep block. Per-element exceptions remain possible by setting `--o-*__radius` directly on the element.

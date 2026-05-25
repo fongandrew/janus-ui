@@ -4,10 +4,10 @@ Part 7 of the [Janus v2 build plan](./README.md). Covers the optional Solid wrap
 
 ## 13. Solid layer (`src/lib/solid`)
 
-The Solid wrapper is the thinnest possible mapping from props to DOM plus the JS layer's `data-t-*` activation attributes. Two design rules:
+The Solid wrapper is the thinnest possible mapping from props to DOM plus the JS layer's `data-js` behavior tokens. Two design rules:
 
-1. **No prop-mod context.** Wrapper-to-leaf wiring uses a render-prop + hook pattern. No upward-merging context, no `(prev) => newValue` prop transforms. Layering across wrappers happens by explicit `ca(prev, ...)` merges at the consumer's call site (§12.2.1).
-2. **No component-side behavior wiring.** Behaviors are activated by `data-t-*` attributes (§12). The Solid component renders the attr; `dom/`'s `mount()` registers handlers. Components never call `createValidator` or push callbacks into a registry.
+1. **No prop-mod context.** What v2 explicitly rejects is the v1 `PropModContext` pattern — a context whose value is a `(prev) => next` function that descendants run to transform their own props. Wrapper-to-leaf wiring uses a render-prop + hook pattern instead; layering across wrappers happens by explicit `ca(prev, ...)` merges at the consumer's call site (§12.2.1). Ordinary Solid `createContext` for narrow, ID-carrying state (e.g. `FormContext` in §13.5) is fine — those are read-only signals, not prop transforms.
+2. **No component-side behavior wiring.** Behaviors are activated by tokens in the `data-js` attribute (§12). The Solid component renders the attribute; `dom/`'s `mount()` runs registered behaviors. Components never call `createValidator` or push callbacks into a registry.
 
 ### 13.1 Helpers at the framework boundary
 
@@ -64,6 +64,24 @@ For the narrower case of joining string values you've already destructured, `att
 
 **Deep ARIA contribution across multiple wrapper layers is not supported.** A `<FormSection>` does *not* push aria-describedby into descendant inputs — section-level descriptions belong on the section element (`<section aria-describedby=...>`). If per-input contribution is genuinely needed, the consumer nests render-props by hand.
 
+#### 13.2.1 Two sources of error text
+
+`useLabelledInput`'s `errorMessage` prop and `dom/`'s validation engine are two independent paths that can both populate the error slot. Both are needed, and they're cleanly separated:
+
+| Path | When it's the right one |
+|---|---|
+| **Engine-written** (default) | Inputs inside a `<form data-js~="t-validate">`. Validators return strings; the dispatcher writes them into the element carrying `data-js="t-validate-error"` (the one the hook reads as `errorProps`). This is also the path for server-fed errors via `setErrors()`. **100% of the error text in progressive-enhancement mode.** |
+| **Prop-controlled** (`errorMessage`) | SPA-only patterns: an input outside any form, or an input where the consumer wants to derive the error from upstream state (form library, route data, etc.). |
+
+Precedence is decided at the *element*, not at runtime: the hook adds a `data-external-error` sidecar to `errorProps` *iff* `errorMessage` is a non-undefined accessor. The engine's dispatcher skips writes to elements carrying that marker — Solid renders the prop value reactively, the engine stays out of its way. When `errorMessage` is `undefined` (the default), the marker isn't emitted and the engine owns the slot.
+
+Net effect:
+
+- No `errorMessage` prop → engine writes whatever validators (or `setErrors`) return. The normal SPA case for in-form inputs.
+- `errorMessage` prop present (even if its value is `null` for "no error") → consumer controls the slot end-to-end. Validators still *run* (so `aria-invalid` and submit blocking work), but their messages don't get rendered.
+
+This split keeps progressive enhancement working with zero ceremony while giving SPA consumers a clean controlled-component escape hatch.
+
 ### 13.3 What this replaces from v1
 
 | v1 mechanism | v2 equivalent |
@@ -89,7 +107,7 @@ interface InputProps extends Omit<ComponentProps<'input'>, 'type'> {
 }
 ```
 
-- `validators` renders directly as `data-t-validate="..."`. The dispatcher looks each name up in the registry (§12.1).
+- `validators` renders directly as `data-validators="..."`. The dispatcher looks each name up in the registry (§12.1).
 - `onValidate` is attached via a `ref` that calls `addValidator(el, fn)` and returns the cleanup to `onCleanup()`. No event listener is attached to the element — the document-level dispatcher reads from the WeakMap.
 
 **Deliberately not props**: `validationMessage`, `validateMatch`, `validateMinFrom`, `validateMaxFrom`. Custom error messages are returned by the validator function — named or inline. Cross-field comparisons (password match, date ranges, "X must be greater than Y") are written as named validators at module load by the consumer, then referenced via `validators="..."`. The single declarative knob to learn is "register a validator, reference it by name."
@@ -115,8 +133,8 @@ export function Form(props: FormProps) {
       <form
         {...rest}
         id={id}
-        data-t-validate
-        data-t-submit={v.submitHandler}
+        data-js="t-validate t-submit"
+        data-submit-handler={v.submitHandler}
         noValidate
         ref={(el) => { if (v.onSubmit) onCleanup(addSubmitHandler(el, v.onSubmit)); }}
       />
@@ -127,21 +145,21 @@ export function Form(props: FormProps) {
 
 The ref attaches *only* when a closure is passed. Consumers using `submitHandler="name"` go through the pure attribute path with zero refs.
 
-`FormContext` carries the form's `id` only — the single allowed Solid context per §13.1. It lets `<SubmitButton>` (and similar) render outside the `<form>` (modal footers, portals) while still targeting it via the `form={id}` attribute.
+`FormContext` carries the form's `id` only. It's an ordinary read-only context — exactly the kind §13.1 permits, and not the v1 prop-mod shape §13.1 rejects. It lets `<SubmitButton>` (and similar) render outside the `<form>` (modal footers, portals) while still targeting it via the `form={id}` attribute.
 
 Other form components are pure attribute renderers:
 
 ```tsx
 // Cross-field validation grouping
 export function FormGroup(props: ComponentProps<'div'>) {
-  return <div {...props} data-t-validate-group />;
+  return <div {...props} data-js="t-validate-group" />;
 }
 
-// Form-wide error display. setFormError() finds it by data-t-form-error
+// Form-wide error display. setFormError() finds it by data-form-error
 export function FormError(props: ComponentProps<'div'>) {
   return (
     <div {...props}
-      data-t-validate-error data-t-form-error
+      data-js="t-validate-error" data-form-error
       role="alert" aria-atomic="true"
       class={cx('c-alert v-colors-danger', props.class)} />
   );
@@ -156,7 +174,7 @@ export function SubmitButton(props: ButtonProps) {
 
 ### 13.6 Modal form
 
-The three modal-form behaviors from §12.1 (`data-t-reset-on-close`, `data-t-close-on-success`, plus the speed-bump pattern via `data-c-modal-speed-bump`) compose into a single Solid wrapper. Defaults are opinionated — all on, individually opt-outable.
+The three modal-form behaviors from §12.1 (`t-reset-on-close`, `t-close-on-success`, plus the speed-bump pattern via `c-modal-speed-bump`) compose into a single Solid wrapper. Defaults are opinionated — all on, individually opt-outable.
 
 ```tsx
 export interface ModalFormProps extends FormProps {
@@ -166,17 +184,17 @@ export interface ModalFormProps extends FormProps {
 
 export function ModalForm(props: ModalFormProps) {
   const [v, rest] = splitProps(props, ['closeOnSuccess', 'resetOnClose']);
+  const extras = [
+    v.closeOnSuccess !== false && 't-close-on-success',
+    v.resetOnClose !== false && 't-reset-on-close',
+  ].filter(Boolean).join(' ');
   return (
-    <Form
-      {...rest}
-      data-t-close-on-success={v.closeOnSuccess !== false ? '' : undefined}
-      data-t-reset-on-close={v.resetOnClose !== false ? '' : undefined}
-    />
+    <Form {...ca(rest, { 'data-js': concat(extras) })} />
   );
 }
 ```
 
-`<ModalSpeedBump>` is a thin wrapper around a nested `<dialog>` carrying the `data-c-modal-speed-bump` marker. The parent modal's `requestClose` dispatcher auto-discovers it via DOM — no `speedBumpId` prop, no ref:
+`<ModalSpeedBump>` is a thin wrapper around a nested `<dialog>` carrying the `c-modal-speed-bump` behavior. The parent modal's `requestClose` dispatcher auto-discovers it via DOM — no `speedBumpId` prop, no ref:
 
 ```tsx
 export interface ModalSpeedBumpProps {
@@ -187,7 +205,7 @@ export interface ModalSpeedBumpProps {
 
 export function ModalSpeedBump(props: ModalSpeedBumpProps) {
   return (
-    <dialog class="c-modal c-modal-speed-bump" data-c-modal-speed-bump>
+    <dialog class="c-modal c-modal-speed-bump" data-js="c-modal-speed-bump">
       <form method="dialog" class="o-stack">
         <p>{props.message ?? 'You have unsaved changes.'}</p>
         <div class="o-row">
@@ -222,9 +240,9 @@ What v1 drops:
 
 | v1 | v2 |
 |---|---|
-| `modalFormCloseOnSuccess` (callbackAttrs registration) | `data-t-close-on-success` attribute |
-| `modalFormResetOnClose` (custom afterHide callback machinery) | `data-t-reset-on-close` + capture-phase `close` listener |
-| `modalFormMaybeShowSpeedBump` + explicit `speedBumpId` wiring | `data-c-modal-speed-bump` marker + DOM-discovered orchestration |
+| `modalFormCloseOnSuccess` (callbackAttrs registration) | `t-close-on-success` behavior token in `data-js` |
+| `modalFormResetOnClose` (custom afterHide callback machinery) | `t-reset-on-close` behavior + capture-phase `close` listener |
+| `modalFormMaybeShowSpeedBump` + explicit `speedBumpId` wiring | `c-modal-speed-bump` behavior + DOM-discovered orchestration |
 | `ModalFormContent` wrapper that splits modal vs. form props | `<Modal>` + `<ModalForm>` composed directly |
 
 ### 13.7 Porting target

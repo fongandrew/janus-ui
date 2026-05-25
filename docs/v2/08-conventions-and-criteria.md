@@ -12,8 +12,8 @@ Part 8 of the [Janus v2 build plan](./README.md). Covers what was deliberately d
 | Custom focus-trap library | `<dialog>` provides this natively. |
 | Text-overflow tooltip machinery | Replaced by `t-truncate` + manual `c-tooltip` when needed. |
 | Empty-state object class | Compose with stack + center. |
-| Sass-style `@define-mixin` system | All composition through CSS layers + custom properties; no preprocessor mixins. |
-| v1's behavior callback registry (`data-callback-*` plumbing) | Two patterns under one dispatcher (§12.2.2–§12.2.4): event callbacks referenced by `$`-prefixed name from `data-t-on-*` values, and activation attributes (`data-t-*`) for stateful behaviors. Callback names are stable strings tied to module filenames — no per-render generated IDs. Validators / submit handlers still use a name registry (§12.1). Closures go in a WeakMap. |
+| v1's general-purpose mixin overuse | Mixins (via `postcss-mixins`) are kept but **used sparingly** — see §5.3. They exist for the irreducibly-bundled-knob case (`v-spacing $size` sets five knobs at once) and for media-/container-query wrappers (`v-breakpoint-*`, `v-container-*`). They are *not* used as a general composition mechanism the way v1 reached for them. |
+| v1's behavior callback registry (`data-callback-*` plumbing) | One unified pattern under one dispatcher (§12.2.2–§12.2.3): elements opt into behaviors via tokens in a single canonical `data-js="..."` attribute. Behavior names are stable strings tied to module filenames — no per-render generated IDs. Validators / submit handlers still use a name registry (§12.1). Closures go in a WeakMap. |
 | `o-top-nav-layout`, `o-sidebar-layout` (whole-page layouts) | Reframed as compositions of primitives (§10.4). The realistic needs — auto-hiding top nav, sidebar-to-drawer — decompose into recipes over `o-split`, `o-container`, `c-drawer` + CSS scroll-state / container queries. |
 
 ## 15. Browser feature gates
@@ -21,8 +21,9 @@ Part 8 of the [Janus v2 build plan](./README.md). Covers what was deliberately d
 The build assumes the following are available without fallback. Verify against the project's target Baseline before starting.
 
 - CSS `@layer`
-- CSS custom properties + `calc()`
+- CSS custom properties + `calc()` (including `calc(infinity)`)
 - `color-mix()`, `light-dark()`
+- `oklch()` and the relative-color syntax `oklch(from <color> …)` — used for the `--v-fg` derivation in §5.1
 - `1lh` unit
 - `:has()`
 - Container queries (`@container`, `cqw` units)
@@ -30,6 +31,7 @@ The build assumes the following are available without fallback. Verify against t
 - `popover` attribute + Popover API
 - `commandfor` / `command` attributes (verify: still relatively new)
 - CSS anchor positioning (`anchor-name`, `position-anchor`, `position-try`)
+- `scroll-state()` container queries — used by the auto-hiding-nav recipe in §10.4. Optional: the recipe degrades gracefully (nav stays visible) where unsupported.
 
 If `commandfor` is not yet Baseline at build time, fall back to a thin JS shim in `src/lib/dom/` (open/close handlers). Do NOT polyfill — shim only where the framework cannot function. Anchor positioning is treated as a hard requirement; consumers whose target browsers don't support it should pick a different library.
 
@@ -46,11 +48,14 @@ src/lib/
     reset.css
     base.css
     tokens/
-      spacing.css                # --v-spacing knob + derivations
-      color.css                  # --v-color-* palette
+      spacing.css                # --v-spacing + --v-pad-* / --v-gap-* root
+                                 #   knobs + the v-spacing mixin (§5.3)
+      color.css                  # --v-bg / --v-fg / --v-link / --v-accent /
+                                 #   --v-muted + oklch-based --v-fg default
       typography.css
       radius.css
       shadow.css
+      breakpoints.css            # v-breakpoint-* / v-container-* mixins
     objects/
       box.css                    # .o-box
       text-box.css               # .o-text-box
@@ -77,6 +82,7 @@ src/lib/
       text.css                   # .v-text-display / .v-text-meta (role-based, sparingly)
       # No .v-spacing-*, .v-input-size-*, or other t-shirt-scaled variants.
       # Consumers define those in their own CSS as semantic scopes.
+      # Font-size tokens are semantic (h1–h3, caption, code), not sm/md/lg.
     tools/
       padding.css
       flex.css
@@ -100,46 +106,47 @@ src/lib/
     tsconfig.json               # allows DOM types, forbids framework imports
     eslint.config.js
     vitest.config.ts
+    config.ts                   # setup() + JS_ATTR constant — §12.2.2
     compose-attrs.ts            # ca / only / concat / override — §12.2.1
-    dispatch.ts                 # registerCallback + registerActivation +
-                                #   the document-level dispatchers — §12.2.2,
-                                #   §12.2.3, §12.2.4
+    dispatch.ts                 # registerBehavior + the document-level
+                                #   dispatcher — §12.2.2, §12.2.3
     mount.ts                    # initial DOM scan + MutationObserver wiring
     form/                       # form engine — §12.1
       index.ts
       validate.ts
       submit.ts
-    handlers/                   # one file per activation attribute or callback
-                                #   name. Filename IS the manifest (§12.2.2 /
-                                #   §12.2.3) — the bundling plugin (§12.4)
-                                #   text-scans the SSR output for attribute
-                                #   names + $callback values and imports the
+    handlers/                   # one file per behavior name. Filename IS the
+                                #   manifest (§12.2.2) — the bundling plugin
+                                #   (§12.4) text-scans the SSR output for
+                                #   data-js="..." tokens and imports the
                                 #   matching modules. Each module top-level-
-                                #   calls registerCallback / registerActivation
-                                #   (side effect) and exports producers.
+                                #   calls registerBehavior (side effect) and
+                                #   exports producers. Names follow the BEM
+                                #   prefix scheme: t-* for toolkit, c-*[__*]
+                                #   for component-internal, p-* for project.
 
-      # Activation attributes (filename = attribute name).
-      data-t-roving-focus.ts
-      data-t-focus-trap.ts
-      data-t-restore-focus.ts
-      data-t-request-close.ts
-      data-t-typeahead-filter.ts
-      data-t-active-descendant.ts
-      data-t-validate.ts        # form engine's activation attrs use the same
-      data-t-submit.ts          #   filename-as-manifest convention so the
-      data-t-validate-group.ts  #   bundling story is uniform across the
-      data-t-validate-error.ts  #   library.
-      data-t-reset-on-close.ts
-      data-t-close-on-success.ts
-      data-c-modal-speed-bump.ts
+      # Toolkit behaviors.
+      t-roving-focus.ts
+      t-focus-trap.ts
+      t-restore-focus.ts
+      t-request-close.ts
+      t-typeahead-filter.ts
+      t-active-descendant.ts
+      t-open-tab.ts
 
-      # Event callbacks (filename = $name from data-t-on-* values).
-      # Names follow the BEM prefix scheme: $t-* for toolkit, $c-*__* for
-      # component-internal (see §12.2.2).
-      $t-focus-on-click.ts
-      $t-open-tab.ts
-      $c-modal__close.ts
-      $c-tabs__select.ts
+      # Form-engine behaviors — same filename-as-manifest convention so the
+      # bundling story is uniform across the library.
+      t-validate.ts
+      t-submit.ts
+      t-validate-group.ts
+      t-validate-error.ts
+      t-reset-on-close.ts
+      t-close-on-success.ts
+
+      # Component-internal behaviors.
+      c-modal-speed-bump.ts
+      c-modal__close.ts
+      c-tabs__select.ts
       ...
     components/                 # thin compositions — §12.3
       tabs.ts
@@ -172,12 +179,11 @@ src/lib/
     ...
     # No prop-mod-context, no form-element-props, no auto-prop. Validators
     # live in dom/'s registry (§12.1); Solid components just render
-    # data-t-validate attrs or ref-attach closures. See §13.
+    # data-js="t-validate" or ref-attach closures. See §13.
 
 plugins/                        # Individually copyable Vite plugins.
                                 # Not pseudo-packaged — each file standalone.
   vite-plugin-purgecss.ts
-  vite-plugin-manglecss.ts
   vite-plugin-ssg.ts
   vite-plugin-janus-bundle.ts   # SSR-introspection bundling — §12.4
 
@@ -214,6 +220,6 @@ v2 is considered complete when:
 - A consumer can copy any single pseudo-package (with its declared `depends`) into a fresh repo and it builds + lints + tests without touching the others. The boundary lint rule (§3.3) is what guarantees this.
 - An LLM agent, given only the root `README.md` and the consumer's fork (whose copied `CHANGELOG.md` files mark the last sync point), can produce a coherent diff of "what needs to change in the consumer's fork to pick up the latest Janus" — no human translation step.
 - A typical element carries 1–3 classes. The 95th percentile is ≤ 5.
-- The `--v-*` knob surface is ≤ 20 documented variables.
+- The `--v-*` knob surface is split into primary (static defaults) and secondary (derived) tiers (§5.1). Primary knobs are the minimal set a consumer needs to define a design; secondary knobs default from primaries and only need overriding to break a specific relationship.
 - No `t-` class sets an arbitrary numeric scale (no `t-px-2`, `t-mb-4`, etc.).
 - The custom listbox / styled-select component has ≤ 1 consumer use case in mind (font picker) and is documented as such.

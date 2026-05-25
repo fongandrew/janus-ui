@@ -4,28 +4,27 @@ Part 6 of the [Janus v2 build plan](./README.md). Covers the framework-agnostic 
 
 ## 12. The JS layer (`src/lib/dom`)
 
-The JS layer is a toolkit of small, composable behaviors that attach to DOM elements via `data-t-*` attributes. Components ship as thin compositions of these behaviors. Consumers can use the same toolkit directly to build custom controls (toolbars, command palettes, navigable lists) without leaving the Janus model.
+The JS layer is a toolkit of small, composable behaviors that attach to DOM elements via a single canonical attribute — `data-js` by default, configurable (§12.2.2). Components ship as thin compositions of these behaviors. Consumers can use the same toolkit directly to build custom controls (toolbars, command palettes, navigable lists) without leaving the Janus model.
 
-Three structural pieces underpin everything in this layer:
+Two structural pieces underpin everything in this layer:
 
 - **`ca` — the attribute composition helper** (§12.2.1). One way to merge prop objects (data attributes, ARIA, class, etc.) onto an element with explicit conflict semantics. Replaces v1's `callbackAttrs` plus any ad-hoc spread merging.
-- **Event callbacks** (§12.2.2). One document-level capture-phase listener per event type reads a single `data-t-on-{event}` attribute per ancestor and dispatches to a callback registered under a `$`-prefixed name. Each callback lives in its own module under `src/lib/dom/handlers/`, filename matches the callback name.
-- **Activation-attribute behaviors** (§12.2.3). Stateful per-element behaviors (roving focus, request-close, validators) opt in via a dedicated `data-t-{behavior}` attribute. Each lives in its own module named after the attribute. Same filename-as-manifest convention as event callbacks; same purge story (§12.4).
+- **Behaviors** (§12.2.2). Each behavior is a module under `src/lib/dom/handlers/`; the filename is the behavior name. A behavior registers a manifest declaring which DOM events it handles and an optional `mount` hook for setup. Elements opt in by listing one or more behavior names in `data-js="..."`. A single document-level capture-phase listener per event type dispatches to the right behaviors by reading one attribute per ancestor.
 
 Application areas:
 
-- **Form engine** (§12.1) — substantial coherent system for validation and submission. Janus's biggest JS investment, because forms are the most JS-heavy real-world need (285+ call sites in surveyed v1 consumers). Uses the activation-attribute pattern.
-- **Behavior utilities** (§12.2.5) — small composable bits: roving focus, request-close, typeahead, active descendant, etc. Mix of both patterns depending on whether the behavior is event-driven (callback) or stateful (activation attribute).
-- **Bundling** (§12.4) — for SSR apps, a build step text-scans the SSR output for both `$callback-name` strings and activation-attribute names, then generates a client entry that imports only the matching modules.
+- **Form engine** (§12.1) — substantial coherent system for validation and submission. Janus's biggest JS investment, because forms are the most JS-heavy real-world need (285+ call sites in surveyed v1 consumers). Adopts the same `data-js` opt-in convention but keeps its own bespoke dispatcher; the form lifecycle — discover owning form, walk members, ordered validator chain, touched-state machine — doesn't fit the per-event-per-ancestor shape cleanly.
+- **Behavior utilities** (§12.2.4) — small composable bits: roving focus, request-close, typeahead, active descendant, etc.
+- **Bundling** (§12.4) — for SSR apps, a build step text-scans the SSR output for `data-js` values and generates a client entry that imports only the matching modules.
 
 ### 12.1 Form engine
 
-The engine is **one document-level dispatcher plus two registries**. No per-element listeners. No per-render ID generation. Validators register either once at module load (named) or by element identity (closure, via WeakMap). It predates the general event-callback dispatcher (§12.2.4) and keeps its own form-specific dispatcher because the form lifecycle — discover owning form, walk members, ordered validator chain, touched-state machine — doesn't fit the simple per-event callback shape cleanly. The activation attributes (`data-t-validate`, `data-t-submit`, etc.) follow the filename-as-manifest convention (§12.2.3), so the bundling story is unified.
+The engine is **one document-level dispatcher plus two registries**. No per-element listeners. No per-render ID generation. Validators register either once at module load (named) or by element identity (closure, via WeakMap). It keeps its own form-specific dispatcher (rather than going through the general one in §12.2.3) because the form lifecycle — discover owning form, walk members, ordered validator chain, touched-state machine — doesn't fit the simple per-event callback shape cleanly. The behaviors it ships (`t-validate`, `t-submit`, etc.) follow the same `data-js` opt-in and filename-as-manifest convention as everything else, so the bundling story is unified.
 
-**Activation.** A form opts in with a single boolean attribute:
+**Activation.** A form opts in by listing the behavior:
 
 ```html
-<form data-t-validate>
+<form data-js="t-validate">
   ...
 </form>
 ```
@@ -45,10 +44,10 @@ registerValidator('match-password', (el: HTMLInputElement) => {
 ```
 
 ```html
-<input type="password" required data-t-validate="match-password">
+<input type="password" required data-validators="match-password">
 ```
 
-`data-t-validate` is a space-separated list of names. Multiple validators per element compose by listing them.
+`data-validators` is a sidecar attribute on individual inputs — a space-separated list of named validators to run for this field. Multiple validators per element compose by listing them. (Inputs participating in HTML5-only validation need nothing; the form-level `data-js="t-validate"` opt-in walks all members.)
 
 ```ts
 // 2. Inline closures — stored in a WeakMap keyed by element identity.
@@ -64,30 +63,30 @@ const cleanup = addValidator(inputEl, (el) => {
 
 **Dispatcher.** A single set of document-level capture-mode listeners (`submit`, `change`, `input`) is installed once at `mount()` time. On each event the dispatcher:
 
-1. Finds the owning `<form data-t-validate>` (no-op if absent).
+1. Finds the owning `<form data-js~="t-validate">` (no-op if absent).
 2. Walks form members.
-3. For each element runs, in order: HTML5 native validity check → named validators from `data-t-validate` → inline validators from the WeakMap.
+3. For each element runs, in order: HTML5 native validity check → named validators from `data-validators` → inline validators from the WeakMap.
 4. First non-null return wins. The engine writes the message into the element's error destination.
 
-**Error destination.** Boolean marker on any element receiving error text:
+**Error destination.** Marker behavior on any element receiving error text:
 
 ```html
 <input id="email" aria-describedby="email-err" required>
-<span id="email-err" data-t-validate-error></span>
+<span id="email-err" data-js="t-validate-error"></span>
 ```
 
-The engine walks the input's `aria-describedby`, finds the first element with `data-t-validate-error`, writes the message there and toggles `role="alert"`. The screen-reader wiring is the same DOM relationship the engine uses — no separate back-pointer attribute.
+The engine walks the input's `aria-describedby`, finds the first element carrying `t-validate-error`, writes the message there and toggles `role="alert"`. The screen-reader wiring is the same DOM relationship the engine uses — no separate back-pointer attribute.
 
 **Group validation.**
 
 ```html
-<fieldset data-t-validate-group>
+<fieldset data-js="t-validate-group">
   <input name="start-date" type="date" required>
-  <input name="end-date" type="date" required data-t-validate="after-start-date">
+  <input name="end-date" type="date" required data-validators="after-start-date">
 </fieldset>
 ```
 
-When a child of a `data-t-validate-group` changes, every other touched child re-validates. Touched-only is the always-on default.
+When a child of a `t-validate-group` fieldset changes, every other touched child re-validates. Touched-only is the always-on default.
 
 **Touch tracking.** An element is "touched" after its first `change` event or after the form has submitted. Untouched fields don't show errors when *other* fields change (avoids premature red text). After a field shows its first error, the engine switches to `input`-event validation on that field for live feedback while the user fixes it.
 
@@ -115,7 +114,7 @@ registerSubmitHandler('signup', async (data, form) => {
 ```
 
 ```html
-<form data-t-validate data-t-submit="signup">
+<form data-js="t-validate t-submit" data-submit-handler="signup">
   ...
 </form>
 ```
@@ -137,25 +136,31 @@ type SubmitHandler = (data: FormData, form: HTMLFormElement) =>
   | Promise<SubmitResult>;
 ```
 
-The submit dispatcher (same document-level listener set) owns all the choreography: `preventDefault`, run validation, dispatch to handler if valid, call `setErrors` / `setFormError` on returned errors, reset on `{ ok: true }` unless `reset: false`. The consumer's handler is just business logic.
+The submit dispatcher (same document-level listener set) owns all the choreography: `preventDefault`, run validation, build the `FormData` (see "Disabled-state filtering" below), dispatch to handler if valid, call `setErrors` / `setFormError` on returned errors, reset on `{ ok: true }` unless `reset: false`. The consumer's handler is just business logic.
 
-A form can use `data-t-submit` (or `addSubmitHandler`) without `data-t-validate` (no validation, just async submit choreography) or vice versa.
+**Disabled-state filtering.** Before constructing `FormData`, the dispatcher walks the form's elements and excludes any element with `aria-disabled="true"` from submission — same outcome as if the native `disabled` attribute were set, but without removing the element from tab order or screen-reader output. This is the runtime contract that backs the Solid layer's `ariaize()` rule (§13.1): `<Input disabled />` always renders `aria-disabled`, never the native `disabled` attribute, and the form engine guarantees those fields don't reach the handler. Validators also skip `aria-disabled` elements during the per-field check — a disabled field with a `required` violation should not block submit.
 
-**Modal-form behaviors.** Three attrs, dispatched by the same document-level listeners. No ref, no per-form setup, no callback registration.
+A form can use `t-submit` (or `addSubmitHandler`) without `t-validate` (no validation, just async submit choreography) or vice versa.
 
-| Attribute | Effect |
+**Modal-form behaviors.** Three behaviors, dispatched by the same document-level listeners. No ref, no per-form setup, no callback registration.
+
+| Behavior | Effect |
 |---|---|
-| `data-t-reset-on-close` | When the ancestor `<dialog>` fires `close` (or `[popover]` fires `toggle` → `closed`), reset the form. A document-level capture-phase listener handles non-bubbling `close`. |
-| `data-t-close-on-success` | On `{ ok: true }` from the submit handler, close the ancestor `<dialog>` / `[popover]` after reset. Dispatcher branch. |
+| `t-reset-on-close` | When the ancestor `<dialog>` fires `close` (or `[popover]` fires `toggle` → `closed`), reset the form. A document-level capture-phase listener handles non-bubbling `close`. |
+| `t-close-on-success` | On `{ ok: true }` from the submit handler, close the ancestor `<dialog>` / `[popover]` after reset. Dispatcher branch. |
+| `c-modal-speed-bump` | Marks a nested `<dialog>` as the "are you sure?" prompt for its parent modal. The speed-bump module — not the parent modal — owns the orchestration. See below. |
 
-**Speed bump for dirty close.** When a modal contains both a dirty form and a descendant `<dialog data-c-modal-speed-bump>`, the modal's `requestClose` handler (§12.2.5) intercepts the close, opens the speed bump, and only commits the outer close if the speed bump returns `'discard'`. Pure markup pattern — the consumer renders both dialogs and the engine discovers them via DOM:
+**Speed bump for dirty close.** The consumer renders a nested `<dialog>` carrying the `c-modal-speed-bump` behavior inside the modal. Markup:
 
 ```html
 <dialog class="c-modal">
-  <form data-t-validate data-t-reset-on-close data-t-close-on-success data-t-submit="signup">
+  <form
+    data-js="t-validate t-submit t-reset-on-close t-close-on-success"
+    data-submit-handler="signup"
+  >
     ...
   </form>
-  <dialog class="c-modal" data-c-modal-speed-bump>
+  <dialog class="c-modal" data-js="c-modal-speed-bump">
     <form method="dialog">
       <p>You have unsaved changes.</p>
       <button value="cancel">Keep editing</button>
@@ -165,7 +170,18 @@ A form can use `data-t-submit` (or `addSubmitHandler`) without `data-t-validate`
 </dialog>
 ```
 
-Orchestration: outer modal's `requestClose` runs `isDirty(form)`; if dirty, calls `showModal()` on the speed bump and cancels the original close; listens once for the speed bump's `close` event; if `returnValue === 'discard'`, closes the outer modal.
+Orchestration lives entirely inside `handlers/c-modal-speed-bump.ts` — `c-modal`'s code knows nothing about speed bumps. The module's `mount` handler:
+
+1. Walks up from the speed-bump element to its ancestor `<dialog>` (the parent modal).
+2. Registers a `requestClose` hook on the parent modal via the public `onRequestClose(parentModal, fn)` helper (exposed by `handlers/t-request-close.ts`). The hook: walk the parent modal's `<form data-js~="t-validate">` descendants; if any returns `true` from `isDirty(form)`, call `parentModal.querySelector('[data-js~="c-modal-speed-bump"]').showModal()` and return `false` (cancel the parent close). Otherwise return `true` (allow the close).
+3. Adds a `close` listener on the speed-bump element itself: if `returnValue === 'discard'`, call `forceClose(parentModal)` — a sibling helper that closes the dialog while bypassing the `requestClose` chain, so the hook from step 2 doesn't re-fire and re-open the speed bump.
+
+Two small additions to the public API to make this work:
+
+- `onRequestClose(el: Element, fn: () => boolean): () => void` — exposed by `handlers/t-request-close.ts`. Lets any handler subscribe to the same hook chain the markup behavior uses. Returns cleanup.
+- `forceClose(dialog: HTMLDialogElement): void` — closes the dialog without firing `requestClose`. Equivalent to `dialog.close()` plus a marker the dispatcher reads to skip its chain on this turn.
+
+Net effect: the modal stays generic, and consumers can build other "are you sure?" patterns (form abandonment, destructive-action confirmations) by writing their own behavior modules on the same shape.
 
 **Public API summary:**
 
@@ -179,11 +195,11 @@ setFormError(form: HTMLFormElement, msg: string): void;                  // form
 isDirty(form: HTMLFormElement): boolean;                                 // used by speed bump
 ```
 
-The Solid wrapper sits on top. The DOM layer alone is sufficient for static HTML + progressive enhancement: a `<form data-t-validate>` with HTML5 attributes works without any JS-layer prop wrapping.
+The Solid wrapper sits on top. The DOM layer alone is sufficient for static HTML + progressive enhancement: a `<form data-js="t-validate">` with HTML5 attributes works without any JS-layer prop wrapping.
 
 ### 12.2 Behavior utilities
 
-Four pieces work together: `ca` for composing element attributes (§12.2.1), event callbacks for one-off event-driven actions (§12.2.2), activation-attribute behaviors for stateful per-element setups (§12.2.3), and a single dispatcher tying them together (§12.2.4). All modules live under `src/lib/dom/handlers/` and follow the filename-as-manifest convention so the SSR purge step (§12.4) can include exactly the modules referenced by the rendered output.
+Three pieces work together: `ca` for composing element attributes (§12.2.1), behavior modules that declare what they do via a manifest (§12.2.2), and a single dispatcher tying them together (§12.2.3). All modules live under `src/lib/dom/handlers/` and follow the filename-as-manifest convention so the SSR purge step (§12.4) can include exactly the modules referenced by the rendered output.
 
 #### 12.2.1 `ca` — attribute composition
 
@@ -198,11 +214,12 @@ Default conflict resolution:
 | Attribute pattern | Behavior on duplicate |
 |---|---|
 | `id`, `role` | throw |
+| `data-js` | concat (space-joined) |
 | `data-*` | throw |
 | `class`, `aria-labelledby`, `aria-describedby`, `style` | concat (space- or `;`-joined as appropriate) |
 | everything else | throw |
 
-Defaults are conservative. Throwing surfaces accidental double-writes loudly instead of letting the last writer silently win — including for data attributes, which the dispatcher (§12.2.4) interprets per-handler and rarely round-trips through space-joined values cleanly.
+Defaults are conservative. `data-js` concats because composing multiple behaviors on one element is the common case (§12.2.2). Other data attributes default to `throw` so accidental double-writes surface loudly instead of letting the last writer silently win — sidecar params (`data-validators`, `data-submit-handler`, etc.) interpreted per-behavior rarely round-trip through space-joined values cleanly.
 
 Producers can pin per-attribute behavior using wrappers, irrespective of the global defaults:
 
@@ -213,7 +230,8 @@ export function openTab(panelId: string) {
   return {
     role: 'tab',
     'aria-labelledby': concat(panelId),
-    'data-t-focus-on-click': only(panelId),
+    'data-js': concat('t-open-tab'),
+    'data-target': only(panelId),
   };
 }
 ```
@@ -232,6 +250,7 @@ import { CombineAttrs } from '~/lib/dom/compose-attrs';
 export const ca = new CombineAttrs({
   id: 'throw',
   role: 'throw',
+  'data-js': 'concat',
   'data-*': 'throw',
   class: 'concat',
   'aria-labelledby': 'concat',
@@ -243,139 +262,136 @@ export const ca = new CombineAttrs({
 
 `ca` is framework-agnostic. JSX consumers spread the result; for hand-built DOM, a sibling `apply(el, attrs)` helper iterates and calls `setAttribute` / property assignment as appropriate.
 
-#### 12.2.2 Event callbacks
+#### 12.2.2 Behaviors
 
-For one-off event-driven actions — "focus this on click", "close this modal on outside click", "track a button press" — the markup uses a single generic event attribute per event type:
+A behavior is a module under `src/lib/dom/handlers/`. The filename is the behavior name. The module registers a manifest declaring which DOM events it handles plus an optional `mount` hook for setup. Elements opt in by listing one or more behavior names in the canonical `data-js` attribute:
 
 ```html
-<button data-t-on-click="$t-open-tab">Open</button>
+<div role="toolbar" data-js="t-roving-focus" aria-orientation="horizontal">
+  <button class="c-button">Cut</button>
+  ...
+</div>
+
+<dialog data-js="c-modal t-request-close">...</dialog>
+
+<button data-js="t-open-tab" data-target="panel-3">Open</button>
 ```
 
-`$t-open-tab` is the **callback name**, which is also the filename of its module under `src/lib/dom/handlers/`. The dispatcher reads the attribute once per ancestor on each event (single `getAttribute`) and looks the name up in the registry.
+**Naming convention.** Behavior names mirror the BEM prefix scheme used for CSS classes (§16):
+
+- `t-{name}` — **toolkit** behavior. Library-provided, behavior-driven, single-purpose. Examples: `t-roving-focus`, `t-request-close`, `t-open-tab`, `t-track-event`.
+- `c-{component}` / `c-{component}__{action}` — **component** behavior. Component-internal, namespaced by component, optionally with a BEM-style `__action` suffix. Examples: `c-modal`, `c-tabs`, `c-modal__close`, `c-styled-select__commit`.
+- `p-{...}` — reserved for project-level behaviors consumers declare in their own forks, by analogy with the `p-` CSS prefix.
+
+The prefix is the dispatch sigil — it tells the purge scanner (§12.4) which value tokens to map back to handler files. The filename matches the name byte-for-byte: `handlers/t-roving-focus.ts`, `handlers/c-modal__close.ts`. All characters used here are valid POSIX and Windows filenames and supported by every bundler Janus targets (Vite, Rollup, esbuild); no escape or substitution is needed.
+
+**Module shape.** Each module does two things:
+
+1. **Registers a manifest** at top level via `registerBehavior`. Importing the module is a side effect that mounts the behavior into the dispatcher. If never imported, tree-shaking removes it.
+2. **Exports producer functions** that return prop objects (using the `ca`-friendly wrappers) for consumers to spread onto markup.
 
 ```ts
-// src/lib/dom/handlers/$t-open-tab.ts
-import { registerCallback } from '~/lib/dom/dispatch';
+// src/lib/dom/handlers/t-open-tab.ts — event-only, smallest case
+import { registerBehavior } from '~/lib/dom/dispatch';
 import { only, concat } from '~/lib/dom/compose-attrs';
 
-registerCallback('$t-open-tab', (el, ev) => {
-  const panelId = el.getAttribute('data-c-open-tab__target');
-  if (panelId) document.getElementById(panelId)?.focus();
+registerBehavior('t-open-tab', {
+  click(el, ev) {
+    const panelId = el.getAttribute('data-target');
+    if (panelId) document.getElementById(panelId)?.focus();
+  },
 });
 
 export function openTab(panelId: string) {
   return {
     role: 'tab',
     'aria-labelledby': concat(panelId),
-    'data-t-on-click': only('$t-open-tab'),
-    'data-c-open-tab__target': only(panelId),
+    'data-js': concat('t-open-tab'),
+    'data-target': only(panelId),
   };
 }
 ```
 
-Module does two things:
-
-1. **Registers the callback** at top level via `registerCallback`. Importing the module is a side effect that mounts it into the registry. If never imported, tree-shaking removes it.
-2. **Exports producer functions** that return prop objects (using the `ca`-friendly wrappers) for consumers to spread onto markup.
-
-**Naming convention.** Callback names mirror the BEM prefix scheme used for CSS classes (§16):
-
-- `$t-{name}` — **toolkit** callback. Library-provided, behavior-driven, action-named. Single purpose, no BEM modifier. Examples: `$t-open-tab`, `$t-focus-on-click`, `$t-track-event`.
-- `$c-{component}__{action}` — **component** callback. Component-internal, namespaced by component, with a BEM-style `__action` suffix. Examples: `$c-modal__close`, `$c-tabs__select`, `$c-styled-select__commit`.
-- `$p-{...}` is reserved for project-level callbacks consumers can declare in their own forks, by analogy with the `p-` CSS prefix.
-
-The `$` prefix is the dispatch sigil — it tells the purge scanner (§12.4) which string literals to match as callback names, and visually disambiguates callbacks from the many other literal strings the SSR output contains (class names, IDs, ARIA labels). If the `$` ever causes friction at the filesystem or import-resolution layer, drop or substitute it — the sigil is plumbing, not API. The BEM-prefix portion (`t-` / `c-` / `p-`) is the durable convention regardless of what wraps it.
-
-Per-call payload lives on a sibling `data-c-*` attribute the callback reads. Single dispatch attribute, single registry hit per ancestor per event.
-
-Multiple callbacks for the same event compose by space-separating the value:
-
-```html
-<button data-t-on-click="$t-track-event $c-modal__close">...</button>
-```
-
-Both fire on click, in source order.
-
-The dispatch attributes are `data-t-on-click`, `data-t-on-keydown`, `data-t-on-input`, `data-t-on-change`, etc. — naming mirrors HTML event handler attributes for familiarity. New event types are added by registering callbacks for them; the dispatcher installs the document-level listener lazily on first registration for that event type.
-
-#### 12.2.3 Activation-attribute behaviors
-
-For stateful per-element behaviors — roving focus, request-close, focus trap, validators — the markup opts in via a dedicated `data-t-{behavior}` attribute rather than a generic event attribute:
-
-```html
-<div role="toolbar" data-t-roving-focus="horizontal">
-  <button class="c-button">Cut</button>
-  ...
-</div>
-```
-
-The attribute itself names the behavior. Its module under `src/lib/dom/handlers/` is named after the attribute and registers whatever event handling and/or mount-time setup the behavior needs:
-
 ```ts
-// src/lib/dom/handlers/data-t-roving-focus.ts
-import { registerActivation } from '~/lib/dom/dispatch';
-import { only } from '~/lib/dom/compose-attrs';
+// src/lib/dom/handlers/t-roving-focus.ts — mount + event hooks
+import { registerBehavior } from '~/lib/dom/dispatch';
+import { concat, only } from '~/lib/dom/compose-attrs';
 
-registerActivation('data-t-roving-focus', {
-  mount(el, value)       { /* demote non-active items to tabindex="-1" */ },
-  keydown(el, value, ev) { /* arrow / Home / End handling */ },
+registerBehavior('t-roving-focus', {
+  mount(el)       { /* demote non-active items to tabindex="-1" */ },
+  keydown(el, ev) { /* arrow / Home / End handling */ },
 });
 
 export function rovingFocus(opts: { axis: 'horizontal' | 'vertical' | 'both' }) {
-  return { 'data-t-roving-focus': only(opts.axis) };
+  return {
+    'data-js': concat('t-roving-focus'),
+    'aria-orientation': only(opts.axis),
+  };
 }
 ```
 
-Same two responsibilities as event-callback modules: top-level side-effect registration plus exported producers.
+The manifest declares only the lifecycle hooks the behavior needs. Most behaviors are event-only; a few also need mount-time setup. Use a `mount` hook when the behavior needs to do something *before* the first user event — initial `tabindex` demotion, focus-anchor recording, subtree wiring. Otherwise leave it out.
 
-Activation attributes are the right pattern when:
+New event types are added by registering behaviors that include them in the manifest; the dispatcher installs the document-level listener lazily on first registration for that event type (§12.2.3).
 
-- The behavior needs *mount-time setup* (initial `tabindex` demotion, focus-anchor recording).
-- The behavior aggregates *multiple events* under one logical concept and you want one declarative opt-in instead of three sibling `data-t-on-*` attributes.
-- The behavior is stateful enough that earning its own attribute aids readability.
+**Multiple behaviors per element.** The `data-js` value is space-separated; behaviors compose by listing both names. When two behaviors register for the same event, both fire in source order:
 
-Otherwise prefer the lighter event-callback pattern (§12.2.2) — fewer moving parts.
+```html
+<button data-js="t-track-event c-modal__close">Save</button>
+```
 
-In the SPA path, normal tree-shaking handles both patterns: if nothing in the app imports the producer (or the module side-effect), the module never enters the bundle. In the SSR path, the producer isn't called on the client (HTML already carries the attribute), so the bundling step (§12.4) generates a client entry that imports each referenced module purely for its registration side effect.
+**Per-call parameters.** When a behavior needs an element-specific parameter (a target id, a label, the active tab index), the producer emits an additional attribute on the same element — no inline syntax in the `data-js` value. Use a native attribute when one fits naturally (`aria-orientation` for axis, `aria-labelledby` / `for` for references); otherwise use a `data-*` attribute the behavior documents. The dispatcher only reads `data-js`; sidecar attributes are invisible to the SSR purge and free-named per behavior.
 
-#### 12.2.4 Dispatch model
+**Configuration.** The canonical attribute name and other library-wide settings come from `~/lib/dom/config`. The default is `data-js`. Consumers whose markup namespace would conflict can override before `mount()`:
 
-The library installs exactly one document-level capture-phase listener per event type used by any registered callback or activation behavior. There is no per-element wiring.
+```ts
+import { setup } from '~/lib/dom';
+setup({ attr: 'data-foo' });  // before mount()
+```
 
-**Event-callback dispatch.** On each event, the dispatcher walks from the event target upward (standard delegation). At each ancestor it does a single `getAttribute('data-t-on-{eventtype}')`, splits the value on whitespace, and invokes each named callback with `(element, event)`. One attribute read per ancestor regardless of how many callbacks are registered globally.
+Producers emit the configured attribute name by importing the constant rather than hardcoding the string, so an override propagates uniformly across producers and dispatcher.
 
-**Activation-attribute dispatch.** `registerActivation(attr, handlers)` adds `attr` to a per-event-type lookup. On the same walk, the dispatcher does one additional `getAttribute(attr)` per activation attribute registered for that event type, and invokes the handler if present. The synthetic `mount` event is fired once by `mount()` and again on `MutationObserver` discovery — it has no document-level listener of its own.
+**Bundling.** In the SPA path, normal tree-shaking handles behaviors: if nothing in the app imports the producer (or the module side-effect), the module never enters the bundle. In the SSR path, the producer isn't called on the client (HTML already carries the attribute), so the bundling step (§12.4) generates a client entry that imports each referenced module purely for its registration side effect.
 
-Per-ancestor cost is `O(1 + activation-attrs-registered-for-this-event)`. The activation-attribute count is bounded by what the codebase actually registers (a handful in practice), not by total handlers globally.
+#### 12.2.3 Dispatch model
 
-**Multi-callback per event** is natural via the space-separated value (`data-t-on-click="$a $b"`). Both fire, in source order.
+The library installs exactly one document-level capture-phase listener per event type that some registered behavior declares in its manifest. There is no per-element wiring.
 
-**No `stopImmediatePropagation`-style cross-handler abort.** Handlers run in declared order; if you need to suppress sibling handlers, restructure the markup so they aren't co-located. A global stop is too easy to misuse for the handful of cases where it would help.
+On each event, the dispatcher walks from the event target upward (standard delegation). At each ancestor it does a single `getAttribute('data-js')`, splits the value on whitespace, and for each token looks up the registered manifest and invokes its handler for the current event type if one is registered. Tokens with no registered behavior, or behaviors that don't declare this event type, are skipped.
 
-`mount()` is the entry point that primes the system at startup: it walks the DOM once and fires the synthetic `mount` event on every element carrying a registered activation attribute. Subsequent DOM mutations are picked up via `MutationObserver`. After mount, the document-level listeners handle the rest.
+Per-ancestor cost is `O(1)` attribute reads plus `O(tokens-on-this-element)` Map lookups. In practice the token count is at most a small handful. Crucially, the cost does **not** scale with the number of behaviors registered globally — only with what this specific element opts into.
 
-This replaces v1's per-render callback ID generation and the global callback registry: callback names are now stable strings tied to module filenames; no IDs are minted at runtime.
+**Mount.** The synthetic `mount` event has no document-level listener; the runtime invokes `mount` handlers directly. It fires:
 
-#### 12.2.5 Behavior catalogue
+- Once at startup when `mount()` walks the DOM and dispatches `mount` to every element whose `data-js` tokens include a behavior with a `mount` hook.
+- Again on `MutationObserver` discovery as new nodes are added.
+
+**Multi-behavior** is natural via space-separated tokens. Handlers run in declared (source) order. There is no `stopImmediatePropagation`-style cross-handler abort — if you need to suppress sibling handlers, restructure the markup so they aren't co-located. A global stop is too easy to misuse for the handful of cases where it would help.
+
+`mount()` is the entry point that primes the system at startup: it walks the DOM once, fires the synthetic `mount` event where needed, and installs the `MutationObserver`. After mount, the document-level listeners handle the rest.
+
+This replaces v1's per-render callback ID generation and the global callback registry: behavior names are stable strings tied to module filenames; no IDs are minted at runtime.
+
+#### 12.2.4 Behavior catalogue
 
 Each utility ships as a handler module under `src/lib/dom/handlers/` with one or more exported producers. Imperative entry points are exported alongside for consumers who prefer wiring elements directly.
 
-| Module | Pattern | Producers (sketch) | Purpose |
-|---|---|---|---|
-| `data-t-roving-focus` | activation | `rovingFocus({ axis, wrap?, homeEnd? })` | Single-tabindex group with arrow-key navigation. `axis: 'horizontal' \| 'vertical' \| 'both'`. Optional wrap-around and Home/End jump-to-edge. Powers tabs, menus, toolbars, listboxes. **Markup ships items at default tab order (no `tabindex="-1"` by hand); the `mount` hook demotes non-active items. No-JS fallback: tab through items individually — degraded but functional.** |
-| `data-t-focus-trap` | activation | `focusTrap()` | Constrains Tab/Shift+Tab to descendants. Only needed for non-`<dialog>` overlays — native `<dialog>` traps focus for free. |
-| `data-t-restore-focus` | activation | `restoreFocus()` | Records the active element before `el` opens; restores it on close. Pairs with popovers / menus. |
-| `data-t-request-close` | activation | `requestClose({ onRequestClose? })` | Intercepts ESC, outside-click, and `commandfor close` invocations. Callback returns a boolean to allow / cancel (e.g. "discard unsaved changes?"). |
-| `data-t-typeahead-filter` | activation | `typeaheadFilter({ match })` | Buffers keystrokes (~500ms window) and calls `match(buffer)` to find / focus matching items. |
-| `data-t-active-descendant` | activation | `activeDescendant({ items, onActive })` | Manages `aria-activedescendant` based on arrow keys without moving DOM focus. Used by listbox / combobox patterns. |
-| `$t-focus-on-click` | event callback | `focusOnClick(targetId)`, `openTab(panelId)` | Smallest illustrative case — focuses a target element on click; reads target from a sibling `data-c-*` attribute. |
+| Behavior | Producers (sketch) | Purpose |
+|---|---|---|
+| `t-roving-focus` | `rovingFocus({ axis, wrap?, homeEnd? })` | Single-tabindex group with arrow-key navigation. `axis: 'horizontal' \| 'vertical' \| 'both'`. Optional wrap-around and Home/End jump-to-edge. Powers tabs, menus, toolbars, listboxes. Reads `aria-orientation` for axis. **Markup ships items at default tab order (no `tabindex="-1"` by hand); the `mount` hook demotes non-active items. No-JS fallback: tab through items individually — degraded but functional.** |
+| `t-focus-trap` | `focusTrap()` | Constrains Tab/Shift+Tab to descendants. Only needed for non-`<dialog>` overlays — native `<dialog>` traps focus for free. |
+| `t-restore-focus` | `restoreFocus()` | Records the active element before `el` opens; restores it on close. Pairs with popovers / menus. |
+| `t-request-close` | `requestClose({ onRequestClose? })` | Intercepts ESC, outside-click, and `commandfor close` invocations. Callback returns a boolean to allow / cancel (e.g. "discard unsaved changes?"). Also exports `onRequestClose(el, fn)` (subscribe a programmatic hook to the same chain) and `forceClose(dialog)` (close while bypassing the chain — the recursion guard the speed bump in §12.1 relies on). |
+| `t-typeahead-filter` | `typeaheadFilter({ match })` | Buffers keystrokes (~500ms window) and calls `match(buffer)` to find / focus matching items. |
+| `t-active-descendant` | `activeDescendant({ items, onActive })` | Manages `aria-activedescendant` based on arrow keys without moving DOM focus. Used by listbox / combobox patterns. |
+| `t-open-tab` | `openTab(panelId)` | Smallest illustrative case — focuses a target element on click; reads target id from sibling `data-target`. |
 
-**Graceful degradation principle.** Markup must remain functional with JS disabled. Behavior utilities *enhance* the no-JS baseline; they don't establish it. Specifically: never render no-JS-unreachable state into the initial HTML (e.g. don't ship `tabindex="-1"` on items that the JS arrow-key handler is supposed to reach). Mount-time JS demotes / rewires as needed.
+**Graceful degradation principle.** Markup must remain functional with JS disabled. Behaviors *enhance* the no-JS baseline; they don't establish it. Specifically: never render no-JS-unreachable state into the initial HTML (e.g. don't ship `tabindex="-1"` on items that the JS arrow-key handler is supposed to reach). Mount-time JS demotes / rewires as needed.
 
 **Declarative usage example.**
 
 ```html
-<div role="toolbar" data-t-roving-focus="horizontal">
+<div role="toolbar" data-js="t-roving-focus" aria-orientation="horizontal">
   <button class="c-button">Cut</button>
   <button class="c-button">Copy</button>
   <button class="c-button">Paste</button>
@@ -390,7 +406,7 @@ mount() // initial scan + MutationObserver wiring; then steady-state
 Producer-driven usage (JSX):
 
 ```tsx
-import { rovingFocus } from '~/lib/dom/handlers/data-t-roving-focus';
+import { rovingFocus } from '~/lib/dom/handlers/t-roving-focus';
 
 <div {...ca(rovingFocus({ axis: 'horizontal' }), { role: 'toolbar' })}>
   <button class="c-button">Cut</button>
@@ -403,13 +419,13 @@ import { rovingFocus } from '~/lib/dom/handlers/data-t-roving-focus';
 Janus's own components are thin wrappers over the toolkit:
 
 ```
-c-tabs          = data-t-roving-focus (horizontal) + aria-selected sync
-c-modal         = native <dialog> + data-t-request-close
-c-drawer        = native <dialog> + o-dialog chrome + edge-anchored CSS + data-t-request-close
-c-popover       = [popover] + data-t-request-close
-c-menu          = [popover] + data-t-roving-focus (vertical) + data-t-typeahead-filter
-c-styled-select = [popover] + data-t-roving-focus + data-t-active-descendant
-                  + data-t-typeahead-filter + form engine
+c-tabs          = t-roving-focus (horizontal) + aria-selected sync
+c-modal         = native <dialog> + t-request-close
+c-drawer        = native <dialog> + o-dialog chrome + edge-anchored CSS + t-request-close
+c-popover       = [popover] + t-request-close
+c-menu          = [popover] + t-roving-focus (vertical) + t-typeahead-filter
+c-styled-select = [popover] + t-roving-focus + t-active-descendant
+                  + t-typeahead-filter + form engine
 ```
 
 A consumer building a custom toolbar, command palette, or any list-with-keyboard-nav reaches for the same producers directly. There is no "private" JS in Janus components that consumers can't replicate.
@@ -418,9 +434,9 @@ A consumer building a custom toolbar, command palette, or any list-with-keyboard
 
 `src/lib/dom` ships two ways to get handlers into the client. Pick one per app.
 
-The default entry (`~/lib/dom`) exports the API surface (`mount`, `ca`, `registerCallback`, `registerActivation`, `registerValidator`, `registerSubmitHandler`, etc.) and **does not** side-effect-import any handlers. Pulling handlers in is a separate step, satisfied by exactly one of the patterns below.
+The default entry (`~/lib/dom`) exports the API surface (`mount`, `setup`, `ca`, `registerBehavior`, `registerValidator`, `registerSubmitHandler`, etc.) and **does not** side-effect-import any handlers. Pulling handlers in is a separate step, satisfied by exactly one of the patterns below.
 
-**Pattern A — static HTML + everything bundle.** Side-effect-import the catchall `~/lib/dom/all` entry, which pulls in every handler module. The dispatcher routes events through registered callbacks and activation attributes as usual. No build tooling required.
+**Pattern A — static HTML + everything bundle.** Side-effect-import the catchall `~/lib/dom/all` entry, which pulls in every handler module. The dispatcher routes events through registered behaviors as usual. No build tooling required.
 
 ```html
 <script type="module">
@@ -434,29 +450,26 @@ Right for static sites, CMS pages, demos, prototypes — anywhere a bundler isn'
 
 **Pattern B — SSR-driven purge.** For apps with separate SSR and client builds, `plugins/vite-plugin-janus-bundle.ts` produces a per-app client bundle containing exactly the handler modules referenced by the SSR pass.
 
-The mechanism is a text scan of the SSR build's emitted output — PurgeCSS-style — rather than module-graph introspection. Two complementary scans cover the two handler patterns:
+The mechanism is a text scan of the SSR build's emitted output — PurgeCSS-style — rather than module-graph introspection. One scan covers everything:
 
 1. Run the SSR build first.
-2. **Scan for activation attributes.** Match every literal `data-t-*` / `data-c-*` attribute name. Exclude the generic event-dispatch attributes (`data-t-on-click`, `data-t-on-keydown`, …) — those route to event callbacks, not to a handler module per attribute. Each remaining match corresponds to one file: `handlers/data-t-{name}.ts` or `handlers/data-c-{name}.ts`.
-3. **Scan for callback names.** Match every `$`-prefixed literal appearing as a `data-t-on-*` attribute value. Conservative pattern: the scan keys off the leading `$` to bound the candidate set. Each match corresponds to one file: `handlers/$xyz.ts`.
-4. Look each result up against `src/lib/dom/handlers/`. The **filename-as-manifest** convention from §12.2.2 / §12.2.3 is the only mapping.
-5. Generate a client entry that statically imports only the matching modules:
+2. **Scan `data-js` attribute values.** Match every literal `data-js="..."` (or the configured attribute, if overridden via `setup`) and split the value on whitespace. Each token is a behavior name with a `t-`, `c-`, or `p-` prefix.
+3. Look each token up against `src/lib/dom/handlers/`. The **filename-as-manifest** convention from §12.2.2 is the only mapping: token `t-roving-focus` → file `handlers/t-roving-focus.ts`.
+4. Generate a client entry that statically imports only the matching modules:
 
    ```ts
    // generated: virtual:janus-handlers (or written to a real file)
-   // Activation attributes scanned from attribute names:
-   import '~/lib/dom/handlers/data-t-roving-focus';
-   import '~/lib/dom/handlers/data-t-request-close';
-   import '~/lib/dom/handlers/data-t-validate';
-   // Event callbacks scanned from data-t-on-* values:
-   import '~/lib/dom/handlers/$c-modal__close';
-   import '~/lib/dom/handlers/$t-open-tab';
+   import '~/lib/dom/handlers/t-roving-focus';
+   import '~/lib/dom/handlers/t-request-close';
+   import '~/lib/dom/handlers/t-validate';
+   import '~/lib/dom/handlers/c-modal__close';
+   import '~/lib/dom/handlers/t-open-tab';
    // ...exactly the modules referenced in the SSR output
    ```
 
-6. The client build consumes that entry; normal tree-shaking removes everything not referenced — including unused producers from imported files.
+5. The client build consumes that entry; normal tree-shaking removes everything not referenced — including unused producers from imported files.
 
-Each handler module's top-level `registerCallback` / `registerActivation` call mounts the dispatcher entry as a side effect of being imported. The generated entry is just imports, no function calls.
+Each handler module's top-level `registerBehavior` call mounts the dispatcher entry as a side effect of being imported. The generated entry is just imports, no function calls.
 
 ```ts
 // client entry
@@ -465,18 +478,20 @@ import { mount } from '~/lib/dom';
 mount();
 ```
 
+Sidecar attributes (`data-target`, `data-validators`, `data-submit-handler`, etc.) are invisible to this scan — they carry behavior parameters, not behavior identifiers, and don't map to handler modules.
+
 **Why text scanning instead of module-graph introspection.** Both approaches encode "what the SSR build references." Text scanning has two practical advantages:
 
 - **Bundler-portable.** Scanning a directory of emitted files is something any build pipeline can do — Vite isn't structurally required (though we ship a Vite plugin first). The same purge step can be ported to Rollup / esbuild / Turbopack / a standalone CLI without rewriting.
-- **Robust to indirection.** A producer like `openTab(id)` emits literal attribute strings into the rendered HTML regardless of where the producer was imported from. Text scanning picks it up no matter the source-side topology; module-graph introspection requires every behavior-using path to import the right thing.
+- **Robust to indirection.** A producer like `openTab(id)` emits literal `data-js` tokens into the rendered HTML regardless of where the producer was imported from. Text scanning picks it up no matter the source-side topology; module-graph introspection requires every behavior-using path to import the right thing.
 
-The cost is one hard rule: **activation attribute names and callback names always appear as literal strings in source code.** No `data-t-${dynamic}` attribute construction; no `'$' + name` callback-name concatenation. Producers that need dynamic dispatch should pick from a small allowlist of literals.
+The cost is one hard rule: **behavior names always appear as literal strings in source code.** No `data-js="t-${dynamic}"` construction; no `'t-' + name` concatenation. Producers that need dynamic dispatch should pick from a small allowlist of literals.
 
 **Dev mode.** `vite dev` doesn't run the SSR-build step against emitted files. Default: treat dev as Pattern A — ship the everything bundle. Simple, fast HMR, no surprise dev-vs-prod behavior divergence (only bundle composition differs, which is a prod-build concern). For teams that want strict parity, a second plugin mode walks Vite's `server.moduleGraph` on the SSR side and regenerates the virtual entry from there; invalidate on SSR module updates and Vite's HMR cascades the client.
 
-**Form-engine inclusion.** The dispatcher and `registerValidator` / `registerSubmitHandler` APIs sit under `~/lib/dom/form`. The form engine's activation attributes (`data-t-validate`, `data-t-submit`, `data-t-validate-group`, `data-t-validate-error`, `data-t-reset-on-close`, `data-t-close-on-success`) are filename-as-manifest entries under `handlers/` — they land in the client iff some SSR-time code path emits the attribute, exactly like any other activation behavior (§12.2.3). Validator and submit-handler bodies live in consumer code and tree-shake by normal means; the plugin doesn't enumerate handler names.
+**Form-engine inclusion.** The dispatcher and `registerValidator` / `registerSubmitHandler` APIs sit under `~/lib/dom/form`. The form engine's behaviors (`t-validate`, `t-submit`, `t-validate-group`, `t-validate-error`, `t-reset-on-close`, `t-close-on-success`) are filename-as-manifest entries under `handlers/` — they land in the client iff some SSR-time code path emits the matching `data-js` token, exactly like any other behavior (§12.2.2). Validator and submit-handler bodies live in consumer code and tree-shake by normal means; the plugin doesn't enumerate handler names.
 
 **Multi-bundle / lazy-loading direction.** The text-scan mechanism extends naturally; only the codegen that turns the scan results into the generated entry changes.
 
 - **Per-route splitting.** When the SSR build emits one entry chunk per route, the plugin scans per chunk and generates one client entry per route. Behaviors used only on `/settings` aren't bundled into `/marketing`. Behaviors common to multiple routes hoist via Rollup's `manualChunks` — the same problem-and-solution as any other code split.
-- **Per-handler dynamic loading.** Generate `loaders[name] = () => import('...')` instead of static imports, keyed on the activation attribute or callback name. The dispatcher resolves and registers on first match. Wins when individual handlers are large (`c-styled-select` is the obvious candidate) or rarely used; loses first-interaction latency on cheap handlers. A `lazy: ['styled-select']` allowlist makes the choice granular without forcing it on every handler.
+- **Per-behavior dynamic loading.** Generate `loaders[name] = () => import('...')` instead of static imports, keyed on the behavior name. The dispatcher resolves and registers on first match. Wins when individual handlers are large (`c-styled-select` is the obvious candidate) or rarely used; loses first-interaction latency on cheap handlers. A `lazy: ['c-styled-select']` allowlist makes the choice granular without forcing it on every handler.

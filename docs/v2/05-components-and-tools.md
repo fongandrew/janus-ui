@@ -15,13 +15,13 @@ Part 5 of the [Janus v2 build plan](./README.md). Covers the `c-` component clas
 | `c-checkbox`, `c-radio` | `<input type=...>` | Custom-styled but uses native input. |
 | `c-toggle` | `<input type="checkbox" role="switch">` | Pure CSS via `:checked`. Track height derived from `--v-input-height`. |
 | `c-select-native` | `<select>` | Styled chrome around native select. Height = `--v-input-height`. Default for almost all dropdowns. |
-| `c-tag` | `<span>` | Internally text-mode. Interactive / removable label. |
-| `c-badge` | `<span>` | Text-mode for count badges, square-mode for dot indicators. Static. |
+| `c-tag` | `<span>` | Composes `o-caption` for interactive / removable text-mode label. |
+| `c-badge` | `<span>` | Composes `o-caption` for text-mode count badges, square-mode for dot indicators. Static. |
 | `c-avatar` | `<img>`, `<span>` | Square-mode. |
 | `c-spinner` | `<span>` | Square-mode. CSS animation. |
 | `c-skeleton` | `<div>` | CSS animation. |
 | `c-disclosure` | `<details><summary>` | Native, styled. |
-| `c-tooltip` | Anchored `[popover]` | Anchor positioning. No JS. |
+| `c-tooltip` | Anchored `[popover]` | Composes `o-caption`. Anchor positioning. No JS. |
 
 **Implicit text-mode.** Components that wrap text rely on the underlying text-mode object — `c-button`/`c-input` via `o-input-box`, `c-tag`/`c-badge`/`c-alert` via their own text-mode padding. The consumer never has to wrap them in `o-text-box`. Heading and paragraph base styles in the `base` layer handle their own lh compensation similarly. A consumer reaches for `o-text-box` explicitly only when wrapping prose that isn't already inside a text-bearing component (e.g., a callout card that *is* a paragraph).
 
@@ -33,15 +33,15 @@ These use a native HTML element (`<dialog>`, `[popover]`) for most of their beha
 |---|---|---|
 | `c-tabs` | `<div role="tablist">` with `role="tab"` buttons | `rovingFocus` (horizontal) for arrow / Home / End navigation; small JS syncs `aria-selected` and panel visibility. |
 | `c-modal` | `<dialog class="o-dialog">` | Layers modal-typical chrome on `o-dialog`: centered viewport positioning, backdrop tint, focus halo, header/body/footer slot conventions. `requestClose` for ESC / outside-click / `commandfor close` hooks. Focus trapping is native to `<dialog>`. |
-| `c-drawer` | `<dialog class="o-dialog c-drawer c-drawer--left">` | Composes `o-dialog`'s chrome with edge-anchored positioning + slide transition. Side variants: `c-drawer--left`, `c-drawer--right`, `c-drawer--top`, `c-drawer--bottom` set the anchor edge and the slide direction. A `--c-drawer__side` custom property mirrors the modifier for cases where you need to switch sides via inline style or scoped variable (rare). Same `requestClose` protocol as `c-modal`. |
+| `c-drawer` | `<dialog class="o-dialog c-drawer c-drawer--left">` | Composes `o-dialog`'s chrome with edge-anchored positioning + slide transition. Side variants: `c-drawer--left`, `c-drawer--right`, `c-drawer--top`, `c-drawer--bottom` set the anchor edge and the slide direction. A `--o-drawer__side` custom property mirrors the modifier for cases where you need to switch sides via inline style or scoped variable (rare). Same `requestClose` protocol as `c-modal`. |
 | `c-popover` | `[popover]` | `requestClose`; native CSS anchor positioning. |
-| `c-menu` | `[popover]` with `role="menu"` | `rovingFocus` (vertical), `typeaheadFilter` for letter-jump. |
+| `c-menu` | `[popover]` with `role="menu"` | Composes `o-menu` / `o-menu-item` for structure. `rovingFocus` (vertical), `typeaheadFilter` for letter-jump. |
 
 ### 10.3 Composite components (substantial toolkit composition)
 
 | Class | Element | Toolkit utilities |
 |---|---|---|
-| `c-styled-select` | Custom button + listbox in `[popover]` | `rovingFocus` (vertical), `activeDescendant`, `typeaheadFilter`, plus form-engine integration for value reporting. The *only* reason this exists is options that need rendered content (font previews, image swatches) — never use for plain text options. |
+| `c-styled-select` | Custom button + listbox in `[popover]` | Composes `o-menu` / `o-menu-item` for the dropdown structure. `rovingFocus` (vertical), `activeDescendant`, `typeaheadFilter`, plus form-engine integration for value reporting. The *only* reason this exists is options that need rendered content (font previews, image swatches) — never use for plain text options. |
 
 `c-styled-select` is the single composite component in v2. Everything else is either pure CSS or a near-trivial wiring of one or two utilities.
 
@@ -103,19 +103,6 @@ Degrades gracefully — on browsers without `scroll-state`, the nav stays sticky
 ```
 
 This duplicates DOM nodes but not the consumer's *source* — frameworks resolve that with `<slot>` / `children` / component reuse. The two elements are conceptually different: one is a landmark sidebar, the other is a modal drawer with focus trap, ESC handling, and backdrop. Trying to be one element is fighting browser defaults.
-
-**Single-element alternative** (`[popover]`). For nav-style drawers where you don't need true modal focus trapping, a single `<aside popover="manual">` works. Below the breakpoint, `commandfor` opens it. Above, a container query overrides the popover's default `display: none`:
-
-```css
-@container (min-width: 50rem) {
-  .my-side-nav:not(:popover-open) {
-    display: block;
-    /* + reset popover-injected positioning, margins, top-layer rules */
-  }
-}
-```
-
-Caveat: popovers don't trap focus by default. Fine for navigation (Tab escapes are usually desirable); worse for modal forms inside a drawer.
 
 **Why no `o-*-layout` class.** A whole-page layout component bakes in too many decisions: where the nav goes, mobile behavior, breakpoints, surface treatment. The primitives (`o-split`, `o-stack`, `o-container`, `c-drawer`) compose, and the consumer picks the breakpoint and surface to match their design. Janus ships the primitives; the layout recipes are documentation, not classes.
 
