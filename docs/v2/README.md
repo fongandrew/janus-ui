@@ -14,3 +14,4 @@ The plan is split across the files below. Read top-to-bottom for the full design
 - [06-dom-layer.md](./06-dom-layer.md) — §12 The JS layer (`src/lib/dom`)
 - [07-solid-layer.md](./07-solid-layer.md) — §13 Solid layer (`src/lib/solid`)
 - [08-conventions-and-criteria.md](./08-conventions-and-criteria.md) — §14 Explicitly dropped from v1, §15 Browser feature gates, §16 Naming & file conventions, §17 Reference patterns to study from v1, §18 Success criteria
+- [09-demo-site.md](./09-demo-site.md) — §19 Site architecture, §20 Pages (home, components, typography, colors, SPA), §21 Config modal
