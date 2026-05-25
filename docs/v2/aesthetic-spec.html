@@ -1,0 +1,2026 @@
+<!doctype html>
+<html lang="en" data-color-scheme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Janus v2 — Aesthetic Spec Gap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  /* =========================================================================
+     Janus v1 palette — verbatim from src/lib/styles/variables/color-schemes.css
+     Light is the default. Dark applies on data-color-scheme="dark".
+     This file deliberately uses v1's *actual* color choices so the document
+     itself demonstrates what the v2 spec is failing to encode.
+     ========================================================================= */
+
+  :root {
+    /* Type */
+    --v-font-family: 'Lexend', system-ui, -apple-system, sans-serif;
+    --v-font-family-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+    /* Light surfaces */
+    --v-bg:           hsl(30deg 12% 98.5%);
+    --v-fg:           hsl(216deg 16% 8%);
+    --v-secondary-bg: hsl(30deg 12% 92.5%);
+    --v-callout-bg:   hsl(30deg 12% 92.5%);
+    --v-card-bg:      hsl(30deg 12% 98.5%);
+
+    --v-pre-bg:       hsl(216deg 16% 18%);
+    --v-pre-fg:       hsl(30deg 100% 96%);
+    --v-pre-muted:    hsl(30deg 7% 82.5%);
+    --v-code-bg:      hsl(30deg 12% 92.5%);
+    --v-code-fg:      hsl(216deg 16% 8%);
+
+    --v-tooltip-bg:   hsl(216deg 16% 8%);
+    --v-tooltip-fg:   hsl(0deg 0% 98%);
+    --v-popover-bg:   hsl(30deg 12% 98.5%);
+    --v-popover-fg:   hsl(216deg 16% 8%);
+
+    --v-primary-bg:   hsl(195deg 100% 20%);
+    --v-primary-fg:   hsl(30deg 100% 96%);
+
+    --v-danger-bg:    hsl(0deg 89% 31%);
+    --v-danger-fg:    hsl(0deg 0% 98%);
+    --v-danger-text:  hsl(0deg 89% 31%);
+
+    --v-success-bg:   hsl(158deg 77% 15%);
+    --v-success-fg:   hsl(30deg 100% 96%);
+
+    --v-warn-bg:      hsl(50deg 77% 86%);
+    --v-warn-fg:      hsl(216deg 16% 8%);
+
+    --v-muted:        hsl(30deg 7% 31%);
+    --v-link:         hsl(195deg 100% 20%);
+    --v-ring:         hsl(195deg 100% 20%);
+    --v-ring-alt:     hsl(183deg 25% 71%);
+
+    /* The two-stop body gradient that even "flat" pages get.
+       Warm peach + cool teal at very low opacity. */
+    --v-body-bg:
+      linear-gradient(102deg, hsl(0deg 0% 100% / 0%), hsl(30deg 75% 75% / 15%)),
+      linear-gradient(12deg,  hsl(0deg 0% 100% / 0%), hsl(183deg 25% 71% / 7%)),
+      var(--v-bg);
+
+    /* Dynamic-border base + mix. Light = black, low mix.
+       Borders sit at a fixed perceptual distance from any surface. */
+    --v-border-dynamic-base: black;
+    --v-border-dynamic-mix:  17.5%;
+    --v-border-width: 1px;
+    --v-border-color: color-mix(in hsl, var(--v-border-dynamic-base) var(--v-border-dynamic-mix), var(--v-bg));
+
+    /* Rhythm */
+    --v-spacing: 0.9375rem;
+    --v-radius: calc(var(--v-spacing) - (1lh - 1em) / 2);
+    --v-inner-radius: 0.4em;
+    --v-inline-gap: 0.5em;
+    --v-input-height: 2.25rem;
+
+    /* Shadows */
+    --v-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 10%);
+    --v-shadow-md: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
+    --v-shadow-lg: 0 6px 9px -2px rgb(0 0 0 / 10%), 0 3px 5px -3px rgb(0 0 0 / 10%);
+    --v-shadow-inner: inset 0 1px 2px 0 rgb(0 0 0 / 10%);
+    --v-shadow-inner-top: inset 0 6px 6px -4px rgb(0 0 0 / 15%);
+    --v-shadow-inner-bottom: inset 0 -6px 6px -4px rgb(0 0 0 / 15%);
+    --v-shadow-focus: 0 0 0 0.125rem var(--v-ring-alt);
+
+    /* Font weights */
+    --v-font-weight-normal: 400;
+    --v-font-weight-label: 500;
+    --v-font-weight-subtitle: 600;
+    --v-font-weight-strong: 600;
+    --v-font-weight-title: 700;
+    --v-font-weight: 400;
+
+    /* Animation */
+    --v-duration: 240ms;
+    --v-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-color-scheme="light"]) { color-scheme: dark; }
+  }
+
+  :root[data-color-scheme="dark"],
+  :root:not([data-color-scheme="light"]):where(.dark) {
+    /* not used in this static doc — set placeholder */
+  }
+
+  /* The doc itself uses light. A scoped "inverted" demo region flips below. */
+
+  * { box-sizing: border-box; }
+  html { font-size: 16px; }
+  body {
+    font-family: var(--v-font-family);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--v-fg);
+    background: var(--v-body-bg);
+    background-attachment: fixed;
+    margin: 0;
+    min-height: 100dvh;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* "Inverted" subtree — dark mode, scoped. Used by the comparison demos. */
+  .v-inverted {
+    --v-bg: hsl(216deg 16% 8%);
+    --v-fg: hsl(30deg 12% 98.5%);
+    --v-secondary-bg: hsl(216deg 16% 18%);
+    --v-card-bg: hsl(216deg 16% 8%);
+    --v-muted: hsl(30deg 7% 86.5%);
+    --v-link: hsl(183deg 25% 85%);
+    --v-ring: hsl(183deg 25% 85%);
+    --v-ring-alt: hsl(210deg 0% 25%);
+    --v-primary-bg: hsl(195deg 100% 20%);
+    --v-primary-fg: hsl(30deg 100% 96%);
+    --v-border-dynamic-base: white;
+    --v-border-dynamic-mix: 50%;
+    --v-border-color: color-mix(in hsl, var(--v-border-dynamic-base) var(--v-border-dynamic-mix), var(--v-bg));
+    color: var(--v-fg);
+    background: var(--v-bg);
+    color-scheme: dark;
+  }
+
+  /* ============== page chrome ============== */
+
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: clamp(2rem, 4vw, 4rem) clamp(1rem, 3vw, 2.5rem) 6rem;
+  }
+
+  .page-header {
+    padding-block: clamp(2rem, 5vw, 4rem);
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    color: var(--v-muted);
+    margin-bottom: 1.25rem;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 1.75rem;
+    height: 1px;
+    background: currentcolor;
+    display: inline-block;
+  }
+  .page-header h1 {
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    font-weight: 700;
+    margin: 0 0 1.5rem;
+    max-width: 22ch;
+    text-wrap: balance;
+    color: var(--v-fg);
+  }
+  .page-header .lede {
+    font-size: 1.125rem;
+    line-height: 1.5;
+    max-width: 60ch;
+    color: var(--v-fg);
+    margin: 0 0 1.5rem;
+    text-wrap: pretty;
+  }
+  .page-header .lede em {
+    font-style: normal;
+    color: var(--v-link);
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 0.25rem;
+    text-decoration-thickness: 1px;
+  }
+
+  .meta-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 2rem;
+    padding-block: 1.25rem;
+    border-block: 1px solid var(--v-border-color);
+    margin-top: 1rem;
+    font-size: 0.8125rem;
+  }
+  .meta-strip dt {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--v-muted);
+    font-weight: 500;
+    font-size: 0.6875rem;
+    margin: 0 0 0.25rem;
+  }
+  .meta-strip dd { margin: 0; font-weight: 500; }
+  .meta-strip > div { min-width: 8rem; }
+
+  /* ============== intro ============== */
+
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+    max-width: 64ch;
+    padding-block: clamp(2rem, 4vw, 3rem);
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+  .intro p { margin: 0; text-wrap: pretty; }
+  .intro p:first-child {
+    font-size: 1.125rem;
+    line-height: 1.5;
+  }
+  .intro strong { font-weight: 600; color: var(--v-fg); }
+
+  /* ============== section / cards ============== */
+
+  .section { margin-top: clamp(2.5rem, 5vw, 4rem); }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--v-border-color);
+  }
+  .section-head .roman {
+    font-family: var(--v-font-family-mono);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--v-muted);
+    letter-spacing: 0.05em;
+  }
+  .section-head h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    margin: 0;
+    flex: 1;
+  }
+  .section-head .meta {
+    font-size: 0.8125rem;
+    color: var(--v-muted);
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(28rem, 100%), 1fr));
+    gap: 1.25rem;
+  }
+
+  .principle {
+    background: var(--v-card-bg);
+    border: 1px solid var(--v-border-color);
+    border-radius: var(--v-radius);
+    box-shadow: var(--v-shadow-sm);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    container-type: inline-size;
+  }
+
+  .p-head {
+    padding: 1.25rem 1.25rem 0.875rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.875rem;
+  }
+  .p-head .num {
+    font-family: var(--v-font-family-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--v-muted);
+    background: var(--v-secondary-bg);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    border: 1px solid var(--v-border-color);
+    line-height: 1;
+    margin-top: 0.25em;
+    flex: 0 0 auto;
+    letter-spacing: 0.04em;
+  }
+  .p-head .h {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+  .p-head h3 {
+    font-size: 1.0625rem;
+    line-height: 1.3;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .p-head .why {
+    font-size: 0.8125rem;
+    color: var(--v-muted);
+    margin: 0;
+    line-height: 1.5;
+    text-wrap: pretty;
+    font-weight: 500;
+  }
+
+  /* the demo area — generous so visuals breathe */
+  .demo {
+    margin: 0.5rem 0;
+    padding: 1.25rem;
+    min-height: 12rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-block: 1px solid var(--v-border-color);
+    background:
+      repeating-linear-gradient(45deg,
+        transparent 0,
+        transparent 6px,
+        color-mix(in hsl, var(--v-muted) 4%, transparent) 6px,
+        color-mix(in hsl, var(--v-muted) 4%, transparent) 7px),
+      var(--v-bg);
+  }
+  .demo.tight { min-height: 10rem; padding: 1rem 1.25rem; }
+  .demo .demo-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: stretch;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .demo .demo-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    align-items: stretch;
+    width: 100%;
+    border: 1px solid var(--v-border-color);
+    border-radius: var(--v-inner-radius);
+    overflow: hidden;
+    background: var(--v-bg);
+  }
+  .demo .demo-pair > div {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.625rem;
+    min-height: 8rem;
+    justify-content: center;
+  }
+  .demo .demo-pair > div + div {
+    border-left: 1px solid var(--v-border-color);
+  }
+  .demo .demo-pair .tag {
+    font-family: var(--v-font-family-mono);
+    font-size: 0.6875rem;
+    color: var(--v-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.375rem;
+  }
+  .demo .demo-pair .tag.bad { color: var(--v-danger-text); }
+  .demo .demo-pair .tag.good { color: var(--v-success-bg); }
+
+  /* footer of each principle: spec gap + snippet */
+  .p-foot {
+    padding: 1rem 1.25rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+  .spec-gap {
+    background: color-mix(in hsl, var(--v-warn-bg) 50%, var(--v-bg));
+    border: 1px solid color-mix(in hsl, var(--v-warn-bg), black 15%);
+    border-radius: var(--v-inner-radius);
+    padding: 0.625rem 0.75rem;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--v-fg);
+  }
+  .spec-gap strong {
+    font-weight: 600;
+    color: var(--v-fg);
+    display: block;
+    margin-bottom: 0.125rem;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .spec-gap code { font-family: var(--v-font-family-mono); font-size: 0.75rem; }
+
+  pre.snippet {
+    margin: 0;
+    background: var(--v-pre-bg);
+    color: var(--v-pre-fg);
+    padding: 0.875rem 1rem;
+    border-radius: var(--v-inner-radius);
+    font-family: var(--v-font-family-mono);
+    font-size: 0.75rem;
+    line-height: 1.55;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  pre.snippet .c { color: var(--v-pre-muted); font-style: italic; }
+  pre.snippet .k { color: hsl(195deg 60% 75%); }
+  pre.snippet .v { color: hsl(30deg 80% 80%); }
+  pre.snippet .s { color: hsl(150deg 40% 75%); }
+
+  /* ============== reusable demo widgets ============== */
+
+  /* A v1-style button. Hover = filter, not color. Focus = double ring. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--v-inline-gap);
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: var(--v-font-weight-label);
+    line-height: 1;
+    height: var(--v-input-height);
+    padding: 0 var(--v-spacing);
+    border: 1px solid var(--v-border-color);
+    border-radius: var(--v-inner-radius);
+    background: var(--v-secondary-bg);
+    color: var(--v-fg);
+    cursor: pointer;
+    transition: filter var(--v-duration) var(--v-ease),
+                box-shadow var(--v-duration) var(--v-ease),
+                background-color var(--v-duration) var(--v-ease),
+                border-color var(--v-duration) var(--v-ease);
+    text-decoration: none;
+    will-change: filter;
+  }
+  .btn:hover {
+    box-shadow: var(--v-shadow-md);
+    filter: contrast(0.95) saturate(1.15);
+  }
+  .btn:active { box-shadow: none; transform: translateY(0.5px); }
+  .btn:focus-visible {
+    box-shadow: var(--v-shadow-focus);
+    outline: 2px solid var(--v-ring);
+    outline-offset: 2px;
+  }
+  .btn.primary {
+    background: var(--v-primary-bg);
+    color: var(--v-primary-fg);
+    border-color: color-mix(in hsl, var(--v-border-dynamic-base) var(--v-border-dynamic-mix), var(--v-primary-bg));
+  }
+  .btn.danger {
+    background: var(--v-danger-bg);
+    color: var(--v-danger-fg);
+    border-color: color-mix(in hsl, var(--v-border-dynamic-base) var(--v-border-dynamic-mix), var(--v-danger-bg));
+  }
+  .btn.no-filter:hover { filter: none; background: hsl(195deg 100% 26%); }
+  .btn.bare-focus:focus-visible { outline: 2px solid var(--v-ring); outline-offset: 2px; box-shadow: none; }
+
+  /* A v1-style input. Inner shadow. Border via dynamic-border formula. */
+  .inp {
+    display: block;
+    width: 100%;
+    height: var(--v-input-height);
+    padding: 0 calc(var(--v-input-height) * 0.25);
+    font-family: inherit;
+    font-size: 0.875rem;
+    background: var(--v-bg);
+    color: var(--v-fg);
+    border: 1px solid var(--v-border-color);
+    border-radius: var(--v-inner-radius);
+    box-shadow: var(--v-shadow-inner);
+    transition: border-color var(--v-duration) var(--v-ease),
+                box-shadow var(--v-duration) var(--v-ease);
+  }
+  .inp:focus-visible {
+    outline: 2px solid var(--v-ring);
+    outline-offset: 2px;
+    box-shadow: var(--v-shadow-inner), var(--v-shadow-focus);
+  }
+  .inp[aria-invalid="true"] { border-color: var(--v-danger-text); }
+
+  .lbl {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    font-size: 0.8125rem;
+    font-weight: var(--v-font-weight-label);
+    color: var(--v-fg);
+  }
+  .err {
+    font-size: 0.75rem;
+    color: var(--v-danger-text);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    min-height: 1lh;
+  }
+  .err::before { content: "✗"; font-weight: 700; }
+  .err:empty { display: none; }
+
+  /* v1-style link */
+  .lnk {
+    color: var(--v-link);
+    font-weight: var(--v-font-weight-label);
+    text-decoration: underline;
+    text-underline-offset: 0.25rem;
+    transition: filter var(--v-duration) var(--v-ease);
+    will-change: filter;
+  }
+  .lnk:hover { filter: contrast(0.95) saturate(1.15); }
+  .lnk:focus-visible {
+    outline: none;
+    text-decoration-style: double;
+    text-decoration-thickness: from-font;
+    text-underline-offset: 0.3rem;
+  }
+  .lnk.bare-focus:focus-visible {
+    outline: 2px solid var(--v-ring);
+    outline-offset: 2px;
+    text-decoration-style: solid;
+  }
+
+  /* ============== specific demo styles ============== */
+
+  /* 01 dynamic borders */
+  .swatch-set { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.5rem; width: 100%; }
+  .swatch {
+    aspect-ratio: 1.6;
+    border-radius: var(--v-inner-radius);
+    display: flex;
+    align-items: end;
+    padding: 0.5rem;
+    font-family: var(--v-font-family-mono);
+    font-size: 0.625rem;
+    color: var(--v-muted);
+  }
+  .swatch.bad { border: 1px solid hsl(0deg 0% 0% / 17.5%); }
+  .swatch.good {
+    border: 1px solid color-mix(in hsl, black 17.5%, var(--bg, var(--v-bg)));
+  }
+  .swatch.s1 { --bg: hsl(30deg 12% 98.5%); background: var(--bg); }
+  .swatch.s2 { --bg: hsl(195deg 100% 20%); background: var(--bg); color: hsl(30deg 100% 96%); }
+  .swatch.s3 { --bg: hsl(158deg 77% 15%); background: var(--bg); color: hsl(30deg 100% 96%); }
+  .swatch.s4 { --bg: hsl(50deg 77% 86%); background: var(--bg); color: hsl(216deg 16% 8%); }
+
+  /* 02 body bg gradient — show flat vs. tinted */
+  .bg-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0; height: 9rem; border: 1px solid var(--v-border-color); border-radius: var(--v-inner-radius); overflow: hidden; }
+  .bg-compare > div { padding: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; justify-content: space-between; }
+  .bg-compare .flat { background: hsl(30deg 12% 98.5%); border-right: 1px solid var(--v-border-color); }
+  .bg-compare .tinted {
+    background:
+      linear-gradient(102deg, hsl(0deg 0% 100% / 0%), hsl(30deg 75% 75% / 15%)),
+      linear-gradient(12deg,  hsl(0deg 0% 100% / 0%), hsl(183deg 25% 71% / 7%)),
+      hsl(30deg 12% 98.5%);
+  }
+
+  /* 03 inverted tooltip */
+  .tt-host { position: relative; display: inline-block; }
+  .tt {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--v-tooltip-bg);
+    color: var(--v-tooltip-fg);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.4;
+    padding: 0.375rem 0.625rem;
+    border-radius: 0.25rem;
+    white-space: nowrap;
+    box-shadow: var(--v-shadow-md);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .tt::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-bottom-color: var(--v-tooltip-bg);
+  }
+  .pop {
+    background: var(--v-popover-bg);
+    color: var(--v-popover-fg);
+    border: 1px solid var(--v-border-color);
+    border-radius: var(--v-inner-radius);
+    box-shadow: var(--v-shadow-lg);
+    padding: 0.5rem;
+    font-size: 0.8125rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 10rem;
+  }
+  .pop .item { padding: 0.375rem 0.625rem; border-radius: 0.25rem; }
+  .pop .item.active { background: var(--v-primary-bg); color: var(--v-primary-fg); }
+  .pop .item:hover:not(.active) { background: var(--v-secondary-bg); }
+
+  /* 04 dark code */
+  .code-block {
+    background: var(--v-pre-bg);
+    color: var(--v-pre-fg);
+    border: 1px solid color-mix(in hsl, white 50%, var(--v-pre-bg));
+    border-radius: var(--v-inner-radius);
+    padding: 0.625rem 0.875rem;
+    font-family: var(--v-font-family-mono);
+    font-size: 0.75rem;
+    line-height: 1.55;
+    overflow-x: auto;
+    width: 100%;
+  }
+  .inline-code {
+    font-family: var(--v-font-family-mono);
+    font-size: 0.875em;
+    background: var(--v-code-bg);
+    color: var(--v-code-fg);
+    padding: 0.05em 0.4em;
+    border-radius: 0.3em;
+    border: 1px solid var(--v-border-color);
+  }
+
+  /* 05 callout weight bump */
+  .callout {
+    background: var(--v-callout-bg);
+    border: 1px solid var(--v-border-color);
+    border-radius: var(--v-inner-radius);
+    padding: 0.75rem 0.875rem;
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    /* the bumped weights */
+    font-weight: 500;
+  }
+  .callout strong { font-weight: 800; }
+  .callout .l { font-weight: 600; color: var(--v-link); }
+  .callout.no-bump { font-weight: 400; }
+  .callout.no-bump strong { font-weight: 600; }
+  .callout.no-bump .l { font-weight: 400; }
+
+  /* 07 double-ring focus */
+  .focus-demo-row { display: flex; gap: 0.625rem; flex-wrap: wrap; justify-content: center; }
+
+  /* 09 keyboard vs mouse */
+  .kb-list {
+    background: var(--v-popover-bg);
+    border: 1px solid var(--v-border-color);
+    border-radius: var(--v-inner-radius);
+    padding: 0.375rem;
+    box-shadow: var(--v-shadow-md);
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    width: 14rem;
+    margin: 0 auto;
+  }
+  .kb-list .item {
+    padding: 0.375rem 0.625rem;
+    font-size: 0.8125rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .kb-list .item .icon { width: 0.875rem; height: 0.875rem; opacity: 0.6; }
+  /* mouse mode: hover lights up. kb-mode active item lights up regardless of hover. */
+  body[data-kb="false"] .kb-list .item:hover,
+  body[data-kb="true"] .kb-list .item.active {
+    background: var(--v-primary-bg);
+    color: var(--v-primary-fg);
+  }
+  .kb-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--v-muted);
+    font-family: var(--v-font-family-mono);
+    margin-bottom: 0.625rem;
+  }
+
+  /* 10 weight floor */
+  .wf-pair {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.625rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+  .wf-row { padding: 0.625rem 0.75rem; border-radius: var(--v-inner-radius); border: 1px solid var(--v-border-color); background: var(--v-bg); }
+  .wf-row .tag { font-family: var(--v-font-family-mono); font-size: 0.625rem; color: var(--v-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.25rem; }
+  .wf-row.bare a { color: hsl(195deg 60% 50%); font-weight: 400; text-decoration: underline; text-underline-offset: 0.2rem; }
+  .wf-row.bare .muted { color: hsl(30deg 12% 60%); font-weight: 400; }
+  .wf-row.bumped a { color: hsl(195deg 60% 35%); font-weight: 500; text-decoration: underline; text-underline-offset: 0.2rem; }
+  .wf-row.bumped .muted { color: hsl(30deg 7% 31%); font-weight: 500; }
+
+  /* 11 icon stroke */
+  .icon-row { display: flex; gap: 1.5rem; align-items: center; justify-content: center; }
+  .icon-row figure { margin: 0; display: flex; flex-direction: column; gap: 0.375rem; align-items: center; font-size: 0.75rem; color: var(--v-muted); }
+  .icon-row svg { width: 1.5rem; height: 1.5rem; }
+  .icon-row .lbl-row {
+    font-family: var(--v-font-family-mono);
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .icon-row .w-body { stroke-width: 2; }
+  .icon-row .w-label { stroke-width: 2.5; }
+  .icon-row .w-title { stroke-width: 3; }
+
+  /* 12 spacing bundle */
+  .spacing-stack { display: flex; flex-direction: column; gap: 0.75rem; width: 100%; }
+  .spacing-card {
+    background: var(--v-card-bg);
+    border-style: solid;
+    border-color: var(--v-border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: space-between;
+    font-size: 0.8125rem;
+  }
+  .spacing-card.sm { padding: 0.5rem;   border-width: 1px;   border-radius: 0.25rem; }
+  .spacing-card.md { padding: 0.9375rem; border-width: 1px;   border-radius: 0.4rem; }
+  .spacing-card.lg { padding: 1.5rem;  border-width: 2px;   border-radius: 0.75rem; }
+  .spacing-card .label {
+    font-family: var(--v-font-family-mono);
+    font-size: 0.625rem;
+    color: var(--v-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* 13 hi-dpi — diagrammatic */
+  .dpi-diagram {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--v-border-color);
+    border-radius: var(--v-inner-radius);
+    overflow: hidden;
+    width: 100%;
+  }
+  .dpi-diagram > div { padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem; align-items: stretch; background: var(--v-bg); justify-content: center; }
+  .dpi-diagram .desktop { border-right: 1px solid var(--v-border-color); }
+  .dpi-diagram .tag-row { font-family: var(--v-font-family-mono); font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--v-muted); }
+  .dpi-diagram .btn-sm { font-size: 0.8125rem; height: 1.875rem; padding: 0 0.75rem; }
+  .dpi-diagram .btn-touch { font-size: 1rem; height: 2.75rem; padding: 0 1rem; }
+
+  /* 14 card flatten */
+  .ctx-container {
+    padding: 1rem;
+    background: var(--v-bg);
+    border-radius: var(--v-inner-radius);
+    border: 1px dashed color-mix(in hsl, var(--v-muted) 40%, transparent);
+  }
+  .ctx-container .lbl-ctx {
+    font-family: var(--v-font-family-mono);
+    font-size: 0.625rem;
+    color: var(--v-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.5rem;
+  }
+  .ctx-card {
+    background: var(--v-card-bg);
+    border: 1px solid var(--v-border-color);
+    border-radius: var(--v-inner-radius);
+    padding: 0.875rem;
+    font-size: 0.8125rem;
+  }
+  .ctx-card.shadowed { box-shadow: var(--v-shadow-md); }
+  .ctx-modal {
+    background: hsl(0deg 0% 0% / 8%);
+    padding: 1rem;
+    border-radius: var(--v-inner-radius);
+    backdrop-filter: blur(2px);
+  }
+
+  /* 15 scroll shadow */
+  .scroll-host {
+    border: 1px solid var(--v-border-color);
+    border-radius: var(--v-inner-radius);
+    background: var(--v-card-bg);
+    height: 9rem;
+    overflow-y: auto;
+    padding: 0.75rem 0.875rem;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    box-shadow: var(--v-shadow-inner-top), var(--v-shadow-inner-bottom);
+    position: relative;
+  }
+  .scroll-host p { margin: 0 0 0.5rem; }
+
+  /* 16 tab self-theme */
+  .tab-strip {
+    display: flex;
+    border-bottom: 1px solid var(--v-border-color);
+    gap: 0;
+    width: 100%;
+  }
+  .tab-strip .tab {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--v-muted);
+    border-bottom: 1px solid transparent;
+    margin-bottom: -1px;
+    cursor: pointer;
+    flex: 1;
+    text-align: center;
+  }
+  .tab-strip .tab[aria-selected="true"] {
+    color: var(--v-fg);
+    border-bottom-color: color-mix(in hsl, var(--v-border-dynamic-base) 50%, var(--v-primary-bg));
+    box-shadow: inset 0 -1px 0 color-mix(in hsl, var(--v-border-dynamic-base) 50%, var(--v-primary-bg));
+  }
+  .tab-strip.theme-success .tab[aria-selected="true"] {
+    border-bottom-color: color-mix(in hsl, var(--v-border-dynamic-base) 50%, var(--v-success-bg));
+    box-shadow: inset 0 -1px 0 color-mix(in hsl, var(--v-border-dynamic-base) 50%, var(--v-success-bg));
+  }
+  .tab-strip.theme-danger .tab[aria-selected="true"] {
+    border-bottom-color: color-mix(in hsl, var(--v-border-dynamic-base) 50%, var(--v-danger-bg));
+    box-shadow: inset 0 -1px 0 color-mix(in hsl, var(--v-border-dynamic-base) 50%, var(--v-danger-bg));
+  }
+
+  /* 17 disabled-but-clickable submit */
+  .form-card {
+    background: var(--v-card-bg);
+    border: 1px solid var(--v-border-color);
+    border-radius: var(--v-inner-radius);
+    padding: 0.875rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    width: 100%;
+    box-shadow: var(--v-shadow-sm);
+  }
+  .form-card .footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    border-top: 1px solid var(--v-border-color);
+    padding-top: 0.75rem;
+    margin-top: 0.25rem;
+  }
+  .form-card.invalid .submit {
+    opacity: 0.5;
+    /* deliberately NOT pointer-events: none */
+  }
+
+  /* 19 truncation */
+  .trunc-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    width: 100%;
+  }
+  .trunc-row .frame {
+    width: 100%;
+    max-width: 18rem;
+    border: 1px solid var(--v-border-color);
+    padding: 0.5rem 0.75rem;
+    background: var(--v-card-bg);
+    border-radius: 0.25rem;
+  }
+  .trunc-row h4 { margin: 0; font-size: 1rem; font-weight: 600; line-height: 1.3; }
+  .trunc-row .ok h4 { overflow-x: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .trunc-row .bad h4 { overflow-x: visible; }
+  .trunc-row .bad { overflow: hidden; }
+
+  /* 20 header hierarchy */
+  .hh-pair { display: grid; grid-template-columns: 1fr; gap: 0.625rem; width: 100%; }
+  .hh-card {
+    border: 1px solid var(--v-border-color);
+    border-radius: var(--v-inner-radius);
+    background: var(--v-card-bg);
+    padding: 0;
+    overflow: hidden;
+  }
+  .hh-card > header {
+    padding: 0.625rem 0.875rem;
+    border-bottom: 1px solid var(--v-border-color);
+    background: var(--v-bg);
+  }
+  .hh-card > header h2 {
+    font-size: 1.0625rem; /* one step down inside <header>: looks like an h3 */
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .hh-card > .body { padding: 0.75rem 0.875rem; font-size: 0.8125rem; color: var(--v-muted); }
+  .hh-naive h2 {
+    font-size: 1.5rem; /* without the rule, h2 is huge inside a card */
+    font-weight: 700;
+    margin: 0;
+  }
+
+  /* 06 filter hover comparison */
+  .palette-row { display: flex; gap: 0.625rem; flex-wrap: wrap; justify-content: center; }
+
+  /* ============== closing ============== */
+
+  .closing {
+    margin-top: clamp(3rem, 6vw, 5rem);
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--v-border-color);
+  }
+  .closing h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    margin: 0 0 1.5rem;
+  }
+  .closing .lede {
+    font-size: 1rem;
+    color: var(--v-muted);
+    max-width: 60ch;
+    margin: 0 0 2rem;
+    line-height: 1.6;
+  }
+
+  .additions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+  .add {
+    display: grid;
+    grid-template-columns: minmax(8rem, 11rem) 1fr;
+    gap: 1.25rem;
+    align-items: baseline;
+    padding: 1rem 0;
+    border-top: 1px solid var(--v-border-color);
+    font-size: 0.875rem;
+    line-height: 1.55;
+  }
+  .add:last-child { border-bottom: 1px solid var(--v-border-color); }
+  .add .ref {
+    font-family: var(--v-font-family-mono);
+    font-size: 0.75rem;
+    color: var(--v-muted);
+    letter-spacing: 0.02em;
+    font-weight: 500;
+  }
+  .add .ref strong { display: block; color: var(--v-link); font-weight: 600; margin-bottom: 0.125rem; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .add p { margin: 0; text-wrap: pretty; }
+  .add code { font-family: var(--v-font-family-mono); font-size: 0.8125em; background: var(--v-secondary-bg); padding: 0.05em 0.35em; border-radius: 0.25rem; border: 1px solid var(--v-border-color); }
+
+  /* ============== narrow ============== */
+  @container (max-width: 28rem) {
+    .demo .demo-pair { grid-template-columns: 1fr; }
+    .demo .demo-pair > div + div { border-left: 0; border-top: 1px solid var(--v-border-color); }
+    .swatch-set { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 720px) {
+    .add { grid-template-columns: 1fr; gap: 0.25rem; }
+  }
+</style>
+</head>
+<body data-kb="false">
+
+<div class="page">
+
+<!-- ============================== HEADER ============================== -->
+<header class="page-header">
+  <div class="eyebrow">Janus v2 · Design review · Aesthetic gap</div>
+  <h1>The accessibility-led taste in v1 that the v2 spec keeps dropping on the floor.</h1>
+  <p class="lede">
+    The v2 spec captures the <em>structure</em> of v1 well — tokens, cascade, objects, components.
+    What it under-specifies is the <em>visual mechanics</em> that make v1 feel calm and legible on
+    any palette. Every gap below is small, but cumulatively they're why v1 reads as designed and
+    early v2 attempts read as generic.
+  </p>
+  <dl class="meta-strip">
+    <div><dt>Subject</dt><dd>Janus UI v2 — `src/lib/css/`</dd></div>
+    <div><dt>Reference</dt><dd>v1 at fongandrew.github.io/janus-ui/</dd></div>
+    <div><dt>Items</dt><dd>20 principles · 5 sections</dd></div>
+    <div><dt>Format</dt><dd>Each: live demo · spec gap · proposed CSS</dd></div>
+    <div><dt>Status</dt><dd>For inclusion in PLAN.md phases 1–3</dd></div>
+  </dl>
+</header>
+
+<!-- ============================== INTRO ============================== -->
+<section class="intro">
+  <p>
+    v1 leans hard on a small library of <strong>self-tuning recipes</strong>: borders that take their
+    color from the surface they sit on, hovers that lean on a single filter instead of a per-palette
+    color, focus rings layered in two passes, link colors that auto-bump their weight to clear the
+    contrast floor. None of these are written down as design rules in the v2 spec — they exist as
+    CSS mixins (<code>t-hover</code>, <code>t-focus-ring</code>, <code>t-border</code>,
+    <code>v-text-muted</code>) that an implementing agent reading PLAN.md doesn't know to look at.
+  </p>
+  <p>
+    The pattern across all of them is the same: <strong>encode the relationship, not the value.</strong>
+    v1 doesn't pick a border color per palette — it states, in one line, that every border sits 17.5%
+    of the way from the surface toward the ink, in HSL. The palette can move; the relationship holds.
+    That's the taste. Below is the catalog of relationships v2's spec needs to name.
+  </p>
+  <p>
+    Each card on this page is itself rendered with the v1 mechanics it documents. Hover the buttons,
+    tab into the links, mouse vs. arrow-key through the menu in §9. The document is the proof.
+  </p>
+</section>
+
+<!-- ============================== §1 SURFACE & COLOR ============================== -->
+<section class="section">
+  <div class="section-head">
+    <span class="roman">I</span>
+    <h2>Surface & color</h2>
+    <span class="meta">5 principles · maps to v2 spec §7</span>
+  </div>
+
+  <div class="card-grid">
+
+    <!-- 01 dynamic borders -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">01</span>
+        <div class="h">
+          <h3>Borders take their color from the surface they sit on.</h3>
+          <p class="why">One <code>color-mix</code> recipe places every border at a fixed perceptual distance from any background — light, dark, branded, danger — without a per-palette knob.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%;">
+          <div>
+            <div class="tag" style="font-family: var(--v-font-family-mono); font-size: 0.625rem; color: var(--v-danger-text); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;">Fixed `rgb(0 0 0 / 17.5%)` border</div>
+            <div class="swatch-set">
+              <div class="swatch bad s1">paper</div>
+              <div class="swatch bad s2">teal</div>
+              <div class="swatch bad s3">green</div>
+              <div class="swatch bad s4">sand</div>
+            </div>
+            <p style="font-size: 0.6875rem; color: var(--v-muted); margin: 0.5rem 0 0;">Reads on paper, disappears on dark, fights against tinted surfaces.</p>
+          </div>
+          <div>
+            <div class="tag" style="font-family: var(--v-font-family-mono); font-size: 0.625rem; color: var(--v-success-bg); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;">`color-mix(black 17.5%, bg)`</div>
+            <div class="swatch-set">
+              <div class="swatch good s1">paper</div>
+              <div class="swatch good s2">teal</div>
+              <div class="swatch good s3">green</div>
+              <div class="swatch good s4">sand</div>
+            </div>
+            <p style="font-size: 0.6875rem; color: var(--v-muted); margin: 0.5rem 0 0;">Same visual weight on every surface; flips base to white in dark mode.</p>
+          </div>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          §7 names <code>--v-bg</code>, <code>--v-fg</code>, <code>--v-link</code>, <code>--v-accent</code>, <code>--v-muted</code> — but no border-color knob and no recipe for how borders take their color. Implementers default to a flat <code>rgb(0 0 0 / 12%)</code>.
+        </div>
+<pre class="snippet"><span class="c">/* tokens/color.css — add */</span>
+<span class="k">--v-border-dynamic-base</span>: <span class="v">light-dark(black, white)</span>;
+<span class="k">--v-border-dynamic-mix</span>:  <span class="v">light-dark(17.5%, 50%)</span>;
+<span class="k">--v-border-color</span>: <span class="v">color-mix(in hsl,
+  var(--v-border-dynamic-base) var(--v-border-dynamic-mix),
+  var(--v-bg))</span>;</pre>
+      </div>
+    </article>
+
+    <!-- 02 body bg gradient -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">02</span>
+        <div class="h">
+          <h3>"Flat" pages aren't flat — they carry a faint two-stop tint.</h3>
+          <p class="why">Two low-opacity gradients (warm peach + cool teal in light; deep green + cyan in dark) give the eye somewhere to rest. Read it on this page's background.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <div class="bg-compare">
+          <div class="flat">
+            <div class="tag" style="font-family: var(--v-font-family-mono); font-size: 0.625rem; color: var(--v-muted); text-transform: uppercase; letter-spacing: 0.06em;">Pure `hsl(30 12% 98.5%)`</div>
+            <div style="font-size: 0.75rem; color: var(--v-muted);">Looks like a wireframe.</div>
+          </div>
+          <div class="tinted">
+            <div class="tag" style="font-family: var(--v-font-family-mono); font-size: 0.625rem; color: var(--v-muted); text-transform: uppercase; letter-spacing: 0.06em;">+ 15% peach @ 102° &nbsp;·&nbsp; + 7% teal @ 12°</div>
+            <div style="font-size: 0.75rem; color: var(--v-muted);">Looks like a page someone designed.</div>
+          </div>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          §5.1: <code>--v-bg</code> defaults to <code>light-dark(white, black)</code>. No mention of <code>--v-body-bg</code> as a derived token or of the gradient recipe.
+        </div>
+<pre class="snippet"><span class="c">/* tokens/color.css — add */</span>
+<span class="k">--v-body-bg</span>: <span class="v">linear-gradient(102deg, transparent, hsl(30 75% 75% / 15%)),
+              linear-gradient(12deg,  transparent, hsl(183 25% 71% / 7%)),
+              var(--v-bg)</span>;
+
+<span class="c">/* base.css */</span>
+<span class="k">body</span> { <span class="k">background</span>: <span class="v">var(--v-body-bg)</span>; <span class="k">background-attachment</span>: <span class="v">fixed</span>; }</pre>
+      </div>
+    </article>
+
+    <!-- 03 inverted tooltip -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">03</span>
+        <div class="h">
+          <h3>Tooltips are always inverted; popovers always match.</h3>
+          <p class="why">A tooltip floats <em>above</em> the page — its surface should read as a separate layer. A popover replaces UI — its surface should match. v1 names both; v2 collapses them.</p>
+        </div>
+      </div>
+      <div class="demo" style="overflow: visible;">
+        <div style="display: flex; gap: 2.5rem; align-items: flex-start; justify-content: center; padding-top: 1rem; padding-bottom: 2rem;">
+          <div class="tt-host">
+            <button type="button" class="btn">Tooltip host</button>
+            <span class="tt">Tooltip · inverted surface</span>
+          </div>
+          <div class="pop" role="menu" aria-label="Demo menu">
+            <div class="item">Profile</div>
+            <div class="item active">Settings</div>
+            <div class="item">Sign out</div>
+          </div>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          §7 lists <code>v-colors-primary/danger/success/warn/info/muted</code> — no <code>v-colors-tooltip</code>, no <code>v-colors-popover</code>. v2 implementers paint tooltips with the body palette.
+        </div>
+<pre class="snippet"><span class="c">/* variants/colors.css — add to the catalog */</span>
+<span class="k">.v-colors-tooltip</span> {
+  <span class="k">--v-bg</span>: <span class="v">light-dark(#141821, #fafafa)</span>;  <span class="c">/* always inverted vs scheme */</span>
+  <span class="k">--v-fg</span>: <span class="v">light-dark(#fafafa, #141821)</span>;
+}
+<span class="k">.v-colors-popover</span> {
+  <span class="k">--v-bg</span>: <span class="v">var(--v-card-bg, var(--v-bg))</span>;  <span class="c">/* matches surrounding chrome */</span>
+}</pre>
+      </div>
+    </article>
+
+    <!-- 04 always-dark code -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">04</span>
+        <div class="h">
+          <h3>Code blocks stay dark in light mode.</h3>
+          <p class="why">Code is a terminal-context: monospaced, dense, syntax-colored. v1 keeps <code>pre</code> on an ink surface in light mode so users don't context-switch eye adaptation when scanning code on a paper page.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+          <p style="font-size: 0.8125rem; line-height: 1.6; margin: 0;">
+            Inline <span class="inline-code">code</span> uses a tinted paper background and inherits text color.
+            Block code stays dark:
+          </p>
+<pre class="code-block"><span style="color: hsl(30 80% 80%);">function</span> <span style="color: hsl(195 60% 75%);">deriveBorder</span>(bg) {
+  <span style="color: hsl(30 80% 80%);">return</span> <span style="color: hsl(150 40% 75%);">`color-mix(in hsl, currentColor 17.5%, ${bg})`</span>;
+}</pre>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          §9.5 defines <code>o-code</code> (sizing only). No <code>v-colors-code</code> / <code>v-colors-pre</code> with the asymmetric paper/ink treatment. v2 implementers paint <code>&lt;pre&gt;</code> with the page surface.
+        </div>
+<pre class="snippet"><span class="c">/* variants/colors.css */</span>
+<span class="k">.v-colors-code</span> { <span class="c">/* tinted-paper, inline code */</span>
+  <span class="k">--v-bg</span>: <span class="v">color-mix(in hsl, var(--v-muted) 8%, var(--v-bg))</span>;
+}
+<span class="k">.v-colors-pre</span> { <span class="c">/* ink, even in light mode */</span>
+  <span class="k">--v-bg</span>: <span class="v">#141821</span>;
+  <span class="k">--v-fg</span>: <span class="v">#fdf3e1</span>;
+  <span class="k">--v-muted</span>: <span class="v">#d1ccc4</span>;
+}
+<span class="k">code</span> { <span class="v">@apply v-colors-code</span>; }
+<span class="k">pre</span>  { <span class="v">@apply v-colors-pre</span>; }</pre>
+      </div>
+    </article>
+
+    <!-- 05 callout weight bump -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">05</span>
+        <div class="h">
+          <h3>Callouts auto-bump every weight by one step.</h3>
+          <p class="why">A tinted background reduces contrast against the page's body weight. v1's <code>v-colors-callout</code> shifts <code>normal→500, label→600, strong→800</code> for everything inside, so prose stays readable on a mid-tone surface.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; width: 100%;">
+          <div>
+            <div style="font-family: var(--v-font-family-mono); font-size: 0.625rem; color: var(--v-danger-text); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;">no bump</div>
+            <div class="callout no-bump">
+              See the <a class="l">spec gap</a> below for the full recipe. <strong>Body weight</strong> on tinted bg loses contrast.
+            </div>
+          </div>
+          <div>
+            <div style="font-family: var(--v-font-family-mono); font-size: 0.625rem; color: var(--v-success-bg); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;">v1 bump</div>
+            <div class="callout">
+              See the <a class="l">spec gap</a> below for the full recipe. <strong>Body weight</strong> on tinted bg compensates.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          §7.1 introduces per-color <code>--v-*-weight-min</code> floors (link, accent, muted). It doesn't generalize to "tinted-surface variants bump <em>all</em> weights."
+        </div>
+<pre class="snippet"><span class="c">/* variants/colors.css */</span>
+<span class="k">.v-colors-callout</span>,
+<span class="k">.v-colors-warn</span>,
+<span class="k">.v-colors-info</span> {
+  <span class="k">--v-bg</span>: <span class="v">color-mix(in hsl, currentcolor 8%, var(--v-bg))</span>;
+  <span class="c">/* bump the whole stack by ~100 */</span>
+  <span class="k">--v-font-weight-normal</span>:   <span class="v">500</span>;
+  <span class="k">--v-font-weight-label</span>:    <span class="v">600</span>;
+  <span class="k">--v-font-weight-strong</span>:   <span class="v">800</span>;
+  <span class="k">font-weight</span>: <span class="v">var(--v-font-weight-normal)</span>;
+}</pre>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================== §2 HOVER / PRESS / FOCUS ============================== -->
+<section class="section">
+  <div class="section-head">
+    <span class="roman">II</span>
+    <h2>Hover, press, focus</h2>
+    <span class="meta">4 principles · maps to v2 spec gap</span>
+  </div>
+
+  <div class="card-grid">
+
+    <!-- 06 filter hover -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">06</span>
+        <div class="h">
+          <h3>Hover is one filter, applied to anything.</h3>
+          <p class="why">v1's <code>filter: contrast(0.95) saturate(1.15)</code> works on every button, link, badge, and tone — primary, danger, ghost, paper. No per-palette hover-color knobs. Hover the rows below.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+          <div>
+            <div style="font-family: var(--v-font-family-mono); font-size: 0.625rem; color: var(--v-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;">Naïve — per-palette `:hover {background: …}`</div>
+            <div class="palette-row">
+              <button type="button" class="btn no-filter">Default</button>
+              <button type="button" class="btn primary no-filter">Primary</button>
+              <button type="button" class="btn danger no-filter">Danger</button>
+              <a href="#06" class="lnk" style="align-self: center;">Link</a>
+            </div>
+            <p style="font-size: 0.6875rem; color: var(--v-muted); margin: 0.375rem 0 0;">Each tone needs its own hover color. Forget one, get a dead state.</p>
+          </div>
+          <div>
+            <div style="font-family: var(--v-font-family-mono); font-size: 0.625rem; color: var(--v-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;">v1 — single filter recipe</div>
+            <div class="palette-row">
+              <button type="button" class="btn">Default</button>
+              <button type="button" class="btn primary">Primary</button>
+              <button type="button" class="btn danger">Danger</button>
+              <a href="#06" class="lnk" style="align-self: center;">Link</a>
+            </div>
+            <p style="font-size: 0.6875rem; color: var(--v-muted); margin: 0.375rem 0 0;">Try hovering. One rule covers every tone.</p>
+          </div>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          §10.1 says "<code>c-button</code> · hover state, outer shadow." It doesn't say <em>what</em> the hover state is. Without guidance, agents reach for per-palette darken/lighten.
+        </div>
+<pre class="snippet"><span class="c">/* tools/states.css */</span>
+<span class="k">@define-mixin t-hover</span> {
+  <span class="k">filter</span>: <span class="v">contrast(0.95) saturate(1.15)</span>;
+  <span class="k">will-change</span>: <span class="v">filter</span>;  <span class="c">/* nudges Safari GPU path */</span>
+}
+
+<span class="c">/* tools/elements.css */</span>
+<span class="k">@define-mixin t-button-style</span> {
+  <span class="c">/* … */</span>
+  <span class="k">&:hover</span> { <span class="v">@mixin t-hover</span>; <span class="k">box-shadow</span>: <span class="v">var(--v-shadow-md)</span>; }
+  <span class="k">&:active</span> { <span class="k">box-shadow</span>: <span class="v">none</span>; }
+}</pre>
+      </div>
+    </article>
+
+    <!-- 07 double-ring focus -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">07</span>
+        <div class="h">
+          <h3>Focus is two layers: crisp outline + soft halo.</h3>
+          <p class="why">Outline alone is easy to miss against busy layouts; halo alone is fuzzy. v1 stacks <code>box-shadow</code> (ring-alt halo) under <code>outline</code> (ring-crisp). Tab through the buttons.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+          <div>
+            <div style="font-family: var(--v-font-family-mono); font-size: 0.625rem; color: var(--v-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;">Outline only</div>
+            <div class="focus-demo-row">
+              <button type="button" class="btn bare-focus">Tab to me</button>
+              <button type="button" class="btn primary bare-focus">Tab to me</button>
+              <button type="button" class="btn bare-focus">Tab to me</button>
+            </div>
+          </div>
+          <div>
+            <div style="font-family: var(--v-font-family-mono); font-size: 0.625rem; color: var(--v-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;">v1 — halo + outline</div>
+            <div class="focus-demo-row">
+              <button type="button" class="btn">Tab to me</button>
+              <button type="button" class="btn primary">Tab to me</button>
+              <button type="button" class="btn">Tab to me</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          §5.1 mentions <code>--v-accent</code> "(focus ring)" — one knob. v1 uses two (<code>--v-ring</code> crisp, <code>--v-ring-alt</code> soft) and stacks them. No <code>t-focus-ring</code> spec.
+        </div>
+<pre class="snippet"><span class="c">/* tokens/color.css */</span>
+<span class="k">--v-ring</span>:     <span class="v">var(--v-accent)</span>;                    <span class="c">/* crisp outline */</span>
+<span class="k">--v-ring-alt</span>: <span class="v">color-mix(in hsl, var(--v-accent) 35%, transparent)</span>;
+<span class="k">--v-shadow-focus</span>: <span class="v">0 0 0 0.125rem var(--v-ring-alt)</span>;
+
+<span class="c">/* tools/states.css */</span>
+<span class="k">@define-mixin t-focus-ring</span> {
+  <span class="k">box-shadow</span>: <span class="v">var(--v-shadow-focus)</span>;
+  <span class="k">outline</span>: <span class="v">2px solid var(--v-ring)</span>;
+  <span class="k">outline-offset</span>: <span class="v">2px</span>;
+}</pre>
+      </div>
+    </article>
+
+    <!-- 08 double underline links -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">08</span>
+        <div class="h">
+          <h3>Inline links flip to a double underline on focus.</h3>
+          <p class="why">A box-outline around an inline link breaks the reading line. v1's link focus changes <code>text-decoration-style</code> to <code>double</code> — strongly visible, doesn't disturb the run of text. Tab through the paragraph.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <div style="display: flex; flex-direction: column; gap: 0.875rem; width: 100%; font-size: 0.875rem; line-height: 1.7;">
+          <div>
+            <div style="font-family: var(--v-font-family-mono); font-size: 0.625rem; color: var(--v-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.375rem;">Outline focus on inline link</div>
+            <p style="margin: 0;">A paragraph with an <a href="#08" class="lnk bare-focus">inline link</a> that gets a box outline. The box bursts above and below the text baseline and disrupts the reading line.</p>
+          </div>
+          <div>
+            <div style="font-family: var(--v-font-family-mono); font-size: 0.625rem; color: var(--v-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.375rem;">v1 — double underline</div>
+            <p style="margin: 0;">A paragraph with an <a href="#08" class="lnk">inline link</a> that gets a double underline. The text flow is preserved; the doubling is unmistakable up close and at a glance.</p>
+          </div>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          The link / focus story in v2 is missing entirely. <code>base.css</code> in PLAN.md phase 1.5 lists "links" but doesn't specify the <code>:focus-visible</code> treatment.
+        </div>
+<pre class="snippet"><span class="c">/* base.css */</span>
+<span class="k">a:where([href])</span> {
+  <span class="k">color</span>: <span class="v">var(--v-link)</span>;
+  <span class="k">font-weight</span>: <span class="v">var(--v-link-weight-min, inherit)</span>;
+  <span class="k">text-decoration</span>: <span class="v">underline</span>;
+  <span class="k">text-underline-offset</span>: <span class="v">0.25rem</span>;
+}
+<span class="k">a:focus-visible</span> {
+  <span class="k">outline</span>: <span class="v">none</span>;
+  <span class="k">text-decoration-style</span>: <span class="v">double</span>;
+}</pre>
+      </div>
+    </article>
+
+    <!-- 09 keyboard-vs-mouse mode -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">09</span>
+        <div class="h">
+          <h3>Menu highlight follows mouse <em>or</em> keyboard — not both.</h3>
+          <p class="why">When the user is mousing, hover highlights. When they're arrow-keying through a menu, the active descendant highlights regardless of cursor position. v1 toggles <code>body[data-v-kb-nav="true"]</code> from script.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <div style="display: flex; flex-direction: column; gap: 0.625rem; align-items: center; width: 100%;">
+          <div class="kb-toggle">
+            <label><input type="radio" name="kb-mode" value="false" checked onclick="document.body.dataset.kb='false'"> mouse mode</label>
+            <label><input type="radio" name="kb-mode" value="true" onclick="document.body.dataset.kb='true'"> keyboard mode</label>
+          </div>
+          <div class="kb-list" role="menu">
+            <div class="item">Open file</div>
+            <div class="item active">Save as…</div>
+            <div class="item">Recent files</div>
+            <div class="item">Preferences</div>
+            <div class="item">Quit</div>
+          </div>
+          <p style="font-size: 0.6875rem; color: var(--v-muted); margin: 0; max-width: 22rem; text-align: center;">In mouse mode, hover the rows. In keyboard mode, <em>Save as…</em> stays highlighted (the "active descendant") regardless of hover.</p>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          PLAN.md phase 5 lists <code>t-active-descendant</code> and <code>t-roving-focus</code> as handler modules but doesn't mention the page-level <code>data-v-kb-nav</code> flag that makes the CSS conditional.
+        </div>
+<pre class="snippet"><span class="c">/* page-level state driven by dom/handlers/kb-nav.ts */</span>
+<span class="k">body</span>[<span class="k">data-v-kb-nav</span>=<span class="s">"true"</span>] { <span class="c">/* arrow-key mode */</span> }
+
+<span class="c">/* components/menu.css */</span>
+<span class="k">body</span>:not([<span class="k">data-v-kb-nav</span>=<span class="s">"true"</span>]) <span class="k">.o-menu-item:hover</span>,
+<span class="k">body</span>[<span class="k">data-v-kb-nav</span>=<span class="s">"true"</span>] <span class="k">.o-menu-item</span>[<span class="k">data-active</span>] {
+  <span class="v">@apply v-colors-highlight</span>;
+}</pre>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================== §3 TYPE & WEIGHT ============================== -->
+<section class="section">
+  <div class="section-head">
+    <span class="roman">III</span>
+    <h2>Type, weight, and stroke</h2>
+    <span class="meta">3 principles · maps to v2 spec §5 / §7.1</span>
+  </div>
+
+  <div class="card-grid">
+
+    <!-- 10 weight floor -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">10</span>
+        <div class="h">
+          <h3>Hue-distinguished text bumps its weight to clear the contrast floor.</h3>
+          <p class="why">Links and muted text use color to distinguish themselves from body. Color alone may sit below WCAG; a half-step weight bump carries the difference the hue can't.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <div class="wf-pair">
+          <div class="wf-row bare">
+            <div class="tag">no floor</div>
+            Read <a href="#10">the recipe</a> below — the link is set in regular weight, so the desaturated color is doing all the work, and <span class="muted">muted asides</span> drift toward the background.
+          </div>
+          <div class="wf-row bumped">
+            <div class="tag">v1 — weight floor</div>
+            Read <a href="#10">the recipe</a> below — the link runs at weight 500, so the desaturated color is enough, and <span class="muted">muted asides</span> stay legible.
+          </div>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          §7.1 names the floors (<code>--v-link-weight-min</code>, etc.) but defaults all of them to <code>inherit</code>. The shipping palette should set them; the spec needs to say so.
+        </div>
+<pre class="snippet"><span class="c">/* tokens/color.css — set, don't just declare */</span>
+<span class="k">--v-link-weight-min</span>:    <span class="v">500</span>;
+<span class="k">--v-accent-weight-min</span>:  <span class="v">500</span>;
+<span class="k">--v-muted-weight-min</span>:   <span class="v">500</span>;
+
+<span class="c">/* base.css — apply on the targets */</span>
+<span class="k">a</span>        { <span class="k">color</span>: <span class="v">var(--v-link)</span>;  <span class="k">font-weight</span>: <span class="v">var(--v-link-weight-min, inherit)</span>; }
+<span class="k">.v-muted</span> { <span class="k">color</span>: <span class="v">var(--v-muted)</span>; <span class="k">font-weight</span>: <span class="v">var(--v-muted-weight-min, inherit)</span>; }</pre>
+      </div>
+    </article>
+
+    <!-- 11 stroke scales -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">11</span>
+        <div class="h">
+          <h3>Icon stroke thickens with the text weight around it.</h3>
+          <p class="why">An icon set inside a label (weight 500) should look slightly heavier than the same icon inside body copy (weight 400). v1 binds <code>stroke-width</code> to <code>--v-font-weight</code>.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <div class="icon-row">
+          <figure>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-body"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l3 2"/></svg>
+            <span class="lbl-row">body · 400 · sw 2</span>
+          </figure>
+          <figure>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-label"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l3 2"/></svg>
+            <span class="lbl-row">label · 500 · sw 2.5</span>
+          </figure>
+          <figure>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-title"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l3 2"/></svg>
+            <span class="lbl-row">title · 700 · sw 3</span>
+          </figure>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          §11 lists tools but doesn't mention an icon base style. v2 implementers leave Lucide's default stroke; icons feel uniformly thin against bold labels.
+        </div>
+<pre class="snippet"><span class="c">/* base.css — applies to the global icon class */</span>
+<span class="k">.lucide</span>, <span class="k">.icon</span> {
+  <span class="k">display</span>: <span class="v">inline-block</span>;
+  <span class="k">height</span>: <span class="v">1em</span>;
+  <span class="k">width</span>: <span class="v">1em</span>;
+  <span class="k">flex-shrink</span>: <span class="v">0</span>;
+  <span class="k">vertical-align</span>: <span class="v">text-bottom</span>;
+  <span class="k">stroke-width</span>: <span class="v">clamp(2, var(--v-font-weight) / 200, 3)</span>;
+}</pre>
+      </div>
+    </article>
+
+    <!-- 12 heading hierarchy forgiving in <header> -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">12</span>
+        <div class="h">
+          <h3>Headings shift one step down inside <code>&lt;header&gt;</code>.</h3>
+          <p class="why">A card's title is <em>visually</em> an h3 but should be <em>semantically</em> an h2 inside that card's section. v1 lets authors pick the right semantic level by sizing headings smaller when wrapped in <code>&lt;header&gt;</code>.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <div class="hh-pair">
+          <div class="hh-card hh-naive">
+            <div style="padding: 0.625rem 0.875rem; border-bottom: 1px solid var(--v-border-color); background: var(--v-bg);">
+              <h2>Stand-alone &lt;h2&gt;</h2>
+            </div>
+            <div class="body">Without the rule, an &lt;h2&gt; inside a card heads is huge — authors compensate by using &lt;h3&gt;, breaking outline semantics.</div>
+          </div>
+          <div class="hh-card">
+            <header>
+              <h2>Same &lt;h2&gt;, inside &lt;header&gt;</h2>
+            </header>
+            <div class="body">Sized to read as a card title. The author still writes the semantically correct level for the document outline.</div>
+          </div>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          PLAN.md phase 1.5 ("base.css — headings, ...") doesn't carry forward v1's <code>header h1, h2 { @mixin v-text-xl }</code> auto-demotion.
+        </div>
+<pre class="snippet"><span class="c">/* base.css */</span>
+<span class="k">h1</span>          { <span class="k">font-size</span>: <span class="v">var(--v-font-size-h1)</span>; <span class="k">line-height</span>: <span class="v">var(--v-line-height-h1)</span>; }
+<span class="k">header h1</span>, <span class="k">h2</span> { <span class="k">font-size</span>: <span class="v">var(--v-font-size-h2)</span>; <span class="k">line-height</span>: <span class="v">var(--v-line-height-h2)</span>; }
+<span class="k">header h2</span>, <span class="k">h3</span> { <span class="k">font-size</span>: <span class="v">var(--v-font-size-h3)</span>; <span class="k">line-height</span>: <span class="v">var(--v-line-height-h3)</span>; }
+<span class="c">/* … so a CardHeader's `<h2>` looks like an h3 but documents correctly */</span></pre>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================== §4 SPACING, DENSITY, RHYTHM ============================== -->
+<section class="section">
+  <div class="section-head">
+    <span class="roman">IV</span>
+    <h2>Spacing, density, rhythm</h2>
+    <span class="meta">2 principles · maps to v2 spec §5.3 / §6</span>
+  </div>
+
+  <div class="card-grid">
+
+    <!-- 13 spacing bundles -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">13</span>
+        <div class="h">
+          <h3>The spacing mixin moves border-width and radius too.</h3>
+          <p class="why">Denser layouts want thinner borders and tighter radii — not just smaller padding. v1's <code>v-spacing-{sm,md,lg}</code> moves all three; v2's spec moves only the pad/gap quintet.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <div class="spacing-stack">
+          <div class="spacing-card sm">
+            <span class="label">sm · pad 0.5 · border 1 · r 0.25</span>
+            <button type="button" class="btn" style="height: 1.875rem; font-size: 0.8125rem;">Action</button>
+          </div>
+          <div class="spacing-card md">
+            <span class="label">md · pad 0.9375 · border 1 · r 0.4</span>
+            <button type="button" class="btn">Action</button>
+          </div>
+          <div class="spacing-card lg">
+            <span class="label">lg · pad 1.5 · border 2 · r 0.75</span>
+            <button type="button" class="btn" style="height: 2.75rem; font-size: 1rem; padding: 0 1.25rem;">Action</button>
+          </div>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          §5.3's <code>v-spacing $size</code> mixin sets only <code>--v-spacing</code> + the four pad/gap derivatives. v1's bundle is wider: <code>--v-spacing</code>, <code>--v-border-width</code>, <code>--v-radius</code>.
+        </div>
+<pre class="snippet"><span class="c">/* tokens/spacing.css */</span>
+<span class="k">@define-mixin v-spacing $size, $border-width: 1px</span> {
+  <span class="k">--v-spacing</span>:      <span class="v">$size</span>;
+  <span class="k">--v-pad-block</span>:    <span class="v">$size</span>;
+  <span class="k">--v-pad-inline</span>:   <span class="v">$size</span>;
+  <span class="k">--v-gap-block</span>:    <span class="v">$size</span>;
+  <span class="k">--v-gap-inline</span>:   <span class="v">calc($size * 0.5)</span>;
+  <span class="k">--v-border-width</span>: <span class="v">$border-width</span>;          <span class="c">/* add */</span>
+  <span class="k">--v-radius</span>:       <span class="v">calc($size - (1lh - 1em) / 2)</span>;  <span class="c">/* add */</span>
+}</pre>
+      </div>
+    </article>
+
+    <!-- 14 hi-dpi -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">14</span>
+        <div class="h">
+          <h3>Hi-dpi screens get a density bump automatically.</h3>
+          <p class="why">A 2.25rem control on a desktop reads fine; on a phone, fingers want at least 2.75rem. v1 ships a <code>@media (resolution >= 200dpi)</code> block that grows touch targets and bumps body text.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <div class="dpi-diagram">
+          <div class="desktop">
+            <div class="tag-row">desktop · &lt; 200dpi</div>
+            <button type="button" class="btn btn-sm">Sign in</button>
+            <p style="font-size: 0.9375rem; line-height: 1.55; margin: 0; color: var(--v-muted);">Body text reads at 15px. Controls 30px high.</p>
+          </div>
+          <div>
+            <div class="tag-row">touch / hi-dpi · ≥ 200dpi</div>
+            <button type="button" class="btn btn-touch">Sign in</button>
+            <p style="font-size: 1.0625rem; line-height: 1.55; margin: 0; color: var(--v-muted);">Body text 17px. Controls 44px to clear thumb-target.</p>
+          </div>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          §5.1 names <code>--v-input-height: 2.5rem</code> as a single literal. No mention of the resolution-based density branch. PLAN.md phase 1 doesn't mention it either.
+        </div>
+<pre class="snippet"><span class="c">/* tokens/spacing.css */</span>
+<span class="k">:root</span> {
+  <span class="k">--v-input-height</span>: <span class="v">2.25rem</span>;
+  <span class="k">--v-font-size</span>:    <span class="v">0.9375rem</span>;
+}
+<span class="c">/* Bigger touch targets + readable text on dense screens. */</span>
+<span class="k">@media (resolution >= 200dpi)</span> {
+  <span class="k">:root</span> {
+    <span class="k">--v-input-height</span>: <span class="v">2.75rem</span>;
+    <span class="k">--v-font-size</span>:    <span class="v">1.0625rem</span>;
+    <span class="k">--v-spacing</span>:      <span class="v">1rem</span>;
+  }
+}</pre>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================== §5 CONTEXT-AWARE CHROME ============================== -->
+<section class="section">
+  <div class="section-head">
+    <span class="roman">V</span>
+    <h2>Context-aware chrome</h2>
+    <span class="meta">6 principles · maps to v2 spec §10</span>
+  </div>
+
+  <div class="card-grid">
+
+    <!-- 15 cards flatten in container -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">15</span>
+        <div class="h">
+          <h3>Cards flatten when they're inside a container.</h3>
+          <p class="why">A card floating inside a popover or modal earns its shadow — it's a thing sitting above other things. The same card streaming down an <code>o-container</code> page is just a section break — shadows compete with body text.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; width: 100%;">
+          <div class="ctx-container">
+            <div class="lbl-ctx">inside `o-container`</div>
+            <div class="ctx-card">
+              <strong style="display: block; margin-bottom: 0.25rem;">Card on page</strong>
+              <span style="color: var(--v-muted); font-size: 0.75rem;">No shadow. Sits in the reading flow.</span>
+            </div>
+          </div>
+          <div class="ctx-modal">
+            <div class="lbl-ctx">inside a modal / popover</div>
+            <div class="ctx-card shadowed">
+              <strong style="display: block; margin-bottom: 0.25rem;">Card on backdrop</strong>
+              <span style="color: var(--v-muted); font-size: 0.75rem;">Shadow, because it's floating.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          §10.1 says cards have a <code>--v-shadow-outer</code>. No mention of the conditional flattening inside <code>o-container</code> or restoring inside <code>:modal</code> / <code>:popover-open</code>.
+        </div>
+<pre class="snippet"><span class="c">/* components/card.css */</span>
+<span class="k">.c-card</span> {
+  <span class="k">box-shadow</span>: <span class="v">var(--v-shadow-outer)</span>;
+}
+<span class="k">@media (min-width: 50rem)</span> {
+  <span class="k">.o-container .c-card</span>          { <span class="k">box-shadow</span>: <span class="v">none</span>; }
+  <span class="k">:modal .c-card</span>,
+  <span class="k">:popover-open .c-card</span>          { <span class="k">box-shadow</span>: <span class="v">var(--v-shadow-outer)</span>; }
+}</pre>
+      </div>
+    </article>
+
+    <!-- 16 scroll shadow -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">16</span>
+        <div class="h">
+          <h3>Inner shadows tell users when content scrolls.</h3>
+          <p class="why">When a modal body has more content above the fold, the top edge gets an inward shadow. Same for below. The chrome reports the affordance — no separate "more" badge.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <div style="display: flex; flex-direction: column; gap: 0.375rem; width: 100%;">
+          <div style="font-family: var(--v-font-family-mono); font-size: 0.625rem; color: var(--v-muted); text-transform: uppercase; letter-spacing: 0.06em;">scroll inside →</div>
+          <div class="scroll-host">
+            <p><strong>The cascade architecture sketch.</strong> Janus declares its layers up front and never lets a single class span more than one.</p>
+            <p>Reset normalizes defaults. Base styles elements directly. Components own chrome. Objects own structure. Variants set knobs. Tools win.</p>
+            <p>This is a deliberate inversion from v1, where utilities crept into components. The layer order is enforced by the cascade, not by hope.</p>
+            <p>The line between an object and a component is "structure vs. chrome." A box owns spacing and radius. A card adds shadow, border, and color on top.</p>
+            <p>The narrow tools layer (<code>t-px-0</code>, <code>t-flex-fill</code>, etc.) is intentionally tiny.</p>
+          </div>
+          <p style="font-size: 0.6875rem; color: var(--v-muted); margin: 0;">Top/bottom shadows fade as you reach each end.</p>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          §10.2 mentions <code>c-modal</code> chrome but not the scroll-edge shadows. PLAN.md phase 5 lists scroll handlers under <code>dom/handlers</code> but the CSS spec for the shadows is missing.
+        </div>
+<pre class="snippet"><span class="c">/* tokens/shadow.css */</span>
+<span class="k">--v-shadow-inner-top</span>:    <span class="v">inset 0 6px 6px -4px rgb(0 0 0 / 15%)</span>;
+<span class="k">--v-shadow-inner-bottom</span>: <span class="v">inset 0 -6px 6px -4px rgb(0 0 0 / 15%)</span>;
+
+<span class="c">/* components/modal.css — driven by dom handler that sets data-scroll-* attrs */</span>
+<span class="k">.c-modal__content:not([data-scroll-top])</span> {
+  <span class="k">box-shadow</span>: <span class="v">var(--v-shadow-inner-top)</span>;
+}
+<span class="k">.c-modal__content:not([data-scroll-bottom])</span> {
+  <span class="k">box-shadow</span>: <span class="v">var(--v-shadow-inner-bottom)</span>;
+}</pre>
+      </div>
+    </article>
+
+    <!-- 17 tab self-theme -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">17</span>
+        <div class="h">
+          <h3>The tab indicator self-themes against whatever surface it sits on.</h3>
+          <p class="why">v1 colors the selected tab's border with the same <code>color-mix</code> recipe as a dynamic border, but mixing against the tone (primary / success / danger). Drop a tabs strip in any context; the indicator picks up the right color.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; width: 100%;">
+          <div class="tab-strip">
+            <button type="button" class="tab" aria-selected="true">Overview</button>
+            <button type="button" class="tab">Components</button>
+            <button type="button" class="tab">Colors</button>
+          </div>
+          <div class="tab-strip theme-success">
+            <button type="button" class="tab" aria-selected="true">Success</button>
+            <button type="button" class="tab">Latest</button>
+            <button type="button" class="tab">Errors</button>
+          </div>
+          <div class="tab-strip theme-danger">
+            <button type="button" class="tab" aria-selected="true">Critical</button>
+            <button type="button" class="tab">Warning</button>
+            <button type="button" class="tab">Info</button>
+          </div>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          §10.2 names <code>c-tabs</code>. No mention of the indicator-color recipe. The <code>v-colors-*</code> variant a tab strip sits inside should drive its selected color.
+        </div>
+<pre class="snippet"><span class="c">/* components/tabs.css */</span>
+<span class="k">.c-tabs__tab[aria-selected="true"]</span> {
+  <span class="k">--v-border-color</span>: <span class="v">color-mix(in hsl,
+    var(--v-border-dynamic-base) var(--v-border-dynamic-mix),
+    var(--v-accent))</span>;
+  <span class="c">/* box-shadow used instead of border so neighboring tabs don't shift */</span>
+  <span class="k">box-shadow</span>: <span class="v">inset 0 -1px 0 var(--v-border-color)</span>;
+}</pre>
+      </div>
+    </article>
+
+    <!-- 18 disabled-but-clickable submit -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">18</span>
+        <div class="h">
+          <h3>Disabled-but-clickable submit, when the form is invalid.</h3>
+          <p class="why">A "fully disabled" submit can't move focus to the invalid field on click — which is how screenreader users navigate to errors. v1 visually disables (opacity 0.5) but keeps <code>pointer-events</code> alive.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <form class="form-card invalid" onsubmit="event.preventDefault();document.getElementById('demo-email').focus();">
+          <label class="lbl">Email
+            <input id="demo-email" class="inp" aria-invalid="true" value="not-a-valid-email" />
+          </label>
+          <div class="err">Enter a valid email address.</div>
+          <div class="footer">
+            <button type="button" class="btn">Reset</button>
+            <button type="submit" class="btn primary submit">Save changes</button>
+          </div>
+        </form>
+        <p style="font-size: 0.6875rem; color: var(--v-muted); margin: 0.625rem 0 0; text-align: center;">Click <em>Save changes</em> — focus moves to the invalid field, even though the button looks disabled.</p>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          PLAN.md phase 6 mentions <code>SubmitButton</code> but doesn't carry forward v1's critical a11y detail: the submit must accept clicks even when visually disabled so it can dispatch focus.
+        </div>
+<pre class="snippet"><span class="c">/* components/card.css */</span>
+<span class="k">.c-card:has(:invalid, [aria-invalid="true"]) .c-card__footer [type="submit"]</span> {
+  <span class="k">opacity</span>: <span class="v">0.5</span>;
+  <span class="k">cursor</span>: <span class="v">not-allowed</span>;
+  <span class="c">/* deliberately NOT pointer-events: none —
+     submit handler catches click and moves focus to first invalid field */</span>
+  <span class="k">pointer-events</span>: <span class="v">unset</span>;
+}</pre>
+      </div>
+    </article>
+
+    <!-- 19 empty alerts collapse -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">19</span>
+        <div class="h">
+          <h3>Empty error containers collapse to zero height.</h3>
+          <p class="why">A field's error slot stays in the DOM for live-region announcements, but it shouldn't reserve a row of dead space when there's no error. v1 collapses with <code>:has(... [data-t-empty])</code> + <code>:empty</code>.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <div style="display: flex; flex-direction: column; gap: 0.625rem; width: 100%;">
+          <label class="lbl">Username
+            <input class="inp" placeholder="ada-lovelace" />
+            <div class="err">User-name already taken.</div>
+          </label>
+          <label class="lbl">Display name
+            <input class="inp" placeholder="Ada Lovelace" />
+            <div class="err"></div>
+          </label>
+          <p style="font-size: 0.6875rem; color: var(--v-muted); margin: 0; text-align: center;">Both fields ship with the same DOM. The second row reclaims the vertical space.</p>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          §10.1 mentions <code>c-alert</code>. No mention of empty-collapse or <code>data-t-empty</code> sentinel from the form engine. Without it, forms develop dead vertical bands.
+        </div>
+<pre class="snippet"><span class="c">/* components/alert.css */</span>
+<span class="k">.c-error-message:empty</span> { <span class="k">display</span>: <span class="v">none</span>; }
+
+<span class="k">.c-alert:has(.c-alert__children[data-t-empty])</span> { <span class="k">display</span>: <span class="v">none</span>; }
+
+<span class="c">/* dom/handlers/t-empty.ts sets data-t-empty when there are no children */</span></pre>
+      </div>
+    </article>
+
+    <!-- 20 default text overflow -->
+    <article class="principle">
+      <div class="p-head">
+        <span class="num">20</span>
+        <div class="h">
+          <h3>Every text element ellipsizes by default — opt out, not in.</h3>
+          <p class="why">v1 sets <code>overflow-x: hidden; text-overflow: ellipsis</code> on the inline-text element set in <code>base.css</code>. A long heading in a narrow card never overflows; the consumer doesn't have to remember.</p>
+        </div>
+      </div>
+      <div class="demo">
+        <div class="trunc-row">
+          <div class="frame bad">
+            <div style="font-family: var(--v-font-family-mono); font-size: 0.625rem; color: var(--v-danger-text); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.25rem;">no truncation</div>
+            <h4>A heading with a deliberately long string that pushes past the frame</h4>
+          </div>
+          <div class="frame ok">
+            <div style="font-family: var(--v-font-family-mono); font-size: 0.625rem; color: var(--v-success-bg); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.25rem;">v1 default</div>
+            <h4>A heading with a deliberately long string that pushes past the frame</h4>
+          </div>
+        </div>
+      </div>
+      <div class="p-foot">
+        <div class="spec-gap">
+          <strong>Gap in v2 spec</strong>
+          §11 lists <code>t-truncate</code> as an opt-in single-line ellipsis. v1 ships truncation as the default in <code>base.css</code> for the inline-text set, with an explicit opt-out for prose containers.
+        </div>
+<pre class="snippet"><span class="c">/* base.css */</span>
+<span class="k">a, aside, b, blockquote, em, h1, h2, h3, h4, h5, h6, p, span, strong</span> {
+  <span class="k">overflow-x</span>: <span class="v">hidden</span>;
+  <span class="k">text-overflow</span>: <span class="v">ellipsis</span>;
+}
+<span class="c">/* … and explicit opt-out where you want wrapping */</span>
+<span class="k">.t-wrap</span> { <span class="k">overflow-x</span>: <span class="v">visible</span>; <span class="k">text-overflow</span>: <span class="v">clip</span>; }</pre>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================== CLOSING ============================== -->
+<section class="closing">
+  <h2>Drop-in additions to PLAN.md</h2>
+  <p class="lede">
+    Each row maps a principle to the PLAN.md phase where it belongs. Tokens go in Phase 1 (CSS
+    foundation). Behaviors go in Phase 5 (DOM layer). The numbered cross-refs follow the design spec.
+  </p>
+
+  <div class="additions">
+
+    <div class="add">
+      <div class="ref"><strong>Phase 1.4 · tokens/color.css</strong>§5.1 · §7</div>
+      <p>Add <code>--v-border-dynamic-base</code> / <code>--v-border-dynamic-mix</code> / <code>--v-border-color</code> (computed). Add <code>--v-body-bg</code> (gradient stack). Split <code>--v-ring</code> / <code>--v-ring-alt</code>. Set palette-shipping defaults for <code>--v-link-weight-min</code> / <code>--v-muted-weight-min</code> / <code>--v-accent-weight-min</code>. <em>Principles 01, 02, 07, 10.</em></p>
+    </div>
+
+    <div class="add">
+      <div class="ref"><strong>Phase 1.4 · tokens/spacing.css</strong>§5.3</div>
+      <p>Extend the <code>v-spacing $size</code> mixin to bundle <code>--v-border-width</code> and <code>--v-radius</code> in addition to the four pad/gap derivatives. Add the <code>@media (resolution >= 200dpi)</code> density bump for <code>--v-input-height</code>, <code>--v-font-size</code>, <code>--v-spacing</code>. <em>Principles 13, 14.</em></p>
+    </div>
+
+    <div class="add">
+      <div class="ref"><strong>Phase 1.5 · base.css</strong>§5 · §11</div>
+      <p>Specify the <code>a:focus-visible</code> double-underline rule. Specify default truncation for the inline-text set (with explicit opt-out for prose). Specify icon stroke-width binding (<code>.lucide { stroke-width: clamp(2, var(--v-font-weight) / 200, 3) }</code>). Specify <code>header h1, h2 { ... }</code> auto-demotion. <em>Principles 08, 11, 12, 20.</em></p>
+    </div>
+
+    <div class="add">
+      <div class="ref"><strong>Phase 3a · variants/colors.css</strong>§7</div>
+      <p>Add <code>v-colors-tooltip</code> (always-inverted), <code>v-colors-popover</code> (matches card chrome), <code>v-colors-code</code> (tinted-paper), <code>v-colors-pre</code> (ink, even in light mode), <code>v-colors-callout</code> (auto weight-bump). These aren't tonal — they're <em>surface-role</em> variants and need to be enumerated alongside the tonal set. <em>Principles 03, 04, 05.</em></p>
+    </div>
+
+    <div class="add">
+      <div class="ref"><strong>Phase 3a · tools/states.css</strong>§11</div>
+      <p>Add the <code>t-hover</code> mixin (<code>filter: contrast(0.95) saturate(1.15); will-change: filter</code>) and the <code>t-focus-ring</code> mixin (stacks halo + crisp outline). The hover-color story for components defers to <code>t-hover</code> rather than per-palette knobs. <em>Principles 06, 07.</em></p>
+    </div>
+
+    <div class="add">
+      <div class="ref"><strong>Phase 3b · components/card.css</strong>§10.1</div>
+      <p>Specify the conditional shadow rule: cards inside an <code>o-container</code> on wide viewports lose <code>--v-shadow-outer</code>; cards inside <code>:modal</code> / <code>:popover-open</code> always show it. Plus the <code>:has(:invalid) [type="submit"]</code> disabled-but-clickable rule. <em>Principles 15, 18.</em></p>
+    </div>
+
+    <div class="add">
+      <div class="ref"><strong>Phase 3b · components/tabs.css</strong>§10.2</div>
+      <p>Specify the selected-indicator border-color recipe — same <code>color-mix</code> as the dynamic border but with <code>--v-accent</code> (or the surrounding <code>v-colors-*</code> tone) as the mix target. Use <code>inset box-shadow</code> for the underline so neighboring tabs don't shift on selection. <em>Principle 17.</em></p>
+    </div>
+
+    <div class="add">
+      <div class="ref"><strong>Phase 3b · components/modal.css</strong>§10.2</div>
+      <p>Specify the scroll-edge inner shadows (<code>--v-shadow-inner-top</code>, <code>--v-shadow-inner-bottom</code>), wired to the <code>data-scroll-top</code> / <code>data-scroll-bottom</code> sentinels set by the DOM handler. Document them as a chrome contract between the CSS and the handler. <em>Principle 16.</em></p>
+    </div>
+
+    <div class="add">
+      <div class="ref"><strong>Phase 5 · dom/handlers</strong>§12</div>
+      <p>Add <code>t-empty.ts</code> (sets <code>data-t-empty</code> on containers whose children render no content — drives empty-alert collapse) and <code>t-kb-nav.ts</code> (toggles <code>body[data-v-kb-nav]</code> on first Tab / arrow-key, removes on first mousedown). The keyboard-vs-mouse flag is a single boolean but everything from menu hover to active-descendant respects it. <em>Principles 09, 19.</em></p>
+    </div>
+
+    <div class="add">
+      <div class="ref"><strong>Phase 1.3 · reset.css</strong>cross-cutting</div>
+      <p>Add the <code>* { border-color: transparent }</code> rule from v1's reset. v1's <code>o-input-box</code> reserves space for a border on every interactive element so the box doesn't shift on focus or invalid state. Without the transparent default, the border space is reserved but invisible until needed. <em>Cross-cutting; supports principles 07, 17, 18.</em></p>
+    </div>
+
+  </div>
+
+  <div style="margin-top: 3rem; padding: 1.25rem 1.5rem; background: var(--v-secondary-bg); border: 1px solid var(--v-border-color); border-radius: var(--v-inner-radius); font-size: 0.875rem; line-height: 1.6;">
+    <strong style="display: block; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--v-muted); margin-bottom: 0.5rem;">A note on the principle behind these principles</strong>
+    Every item above is one line of CSS that <em>encodes a relationship rather than a value</em>.
+    Borders aren't a color, they're 17.5% of the way to the ink. Hover isn't a darker shade,
+    it's a contrast filter. The link weight isn't 500, it's "whatever the floor is."
+    When v2 implementers reach for literal values, the system loses its self-tuning property — and
+    every new palette becomes a manual tweaking session. The v2 spec already names a lot of knobs;
+    it needs to also name the formulas that connect them.
+  </div>
+</section>
+
+</div>
+
+<script>
+  // Tiny progressive-enhancement: track whether the user is mid-keyboard nav,
+  // for principle 09's demo (the actual rule lives on body[data-kb]).
+  let kbModeUserOverride = false;
+  document.querySelectorAll('input[name="kb-mode"]').forEach((r) => {
+    r.addEventListener('change', () => { kbModeUserOverride = true; });
+  });
+
+  // For everything else: detect kb-nav, set the page-level flag.
+  // (Only switches automatically if the user hasn't already chosen with the radios.)
+  window.addEventListener('keydown', (e) => {
+    if (kbModeUserOverride) return;
+    if (e.key === 'Tab' || e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      document.body.dataset.kb = 'true';
+    }
+  });
+  window.addEventListener('mousedown', () => {
+    if (kbModeUserOverride) return;
+    document.body.dataset.kb = 'false';
+  });
+</script>
+
+</body>
+</html>

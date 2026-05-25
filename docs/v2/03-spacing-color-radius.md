@@ -21,7 +21,44 @@ Layout gaps:
 - **Stack gap** — `o-stack` exposes `--o-stack__gap`, defaulting to `var(--v-gap-block)`.
 - **Inline gap** — `o-group` / `o-row` expose `--o-group__gap` / `--o-row__gap`, defaulting to `var(--v-gap-inline)`.
 
-**No t-shirt size variants ship with Janus.** Consumers who want a tighter spacing for a specific context — a toolbar, a dense table, a nav bar — define their own semantic class. Because `--v-pad-*` and `--v-gap-*` are frozen at root, the `v-spacing` mixin (§5.3) is the one-liner that re-bundles all five knobs:
+### 6.1 The spacing mixin bundles border-width (but not radius)
+
+The `v-spacing` mixin (§5.3) should bundle `--v-border-width` alongside the four pad/gap derivatives — denser layouts want thinner borders, not just smaller padding:
+
+```css
+@define-mixin v-spacing $size, $border-width: 1px {
+  --v-spacing:      $size;
+  --v-pad-block:    $size;
+  --v-pad-inline:   $size;
+  --v-gap-block:    $size;
+  --v-gap-inline:   calc($size * 0.5);
+  --v-border-width: $border-width;
+}
+```
+
+**Do NOT include `--v-radius` in the mixin.** The radius cascade (§8) derives `--o-box__radius` as `calc(var(--v-radius) - var(--v-spacing))`, `--o-input-box__radius` as `calc(var(--o-box__radius) - var(--v-spacing))`, etc. Changing `--v-spacing` alone already tightens inner radii through this concentric step-down — that's the whole point of the cascade. Overriding `--v-radius` inside the mixin would flatten the frame→card→control hierarchy to a single value. If a consumer genuinely wants to change the outermost radius, they set `--v-radius` explicitly alongside the mixin call.
+
+### 6.2 Hi-DPI density bump
+
+A 2.25rem control on a desktop reads fine; on a phone, fingers want at least 2.75rem. The foundation layer ships a resolution-based density branch:
+
+```css
+:root {
+  --v-input-height: 2.25rem;
+  --v-font-size:    0.9375rem;
+}
+@media (resolution >= 200dpi) {
+  :root {
+    --v-input-height: 2.75rem;
+    --v-font-size:    1.0625rem;
+    --v-spacing:      1rem;
+  }
+}
+```
+
+This is not a breakpoint — it's a pixel-density gate. A phone with a 200dpi screen gets larger targets and text regardless of viewport width.
+
+**No t-shirt size variants ship with Janus.** Consumers who want a tighter spacing for a specific context — a toolbar, a dense table, a nav bar — define their own semantic class. Because `--v-pad-*` and `--v-gap-*` are frozen at root, the `v-spacing` mixin (§5.3) is the one-liner that re-bundles all knobs:
 
 ```css
 /* Consumer CSS, not framework CSS */
@@ -38,9 +75,97 @@ Inside the scoped subtree, every `--o-*__pad-*` / `--o-*__gap` default re-resolv
 
 Five root color knobs (`--v-bg`, `--v-fg`, `--v-link`, `--v-accent`, `--v-muted`) carry the whole base palette. Tonal variations (primary / danger / etc.) live as **variants** that re-set these knobs together for a tonal subtree. No flat list of palette knobs at root.
 
+### 7.0 Default palette values
+
+The defaults matter — they set the visual tone for every consumer who doesn't override. v1's defaults produce a warm, intentional look (not generic black-on-white). v2 should match or improve on this warmth. Reference values from v1 (`git show main:src/lib/styles/variables/color-schemes.css`):
+
+**Light mode defaults:**
+
+| Knob | v1 reference value | Notes |
+|---|---|---|
+| `--v-bg` | `hsl(30deg 12% 98.5%)` | Warm off-white with a hint of cream. NOT pure `#fff`. |
+| `--v-fg` | (derived from `--v-bg` via OKLCH lightness) | Resolves to near-black `hsl(216deg 16% 8%)` |
+| `--v-link` | `hsl(195deg 100% 20%)` | Saturated dark teal — distinctive, not generic blue |
+| `--v-accent` | Same as link or a close variant | Focus rings, selected states, primary actions |
+| `--v-muted` | Reduced-saturation gray | De-emphasized text, secondary labels |
+
+**Dark mode defaults:**
+
+| Knob | v1 reference value | Notes |
+|---|---|---|
+| `--v-bg` | `hsl(216deg 16% 8%)` | Deep blue-gray. NOT pure `#000`. |
+| `--v-fg` | (derived) | Resolves to warm off-white |
+| `--v-link` | `hsl(195deg 100% 50%)` or lighter variant | Same hue as light, adjusted for dark bg contrast |
+
+**Body background treatment.** Beyond the flat `--v-bg`, the `base.css` body rule should include subtle radial gradient overlays for visual depth (v1 pattern):
+
+```css
+/* v1 reference — two overlapping gradients at low opacity */
+body {
+  background:
+    radial-gradient(ellipse at 70% 20%, hsl(20deg 80% 70% / 15%), transparent 50%),
+    radial-gradient(ellipse at 30% 80%, hsl(195deg 80% 50% / 7%), transparent 50%),
+    var(--v-bg);
+}
+```
+
+This creates a barely-perceptible warm/cool depth that prevents the page from looking flat. The exact gradient values can change, but the pattern of two low-opacity radial gradients should be preserved.
+
+**Tonal variant palette.** Each `v-colors-*` variant re-sets the five root knobs. v1 reference values:
+
+| Variant | v1 bg (light mode) | Notes |
+|---|---|---|
+| `v-colors-primary` | `hsl(195deg 100% 20%)` (the link color as bg) | White or near-white fg |
+| `v-colors-danger` | `hsl(0deg 89% 31%)` | Red family |
+| `v-colors-success` | `hsl(158deg 77% 15%)` | Teal-green family |
+| `v-colors-warn` | `hsl(50deg 77% 86%)` | Warm yellow, dark fg |
+| `v-colors-info` | `hsl(195deg 80% 90%)` | Light cyan, dark fg |
+| `v-colors-secondary` | `hsl(30deg 8% 93%)` | Near-gray, slightly warm — neutral tinted surface for secondary UI regions |
+
+**Shadows.** Two semantic root knobs — no t-shirt scale. v1 shipped `--v-shadow-sm/md/lg`; v2 collapses these into role-based tokens:
+
+```css
+/* The two public knobs. Default values use multi-layer shadows for realistic depth. */
+--v-shadow-outer: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
+--v-shadow-inner: inset 0 1px 2px 0 rgb(0 0 0 / 10%);
+```
+
+Components that need a stronger or weaker shadow write a literal value or scope a redefinition — `o-dialog` can redefine `--v-shadow-outer` for its subtree so cards inside a modal get a stronger lift. No `--v-shadow-sm/md/lg` public tokens. Reference `git show main:src/lib/styles/variables/composition.css` for v1's multi-layer values.
+
+**Dynamic border derivation:**
+
+```css
+/* v1 pattern — borders that look correct on any background */
+--v-border-color: color-mix(in hsl, black 17.5%, var(--v-bg));  /* light mode */
+--v-border-color: color-mix(in hsl, white 50%, var(--v-bg));     /* dark mode */
+```
+
+**Transition defaults.** One base duration knob, not a scale. Components derive faster/slower paces via `calc()`:
+
+```css
+--v-duration: 240ms;                                  /* the standard pace */
+--v-ease: cubic-bezier(0.4, 0, 0.2, 1);              /* Material-style ease */
+/* Components use: calc(var(--v-duration) * 0.5) for fast hover/active feedback,
+   calc(var(--v-duration) * 2) for extended transitions.
+   prefers-reduced-motion zeros --v-duration and everything follows. */
+```
+
 **Tone** (`v-colors-*`) — re-sets the color knobs for a subtree. Composable; applies to whichever element carries the class.
 
-- `v-colors-primary`, `v-colors-danger`, `v-colors-success`, `v-colors-warn`, `v-colors-info`, `v-colors-muted`
+- `v-colors-primary`, `v-colors-danger`, `v-colors-success`, `v-colors-warn`, `v-colors-info`, `v-colors-secondary`
+
+**Surface-role** (`v-colors-*`) — UI-context variants that control *which* surface a component renders on. These are orthogonal to tonal variants: a tooltip is always inverted regardless of whether it sits inside `v-colors-danger` or the default palette.
+
+| Variant | Purpose | Key behavior |
+|---|---|---|
+| `v-colors-tooltip` | Floating annotation | Always inverted vs. color scheme. `--v-bg: light-dark(#141821, #fafafa)` |
+| `v-colors-popover` | UI replacement (menus, dropdowns) | Matches card/surrounding chrome. `--v-bg: var(--v-card-bg, var(--v-bg))` |
+| `v-colors-code` | Inline code | Tinted paper. `--v-bg: color-mix(in hsl, var(--v-muted) 8%, var(--v-bg))` |
+| `v-colors-pre` | Code blocks | Always dark, even in light mode. `--v-bg: #141821; --v-fg: #fdf3e1` |
+| `v-colors-callout` | Callout/highlighted region | Tinted bg + **auto weight-bump**: `--v-font-weight-normal: 500`, `--v-font-weight-label: 600`, `--v-font-weight-strong: 800`. Entire weight stack shifts up ~100. |
+| `v-colors-highlight` | Active descendant / selected item | `--v-bg: var(--v-accent)` or `--v-link`. Used by menus and keyboard nav. |
+
+`v-colors-warn` and `v-colors-info` should also apply the callout weight bump, since they are tinted-surface variants where body-weight text loses contrast against the background.
 
 **Surface** (`v-surface-*`) — background treatment, shadow, border, optional `backdrop-filter`. Composes with `v-colors-*` for tint.
 

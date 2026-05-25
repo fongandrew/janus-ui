@@ -385,6 +385,9 @@ Each utility ships as a handler module under `src/lib/dom/handlers/` with one or
 | `t-typeahead-filter` | `typeaheadFilter({ match })` | Buffers keystrokes (~500ms window) and calls `match(buffer)` to find / focus matching items. |
 | `t-active-descendant` | `activeDescendant({ items, onActive })` | Manages `aria-activedescendant` based on arrow keys without moving DOM focus. Used by listbox / combobox patterns. |
 | `t-open-tab` | `openTab(panelId)` | Smallest illustrative case — focuses a target element on click; reads target id from sibling `data-target`. |
+| `t-kb-nav` | *(page-level, no producer)* | Toggles `body[data-v-kb-nav="true"]` on first Tab / arrow-key, removes on first mousedown. This single boolean drives CSS conditionals: menu item hover highlights in mouse mode, active-descendant highlights in keyboard mode. Registered once at mount time. |
+| `t-empty` | *(auto-observing)* | Sets `data-t-empty` attribute on containers whose children render no visible content (empty text, no element children). Drives CSS empty-collapse rules: `.c-alert:has([data-t-empty]) { display: none }`, `.c-error-message:empty { display: none }`. Prevents dead vertical space in forms. |
+| `t-scroll-shadow` | `scrollShadow()` | Observes scroll position of an element. Sets `data-scroll-top` when scrolled to the top edge, `data-scroll-bottom` when at the bottom. CSS uses these to show/hide `--v-shadow-inner-top` / `--v-shadow-inner-bottom`. Used by modal/drawer scrollable content. |
 
 **Graceful degradation principle.** Markup must remain functional with JS disabled. Behaviors *enhance* the no-JS baseline; they don't establish it. Specifically: never render no-JS-unreachable state into the initial HTML (e.g. don't ship `tabindex="-1"` on items that the JS arrow-key handler is supposed to reach). Mount-time JS demotes / rewires as needed.
 

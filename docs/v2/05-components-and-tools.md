@@ -9,7 +9,7 @@ Part 5 of the [Janus v2 design spec](./README.md). Covers the `c-` component cla
 | Class | Element | Notes |
 |---|---|---|
 | `c-button` | `<button class="o-input-box">`, `<a class="o-input-box">` | Hover state, outer shadow (`--v-shadow-outer`), tone via `v-colors-*`. Layers chrome on `o-input-box`; sizing/padding/radius come from the object. `c-button--icon` opts into square mode. Consumer-defined scopes (e.g. `.v-cta`) tweak height/radius for specific roles. |
-| `c-card` | `<article>`, `<section>` (with `o-box` or `o-text-box`) | Surface chrome only (`--v-shadow-outer`, border, bg). Pair with `o-box` (children are components) or `o-text-box` (children are prose). Reads `--o-box__radius`. |
+| `c-card` | `<article>`, `<section>` (with `o-box` or `o-text-box`) | Surface chrome only (`--v-shadow-outer`, border, bg). Pair with `o-box` (children are components) or `o-text-box` (children are prose). Reads `--o-box__radius`. **Context-aware shadow**: cards inside `o-container` on wide viewports lose shadow (they're in the reading flow); cards inside `:modal` / `:popover-open` always show it (they're floating). The `:has(:invalid, [aria-invalid]) [type="submit"]` rule visually disables the submit at `opacity: 0.5` but preserves `pointer-events` so the form engine can dispatch focus to invalid fields on click. |
 | `c-alert` | `<div role="alert">` | Internally text-mode. Tone via `v-colors-*`. |
 | `c-input` | `<input class="o-input-box">`, `<textarea class="o-input-box">` | Inner shadow (`--v-shadow-inner`), focus ring, invalid-state chrome. Sizing/padding/radius come from `o-input-box`. |
 | `c-checkbox`, `c-radio` | `<input type=...>` | Custom-styled but uses native input. |
@@ -21,7 +21,7 @@ Part 5 of the [Janus v2 design spec](./README.md). Covers the `c-` component cla
 | `c-spinner` | `<span>` | Square-mode. CSS animation. |
 | `c-skeleton` | `<div>` | CSS animation. |
 | `c-disclosure` | `<details><summary>` | Native, styled. |
-| `c-tooltip` | Anchored `[popover]` | Composes `o-caption`. Anchor positioning. No JS. |
+| `c-tooltip` | Anchored `[popover]` | Composes `o-caption`. Anchor positioning. No JS. Applies `v-colors-tooltip` (always inverted vs. color scheme). |
 
 **Implicit text-mode.** Components that wrap text rely on the underlying text-mode object — `c-button`/`c-input` via `o-input-box`, `c-tag`/`c-badge`/`c-alert` via their own text-mode padding. The consumer never has to wrap them in `o-text-box`. Heading and paragraph base styles in the `base` layer handle their own lh compensation similarly. A consumer reaches for `o-text-box` explicitly only when wrapping prose that isn't already inside a text-bearing component (e.g., a callout card that *is* a paragraph).
 
@@ -31,11 +31,11 @@ These use a native HTML element (`<dialog>`, `[popover]`) for most of their beha
 
 | Class | Element | Toolkit utilities |
 |---|---|---|
-| `c-tabs` | `<div role="tablist">` with `role="tab"` buttons | `rovingFocus` (horizontal) for arrow / Home / End navigation; small JS syncs `aria-selected` and panel visibility. |
-| `c-modal` | `<dialog class="o-dialog">` | Layers modal-typical chrome on `o-dialog`: centered viewport positioning, backdrop tint, focus halo, header/body/footer slot conventions. `requestClose` for ESC / outside-click / `commandfor close` hooks. Focus trapping is native to `<dialog>`. |
+| `c-tabs` | `<div role="tablist">` with `role="tab"` buttons | `rovingFocus` (horizontal) for arrow / Home / End navigation; small JS syncs `aria-selected` and panel visibility. Selected-tab indicator uses `color-mix` against `--v-accent` (same `color-mix` recipe as dynamic borders) — self-themes when inside a `v-colors-*` subtree. Indicator is `inset box-shadow`, not border, so neighboring tabs don't shift. |
+| `c-modal` | `<dialog class="o-dialog">` | Layers modal-typical chrome on `o-dialog`: centered viewport positioning, backdrop tint (`backdrop-filter: blur(4px)`), focus halo, header/body/footer slot conventions. `requestClose` for ESC / outside-click / `commandfor close` hooks. Focus trapping is native to `<dialog>`. Scrollable content areas show `--v-shadow-inner-top` / `--v-shadow-inner-bottom` at scroll edges (driven by `data-scroll-top` / `data-scroll-bottom` sentinels from `t-scroll-shadow.ts`). |
 | `c-drawer` | `<dialog class="o-dialog c-drawer c-drawer--left">` | Composes `o-dialog`'s chrome with edge-anchored positioning + slide transition. Side variants: `c-drawer--left`, `c-drawer--right`, `c-drawer--top`, `c-drawer--bottom` set the anchor edge and the slide direction. A `--o-drawer__side` custom property mirrors the modifier for cases where you need to switch sides via inline style or scoped variable (rare). Same `requestClose` protocol as `c-modal`. |
 | `c-popover` | `[popover]` | `requestClose`; native CSS anchor positioning. |
-| `c-menu` | `[popover]` with `role="menu"` | Composes `o-menu` / `o-menu-item` for structure. `rovingFocus` (vertical), `typeaheadFilter` for letter-jump. |
+| `c-menu` | `[popover]` with `role="menu"` | Composes `o-menu` / `o-menu-item` for structure. `rovingFocus` (vertical), `typeaheadFilter` for letter-jump. Applies `v-colors-popover` (matches card chrome). Menu item highlight is conditional on keyboard/mouse mode: hover highlights in mouse mode, active-descendant highlights in keyboard mode — controlled by `body[data-v-kb-nav]` flag from `t-kb-nav.ts`. |
 
 ### 10.3 Composite components (substantial toolkit composition)
 

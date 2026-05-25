@@ -34,12 +34,40 @@ The component catalog — the primary exploration surface.
 
 **Sidebar (SSR):** Grouped nav listing all components from §10 (buttons, cards, alerts, inputs, selects, modals, menus, tabs, etc.). Sidebar highlight tracks the scroll position of the main content.
 
-**Main content:** An `o-grid` of component demo cards. Each card shows the component in a realistic context with enough variants to demonstrate the knob system. Roughly the same roster as v1's demos, reorganized to match v2's component list:
+**Main content:** An `o-grid` of component demo cards. Each card shows the component in a realistic context with enough variants to demonstrate the knob system. Every demo uses the actual Solid components from `src/lib/solid/` (not raw HTML) — the demos are integration tests for the wrapper layer.
 
-- Pure CSS components (§10.1): buttons, cards, alerts, inputs, checkboxes, radios, toggles, tags, badges, disclosure, tooltips
-- Browser-primitive components (§10.2): tabs, modals, drawers, popovers, menus
-- Composite (§10.3): styled select
-- Form patterns: validation groups, form submit, labelled controls
+Each demo card follows the `Card` + `CardHeader` + `CardTitle` + `CardDescription` + `CardContent` pattern from v1. Each has a unique `id` (e.g. `buttons-demo`) for sidebar anchor linking and E2E test scoping. Reference v1's demo files (`git show main:src/demos/<name>-demo.tsx`) for content structure.
+
+**Demo catalogue:**
+
+| Demo | id | Content |
+|---|---|---|
+| **Buttons** | `buttons-demo` | Full width (`t-col-span-full`). Row of size variants (if applicable). Row of tonal variants: default, primary, danger. Disabled button. `IconButton` examples. Shows hover/active states on interaction. |
+| **Cards** | `cards-demo` | Grid of cards showing surface treatments: `v-surface-card`, `v-surface-elevated`, `v-surface-sunken`, `v-surface-glass`, `v-surface-gradient`. Each card has title, body text, and a link to show text colors. |
+| **Alerts** | `alerts-demo` | Stack of alerts: default, success, warning, danger, info. Each with descriptive text. At least one with a close action. |
+| **Inputs** | `inputs-demo` | Default, placeholder, with value, error state, disabled. Email/URL type inputs. `LabelledInput` with description. `LabelledInput` with error message. |
+| **Textareas** | `textareas-demo` | Default, placeholder, disabled, error. Inside `LabelledInput`. |
+| **Checkboxes** | `checkboxes-demo` | Unchecked, checked, indeterminate, disabled. Group with labels. |
+| **Radios** | `radios-demo` | Radio group (3–4 options), one pre-selected, one disabled. Horizontal and vertical layouts. |
+| **Toggles** | `toggles-demo` | Off, on, disabled. Each with label text. |
+| **Native Selects** | `selects-demo` | Default with options, with initial value, disabled. Inside `LabelledInput`. |
+| **Styled Select** | `styled-selects-demo` | Select with rendered options (color swatches or font previews alongside text). Shows the composite component's full keyboard interaction. |
+| **Tags** | `tags-demo` | Row of tonal variant tags. Removable tags. |
+| **Badges** | `badges-demo` | Count badges, dot badges. Different variants. |
+| **Avatars** | `avatars-demo` | Image avatar, initials fallback. Different sizes via scoped knobs. |
+| **Spinners** | `spinners-demo` | Default, different sizes. Spinner inside a loading button. |
+| **Skeletons** | `skeletons-demo` | Text lines, circle, card-shaped skeleton. |
+| **Disclosure** | `disclosure-demo` | Closed, open, nested. Styled summary content. |
+| **Tooltips** | `tooltips-demo` | Tooltip on hover with anchor positioning. Multiple positions. Longer content. Note: full positioning requires Chromium; show a note for other browsers. |
+| **Tabs** | `tabs-demo` | 3–4 tabs with panel content. One disabled tab. Keyboard navigation works. |
+| **Modals** | `modals-demo` | Open/close modal. Modal with scrollable content (inner shadows). Modal with form. Speed bump demo. |
+| **Drawers** | `drawers-demo` | Open from each side (left, right, top, bottom). Drawer with nav content. |
+| **Popovers** | `popovers-demo` | Button trigger, content popover. Anchor-positioned. |
+| **Menus** | `menus-demo` | Dropdown menu from button. Menu with icons. Typeahead demo. |
+| **Forms** | `forms-demo` | Complete form with validation, submit, error display, success output. `FormGroup` for cross-field validation. |
+| **Modal Forms** | `modal-forms-demo` | Modal form with submit-closes-modal, reset-on-close, and speed bump behaviors. |
+
+Each demo must be interactive — not just static HTML renderings. Buttons should respond to clicks, toggles should toggle, forms should validate. Use the `data-js` behavior system + Solid signals where needed.
 
 ### 20.3 Typography
 

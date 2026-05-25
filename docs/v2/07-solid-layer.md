@@ -245,7 +245,60 @@ What v1 drops:
 | `modalFormMaybeShowSpeedBump` + explicit `speedBumpId` wiring | `c-modal-speed-bump` behavior + DOM-discovered orchestration |
 | `ModalFormContent` wrapper that splits modal vs. form props | `<Modal>` + `<ModalForm>` composed directly |
 
-### 13.7 Porting target
+### 13.7 Complete component catalogue
+
+Every component from §10 gets a Solid wrapper. Even pure-CSS components that add no interactivity beyond what the HTML element provides get a wrapper — it enforces consistent ARIA handling (via `ariaize`), consistent prop merging (via `ca`), and makes every component importable, discoverable, and demoable.
+
+Each component is one file under `src/lib/solid/`. The file exports named components (no default exports).
+
+**Pure CSS component wrappers (§10.1):**
+
+| File | Exports | Element | CSS class | Key props |
+|---|---|---|---|---|
+| `button.tsx` | `Button`, `IconButton` | `<button>` / `<a>` | `c-button o-input-box` | `variant?: 'primary'\|'danger'\|'success'\|'warn'` (maps to `v-colors-*`), `disabled`, standard button attrs. `IconButton` adds `c-button--icon` and square mode. |
+| `card.tsx` | `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent` | `<article>`/`<section>`, `<header>`, `<h3>`, `<p>`, `<div>` | `c-card o-box` / `c-card o-text-box` | `surface?: 'card'\|'elevated'\|'sunken'\|'glass'\|'gradient'` (maps to `v-surface-*`). Subcomponents are thin structural wrappers. |
+| `alert.tsx` | `Alert` | `<div>` | `c-alert` | `variant`, `role` (default `"alert"`). |
+| `input.tsx` | `Input` | `<input>` | `c-input o-input-box` | `validators?: string`, `onValidate?: Validator` (§13.4). Standard input attrs except `type` is constrained (no `checkbox`/`radio`). |
+| `textarea.tsx` | `Textarea` | `<textarea>` | `c-input o-input-box` | Same validation props as `Input`. |
+| `checkbox.tsx` | `Checkbox` | `<input type="checkbox">` | `c-checkbox` | `checked`, `indeterminate`, `disabled`. Renders `<label>` wrapper with text. |
+| `radio.tsx` | `Radio`, `RadioGroup` | `<input type="radio">`, `<fieldset>` | `c-radio` | `RadioGroup`: wraps in `<fieldset role="radiogroup">` with `data-js="t-roving-focus"`. `Radio`: renders `<label>` + `<input type="radio">`. |
+| `toggle.tsx` | `Toggle` | `<input type="checkbox" role="switch">` | `c-toggle` | `checked`, `disabled`. Renders `<label>` wrapper. |
+| `select-native.tsx` | `SelectNative` | `<select>` | `c-select-native o-input-box` | `options?: Array<{value, label}>` (convenience), or `children` for `<option>`. |
+| `tag.tsx` | `Tag` | `<span>` | `c-tag` | `variant`, `onRemove?: () => void` (renders an × button). |
+| `badge.tsx` | `Badge` | `<span>` | `c-badge` | `variant`, `dot?: boolean` (switches to dot-indicator mode). |
+| `avatar.tsx` | `Avatar` | `<img>` / `<span>` | `c-avatar o-square` | `src`, `alt`, `fallback` (string for initials, or JSX for icon). Falls back to initials `<span>` when `src` is absent. |
+| `spinner.tsx` | `Spinner` | `<span>` | `c-spinner o-square` | `size?: string` (inline style override). Default `aria-label="Loading"`. |
+| `skeleton.tsx` | `Skeleton` | `<div>` | `c-skeleton` | `width`, `height`, `circle?: boolean` (sets `border-radius: 50%`). |
+| `disclosure.tsx` | `Disclosure` | `<details><summary>` | `c-disclosure` | `summary: JSX.Element`, `open?: boolean`. Children go after `<summary>`. |
+| `tooltip.tsx` | `Tooltip` | `[popover]` | `c-tooltip` | `content: JSX.Element`, `anchor: string` (ID of the anchor element). Renders via CSS anchor positioning. No JS. |
+
+**Browser-primitive component wrappers (§10.2):**
+
+| File | Exports | Element | CSS class | Key props / data-js |
+|---|---|---|---|---|
+| `tabs.tsx` | `Tabs`, `TabList`, `Tab`, `TabPanel` | container, `<div role="tablist">`, `<button role="tab">`, `<div role="tabpanel">` | `c-tabs` | `TabList` adds `data-js="t-roving-focus c-tabs__select"`. `Tab` adds `aria-selected`, `aria-controls`. `TabPanel` adds `aria-labelledby`, hidden when inactive. |
+| `modal.tsx` | `Modal` | `<dialog>` | `c-modal o-dialog` | `id` (required for `commandfor`), `onClose`. Adds `data-js="t-request-close t-restore-focus"`. |
+| `drawer.tsx` | `Drawer` | `<dialog>` | `c-drawer o-dialog c-drawer--{side}` | `side: 'left'\|'right'\|'top'\|'bottom'`, `id`, `onClose`. Same `data-js` as modal. |
+| `popover.tsx` | `Popover` | `[popover]` | `c-popover` | `anchor: string` (ID), `id`. Adds `data-js="t-request-close"`. |
+| `menu.tsx` | `Menu`, `MenuItem` | `[popover] role="menu"`, `<button role="menuitem">` | `c-menu o-menu`, `o-menu-item` | `Menu` adds `data-js="t-roving-focus t-typeahead-filter t-request-close"`. `MenuItem` supports `disabled`. |
+
+**Composite component wrapper (§10.3):**
+
+| File | Exports | Notes |
+|---|---|---|
+| `styled-select.tsx` | `StyledSelect` | Props: `options: Array<{value, label, render?}>`, `value`, `onChange`, `renderOption?: (opt) => JSX.Element`. Wires all needed `data-js` tokens. The only component with substantial wiring logic. |
+
+**Form components (§13.5–13.6):** `Form`, `FormGroup`, `FormError`, `SubmitButton`, `ModalForm`, `ModalSpeedBump` — already specified above.
+
+**Layout wrappers (§13.2):** `LabelledInput`, `LabelledInline`, `LabelledInputGroup` — already specified above.
+
+**Utility components:**
+
+| File | Exports | Notes |
+|---|---|---|
+| `password.tsx` | `Password` | Extends `Input` with a show/hide toggle button. Renders `<Input type={showPassword() ? 'text' : 'password'}>` + an `IconButton`. |
+
+### 13.8 Porting target
 
 The render-prop + hook shape ports mechanically:
 
