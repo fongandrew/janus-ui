@@ -2,13 +2,15 @@
 
 This document tells you **what to build and in what order**. For the design rationale and detailed rules, consult the [design spec](./README.md). Section references like "§5.1" point into the spec.
 
+The plan uses a **gradual migration** strategy: v2 code is built in `src/lib2/` alongside the existing v1 code in `src/lib/`. The v1 demo site stays fully functional throughout, serving as both the visual reference and the migration target. Once all pages are migrated, Phase 10 removes v1 and renames `lib2/` → `lib/`.
+
 The plan is phased. Each phase has a "done when" check. Phases are sequential unless noted otherwise. Within a phase, the order of items is a suggested priority — not a hard requirement.
 
 ---
 
 ## Phase 0: Repo setup
 
-**Goal:** A clean working tree for v2 on a dedicated branch, with v1 accessible via git for reference.
+**Goal:** A `v2` branch with `src/lib2/` scaffolded alongside the existing `src/lib/`, the v1 demo site still deployable, and dual path aliases configured.
 
 ### 0.1 Create the branch
 
@@ -16,51 +18,29 @@ The plan is phased. Each phase has a "done when" check. Phases are sequential un
 git checkout -b v2
 ```
 
-All v2 work happens here. `main` stays untouched — the v1 demo site remains deployable from `main` for comparison. To reference v1 code during the build, use `git show main:path/to/file` (e.g. `git show main:src/lib/utility/throttle.ts`).
+All v2 work happens here. `main` stays untouched as a baseline. v1 source stays in the working tree during migration — read v1 files directly (e.g. `src/lib/utility/throttle.ts`), no `git show` needed.
 
-### 0.2 Remove v1 source
+### 0.2 Scaffold `src/lib2/`
 
-Delete everything the v2 build replaces. One commit, clear message.
+Create the v2 pseudo-package directory structure alongside v1:
 
-**Delete:**
+```
+src/lib2/
+  css/
+  utils/
+  dom/
+  solid/
+```
 
-| Path | Why |
-|---|---|
-| `src/lib/` | v1 library — replaced by the new pseudo-package structure |
-| `src/demos/` | v1 demo components |
-| `src/*.tsx`, `src/*.ts` (all files in `src/`) | v1 demo site pages (`app.tsx`, `index.tsx`, `components.tsx`, `colors.tsx`, `typography.tsx`, `ssr.tsx`, `prefs-modal.tsx`, `ssr-callbacks.ts`) and their e2e tests |
-| `*.html` at root | v1 entry points (`index.html`, `colors.html`, `typography.html`, `ssr.html`) — will be recreated |
-| `dist/`, `playwright-report/`, `test-results/` | Build artifacts |
-| `scripts/` | v1 utility scripts (`check-apca.ts`) |
-| `types/` | v1 type shims — recreate as needed |
-
-**Keep:**
-
-| Path | Why |
-|---|---|
-| `docs/v2/` | The design spec and this plan |
-| `plugins/` | `vite-plugin-purgecss.ts` and `vite-plugin-ssg.ts` to adapt; `vite-plugin-manglecss.ts` to evaluate. `vite-plugin-janus-bundle.ts` will be added new. |
-| `package.json` | Starting point for dependencies. Will need edits (description, scripts, drop `@floating-ui/dom` and `lucide-solid`, etc.) but the toolchain deps (vite, solid, eslint, stylelint, postcss, playwright, vitest) carry forward. |
-| `vite.config.ts` | Adapt for v2 entry points and pseudo-package aliases. |
-| `tsconfig.json`, `tsconfig.node.json` | Adapt path aliases for new `src/lib/` structure. |
-| `eslint.config.js` | Adapt — will add the boundary rule (Phase 8). |
-| `.stylelintrc.js`, `postcss.config.js` | Carry forward. |
-| `.prettierrc` | Carry forward. |
-| `.gitignore` | Carry forward. |
-| `playwright.config.ts` | Carry forward. |
-| `vitest.setup.ts` | Carry forward. |
-| `CLAUDE.md`, `.github/` | Carry forward, update as needed. |
-| `assets/` | Carry forward (test images). |
-| `LICENSE.md` | Carry forward. |
+No v1 files are deleted. The existing `src/lib/` (styles, components, utility, dom) remains untouched and the v1 demo site stays fully functional throughout the migration.
 
 ### 0.3 Adjust root configs
 
 In the same commit or a follow-up:
 
-- **`package.json`** — update description, remove deps that won't be needed (`@floating-ui/dom`, `lucide-solid`), keep everything else. Bump `@playwright/test` (see §0.4). Scripts will be updated incrementally as pseudo-packages are built.
-- **`vite.config.ts`** — clear the `rollupOptions.input` (no HTML entry points yet), update the `resolve.alias` to point at the new pseudo-package paths once they exist.
-- **`tsconfig.json`** — update path aliases: `~/lib/css/*`, `~/lib/utils/*`, `~/lib/dom/*`, `~/lib/solid/*`.
-- **`README.md`** — replace v1 content with a stub pointing at `docs/v2/README.md`. The full "Updating your fork" section comes in Phase 8.
+- **`vite.config.ts`** — add `resolve.alias` entries for `~/lib2/css/*`, `~/lib2/utils/*`, `~/lib2/dom/*`, `~/lib2/solid/*` alongside the existing `~/lib/*` aliases. Both coexist during migration. Add `src/lib2/css/test-harness.html` to `rollupOptions.input` as a second entry point once Phase 1 begins.
+- **`tsconfig.json`** — add path aliases: `~/lib2/css/*`, `~/lib2/utils/*`, `~/lib2/dom/*`, `~/lib2/solid/*`. Keep existing `~/lib/*` aliases.
+- **`package.json`** — no dependency changes yet. v1 deps stay until the components that use them are migrated. Bump `@playwright/test` (see §0.4). Scripts will be updated incrementally as pseudo-packages are built.
 
 ### 0.4 Browser targets and Playwright
 
@@ -139,23 +119,23 @@ test('tooltip shows on hover', async ({ page }) => {
 ### 0.5 Verify
 
 ```
-git status          # only expected deletions + config edits
+git status          # only new directories + config edits, no deletions
 npm install         # no broken deps
 npx playwright install  # pull new browser binaries
-npx tsc --noEmit    # no stale references (should be trivially clean — no src/ files)
+npx tsc --noEmit    # clean — v1 still compiles, no new source files yet
 ```
 
-**Done when:** The `v2` branch has a clean `src/` directory (empty or just `src/lib/` scaffold stubs), all root configs are adjusted, `npm install` succeeds, and `npx playwright install` completes with Chromium ≥135. v1 code is accessible via `git show main:...`.
+**Done when:** The `v2` branch has `src/lib2/` scaffolded with empty pseudo-package directories, root configs have dual aliases (`~/lib/*` and `~/lib2/*`), `npm install` succeeds, `npx playwright install` completes with Chromium ≥135, and the v1 demo site still builds and runs.
 
 ---
 
-## Phase 1: CSS foundation (`src/lib/css/`)
+## Phase 1: CSS foundation (`src/lib2/css/`)
 
 **Goal:** A working `index.css` that declares layers, resets defaults, and establishes all root knobs.
 
 Build in this order — each step depends on the previous:
 
-1. **Scaffold.** Create `src/lib/css/` with `janus.json` (`depends: []`), `README.md`, `CHANGELOG.md`.
+1. **Scaffold.** Create `src/lib2/css/` with `janus.json` (`depends: []`), `README.md`, `CHANGELOG.md`.
 2. **`index.css`** — the single entry point. Declare the `@layer` order (§4): `reset, base, components, objects, variants, tools`. Import everything else from here.
 3. **`reset.css`** — box-sizing, margin resets, etc. Layer: `reset`. Must include `* { border-color: transparent }` — v1 reserves border space on every interactive element so the box doesn't shift on focus or invalid state. Without the transparent default, borders appear as visible lines before they're needed. *(Aesthetic spec §reset)*
 4. **`tokens/`** — root knobs and mixins:
@@ -179,9 +159,9 @@ Build in this order — each step depends on the previous:
 
 ### 1.T Tests
 
-Create a **CSS test harness** — a plain HTML page (`src/lib/css/test-harness.html`) that imports `index.css` and renders representative elements: headings (h1–h6), paragraphs, links, form inputs, `<code>`, `<pre>`, a `<table>`. This page serves as the E2E target for all CSS-layer tests through Phase 3.
+Create a **CSS test harness** — a plain HTML page (`src/lib2/css/test-harness.html`) that imports `index.css` and renders representative elements: headings (h1–h6), paragraphs, links, form inputs, `<code>`, `<pre>`, a `<table>`. This page serves as the E2E target for all CSS-layer tests through Phase 3.
 
-Write `src/lib/css/tokens.desktop.e2e.ts`:
+Write `src/lib2/css/tokens.desktop.e2e.ts`:
 
 - Verify every primary knob (`--v-spacing`, `--v-radius`, `--v-border-width`, `--v-input-height`, `--v-font-family`, `--v-font-family-mono`, `--v-font-size`, `--v-line-height`, `--v-bg`, `--v-link`, `--v-accent`, `--v-muted`, `--v-shadow-outer`, `--v-shadow-inner`) resolves to a non-empty concrete value via `getComputedStyle`.
 - Verify secondary knobs (`--v-pad-block`, `--v-pad-inline`, `--v-gap-block`, `--v-gap-inline`, `--v-fg`, `--v-font-size-h1` through `-h6`, `-caption`, `-code`) all resolve.
@@ -190,20 +170,20 @@ Write `src/lib/css/tokens.desktop.e2e.ts`:
 
 ### 1.D Design notes
 
-The default color palette should carry v1's warmth, not generic black-on-white. Reference `git show main:src/lib/styles/variables/color-schemes.css` for exact values:
+The default color palette should carry v1's warmth, not generic black-on-white. Reference `src/lib/styles/variables/color-schemes.css` for exact values:
 
 - **Light mode `--v-bg`**: warm off-white (v1 used `hsl(30deg 12% 98.5%)`), not pure `#fff`
 - **Dark mode `--v-bg`**: deep blue-gray (v1 used `hsl(216deg 16% 8%)`), not pure `#000`
 - **Body background**: subtle radial gradient overlays (warm peachy at ~15% opacity + cool cyan at ~7% opacity) over the solid `--v-bg`. This creates visual depth without distraction.
 - **`--v-link`**: a saturated cyan/teal (v1 used `hsl(195deg 100% 20%)`)
 - **Dynamic border color**: derived via `color-mix()` from `--v-bg` — `color-mix(in hsl, black 17.5%, var(--v-bg))` in light mode, `color-mix(in hsl, white 50%, var(--v-bg))` in dark mode. Not a flat gray.
-- **Shadows**: two semantic root knobs, not a t-shirt scale. `--v-shadow-outer` default should be a multi-layer shadow (`0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%)`) for realistic depth. `--v-shadow-inner` default: `inset 0 1px 2px 0 rgb(0 0 0 / 10%)` for embossed inputs. Components needing stronger shadows (modals, elevated surfaces) write larger values directly or scope a redefinition. Reference `git show main:src/lib/styles/variables/composition.css`.
+- **Shadows**: two semantic root knobs, not a t-shirt scale. `--v-shadow-outer` default should be a multi-layer shadow (`0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%)`) for realistic depth. `--v-shadow-inner` default: `inset 0 1px 2px 0 rgb(0 0 0 / 10%)` for embossed inputs. Components needing stronger shadows (modals, elevated surfaces) write larger values directly or scope a redefinition. Reference `src/lib/styles/variables/composition.css`.
 
 **Done when:** Importing `index.css` in a blank HTML page applies the reset, sets all `--v-*` custom properties on `:root`, and styles basic elements (headings, links, paragraphs). Verify with browser devtools that every primary and secondary knob from §5.1 resolves to a concrete value. The page should look warm and intentional — not a browser default with custom properties bolted on.
 
 ---
 
-## Phase 2: CSS objects (`src/lib/css/objects/`)
+## Phase 2: CSS objects (`src/lib2/css/objects/`)
 
 **Goal:** All structural / layout primitives from §9.
 
@@ -238,7 +218,7 @@ Then typography and menu objects:
 
 Extend the CSS test harness (`test-harness.html`) with markup for every object.
 
-Write `src/lib/css/objects.desktop.e2e.ts`:
+Write `src/lib2/css/objects.desktop.e2e.ts`:
 
 - **Box family radius cascade**: render `o-box` > `o-input-box` and verify `border-radius` steps down correctly (computed style on box vs. inner input-box). Repeat with `o-dialog` > `o-box` > `o-input-box` three-level nesting.
 - **Spacing**: verify `o-box` padding matches `--v-pad-block` / `--v-pad-inline`. Verify `o-text-box` block padding is visually smaller (lh compensation).
@@ -255,7 +235,7 @@ Write `src/lib/css/objects.desktop.e2e.ts`:
 
 **Dependency:** Phase 2 (components compose objects).
 
-### 3a: Variants and state mixins (`src/lib/css/variants/`, `src/lib/css/tools/`)
+### 3a: Variants and state mixins (`src/lib2/css/variants/`, `src/lib2/css/tools/`)
 
 Build variants before components — components reference tonal classes. Build state mixins alongside — components reference those too.
 
@@ -285,7 +265,7 @@ Build variants before components — components reference tonal classes. Build s
    - **`t-focus-ring` mixin**: `box-shadow: var(--v-shadow-focus); outline: 2px solid var(--v-ring); outline-offset: 2px;` — stacks a soft halo (`--v-ring-alt` via `--v-shadow-focus`) under a crisp outline (`--v-ring`). Both are needed — outline alone is invisible against busy layouts, halo alone is fuzzy.
    - Components consume these: `c-button:hover { @mixin t-hover; box-shadow: var(--v-shadow-outer); }`, `c-button:active { box-shadow: none; }`, `c-button:focus-visible { @mixin t-focus-ring; }`.
 
-### 3b: Components (`src/lib/css/components/`)
+### 3b: Components (`src/lib2/css/components/`)
 
 Pure CSS components from §10.1, in rough priority order:
 
@@ -313,7 +293,7 @@ Browser-primitive component chrome (§10.2) — these need CSS only at this phas
 19. **`menu-component.css`** — `c-menu`. Chrome on `o-menu`. Menu item highlight is conditional on keyboard/mouse mode: `body:not([data-v-kb-nav="true"]) .o-menu-item:hover` vs `body[data-v-kb-nav="true"] .o-menu-item[data-active]` both apply `v-colors-highlight`. *(Aesthetic spec §09)*
 20. **`styled-select.css`** — `c-styled-select` chrome.
 
-### 3c: Tools (`src/lib/css/tools/`)
+### 3c: Tools (`src/lib2/css/tools/`)
 
 The narrow set from §11: `t-px-0`, `t-py-0`, `t-p-0`, `t-px`, `t-py`, `t-p`, `t-flex`, `t-flex-fill`, `t-flex-auto`, `t-flex-none`, `t-flex-wrap`, `t-block`, `t-inline`, `t-inline-block`, `t-hidden`, `t-sr-only`, `t-border`, `t-border-none`, `t-border-inner`, `t-radius-none`, `t-radius-full`, `t-shadow`, `t-shadow-inner`, `t-shadow-outer`, `t-shadow-none`, `t-align-start`, `t-align-center`, `t-align-end`, `t-truncate`.
 
@@ -321,7 +301,7 @@ The narrow set from §11: `t-px-0`, `t-py-0`, `t-p-0`, `t-px`, `t-py`, `t-p`, `t
 
 Extend the CSS test harness with markup for every component in every major state (default, hover-simulated via class, focus, disabled, invalid where applicable). Add variant demonstrations (each `v-colors-*` applied to buttons, cards, alerts).
 
-Write `src/lib/css/components.desktop.e2e.ts`:
+Write `src/lib2/css/components.desktop.e2e.ts`:
 
 - **Buttons**: verify `c-button` has correct padding (from `o-input-box`), border-radius, hover shadow. Test `c-button--icon` is square. Test tonal variants (`v-colors-primary`, `v-colors-danger`) change background/text color.
 - **Cards**: verify `c-card` has shadow, border, correct radius. Test `v-surface-card` vs `v-surface-elevated` shadow difference.
@@ -331,14 +311,14 @@ Write `src/lib/css/components.desktop.e2e.ts`:
 - **Alerts**: verify tonal coloring with `v-colors-success`, `v-colors-danger`, `v-colors-warn`.
 - **Tooltips** `@chromium-only`: verify anchor positioning places tooltip near its anchor. Verify popover shows/hides.
 
-Write `src/lib/css/components.mobile.e2e.ts`:
+Write `src/lib2/css/components.mobile.e2e.ts`:
 
 - Verify touch-target sizing: buttons and inputs meet minimum 44px tap target.
 - Verify card shadows are suppressed inside containers on mobile (if this pattern carries forward).
 
 ### 3.D Design notes
 
-Each component needs visual polish beyond just "applies the right CSS class." Reference v1 files via `git show main:src/lib/styles/components/<name>.css` and `git show main:src/lib/styles/tools/elements.css` for patterns to carry forward:
+Each component needs visual polish beyond just "applies the right CSS class." Reference v1 files via `src/lib/styles/components/<name>.css` and `src/lib/styles/tools/elements.css` for patterns to carry forward:
 
 **Buttons:**
 - Hover: `filter: contrast(0.95) saturate(1.15)` + `box-shadow: var(--v-shadow-outer)` (darkens slightly while making colors pop)
@@ -375,7 +355,7 @@ Each component needs visual polish beyond just "applies the right CSS class." Re
 
 ---
 
-## Phase 4: Utils (`src/lib/utils/`)
+## Phase 4: Utils (`src/lib2/utils/`)
 
 **Goal:** Framework-agnostic JS/TS utilities. No DOM types, no framework imports.
 
@@ -398,7 +378,7 @@ Skip (DOM-dependent, belongs in `dom/`): `focusables.ts`, `get-scrollable-parent
 
 ---
 
-## Phase 5: DOM layer (`src/lib/dom/`)
+## Phase 5: DOM layer (`src/lib2/dom/`)
 
 **Goal:** The framework-agnostic JS behavior system from §12.
 
@@ -437,7 +417,7 @@ Build in this order — each piece depends on the previous:
 - **`submit.test.ts`**: registry path, closure path, disabled-state filtering (`aria-disabled` inputs excluded from FormData), submit choreography (validate → collect → handler → success/error), `setErrors` / `setFormError` server-fed error flow.
 - **`dispatch.test.ts`**: `registerBehavior` creates listener on first registration, walks `data-js` ancestor chain, multiple behaviors on one element via space-separated tokens.
 
-**E2E tests (Playwright)** — create an interactive HTML test harness (`src/lib/dom/test-harness.html`) that loads `css/index.css` + `dom/all`:
+**E2E tests (Playwright)** — create an interactive HTML test harness (`src/lib2/dom/test-harness.html`) that loads `css/index.css` + `dom/all`:
 
 - **`tabs.desktop.e2e.ts`**: arrow key navigation between tabs, Home/End, `aria-selected` toggles, panel visibility toggles.
 - **`modal.desktop.e2e.ts`**: open via `commandfor` `@chromium-only`, ESC closes, outside-click closes, focus trap keeps focus inside, focus restores on close.
@@ -449,7 +429,7 @@ Build in this order — each piece depends on the previous:
 
 ---
 
-## Phase 6: Solid layer (`src/lib/solid/`)
+## Phase 6: Solid layer (`src/lib2/solid/`)
 
 **Goal:** Thin Solid wrappers from §13.
 
@@ -500,7 +480,7 @@ Build in this order — each piece depends on the previous:
 - **`aria.test.ts`**: `ariaize({ disabled: true })` → `{ 'aria-disabled': true }`, never native `disabled`. `attrs('foo', undefined, 'bar')` → `'foo bar'`, `attrs(undefined)` → `undefined`.
 - **`use-labelled-input.test.ts`**: ID generation is deterministic (`${id}-label`, `-desc`, `-err`). `aria-describedby` joins description + error IDs only when rendered. `errorMessage` prop present → `data-external-error` marker emitted.
 
-**E2E tests (Playwright)** — these test Solid-rendered components, not raw HTML. Create a Solid test app (`src/lib/solid/test-app/`) that renders each component with representative props. This app doubles as a development playground during the build and as the E2E target.
+**E2E tests (Playwright)** — these test Solid-rendered components, not raw HTML. Create a Solid test app (`src/lib2/solid/test-app/`) that renders each component with representative props. This app doubles as a development playground during the build and as the E2E target.
 
 Write one E2E file per component group, following v1's `describeComponent` pattern (see Testing strategy below). Key tests:
 
@@ -555,9 +535,11 @@ Can start as early as Phase 1 (the boundary rule is most useful once multiple ps
 
 ## Phase 9: Demo site
 
-**Goal:** The demo / marketing site from §19–21.
+**Goal:** Migrate the demo / marketing site from v1 components (`src/lib/`) to v2 components (`src/lib2/`), building out new pages per §19–21.
 
 **Dependency:** All previous phases — the site exercises the full stack.
+
+**Migration strategy:** The v1 demo site is still running at this point. Migrate it page by page — each page switches its imports from `~/lib/` to `~/lib2/` and adopts v2 class names and component APIs. After each page migrates, visually compare it against the v1 version (still accessible by temporarily reverting that page's imports, or by checking out `main`). A page is "done" when it looks at least as good as v1.
 
 ### 9a: Site shell
 
@@ -575,7 +557,7 @@ Can start as early as Phase 1 (the boundary rule is most useful once multiple ps
 
 ### 9c: Component demo catalogue
 
-Every component gets a demo card on the Components page. Each demo card uses the `Card` + `CardHeader` + `CardTitle` + `CardDescription` + `CardContent` pattern. Each card has a unique `id` for sidebar anchor linking and E2E test scoping. Reference v1's demo files (`git show main:src/demos/<name>-demo.tsx`) for content structure — adapt for v2 class names and patterns.
+Every component gets a demo card on the Components page. Each demo card uses the `Card` + `CardHeader` + `CardTitle` + `CardDescription` + `CardContent` pattern. Each card has a unique `id` for sidebar anchor linking and E2E test scoping. Reference v1's demo files (`src/demos/<name>-demo.tsx`) for content structure — adapt for v2 class names and patterns.
 
 | Demo card | id | What to show |
 |---|---|---|
@@ -651,9 +633,19 @@ One `describeComponent` block per demo card from the catalogue above. Each block
 
 ## Cross-cutting notes
 
+### Gradual migration principles
+
+This plan uses a **strangler fig** approach: v2 code grows in `src/lib2/` while v1 code in `src/lib/` stays fully functional. Key principles:
+
+1. **The demo site must look correct at every commit.** If a migration step makes something look worse, fix it before moving on. v1 is the visual baseline — not a spec document, but the actual running site you can compare against side-by-side.
+2. **Migrate bottom-up.** CSS tokens → objects → components → Solid wrappers → demo pages. Each layer can be validated independently before the layer above consumes it.
+3. **One file dies when its replacement is proven.** Don't delete `src/lib/styles/components/button.css` until `src/lib2/css/components/button.css` renders identically (or better) in the demo site. Phase 10 handles any stragglers.
+4. **Dual aliases coexist.** `~/lib/*` (v1) and `~/lib2/*` (v2) both work. During migration, a single file can import from both — e.g., a demo page might use v2 buttons but v1 modals while modals are still being ported.
+5. **v1 is the reference, not `git show`.** Read v1 source directly from `src/lib/`. No need to reconstruct design decisions from memory or documentation — the working code is right there.
+
 ### What to port from v1 vs. rewrite
 
-v1 source is reference, not a template. Use `git show main:<path>` to read v1 files without polluting the working tree. Specific things worth porting:
+v1 source lives alongside v2 in the working tree during migration. Read v1 files directly from `src/lib/`, `src/demos/`, etc. Specific things worth porting:
 - `vite-plugin-purgecss.ts`, `vite-plugin-ssg.ts` — adapt, don't rewrite.
 - Pure utilities headed for `utils/` — port directly, strip DOM deps. Key candidates listed in Phase 4.
 - Demo component structure — adapt for v2 class names and patterns.
@@ -672,8 +664,8 @@ Testing is not an afterthought — it's built into every phase. Each phase above
 
 **Test harness pattern (Phases 1–5).** Before the demo site exists, CSS and DOM tests need HTML pages to test against. Create minimal HTML test harnesses:
 
-- `src/lib/css/test-harness.html` — loads `index.css`, renders static HTML with every object and component class. Grows through Phases 1–3.
-- `src/lib/dom/test-harness.html` — loads `index.css` + `dom/all`, renders interactive elements (tabs, modals, forms, menus). Used in Phase 5.
+- `src/lib2/css/test-harness.html` — loads `index.css`, renders static HTML with every object and component class. Grows through Phases 1–3.
+- `src/lib2/dom/test-harness.html` — loads `index.css` + `dom/all`, renders interactive elements (tabs, modals, forms, menus). Used in Phase 5.
 
 These harnesses need Vite dev server support. Add them as entry points in `vite.config.ts` (multi-page app) alongside the main demo pages.
 
@@ -711,7 +703,7 @@ This pattern ensures every component demo is tested in isolation and works in bo
 
 ### Design language — visual polish to carry forward from v1
 
-v1's components look intentional and polished because of specific, deliberate design choices. Without these, components come out flat and generic. This section captures the key patterns an implementer must carry into v2. Reference v1 source via `git show main:<path>` for exact values.
+v1's components look intentional and polished because of specific, deliberate design choices. Without these, components come out flat and generic. This section captures the key patterns an implementer must carry into v2. Reference v1 source directly in `src/lib/` for exact values.
 
 **Key v1 reference files:**
 
@@ -845,3 +837,49 @@ Each principle's additions have been incorporated into the PLAN.md phases above 
 | `--v-animation-duration-sm/md/lg` | `--v-duration` (one base knob; derive faster via `calc(var(--v-duration) * 0.5)`, slower via `calc(var(--v-duration) * 2)`) |
 | `--v-animation-timing` | `--v-ease` |
 | `--v-inner-radius` | `--o-input-box__radius` (v2 uses the object-namespaced knob from the radius cascade §8) |
+
+---
+
+## Phase 10: Cleanup — `lib2/` → `lib/`
+
+**Goal:** Remove v1 code and finalize the directory rename.
+
+**Dependency:** Phase 9 complete. The demo site runs entirely on v2 code from `src/lib2/`. No file in the project imports from `~/lib/` (the v1 aliases).
+
+1. **Verify no v1 imports remain.** `grep -r "~/lib/" src/` should return nothing (only `~/lib2/` imports). The v1 demo pages, test files, and components should all have been migrated or removed during Phase 9.
+
+2. **Delete v1 source.** Remove everything v2 replaces:
+
+   | Path | Why safe to delete |
+   |---|---|
+   | `src/lib/` | The v1 library — fully replaced by `src/lib2/` |
+   | `src/demos/` | v1 demo components — replaced by v2 demo pages |
+   | v1 pages in `src/` (`app.tsx`, `components.tsx`, `colors.tsx`, `typography.tsx`, `ssr.tsx`, `prefs-modal.tsx`, `ssr-callbacks.ts`) and their E2E tests | Replaced by v2 demo site |
+   | v1 entry points at root (`colors.html`, `typography.html`, `ssr.html`) | Replaced by v2 entry points |
+   | `scripts/` | v1 utility scripts (`check-apca.ts`) |
+   | `types/` | v1 type shims — recreate in `lib2/` if needed |
+
+3. **Rename `src/lib2/` → `src/lib/`.** One commit.
+
+4. **Update all aliases and imports.**
+   - `vite.config.ts` — change `~/lib2/*` aliases to `~/lib/*`, remove the old v1 `~/lib/*` aliases.
+   - `tsconfig.json` — same.
+   - Find-and-replace all `~/lib2/` imports in source to `~/lib/`.
+   - Update any `rollupOptions.input` paths.
+
+5. **Clean up dependencies.** Remove v1-only deps from `package.json` (`@floating-ui/dom`, `lucide-solid`, etc.).
+
+6. **Update `README.md`** — replace v1 content with the full v2 README including the "Updating your fork" section (§3.2).
+
+### 10.V Verify
+
+```
+npm install         # no broken deps after removal
+npx tsc --noEmit    # no stale references
+npm run lint        # clean
+npm run test        # unit tests pass
+npm run test:e2e    # E2E tests pass
+npm run build       # production build succeeds
+```
+
+**Done when:** `src/lib/` contains only v2 code, no `src/lib2/` exists, all imports use `~/lib/`, the full test suite passes, and the demo site builds and runs with the same visual quality as v1.
