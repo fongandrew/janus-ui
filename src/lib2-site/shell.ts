@@ -125,3 +125,44 @@ export function sectionCard(title: string, body: string, id?: string): string {
 			${body}
 		</section>`;
 }
+
+/** A Composition sub-page: top nav + Composition ToC sidebar + main content. */
+export function compositionPage(activeKey: string, main: string): string {
+	return renderPage({
+		section: 'composition',
+		sidebar: compositionSidebar(activeKey),
+		main,
+	});
+}
+
+/** A placeholder page for sections built in a later phase (keeps nav links live). */
+export function stubPage(section: Section, title: string, note: string): string {
+	const main = sectionCard(title, `<p>${esc(note)}</p>`);
+	return renderPage({ section, main });
+}
+
+/** A reference table for a token group: knob name, default expression, notes. */
+export interface TokenRow {
+	knob: string;
+	/** Default value / derivation expression (shown verbatim in a <code>). */
+	default: string;
+	desc: string;
+}
+
+export function tokenTable(rows: TokenRow[]): string {
+	const body = rows
+		.map(
+			(r) => `<tr>
+				<td><code>${esc(r.knob)}</code></td>
+				<td><code>${esc(r.default)}</code></td>
+				<td>${esc(r.desc)}</td>
+			</tr>`,
+		)
+		.join('\n\t\t\t\t');
+	return `<table class="c-token-table">
+			<thead><tr><th>Knob</th><th>Default</th><th>Description</th></tr></thead>
+			<tbody>
+				${body}
+			</tbody>
+		</table>`;
+}

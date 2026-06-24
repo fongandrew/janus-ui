@@ -1,0 +1,101 @@
+/*
+	Typography tokens — a fluid, Utopia-style type scale (§5.4).
+
+	Every font-size token is a clamp() that interpolates with the viewport between
+	two anchors. Two things vary across the range: the base size
+	(--v-font-size-min → -max) and the scale ratio (--v-font-ratio-min → -max), so
+	wide screens get bigger body text AND a bolder step-to-step contrast.
+
+	CSS has no pow(), so the per-step ratio powers and the slope/intercept of each
+	clamp's preferred line are precomputed constants (mirroring utopia-core), the
+	only place step indices appear (§5.4). The clamp *bounds* multiply the live
+	--v-font-size-min / -max anchors, so the hi-DPI density bump (§6.4) that raises
+	those anchors raises every token's floor and ceiling automatically. The baked
+	preferred line matches the default anchors exactly; overriding the anchors or
+	ratios shifts the interpolation slightly but stays bounded by the clamp.
+*/
+
+/* Internal authoring primitives (§5.3) — NOT a consumer API. */
+
+/* The general fluid clamp (the §6.5 fluid-spacing engine): no readability floor. */
+@define-mixin v-fluid $prop, $min, $max, $intercept, $slope {
+	$(prop): clamp($(min), $(intercept) + $(slope), $(max));
+}
+
+/* One type step: like v-fluid but with the min side floored for legibility (§5.1). */
+@define-mixin v-font-step $prop, $pow-min, $pow-max, $intercept, $slope {
+	$(prop): clamp(
+		max(var(--_font-size-floor), var(--v-font-size-min) * $(pow-min)),
+		$(intercept) + $(slope),
+		var(--v-font-size-max) * $(pow-max)
+	);
+}
+
+@layer base {
+	:root {
+		/* Primary knobs: families. */
+		--v-font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'Roboto',
+			'Helvetica Neue', 'Arial', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+		--v-font-family-mono: ui-monospace, 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas',
+			'Liberation Mono', 'Courier New', monospace;
+
+		/* Primary knobs: fluid anchors, ratios, viewport anchors, line height. */
+		--v-font-size-min: 1rem;
+		--v-font-size-max: 1.125rem;
+		--v-font-ratio-min: 1.2;
+		--v-font-ratio-max: 1.25;
+		--v-viewport-min: 20rem;
+		--v-viewport-max: 80rem;
+		--v-line-height: 1.5;
+
+		/*
+			Readability floor (§5.1): no step's min side drops below ~13px. When the
+			base anchor itself is ≤13px, fall to 1px under it so caption/code keep their
+			distinction.
+		*/
+		--_font-size-floor: min(13px, var(--v-font-size-min) - 1px);
+
+		/*
+			Resolved secondary font-size tokens. Step exponents (and their precomputed
+			ratio powers / slope / intercept) appear only here. Body = step 0; headings
+			+1…+3; caption/code −1. Anchors 1rem→1.125rem, ratios 1.2→1.25, viewport
+			20rem→80rem.
+		*/
+		@mixin v-font-step --v-font-size, 1, 1, 0.9583rem, 0.2083vw; /* step 0 */
+		@mixin v-font-step --v-font-size-h1, 1.728, 1.9531, 1.5716rem, 0.7821vw; /* +3 */
+		@mixin v-font-step --v-font-size-h2, 1.44, 1.5625, 1.3341rem, 0.5297vw; /* +2 */
+		@mixin v-font-step --v-font-size-h3, 1.2, 1.25, 1.1313rem, 0.3438vw; /* +1 */
+		@mixin v-font-step --v-font-size-h4, 1, 1, 0.9583rem, 0.2083vw; /* 0 */
+		@mixin v-font-step --v-font-size-h5, 1, 1, 0.9583rem, 0.2083vw; /* 0 */
+		@mixin v-font-step --v-font-size-h6, 1, 1, 0.9583rem, 0.2083vw; /* 0 */
+		@mixin v-font-step --v-font-size-caption, 0.8333, 0.8, 0.8111rem, 0.1111vw; /* -1 */
+		@mixin v-font-step --v-font-size-code, 0.8333, 0.8, 0.8111rem, 0.1111vw; /* -1 */
+
+		/*
+			Per-role line heights for elements that set their own font-size (headings,
+			caption, code). A fixed leading offset added to 1em — as size grows the
+			ratio tightens automatically, and it rides each fluid clamp because 1em is
+			the element's own resolved size (§5.1).
+		*/
+		--v-line-height-h1: calc(1em + 0.5 * var(--v-spacing));
+		--v-line-height-h2: calc(1em + 0.5 * var(--v-spacing));
+		--v-line-height-h3: calc(1em + 0.5 * var(--v-spacing));
+		--v-line-height-h4: calc(1em + 0.5 * var(--v-spacing));
+		--v-line-height-h5: calc(1em + 0.5 * var(--v-spacing));
+		--v-line-height-h6: calc(1em + 0.5 * var(--v-spacing));
+		--v-line-height-caption: calc(1em + 0.5 * var(--v-spacing));
+		--v-line-height-code: calc(1em + 0.5 * var(--v-spacing));
+
+		/*
+			Semantic font-weight stack (§ aesthetic spec §05). Components and base
+			styles consume these; tinted-surface variants bump the whole stack by ~100.
+			--v-font-weight is the contextual weight (drives icon-stroke scaling, §11).
+		*/
+		--v-font-weight-normal: 400;
+		--v-font-weight-label: 500;
+		--v-font-weight-subtitle: 600;
+		--v-font-weight-strong: 600;
+		--v-font-weight-title: 700;
+		--v-font-weight: var(--v-font-weight-normal);
+	}
+}

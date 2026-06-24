@@ -1,0 +1,208 @@
+/*
+	Base — element-level defaults. Layer: base. Consumes --v-* tokens; sets no
+	raw px/rem values of its own beyond small, deliberate constants (§4).
+*/
+@layer base {
+	body {
+		background: var(--v-body-bg, var(--v-bg)); /* §02 */
+		background-attachment: fixed;
+		color: var(--v-fg);
+		font-family: var(--v-font-family);
+		font-size: var(--v-font-size);
+		font-weight: var(--v-font-weight-normal);
+		line-height: var(--v-line-height);
+		min-height: 100dvh;
+
+		/* So container queries can fall back to the body as a container. */
+		container-type: inline-size;
+	}
+
+	/*
+		Text-box trim (§6, §15): box edges sit at cap-height / alphabetic baseline so
+		uniform block padding reads optically correct regardless of font size. This
+		replaces v1's (1lh − 1em)/2 compensation. Firefox lacks it — accepted
+		degradation is slightly loose first/last-line leading.
+	*/
+	:where(
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6,
+		p,
+		li,
+		dt,
+		dd,
+		blockquote,
+		figcaption,
+		th,
+		td,
+		label,
+		a,
+		button
+	) {
+		text-box: trim-both cap alphabetic;
+	}
+
+	/* Headings: fluid sizes, matching leading, semantic weights. */
+	h1 {
+		font-size: var(--v-font-size-h1);
+		line-height: var(--v-line-height-h1);
+		font-weight: var(--v-font-weight-title);
+	}
+
+	h2 {
+		font-size: var(--v-font-size-h2);
+		line-height: var(--v-line-height-h2);
+		font-weight: var(--v-font-weight-title);
+	}
+
+	h3 {
+		font-size: var(--v-font-size-h3);
+		line-height: var(--v-line-height-h3);
+		font-weight: var(--v-font-weight-subtitle);
+	}
+
+	h4 {
+		font-size: var(--v-font-size-h4);
+		line-height: var(--v-line-height-h4);
+		font-weight: var(--v-font-weight-subtitle);
+	}
+
+	h5 {
+		font-size: var(--v-font-size-h5);
+		line-height: var(--v-line-height-h5);
+		font-weight: var(--v-font-weight-strong);
+	}
+
+	h6 {
+		font-size: var(--v-font-size-h6);
+		line-height: var(--v-line-height-h6);
+		font-weight: var(--v-font-weight-strong);
+	}
+
+	/*
+		Heading demotion inside <header> (§12): a card title can use a semantically
+		correct level (h2) while rendering at an appropriate visual size for the card.
+	*/
+	:where(header) h1 {
+		font-size: var(--v-font-size-h2);
+	}
+
+	:where(header) h2 {
+		font-size: var(--v-font-size-h3);
+	}
+
+	:where(header) h3 {
+		font-size: var(--v-font-size-h4);
+	}
+
+	/*
+		Block rhythm comes from flow (§6.2): top-margin only between siblings, so the
+		box owns its perimeter (no leading margin on a first child). Headings get more
+		space above than paragraphs.
+	*/
+	:where(* + p, * + ul, * + ol, * + blockquote, * + table, * + pre, * + figure) {
+		margin-block-start: var(--v-spacing);
+	}
+
+	:where(* + h1, * + h2, * + h3, * + h4, * + h5, * + h6) {
+		margin-block-start: calc(var(--v-spacing) * 1.5);
+	}
+
+	/* Links (§08): teal, weight floor, comfortable underline offset. */
+	a:where([href]) {
+		color: var(--v-link);
+		font-weight: var(--v-link-weight-min, inherit);
+		text-decoration-line: underline;
+		text-underline-offset: 0.25rem;
+	}
+
+	/* Inline links use a double underline on focus, not a box outline. */
+	a:where([href]):focus-visible {
+		outline: none;
+		text-decoration-style: double;
+	}
+
+	b,
+	strong {
+		font-weight: var(--v-font-weight-strong);
+	}
+
+	/* De-emphasized text reads with a weight floor (§7.1). */
+	:where(.v-muted) {
+		color: var(--v-muted);
+		font-weight: var(--v-muted-weight-min, inherit);
+	}
+
+	/* Inline code: tinted paper (the v-colors-code surface role, §04). */
+	code {
+		font-family: var(--v-font-family-mono);
+		font-size: var(--v-font-size-code);
+		background: color-mix(in hsl, var(--v-muted) 8%, var(--v-bg));
+		border-radius: var(--v-radius-min);
+		padding: 0 0.25em;
+	}
+
+	/* Code blocks: terminal context — always dark (the v-colors-pre surface role). */
+	pre {
+		font-family: var(--v-font-family-mono);
+		font-size: var(--v-font-size-code);
+		line-height: var(--v-line-height-code);
+		background: hsl(216deg 16% 8%);
+		color: hsl(30deg 100% 96%);
+		border-radius: var(--v-radius-min);
+		padding: var(--v-pad-block) var(--v-pad-inline);
+		overflow-x: auto;
+	}
+
+	pre code {
+		background: none;
+		padding: 0;
+		font-size: inherit;
+	}
+
+	/* Tables: dynamic borders, semantic header weight. */
+	th,
+	td {
+		padding: calc(var(--v-pad-block) * 0.5) var(--v-pad-inline);
+		border-bottom: var(--v-border-width) solid var(--v-border-color);
+		text-align: start;
+	}
+
+	th {
+		font-weight: var(--v-font-weight-subtitle);
+	}
+
+	/* Form controls: sensible cursors; chrome comes from components (Phase 3). */
+	:where(button, [role='button'], summary) {
+		cursor: pointer;
+	}
+
+	:where(input, textarea) {
+		cursor: text;
+	}
+
+	:where(:disabled, [aria-disabled='true']) {
+		cursor: not-allowed;
+	}
+
+	/*
+		Icon stroke scaling (§11): icons thicken with the surrounding text weight
+		(body 400→2, label 500→2.5, title 700→3).
+	*/
+	:where(.lucide, .icon) {
+		stroke-width: clamp(2, var(--v-font-weight) / 200, 3);
+	}
+
+	/*
+		Default text truncation (§20): inline and heading text truncates by default —
+		opt-out via the `t-wrap` tool (Phase 3), not opt-in. Saves wiring overflow on
+		every child for the ellipsis treatment to work.
+	*/
+	:where(a, b, em, h1, h2, h3, h4, h5, h6, p, span, strong) {
+		overflow-x: hidden;
+		text-overflow: ellipsis;
+	}
+}

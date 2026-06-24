@@ -1,0 +1,5 @@
+{
+	"name": "css",
+	"summary": "Pure CSS pseudo-package: layers, tokens, objects, components, variants, tools. No JS.",
+	"depends": []
+}

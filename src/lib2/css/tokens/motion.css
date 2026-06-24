@@ -1,0 +1,17 @@
+/*
+	Motion tokens (§7). One base duration knob, not a scale. Components derive
+	faster (calc(var(--v-duration) * 0.5)) or slower (calc(var(--v-duration) * 2))
+	paces from it. prefers-reduced-motion zeros the duration and everything follows.
+*/
+@layer base {
+	:root {
+		--v-duration: 240ms;
+		--v-ease: cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:root {
+			--v-duration: 0ms;
+		}
+	}
+}

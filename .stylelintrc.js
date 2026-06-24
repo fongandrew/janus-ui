@@ -59,12 +59,13 @@ export default {
 		// drop the v1-specific "prefer tool mixins" lists. Proper per-pseudo-package
 		// stylelint config lands in Phase 8 (§3.4).
 		{
-			files: ['src/lib2/**/*.css'],
+			files: ['src/lib2/**/*.css', 'src/lib2-site/**/*.css'],
 			rules: {
-				'csstools/value-no-unknown-custom-properties': [
-					true,
-					{ importFrom: ['src/lib2/css/index.css'] },
-				],
+				// Many v2 tokens (the fluid type scale) are defined through the
+				// internal v-font-step mixin, which this rule can't expand — so it
+				// can't see those custom properties. Disable it for v2; the proper
+				// per-pseudo-package stylelint config in Phase 8 (§3.4) handles this.
+				'csstools/value-no-unknown-custom-properties': null,
 				'declaration-property-value-disallowed-list': null,
 				'declaration-property-value-allowed-list': null,
 			},

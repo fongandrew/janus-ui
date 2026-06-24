@@ -1,0 +1,86 @@
+/*
+	Internal breakpoint / container-query mixins (§5.3). Authoring tools for
+	Janus's own CSS — NOT a consumer API. Consumers writing responsive CSS use
+	plain @media / @container. Carried forward from v1's variables/breakpoints.css.
+
+	The `&:is(*)` wrapper is a PurgeCSS workaround (see v1 note).
+*/
+@define-mixin v-breakpoint-lt-mobile-wide {
+	@media (width < 640px) {
+		&:is(*) {
+			@mixin-content;
+		}
+	}
+}
+
+@define-mixin v-breakpoint-mobile-wide {
+	@media (width >= 640px) {
+		&:is(*) {
+			@mixin-content;
+		}
+	}
+}
+
+@define-mixin v-breakpoint-lt-tablet {
+	@media (width < 768px) {
+		&:is(*) {
+			@mixin-content;
+		}
+	}
+}
+
+@define-mixin v-breakpoint-tablet {
+	@media (width >= 768px) {
+		&:is(*) {
+			@mixin-content;
+		}
+	}
+}
+
+@define-mixin v-breakpoint-lt-desktop {
+	@media (width < 1200px) {
+		&:is(*) {
+			@mixin-content;
+		}
+	}
+}
+
+@define-mixin v-breakpoint-desktop {
+	@media (width >= 1200px) {
+		&:is(*) {
+			@mixin-content;
+		}
+	}
+}
+
+@define-mixin v-container-lt-tablet {
+	@container (width < 768px) {
+		&:is(*) {
+			@mixin-content;
+		}
+	}
+}
+
+@define-mixin v-container-tablet {
+	@container (width >= 768px) {
+		&:is(*) {
+			@mixin-content;
+		}
+	}
+}
+
+@define-mixin v-container-lt-desktop {
+	@container (width < 1200px) {
+		&:is(*) {
+			@mixin-content;
+		}
+	}
+}
+
+@define-mixin v-container-desktop {
+	@container (width >= 1200px) {
+		&:is(*) {
+			@mixin-content;
+		}
+	}
+}

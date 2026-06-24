@@ -1,0 +1,17 @@
+/*
+	Shadow tokens (§5.1, §7). Two semantic root knobs — no t-shirt scale.
+	Components needing a stronger shadow write a literal or scope a redefinition.
+*/
+@layer base {
+	:root {
+		/* Multi-layer for realistic depth (§1.D). */
+		--v-shadow-outer: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
+
+		/* Embossed inputs. */
+		--v-shadow-inner: inset 0 1px 2px 0 rgb(0 0 0 / 10%);
+
+		/* Scroll-edge shadows for modal/drawer scrollable content (§16). */
+		--v-shadow-inner-top: inset 0 6px 6px -4px rgb(0 0 0 / 15%);
+		--v-shadow-inner-bottom: inset 0 -6px 6px -4px rgb(0 0 0 / 15%);
+	}
+}

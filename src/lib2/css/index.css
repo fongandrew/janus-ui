@@ -1,7 +1,30 @@
 /*
-	Janus v2 — CSS entry point (placeholder).
+	Janus v2 — CSS entry point.
 
-	Phase 0 ships this as an empty placeholder so the documentation-site shell
-	resolves its stylesheet import and builds. Phase 1 replaces it with the real
-	entry: the `@layer` declaration plus imports of reset, tokens, and base.
+	The single import a consumer needs. Declares the @layer precedence order, then
+	imports the reset, the token layer (root --v-* knobs + internal mixins), and
+	the base element styles. Objects, components, variants, and tools layer in as
+	later phases land.
 */
+
+/*
+	Cascade order (§4). Components sit ABOVE objects so a component can make minor
+	overrides of the objects it composes (§4.1); variants and tools outrank both.
+*/
+@layer reset, base, objects, components, variants, tools;
+
+@import './reset.css';
+
+/*
+	Token layer. Order matters in one spot: spacing.css carries the hi-DPI bump
+	that overrides the font-size anchors declared in typography.css, so it is
+	imported AFTER typography.css to land later in source (§6.4).
+*/
+@import './tokens/breakpoints.css';
+@import './tokens/radius.css';
+@import './tokens/color.css';
+@import './tokens/typography.css';
+@import './tokens/spacing.css';
+@import './tokens/shadow.css';
+@import './tokens/motion.css';
+@import './base.css';

@@ -1,0 +1,16 @@
+/*
+	Border radius & border-width tokens (§5.1, §8).
+
+	Radius is preset-driven (§8.2), not a subtractive cascade. Two root knobs
+	anchor it: --v-radius (window/dialog frame) and --v-radius-min (the innermost
+	floor — controls never round below this, so corners are never sharp). Per-layer
+	object radii (--o-box__radius etc.) are assigned by a radius preset in the
+	`variants` layer; objects read their own knob with a floor fallback.
+*/
+@layer base {
+	:root {
+		--v-radius: 0.5rem;
+		--v-radius-min: 0.25rem;
+		--v-border-width: 1px;
+	}
+}
