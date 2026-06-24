@@ -12,7 +12,7 @@ Part 8 of the [Janus v2 design spec](./README.md). Covers what was deliberately 
 | Custom focus-trap library | `<dialog>` provides this natively. |
 | Text-overflow tooltip machinery | Replaced by `t-truncate` + manual `c-tooltip` when needed. |
 | Empty-state object class | Compose with stack + center. |
-| v1's general-purpose mixin overuse | Mixins (via `postcss-mixins`) are kept but **used sparingly** — see §5.3. They exist for the irreducibly-bundled-knob case (`v-spacing $size` sets five knobs at once) and for media-/container-query wrappers (`v-breakpoint-*`, `v-container-*`). They are *not* used as a general composition mechanism the way v1 reached for them. |
+| v1's general-purpose mixin overuse | Mixins (via `postcss-mixins`) are kept but reframed as **internal to Janus only** — see §5.3. They are an authoring convenience for irreducibly-bundled knob sets (`v-spacing`) and mechanical expansions (`v-fluid` / `v-font-step` for the fluid type scale, §5.4; `v-breakpoint-*` / `v-container-*` query wrappers). They are *not* a consumer-facing customization surface: consumers theme via `--v-*` overrides, `v-`/`t-` classes, or their own CSS. The sync workflow never asks a consumer to invoke a mixin. |
 | v1's behavior callback registry (`data-callback-*` plumbing) | One unified pattern under one dispatcher (§12.2.2–§12.2.3): elements opt into behaviors via tokens in a single canonical `data-js="..."` attribute. Behavior names are stable strings tied to module filenames — no per-render generated IDs. Validators / submit handlers still use a name registry (§12.1). Closures go in a WeakMap. |
 | `o-top-nav-layout`, `o-sidebar-layout` (whole-page layouts) | Reframed as compositions of primitives (§10.4). The realistic needs — auto-hiding top nav, sidebar-to-drawer — decompose into recipes over `o-split`, `o-container`, `c-drawer` + CSS scroll-state / container queries. |
 
@@ -50,13 +50,16 @@ src/lib/
     base.css
     tokens/
       spacing.css                # --v-spacing + --v-pad-* / --v-gap-* root
-                                 #   knobs + the v-spacing mixin (§5.3)
+                                 #   knobs + the internal v-spacing mixin (§5.3)
       color.css                  # --v-bg / --v-fg / --v-link / --v-accent /
                                  #   --v-muted + oklch-based --v-fg default
-      typography.css
+      typography.css             # fluid Utopia-style scale (§5.4): font anchors
+                                 #   + min/max ratios + viewport anchors; semantic
+                                 #   tokens (h1–h6, caption, code) via the internal
+                                 #   v-fluid / v-font-step mixins
       radius.css
       shadow.css
-      breakpoints.css            # v-breakpoint-* / v-container-* mixins
+      breakpoints.css            # internal v-breakpoint-* / v-container-* mixins
     objects/
       box.css                    # .o-box
       text-box.css               # .o-text-box
@@ -86,7 +89,9 @@ src/lib/
       align.css                  # .v-align-text / .v-align-edge (§6.1)
       text.css                   # .v-text-display / .v-text-meta (role-based, sparingly)
       # No .v-spacing-*, .v-input-size-*, or other t-shirt-scaled variants.
-      # Consumers define those in their own CSS as semantic scopes.
+      # Consumers define those in their own CSS as semantic density scopes
+      #   (the .v-dense / .v-toolbar / .v-touch convention — §6.6) and pick
+      #   which signal drives each sizing axis (§5.5, recipes §6.7).
       # Font-size tokens are semantic (h1–h3, caption, code), not sm/md/lg.
     tools/
       padding.css

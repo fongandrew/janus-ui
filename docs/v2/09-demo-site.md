@@ -86,7 +86,8 @@ Showcase of the typography system (still part of Composition — type *is* compo
 - Caption text (`--v-font-size-caption`) and code text (`--v-font-size-code`)
 - Lists (ordered, unordered, nested), blockquotes, tables
 - `<pre>` / `<code>` blocks
-- A reference table showing each token's default value and effective ratio (from §5.1's line-height table)
+- A reference table showing each token's resolved size and effective ratio (from §5.1's line-height table)
+- A note that the scale is **fluid** (Utopia-style, §5.4): resizing the viewport between `--v-viewport-min` and `--v-viewport-max` continuously scales every level, and the heading↔body contrast widens toward the wide end (dual ratios). This is the visible proof the responsive type system works — no breakpoints, just interpolation.
 
 ### 20.3 Colors
 
@@ -200,7 +201,12 @@ A new section below the existing preferences. All inputs are **plain text fields
 | `--v-radius` | `0.5rem` | Frame / window radius |
 | `--v-input-height` | `2.5rem` | Control height |
 | `--v-border-width` | `1px` | Base border width |
-| `--v-font-size` | `1rem` | Base font size |
+| `--v-font-size-min` | `1rem` | Base body size at the min viewport (fluid scale, §5.4) |
+| `--v-font-size-max` | `1.125rem` | Base body size at the max viewport |
+| `--v-font-ratio-min` | `1.2` | Modular-scale ratio at the min viewport |
+| `--v-font-ratio-max` | `1.25` | Modular-scale ratio at the max viewport |
+| `--v-viewport-min` | `20rem` | Lower fluid anchor (type + opt-in space) |
+| `--v-viewport-max` | `80rem` | Upper fluid anchor |
 | `--v-line-height` | `1.5` | Base line height |
 | `--v-font-family` | system default | Primary font stack |
 | `--v-font-family-mono` | system default | Monospace font stack |
@@ -213,7 +219,8 @@ Layout derivatives:
 - `--v-gap-block` (default `var(--v-spacing)`)
 - `--v-gap-inline` (default `calc(var(--v-spacing) * 0.5)`)
 
-Font-size derivatives:
+Font-size derivatives (each a fluid `clamp()` step on the scale, §5.4):
+- `--v-font-size` (the resolved fluid base, step 0)
 - `--v-font-size-h1` through `--v-font-size-h6`
 - `--v-font-size-caption`
 - `--v-font-size-code`
