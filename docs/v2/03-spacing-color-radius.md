@@ -56,9 +56,9 @@ Interior vertical rhythm comes from **flow**:
 
 This matches how developers actually write markup — they wrap a *group* in one box and drop several elements inside, not wrap every heading and paragraph individually. So the contract is **"wrap a group, flow the children":** the box owns the perimeter; the elements (or the stack) own the gaps. `o-text-box` is therefore a *perimeter + inline-alignment* primitive that leans on flow for its vertical story.
 
-### 6.3 The spacing mixin bundles border-width (but not radius)
+### 6.3 The spacing bundle includes border-width (but not radius)
 
-The `v-spacing` mixin (§5.3) should bundle `--v-border-width` alongside the four pad/gap derivatives — denser layouts want thinner borders, not just smaller padding:
+Janus's internal `v-spacing` mixin (§5.3 — an authoring tool, not a consumer API) bundles `--v-border-width` alongside the four pad/gap derivatives, because denser layouts want thinner borders, not just smaller padding. A consumer setting the bundle by hand sets `--v-border-width` in the same block:
 
 ```css
 @define-mixin v-spacing $size, $border-width: 1px {
@@ -75,36 +75,60 @@ The `v-spacing` mixin (§5.3) should bundle `--v-border-width` alongside the fou
 
 ### 6.4 Hi-DPI density bump
 
-A 2.25rem control on a desktop reads fine; on a phone, fingers want at least 2.75rem. The foundation layer ships a resolution-based density branch:
+A 2.5rem control on a desktop reads fine; on a phone, fingers want at least 2.75rem. The foundation layer ships a resolution-based density branch. Because type is fluid (§5.4), the bump nudges the **anchors** (`--v-font-size-min` / `-max`), not a frozen size — the resolved `--v-font-size` clamp and every step recompute from them automatically:
 
 ```css
 :root {
-  --v-input-height: 2.25rem;
-  --v-font-size:    0.9375rem;
+  --v-input-height:  2.5rem;
+  --v-font-size-min: 1rem;
+  --v-font-size-max: 1.125rem;
 }
 @media (resolution >= 200dpi) {
   :root {
-    --v-input-height: 2.75rem;
-    --v-font-size:    1.0625rem;
-    --v-spacing:      1rem;
+    --v-input-height:  2.75rem;
+    --v-font-size-min: 1.0625rem;
+    --v-font-size-max: 1.1875rem;
+    --v-spacing:       1rem;
   }
 }
 ```
 
-This is not a breakpoint — it's a pixel-density gate. A phone with a 200dpi screen gets larger targets and text regardless of viewport width.
+This is not a breakpoint — it's a pixel-density gate. A phone with a 200dpi screen gets larger targets and text regardless of viewport width. It composes with the fluid scale: the viewport-driven `clamp()` still interpolates; the gate just raises the floor and ceiling it interpolates between.
 
-**No t-shirt size variants ship with Janus.** Consumers who want a tighter spacing for a specific context — a toolbar, a dense table, a nav bar — define their own semantic class. Because `--v-pad-*` and `--v-gap-*` are frozen at root, the `v-spacing` mixin (§5.3) is the one-liner that re-bundles all knobs:
+**No t-shirt size variants ship with Janus.** Consumers who want a tighter spacing for a specific context — a toolbar, a dense table, a nav bar — define their own semantic class via the supported customization paths (§5.3): variable overrides, a `v-` variant, or plain CSS — *not* a Janus mixin. Because `--v-pad-*` and `--v-gap-*` are frozen at root, set the bundle together:
 
 ```css
-/* Consumer CSS, not framework CSS */
-.v-dense    { @mixin v-spacing 0.5rem; }
-.v-nav      { @mixin v-spacing 0.5rem; --v-input-height: 2rem; }
-.v-cta      { --v-input-height: 3rem; --v-radius: 9999px; }
+/* Consumer CSS — set the knob bundle directly. */
+.v-dense { --v-spacing: 0.5rem; --v-pad-block: 0.5rem; --v-pad-inline: 0.5rem;
+           --v-gap-block: 0.5rem; --v-gap-inline: 0.25rem; }
+.v-nav   { --v-spacing: 0.5rem; --v-pad-block: 0.5rem; --v-pad-inline: 0.5rem;
+           --v-gap-block: 0.5rem; --v-gap-inline: 0.25rem; --v-input-height: 2rem; }
+.v-cta   { --v-input-height: 3rem; --v-radius: 9999px; }
 ```
 
-Inside the scoped subtree, every `--o-*__pad-*` / `--o-*__gap` default re-resolves against the new bundle. Consumers who'd rather avoid the mixin set the five knobs by hand — same effect.
+Inside the scoped subtree, every `--o-*__pad-*` / `--o-*__gap` default re-resolves against the new bundle. (A consumer who forks the CSS package *may* reuse Janus's internal `v-spacing` mixin to shorten these, but it isn't required and isn't part of the documented surface.)
 
 **Rule of thumb for consumers:** raw text never goes directly inside an `o-box`. Wrap it in `o-text-box`, or place it inside a text-bearing component. This keeps inline alignment (§6.1) and curvature clearance well-defined, and is what makes the positive-padding-only model work without negative margins.
+
+### 6.5 Fluid spacing (opt-in, same mechanism as type)
+
+Spacing is **static by default** — `--v-spacing` is a fixed length and the pad/gap bundle derives from it (§5.1). Type, by contrast, is fluid out of the box (§5.4). The asymmetry is deliberate: fluid type pays off everywhere (readable on phones, expressive on desktops with no breakpoints), while fluid spacing interacts with the frozen-at-root bundle and the hi-DPI gate, so we keep it opt-in rather than impose it.
+
+When a consumer *does* want roomier gutters on wide screens, the same Utopia-style `clamp()` mechanism applies — make `--v-spacing` itself a fluid value, then set the bundle from it:
+
+```css
+/* Consumer CSS — fluid spacing between the §5.1 viewport anchors.
+   slope/intercept computed exactly as in §5.4. */
+:root {
+  --v-spacing:    clamp(0.75rem, calc(0.6818rem + 0.34vw), 1rem);
+  --v-pad-block:  var(--v-spacing);
+  --v-pad-inline: var(--v-spacing);
+  --v-gap-block:  var(--v-spacing);
+  --v-gap-inline: calc(var(--v-spacing) * 0.5);
+}
+```
+
+Because the four derivatives read `var(--v-spacing)` here, they track the fluid value. (This is one of the rare cases where the freezing rule helps you: deriving the bundle *from* a fluid `--v-spacing` in the same `:root` block makes the whole bundle fluid in lockstep.) The hi-DPI gate (§6.4) still composes — it can override the anchors of the clamp at high resolution. Janus's internal `v-fluid $min, $max` mixin (§5.3) is what generates these clamps in-house; consumers paste the computed `clamp()` or write their own.
 
 ## 7. Color & surface system
 
