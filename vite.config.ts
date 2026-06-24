@@ -32,6 +32,13 @@ export default defineConfig(({ mode }) => {
 		],
 		resolve: {
 			alias: {
+				// v2 pseudo-package aliases. These coexist with the v1 `~/lib/*`
+				// aliases during the gradual migration (PLAN.md Phase 0.3). The
+				// more-specific entries are listed before the catch-all `~`.
+				'~/lib2/css': '/src/lib2/css',
+				'~/lib2/utils': '/src/lib2/utils',
+				'~/lib2/dom': '/src/lib2/dom',
+				'~/lib2/solid': '/src/lib2/solid',
 				'@': '/assets',
 				'~': '/src',
 			},

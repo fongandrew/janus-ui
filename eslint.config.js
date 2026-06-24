@@ -63,6 +63,17 @@ export default tseslint.config(
 		},
 	},
 
+	// v2 documentation site. It is built gradually alongside the CSS layers and
+	// deliberately references classes (e.g. `c-card`) before the CSS that defines
+	// them lands — see PLAN.md Phase 0.5. Disable the unknown-class check here;
+	// proper per-pseudo-package configs arrive in Phase 8.
+	{
+		files: ['src/lib2-site/**/*.{js,ts,jsx,tsx}'],
+		rules: {
+			'css-class-usage/no-unknown-classes': 'off',
+		},
+	},
+
 	// Test rules
 	{
 		files: ['**/test-utils/**', '**/*.test.*'],

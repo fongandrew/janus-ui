@@ -29,34 +29,43 @@ export default defineConfig({
 		timeout: 120000,
 	},
 
-	// Configure projects for desktop and mobile browsers
+	// Configure projects for desktop and mobile browsers.
+	//
+	// Tests are tiered by browser support (PLAN.md §0.4). v2 leans on a few
+	// Chromium-only features (anchor positioning, `commandfor`, `scroll-state()`).
+	// Tests exercising those tag their title with `@chromium-only`; the Firefox
+	// and WebKit projects skip them via `grepInvert` so the suite stays honest —
+	// cross-browser features run cross-browser, Chromium-only ones run scoped.
 	projects: [
-		// Desktop browser projects
+		// Tier 1: Chromium — runs every test, including `@chromium-only`.
 		{
 			name: 'chromium-desktop',
 			testMatch: '**/*.desktop.e2e.[tj]s?(x)',
 			use: { ...devices['Desktop Chrome'] },
 		},
 		{
+			name: 'chromium-mobile',
+			testMatch: '**/*.mobile.e2e.[tj]s?(x)',
+			use: { ...devices['Pixel 7'] },
+		},
+
+		// Tier 2: cross-browser — skips `@chromium-only` tests.
+		{
 			name: 'firefox-desktop',
 			testMatch: '**/*.desktop.e2e.[tj]s?(x)',
+			grepInvert: /@chromium-only/,
 			use: { ...devices['Desktop Firefox'] },
 		},
 		{
 			name: 'webkit-desktop',
 			testMatch: '**/*.desktop.e2e.[tj]s?(x)',
+			grepInvert: /@chromium-only/,
 			use: { ...devices['Desktop Safari'] },
-		},
-
-		// Mobile browser projects
-		{
-			name: 'chromium-mobile',
-			testMatch: '**/*.mobile.e2e.[tj]s?(x)',
-			use: { ...devices['Pixel 7'] },
 		},
 		{
 			name: 'webkit-mobile',
 			testMatch: '**/*.mobile.e2e.[tj]s?(x)',
+			grepInvert: /@chromium-only/,
 			use: { ...devices['iPhone 15'] },
 		},
 	],

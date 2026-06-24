@@ -38,6 +38,10 @@
 		"baseUrl": ".",
 		"paths": {
 			"~/lib/*": ["dist/types/lib/*"],
+			"~/lib2/css/*": ["src/lib2/css/*"],
+			"~/lib2/utils/*": ["src/lib2/utils/*"],
+			"~/lib2/dom/*": ["src/lib2/dom/*"],
+			"~/lib2/solid/*": ["src/lib2/solid/*"],
 			"~/*": ["src/*"],
 			"@/*": ["assets/*"]
 		}

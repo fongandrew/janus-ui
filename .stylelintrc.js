@@ -53,5 +53,21 @@ export default {
 				],
 			},
 		},
+		// v2 CSS pseudo-package. It declares its own `--v-*` knobs (with new
+		// semantics from the v1 names) and follows its own authoring conventions.
+		// Resolve unknown-custom-property checks against the v2 token entry, and
+		// drop the v1-specific "prefer tool mixins" lists. Proper per-pseudo-package
+		// stylelint config lands in Phase 8 (§3.4).
+		{
+			files: ['src/lib2/**/*.css'],
+			rules: {
+				'csstools/value-no-unknown-custom-properties': [
+					true,
+					{ importFrom: ['src/lib2/css/index.css'] },
+				],
+				'declaration-property-value-disallowed-list': null,
+				'declaration-property-value-allowed-list': null,
+			},
+		},
 	],
 };

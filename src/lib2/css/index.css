@@ -1,0 +1,7 @@
+/*
+	Janus v2 — CSS entry point (placeholder).
+
+	Phase 0 ships this as an empty placeholder so the documentation-site shell
+	resolves its stylesheet import and builds. Phase 1 replaces it with the real
+	entry: the `@layer` declaration plus imports of reset, tokens, and base.
+*/
