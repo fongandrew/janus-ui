@@ -1,0 +1,16 @@
+/*
+	o-input-box — shared base for text-bearing leaf controls: <button>, <input>,
+	<textarea>, native <select> (text-mode, §9.2). Height = --v-input-height via
+	block padding (centers text for native controls without flex). Inline padding =
+	the control inset (§6.1). Reads its own radius knob with a floor fallback (§8).
+	NOT used for checkbox / radio / toggle — those have their own dimensions.
+*/
+@layer objects {
+	.o-input-box {
+		padding-block: calc((var(--v-input-height) - 1lh) / 2);
+		padding-inline: var(--v-control-inset);
+		border-width: var(--v-border-width);
+		border-style: solid;
+		border-radius: var(--o-input-box__radius, var(--v-radius-min));
+	}
+}

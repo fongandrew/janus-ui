@@ -1,0 +1,24 @@
+/*
+	o-segmented — a rounded frame holding cells that share one border, dividers
+	between them instead of gaps (the iOS-style grouped-list / settings group,
+	§9.8). The group owns the outer radius and clips its cells' corners; the cells
+	carry the padding (group pad = 0). Only first/last cells round outer corners;
+	interior corners square because the divider replaces the gap.
+*/
+@layer objects {
+	.o-segmented {
+		--o-segmented__divider: var(--v-border-width) solid var(--v-border-color);
+
+		display: flex;
+		flex-direction: column;
+		padding: 0;
+		border-radius: var(--o-box__radius, var(--v-radius-min));
+
+		/* Clip cell corners to the group radius so only first/last round. */
+		overflow: hidden;
+	}
+
+	.o-segmented > * + * {
+		border-block-start: var(--o-segmented__divider);
+	}
+}

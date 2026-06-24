@@ -1,0 +1,21 @@
+/*
+	o-box — default padded container (block-mode, §9.2). Children are other
+	components or rows. Uniform block padding; inline padding reconciles with the
+	alignment budget (§6.1): in text-align mode the v-align-text variant sets
+	--v-align-control-inset, which this subtracts so flush controls' text lines up.
+	Positive padding only — clamped at 0 for the pill-radius edge case.
+*/
+@layer objects {
+	.o-box {
+		--o-box__pad-block: var(--v-pad-block);
+		--o-box__pad-inline: max(
+			0px,
+			calc(var(--v-pad-inline) - var(--v-align-control-inset, 0px))
+		);
+
+		padding: var(--o-box__pad-block) var(--o-box__pad-inline);
+
+		/* Reads its own radius knob (assigned by a preset, §8.2) with a floor fallback. */
+		border-radius: var(--o-box__radius, var(--v-radius-min));
+	}
+}

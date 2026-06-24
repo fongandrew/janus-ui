@@ -1,0 +1,16 @@
+/*
+	o-text-box — perimeter + inline-alignment primitive for raw text / prose
+	(text-mode, §9.2). Uniform block padding relies on text-box-trim (base.css) so
+	it reads correct at any font-size (§6). Interior vertical rhythm comes from flow
+	(§6.2), not this box. Inline inset clears the rounded corner in edge-align and
+	lines up with control text in text-align (the max picks --v-control-inset there).
+*/
+@layer objects {
+	.o-text-box {
+		--o-text-box__pad-block: var(--v-pad-block);
+		--o-text-box__pad-inline: max(var(--v-radius-min), var(--v-align-control-inset, 0px));
+
+		padding: var(--o-text-box__pad-block) var(--o-text-box__pad-inline);
+		border-radius: var(--o-text-box__radius, var(--o-box__radius, var(--v-radius-min)));
+	}
+}

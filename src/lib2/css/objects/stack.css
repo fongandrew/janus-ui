@@ -1,0 +1,10 @@
+/* o-stack — vertical flow with a consistent gap (§9.3). */
+@layer objects {
+	.o-stack {
+		--o-stack__gap: var(--v-gap-block);
+
+		display: flex;
+		flex-direction: column;
+		gap: var(--o-stack__gap);
+	}
+}

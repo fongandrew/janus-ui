@@ -1,0 +1,53 @@
+/*
+	Radius presets (§8.2). Variant classes that assign every layer's --o-*__radius
+	knob at once, built outward from the --v-radius-min floor so a corner is never
+	sharp. Live in the `variants` layer, which outranks `objects`, so the assignment
+	beats each object's var() fallback (§8.2). A consumer applies one class to a
+	scope (usually :root).
+
+	(Built here in Phase 2 because the Objects doc page demonstrates the four-level
+	concentric nesting; the rest of the variants layer lands in Phase 3.)
+*/
+@layer variants {
+	/* True concentric: each layer = the inner radius + the padding between them, so
+	   nested corners stay optically parallel. The only preset that relates radius to
+	   padding (additively, inside-out, anchored at the floor). */
+	.v-radius-concentric {
+		--o-input-box__radius: var(--v-radius-min);
+		--o-box__radius: calc(var(--v-radius-min) + var(--v-pad-inline));
+		--o-dialog__radius: calc(var(--o-box__radius) + var(--v-pad-inline));
+		--v-radius: var(--o-dialog__radius);
+	}
+
+	/* Two flat values. */
+	.v-radius-uniform {
+		--o-input-box__radius: 0.25rem;
+		--o-box__radius: 0.25rem;
+		--o-dialog__radius: 0.5rem;
+		--v-radius: 0.5rem;
+	}
+
+	/* Concentric, but the page frame is 0 (the browser/webview rounds the window);
+	   dialogs keep their radius. */
+	.v-radius-web-concentric {
+		--o-input-box__radius: var(--v-radius-min);
+		--o-box__radius: calc(var(--v-radius-min) + var(--v-pad-inline));
+		--o-dialog__radius: calc(var(--o-box__radius) + var(--v-pad-inline));
+		--v-radius: 0;
+	}
+
+	/* Uniform, page frame 0. */
+	.v-radius-web-uniform {
+		--o-input-box__radius: 0.25rem;
+		--o-box__radius: 0.25rem;
+		--o-dialog__radius: 0.5rem;
+		--v-radius: 0;
+	}
+
+	/* Degenerate: every layer equals --v-radius. */
+	.v-radius-flat {
+		--o-input-box__radius: var(--v-radius);
+		--o-box__radius: var(--v-radius);
+		--o-dialog__radius: var(--v-radius);
+	}
+}

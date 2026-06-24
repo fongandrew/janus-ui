@@ -1,0 +1,11 @@
+/* o-square — 1:1 content (icons, avatars). Reads --v-radius directly; can become
+   a circle via --v-radius: 50%. No padding floor, no curvature avoidance (§9.2). */
+@layer objects {
+	.o-square {
+		display: grid;
+		place-items: center;
+		aspect-ratio: 1;
+		overflow: hidden;
+		border-radius: var(--v-radius);
+	}
+}

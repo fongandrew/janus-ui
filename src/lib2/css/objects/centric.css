@@ -1,0 +1,15 @@
+/* o-centric — centers contents within an optional max-width (§9.3). */
+@layer objects {
+	.o-centric {
+		--o-centric__max: 44rem;
+
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.o-centric > * {
+		inline-size: 100%;
+		max-inline-size: var(--o-centric__max);
+	}
+}

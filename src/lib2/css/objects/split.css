@@ -1,0 +1,24 @@
+/*
+	o-split — two-up (sidebar + main) that collapses to stacked below a threshold.
+	Pure flex-basis intrinsic responsiveness — no media queries: the sidebar holds
+	its width while the main column has room, then both wrap when the container is
+	narrower than sidebar + threshold (§9.3).
+*/
+@layer objects {
+	.o-split {
+		--o-split__sidebar: 16rem;
+		--o-split__threshold: 28rem;
+
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--v-gap-block) var(--v-gap-inline);
+	}
+
+	.o-split > :first-child {
+		flex: 1 1 var(--o-split__sidebar);
+	}
+
+	.o-split > :last-child {
+		flex: 999 1 var(--o-split__threshold);
+	}
+}

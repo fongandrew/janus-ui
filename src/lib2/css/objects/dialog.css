@@ -1,0 +1,14 @@
+/*
+	o-dialog — chrome only for <dialog> (radius, viewport-edge breathing room,
+	surface). Position-agnostic; the positioning models live on c-modal / c-drawer /
+	c-popover (§9.4). Reads --o-dialog__radius with a --v-radius fallback.
+*/
+@layer objects {
+	.o-dialog {
+		--o-dialog__offset: var(--v-spacing);
+
+		max-inline-size: calc(100vw - 2 * var(--o-dialog__offset));
+		max-block-size: calc(100dvh - 2 * var(--o-dialog__offset));
+		border-radius: var(--o-dialog__radius, var(--v-radius));
+	}
+}

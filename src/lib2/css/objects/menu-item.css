@@ -1,0 +1,18 @@
+/*
+	o-menu-item — a row inside an o-menu (§9.6). Owns its own height and font-size
+	(compact relative to --v-input-height / --v-font-size) rather than reaching for
+	a global "small" token.
+*/
+@layer objects {
+	.o-menu-item {
+		--o-menu-item__height: 2rem;
+		--o-menu-item__font-size: var(--v-font-size);
+
+		display: flex;
+		align-items: center;
+		gap: var(--v-gap-inline);
+		min-block-size: var(--o-menu-item__height);
+		padding-inline: var(--v-control-inset);
+		font-size: var(--o-menu-item__font-size);
+	}
+}

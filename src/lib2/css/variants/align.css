@@ -1,0 +1,22 @@
+/*
+	Inline-alignment modes (§6.1). Set the inline-alignment mode for a subtree by
+	driving the internal --v-align-control-inset knob the box objects read.
+	Positive padding only — never negative margins.
+
+	- v-align-edge (default): controls' border-box lands --v-pad-inline from the
+	  edge; plain text gets a small --v-radius-min inset. (inset 0)
+	- v-align-text: in-control text and plain text share an inline offset; the
+	  container pads less by exactly the control inset. (inset = --v-control-inset)
+
+	(Built here in Phase 2 to support the Objects doc page's side-by-side demo; the
+	rest of the variants layer lands in Phase 3.)
+*/
+@layer variants {
+	.v-align-edge {
+		--v-align-control-inset: 0px;
+	}
+
+	.v-align-text {
+		--v-align-control-inset: var(--v-control-inset);
+	}
+}

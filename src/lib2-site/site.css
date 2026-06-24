@@ -224,3 +224,72 @@ body {
 .c-ramp__row code {
 	font-size: var(--v-font-size-caption);
 }
+
+/*
+ * Minimal v-surface-card fallback so the doc demos read as cards before the real
+ * variant lands in Phase 3. (Site chrome — not the library.)
+ */
+.v-surface-card {
+	background: var(--v-bg);
+	border: var(--v-border-width, 1px) solid var(--v-border-color, currentcolor);
+	box-shadow: var(--v-shadow-outer);
+}
+
+/* Objects-page demo helpers */
+.c-demo-ph {
+	display: inline-grid;
+	place-items: center;
+	min-block-size: 2rem;
+	padding: 0.25rem 0.75rem;
+	background: color-mix(in hsl, var(--v-muted) 12%, var(--v-bg));
+	border-radius: var(--v-radius-min);
+	font-size: var(--v-font-size-caption);
+}
+
+.c-obj__demo {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	align-items: center;
+	margin-block: 0.75rem;
+	padding: 0.75rem;
+	background: color-mix(in hsl, var(--v-muted) 6%, var(--v-bg));
+	border-radius: var(--v-radius-min);
+}
+
+.c-obj__knobs {
+	font-size: var(--v-font-size-caption);
+}
+
+.c-obj__snippet {
+	font-size: var(--v-font-size-caption);
+}
+
+/* Concentric-nesting frames: visible borders so the radii read */
+.c-demo-frame {
+	display: block;
+	position: relative;
+	border: var(--v-border-width, 1px) solid var(--v-border-color, currentcolor);
+}
+
+.c-demo-tag {
+	font-size: var(--v-font-size-caption);
+	color: var(--v-muted);
+}
+
+.c-demo-align {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	align-items: stretch;
+}
+
+figure {
+	margin: 0;
+}
+
+figcaption {
+	margin-block-end: 0.5rem;
+	font-size: var(--v-font-size-caption);
+	color: var(--v-muted);
+}

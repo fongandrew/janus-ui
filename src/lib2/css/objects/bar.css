@@ -1,0 +1,34 @@
+/*
+	o-bar — horizontal header / toolbar / app-bar strip (§9.7). The block-axis
+	instance of the §6.1 alignment principle. Three height modes: text-height
+	(default), input-height (the bar IS one control tall, control flush), and
+	contains-input (reduced block padding so the control's text sits --v-spacing
+	from the bar edge). Follows the subtree's align mode for inline padding.
+*/
+@layer objects {
+	.o-bar {
+		--o-bar__pad-block: var(--v-pad-block);
+		--o-bar__pad-inline: max(
+			0px,
+			calc(var(--v-pad-inline) - var(--v-align-control-inset, 0px))
+		);
+
+		display: flex;
+		align-items: center;
+		gap: var(--v-gap-inline);
+		min-block-size: var(--o-bar__height, auto);
+		padding: var(--o-bar__pad-block) var(--o-bar__pad-inline);
+	}
+
+	/* Mode 2: the bar is exactly one control tall; the control sits flush. */
+	.o-bar--input-height {
+		--o-bar__height: var(--v-input-height);
+		--o-bar__pad-block: 0px;
+	}
+
+	/* Mode 3: tall enough to hold a control, with reduced block padding so the
+	   control's text sits --v-spacing from the bar edge (block-axis text-align). */
+	.o-bar--contains-input {
+		--o-bar__pad-block: max(0px, calc(var(--v-pad-block) - (var(--v-input-height) - 1lh) / 2));
+	}
+}

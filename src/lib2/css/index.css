@@ -28,3 +28,14 @@
 @import './tokens/shadow.css';
 @import './tokens/motion.css';
 @import './base.css';
+
+/* Objects layer — structural / layout primitives (§9). */
+@import './objects/index.css';
+
+/*
+	Variants layer — knob setters (§4). The radius presets (§8.2) and inline-align
+	modes (§6.1) ship here in Phase 2 because the Objects doc page demonstrates them;
+	the rest of the variants layer (colors, surfaces) lands in Phase 3.
+*/
+@import './variants/radius.css';
+@import './variants/align.css';
