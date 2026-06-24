@@ -48,18 +48,16 @@ Components don't have their own variable prefix. A component that needs to expos
 
 **Namespacing convention for `--o-*` knobs.** Scoped knobs are written as `--o-{name}__{property}` — a double underscore separates the namespace from the property. So `--o-box__radius`, `--o-input-box__radius`, `--o-drawer__side`. This makes the boundary unambiguous (`o-input-box` is one namespace, not three) and lets you grep `--o-input-box__` to find every knob belonging to a single thing. Root knobs (`--v-*`) don't use the boundary — they're global and not scoped to a thing.
 
-**The override pattern.** An outer rule sets a *different-named* knob on itself to redefine an inner object's appearance:
+**The override pattern.** A rule (often a variant scope) sets a *different-named* knob to redefine an inner object's appearance for its subtree. The canonical case is a radius preset (§8.2) assigning every layer's radius knob at once:
 
 ```css
-.o-box {
-  /* o-box's own radius */
-  border-radius: var(--o-box__radius);
-  /* Redefine the inner object's knob for descendants */
-  --o-input-box__radius: max(0px, calc(var(--o-box__radius) - var(--v-spacing)));
+.v-radius-concentric {
+  --o-input-box__radius: var(--v-radius-min);
+  --o-box__radius:       calc(var(--v-radius-min) + var(--v-pad-inline));
 }
 ```
 
-This avoids the self-reference cycle that breaks recursive `var()` cascades (see §5.2). It also means context-aware styling falls out naturally: a top-level button reads its own root default; a button inside an `o-box` reads the redefined value.
+Each object reads its own knob (`.o-box { border-radius: var(--o-box__radius, var(--v-radius-min)) }`), and the preset — in the `variants` layer, which outranks `objects` — assigns it. Because no knob references *itself*, the self-reference cycle that breaks recursive `var()` cascades never arises (see §5.2). Context-aware styling still falls out: a button at the root reads the floor; the same button under a preset scope reads the preset's value.
 
 ### 5.1 Root knobs (`--v-*`)
 
@@ -72,7 +70,8 @@ Root knobs split into two tiers:
 
 Layout & rhythm:
 - `--v-spacing` — base spacing unit (default `0.75rem`).
-- `--v-radius` — frame / window radius (default `0.5rem`). The chain root — every `--o-*__radius` derives from this. Even when no visible frame exists (a page in a browser viewport), set it on `:root` so derived radii are computable.
+- `--v-radius` — window / dialog frame radius (default `0.5rem`). Used by `o-dialog`, `o-square`, and page-body framing. No longer a "chain root": per-layer radii are assigned by presets (§8.2), not derived from this by subtraction.
+- `--v-radius-min` — the innermost radius floor (default `0.25rem`). Controls never round below this, so corners are never sharp. Radius presets build outward from this floor (§8).
 - `--v-border-width` — base border width (default `1px`).
 - `--v-input-height` — height of interactive controls (default `2.5rem`). Drives `o-input-box` and the controls layered on it. Deliberately *independent* of `--v-spacing`.
 
@@ -98,6 +97,7 @@ Layout & rhythm (derive from `--v-spacing`):
 - `--v-pad-inline` — default inline padding for box objects (default `var(--v-spacing)`).
 - `--v-gap-block` — default block gap (used by `o-stack`; default `var(--v-spacing)`).
 - `--v-gap-inline` — default inline gap (used by `o-group`, `o-row`; default `calc(var(--v-spacing) * 0.5)`).
+- `--v-control-inset` — a control's internal inline padding (text-to-border; default `var(--v-pad-inline)`, curvature-clamped on the object). Consumed by the inline-alignment modes (§6.1): edge-align uses it as the control's own padding; text-align subtracts it from the container's padding and adds it to plain-text boxes so all text lines up.
 
 The four `--v-pad-*` / `--v-gap-*` knobs are *frozen at root* once declared — changing `--v-spacing` in a sub-tree does NOT recompute them. The `v-spacing` mixin (§5.3) sets all five together; consumers who'd rather avoid the mixin set the bundle by hand.
 
@@ -172,11 +172,10 @@ Two rules:
 .o-box {
   --o-box__pad-block:  var(--v-pad-block);
   --o-box__pad-inline: var(--v-pad-inline);
-  --o-box__radius:     max(0px, calc(var(--v-radius) - var(--v-spacing)));
   padding: var(--o-box__pad-block) var(--o-box__pad-inline);
-  border-radius: var(--o-box__radius);
-  /* Redefine descendant input-box radius for context-aware step-down */
-  --o-input-box__radius: max(0px, calc(var(--o-box__radius) - var(--v-spacing)));
+  /* Radius reads its own knob (assigned by a preset, §8.2) with a floor fallback —
+     no subtraction chain, no self-reference. */
+  border-radius: var(--o-box__radius, var(--v-radius-min));
 }
 ```
 

@@ -10,6 +10,7 @@ Part 1 of the [Janus v2 design spec](./README.md). Covers goals, non-goals, and 
 - **Small public surface, deep derivation.** A handful of documented CSS custom properties act as "knobs." Everything else is internal and derived via `calc()` / `color-mix()` / etc.
 - **Modern browsers only.** Target features that are Baseline 2024–2025: CSS layers, `:has()`, `color-mix()`, `light-dark()`, `1lh`, container queries, `popover`, anchor positioning, `commandfor`. No polyfills for these.
 - **Framework-agnostic core.** The CSS pseudo-package has no coupling to Solid or any framework. The Solid pseudo-package wraps it as an optional convenience layer; the DOM pseudo-package provides a vanilla-JS path. Consumers fork whichever combination they need (see §3).
+- **The site is the documentation.** The shipped site (§19–21) is the canonical reference, not a separate marketing page. It documents every public surface — the `--v-*` variable knobs, the `o-*` objects, the `t-*` tools, and the `c-*` components — with live, rendered examples alongside the values. The CSS-layer documentation pages (variables, objects, tools, typography, colors, base elements) are authored as framework-free SSR markup: pure HTML + `index.css`, no JS. They double as the human-review artifact while the CSS is iterated and as the E2E target for the CSS layer, and they stand as proof of the CSS-first claim — you can build the docs for the CSS package with nothing but the CSS package.
 
 ## 2. Non-goals
 

@@ -1,16 +1,24 @@
-# Janus v2 — Demo Site
+# Janus v2 — Documentation Site
 
-Part 9 of the [Janus v2 design spec](./README.md). Covers the demo / marketing site that ships alongside the library.
+Part 9 of the [Janus v2 design spec](./README.md). Covers the documentation site that ships alongside the library and **is** the library's canonical documentation.
 
-The demo site serves two roles: a short marketing page explaining what Janus is and how to adopt it, and a live playground for exploring the design system's knobs, colors, and components.
+**The site is the documentation.** There is no separate docs system, README gallery, or Storybook — the shipped site documents every public surface of the library with live, rendered examples sitting next to the values that produced them. It plays three roles at once:
+
+1. **Reference** — every public surface is documented under one of three sections: **Composition** (§20.2) covers the `--v-*` variable knobs, the `o-*` objects, the `t-*` tools, and typography; **Colors** (§20.3) covers the color system; **Components** (§20.4) covers the `c-*` catalogue. Each lists names and defaults *and* renders them.
+2. **Marketing / onboarding** — the Home page (§20.1) explains what Janus is and how to adopt it.
+3. **Playground** — interactive regions (the config modal §21, the colors playground §20.3) let a user manipulate knobs live.
+
+**The CSS-reference pages are framework-free, and built first.** The variables, objects, tools, typography, colors, and base-element pages are authored as plain SSR markup — raw HTML elements carrying `o-*` / `c-*` / `t-*` / `v-*` classes, rendered to static HTML, with `index.css` the only asset. No Solid component wrappers, no `data-js`, no hydration. This is deliberate: these pages are stood up at the very start of the build (PLAN.md Phase 0–3) as the **human-review artifact for the CSS**, long before the DOM or Solid layers exist, and they prove the CSS-first claim — the CSS package documents itself with nothing but the CSS package. The Components section (§20.4) and the interactive playground islands come later, once the Solid and DOM layers are built, and they consume the real Solid wrappers.
 
 ## 19. Site architecture
 
-**SSR-first.** Every page renders server-side. This inverts the v1 default (where SPA was the norm and SSR was a special page). The top nav shell, config modal, and sidebar are all SSR — they work without JS via the callback-attrs progressive enhancement pattern (§12). SPA interactivity exists only as **islands**: hydrated regions inside otherwise-static content.
+**SSR-first.** Every page renders server-side. This inverts the v1 default (where SPA was the norm and SSR was a special page). The top nav shell, config modal, and sidebar are all SSR — they work without JS via the callback-attrs progressive enhancement pattern (§12). SPA interactivity exists only as **islands**: hydrated regions inside otherwise-static content. The Composition section (§20.2) and the Colors contrast grid (§20.3 Section 1) render entirely without JS — they are static markup + `index.css`.
 
-**Multi-page Vite app.** Same pattern as v1 — one HTML entry point per page at the repo root, each pointing at a TSX entry in `src/`. The `vite-plugin-ssg.ts` plugin (§3.1) handles SSR rendering at build time.
+**Multi-page Vite app.** Same pattern as v1 — one HTML entry point per page at the repo root, each pointing at a TSX entry in `src/`. The `vite-plugin-ssg.ts` plugin (§3.1) handles SSR rendering at build time. Because the site shell and SSG are stood up first (Phase 0), every CSS doc page renders through the real site machinery from day one — no throwaway test harness.
 
-**Navigation.** A top nav bar with links to each page plus a config-modal trigger. The nav is rendered server-side; the current-page indicator is resolved at SSR time from the entry point path.
+**Navigation.** The top nav bar holds exactly **three** links — **Composition**, **Colors**, **Components** — plus a config-modal trigger. Three is the deliberate ceiling: more items don't fit comfortably. The site title / logo links to Home (Home is not itself a nav item). The nav is rendered server-side; the current-section indicator is resolved at SSR time from the entry point path. Each of the three sections owns its own internal navigation — Composition and Components use a sidebar / table-of-contents (§20.2, §20.4); Colors is a single scrolling page.
+
+**Pages render with raw markup where possible.** Doc pages built before the Solid layer exists are authored as SSR page modules that emit plain HTML elements with the library's classes directly. When the Solid layer lands (Phase 7), the component-demo page is rebuilt on the real Solid wrappers; the CSS-reference pages can stay raw markup, since that is exactly what they document.
 
 ## 20. Pages
 
@@ -24,11 +32,93 @@ The landing page. Explains what Janus is and how to use it.
 - **Pseudo-package overview.** Brief description of the four pseudo-packages (`css/`, `utils/`, `dom/`, `solid/`) and the consumer profiles from §3.1 (static site → CSS only; vanilla JS app → CSS + utils + dom; Solid SPA → all four).
 - **Design philosophy highlights.** Knobs over utilities, semantic names, small public surface, framework-agnostic core — pulled from §1.
 - **Visual samples.** A card with surface treatment, a form with a few inputs, a button row — just enough to show the system in action, not a full component catalog.
-- **Navigation cards.** Links to Components, Typography, Colors, and the SPA demo, each with a one-line description.
+- **Navigation cards.** Links to the three sections — Composition, Colors, Components — each with a one-line description.
 
-### 20.2 Components
+### 20.2 Composition
 
-The component catalog — the primary exploration surface.
+The first and largest section. It documents the building blocks that produce layout, rhythm, and type — the `--v-*` variable knobs, the `o-*` objects, the `t-*` tools, and typography — all in one place. Composition is **built first** (PLAN Phases 1–3) and is the primary human-review surface for the CSS: everything here is framework-free (static markup + `index.css`, zero JS).
+
+**Layout.** A persistent left **sidebar / table-of-contents** lists the four areas — Variables, Objects, Tools, Typography — and their sub-sections; the main column scrolls through the documentation, sidebar highlight tracking scroll position. On narrow viewports the sidebar collapses to a `c-drawer` (same recipe as the Components page, §10.4). Composition may be one long anchored page or split into sub-routes — either works; the ToC is the through-line.
+
+**Bootstrapping note.** Composition is built before the Solid component layer exists, so its shell chrome (the sidebar, the section cards, the nav) is assembled from **ad-hoc markup + CSS classes**, not finished `Card`/`Sidebar` components. That is fine and expected — the point is to exercise the CSS as early as possible. These ad-hoc shells are refactored into real components later, once the Solid layer lands (see PLAN Phase 9).
+
+#### 20.2.1 Variables
+
+The reference for every public `--v-*` knob. This is what humans review while the token layer is iterated (Phase 1).
+
+**Layout:** one section per token group (spacing, radius/border, color, typography, shadow, motion), matching the `tokens/` file split (§5.1, PLAN Phase 1). Each section pairs a **reference table** with a **live render**.
+
+**Reference table columns:** knob name, default value, the *resolved* computed value (read at SSR time or shown via a small inline sample), one-line description, and — for derived tokens — the formula or source knob it derives from (e.g. `--v-pad-inline` ← `--v-spacing`, `--v-border-color` ← `color-mix` of `--v-border-dynamic-*` and `--v-bg`). Primary knobs (the documented public surface) are visually distinguished from secondary/derived tokens.
+
+**Live render:** next to each group, a swatch/sample strip showing the knob in effect — spacing shown as a ruler of padded boxes, radius as a row of progressively rounded boxes, the color knobs as labeled swatches, the shadow knobs as elevated tiles, the font-size/line-height tokens as a type ramp. The point is that a reviewer sees both the *number* and *what it does* without leaving the page.
+
+This page is the static, read-only counterpart to the config modal (§21): the modal lets you *change* knobs live (once the DOM layer exists); this page *documents* them and works with zero JS from Phase 1 onward.
+
+#### 20.2.2 Objects
+
+The reference for every `o-*` object (§9).
+
+**Layout:** one demo card per object — `o-box`, `o-text-box`, `o-input-box`, `o-square`, `o-dialog`, `o-stack`, `o-group`, `o-row`, `o-grid`, `o-container`, `o-split`, `o-centric`, `o-caption`, `o-code`, `o-menu`, `o-menu-item`. Each card shows:
+
+- A **live render** of the object doing its job, using neutral placeholder content (boxes/blocks, not finished components) so the object's *structural* behavior is the focus, not component chrome.
+- The object's **knobs** — its `--o-<name>__*` custom properties (e.g. `--o-box__pad-block`, `--o-grid__min`, `--o-stack__gap`) listed with defaults.
+- The **markup snippet** that produced the render, so a consumer can copy it.
+
+**Key demonstrations** (these are the things worth seeing rendered, per §9):
+- The four-level **nesting** under each **radius preset** (§8.2): `o-dialog` > `o-box` > `o-input-box`, annotated with the computed `border-radius` at each tier, so the concentric (radius grows outward, never sharp) vs. uniform presets are visible side by side.
+- `o-grid` and `o-split` **reflow** shown at multiple container widths (resize handles or side-by-side narrow/wide frames).
+- `o-text-box` vs `o-box` block-padding difference (the `1lh` compensation).
+
+#### 20.2.3 Tools
+
+The reference for the narrow `t-*` tools layer (§11).
+
+**Layout:** a compact table/grid — one row per tool (`t-px`, `t-py`, `t-p`, `t-px-0` … `t-flex`, `t-flex-fill`, `t-hidden`, `t-sr-only`, `t-border`, `t-radius-none`, `t-radius-full`, `t-shadow*`, `t-align-*`, `t-truncate`, etc.) — each row showing the tool's name, what it does in one line, and a **before/after live render** (a pair of small boxes, one without and one with the class, so the effect is visible). Tools are deliberately few (§11); the section fits on one screen and serves as the "escape hatch" cheat-sheet.
+
+#### 20.2.4 Typography
+
+Showcase of the typography system (still part of Composition — type *is* composition).
+
+**Content:**
+
+- Heading levels h1–h6 with their semantic font-size tokens (`--v-font-size-h1` through `-h6`)
+- Body paragraphs demonstrating `--v-font-size` and `--v-line-height`
+- Caption text (`--v-font-size-caption`) and code text (`--v-font-size-code`)
+- Lists (ordered, unordered, nested), blockquotes, tables
+- `<pre>` / `<code>` blocks
+- A reference table showing each token's default value and effective ratio (from §5.1's line-height table)
+
+### 20.3 Colors
+
+Color system showcase + interactive playground. Built **second** (after Composition). Section 1 (the contrast grid) is framework-free; Section 2 (the playground) is a hydrated island added once the DOM layer exists. This is also the home of the color-contrast checker that exists today — all color-specific tooling lives here.
+
+**Section 1 — Contrast grid (SSR).** The existing APCA contrast display carried forward from v1: a grid of `v-colors-*` variant boxes, each showing foreground text with APCA Lc scores and pass/fail indicators against the silver-level font-weight tables. Covers: `v-colors-card`, `v-colors-default`, `v-colors-code`, `v-colors-pre`, `v-colors-popover`, `v-colors-tooltip`, `v-colors-primary`, `v-colors-secondary`, `v-colors-callout`, `v-colors-highlight`, `v-colors-input`, `v-colors-success`, `v-colors-warning`, `v-colors-danger`.
+
+**Section 2 — Color playground (island).** An interactive region for experimenting with the v2 color model. This section is a hydrated island inside the otherwise-SSR page.
+
+Controls — text inputs (not color pickers) for the four settable root color knobs:
+
+| Knob | Default (light) | Notes |
+|---|---|---|
+| `--v-bg` | `light-dark(white, black)` | Body background |
+| `--v-link` | palette-dependent | Link color |
+| `--v-accent` | palette-dependent | Focus ring, selected state, primary action |
+| `--v-muted` | palette-dependent | De-emphasized text |
+
+`--v-fg` is shown as a **read-only computed value** — it auto-derives from `--v-bg` via the OKLCH lightness formula (§5.1). The display shows the resolved color so the user can see the binary flip.
+
+**Preview area.** A scoped region (not the whole page) where the custom color values apply. Contains:
+
+- A representative card with body text, a link, muted text, and an accent-colored element
+- The `v-colors-*` variant grid (smaller version) so users can see how tonal variants cascade from the changed root knobs
+- APCA contrast ratios recalculated live for each fg/bg pairing
+- The `*-weight-min` fallback indicators (§7.1) — shows when a color's contrast would require a font-weight bump
+
+Text inputs accept any valid CSS color value (`hsl(...)`, `oklch(...)`, named colors, hex). The playground does not persist to localStorage — it's an ephemeral exploration tool. (Persistent color changes belong in consumer CSS, not a runtime setting.)
+
+### 20.4 Components
+
+The component catalog — the third and last section (built after Composition and Colors). Reference-page chrome that was thrown together ad-hoc for Composition (sidebar, cards) is, by this point, refactored into the real Solid components this page demos.
 
 **Layout:** Sidebar + main content area, same structural pattern as v1 but using v2 primitives (`o-split` for the sidebar/main split, `c-drawer` for the mobile collapse — see §10.4's sidebar recipe).
 
@@ -68,47 +158,6 @@ Each demo card follows the `Card` + `CardHeader` + `CardTitle` + `CardDescriptio
 | **Modal Forms** | `modal-forms-demo` | Modal form with submit-closes-modal, reset-on-close, and speed bump behaviors. |
 
 Each demo must be interactive — not just static HTML renderings. Buttons should respond to clicks, toggles should toggle, forms should validate. Use the `data-js` behavior system + Solid signals where needed.
-
-### 20.3 Typography
-
-Showcase of the typography system.
-
-**Content:**
-
-- Heading levels h1–h6 with their semantic font-size tokens (`--v-font-size-h1` through `-h6`)
-- Body paragraphs demonstrating `--v-font-size` and `--v-line-height`
-- Caption text (`--v-font-size-caption`) and code text (`--v-font-size-code`)
-- Lists (ordered, unordered, nested), blockquotes, tables
-- `<pre>` / `<code>` blocks
-- A reference table showing each token's default value and effective ratio (from §5.1's line-height table)
-
-### 20.4 Colors
-
-Color system showcase + interactive playground.
-
-**Section 1 — Contrast grid (SSR).** The existing APCA contrast display carried forward from v1: a grid of `v-colors-*` variant boxes, each showing foreground text with APCA Lc scores and pass/fail indicators against the silver-level font-weight tables. Covers: `v-colors-card`, `v-colors-default`, `v-colors-code`, `v-colors-pre`, `v-colors-popover`, `v-colors-tooltip`, `v-colors-primary`, `v-colors-secondary`, `v-colors-callout`, `v-colors-highlight`, `v-colors-input`, `v-colors-success`, `v-colors-warning`, `v-colors-danger`.
-
-**Section 2 — Color playground (island).** An interactive region for experimenting with the v2 color model. This section is a hydrated island inside the otherwise-SSR page.
-
-Controls — text inputs (not color pickers) for the four settable root color knobs:
-
-| Knob | Default (light) | Notes |
-|---|---|---|
-| `--v-bg` | `light-dark(white, black)` | Body background |
-| `--v-link` | palette-dependent | Link color |
-| `--v-accent` | palette-dependent | Focus ring, selected state, primary action |
-| `--v-muted` | palette-dependent | De-emphasized text |
-
-`--v-fg` is shown as a **read-only computed value** — it auto-derives from `--v-bg` via the OKLCH lightness formula (§5.1). The display shows the resolved color so the user can see the binary flip.
-
-**Preview area.** A scoped region (not the whole page) where the custom color values apply. Contains:
-
-- A representative card with body text, a link, muted text, and an accent-colored element
-- The `v-colors-*` variant grid (smaller version) so users can see how tonal variants cascade from the changed root knobs
-- APCA contrast ratios recalculated live for each fg/bg pairing
-- The `*-weight-min` fallback indicators (§7.1) — shows when a color's contrast would require a font-weight bump
-
-Text inputs accept any valid CSS color value (`hsl(...)`, `oklch(...)`, named colors, hex). The playground does not persist to localStorage — it's an ephemeral exploration tool. (Persistent color changes belong in consumer CSS, not a runtime setting.)
 
 ### 20.5 SPA
 
@@ -192,7 +241,7 @@ Shadow:
 
 The reset is all-or-nothing — no per-knob reset. If a user wants to reset one knob, they clear the input field, which removes that property from storage and inline style on blur.
 
-**No color knobs.** Color manipulation lives in the Colors page playground (§20.4), not the config modal. The modal is for structural/rhythm/typography knobs that affect the whole page persistently.
+**No color knobs.** Color manipulation lives in the Colors page playground (§20.3), not the config modal. The modal is for structural/rhythm/typography knobs that affect the whole page persistently.
 
 ### 21.4 Implementation
 

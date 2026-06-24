@@ -9,7 +9,7 @@ Part 5 of the [Janus v2 design spec](./README.md). Covers the `c-` component cla
 | Class | Element | Notes |
 |---|---|---|
 | `c-button` | `<button class="o-input-box">`, `<a class="o-input-box">` | Hover state, outer shadow (`--v-shadow-outer`), tone via `v-colors-*`. Layers chrome on `o-input-box`; sizing/padding/radius come from the object. `c-button--icon` opts into square mode. Consumer-defined scopes (e.g. `.v-cta`) tweak height/radius for specific roles. |
-| `c-card` | `<article>`, `<section>` (with `o-box` or `o-text-box`) | Surface chrome only (`--v-shadow-outer`, border, bg). Pair with `o-box` (children are components) or `o-text-box` (children are prose). Reads `--o-box__radius`. **Context-aware shadow**: cards inside `o-container` on wide viewports lose shadow (they're in the reading flow); cards inside `:modal` / `:popover-open` always show it (they're floating). The `:has(:invalid, [aria-invalid]) [type="submit"]` rule visually disables the submit at `opacity: 0.5` but preserves `pointer-events` so the form engine can dispatch focus to invalid fields on click. |
+| `c-card` | `<article>`, `<section>` (with `o-box` or `o-text-box`) | Surface chrome only (`--v-shadow-outer`, border, bg). Pair with `o-box` (children are components) or `o-text-box` (children are prose). Reads `--o-box__radius`. **Context-aware chrome** (all container-query-driven, so it tracks the card's *own* available width, not the viewport): cards inside `o-container` on wide viewports lose their shadow (they're in the reading flow); below a narrow threshold a card can **collapse to a full-bleed section** — `--c-card__radius`, inline border, and shadow drop to `0`/none and `margin-inline` breaks out by `var(--o-container__gutter)` (the sanctioned negative-margin case, §6.1). Cards inside `:modal` / `:popover-open` always show their shadow (they're floating). For a **grouped/segmented** set of cells sharing one border (settings groups), compose `o-segmented` (§9.8) under the card surface. The `:has(:invalid, [aria-invalid]) [type="submit"]` rule visually disables the submit at `opacity: 0.5` but preserves `pointer-events` so the form engine can dispatch focus to invalid fields on click. |
 | `c-alert` | `<div role="alert">` | Internally text-mode. Tone via `v-colors-*`. |
 | `c-input` | `<input class="o-input-box">`, `<textarea class="o-input-box">` | Inner shadow (`--v-shadow-inner`), focus ring, invalid-state chrome. Sizing/padding/radius come from `o-input-box`. |
 | `c-checkbox`, `c-radio` | `<input type=...>` | Custom-styled but uses native input. |
@@ -23,7 +23,7 @@ Part 5 of the [Janus v2 design spec](./README.md). Covers the `c-` component cla
 | `c-disclosure` | `<details><summary>` | Native, styled. |
 | `c-tooltip` | Anchored `[popover]` | Composes `o-caption`. Anchor positioning. No JS. Applies `v-colors-tooltip` (always inverted vs. color scheme). |
 
-**Implicit text-mode.** Components that wrap text rely on the underlying text-mode object — `c-button`/`c-input` via `o-input-box`, `c-tag`/`c-badge`/`c-alert` via their own text-mode padding. The consumer never has to wrap them in `o-text-box`. Heading and paragraph base styles in the `base` layer handle their own lh compensation similarly. A consumer reaches for `o-text-box` explicitly only when wrapping prose that isn't already inside a text-bearing component (e.g., a callout card that *is* a paragraph).
+**Implicit text-mode.** Components that wrap text rely on the underlying text-mode object — `c-button`/`c-input` via `o-input-box`, `c-tag`/`c-badge`/`c-alert` via their own text-mode padding. The consumer never has to wrap them in `o-text-box`. Heading and paragraph base styles in the `base` layer get correct optical block spacing from `text-box-trim` (§6), not per-element compensation. A consumer reaches for `o-text-box` explicitly only when wrapping prose that isn't already inside a text-bearing component (e.g., a callout card that *is* a paragraph).
 
 ### 10.2 Browser-primitive components (native + small toolkit wiring)
 
@@ -119,7 +119,7 @@ Approved tools:
 - Flex: `t-flex`, `t-flex-fill`, `t-flex-auto`, `t-flex-none`, `t-flex-wrap`
 - Display: `t-block`, `t-inline`, `t-inline-block`, `t-hidden`, `t-sr-only`
 - Border toggle: `t-border`, `t-border-none`, `t-border-inner`
-- Radius toggle: `t-radius-none`, `t-radius-full` (cascade handles inner/outer automatically — see §8)
+- Radius toggle: `t-radius-none`, `t-radius-full` (per-element override of the object's `--o-*__radius` knob — see §8)
 - Shadow toggle: `t-shadow`, `t-shadow-inner`, `t-shadow-outer`, `t-shadow-none` (applies / removes `--v-shadow-outer` and `--v-shadow-inner` — the split knob design from §5.1 lets `t-shadow-inner` replace just the inner glow without disturbing an existing outer shadow, and vice versa)
 - Alignment: `t-align-start`, `t-align-center`, `t-align-end`
 - Overflow: `t-truncate` (single-line ellipsis)

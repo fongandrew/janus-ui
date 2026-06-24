@@ -25,6 +25,7 @@ The build assumes the following are available without fallback. Verify against t
 - `color-mix()`, `light-dark()`
 - `oklch()` and the relative-color syntax `oklch(from <color> …)` — used for the `--v-fg` derivation in §5.1
 - `1lh` unit
+- `text-box-trim` / `text-box-edge` (the `text-box` shorthand) — used for uniform block padding on text (§6). **Not yet in Firefox.** This is a deliberate bet (§6): where unsupported, the first/last text line gets slightly loose leading — a minor optical issue we accept rather than carry per-element line-height compensation math everywhere. Unlike `commandfor` / anchor positioning, this is *not* a hard requirement — it degrades, it doesn't break.
 - `:has()`
 - Container queries (`@container`, `cqw` units)
 - `<dialog>` + `showModal()`
@@ -66,9 +67,11 @@ src/lib/
       row.css                    # .o-row
       group.css
       grid.css
-      container.css              # .o-container with --o-container__max
+      container.css              # .o-container with --o-container__max + __gutter
       split.css
       centric.css                # .o-centric
+      bar.css                    # .o-bar  (header/toolbar strip — §9.7)
+      segmented.css              # .o-segmented  (shared-border cells — §9.8)
       ...
     components/
       button.css                 # .c-button
@@ -78,7 +81,9 @@ src/lib/
     variants/
       colors.css                 # .v-colors-* (tones consumed by c- components)
       surface.css                # .v-surface-* (chrome treatments)
-      radius.css                 # .v-radius-flat (cascade-step override — see §8.2)
+      radius.css                 # .v-radius-* presets (concentric / uniform /
+                                 #   web-concentric / web-uniform / flat — §8.2)
+      align.css                  # .v-align-text / .v-align-edge (§6.1)
       text.css                   # .v-text-display / .v-text-meta (role-based, sparingly)
       # No .v-spacing-*, .v-input-size-*, or other t-shirt-scaled variants.
       # Consumers define those in their own CSS as semantic scopes.
@@ -206,7 +211,7 @@ Every pseudo-package directory under `src/lib/` carries the same four files at i
 
 The implementing agent should NOT read v1 source as a template, but the following patterns are worth understanding before designing v2:
 
-- The `0.5lh - 0.5em` line-height calibration (in v1's `o-text-box`) — preserved as the text-mode block padding formula in v2's `o-text-box` / `o-input-box` rules (see §6). Block-mode containers use plain `var(--v-spacing)`.
+- The `0.5lh - 0.5em` line-height calibration (in v1's `o-text-box`) — **superseded in v2 by `text-box-trim`** (§6): instead of subtracting the line-height overhang in padding math, v2 trims the text box to cap-height/baseline so plain `var(--v-pad-block)` works for any font size. Worth understanding the v1 approach to see *why* the trim replaces it, but don't port the formula.
 - The contextual variable layer (v1's `@layer variables` declared last) — preserve as the `variants` layer in v2.
 - Modal's request-to-close protocol — keep the shape, drop the data-attribute registry.
 - The form validation engine — same shape, leaner DOM-only API.
