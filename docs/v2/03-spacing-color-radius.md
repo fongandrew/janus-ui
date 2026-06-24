@@ -130,6 +130,103 @@ When a consumer *does* want roomier gutters on wide screens, the same Utopia-sty
 
 Because the four derivatives read `var(--v-spacing)` here, they track the fluid value. (This is one of the rare cases where the freezing rule helps you: deriving the bundle *from* a fluid `--v-spacing` in the same `:root` block makes the whole bundle fluid in lockstep.) The hi-DPI gate (§6.4) still composes — it can override the anchors of the clamp at high resolution. Janus's internal `v-fluid $min, $max` mixin (§5.3) is what generates these clamps in-house; consumers paste the computed `clamp()` or write their own.
 
+### 6.6 Density scopes (the compactness convention)
+
+Density — the **compactness** axis from §5.5 — is the one sizing concern Janus does *not* hand you as a single global knob, and deliberately so. There is no `--v-density` multiplier. Compactness is a property of a **role/context** (a toolbar is dense because it's a toolbar, not because of any global setting), so the convention is a **density scope**: a consumer-defined class that re-bundles the compactness knobs for a subtree. This is the same shape as the spacing examples in §6.4, promoted to a named pattern.
+
+A density scope sets some or all of three knob groups:
+
+1. **Rhythm** — the `--v-spacing` bundle (`--v-pad-*`, `--v-gap-*`, `--v-border-width`). Always set these together (the freezing rule, §5.2).
+2. **Control height** — `--v-input-height`. **Left independent of `--v-spacing` by default** (§5.1) — "tighten the padding around a control but keep the control itself comfortably clickable" is a real and common want. A density scope *opts into* moving it.
+3. **Legibility** — the type anchors, if this scope should also read smaller (a dense toolbar usually wants ~13px labels).
+
+```css
+/* Consumer CSS. Three escalating levels of "dense". */
+
+/* Padding/gaps tighten; controls stay full-size and clickable. */
+.v-dense {
+  --v-spacing: 0.5rem; --v-pad-block: 0.5rem; --v-pad-inline: 0.5rem;
+  --v-gap-block: 0.5rem; --v-gap-inline: 0.25rem;
+}
+
+/* Toolbar role: everything compact together — rhythm + control height + type. */
+.v-toolbar {
+  --v-spacing: 0.375rem; --v-pad-block: 0.375rem; --v-pad-inline: 0.375rem;
+  --v-gap-block: 0.375rem; --v-gap-inline: 0.1875rem;
+  --v-input-height: 2rem;
+  --v-font-size-min: 0.8125rem; --v-font-size-max: 0.8125rem;  /* fixed, small */
+}
+
+/* Touch role: the inverse — roomier rhythm AND bigger targets together. */
+.v-touch {
+  --v-spacing: 1rem; --v-pad-block: 1rem; --v-pad-inline: 1rem;
+  --v-gap-block: 1rem; --v-gap-inline: 0.5rem;
+  --v-input-height: 2.75rem;
+}
+```
+
+**The scope's driver is your choice (§5.5).** The class above is *role*-driven (you put `v-toolbar` on the toolbar). The exact same knob block can be driven by a different signal without changing the model:
+
+```css
+/* Container-driven: a panel that densifies when it itself gets narrow.
+   Note @container, not @media — keyed to the panel, not the viewport. */
+@container (max-width: 28rem) {
+  .app-panel { --v-spacing: 0.5rem; --v-pad-block: 0.5rem; /* …bundle… */ }
+}
+
+/* Device-class-driven: coarse pointers get the touch bundle everywhere. */
+@media (pointer: coarse) {
+  :root { --v-input-height: 2.75rem; /* …roomier bundle… */ }
+}
+```
+
+If a project finds itself wanting one lever instead of a bundle, the honest move is *not* a global `--v-density` scalar (it fights the "semantic, not abstract scalar" ethos and `--v-spacing` is already the rhythm scalar) — it's to define `--v-input-height: calc(var(--v-spacing) * N)` in that project's `:root` so control height tracks spacing automatically. That's a one-line opt-in to coupling, kept out of the framework default.
+
+### 6.7 Sizing recipes by deployment type
+
+Putting §5.5 (axes × signals) and §6.6 (density scopes) together, three deployment archetypes fall out. Each is a *choice of signal per axis*, not a different mechanism.
+
+**Marketing / content site — fluid everything, viewport-driven.** Legibility and expressiveness both ride the viewport; type is the star.
+
+```css
+:root {
+  --v-font-size-min: 1rem;     --v-font-size-max: 1.25rem;   /* wide gap   */
+  --v-font-ratio-min: 1.2;     --v-font-ratio-max: 1.333;    /* expressive */
+}
+/* Optionally fluid spacing too (§6.5). Hero h1 goes ~2rem → ~4.5rem as one clamp. */
+```
+
+Per-section variety (airy hero, dense footer) is a **scope** that re-declares the anchors for that subtree — the ramp recomputes because the tokens are cascading vars.
+
+**Desktop app (resizable window) — fixed type, role/container density.** Viewport ≈ window here, so viewport-fluid type is *wrong*: dragging the window must not resize the toolbar. Turn fluidity off and drive compactness by context.
+
+```css
+:root {
+  /* Collapse the anchors → fixed scale, no vw dependence. */
+  --v-font-size-min: 0.9375rem; --v-font-size-max: 0.9375rem;
+  --v-font-ratio-min: 1.2;      --v-font-ratio-max: 1.2;
+}
+/* Density comes from roles (.v-toolbar, §6.6) and from @container queries on
+   panels that should densify when cramped — never from raw vw. */
+```
+
+**Web app — device-class bundles, mixed signals.** Viewport/resolution is meaningful, but as a *discrete* "phone vs. desktop" signal, not continuous scaling. On a phone, legibility ↑, touch targets ↑, and spacing ↑ move **together**. The hi-DPI gate (§6.4) is the built-in version of this; `pointer: coarse` generalizes it.
+
+```css
+@media (pointer: coarse), (resolution >= 200dpi) {
+  :root {
+    --v-font-size-min: 1.0625rem; --v-font-size-max: 1.1875rem;  /* legible   */
+    --v-input-height: 2.75rem;                                    /* touch     */
+    --v-spacing: 1rem; --v-pad-block: 1rem; --v-pad-inline: 1rem; /* roomy     */
+    --v-gap-block: 1rem; --v-gap-inline: 0.5rem;
+  }
+}
+/* Mild viewport fluidity for body copy is fine on top of this; chrome density
+   stays on the device-class signal so it doesn't drift with window width. */
+```
+
+The through-line: **pick the signal per axis.** Fluid is the right default for legibility on content surfaces; fixed-plus-context is the right default for app chrome; device-class bundles handle "this is a phone." All three are the same knobs wired to different signals.
+
 ## 7. Color & surface system
 
 Five root color knobs (`--v-bg`, `--v-fg`, `--v-link`, `--v-accent`, `--v-muted`) carry the whole base palette. Tonal variations (primary / danger / etc.) live as **variants** that re-set these knobs together for a tonal subtree. No flat list of palette knobs at root.

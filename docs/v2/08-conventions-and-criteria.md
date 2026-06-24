@@ -89,7 +89,9 @@ src/lib/
       align.css                  # .v-align-text / .v-align-edge (§6.1)
       text.css                   # .v-text-display / .v-text-meta (role-based, sparingly)
       # No .v-spacing-*, .v-input-size-*, or other t-shirt-scaled variants.
-      # Consumers define those in their own CSS as semantic scopes.
+      # Consumers define those in their own CSS as semantic density scopes
+      #   (the .v-dense / .v-toolbar / .v-touch convention — §6.6) and pick
+      #   which signal drives each sizing axis (§5.5, recipes §6.7).
       # Font-size tokens are semantic (h1–h3, caption, code), not sm/md/lg.
     tools/
       padding.css

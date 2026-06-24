@@ -300,3 +300,32 @@ then fed through the clamp formula above. Body is step 0; headings are +1…+3; 
 **Why fluid.** A static scale forces a compromise: comfortable on a phone *or* on a wide monitor, not both. The fluid scale removes the in-between breakpoint juggling — no `@media` steps for type — and the leading formula (§5.1) rides along automatically because it's `1em`-relative. It also subsumes v1's hi-DPI font bump cleanly: the resolution gate (§6.4) nudges the *anchors*, not a frozen value.
 
 **Fluid spacing** uses the identical mechanism and is available as an opt-in (§6.5); type is the default fluid system, space stays static unless the consumer opts in.
+
+### 5.5 Axes of sizing & choosing a signal
+
+Fluid type (§5.4) solves exactly one sizing problem — *legibility vs. viewport width*. It is not the whole story, and binding everything to viewport width is a trap: a desktop app's toolbar should not grow when you drag the window wider. The system stays flexible because sizing decomposes into **three independent axes**, and each axis is driven by a **signal you choose** — the framework never assumes which.
+
+**The three axes.** They move independently; conflating them is what makes a design system rigid.
+
+| Axis | Controls | Knob(s) | Typical driver |
+|---|---|---|---|
+| **Legibility** | how big text is | `--v-font-size-min` / `-max` (and the ramp) | device class / viewport / user preference |
+| **Density** | how tight the chrome is — padding, gaps, control height, borders | `--v-spacing` bundle, `--v-input-height`, `--v-border-width` (§6.6) | UI *role* + device — usually **not** viewport |
+| **Expressiveness** | how dramatic the type ramp is | `--v-font-ratio-min` / `-max` | brand |
+
+**The two signals.** Anything that varies a value does so off one of these:
+
+- **Continuous size** — `vw` (viewport) or `cqw` (container). Fluid, breakpoint-free. The Utopia mechanism (§5.4).
+- **Discrete context** — a scope class (role), a `@media` feature (`resolution`, `pointer: coarse`, a device-class breakpoint), or a `@container` branch. Stepwise.
+
+**The load-bearing property: knobs are signal-agnostic.** Every knob is a custom property, and the *value expression* is where the signal lives — the knob itself is inert about it:
+
+```css
+--v-font-size-min: 1rem;                              /* no signal — fixed   */
+--v-font-size:     clamp(1rem, …vw…, 1.125rem);       /* viewport (Utopia)   */
+.v-toolbar  { --v-spacing: 0.375rem; }               /* role scope          */
+@container (max-width: 30rem) { … --v-spacing: … }   /* container size      */
+@media (pointer: coarse)      { … --v-input-height:…}/* device class        */
+```
+
+Because the framework never hard-codes the binding, you rebind any axis to any signal per project without fighting the cascade. Utopia is simply *one default expression* for the legibility axis — defeat it by collapsing the anchors (`--v-font-size-min == --v-font-size-max`), and the clamp degrades to a fixed scale with no special-casing. **Choosing a sizing strategy = choosing, per axis, which signal drives it.** See §6.7 for the recipes that fall out for marketing sites, desktop apps, and web apps.
