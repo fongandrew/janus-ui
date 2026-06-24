@@ -22,26 +22,12 @@
 		uniform block padding reads optically correct regardless of font size. This
 		replaces v1's (1lh − 1em)/2 compensation. Firefox lacks it — accepted
 		degradation is slightly loose first/last-line leading.
+
+		Applied to prose only — NOT to elements that may become flex/grid items or
+		gain `overflow: hidden` (links, buttons). Trimming the box to the baseline
+		pushes descenders below it, and any overflow clipping would then cut them off.
 	*/
-	:where(
-		h1,
-		h2,
-		h3,
-		h4,
-		h5,
-		h6,
-		p,
-		li,
-		dt,
-		dd,
-		blockquote,
-		figcaption,
-		th,
-		td,
-		label,
-		a,
-		button
-	) {
+	:where(h1, h2, h3, h4, h5, h6, p, li, dt, dd, blockquote, figcaption, th, td, label) {
 		text-box: trim-both cap alphabetic;
 	}
 
@@ -197,11 +183,17 @@
 	}
 
 	/*
-		Default text truncation (§20): inline and heading text truncates by default —
-		opt-out via the `t-wrap` tool (Phase 3), not opt-in. Saves wiring overflow on
-		every child for the ellipsis treatment to work.
+		Default text truncation (§20): inline text truncates by default — opt-out via
+		the `t-wrap` tool (Phase 3), not opt-in. Saves wiring overflow on every child
+		for the ellipsis treatment to work.
+
+		Restricted to inline elements. Block, wrapping elements (h1–h6, p) are
+		deliberately excluded: `overflow-x: hidden` there forces `overflow-y` to
+		compute to `auto`, which clips the descenders / cap overshoot that
+		text-box-trim leaves outside the box — and a wrapping block never shows an
+		ellipsis anyway. Those should truncate via an explicit `t-truncate` tool.
 	*/
-	:where(a, b, em, h1, h2, h3, h4, h5, h6, p, span, strong) {
+	:where(a, b, em, span, strong) {
 		overflow-x: hidden;
 		text-overflow: ellipsis;
 	}
