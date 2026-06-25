@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Janus v2 — Spacing &amp; Type Workbench</title>
+<style>
+  /* ============================================================
+     WORKBENCH CHROME (not part of Janus — its own little design)
+     ============================================================ */
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font: 13px/1.45 ui-sans-serif, system-ui, sans-serif;
+    color: #e7ebf2;
+    background: #11151c;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    overflow: hidden;
+  }
+
+  /* ---- controls sidebar ---- */
+  .panel {
+    background: #161b24;
+    border-right: 1px solid #2a323f;
+    overflow-y: auto;
+    padding: 14px 14px 60px;
+  }
+  .panel h1 {
+    font-size: 14px;
+    margin: 2px 0 2px;
+    letter-spacing: .2px;
+  }
+  .panel .sub { color: #8b97a8; margin: 0 0 14px; font-size: 11.5px; line-height: 1.5; }
+
+  fieldset {
+    border: 1px solid #2a323f;
+    border-radius: 8px;
+    margin: 0 0 12px;
+    padding: 10px 11px 12px;
+  }
+  legend {
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #8b97a8;
+    padding: 0 5px;
+  }
+  .ctl { margin: 9px 0 0; }
+  .ctl:first-of-type { margin-top: 2px; }
+  .ctl .lab {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 11.5px;
+    margin-bottom: 3px;
+  }
+  .ctl .lab .name { color: #c4cdda; }
+  .ctl .lab output { color: #6fd0c4; font-variant-numeric: tabular-nums; font-size: 11px; }
+  .ctl input[type=range] { width: 100%; accent-color: #43b8a8; margin: 0; }
+  .ctl .hint { color: #67738a; font-size: 10.5px; margin-top: 2px; line-height: 1.4; }
+
+  .seg { display: flex; gap: 0; border: 1px solid #2a323f; border-radius: 7px; overflow: hidden; }
+  .seg button {
+    flex: 1; background: transparent; color: #c4cdda; border: 0;
+    padding: 6px 4px; font: inherit; font-size: 11px; cursor: pointer;
+  }
+  .seg button[aria-pressed=true] { background: #43b8a8; color: #08110f; font-weight: 600; }
+  .seg + .hint { color: #67738a; font-size: 10.5px; margin-top: 4px; line-height: 1.4; }
+
+  .togrow { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 9px 0 0; font-size: 11.5px; color: #c4cdda; }
+  .togrow input { accent-color: #43b8a8; width: 15px; height: 15px; }
+
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .num { display: flex; flex-direction: column; gap: 3px; font-size: 11px; color: #c4cdda; }
+  .num input { background: #0e1218; border: 1px solid #2a323f; color: #e7ebf2; border-radius: 6px; padding: 4px 6px; font: inherit; }
+
+  .btnrow { display: flex; gap: 6px; margin-top: 4px; }
+  .btnrow button {
+    flex: 1; background: #232b38; color: #d7dee9; border: 1px solid #313b4a;
+    border-radius: 7px; padding: 7px; font: inherit; font-size: 11.5px; cursor: pointer;
+  }
+  .btnrow button:hover { background: #2b3543; }
+
+  .readout {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px; line-height: 1.55; color: #9fb0c4;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .readout b { color: #6fd0c4; font-weight: 600; }
+
+  /* ---- preview stage ---- */
+  .stage {
+    display: flex; flex-direction: column; min-width: 0; background: #0c0f14;
+    background-image: radial-gradient(circle at 1px 1px, #1a2029 1px, transparent 0);
+    background-size: 22px 22px;
+  }
+  .stagebar {
+    display: flex; align-items: center; gap: 12px; padding: 9px 14px;
+    border-bottom: 1px solid #20262f; background: #11151c; flex: none;
+  }
+  .stagebar .preset { display: flex; gap: 5px; }
+  .stagebar .preset button {
+    background: #1d242e; border: 1px solid #2c3543; color: #c4cdda;
+    border-radius: 6px; padding: 5px 9px; font: inherit; font-size: 11px; cursor: pointer;
+  }
+  .stagebar .preset button:hover { background: #27313d; }
+  .stagebar .wlabel { margin-left: auto; color: #8b97a8; font-size: 11.5px; font-variant-numeric: tabular-nums; }
+  .stagebar .wlabel b { color: #6fd0c4; }
+  .stagewrap { flex: 1; overflow: auto; display: flex; justify-content: center; padding: 18px; }
+  .framewrap {
+    width: 1024px; max-width: 100%; flex: none; align-self: flex-start;
+    background: #fff; border-radius: 10px; overflow: hidden;
+    box-shadow: 0 10px 40px rgb(0 0 0 / .45); height: 100%;
+  }
+  iframe { width: 100%; height: 100%; border: 0; display: block; }
+</style>
+</head>
+<body>
+
+<aside class="panel">
+  <h1>Spacing &amp; Type Workbench</h1>
+  <p class="sub">Janus v2 rhythm playground. Five spacing scales + a fluid (Utopia) type scale, all live. Drag the preview width to test fluid type without resizing your window.</p>
+
+  <fieldset>
+    <legend>Preview</legend>
+    <div class="ctl">
+      <div class="lab"><span class="name">Viewport width</span><output id="width-o"></output></div>
+      <input id="width" type="range" min="320" max="1440" step="1" value="1024" />
+    </div>
+    <div class="ctl" style="margin-top:10px">
+      <div class="lab"><span class="name">Color scheme</span></div>
+      <div class="seg" id="scheme"><button data-v="light" aria-pressed="true">Light</button><button data-v="dark">Dark</button></div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">List rhythm</span></div>
+      <div class="seg" id="lmode"><button data-v="grouped" aria-pressed="true">Grouped</button><button data-v="continuous">Continuous</button></div>
+      <div class="hint">Sets the cascading <code style="color:#9fb0c4">--v-list-rhythm</code> token. Grouped = discrete points (marketing). Continuous = line-height − 1cap, so <em>wrapped</em> bullets read as one passage (WYSIWYG). Watch the multi-line bullets above.</div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Type scale (fluid / Utopia)</legend>
+    <div class="ctl">
+      <div class="lab"><span class="name">Base size · min vw</span><output id="fmin-o"></output></div>
+      <input id="fmin" type="range" min="0.8125" max="1.25" step="0.0625" value="1" />
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">Base size · max vw</span><output id="fmax-o"></output></div>
+      <input id="fmax" type="range" min="0.875" max="1.5" step="0.0625" value="1.125" />
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">Scale ratio · min vw</span><output id="rmin-o"></output></div>
+      <input id="rmin" type="range" min="1.1" max="1.4" step="0.01" value="1.2" />
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">Scale ratio · max vw</span><output id="rmax-o"></output></div>
+      <input id="rmax" type="range" min="1.1" max="1.5" step="0.01" value="1.25" />
+      <div class="hint">Dual ratios: gentler scale on phones, more dramatic on desktops.</div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">Line height (body)</span><output id="lh-o"></output></div>
+      <input id="lh" type="range" min="1.2" max="1.9" step="0.01" value="1.5" />
+      <div class="hint">Body leading. Heading leading = 1em + 0.5·spacing (rides font size).</div>
+    </div>
+    <div class="row2" style="margin-top:10px">
+      <label class="num">Viewport min (rem)<input id="vwmin" type="number" min="10" max="40" step="1" value="20" /></label>
+      <label class="num">Viewport max (rem)<input id="vwmax" type="number" min="40" max="120" step="1" value="80" /></label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Spacing scales</legend>
+    <div class="ctl">
+      <div class="lab"><span class="name">Master · --v-spacing</span><output id="spacing-o"></output></div>
+      <input id="spacing" type="range" min="0.25" max="1.5" step="0.0625" value="1" />
+      <div class="hint">The one lever the rhythm scales below multiply.</div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">Control height</span><output id="inputh-o"></output></div>
+      <input id="inputh" type="range" min="1.75" max="3.5" step="0.0625" value="2" />
+      <div class="hint">Independent of spacing (per spec §5.1).</div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">① Section &nbsp;×spacing</span><output id="rkSection-o"></output></div>
+      <input id="rkSection" type="range" min="0.5" max="3" step="0.05" value="1.5" />
+      <div class="hint">Gap between cards / page sections (grid &amp; section stack).</div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">② Pad &nbsp;×spacing</span><output id="rkPad-o"></output></div>
+      <input id="rkPad" type="range" min="0.5" max="2.5" step="0.05" value="1.25" />
+      <div class="hint">Card / box internal padding (decoupled from section gap).</div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">③ Prose &nbsp;×line</span><output id="rkProse-o"></output></div>
+      <input id="rkProse" type="range" min="0.25" max="2" step="0.05" value="1" />
+      <div class="hint">Paragraph-to-paragraph rhythm — a multiple of a text line, not spacing.</div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">④ Tight &nbsp;×spacing</span><output id="rkTight-o"></output></div>
+      <input id="rkTight" type="range" min="0.1" max="1.5" step="0.05" value="0.25" />
+      <div class="hint">Reserved for forms now — label→control inside a field row. (Heading spacing moved to prose + title groups.)</div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">⑤ Cluster &nbsp;×spacing</span><output id="rkCluster-o"></output></div>
+      <input id="rkCluster" type="range" min="0.1" max="1.5" step="0.05" value="0.5" />
+      <div class="hint">Inline gap between toolbar buttons / tags.</div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">List · grouped &nbsp;×prose</span><output id="rkListGrouped-o"></output></div>
+      <input id="rkListGrouped" type="range" min="0.1" max="1" step="0.05" value="0.5" />
+      <div class="hint">Bullet gap in <em>grouped</em> mode (a fraction of the prose gap). Continuous mode ignores this — it uses line − 1cap.</div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Heading &amp; title groups</legend>
+    <div class="ctl">
+      <div class="lab"><span class="name">Space above heading &nbsp;×line</span><output id="rkHbefore-o"></output></div>
+      <input id="rkHbefore" type="range" min="0.25" max="2.5" step="0.05" value="1" />
+      <div class="hint">A bare heading owns only the space <em>above</em> it; below it the following element keeps its ③ prose gap.</div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">Title-group leading &nbsp;×spacing</span><output id="rkHgroup-o"></output></div>
+      <input id="rkHgroup" type="range" min="0.1" max="1.5" step="0.05" value="0.5" />
+      <div class="hint">Constant space <em>between</em> every line in an <code style="color:#9fb0c4">&lt;hgroup&gt;</code> — line-height = 1em + this, and the title↔subtitle gap is the natural half-leading (no margin, trim only at the outer edges), so it matches the spacing between lines within the title and subtitle. Narrow the preview to wrap the title.</div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Resolved tokens</legend>
+    <div class="readout" id="readout"></div>
+    <div class="btnrow" style="margin-top:10px">
+      <button id="copy">Copy :root CSS</button>
+      <button id="reset">Reset</button>
+    </div>
+  </fieldset>
+</aside>
+
+<section class="stage">
+  <div class="stagebar">
+    <div class="preset">
+      <button data-w="390">Phone</button>
+      <button data-w="768">Tablet</button>
+      <button data-w="1024">Laptop</button>
+      <button data-w="1440">Desktop</button>
+    </div>
+    <span class="wlabel">preview: <b id="wlabel">1024</b> px</span>
+  </div>
+  <div class="stagewrap">
+    <div class="framewrap" id="framewrap">
+      <iframe id="frame" title="preview"></iframe>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ================================================================
+   IFRAME DOCUMENT — the actual Janus-v2-flavored page under test.
+   Token names mirror the v2 spec (--v-*, o-*). CSS is fresh/simplified
+   (no real v2 source exists yet) but faithful to the concepts:
+   text-box-trim, fluid type, the box/stack/grid objects, the rhythm
+   decomposition into 5 named scales.
+   ================================================================ */
+const DOC = `<!doctype html><html data-scheme="light"><head><meta charset="utf-8"><style>
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+
+:root {
+  /* —— primary knobs —— */
+  --v-spacing: 1rem;
+  --v-input-height: 2rem;
+  --v-radius: 0.75rem;
+  --v-radius-min: 0.375rem;
+  --v-border-width: 1px;
+  --v-line-height: 1.5;
+  --v-font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --v-font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* —— font sizes: injected live as clamp() strings from JS —— */
+  --v-font-size: 1rem;
+  --v-font-size-h1: 1.75rem;
+  --v-font-size-h2: 1.4rem;
+  --v-font-size-h3: 1.2rem;
+  --v-font-size-h4: 1rem;
+  --v-font-size-caption: 0.83rem;
+  --v-font-size-code: 0.83rem;
+
+  /* —— weight stack —— */
+  --v-font-weight-normal: 400;
+  --v-font-weight-label: 500;
+  --v-font-weight-subtitle: 600;
+  --v-font-weight-strong: 600;
+  --v-font-weight-title: 700;
+
+  /* —— the FIVE rhythm scales (master + multipliers) —— */
+  --rk-section: 1.5;
+  --rk-pad: 1.25;
+  --rk-prose: 1;       /* × line */
+  --rk-tight: 0.25;
+  --rk-cluster: 0.5;
+  --rk-heading-before: 1; /* × line — space ABOVE a heading (the section break) */
+  --rk-hgroup: 0.5;       /* × spacing — constant leading (space BETWEEN lines) inside <hgroup> */
+
+  --v-rhythm-section: calc(var(--rk-section) * var(--v-spacing));            /* ① between boxes */
+  --v-pad:            calc(var(--rk-pad)     * var(--v-spacing));            /* ② box padding   */
+  --v-rhythm-prose:   calc(var(--rk-prose)  * var(--v-line-height) * 1em);  /* ③ paragraphs    */
+  --v-rhythm-tight:   calc(var(--rk-tight)  * var(--v-spacing));            /* ④ label stacks  */
+  --v-gap-inline:     calc(var(--rk-cluster)* var(--v-spacing));            /* ⑤ inline groups */
+  --v-heading-before: calc(var(--rk-heading-before) * var(--v-line-height) * 1em);
+  /* hgroup leading is ADDITIVE: line-height = 1em + a constant, so line-height scales with font
+     size but the space BETWEEN lines stays put — title lines and subtitle lines share the same
+     visual leading, and so does the title→subtitle gap. (See the hgroup rules.) */
+
+  /* —— list rhythm: two recipes + the cascading switch (default grouped).
+        An editor root sets --v-list-rhythm: var(--v-rhythm-continuous) to flip
+        every list to continuous; marketing leaves it grouped. —— */
+  --rk-list-grouped: 0.5; /* × prose */
+  --v-rhythm-continuous: calc(var(--v-line-height) * 1em - 1cap);              /* boundaries vanish */
+  --v-rhythm-grouped:    calc(var(--rk-list-grouped) * var(--v-rhythm-prose)); /* discrete points   */
+  --v-list-rhythm:       var(--v-rhythm-grouped);
+
+  /* —— heading leading rides font size (spec §5.1) —— */
+  --v-line-height-heading: calc(1em + 0.5 * var(--v-spacing));
+
+  /* —— color —— */
+  color-scheme: light dark;
+  --v-bg:     light-dark(hsl(30deg 12% 98.5%), hsl(216deg 16% 8%));
+  --v-fg:     light-dark(hsl(216deg 16% 8%),  hsl(30deg 12% 98.5%));
+  --v-muted:  light-dark(hsl(30deg 7% 34%),   hsl(30deg 7% 78%));
+  --v-link:   light-dark(hsl(195deg 100% 24%),hsl(183deg 35% 78%));
+  --v-accent: var(--v-link);
+  --v-card-bg:light-dark(hsl(0 0% 100%),      hsl(216deg 16% 12%));
+  --v-input-bg:light-dark(hsl(0 0% 100%),     hsl(216deg 16% 10%));
+  --v-code-bg: color-mix(in hsl, var(--v-muted) 12%, var(--v-bg));
+  --v-border-color: color-mix(in hsl, light-dark(black, white) light-dark(16%, 40%), var(--v-bg));
+}
+html[data-scheme="light"] { color-scheme: light; }
+html[data-scheme="dark"]  { color-scheme: dark; }
+
+html { font-size: 100%; }
+body {
+  font-family: var(--v-font-family);
+  font-size: var(--v-font-size);
+  line-height: var(--v-line-height);
+  font-weight: var(--v-font-weight-normal);
+  color: var(--v-fg);
+  background:
+    radial-gradient(ellipse at 75% -5%, light-dark(hsl(20 85% 70% / 13%), hsl(195 100% 60% / 11%)), transparent 55%),
+    radial-gradient(ellipse at -5% 95%, light-dark(hsl(195 80% 50% / 8%),  hsl(158 77% 45% / 12%)), transparent 55%),
+    var(--v-bg);
+  min-height: 100vh;
+}
+
+/* —— text-box-trim is scoped to o-prose — the one container that signals "running
+   text." Only its immediate text children (and list items inside its lists) are
+   trimmed, so the SAME container owns both the trim and the rhythm that compensates
+   for it. Inputs, buttons, and bare headings outside o-prose keep their half-leading. —— */
+.o-prose > :where(h1,h2,h3,h4,h5,h6,p,figcaption,dt,dd),
+.o-prose > :where(ul,ol) > li {
+  text-box: trim-both cap alphabetic;
+}
+/* Inside an hgroup, trim ONLY the group's outer edges (top of the first child, bottom of the
+   last). The title↔subtitle boundary keeps its natural half-leading, so the gap there is the
+   same visible leading as the gaps between lines WITHIN each element — a blend of both sizes,
+   and no margin is needed. */
+.o-prose hgroup > :first-child { text-box: trim-start cap alphabetic; }
+.o-prose hgroup > :last-child  { text-box: trim-end cap alphabetic; }
+/* blockquote is deliberately NOT trimmed: its border/background frames the whole box,
+   so trimming the text to cap/baseline leaves the rule looking lopsided against the text. */
+
+h1,h2,h3,h4,h5,h6 { line-height: var(--v-line-height-heading); }
+h1 { font-size: var(--v-font-size-h1); font-weight: var(--v-font-weight-title); letter-spacing: -.01em; }
+h2 { font-size: var(--v-font-size-h2); font-weight: var(--v-font-weight-strong); letter-spacing: -.005em; }
+h3 { font-size: var(--v-font-size-h3); font-weight: var(--v-font-weight-subtitle); }
+h4 { font-size: var(--v-font-size-h4); font-weight: var(--v-font-weight-strong); }
+a  { color: var(--v-link); font-weight: var(--v-font-weight-label); text-underline-offset: .15em; }
+strong { font-weight: var(--v-font-weight-strong); }
+ul, ol { padding-inline-start: 1.4em; }
+/* A list is a stack of <li>. The grouped↔continuous choice is just WHICH rhythm
+   token --v-list-rhythm resolves to (set once at a scope, cascades):
+     grouped    = a small gap; items read as discrete points (marketing).
+     continuous = (line-height − 1cap); wrapped items share one baseline and read
+                  as a single passage (WYSIWYG / long-form). Needs the li trimmed
+                  — which it is, because lists live inside o-prose. */
+li + li { margin-block-start: var(--v-list-rhythm); }
+code {
+  font-family: var(--v-font-family-mono);
+  font-size: var(--v-font-size-code);
+  background: var(--v-code-bg);
+  border-radius: .35em; padding: .12em .4em;
+}
+pre {
+  font-family: var(--v-font-family-mono);
+  font-size: var(--v-font-size-code);
+  line-height: 1.5;
+  background: light-dark(hsl(216 16% 12%), hsl(216 16% 5%));
+  color: light-dark(hsl(30 30% 92%), hsl(30 30% 88%));
+  border-radius: var(--v-radius-min);
+  padding: var(--v-pad);
+  overflow-x: auto;
+}
+pre code { background: none; padding: 0; color: inherit; font-size: 1em; }
+blockquote {
+  border-inline-start: 3px solid var(--v-accent);
+  padding-inline-start: var(--v-pad);
+  color: var(--v-muted);
+  font-style: italic;
+}
+.subtitle { color: var(--v-muted); font-weight: var(--v-font-weight-normal); font-size: var(--v-font-size-h4); }
+.help, small { color: var(--v-muted); font-size: var(--v-font-size-caption); font-weight: var(--v-font-weight-normal); }
+label { font-weight: var(--v-font-weight-label); display: block; }
+
+/* ============ OBJECTS ============ */
+.o-container { width: 100%; max-width: var(--o-container__max, 64rem); margin-inline: auto; padding-inline: var(--v-pad); }
+
+/* ============ o-stack — uniform vertical gap (flex, UNTRIMMED) ============
+   For discrete / mixed content: cards, control stacks, settings rows. Half-leading
+   stays intact, so even gaps read optically right. "Tight" is just a gap value —
+   not a different object. */
+.o-stack { display: flex; flex-direction: column; gap: var(--o-stack__gap, var(--v-rhythm-section)); }
+.o-stack--tight { --o-stack__gap: var(--v-rhythm-tight); }   /* ④ label→control, settings rows */
+.o-stack--card  { --o-stack__gap: var(--v-pad); }            /* in-card rhythm */
+
+/* ① Section rhythm is o-stack's default gap; the grid uses it too. */
+.o-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--o-grid__min, 19rem), 100%), 1fr));
+  gap: var(--v-rhythm-section);
+}
+
+/* ============ o-page — the top-level vertical flow (a coarser boundary model) ============
+   Peers (the intro, the card grid) are separated by ① the section gap. But a section that
+   LEADS with a heading instead owns its lead-in: the heading's own space-above (heading-before,
+   in the heading's em) — so the distance between the cards and that heading belongs to the
+   HEADING, not the flat section gap. Works by margin-collapse: o-prose sections carry no
+   padding/border, so the leading heading's margin escapes up into the page flow. */
+.o-page { display: block; }
+.o-page > * { margin-block: 0; }
+.o-page > * + * { margin-block-start: var(--v-rhythm-section); }
+.o-page > * + .o-prose:has(> :first-child:is(h1,h2,h3,h4,h5,h6)) { margin-block-start: 0; }
+.o-page > * + .o-prose:has(> :first-child:is(h1,h2,h3,h4,h5,h6)) > :first-child {
+  margin-block-start: var(--v-heading-before);
+}
+
+/* ② Box padding */
+.o-box, .card {
+  background: var(--v-card-bg);
+  border: var(--v-border-width) solid var(--v-border-color);
+  border-radius: var(--v-radius);
+  padding: var(--v-pad);
+  box-shadow: 0 1px 3px rgb(0 0 0 / .07), 0 1px 2px -1px rgb(0 0 0 / .07);
+}
+
+/* ⑤ Inline cluster — toolbar buttons / tags */
+.cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--v-gap-inline); }
+.row-between { display: flex; align-items: center; justify-content: space-between; gap: var(--v-gap-inline); }
+
+/* header bar */
+.o-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--v-gap-inline);
+  min-height: var(--v-input-height);
+  padding: var(--v-pad);
+  border-bottom: var(--v-border-width) solid var(--v-border-color);
+  background: color-mix(in srgb, var(--v-card-bg) 80%, transparent);
+  backdrop-filter: blur(8px);
+  position: sticky; top: 0; z-index: 5;
+}
+.o-bar .brand { font-size: var(--v-font-size-h3); font-weight: var(--v-font-weight-title); }
+.card .card-title { font-size: var(--v-font-size-h3); } /* heading demotion inside cards */
+
+/* ============ o-prose — block flow, TRIMS its text children, asymmetric heading rhythm ============
+   The single container that opts into text-box-trim (scoped above). Vertical rhythm is a
+   property of the BOUNDARY between two siblings, owned by the element UNDERNEATH (always a
+   margin-block-start on the lower element — the thing below owns the gap above it):
+     • body ↔ body, AND heading → what follows  → ③ prose gap. A bare heading does NOT hug
+       its body; the element below simply keeps its prose gap above it.
+     • what precedes → heading / hgroup         → space-above (the section break a heading owns).
+   A title + subtitle are grouped in an <hgroup> with their own internal rhythm (below) — the
+   ONLY place a heading sits tight to following text. Flat-specificity :where(), source order wins. */
+.o-prose { display: block; }
+.o-prose > * { margin-block: 0; }
+.o-prose > * + * { margin-block-start: var(--v-rhythm-prose); }
+.o-prose > * + :where(h1,h2,h3,h4,h5,h6,hgroup) { margin-block-start: var(--v-heading-before); }
+
+/* <hgroup> — title + subtitle read as one continuous block. ADDITIVE leading (line-height =
+   1em + a constant) keeps the whitespace between lines constant as font size changes. trim is
+   applied ONLY at the group's outer edges (above), so the title↔subtitle boundary keeps its
+   natural half-leading — which makes that gap IDENTICAL to the gaps between lines within each
+   element (a blend of both sizes) with NO margin. 1em adapts per child, so any level works. */
+hgroup {
+  display: block;
+  --o-hgroup__leading: calc(var(--rk-hgroup) * var(--v-spacing)); /* the constant space between lines */
+}
+/* line-height alone determines every gap — no margin between children. */
+.o-prose hgroup > * { margin-block: 0; line-height: calc(1em + var(--o-hgroup__leading)); }
+
+/* ============ CONTROLS ============ */
+input[type=text], input[type=email], select, textarea, .btn {
+  font: inherit; color: inherit;
+  min-height: var(--v-input-height);
+  padding-block: calc((var(--v-input-height) - 1lh) / 2);
+  padding-inline: var(--v-pad);
+  /* Controls carry a stronger border than cards so their box edges (and the spacing
+     around them) are legible — a faint card-weight border reads as borderless. */
+  border: var(--v-border-width) solid color-mix(in hsl, var(--v-fg) 28%, var(--v-bg));
+  border-radius: var(--v-radius-min);
+  background: var(--v-input-bg);
+  box-shadow: inset 0 1px 2px rgb(0 0 0 / .05);
+  width: 100%;
+}
+select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--v-muted) 50%), linear-gradient(135deg, var(--v-muted) 50%, transparent 50%); background-position: calc(100% - 18px) center, calc(100% - 13px) center; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; padding-inline-end: 2.2rem; }
+textarea { min-height: calc(var(--v-input-height) * 2); padding-block: var(--v-pad); width: 100%; resize: vertical; }
+.btn {
+  width: auto; cursor: pointer; background: var(--v-card-bg);
+  font-weight: var(--v-font-weight-label); white-space: nowrap;
+  display: inline-flex; align-items: center; justify-content: center;
+  box-shadow: none;
+}
+.btn-primary { background: var(--v-accent); color: var(--v-bg); border-color: transparent; }
+.btn-ghost { background: transparent; border-color: transparent; }
+
+input.switch {
+  appearance: none; flex: none; width: 2.6em; height: 1.5em; border-radius: 1em;
+  background: var(--v-border-color); position: relative; cursor: pointer; transition: background .2s;
+  border: 0; min-height: 0; padding: 0;
+}
+input.switch:checked { background: var(--v-accent); }
+input.switch::after { content: ''; position: absolute; top: .15em; left: .15em; width: 1.2em; height: 1.2em; border-radius: 50%; background: #fff; transition: left .2s; }
+input.switch:checked::after { left: 1.25em; }
+input[type=radio], input[type=checkbox]:not(.switch) { accent-color: var(--v-accent); width: 1.1em; height: 1.1em; }
+
+.tag { display: inline-flex; align-items: center; font-size: var(--v-font-size-caption); padding: .2em .6em; border-radius: 999px; background: var(--v-code-bg); color: var(--v-muted); font-weight: var(--v-font-weight-label); }
+.page { padding-block: var(--v-rhythm-section) calc(var(--v-rhythm-section) * 2); }
+</style></head>
+<body>
+
+<header class="o-bar">
+  <span class="brand">Acme · Settings</span>
+  <span class="cluster">
+    <button class="btn btn-ghost">Discard</button>
+    <button class="btn btn-primary">Save changes</button>
+  </span>
+</header>
+
+<div class="page">
+<main class="o-container o-page">
+
+  <!-- PROSE SECTION: o-prose = block flow, trims its children, asymmetric heading rhythm.
+       Title + subtitle are grouped in an <hgroup> with their own (wrap-safe) internal rhythm. -->
+  <section class="o-prose">
+    <hgroup>
+      <h1>Workspace settings and member preferences</h1>
+      <p class="subtitle">Control how your team's workspace looks, feels, and behaves — long enough to wrap onto a second line at narrower widths so you can watch the title-group rhythm hold.</p>
+    </hgroup>
+    <p>Janus arranges vertical rhythm by <em>flow</em> rather than a single owl-selector margin. The body copy here rides on the <strong>prose scale</strong> — a multiple of the text line — so leading and paragraph spacing stay proportional as you drag the base size or line height.</p>
+    <p>A bare heading owns only the space <em>above</em> it (the section break); below it, the following text keeps its ordinary <strong>prose</strong> gap. A title and its subtitle are the exception — grouped in an <code>&lt;hgroup&gt;</code> whose internal gap is measured in the subtitle's own lines, so it stays even when the subtitle wraps.</p>
+    <h2>Appearance</h2>
+    <p>The five spacing scales are deliberately independent. Section spacing between cards need not equal a card's interior padding, and neither is tied to the rhythm between paragraphs of running text.</p>
+    <ul>
+      <li>Inter-card and inter-section spacing — the <strong>section</strong> scale — the gap between cards in the grid and between the major regions of a page.</li>
+      <li>Box interior padding — the <strong>pad</strong> scale, deliberately decoupled from the section gap so a roomy grid can still hold snug cards.</li>
+      <li>Paragraph-to-paragraph in running text — the <strong>prose</strong> scale, expressed as a multiple of a text line rather than the spacing unit.</li>
+      <li>Label-to-control and title-to-subtitle — the <strong>tight</strong> scale.</li>
+      <li>Toolbar button and tag gaps — the <strong>cluster</strong> scale.</li>
+    </ul>
+    <h3>Density &amp; code</h3>
+    <p>Use <code>--v-spacing</code> as the master lever; the scales above are multipliers of it (prose excepted — it multiplies the line). Inline <code>code</code> and block code share a step-down size:</p>
+    <pre><code>:root {
+  --v-spacing: 0.75rem;
+  --v-rhythm-section: calc(1.5 * var(--v-spacing));
+  --v-pad:            calc(1.25 * var(--v-spacing));
+  --v-rhythm-prose:   calc(0.75 * var(--v-line-height) * 1em);
+}</code></pre>
+    <blockquote>Wrap a group, flow the children: the box owns the perimeter; the elements own the gaps between them.</blockquote>
+  </section>
+
+  <!-- GRID OF CARDS: ① section gap between them; mix of form + text cards -->
+  <div class="o-grid">
+
+    <!-- form card: <hgroup> title block + UNTRIMMED o-stack field rows -->
+    <section class="card o-stack o-stack--card">
+      <div class="o-prose">
+        <hgroup>
+          <h2 class="card-title">Profile</h2>
+          <p class="help">Shown to everyone in your workspace.</p>
+        </hgroup>
+      </div>
+      <div class="o-stack o-stack--tight">
+        <label for="dn">Display name</label>
+        <input id="dn" type="text" value="Ada Lovelace" />
+        <small class="help">Use your real name so teammates recognize you.</small>
+      </div>
+      <div class="o-stack o-stack--tight">
+        <label for="em">Email</label>
+        <input id="em" type="email" value="ada@acme.com" />
+      </div>
+      <div class="row-between">
+        <span>
+          <label as="span">Public profile</label>
+          <small class="help">Allow anyone with the link to view.</small>
+        </span>
+        <input class="switch" type="checkbox" checked aria-label="Public profile" />
+      </div>
+      <div class="cluster" style="justify-content:flex-end">
+        <button class="btn btn-ghost">Reset</button>
+        <button class="btn btn-primary">Update</button>
+      </div>
+    </section>
+
+    <!-- text card: heading + body live in ONE o-prose (asymmetric flow hugs the h2 to its body) -->
+    <section class="card o-stack o-stack--card">
+      <div class="o-prose">
+        <h2 class="card-title">About rhythm</h2>
+        <p>Text-heavy cards keep the prose scale even inside a small box. With <code>text-box-trim</code> on, the top and bottom padding look optically equal to the sides regardless of font size.</p>
+        <p>Turn the trim off in the sidebar and watch the first line drift down and the last line's descenders crowd the edge — that's the leading the trim removes.</p>
+      </div>
+    </section>
+
+    <!-- settings list card -->
+    <section class="card o-stack o-stack--card">
+      <div class="o-prose"><h2 class="card-title">Notifications</h2></div>
+      <div class="o-stack o-stack--tight">
+        <div class="row-between"><span>Product updates</span><input class="switch" type="checkbox" checked aria-label="Product updates" /></div>
+        <div class="row-between"><span>Weekly digest</span><input class="switch" type="checkbox" aria-label="Weekly digest" /></div>
+        <div class="row-between"><span>Mentions</span><input class="switch" type="checkbox" checked aria-label="Mentions" /></div>
+        <div class="row-between"><span>Security alerts</span><input class="switch" type="checkbox" checked aria-label="Security alerts" /></div>
+      </div>
+    </section>
+
+    <!-- form card 2 -->
+    <section class="card o-stack o-stack--card">
+      <div class="o-prose"><h2 class="card-title">Preferences</h2></div>
+      <div class="o-stack o-stack--tight">
+        <label for="tz">Time zone</label>
+        <select id="tz"><option>UTC−08:00 · Pacific</option><option>UTC+00:00 · London</option><option>UTC+09:00 · Tokyo</option></select>
+      </div>
+      <div class="o-stack o-stack--tight">
+        <label as="span">Theme</label>
+        <div class="cluster">
+          <label class="cluster" style="font-weight:400"><input type="radio" name="th" checked /> System</label>
+          <label class="cluster" style="font-weight:400"><input type="radio" name="th" /> Light</label>
+          <label class="cluster" style="font-weight:400"><input type="radio" name="th" /> Dark</label>
+        </div>
+      </div>
+      <div class="o-stack o-stack--tight">
+        <label for="bio">Bio</label>
+        <textarea id="bio">Mathematician. Wrote the first algorithm intended for a machine.</textarea>
+      </div>
+    </section>
+
+    <!-- text card 2 -->
+    <section class="card o-stack o-stack--card">
+      <div class="o-prose">
+        <h2 class="card-title">Billing</h2>
+        <p>You're on the <strong>Team</strong> plan. Your next invoice posts on the 1st.</p>
+        <p>Need more seats or SSO? Upgrade anytime — proration is automatic.</p>
+      </div>
+      <div class="cluster">
+        <span class="tag">Team</span><span class="tag">12 seats</span><span class="tag">Annual</span>
+      </div>
+      <div class="cluster"><button class="btn">Manage plan</button><button class="btn btn-ghost">View invoices</button></div>
+    </section>
+
+    <!-- stats card -->
+    <section class="card o-stack o-stack--card">
+      <div class="o-prose"><h2 class="card-title">Usage</h2></div>
+      <div class="o-stack o-stack--tight">
+        <div class="row-between"><span class="help">API calls</span><strong>184,320</strong></div>
+        <div class="row-between"><span class="help">Storage</span><strong>62.4 GB</strong></div>
+        <div class="row-between"><span class="help">Seats used</span><strong>9 / 12</strong></div>
+      </div>
+      <button class="btn">Export report</button>
+    </section>
+
+  </div>
+
+  <!-- closing wide prose to show rhythm at full container width -->
+  <section class="o-prose">
+    <h2>Notes on the bet</h2>
+    <p>This page mixes a documentation surface (running prose) with an app surface (cards of controls) on purpose — the two need different rhythms, and a single <code>--v-spacing</code> multiplied uniformly can't serve both. The decomposition here keeps one master lever while letting each context name its own multiple.</p>
+  </section>
+
+</main>
+</div>
+</body></html>`;
+
+/* ================================================================
+   WIRING
+   ================================================================ */
+const frame = document.getElementById('frame');
+const framewrap = document.getElementById('framewrap');
+const $ = id => document.getElementById(id);
+let root = null; // iframe documentElement, set on load
+
+const RANGES = ['fmin','fmax','rmin','rmax','lh','spacing','inputh','rkSection','rkPad','rkProse','rkTight','rkCluster','rkListGrouped','rkHbefore','rkHgroup','width'];
+const NUMS = ['vwmin','vwmax'];
+const DEFAULTS = {};
+[...RANGES, ...NUMS].forEach(id => DEFAULTS[id] = $(id).value);
+
+const num = id => parseFloat($(id).value);
+
+/* Utopia fluid clamp for a given modular step. Sizes/widths in px, output rem. */
+function stepData(n, fminRem, fmaxRem, rmin, rmax, vwMinRem, vwMaxRem) {
+  const sizeMin = fminRem * 16 * Math.pow(rmin, n);
+  const sizeMax = fmaxRem * 16 * Math.pow(rmax, n);
+  const wMin = vwMinRem * 16, wMax = vwMaxRem * 16;
+  const slope = (sizeMax - sizeMin) / (wMax - wMin); // px per px
+  const intercept = sizeMin - slope * wMin;          // px
+  const floorPx = Math.min(13, fminRem * 16 - 1);
+  const minSide = Math.max(floorPx, sizeMin);
+  return { minSide, sizeMax, intercept, slopeVw: slope * 100, wMin, wMax, sizeMin };
+}
+const r2 = px => (px / 16).toFixed(4).replace(/\.?0+$/, '') + 'rem';
+function clampStr(d) {
+  return 'clamp(' + r2(d.minSide) + ', ' + r2(d.intercept) + ' + ' + d.slopeVw.toFixed(4).replace(/\.?0+$/, '') + 'vw, ' + r2(d.sizeMax) + ')';
+}
+/* resolved px at a given preview width */
+function resolvedPx(d, widthPx) {
+  const pref = d.intercept + (d.slopeVw / 100) * widthPx;
+  return Math.max(d.minSide, Math.min(d.sizeMax, pref));
+}
+
+const FONT_STEPS = { '--v-font-size': 0, '--v-font-size-h1': 3, '--v-font-size-h2': 2, '--v-font-size-h3': 1, '--v-font-size-h4': 0, '--v-font-size-caption': -1, '--v-font-size-code': -1 };
+
+function setVar(k, v) { if (root) root.style.setProperty(k, v); }
+
+function apply() {
+  // outputs
+  const fmt = {
+    fmin: () => num('fmin') + 'rem', fmax: () => num('fmax') + 'rem',
+    rmin: () => num('rmin').toFixed(2), rmax: () => num('rmax').toFixed(2),
+    lh: () => num('lh').toFixed(2),
+    spacing: () => num('spacing') + 'rem', inputh: () => num('inputh') + 'rem',
+    rkSection: () => '×' + num('rkSection').toFixed(2) + ' = ' + (num('rkSection') * num('spacing')).toFixed(3) + 'rem',
+    rkPad: () => '×' + num('rkPad').toFixed(2) + ' = ' + (num('rkPad') * num('spacing')).toFixed(3) + 'rem',
+    rkTight: () => '×' + num('rkTight').toFixed(2) + ' = ' + (num('rkTight') * num('spacing')).toFixed(3) + 'rem',
+    rkCluster: () => '×' + num('rkCluster').toFixed(2) + ' = ' + (num('rkCluster') * num('spacing')).toFixed(3) + 'rem',
+    rkListGrouped: () => '×' + num('rkListGrouped').toFixed(2) + ' prose',
+    rkProse: () => '×' + num('rkProse').toFixed(2) + ' line',
+    rkHbefore: () => '×' + num('rkHbefore').toFixed(2) + ' line',
+    rkHgroup: () => '×' + num('rkHgroup').toFixed(2) + ' = ' + (num('rkHgroup') * num('spacing')).toFixed(3) + 'rem',
+    width: () => num('width') + 'px',
+  };
+  for (const id in fmt) { const o = $(id + '-o'); if (o) o.textContent = fmt[id](); }
+
+  if (!root) return;
+
+  // spacing + rhythm knobs
+  setVar('--v-spacing', num('spacing') + 'rem');
+  setVar('--v-input-height', num('inputh') + 'rem');
+  setVar('--v-line-height', num('lh'));
+  setVar('--rk-section', num('rkSection'));
+  setVar('--rk-pad', num('rkPad'));
+  setVar('--rk-prose', num('rkProse'));
+  setVar('--rk-tight', num('rkTight'));
+  setVar('--rk-cluster', num('rkCluster'));
+  setVar('--rk-list-grouped', num('rkListGrouped'));
+  setVar('--rk-heading-before', num('rkHbefore'));
+  setVar('--rk-hgroup', num('rkHgroup'));
+
+  // fonts
+  const args = [num('fmin'), num('fmax'), num('rmin'), num('rmax'), num('vwmin'), num('vwmax')];
+  const data = {};
+  for (const k in FONT_STEPS) { data[k] = stepData(FONT_STEPS[k], ...args); setVar(k, clampStr(data[k])); }
+
+  // attrs
+  root.dataset.scheme = SEG.scheme;
+  // list grouped↔continuous = which token the cascading --v-list-rhythm resolves to
+  setVar('--v-list-rhythm', SEG.lmode === 'continuous' ? 'var(--v-rhythm-continuous)' : 'var(--v-rhythm-grouped)');
+
+  // preview width
+  framewrap.style.width = num('width') + 'px';
+  $('wlabel').textContent = num('width');
+
+  // readout
+  const w = num('width');
+  const line = (label, k) => label.padEnd(10) + clampStr(data[k]) + '  → ' + resolvedPx(data[k], w).toFixed(1) + 'px';
+  $('readout').innerHTML =
+    '<b>font @ ' + w + 'px</b>\n' +
+    ['h1','h2','h3'].map(h => line(h, '--v-font-size-' + h)).join('\n') + '\n' +
+    line('body', '--v-font-size') + '\n' +
+    line('caption', '--v-font-size-caption') + '\n\n' +
+    '<b>rhythm</b>\n' +
+    '① section  ' + (num('rkSection') * num('spacing')).toFixed(3) + 'rem\n' +
+    '② pad      ' + (num('rkPad') * num('spacing')).toFixed(3) + 'rem\n' +
+    '③ prose    ' + num('rkProse').toFixed(2) + ' line (' + (num('rkProse') * num('lh') * resolvedPx(data['--v-font-size'], w)).toFixed(1) + 'px)\n' +
+    '④ tight    ' + (num('rkTight') * num('spacing')).toFixed(3) + 'rem\n' +
+    '⑤ cluster  ' + (num('rkCluster') * num('spacing')).toFixed(3) + 'rem';
+}
+
+/* segmented toggles */
+const SEG = { scheme: 'light', lmode: 'grouped' };
+function wireSeg(id, key) {
+  const box = $(id);
+  box.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    SEG[key] = b.dataset.v;
+    [...box.children].forEach(c => c.setAttribute('aria-pressed', String(c === b)));
+    apply();
+  });
+}
+wireSeg('scheme', 'scheme');
+wireSeg('lmode', 'lmode');
+
+[...RANGES, ...NUMS].forEach(id => $(id).addEventListener('input', apply));
+
+document.querySelectorAll('.stagebar .preset button').forEach(b =>
+  b.addEventListener('click', () => { $('width').value = b.dataset.w; apply(); }));
+
+$('reset').addEventListener('click', () => {
+  for (const id in DEFAULTS) $(id).value = DEFAULTS[id];
+  SEG.scheme = 'light'; SEG.lmode = 'grouped';
+  [...$('scheme').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === 'light')));
+  [...$('lmode').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === 'grouped')));
+  apply();
+});
+
+$('copy').addEventListener('click', () => {
+  const args = [num('fmin'), num('fmax'), num('rmin'), num('rmax'), num('vwmin'), num('vwmax')];
+  const f = k => clampStr(stepData(FONT_STEPS[k], ...args));
+  const css = `:root {
+  /* primary */
+  --v-spacing: ${num('spacing')}rem;
+  --v-input-height: ${num('inputh')}rem;
+  --v-line-height: ${num('lh')};
+  --v-font-size-min: ${num('fmin')}rem;
+  --v-font-size-max: ${num('fmax')}rem;
+  --v-font-ratio-min: ${num('rmin')};
+  --v-font-ratio-max: ${num('rmax')};
+  --v-viewport-min: ${num('vwmin')}rem;
+  --v-viewport-max: ${num('vwmax')}rem;
+
+  /* resolved fluid type */
+  --v-font-size: ${f('--v-font-size')};
+  --v-font-size-h1: ${f('--v-font-size-h1')};
+  --v-font-size-h2: ${f('--v-font-size-h2')};
+  --v-font-size-h3: ${f('--v-font-size-h3')};
+  --v-font-size-caption: ${f('--v-font-size-caption')};
+
+  /* five rhythm scales */
+  --v-rhythm-section: calc(${num('rkSection')} * var(--v-spacing));
+  --v-pad:            calc(${num('rkPad')} * var(--v-spacing));
+  --v-rhythm-prose:   calc(${num('rkProse')} * var(--v-line-height) * 1em);
+  --v-rhythm-tight:   calc(${num('rkTight')} * var(--v-spacing)); /* forms: label→control */
+  --v-gap-inline:     calc(${num('rkCluster')} * var(--v-spacing));
+  --v-heading-before: calc(${num('rkHbefore')} * var(--v-line-height) * 1em); /* space ABOVE a heading */
+  --v-hgroup-leading: calc(${num('rkHgroup')} * var(--v-spacing)); /* <hgroup>: constant space between lines */
+
+  /* o-prose rhythm is set by the boundary, owned by the lower element:
+     body↔body & heading→next = prose; prev→heading/hgroup = heading-before.
+     <hgroup> children use ADDITIVE leading: line-height = 1em + --v-hgroup-leading. Trim only the
+     group's outer edges (first child top, last child bottom); the title↔subtitle boundary keeps
+     its half-leading and needs NO margin, so every line gap in the group is the same leading. */
+
+  /* list rhythm — flip --v-list-rhythm to continuous at an editor root */
+  --v-rhythm-continuous: calc(var(--v-line-height) * 1em - 1cap);
+  --v-rhythm-grouped:    calc(${num('rkListGrouped')} * var(--v-rhythm-prose));
+  --v-list-rhythm:       var(--v-rhythm-${SEG.lmode === 'continuous' ? 'continuous' : 'grouped'});
+}`;
+  const flash = () => { const btn = $('copy'); const t = btn.textContent; btn.textContent = 'Copied ✓'; setTimeout(() => btn.textContent = t, 1200); };
+  const fallback = () => { const ta = document.createElement('textarea'); ta.value = css; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); flash(); };
+  if (navigator.clipboard?.writeText) navigator.clipboard.writeText(css).then(flash, fallback);
+  else fallback();
+});
+
+frame.addEventListener('load', () => { root = frame.contentDocument.documentElement; apply(); });
+frame.srcdoc = DOC;
+</script>
+</body>
+</html>
