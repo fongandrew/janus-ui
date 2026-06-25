@@ -127,6 +127,16 @@
   <p class="sub">Janus v2 rhythm playground. Five spacing scales + a fluid (Utopia) type scale, all live. Drag the preview width to test fluid type without resizing your window.</p>
 
   <fieldset>
+    <legend>Presets</legend>
+    <div class="seg" id="presets">
+      <button data-preset="compact">Compact</button>
+      <button data-preset="default" aria-pressed="true">Default</button>
+      <button data-preset="spacious">Spacious</button>
+    </div>
+    <div class="hint">Compact ≈ Janus v1: fixed 0.9375rem type (no fluid scaling), 1.35 leading, tight spacing. Click a preset, then tweak the sliders.</div>
+  </fieldset>
+
+  <fieldset>
     <legend>Preview</legend>
     <div class="ctl">
       <div class="lab"><span class="name">Viewport width</span><output id="width-o"></output></div>
@@ -140,6 +150,16 @@
       <div class="lab"><span class="name">List rhythm</span></div>
       <div class="seg" id="lmode"><button data-v="grouped" aria-pressed="true">Grouped</button><button data-v="continuous">Continuous</button></div>
       <div class="hint">Sets the cascading <code style="color:#9fb0c4">--v-list-rhythm</code> token. Grouped = discrete points (marketing). Continuous = line-height − 1cap, so <em>wrapped</em> bullets read as one passage (WYSIWYG). Watch the multi-line bullets above.</div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">Header height (o-bar §9.7)</span></div>
+      <div class="seg" id="bmode"><button data-v="text">Text</button><button data-v="input">Input</button><button data-v="contains" aria-pressed="true">Contains</button></div>
+      <div class="hint">Contains = reduced block padding so the control's text sits <code style="color:#9fb0c4">--v-spacing</code> from the edge (fixes the too-tall header). Input = bar is exactly one control tall. Text = full box padding.</div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">Control alignment (§6.1)</span></div>
+      <div class="seg" id="amode"><button data-v="edge" aria-pressed="true">Edge</button><button data-v="text">Text</button></div>
+      <div class="hint">See the <strong>Control alignment</strong> card. Edge puts a control's border-box on the content line (borders line up); Text puts its text on the line (aligned with plain text), so borders overhang to the left — which is why text-align is for light/borderless controls.</div>
     </div>
   </fieldset>
 
@@ -266,7 +286,7 @@
    text-box-trim, fluid type, the box/stack/grid objects, the rhythm
    decomposition into 5 named scales.
    ================================================================ */
-const DOC = `<!doctype html><html data-scheme="light"><head><meta charset="utf-8"><style>
+const DOC = `<!doctype html><html data-scheme="light" data-bar="contains" data-align="edge"><head><meta charset="utf-8"><style>
 *, *::before, *::after { box-sizing: border-box; }
 * { margin: 0; }
 
@@ -308,6 +328,7 @@ const DOC = `<!doctype html><html data-scheme="light"><head><meta charset="utf-8
 
   --v-rhythm-section: calc(var(--rk-section) * var(--v-spacing));            /* ① between boxes */
   --v-pad:            calc(var(--rk-pad)     * var(--v-spacing));            /* ② box padding   */
+  --v-control-inset:  calc((var(--v-input-height) - var(--v-font-size)) / 2); /* control text→border inline pad (v1) */
   --v-rhythm-prose:   calc(var(--rk-prose)  * var(--v-line-height) * 1em);  /* ③ paragraphs    */
   --v-rhythm-tight:   calc(var(--rk-tight)  * var(--v-spacing));            /* ④ label stacks  */
   --v-gap-inline:     calc(var(--rk-cluster)* var(--v-spacing));            /* ⑤ inline groups */
@@ -360,18 +381,20 @@ body {
    text." Only its immediate text children (and list items inside its lists) are
    trimmed, so the SAME container owns both the trim and the rhythm that compensates
    for it. Inputs, buttons, and bare headings outside o-prose keep their half-leading. —— */
-.o-prose > :where(h1,h2,h3,h4,h5,h6,p,figcaption,dt,dd),
+.o-prose > :where(h1,h2,h3,h4,h5,h6,p,figcaption,dt,dd,blockquote,pre),
 .o-prose > :where(ul,ol) > li {
   text-box: trim-both cap alphabetic;
 }
+/* Rule of thumb: any text element that carries its OWN padding (pre, blockquote callouts, table
+   cells…) gets trim-both too — that's what makes the padding read optically uniform top/bottom
+   vs. sides. Their padding also absorbs the cap/descender overshoot, so overflow:auto on a <pre>
+   never clips it. */
 /* Inside an hgroup, trim ONLY the group's outer edges (top of the first child, bottom of the
    last). The title↔subtitle boundary keeps its natural half-leading, so the gap there is the
    same visible leading as the gaps between lines WITHIN each element — a blend of both sizes,
    and no margin is needed. */
 .o-prose hgroup > :first-child { text-box: trim-start cap alphabetic; }
 .o-prose hgroup > :last-child  { text-box: trim-end cap alphabetic; }
-/* blockquote is deliberately NOT trimmed: its border/background frames the whole box,
-   so trimming the text to cap/baseline leaves the rule looking lopsided against the text. */
 
 h1,h2,h3,h4,h5,h6 { line-height: var(--v-line-height-heading); }
 h1 { font-size: var(--v-font-size-h1); font-weight: var(--v-font-weight-title); letter-spacing: -.01em; }
@@ -406,8 +429,10 @@ pre {
 }
 pre code { background: none; padding: 0; color: inherit; font-size: 1em; }
 blockquote {
+  background: var(--v-code-bg);
   border-inline-start: 3px solid var(--v-accent);
-  padding-inline-start: var(--v-pad);
+  border-radius: var(--v-radius-min);
+  padding: var(--v-pad);
   color: var(--v-muted);
   font-style: italic;
 }
@@ -460,16 +485,22 @@ label { font-weight: var(--v-font-weight-label); display: block; }
 .cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--v-gap-inline); }
 .row-between { display: flex; align-items: center; justify-content: space-between; gap: var(--v-gap-inline); }
 
-/* header bar */
+/* o-bar — header/toolbar strip. The block-axis version of the alignment principle (§9.7): it
+   reconciles its block padding with the height of the control it holds, so you don't get the
+   bar's full box padding PLUS the control's own height (the "header is way too tall" bug). */
 .o-bar {
   display: flex; align-items: center; justify-content: space-between; gap: var(--v-gap-inline);
   min-height: var(--v-input-height);
-  padding: var(--v-pad);
+  padding-inline: var(--v-spacing);
   border-bottom: var(--v-border-width) solid var(--v-border-color);
   background: color-mix(in srgb, var(--v-card-bg) 80%, transparent);
   backdrop-filter: blur(8px);
   position: sticky; top: 0; z-index: 5;
 }
+/* Three height modes (§9.7): */
+[data-bar="text"]     .o-bar { padding-block: var(--v-spacing); }                                         /* tall enough for one line of text */
+[data-bar="input"]    .o-bar { padding-block: 0; }                                                        /* bar IS one control tall, flush */
+[data-bar="contains"] .o-bar { padding-block: calc(var(--v-spacing) - max(0px, (var(--v-input-height) - 1lh) / 2)); } /* reduced pad: control TEXT sits --v-spacing from edge */
 .o-bar .brand { font-size: var(--v-font-size-h3); font-weight: var(--v-font-weight-title); }
 .card .card-title { font-size: var(--v-font-size-h3); } /* heading demotion inside cards */
 
@@ -500,11 +531,13 @@ hgroup {
 .o-prose hgroup > * { margin-block: 0; line-height: calc(1em + var(--o-hgroup__leading)); }
 
 /* ============ CONTROLS ============ */
+/* o-input-box: block padding centers one line in --v-input-height; inline padding is the
+   control's own inset (text→border), height-relative like v1 — NOT the card's box padding. */
 input[type=text], input[type=email], select, textarea, .btn {
   font: inherit; color: inherit;
   min-height: var(--v-input-height);
   padding-block: calc((var(--v-input-height) - 1lh) / 2);
-  padding-inline: var(--v-pad);
+  padding-inline: var(--v-control-inset);
   /* Controls carry a stronger border than cards so their box edges (and the spacing
      around them) are legible — a faint card-weight border reads as borderless. */
   border: var(--v-border-width) solid color-mix(in hsl, var(--v-fg) 28%, var(--v-bg));
@@ -513,16 +546,42 @@ input[type=text], input[type=email], select, textarea, .btn {
   box-shadow: inset 0 1px 2px rgb(0 0 0 / .05);
   width: 100%;
 }
-select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--v-muted) 50%), linear-gradient(135deg, var(--v-muted) 50%, transparent 50%); background-position: calc(100% - 18px) center, calc(100% - 13px) center; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; padding-inline-end: 2.2rem; }
-textarea { min-height: calc(var(--v-input-height) * 2); padding-block: var(--v-pad); width: 100%; resize: vertical; }
+select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--v-muted) 50%), linear-gradient(135deg, var(--v-muted) 50%, transparent 50%); background-position: calc(100% - 18px) center, calc(100% - 13px) center; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; padding-inline-end: calc(var(--v-control-inset) + 1.1rem); }
+/* textarea is multi-line: uniform inset all round (block leading-corrected so the first line
+   sits the same distance from the top as the text is from the sides). */
+textarea { min-height: calc(var(--v-input-height) * 2.25); padding-block: calc(var(--v-control-inset) - (1lh - 1em) / 2); width: 100%; resize: vertical; }
 .btn {
   width: auto; cursor: pointer; background: var(--v-card-bg);
   font-weight: var(--v-font-weight-label); white-space: nowrap;
   display: inline-flex; align-items: center; justify-content: center;
+  padding-inline: var(--v-spacing); /* buttons use spacing inline (v1), a touch roomier than inputs */
   box-shadow: none;
 }
 .btn-primary { background: var(--v-accent); color: var(--v-bg); border-color: transparent; }
 .btn-ghost { background: transparent; border-color: transparent; }
+
+/* ===== Alignment modes (§6.1) — does a control's BORDER or its TEXT land on the "content line"
+   (--v-spacing from the container edge)? --v-control-inset reconciles them. Edge-align suits
+   strong-bordered controls (their borders line up on the line); text-align suits light/borderless
+   ones (their text lines up with plain text). The demo uses BORDERED controls on purpose so you can
+   SEE it: in text-align the borders poke past the line — which is exactly why text-align is reserved
+   for light controls, where that overhang is invisible. ===== */
+.align-demo {
+  position: relative; display: flex; flex-direction: column; gap: var(--v-spacing);
+  background: var(--v-input-bg); border: var(--v-border-width) solid var(--v-border-color);
+  border-radius: var(--v-radius-min); padding-block: var(--v-spacing);
+  padding-inline: var(--_apad, var(--v-spacing));
+}
+.align-demo .a-text { color: var(--v-muted); font-size: var(--v-font-size-caption); font-weight: var(--v-font-weight-label); }
+.align-demo input, .align-demo select { width: 100%; }
+/* edge: container pads --v-spacing; controls flush → BORDER on the line; plain text inset by --v-radius-min. */
+[data-align="edge"] .align-demo        { --_apad: var(--v-spacing); }
+[data-align="edge"] .align-demo .a-text{ padding-inline-start: var(--v-radius-min); }
+/* text: container pads (--v-spacing − inset); controls flush → TEXT on the line; plain text pads the inset. */
+[data-align="text"] .align-demo        { --_apad: calc(var(--v-spacing) - var(--v-control-inset)); }
+[data-align="text"] .align-demo .a-text{ padding-inline-start: var(--v-control-inset); }
+/* content line — always --v-spacing from the demo's border edge, drawn on top so you see what lands on it. */
+.align-demo::before { content: ''; position: absolute; top: 0; bottom: 0; inset-inline-start: calc(var(--v-spacing) - var(--_apad, var(--v-spacing))); width: 2px; background: var(--v-accent); opacity: .6; pointer-events: none; z-index: 3; }
 
 input.switch {
   appearance: none; flex: none; width: 2.6em; height: 1.5em; border-radius: 1em;
@@ -534,7 +593,9 @@ input.switch::after { content: ''; position: absolute; top: .15em; left: .15em; 
 input.switch:checked::after { left: 1.25em; }
 input[type=radio], input[type=checkbox]:not(.switch) { accent-color: var(--v-accent); width: 1.1em; height: 1.1em; }
 
-.tag { display: inline-flex; align-items: center; font-size: var(--v-font-size-caption); padding: .2em .6em; border-radius: 999px; background: var(--v-code-bg); color: var(--v-muted); font-weight: var(--v-font-weight-label); }
+/* pill/badge: floor the inline padding at the corner radius (= half the pill height, 0.5lh +
+   block-pad) so text never intrudes into the rounded ends — the §8.3 curvature-clearance idea. */
+.tag { display: inline-flex; align-items: center; font-size: var(--v-font-size-caption); line-height: 1.35; padding-block: 0.25em; padding-inline: calc(0.5lh + 0.35em); border-radius: 999px; background: var(--v-code-bg); color: var(--v-muted); font-weight: var(--v-font-weight-label); }
 .page { padding-block: var(--v-rhythm-section) calc(var(--v-rhythm-section) * 2); }
 </style></head>
 <body>
@@ -677,6 +738,17 @@ input[type=radio], input[type=checkbox]:not(.switch) { accent-color: var(--v-acc
       <button class="btn">Export report</button>
     </section>
 
+    <!-- alignment demo: bordered controls + plain text; the accent line = the content line -->
+    <section class="card o-stack o-stack--card">
+      <div class="o-prose"><hgroup><h2 class="card-title">Control alignment</h2><p class="help">The accent line is --v-spacing from the edge. Edge: control borders sit on it. Text: control text sits on it (aligned with the plain text) and the borders poke left.</p></hgroup></div>
+      <div class="align-demo">
+        <span class="a-text">Section label</span>
+        <input type="text" value="A bordered input" />
+        <select><option>A bordered select</option></select>
+        <span class="a-text">Helper text below</span>
+      </div>
+    </section>
+
   </div>
 
   <!-- closing wide prose to show rhythm at full container width -->
@@ -770,6 +842,8 @@ function apply() {
 
   // attrs
   root.dataset.scheme = SEG.scheme;
+  root.dataset.bar = SEG.bmode;
+  root.dataset.align = SEG.amode;
   // list grouped↔continuous = which token the cascading --v-list-rhythm resolves to
   setVar('--v-list-rhythm', SEG.lmode === 'continuous' ? 'var(--v-rhythm-continuous)' : 'var(--v-rhythm-grouped)');
 
@@ -794,7 +868,7 @@ function apply() {
 }
 
 /* segmented toggles */
-const SEG = { scheme: 'light', lmode: 'grouped' };
+const SEG = { scheme: 'light', lmode: 'grouped', bmode: 'contains', amode: 'edge' };
 function wireSeg(id, key) {
   const box = $(id);
   box.addEventListener('click', e => {
@@ -806,17 +880,57 @@ function wireSeg(id, key) {
 }
 wireSeg('scheme', 'scheme');
 wireSeg('lmode', 'lmode');
+wireSeg('bmode', 'bmode');
+wireSeg('amode', 'amode');
+
+/* Presets — each sets the whole sizing slider bundle; scheme / list-rhythm / preview width
+   are left alone (they're context, not part of a sizing preset). */
+const PRESETS = {
+  compact: { /* Janus v1: fixed, tight type + spacing */
+    fmin: 0.9375, fmax: 0.9375, rmin: 1.2, rmax: 1.2, lh: 1.35,
+    spacing: 0.625, inputh: 1.875,
+    rkSection: 1.5, rkPad: 1.25, rkProse: 1, rkTight: 0.25, rkCluster: 0.5,
+    rkListGrouped: 0.5, rkHbefore: 1, rkHgroup: 0.5,
+  },
+  default: { /* Janus v2 default */
+    fmin: 1, fmax: 1.125, rmin: 1.2, rmax: 1.25, lh: 1.5,
+    spacing: 1, inputh: 2,
+    rkSection: 1.5, rkPad: 1.25, rkProse: 1, rkTight: 0.25, rkCluster: 0.5,
+    rkListGrouped: 0.5, rkHbefore: 1, rkHgroup: 0.5,
+  },
+  spacious: { /* larger, airier, more fluid */
+    fmin: 1.125, fmax: 1.375, rmin: 1.25, rmax: 1.33, lh: 1.6,
+    spacing: 1.25, inputh: 2.75,
+    rkSection: 1.75, rkPad: 1.4, rkProse: 1.1, rkTight: 0.3, rkCluster: 0.6,
+    rkListGrouped: 0.5, rkHbefore: 1.1, rkHgroup: 0.6,
+  },
+};
+function markPreset(name) {
+  [...$('presets').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.preset === name)));
+}
+function setPreset(name) {
+  const pre = PRESETS[name]; if (!pre) return;
+  for (const id in pre) $(id).value = pre[id];
+  markPreset(name);
+  apply();
+}
+$('presets').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setPreset(b.dataset.preset); });
 
 [...RANGES, ...NUMS].forEach(id => $(id).addEventListener('input', apply));
+/* A manual slider tweak means we've diverged from any preset — clear the highlight. */
+[...RANGES, ...NUMS].forEach(id => $(id).addEventListener('input', () => markPreset(null)));
 
 document.querySelectorAll('.stagebar .preset button').forEach(b =>
   b.addEventListener('click', () => { $('width').value = b.dataset.w; apply(); }));
 
 $('reset').addEventListener('click', () => {
   for (const id in DEFAULTS) $(id).value = DEFAULTS[id];
-  SEG.scheme = 'light'; SEG.lmode = 'grouped';
+  SEG.scheme = 'light'; SEG.lmode = 'grouped'; SEG.bmode = 'contains'; SEG.amode = 'edge';
   [...$('scheme').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === 'light')));
   [...$('lmode').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === 'grouped')));
+  [...$('bmode').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === 'contains')));
+  [...$('amode').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === 'edge')));
+  markPreset('default');
   apply();
 });
 
