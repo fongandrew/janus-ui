@@ -254,9 +254,9 @@
   <fieldset>
     <legend>Radius &amp; nesting (§8)</legend>
     <div class="ctl">
-      <div class="lab"><span class="name">Preset (resets min/max)</span></div>
-      <div class="seg" id="rmode"><button data-v="concentric" aria-pressed="true">Concentric</button><button data-v="uniform">Uniform</button><button data-v="flat">Flat</button></div>
-      <div class="hint">The window holds the <strong>max</strong> radius; everything inside steps down toward the <strong>min</strong> by the spacing between it and its parent (cards = window − gutter, controls a step further if nested, dialog = window − inset). Uniform = two flat tiers. Flat = everything at max. Selecting a preset resets the two sliders below.</div>
+      <div class="lab"><span class="name">Quick presets (just set min/max)</span></div>
+      <div class="seg" id="rmode"><button data-v="concentric" aria-pressed="true">Stepped</button><button data-v="uniform">Near-uniform</button><button data-v="flat">Flat</button></div>
+      <div class="hint">One always-on cascade — no preset classes. The window holds the <strong>max</strong> radius; everything inside steps down toward the <strong>min</strong> by the padding between it and its parent (cards = window − gutter, controls a step further if nested, dialog = window − inset). These buttons just set the two sliders below: Stepped = large range, Near-uniform = small range (inner levels bottom out at the floor), Flat = min == max.</div>
     </div>
     <div class="ctl">
       <div class="lab"><span class="name">Max radius · the window</span><output id="radius-o"></output></div>
@@ -315,7 +315,7 @@
    text-box-trim, fluid type, the box/stack/grid objects, the rhythm
    decomposition into 5 named scales.
    ================================================================ */
-const DOC = `<!doctype html><html data-scheme="light" data-bar="text" data-align="edge" data-radius="concentric" data-pframe="draw"><head><meta charset="utf-8"><style>
+const DOC = `<!doctype html><html data-scheme="light" data-bar="text" data-align="edge" data-pframe="draw"><head><meta charset="utf-8"><style>
 *, *::before, *::after { box-sizing: border-box; }
 * { margin: 0; }
 
@@ -503,40 +503,27 @@ label { font-weight: var(--v-font-weight-label); display: block; }
   margin-block-start: var(--v-heading-before);
 }
 
-/* ===== Radius presets (§8.2) — objects read their OWN --o-*__radius knob (fallback --v-radius-min);
-   the preset assigns the knobs. ===== */
-
-/* Concentric — anchor at the FRAME (--v-radius, the window) and work INWARD: each nesting level
-   subtracts the padding/inset between it and its parent, floored at --v-radius-min so corners
-   never go sharp — they just bottom out at the floor. Radius therefore tracks NESTING DEPTH, not
-   element type: a control sitting directly in the dialog is one step in; the same control inside a
-   card is two steps in, and rounds less (often all the way to the floor). The cascade does the
-   counting — each box re-derives the control knob from its own (already-stepped) radius. */
-[data-radius="concentric"] {
+/* ===== Radius cascade (§8.2) — ALWAYS ON, no preset classes. Objects read their OWN --o-*__radius
+   knob (fallback --v-radius-min); these rules assign them. Anchor at the FRAME (--v-radius, the
+   window) and work INWARD: each nesting level subtracts the padding/inset between it and its parent,
+   floored at --v-radius-min so corners never go sharp — they just bottom out at the floor. Radius
+   therefore tracks NESTING DEPTH, not element type: a control directly in the dialog is one step in;
+   the same control inside a card is two steps in, and rounds less (often all the way to the floor).
+   The "look" is set purely by the two values: large range = pronounced stepping; min == max = flat. */
+:root {
   --o-dialog__radius:    max(var(--v-radius-min), calc(var(--v-radius) - var(--o-dialog__offset)));
   --o-box__radius:       max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad)));
   --o-input-box__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad)));
 }
 /* a box steps the CONTROL radius one pad deeper for its own children (no self-reference: reads
    --o-box__radius, writes --o-input-box__radius) */
-[data-radius="concentric"] :where(.o-box, .card) {
+:where(.o-box, .card) {
   --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-box__radius) - var(--v-pad)));
 }
 /* the dialog re-roots the cascade: everything inside derives from the dialog radius */
-[data-radius="concentric"] .o-dialog {
+.o-dialog {
   --o-box__radius:       max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad)));
   --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad)));
-}
-
-[data-radius="uniform"] { /* two flat values: small (control+box), larger (dialog+frame) */
-  --o-input-box__radius: var(--v-radius-min);
-  --o-box__radius:       var(--v-radius-min);
-  --o-dialog__radius:    var(--v-radius);
-}
-[data-radius="flat"] {   /* everything = the frame radius */
-  --o-input-box__radius: var(--v-radius);
-  --o-box__radius:       var(--v-radius);
-  --o-dialog__radius:    var(--v-radius);
 }
 
 /* The frame corner a header must clear is the one actually PAINTED. When we draw the window radius
@@ -1012,7 +999,6 @@ function apply() {
   root.dataset.scheme = SEG.scheme;
   root.dataset.bar = SEG.bmode;
   root.dataset.align = SEG.amode;
-  root.dataset.radius = SEG.rmode;
   root.dataset.pframe = SEG.pframe;
   // list grouped↔continuous = which token the cascading --v-list-rhythm resolves to
   setVar('--v-list-rhythm', SEG.lmode === 'continuous' ? 'var(--v-rhythm-continuous)' : 'var(--v-rhythm-grouped)');
@@ -1056,11 +1042,11 @@ wireSeg('bmode', 'bmode');
 wireSeg('amode', 'amode');
 wireSeg('pframe', 'pframe');
 
-/* Radius presets reset the min/max sliders to a look characteristic of that mode. */
+/* Quick presets — just set the two radius values; the always-on cascade does the rest. */
 const RADIUS_PRESETS = {
-  concentric: { radius: 2.5, radiusMin: 0.375 },  /* big window → visible inward steps */
-  uniform:    { radius: 0.5, radiusMin: 0.25 },   /* two flat tiers */
-  flat:       { radius: 0.5, radiusMin: 0.5 },    /* everything one radius */
+  concentric: { radius: 2.5, radiusMin: 0.375 },  /* large range → pronounced inward steps */
+  uniform:    { radius: 0.5, radiusMin: 0.25 },   /* small range → near-uniform (inner levels floor) */
+  flat:       { radius: 0.5, radiusMin: 0.5 },    /* min == max → every corner identical */
 };
 $('rmode').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
@@ -1167,23 +1153,23 @@ $('copy').addEventListener('click', () => {
   --v-rhythm-grouped:    calc(${num('rkListGrouped')} * var(--v-rhythm-prose));
   --v-list-rhythm:       var(--v-rhythm-${SEG.lmode === 'continuous' ? 'continuous' : 'grouped'});
 
-  /* radius (preset: ${SEG.rmode}, page frame: ${SEG.pframe}) — objects read their own knob with a
-     --v-radius-min fallback; the ${SEG.rmode} preset assigns the per-layer knobs. */
-  --v-radius:            ${num('radius')}rem; /* the window/frame anchor */
-  --v-radius-min:        ${num('radiusMin')}rem;
-  --o-dialog__offset:    calc(${num('dlgOffset')} * var(--v-spacing));${SEG.rmode === 'concentric' ? `
-  /* inward from the frame, floored at the min; each box steps the control knob one pad deeper */
+  /* radius — two values (max/min); the always-on cascade below assigns the per-layer knobs,
+     stepping inward from the frame and flooring at the min. Page frame painted: ${SEG.pframe}. */
+  --v-radius:            ${num('radius')}rem; /* the window/frame anchor (max) */
+  --v-radius-min:        ${num('radiusMin')}rem; /* the floor (min); flat = min == max */
+  --o-dialog__offset:    calc(${num('dlgOffset')} * var(--v-spacing));
+}
+/* The radius cascade — always on, no preset classes. Steps inward from the frame, floored at min;
+   each box steps the control knob one pad deeper. The look is set entirely by the two values above. */
+:root {
   --o-dialog__radius:    max(var(--v-radius-min), calc(var(--v-radius) - var(--o-dialog__offset)));
   --o-box__radius:       max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad)));
   --o-input-box__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad)));
-  /* + .o-box { --o-input-box__radius: max(min, calc(var(--o-box__radius) - var(--v-pad))) }
-     + .o-dialog { --o-box/-input-box__radius: max(min, calc(var(--o-dialog__radius) - var(--v-pad))) } */` : SEG.rmode === 'uniform' ? `
-  --o-input-box__radius: var(--v-radius-min);
-  --o-box__radius:       var(--v-radius-min);
-  --o-dialog__radius:    var(--v-radius);` : `
-  --o-input-box__radius: var(--v-radius);
-  --o-box__radius:       var(--v-radius);
-  --o-dialog__radius:    var(--v-radius);`}
+}
+:where(.o-box, .card) { --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-box__radius) - var(--v-pad))); }
+.o-dialog {
+  --o-box__radius:       max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad)));
+  --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad)));
 }`;
   const flash = () => { const btn = $('copy'); const t = btn.textContent; btn.textContent = 'Copied ✓'; setTimeout(() => btn.textContent = t, 1200); };
   const fallback = () => { const ta = document.createElement('textarea'); ta.value = css; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); flash(); };
