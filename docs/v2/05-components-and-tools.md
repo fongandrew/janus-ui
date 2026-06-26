@@ -131,3 +131,37 @@ Approved tools:
 - Overflow: `t-truncate` (single-line ellipsis)
 
 Drop from v1: the broader text-overflow-with-tooltip machinery. If consumers need it they can compose `t-truncate` with `c-tooltip`.
+
+### 11.1 Truncation: `t-truncate` (the overflow recipe)
+
+v1 made truncation a global **opt-out**: `base.css` applied a `t-overflow-x` mixin to nearly every text element (`a, span, b, em, h1–h6, p, strong, …`), and that mixin set `overflow: hidden` on the element **and recursively on every descendant** (`* { overflow: hidden }`). It also needed `spanify` — a JS pass wrapping bare text nodes in `<span>` so there was a stylable element to clip and so the focus ring (on the outer element) stayed clear of the clip. It worked, but it inverted the common case (most text should wrap) and the both-axes `hidden` caused constant *inadvertent vertical clipping*.
+
+v2 flips it to an **opt-in** single utility built on `overflow-x: clip`:
+
+```css
+@layer tools {
+  .t-truncate {
+    min-width: 0;            /* shrink inside flex/grid parents (replaces the spanify + child-clip hack) */
+    white-space: nowrap;     /* one line — so there's no vertical content to clip */
+    overflow-x: clip;        /* clips horizontally; ellipsis renders */
+    overflow-y: visible;     /* no vertical clipping, no scroll container */
+    text-overflow: ellipsis;
+  }
+}
+```
+
+Why each line, and why this beats v1 (all three claims validated empirically in `spacing-workbench.html`):
+
+- **`overflow-x: clip`, not `hidden`.** Per CSS spec, when one axis is `hidden`/`clip` and the other is `visible`, `hidden` forces the visible axis to compute to **`auto`** — spawning a scroll container (a focusable scroll box + stray scrollbar). That coupling is the entire reason v1 clamped *both* axes to `hidden` (and thus clipped vertically). `clip` is the exception: it does **not** force the other axis to `auto` and does **not** create a scroll container, so `overflow-y: visible` survives. Confirmed: under `overflow-x: hidden` the browser reports `overflow-y: auto` (scroll container); under `clip` it stays `visible` (none). `text-overflow: ellipsis` still renders under `clip`.
+- **`min-width: 0` replaces `spanify` + the recursive `*` clip.** The reason ellipsis "didn't propagate to children" in flex contexts was the flexbox rule that a flex item won't shrink below its content size without `min-width: 0`. Set it on the one truncating child and the descendant-clip recursion is unnecessary. Components own their markup and put `t-truncate` on the single text element they want clamped — no blanket node-wrapping.
+- **Focus ring: truncate on an *inner* element, keep the focusable element overflow-free.** An `outline` on the truncating element itself is never clipped by that element's own overflow — clipping only bites a ring on a **descendant** (or a `box-shadow`). So the durable rule is to put `t-truncate` on an inner span and let the focusable wrapper stay `overflow: visible`; its ring is then never clipped regardless of strategy. (This is the same separation `spanify` bought, made explicit and scoped.)
+
+**Multi-line clamp is a separate tool, not a flag on this one.** When a design needs N-line truncation, use a distinct `t-line-clamp` (`display: -webkit-box; -webkit-line-clamp: var(--t-line-clamp, 2); -webkit-box-orient: vertical; overflow: clip;`) rather than conflating it with single-line `t-truncate` — they have different layout models and shouldn't share a class.
+
+**Header / toolbar shrink pattern.** The common application: a bar with a flexible label and fixed actions. Let the label side shrink and ellipsize while the actions stay fixed — no wrapping to a second row:
+
+```css
+.o-bar > .label-group { flex: 1 1 auto; min-width: 0; }   /* yields space */
+.o-bar > .label-group .brand { /* compose t-truncate */ }
+.o-bar > .actions { flex: none; }                         /* never shrink, never wrap */
+```

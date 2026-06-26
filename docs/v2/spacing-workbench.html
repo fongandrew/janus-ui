@@ -706,6 +706,12 @@ body:has(#dw-narrow:checked)    .o-dialog { --_dlg-width: 22rem; }
 [data-bar="input"]    .o-bar { --_bar-pad: 0px; }                                                           /* flush — bar is one control tall */
 [data-bar="contains"] .o-bar { --_bar-pad: calc(var(--v-spacing) - max(0px, (var(--v-input-height) - 1lh) / 2)); } /* snug */
 .o-bar .brand { font-size: var(--v-font-size-h3); font-weight: var(--v-font-weight-title); }
+/* Header overflow (§11.1 shrink pattern): the label side yields space and ellipsizes; the action
+   side stays fixed and never wraps — so the bar holds ONE row even at phone width. The clusters in
+   the bar must not wrap (the default .cluster wrap is what dropped the buttons to a second row). */
+.o-bar > .cluster { flex-wrap: nowrap; }
+.o-bar > .cluster:first-child { flex: 1 1 auto; min-width: 0; }  /* brand group shrinks */
+.o-bar > .cluster:last-child  { flex: none; }                    /* actions keep their size */
 .card .card-title { font-size: var(--v-font-size-h3); } /* heading demotion inside cards */
 
 /* ============ o-prose — block flow, TRIMS its text children, asymmetric heading rhythm ============
@@ -924,13 +930,21 @@ input[type=radio], input[type=checkbox]:not(.switch) { accent-color: var(--v-acc
    block-pad) so text never intrudes into the rounded ends — the §8.3 curvature-clearance idea. */
 .tag { display: inline-flex; align-items: center; font-size: var(--v-font-size-caption); line-height: 1.35; padding-block: 0.25em; padding-inline: calc(0.5lh + 0.35em); border-radius: 999px; background: var(--v-code-bg); color: var(--v-muted); font-weight: var(--v-font-weight-label); }
 .page { padding-block: var(--v-rhythm-section) calc(var(--v-rhythm-section) * 2); }
+
+/* ============ t-truncate — single-line ellipsis (§11.1) ============
+   Opt-in (NOT v1's global opt-out). Built on overflow-x:clip — clip does not force the other axis
+   to auto (overflow-x:hidden would → a scroll container) and does not clip vertically, so focus
+   rings / popovers on the truncated element survive. min-width:0 lets it shrink inside a flex/grid
+   parent, which is what replaces v1's spanify + recursive * child-clip. Put it on the INNER text
+   element and keep the focusable wrapper overflow-free so its ring is never clipped. */
+.t-truncate { min-width: 0; white-space: nowrap; overflow-x: clip; overflow-y: visible; text-overflow: ellipsis; }
 </style></head>
 <body>
 
 <header class="o-bar">
   <span class="cluster">
     <button class="icon-btn" aria-label="Menu">☰</button>
-    <span class="brand">Acme · Settings</span>
+    <span class="brand t-truncate">Acme · Settings</span>
   </span>
   <span class="cluster">
     <button class="btn btn-ghost">Discard</button>
@@ -1110,6 +1124,7 @@ input[type=radio], input[type=checkbox]:not(.switch) { accent-color: var(--v-acc
     <h2>Notes on the bet</h2>
     <p>This page mixes a documentation surface (running prose) with an app surface (cards of controls) on purpose — the two need different rhythms, and a single <code>--v-spacing</code> multiplied uniformly can't serve both. The decomposition here keeps one master lever while letting each context name its own multiple.</p>
   </section>
+
 
 </main>
 </div>
