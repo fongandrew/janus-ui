@@ -74,20 +74,20 @@ Layout & rhythm:
 - `--v-border-width` — base border width (default `1px`).
 - `--v-input-height` — height of interactive controls (default `2.5rem`). Drives `o-input-box` and the controls layered on it. Deliberately *independent* of `--v-spacing`.
 
-Typography (a **fluid, Utopia-style scale** — §5.4):
+Typography (a Utopia-style scale that ships **fixed by default** — the two anchors collapse to one size; fluid type is an opt-in, §5.4):
 - `--v-font-family`
 - `--v-font-family-mono`
-- `--v-font-size-min` — base body size at (and below) the minimum viewport (default `1rem`).
-- `--v-font-size-max` — base body size at (and above) the maximum viewport (default `1.125rem`).
+- `--v-font-size-min` — base body size at (and below) the minimum viewport (default `0.9375rem` ≈ 15px).
+- `--v-font-size-max` — base body size at (and above) the maximum viewport (default `0.9375rem` ≈ 15px). **By default this equals `--v-font-size-min`, so body text is a fixed 15px** — the app-appropriate default, since UI text should not resize as the window changes. Marketing/content sites opt into fluid type by spreading the two anchors apart (§5.4, §6.7); the default app config anchors a touch below v1's 16px to read as denser, app-grade UI while spacing stays on the 16px grid (`--v-spacing: 1rem`).
 - `--v-font-ratio-min` — modular-scale ratio applied at the minimum viewport (default `1.2`, a minor third). Steps above/below body multiply/divide by this.
 - `--v-font-ratio-max` — modular-scale ratio applied at the maximum viewport (default `1.25`, a major third). Larger screens get a more dramatic scale.
 - `--v-line-height` — base line height (default `1.5`).
 
-Fluid-scaling viewport anchors (primary; shared by the fluid type scale and any opt-in fluid spacing, §6.5):
+Fluid-scaling viewport anchors (primary; the shared engine behind opt-in fluid type and opt-in fluid spacing, §6.5 / §6.7 — inert while the size anchors are collapsed, as they are by default):
 - `--v-viewport-min` — lower anchor; below it everything holds at its `*-min` value (default `20rem` ≈ 320px).
 - `--v-viewport-max` — upper anchor; above it everything holds at its `*-max` value (default `80rem` ≈ 1280px).
 
-The resolved base size, `--v-font-size`, is a **secondary** knob — a `clamp()` interpolating `--v-font-size-min` → `--v-font-size-max` across the viewport range (see §5.4 for the formula). Consumers set the *anchors and ratios* above; `--v-font-size` and the per-role tokens fall out. (Renamed from v1's static `--v-text-size`.)
+The resolved base size, `--v-font-size`, is a **secondary** knob — a `clamp()` interpolating `--v-font-size-min` → `--v-font-size-max` across the viewport range (see §5.4 for the formula). With the default collapsed anchors the clamp degrades to a constant 15px; a consumer who spreads the anchors gets true fluid interpolation. Consumers set the *anchors and ratios* above; `--v-font-size` and the per-role tokens fall out. (Renamed from v1's static `--v-text-size`.)
 
 Color:
 - `--v-bg` — body / base background (default `light-dark(white, black)`).
@@ -113,7 +113,7 @@ Inline insets (accompanying text → the box it introduces, §6.1). Because boxe
 
 The four `--v-pad-*` / `--v-gap-*` knobs are *frozen at root* once declared — changing `--v-spacing` in a sub-tree does NOT recompute them. To re-derive them at a scope, set all five together (Janus's internal `v-spacing` mixin does this in-house, §5.3; consumers set the bundle by hand or in their own variant class).
 
-Font sizes (each a **fluid step** on the scale — §5.4). Every token is its own `clamp()` interpolating between the viewport anchors; the per-role defaults below name the *step* the role occupies. Headings live above body, caption/code below:
+Font sizes (each a **step** on the scale — §5.4). Every token is its own `clamp()` between the viewport anchors; with the default collapsed size anchors each clamp resolves to a fixed size (it only *interpolates* once a consumer opts into fluid type). The per-role defaults below name the *step* the role occupies. Headings live above body, caption/code below:
 - `--v-font-size` — resolved base body size, **step 0**: `clamp(--v-font-size-min, slope·vw + intercept, --v-font-size-max)`. The value the page inherits and every `1em` resolves against. Derived, not hand-set — consumers move the `*-min` / `*-max` anchors instead.
 - `--v-font-size-h1` — page title (default = step **+3**).
 - `--v-font-size-h2` — section heading (default = step **+2**).
@@ -124,7 +124,7 @@ Font sizes (each a **fluid step** on the scale — §5.4). Every token is its ow
 - `--v-font-size-caption` — small text for captions, badges, tooltips (default = step **−1**). Consumed by `o-caption`.
 - `--v-font-size-code` — monospace text size (default = step **−1**). Consumed by `o-code`. (Caption and code share step −1 by default; either is independently overridable — bump `--v-font-size-code` to step 0 if your mono face runs small.)
 
-The step exponent feeds the fluid mechanism in §5.4, which expands to a `clamp(min, slope·vw + intercept, max)` per token — so an `h1` is "step +3 of the scale," fluid between the viewport anchors, *not* a fixed `1.5×` of body. The dual ratios mean the gap between levels widens on large screens (ratio approaches `--v-font-ratio-max`) and tightens on small ones (`--v-font-ratio-min`), which is the Utopia property: a calmer scale on phones, a more expressive one on desktops.
+The step exponent feeds the scale mechanism in §5.4, which expands to a `clamp(min, slope·vw + intercept, max)` per token — so an `h1` is "step +3 of the scale," *not* a hard-coded `1.5×` of body. Under the default fixed config that step is a constant multiple of the 15px base; once a consumer opts into fluid type the dual ratios kick in, so the gap between levels widens on large screens (ratio approaches `--v-font-ratio-max`) and tightens on small ones (`--v-font-ratio-min`) — the Utopia property: a calmer scale on phones, a more expressive one on desktops.
 
 **Readability floor.** Each token's `clamp()` *minimum* (its value at `--v-viewport-min`) is floored so small steps stay legible on small screens, via a private intermediate:
 
@@ -141,7 +141,7 @@ The line-height formula adds a fixed leading amount (half the base spacing) rath
 
 **Additive vs. multiplicative leading.** This `1em + constant` form is *additive* leading, and it's a general principle, not just a heading trick. Multiplicative line-height (`1.5`) makes the whitespace *between* lines grow with font size — which looks wrong when a large heading wraps next to small text (e.g. inside an `<hgroup>`, §6.2): the heading's own lines sit farther apart than the subtitle does. Additive leading gives every line, big or small, the same constant space between, which is why `<hgroup>` and the heading line-heights use it. Body copy keeps multiplicative `--v-line-height` (the conventional choice for long-form reading); the two are a deliberate per-context choice.
 
-**This composes cleanly with the fluid type scale.** Because the offset is added to `1em` — the element's *own resolved* font size — the leading tracks each fluid `clamp()` automatically at every viewport. Nothing recomputes when the type scales; an `h1` that grows from step +3-at-320px to step +3-at-1280px keeps correct leading the whole way, since `1em` is whatever the clamp currently resolves to.
+**This composes cleanly whether type is fixed or fluid.** Because the offset is added to `1em` — the element's *own resolved* font size — the leading tracks whatever each token's `clamp()` currently resolves to. Under the default fixed config that's a constant, so leading is simply correct per role; and if a consumer opts into fluid type, the leading tracks each fluid `clamp()` automatically at every viewport — an `h1` that grows from step +3-at-320px to step +3-at-1280px keeps correct leading the whole way, since `1em` is whatever the clamp currently resolves to. Nothing recomputes either way.
 
 The table below shows resolved values **at the minimum viewport anchor** (320px: 16px base, `--v-font-ratio-min` 1.2) and default spacing (`0.75rem` → offset `0.375rem`). Toward `--v-viewport-max` every font size grows and the steps spread further apart (ratio rises toward `--v-font-ratio-max`), but the *leading ratios* shown here only tighten slightly as the fixed offset shrinks proportionally:
 
@@ -258,9 +258,9 @@ The bar for an internal mixin is high: it must bundle a fixed set of knobs (or a
 
 Mixins are **internal only, used sparingly, for irreducibly-bundled knob sets and mechanical expansions** (see §14).
 
-### 5.4 Fluid type scale (Utopia-style)
+### 5.4 Type scale (Utopia-style, fluid-capable — ships fixed)
 
-The type scale is **fluid**: every font-size token interpolates with the viewport between two anchors, following the model popularized by [Utopia.fyi](https://utopia.fyi). Two things vary across the viewport range — the **base size** (`--v-font-size-min` → `--v-font-size-max`) and the **scale ratio** (`--v-font-ratio-min` → `--v-font-ratio-max`) — so larger screens get both bigger body text *and* a more dramatic step-to-step contrast. The anchors are `--v-viewport-min` / `--v-viewport-max` (§5.1).
+The type scale is **fluid-capable but ships fixed**: the *mechanism* is the Utopia clamp popularized by [Utopia.fyi](https://utopia.fyi), but the **default app config collapses both size anchors to one value (`--v-font-size-min == --v-font-size-max == 0.9375rem`), so every token resolves to a fixed size that does not track the viewport.** Fixed type is the right default for application UI — text shouldn't reflow-resize as you drag the window. A consumer opts into fluid type by spreading the anchors apart (and, if desired, the ratios), which is the recommended configuration for **marketing / content sites** where type is the star (§6.7). When the anchors are spread, two things vary across the viewport range — the **base size** (`--v-font-size-min` → `--v-font-size-max`) and the **scale ratio** (`--v-font-ratio-min` → `--v-font-ratio-max`) — so larger screens get both bigger body text *and* a more dramatic step-to-step contrast. The viewport anchors are `--v-viewport-min` / `--v-viewport-max` (§5.1).
 
 **The clamp formula.** Each token resolves to `clamp(min, preferred, max)`, where the preferred value is a straight line through the two anchor points (size-at-min-viewport, size-at-max-viewport):
 
@@ -309,13 +309,13 @@ then fed through the clamp formula above. Body is step 0; headings are +1…+3; 
 
 (CSS has no `pow()`, so the per-step ratio powers are precomputed numeric constants the mixin/token file carries — the only place step indices appear at all. The toolchain may also generate these at build time from the four primary knobs, mirroring `utopia-core`.) Consumers never invoke `v-font-step`; they set the anchors and ratios (§5.1) and read the semantic tokens.
 
-**Why fluid.** A static scale forces a compromise: comfortable on a phone *or* on a wide monitor, not both. The fluid scale removes the in-between breakpoint juggling — no `@media` steps for type — and the leading formula (§5.1) rides along automatically because it's `1em`-relative. It also subsumes v1's hi-DPI font bump cleanly: the resolution gate (§6.4) nudges the *anchors*, not a frozen value.
+**Why keep the fluid mechanism even though the default is fixed.** Collapsing the anchors costs nothing — `clamp(0.9375rem, …, 0.9375rem)` is a constant, no special-casing — so the same engine serves both modes. When a consumer *does* want fluid type (marketing/content), spreading the anchors removes the in-between breakpoint juggling — no `@media` steps for type — and the leading formula (§5.1) rides along automatically because it's `1em`-relative. The hi-DPI font bump (§6.4) works in either mode: it nudges the *anchors* together, so it raises a fixed size or shifts a fluid range without special-casing.
 
-**Fluid spacing** uses the identical mechanism and is available as an opt-in (§6.5); type is the default fluid system, space stays static unless the consumer opts in.
+**Both type and spacing ship fixed; fluidity is opt-in per axis.** Spacing stays static unless the consumer opts in (§6.5), and type does the same — the default app config keeps the type anchors collapsed. Fluid type is the recommended expression for marketing/content sites (§6.7), not the out-of-the-box default.
 
 ### 5.5 Axes of sizing & choosing a signal
 
-Fluid type (§5.4) solves exactly one sizing problem — *legibility vs. viewport width*. It is not the whole story, and binding everything to viewport width is a trap: a desktop app's toolbar should not grow when you drag the window wider. The system stays flexible because sizing decomposes into **three independent axes**, and each axis is driven by a **signal you choose** — the framework never assumes which.
+Fluid type (§5.4) solves exactly one sizing problem — *legibility vs. viewport width* — which is why it is **opt-in, not the default**: binding text size to viewport width is a trap for app UI, where a toolbar should not grow when you drag the window wider. The default collapses the type anchors to a fixed 15px and lets the consumer rebind the legibility axis to a continuous signal only when that's wanted (marketing/content). The system stays flexible because sizing decomposes into **three independent axes**, and each axis is driven by a **signal you choose** — the framework never assumes which.
 
 **The three axes.** They move independently; conflating them is what makes a design system rigid.
 
@@ -340,4 +340,4 @@ Fluid type (§5.4) solves exactly one sizing problem — *legibility vs. viewpor
 @media (pointer: coarse)      { … --v-input-height:…}/* device class        */
 ```
 
-Because the framework never hard-codes the binding, you rebind any axis to any signal per project without fighting the cascade. Utopia is simply *one default expression* for the legibility axis — defeat it by collapsing the anchors (`--v-font-size-min == --v-font-size-max`), and the clamp degrades to a fixed scale with no special-casing. **Choosing a sizing strategy = choosing, per axis, which signal drives it.** See §6.7 for the recipes that fall out for marketing sites, desktop apps, and web apps.
+Because the framework never hard-codes the binding, you rebind any axis to any signal per project without fighting the cascade. Utopia is *one available expression* for the legibility axis, not the default — **the default ships the anchors collapsed (`--v-font-size-min == --v-font-size-max == 0.9375rem`), a fixed scale with no viewport signal**; spreading the anchors opts the legibility axis onto the viewport signal. **Choosing a sizing strategy = choosing, per axis, which signal drives it.** See §6.7 for the recipes that fall out for marketing sites, desktop apps, and web apps.

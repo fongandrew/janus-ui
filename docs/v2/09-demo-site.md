@@ -201,11 +201,11 @@ A new section below the existing preferences. All inputs are **plain text fields
 | `--v-radius` | `0.5rem` | Frame / window radius |
 | `--v-input-height` | `2.5rem` | Control height |
 | `--v-border-width` | `1px` | Base border width |
-| `--v-font-size-min` | `1rem` | Base body size at the min viewport (fluid scale, §5.4) |
-| `--v-font-size-max` | `1.125rem` | Base body size at the max viewport |
+| `--v-font-size-min` | `0.9375rem` | Base body size at the min viewport. Equals `-max` by default → **fixed 15px**; spread the two to opt into fluid type (§5.4, §6.7) |
+| `--v-font-size-max` | `0.9375rem` | Base body size at the max viewport (equal to `-min` by default) |
 | `--v-font-ratio-min` | `1.2` | Modular-scale ratio at the min viewport |
-| `--v-font-ratio-max` | `1.25` | Modular-scale ratio at the max viewport |
-| `--v-viewport-min` | `20rem` | Lower fluid anchor (type + opt-in space) |
+| `--v-font-ratio-max` | `1.2` | Modular-scale ratio at the max viewport (equal to `-min` by default, so the ramp is fixed too) |
+| `--v-viewport-min` | `20rem` | Lower fluid anchor (used only when type/space fluidity is opted in) |
 | `--v-viewport-max` | `80rem` | Upper fluid anchor |
 | `--v-line-height` | `1.5` | Base line height |
 | `--v-font-family` | system default | Primary font stack |

@@ -107,25 +107,25 @@ Janus's internal `v-spacing` mixin (§5.3 — an authoring tool, not a consumer 
 
 ### 6.4 Hi-DPI density bump
 
-A 2.5rem control on a desktop reads fine; on a phone, fingers want at least 2.75rem. The foundation layer ships a resolution-based density branch. Because type is fluid (§5.4), the bump nudges the **anchors** (`--v-font-size-min` / `-max`), not a frozen size — the resolved `--v-font-size` clamp and every step recompute from them automatically:
+A 2.5rem control on a desktop reads fine; on a phone, fingers want at least 2.75rem. The foundation layer ships a resolution-based density branch. The bump moves the size **anchors** (`--v-font-size-min` / `-max`) together — under the default fixed config they stay collapsed (both move to the same value, so text is still a fixed size, just a larger one); if a consumer has opted into fluid type, moving both anchors shifts the whole interpolation range. Either way the resolved `--v-font-size` and every step recompute automatically:
 
 ```css
 :root {
   --v-input-height:  2.5rem;
-  --v-font-size-min: 1rem;
-  --v-font-size-max: 1.125rem;
+  --v-font-size-min: 0.9375rem;   /* default: anchors collapsed → fixed 15px */
+  --v-font-size-max: 0.9375rem;
 }
 @media (resolution >= 200dpi) {
   :root {
     --v-input-height:  2.75rem;
-    --v-font-size-min: 1.0625rem;
-    --v-font-size-max: 1.1875rem;
+    --v-font-size-min: 1rem;       /* still collapsed → fixed 16px on dense screens */
+    --v-font-size-max: 1rem;
     --v-spacing:       1rem;
   }
 }
 ```
 
-This is not a breakpoint — it's a pixel-density gate. A phone with a 200dpi screen gets larger targets and text regardless of viewport width. It composes with the fluid scale: the viewport-driven `clamp()` still interpolates; the gate just raises the floor and ceiling it interpolates between.
+This is not a breakpoint — it's a pixel-density gate. A phone with a 200dpi screen gets larger targets and text regardless of viewport width. It composes with either mode: under fixed type it simply raises the fixed size; under opt-in fluid type the viewport-driven `clamp()` still interpolates and the gate raises the floor and ceiling it interpolates between.
 
 **No t-shirt size variants ship with Janus.** Consumers who want a tighter spacing for a specific context — a toolbar, a dense table, a nav bar — define their own semantic class via the supported customization paths (§5.3): variable overrides, a `v-` variant, or plain CSS — *not* a Janus mixin. Because `--v-pad-*` and `--v-gap-*` are frozen at root, set the bundle together:
 
@@ -144,7 +144,7 @@ Inside the scoped subtree, every `--o-*__pad-*` / `--o-*__gap` default re-resolv
 
 ### 6.5 Fluid spacing (opt-in, same mechanism as type)
 
-Spacing is **static by default** — `--v-spacing` is a fixed length and the pad/gap bundle derives from it (§5.1). Type, by contrast, is fluid out of the box (§5.4). The asymmetry is deliberate: fluid type pays off everywhere (readable on phones, expressive on desktops with no breakpoints), while fluid spacing interacts with the frozen-at-root bundle and the hi-DPI gate, so we keep it opt-in rather than impose it.
+Spacing is **static by default** — `--v-spacing` is a fixed length and the pad/gap bundle derives from it (§5.1). Type is **also fixed by default** (§5.4): the app config collapses the size anchors to a fixed 15px. Both axes are static out of the box because that's what application UI wants — text and chrome that hold steady as the window resizes. Fluidity is an opt-in *per axis*: a marketing/content site spreads the type anchors to opt into fluid type (§6.7), and any site can make `--v-spacing` itself fluid via the same mechanism below.
 
 When a consumer *does* want roomier gutters on wide screens, the same Utopia-style `clamp()` mechanism applies — make `--v-spacing` itself a fluid value, then set the bundle from it:
 
@@ -216,7 +216,7 @@ If a project finds itself wanting one lever instead of a bundle, the honest move
 
 ### 6.7 Sizing recipes by deployment type
 
-Putting §5.5 (axes × signals) and §6.6 (density scopes) together, three deployment archetypes fall out. Each is a *choice of signal per axis*, not a different mechanism.
+Putting §5.5 (axes × signals) and §6.6 (density scopes) together, three deployment archetypes fall out. Each is a *choice of signal per axis*, not a different mechanism. **Janus ships the app archetype as its default** — fixed 15px type, static spacing, density driven by role/context — so the desktop-app and web-app recipes below mostly *confirm* the defaults; the marketing recipe is the one that opts in to extra machinery.
 
 **Marketing / content site — fluid everything, viewport-driven.** Legibility and expressiveness both ride the viewport; type is the star.
 
@@ -230,11 +230,11 @@ Putting §5.5 (axes × signals) and §6.6 (density scopes) together, three deplo
 
 Per-section variety (airy hero, dense footer) is a **scope** that re-declares the anchors for that subtree — the ramp recomputes because the tokens are cascading vars.
 
-**Desktop app (resizable window) — fixed type, role/container density.** Viewport ≈ window here, so viewport-fluid type is *wrong*: dragging the window must not resize the toolbar. Turn fluidity off and drive compactness by context.
+**Desktop app (resizable window) — fixed type, role/container density. This is the shipped default.** Viewport ≈ window here, so viewport-fluid type is *wrong*: dragging the window must not resize the toolbar. The default already keeps fluidity off; you drive compactness by context.
 
 ```css
 :root {
-  /* Collapse the anchors → fixed scale, no vw dependence. */
+  /* The default — anchors collapsed → fixed 15px scale, no vw dependence. */
   --v-font-size-min: 0.9375rem; --v-font-size-max: 0.9375rem;
   --v-font-ratio-min: 1.2;      --v-font-ratio-max: 1.2;
 }
@@ -257,7 +257,7 @@ Per-section variety (airy hero, dense footer) is a **scope** that re-declares th
    stays on the device-class signal so it doesn't drift with window width. */
 ```
 
-The through-line: **pick the signal per axis.** Fluid is the right default for legibility on content surfaces; fixed-plus-context is the right default for app chrome; device-class bundles handle "this is a phone." All three are the same knobs wired to different signals.
+The through-line: **pick the signal per axis.** Fixed-plus-context is the right call for app chrome — and is what Janus ships; fluid is the right call for legibility on content surfaces and is a deliberate opt-in; device-class bundles handle "this is a phone." All three are the same knobs wired to different signals.
 
 ## 7. Color & surface system
 
