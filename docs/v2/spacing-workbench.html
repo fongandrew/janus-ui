@@ -153,7 +153,7 @@
     </div>
     <div class="ctl">
       <div class="lab"><span class="name">Header height (o-bar §9.7)</span></div>
-      <div class="seg" id="bmode"><button data-v="text">Text</button><button data-v="input">Input</button><button data-v="contains" aria-pressed="true">Contains</button></div>
+      <div class="seg" id="bmode"><button data-v="text" aria-pressed="true">Text</button><button data-v="input">Input</button><button data-v="contains">Contains</button></div>
       <div class="hint">Contains = reduced block padding so the control's text sits <code style="color:#9fb0c4">--v-spacing</code> from the edge (fixes the too-tall header). Input = bar is exactly one control tall. Text = full box padding.</div>
     </div>
     <div class="ctl">
@@ -252,6 +252,35 @@
   </fieldset>
 
   <fieldset>
+    <legend>Radius &amp; nesting (§8)</legend>
+    <div class="ctl">
+      <div class="lab"><span class="name">Preset (resets min/max)</span></div>
+      <div class="seg" id="rmode"><button data-v="concentric" aria-pressed="true">Concentric</button><button data-v="uniform">Uniform</button><button data-v="flat">Flat</button></div>
+      <div class="hint">The window holds the <strong>max</strong> radius; everything inside steps down toward the <strong>min</strong> by the spacing between it and its parent (cards = window − gutter, controls a step further if nested, dialog = window − inset). Uniform = two flat tiers. Flat = everything at max. Selecting a preset resets the two sliders below.</div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">Max radius · the window</span><output id="radius-o"></output></div>
+      <input id="radius" type="range" min="0" max="4" step="0.0625" value="2.5" />
+      <div class="hint">The outermost radius, carried by the window frame. Everything inside steps down from here. (Large values make the inward steps visible before they bottom out at the min.)</div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">Min radius · the floor</span><output id="radiusMin-o"></output></div>
+      <input id="radiusMin" type="range" min="0" max="1.5" step="0.0625" value="0.375" />
+      <div class="hint">Nothing rounds below this, so corners never go sharp — deep/small elements just bottom out here.</div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">Dialog inset · --o-dialog__offset &nbsp;×spacing</span><output id="dlgOffset-o"></output></div>
+      <input id="dlgOffset" type="range" min="0" max="3" step="0.05" value="0.75" />
+      <div class="hint">How far the dialog sits inside the window. dialog radius = window − this, so a bigger inset rounds the dialog less.</div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">Draw window radius</span></div>
+      <div class="seg" id="pframe"><button data-v="draw" aria-pressed="true">On</button><button data-v="nodraw">Off</button></div>
+      <div class="hint">Whether the preview window actually paints the max radius. Off = we don't draw it (the browser/OS rounds the window) — but the cascade still steps down from the expected max, so the cards stay sized for it. The radius is a value we assume, separate from whether we paint it.</div>
+    </div>
+  </fieldset>
+
+  <fieldset>
     <legend>Resolved tokens</legend>
     <div class="readout" id="readout"></div>
     <div class="btnrow" style="margin-top:10px">
@@ -286,7 +315,7 @@
    text-box-trim, fluid type, the box/stack/grid objects, the rhythm
    decomposition into 5 named scales.
    ================================================================ */
-const DOC = `<!doctype html><html data-scheme="light" data-bar="contains" data-align="edge"><head><meta charset="utf-8"><style>
+const DOC = `<!doctype html><html data-scheme="light" data-bar="text" data-align="edge" data-radius="concentric" data-pframe="draw"><head><meta charset="utf-8"><style>
 *, *::before, *::after { box-sizing: border-box; }
 * { margin: 0; }
 
@@ -294,8 +323,10 @@ const DOC = `<!doctype html><html data-scheme="light" data-bar="contains" data-a
   /* —— primary knobs —— */
   --v-spacing: 1rem;
   --v-input-height: 2rem;
-  --v-radius: 0.75rem;
-  --v-radius-min: 0.375rem;
+  --v-radius: 2.5rem;         /* frame/window radius — the anchor; Concentric works inward from it */
+  --v-radius-min: 0.375rem;   /* the floor — controls never round below this; corners never go sharp */
+  --o-dialog__offset: var(--v-spacing); /* dialog inset from the viewport edge (the window→dialog gap) */
+  --v-backdrop: light-dark(hsl(216deg 16% 8% / 0.5), hsl(216deg 16% 2% / 0.6));
   --v-border-width: 1px;
   --v-line-height: 1.5;
   --v-font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -423,7 +454,7 @@ pre {
   line-height: 1.5;
   background: light-dark(hsl(216 16% 12%), hsl(216 16% 5%));
   color: light-dark(hsl(30 30% 92%), hsl(30 30% 88%));
-  border-radius: var(--v-radius-min);
+  border-radius: var(--o-box__radius, var(--v-radius-min));
   padding: var(--v-pad);
   overflow-x: auto;
 }
@@ -431,7 +462,7 @@ pre code { background: none; padding: 0; color: inherit; font-size: 1em; }
 blockquote {
   background: var(--v-code-bg);
   border-inline-start: 3px solid var(--v-accent);
-  border-radius: var(--v-radius-min);
+  border-radius: var(--o-box__radius, var(--v-radius-min));
   padding: var(--v-pad);
   color: var(--v-muted);
   font-style: italic;
@@ -472,13 +503,79 @@ label { font-weight: var(--v-font-weight-label); display: block; }
   margin-block-start: var(--v-heading-before);
 }
 
+/* ===== Radius presets (§8.2) — objects read their OWN --o-*__radius knob (fallback --v-radius-min);
+   the preset assigns the knobs. ===== */
+
+/* Concentric — anchor at the FRAME (--v-radius, the window) and work INWARD: each nesting level
+   subtracts the padding/inset between it and its parent, floored at --v-radius-min so corners
+   never go sharp — they just bottom out at the floor. Radius therefore tracks NESTING DEPTH, not
+   element type: a control sitting directly in the dialog is one step in; the same control inside a
+   card is two steps in, and rounds less (often all the way to the floor). The cascade does the
+   counting — each box re-derives the control knob from its own (already-stepped) radius. */
+[data-radius="concentric"] {
+  --o-dialog__radius:    max(var(--v-radius-min), calc(var(--v-radius) - var(--o-dialog__offset)));
+  --o-box__radius:       max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad)));
+  --o-input-box__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad)));
+}
+/* a box steps the CONTROL radius one pad deeper for its own children (no self-reference: reads
+   --o-box__radius, writes --o-input-box__radius) */
+[data-radius="concentric"] :where(.o-box, .card) {
+  --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-box__radius) - var(--v-pad)));
+}
+/* the dialog re-roots the cascade: everything inside derives from the dialog radius */
+[data-radius="concentric"] .o-dialog {
+  --o-box__radius:       max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad)));
+  --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad)));
+}
+
+[data-radius="uniform"] { /* two flat values: small (control+box), larger (dialog+frame) */
+  --o-input-box__radius: var(--v-radius-min);
+  --o-box__radius:       var(--v-radius-min);
+  --o-dialog__radius:    var(--v-radius);
+}
+[data-radius="flat"] {   /* everything = the frame radius */
+  --o-input-box__radius: var(--v-radius);
+  --o-box__radius:       var(--v-radius);
+  --o-dialog__radius:    var(--v-radius);
+}
+
+/* The frame corner a header must clear is the one actually PAINTED. When we draw the window radius
+   it's --v-radius; when we don't (browser rounds it), there's effectively no corner to clear. */
+[data-pframe="draw"]   { --_window-radius: var(--v-radius); }
+[data-pframe="nodraw"] { --_window-radius: 0.5rem; }
+
 /* ② Box padding */
 .o-box, .card {
   background: var(--v-card-bg);
   border: var(--v-border-width) solid var(--v-border-color);
-  border-radius: var(--v-radius);
+  border-radius: var(--o-box__radius, var(--v-radius-min));
   padding: var(--v-pad);
   box-shadow: 0 1px 3px rgb(0 0 0 / .07), 0 1px 2px -1px rgb(0 0 0 / .07);
+}
+
+/* o-dialog — the dialog FRAME (level 1, floated). It fills the viewport minus the inset top/bottom,
+   so its corners sit one offset inside the window's and you can see them run parallel. radius =
+   window − offset. */
+.dlg-layer { display: none; }
+body:has(.dlg-toggle:checked) .dlg-layer { display: block; }
+.dlg-backdrop { position: fixed; inset: 0; z-index: 49; background: var(--v-backdrop); cursor: pointer; }
+.o-dialog {
+  position: fixed; z-index: 50;
+  inset-block: var(--o-dialog__offset);
+  left: 50%; transform: translateX(-50%);
+  width: min(40rem, calc(100% - 2 * var(--o-dialog__offset)));
+  display: flex; flex-direction: column; gap: var(--v-pad);
+  background: var(--v-card-bg); border: var(--v-border-width) solid var(--v-border-color);
+  border-radius: var(--o-dialog__radius, var(--v-radius));
+  padding: var(--v-pad);
+  /* corners occupied by round elements (a leading icon + a close button), not padded out — see o-bar */
+  box-shadow: 0 24px 70px rgb(0 0 0 / .4); overflow: auto;
+}
+/* the nested box, made obviously recessed so it reads as a separate layer inside the dialog */
+.o-dialog .dlg-box {
+  flex: 1 0 6rem;
+  background: color-mix(in srgb, var(--v-card-bg) 89%, var(--v-fg));
+  box-shadow: inset 0 1px 4px rgb(0 0 0 / .1);
 }
 
 /* ⑤ Inline cluster — toolbar buttons / tags */
@@ -491,16 +588,22 @@ label { font-weight: var(--v-font-weight-label); display: block; }
 .o-bar {
   display: flex; align-items: center; justify-content: space-between; gap: var(--v-gap-inline);
   min-height: var(--v-input-height);
-  padding-inline: var(--v-spacing);
+  /* SYMMETRIC padding (block == inline). We do NOT pad content out of a large corner curve — that
+     wrecks the left alignment (the brand floats far from the gutter). Instead the corner is
+     OCCUPIED by a deliberate round element: a leading icon button (a sidebar/menu trigger) on the
+     left, and the trailing primary button — which the radius cascade turns into a pill at large
+     frame radius — on the right. A circular control nestles into a rounded corner without clipping,
+     and the real content (brand, etc.) sits clear after it. */
+  padding: var(--_bar-pad, var(--v-spacing));
   border-bottom: var(--v-border-width) solid var(--v-border-color);
   background: color-mix(in srgb, var(--v-card-bg) 80%, transparent);
   backdrop-filter: blur(8px);
   position: sticky; top: 0; z-index: 5;
 }
-/* Three height modes (§9.7): */
-[data-bar="text"]     .o-bar { padding-block: var(--v-spacing); }                                         /* tall enough for one line of text */
-[data-bar="input"]    .o-bar { padding-block: 0; }                                                        /* bar IS one control tall, flush */
-[data-bar="contains"] .o-bar { padding-block: calc(var(--v-spacing) - max(0px, (var(--v-input-height) - 1lh) / 2)); } /* reduced pad: control TEXT sits --v-spacing from edge */
+/* Height modes (§9.7) now set the SYMMETRIC base padding (applied to both axes): */
+[data-bar="text"]     .o-bar { --_bar-pad: var(--v-spacing); }                                              /* comfortable */
+[data-bar="input"]    .o-bar { --_bar-pad: 0px; }                                                           /* flush — bar is one control tall */
+[data-bar="contains"] .o-bar { --_bar-pad: calc(var(--v-spacing) - max(0px, (var(--v-input-height) - 1lh) / 2)); } /* snug */
 .o-bar .brand { font-size: var(--v-font-size-h3); font-weight: var(--v-font-weight-title); }
 .card .card-title { font-size: var(--v-font-size-h3); } /* heading demotion inside cards */
 
@@ -541,7 +644,7 @@ input[type=text], input[type=email], select, textarea, .btn {
   /* Controls carry a stronger border than cards so their box edges (and the spacing
      around them) are legible — a faint card-weight border reads as borderless. */
   border: var(--v-border-width) solid color-mix(in hsl, var(--v-fg) 28%, var(--v-bg));
-  border-radius: var(--v-radius-min);
+  border-radius: var(--o-input-box__radius, var(--v-radius-min));
   background: var(--v-input-bg);
   box-shadow: inset 0 1px 2px rgb(0 0 0 / .05);
   width: 100%;
@@ -560,6 +663,29 @@ textarea { min-height: calc(var(--v-input-height) * 2.25); padding-block: calc(v
 .btn-primary { background: var(--v-accent); color: var(--v-bg); border-color: transparent; }
 .btn-ghost { background: transparent; border-color: transparent; }
 
+/* circular icon button — the deliberate corner inhabitant. Round so it nestles into a rounded
+   frame corner without clipping; the real content sits clear after it. */
+.icon-btn {
+  flex: none; width: var(--v-input-height); height: var(--v-input-height); padding: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: var(--v-border-width) solid var(--v-border-color); border-radius: 50%;
+  background: var(--v-card-bg); color: var(--v-fg); cursor: pointer;
+  font: inherit; font-size: 1.1em; line-height: 1;
+}
+.icon-btn:hover { background: var(--v-code-bg); }
+/* dialog top row: a leading icon (top-left corner), the title, a close button (top-right corner) */
+/* dialog head — a 3-col grid so the leading icon + close sit on the TITLE row (centered on its
+   line), while the description spans the full width below (the icon must not indent it). */
+.dlg-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--v-gap-inline);
+  row-gap: calc(0.4 * var(--v-spacing));
+}
+.dlg-head > .dlg-title { grid-column: 2; }
+.dlg-head > .dlg-desc  { grid-column: 1 / -1; } /* full width, below — not indented by the icon */
+
 /* ===== Alignment modes (§6.1) — does a control's BORDER or its TEXT land on the "content line"
    (--v-spacing from the container edge)? --v-control-inset reconciles them. Edge-align suits
    strong-bordered controls (their borders line up on the line); text-align suits light/borderless
@@ -569,7 +695,7 @@ textarea { min-height: calc(var(--v-input-height) * 2.25); padding-block: calc(v
 .align-demo {
   position: relative; display: flex; flex-direction: column; gap: var(--v-spacing);
   background: var(--v-input-bg); border: var(--v-border-width) solid var(--v-border-color);
-  border-radius: var(--v-radius-min); padding-block: var(--v-spacing);
+  border-radius: var(--o-box__radius, var(--v-radius-min)); padding-block: var(--v-spacing);
   padding-inline: var(--_apad, var(--v-spacing));
 }
 .align-demo .a-text { color: var(--v-muted); font-size: var(--v-font-size-caption); font-weight: var(--v-font-weight-label); }
@@ -601,7 +727,10 @@ input[type=radio], input[type=checkbox]:not(.switch) { accent-color: var(--v-acc
 <body>
 
 <header class="o-bar">
-  <span class="brand">Acme · Settings</span>
+  <span class="cluster">
+    <button class="icon-btn" aria-label="Menu">☰</button>
+    <span class="brand">Acme · Settings</span>
+  </span>
   <span class="cluster">
     <button class="btn btn-ghost">Discard</button>
     <button class="btn btn-primary">Save changes</button>
@@ -749,6 +878,12 @@ input[type=radio], input[type=checkbox]:not(.switch) { accent-color: var(--v-acc
       </div>
     </section>
 
+    <!-- frame & nesting: the window IS the frame; open the dialog for a clean frame→box→control nest -->
+    <section class="card o-stack o-stack--card">
+      <div class="o-prose"><hgroup><h2 class="card-title">Frame &amp; nesting</h2><p class="help">The preview window itself is the frame (level 1); these cards are boxes, their inputs are controls. Open the dialog for a clean, isolated nest.</p></hgroup></div>
+      <label for="dlg-toggle" class="btn btn-primary" style="align-self:flex-start">Open dialog</label>
+    </section>
+
   </div>
 
   <!-- closing wide prose to show rhythm at full container width -->
@@ -758,6 +893,30 @@ input[type=radio], input[type=checkbox]:not(.switch) { accent-color: var(--v-acc
   </section>
 
 </main>
+</div>
+
+<!-- CSS-only dialog (no script): the checkbox drives body:has(...) -->
+<input type="checkbox" id="dlg-toggle" class="dlg-toggle" hidden>
+<div class="dlg-layer">
+  <label for="dlg-toggle" class="dlg-backdrop" aria-label="Close dialog"></label>
+  <div class="o-dialog">
+    <div class="dlg-head">
+      <span class="icon-btn" aria-hidden="true">◆</span>
+      <h2 class="dlg-title">Dialog frame</h2>
+      <label for="dlg-toggle" class="icon-btn" aria-label="Close">✕</label>
+      <p class="help dlg-desc">Concentric works inward from the window: dialog = window − inset, then each box/control subtracts a pad, floored at the minimum. Radius tracks how many steps deep a thing sits — not what kind of thing it is. The round icon and close button sit in the corners on purpose, so the text needn't dodge the curve.</p>
+    </div>
+    <div class="card dlg-box">
+      <div class="o-stack o-stack--tight">
+        <label>Control inside the card — two steps in (dialog − 2·pad), so it rounds least (often the floor)</label>
+        <input type="text" value="floored at the minimum radius" />
+      </div>
+    </div>
+    <div class="cluster" style="justify-content:flex-end">
+      <label for="dlg-toggle" class="btn btn-ghost">Cancel</label>
+      <button class="btn btn-primary">Save · one step in, rounds more</button>
+    </div>
+  </div>
 </div>
 </body></html>`;
 
@@ -769,7 +928,7 @@ const framewrap = document.getElementById('framewrap');
 const $ = id => document.getElementById(id);
 let root = null; // iframe documentElement, set on load
 
-const RANGES = ['fmin','fmax','rmin','rmax','lh','spacing','inputh','rkSection','rkPad','rkProse','rkTight','rkCluster','rkListGrouped','rkHbefore','rkHgroup','width'];
+const RANGES = ['fmin','fmax','rmin','rmax','lh','spacing','inputh','rkSection','rkPad','rkProse','rkTight','rkCluster','rkListGrouped','rkHbefore','rkHgroup','radiusMin','radius','dlgOffset','width'];
 const NUMS = ['vwmin','vwmax'];
 const DEFAULTS = {};
 [...RANGES, ...NUMS].forEach(id => DEFAULTS[id] = $(id).value);
@@ -816,9 +975,12 @@ function apply() {
     rkProse: () => '×' + num('rkProse').toFixed(2) + ' line',
     rkHbefore: () => '×' + num('rkHbefore').toFixed(2) + ' line',
     rkHgroup: () => '×' + num('rkHgroup').toFixed(2) + ' = ' + (num('rkHgroup') * num('spacing')).toFixed(3) + 'rem',
+    radiusMin: () => num('radiusMin') + 'rem',
+    dlgOffset: () => '×' + num('dlgOffset').toFixed(2) + ' = ' + (num('dlgOffset') * num('spacing')).toFixed(3) + 'rem',
     width: () => num('width') + 'px',
   };
   for (const id in fmt) { const o = $(id + '-o'); if (o) o.textContent = fmt[id](); }
+  $('radius-o').textContent = num('radius') + 'rem';
 
   if (!root) return;
 
@@ -840,15 +1002,25 @@ function apply() {
   const data = {};
   for (const k in FONT_STEPS) { data[k] = stepData(FONT_STEPS[k], ...args); setVar(k, clampStr(data[k])); }
 
+  // radius — floor + dialog inset are primary; --v-radius is DERIVED under concentric (let the
+  // preset CSS compute it), set directly under uniform/flat.
+  setVar('--v-radius', num('radius') + 'rem');
+  setVar('--v-radius-min', num('radiusMin') + 'rem');
+  setVar('--o-dialog__offset', (num('dlgOffset') * num('spacing')) + 'rem');
+
   // attrs
   root.dataset.scheme = SEG.scheme;
   root.dataset.bar = SEG.bmode;
   root.dataset.align = SEG.amode;
+  root.dataset.radius = SEG.rmode;
+  root.dataset.pframe = SEG.pframe;
   // list grouped↔continuous = which token the cascading --v-list-rhythm resolves to
   setVar('--v-list-rhythm', SEG.lmode === 'continuous' ? 'var(--v-rhythm-continuous)' : 'var(--v-rhythm-grouped)');
 
-  // preview width
+  // preview width + the WINDOW frame: round the preview itself to the frame radius (Window),
+  // or a small browser-chrome radius (Web, page frame 0).
   framewrap.style.width = num('width') + 'px';
+  framewrap.style.borderRadius = SEG.pframe === 'nodraw' ? '8px' : (num('radius') * 16).toFixed(1) + 'px';
   $('wlabel').textContent = num('width');
 
   // readout
@@ -868,7 +1040,7 @@ function apply() {
 }
 
 /* segmented toggles */
-const SEG = { scheme: 'light', lmode: 'grouped', bmode: 'contains', amode: 'edge' };
+const SEG = { scheme: 'light', lmode: 'grouped', bmode: 'text', amode: 'edge', rmode: 'concentric', pframe: 'draw' };
 function wireSeg(id, key) {
   const box = $(id);
   box.addEventListener('click', e => {
@@ -882,6 +1054,22 @@ wireSeg('scheme', 'scheme');
 wireSeg('lmode', 'lmode');
 wireSeg('bmode', 'bmode');
 wireSeg('amode', 'amode');
+wireSeg('pframe', 'pframe');
+
+/* Radius presets reset the min/max sliders to a look characteristic of that mode. */
+const RADIUS_PRESETS = {
+  concentric: { radius: 2.5, radiusMin: 0.375 },  /* big window → visible inward steps */
+  uniform:    { radius: 0.5, radiusMin: 0.25 },   /* two flat tiers */
+  flat:       { radius: 0.5, radiusMin: 0.5 },    /* everything one radius */
+};
+$('rmode').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  SEG.rmode = b.dataset.v;
+  [...$('rmode').children].forEach(c => c.setAttribute('aria-pressed', String(c === b)));
+  const pre = RADIUS_PRESETS[SEG.rmode];
+  if (pre) { $('radius').value = pre.radius; $('radiusMin').value = pre.radiusMin; }
+  apply();
+});
 
 /* Presets — each sets the whole sizing slider bundle; scheme / list-rhythm / preview width
    are left alone (they're context, not part of a sizing preset). */
@@ -925,11 +1113,14 @@ document.querySelectorAll('.stagebar .preset button').forEach(b =>
 
 $('reset').addEventListener('click', () => {
   for (const id in DEFAULTS) $(id).value = DEFAULTS[id];
-  SEG.scheme = 'light'; SEG.lmode = 'grouped'; SEG.bmode = 'contains'; SEG.amode = 'edge';
+  SEG.scheme = 'light'; SEG.lmode = 'grouped'; SEG.bmode = 'text'; SEG.amode = 'edge'; SEG.rmode = 'concentric'; SEG.pframe = 'draw';
   [...$('scheme').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === 'light')));
   [...$('lmode').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === 'grouped')));
-  [...$('bmode').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === 'contains')));
+  [...$('bmode').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === 'text')));
   [...$('amode').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === 'edge')));
+  [...$('rmode').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === 'concentric')));
+  $('radius').value = RADIUS_PRESETS.concentric.radius; $('radiusMin').value = RADIUS_PRESETS.concentric.radiusMin;
+  [...$('pframe').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === 'draw')));
   markPreset('default');
   apply();
 });
@@ -975,6 +1166,24 @@ $('copy').addEventListener('click', () => {
   --v-rhythm-continuous: calc(var(--v-line-height) * 1em - 1cap);
   --v-rhythm-grouped:    calc(${num('rkListGrouped')} * var(--v-rhythm-prose));
   --v-list-rhythm:       var(--v-rhythm-${SEG.lmode === 'continuous' ? 'continuous' : 'grouped'});
+
+  /* radius (preset: ${SEG.rmode}, page frame: ${SEG.pframe}) — objects read their own knob with a
+     --v-radius-min fallback; the ${SEG.rmode} preset assigns the per-layer knobs. */
+  --v-radius:            ${num('radius')}rem; /* the window/frame anchor */
+  --v-radius-min:        ${num('radiusMin')}rem;
+  --o-dialog__offset:    calc(${num('dlgOffset')} * var(--v-spacing));${SEG.rmode === 'concentric' ? `
+  /* inward from the frame, floored at the min; each box steps the control knob one pad deeper */
+  --o-dialog__radius:    max(var(--v-radius-min), calc(var(--v-radius) - var(--o-dialog__offset)));
+  --o-box__radius:       max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad)));
+  --o-input-box__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad)));
+  /* + .o-box { --o-input-box__radius: max(min, calc(var(--o-box__radius) - var(--v-pad))) }
+     + .o-dialog { --o-box/-input-box__radius: max(min, calc(var(--o-dialog__radius) - var(--v-pad))) } */` : SEG.rmode === 'uniform' ? `
+  --o-input-box__radius: var(--v-radius-min);
+  --o-box__radius:       var(--v-radius-min);
+  --o-dialog__radius:    var(--v-radius);` : `
+  --o-input-box__radius: var(--v-radius);
+  --o-box__radius:       var(--v-radius);
+  --o-dialog__radius:    var(--v-radius);`}
 }`;
   const flash = () => { const btn = $('copy'); const t = btn.textContent; btn.textContent = 'Copied ✓'; setTimeout(() => btn.textContent = t, 1200); };
   const fallback = () => { const ta = document.createElement('textarea'); ta.value = css; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); flash(); };
