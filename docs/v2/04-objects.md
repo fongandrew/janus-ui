@@ -9,7 +9,7 @@ Part 4 of the [Janus v2 design spec](./README.md). Covers the pure-CSS layout / 
 Janus is designed around a **four-level nesting model**. The first level always exists; the others are present as content demands.
 
 1. **Level 1 — Frame.** The outermost rounded surface in context. Not a class — it's a *role* filled by `<body>`, or by a component like `c-modal`, `c-drawer`, `c-card` when it's the top of its stacking context. Frames read `--v-radius` (often `0` for the page body, larger for window-style modals or desktop-archetype shells).
-2. **Level 2 — Section / container.** Width-bounded organizational layer. The `o-container` class. **Transparent in radius terms** — never rounded. Can carry its own *surface* (a gradient band, a tinted background) by composing with `v-surface-*`. A single frame can hold multiple containers as sibling sections (marketing example: a full-bleed hero `o-container` next to a max-width `o-container.v-container-bounded`).
+2. **Level 2 — Section / container.** Width-bounded organizational layer. The `o-container` class. **Transparent in radius terms** — never rounded. Can carry its own *surface* (a gradient band, a tinted background) by composing with `v-surface-*`. A single frame can hold multiple containers as sibling sections (marketing example: a full-bleed hero `o-container` next to a width-bounded one that sets `--o-container__max` to a reading width). There is no `v-container-bounded` preset — width-bounding is just setting `--o-container__max` (default `none`) on that container, inline or via the consumer's own class.
 3. **Level 3 — Box / card.** Rounded grouping of related components or rows of content. The `o-box` family. Reads `--o-box__radius`.
 4. **Level 4 — Control / text container.** Leaf controls (`o-input-box` — buttons, inputs) and standalone prose blocks (`o-text-box`). Reads its own `--o-*-radius` knob, which the enclosing box redefines.
 
@@ -17,7 +17,9 @@ The four levels describe the *mental model*; the radius story for each is in §8
 
 **Frame is two sub-roles.** For radius, "frame" splits into the **page frame** (the `<body>` in a browser viewport — usually `0`, the browser/OS rounds the window) and the **dialog frame** (`c-modal` / `c-drawer`, via `o-dialog` — rounded). Painting the frame radius is a per-frame choice (§8.1), so a web app keeps modals rounded while the page itself is square. A **sidebar** is *not* a third frame kind: it's a level-2 `o-container` that may carry a surface (`v-surface-*`); in a narrow sidebar you generally prefer full-bleed sub-sections over nested cards (§9.3, and the card→bleed collapse).
 
-This is a *guideline*, not a hard limit. The model deliberately does **not** auto-derive radii through arbitrary nesting depth: a nested `o-box` inside an `o-box` shares the parent's `--o-box__radius`. UI that needs two distinct rounded-box levels should introduce a new object (e.g. `o-panel`, or `o-segmented` for shared-border cells — §9.8) rather than relying on a recursive cascade (see §5.2 / §8). For a uniform radius everywhere, set `--v-radius-min == --v-radius` (§8.4).
+This is a *guideline*, not a hard limit. The model deliberately does **not** auto-derive radii through arbitrary nesting depth: a nested `o-box` inside an `o-box` shares the parent's `--o-box__radius`.
+
+**Card-in-card is explicitly unsupported.** A `c-card` inside a `c-card` is not a pattern Janus rounds for — the inner card shares the outer's radius and the result reads wrong. When UI wants to group peer rows *inside* a card (settings groups, account rows, a list of sub-items), use **`o-segmented`** (§9.8): shared-border cells under one card surface, which is the iOS-style grouped-list shape that "nested cards" is usually reaching for. If a design genuinely needs two *distinct* rounded-box levels, introduce a new named object with its own knob (e.g. `o-panel`) rather than nesting cards or relying on a recursive cascade (see §5.2 / §8). For a uniform radius everywhere, set `--v-radius-min == --v-radius` (§8.4).
 
 ### 9.2 Box family (padded containers)
 
@@ -124,6 +126,31 @@ Behavior:
 - The **group** is the rounded box: it owns `--o-box__radius` (outer corners) and its surface/border (via `v-surface-card` or `c-card`). Its own padding is **`0`** — the cells carry the padding. The "card → segment" pattern: the group owns only the radius/border, and each cell owns its full inline padding.
 - **Cells** are the immediate children — each effectively an `o-box` / `o-text-box` / `o-bar` that carries the padding. Adjacent cells are separated by `--o-segmented__divider` (a border on the shared edge); only the first and last cells round their outer corners (inheriting the group radius), interior corners square.
 - **No gaps** — the divider replaces the gap. Use when content is a set of peer rows that read as one grouped unit (a preferences group of font settings, a list of account rows).
+
+**Corner recipe (how cells round without per-cell knobs or clipping).** The group carries the radius; the cells round only their *outer* corners via logical corner properties, so interior corners stay square and nothing relies on `overflow: clip` (which would bite cell focus rings):
+
+```css
+.o-segmented {
+  --o-segmented__divider: var(--v-border-width) solid var(--v-border-color);
+  border-radius: var(--o-box__radius);   /* the group's outer corners */
+  padding: 0;                             /* cells carry the padding */
+}
+.o-segmented > * { border-radius: 0; }    /* every cell square by default */
+.o-segmented > * + * {                     /* divider on the shared edge */
+  border-block-start: var(--o-segmented__divider);   /* row mode: border-inline-start */
+}
+/* Only the end cells round, and only on the group's outer side: */
+.o-segmented > :first-child {
+  border-start-start-radius: var(--o-box__radius);
+  border-start-end-radius:   var(--o-box__radius);
+}
+.o-segmented > :last-child {
+  border-end-start-radius: var(--o-box__radius);
+  border-end-end-radius:   var(--o-box__radius);
+}
+```
+
+For a **horizontal** (row) segmented control, flip the logical pairs (`start-start`/`end-start` on the first child, `start-end`/`end-end` on the last) and move the divider to `border-inline-start`. A `--o-segmented--row` modifier carries that variant. Because the cells round themselves rather than being clipped by the group, each cell's focus ring renders intact.
 
 This is the primitive many v1 consumers hand-rolled for settings / preference groups. It's a *peer object*, not a new nesting layer — it sits at the box level and contains box-level cells.
 

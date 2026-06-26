@@ -124,7 +124,8 @@ A 2.5rem control on a desktop reads fine; on a phone, fingers want at least 2.75
     --v-input-height:  2.75rem;
     --v-font-size-min: 1rem;       /* still collapsed → fixed 16px on dense screens */
     --v-font-size-max: 1rem;
-    --v-spacing:       1rem;
+    /* --v-spacing already defaults to 1rem, so no spacing bump is needed here;
+       set the bundle explicitly only if a dense screen should also be roomier. */
   }
 }
 ```
@@ -342,6 +343,16 @@ Components that need a stronger or weaker shadow write a literal value or scope 
    prefers-reduced-motion zeros --v-duration and everything follows. */
 ```
 
+**Two orthogonal, composable axes — read this before reaching for a class.** Color and chrome are deliberately separate concerns with separate prefixes, and they compose:
+
+| Want… | Reach for | What it sets | Examples |
+|---|---|---|---|
+| a **tint / color identity** (bg + fg + accent shift) | `v-colors-*` | the five color knobs only | `v-colors-primary`, `v-colors-danger`, and the surface-*role* variants `v-colors-tooltip` / `v-colors-popover` / `v-colors-code` / `v-colors-pre` |
+| **elevation / border / blur** (chrome treatment) | `v-surface-*` | shadow, border, `backdrop-filter` — *not* color | `v-surface-card`, `v-surface-elevated`, `v-surface-glass` |
+| **both** | compose them | each axis independently | `class="c-card v-surface-glass v-colors-danger"` |
+
+The one subtlety: a few `v-colors-*` entries are *named for a UI role* (tooltip, popover, code, pre) rather than a tone, but they are still **only color** — `v-colors-tooltip` inverts the palette but draws no shadow; pair it with `v-surface-elevated` if you want the float to lift. There is intentionally no `v-surface-tooltip`. Mnemonic: **`v-colors-` = what color, `v-surface-` = how raised.**
+
 **Tone** (`v-colors-*`) — re-sets the color knobs for a subtree. Composable; applies to whichever element carries the class.
 
 - `v-colors-primary`, `v-colors-danger`, `v-colors-success`, `v-colors-warn`, `v-colors-info`, `v-colors-secondary`
@@ -379,7 +390,7 @@ a       { color: var(--v-link);   font-weight: var(--v-link-weight-min,   inheri
 .v-accent-text { color: var(--v-accent); font-weight: var(--v-accent-weight-min, inherit); }
 ```
 
-This lets a designer ship a slightly desaturated link or a softer muted color without breaking WCAG contrast — the weight bump carries the visual emphasis the hue alone can't. Default is `inherit` (no bump); palettes that need it raise the floor.
+This lets a designer ship a slightly desaturated link or a softer muted color without breaking WCAG contrast — the weight bump carries the visual emphasis the hue alone can't. **The shipped palette defaults these to `500`** (its link/accent/muted colors need it); the *mechanism* falls back to `inherit` (no bump) when a consumer clears the knob for a palette that doesn't.
 
 ### 7.2 Color scheme (light/dark)
 

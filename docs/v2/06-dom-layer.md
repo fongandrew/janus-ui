@@ -148,9 +148,9 @@ A form can use `t-submit` (or `addSubmitHandler`) without `t-validate` (no valid
 |---|---|
 | `t-reset-on-close` | When the ancestor `<dialog>` fires `close` (or `[popover]` fires `toggle` → `closed`), reset the form. A document-level capture-phase listener handles non-bubbling `close`. |
 | `t-close-on-success` | On `{ ok: true }` from the submit handler, close the ancestor `<dialog>` / `[popover]` after reset. Dispatcher branch. |
-| `c-modal-speed-bump` | Marks a nested `<dialog>` as the "are you sure?" prompt for its parent modal. The speed-bump module — not the parent modal — owns the orchestration. See below. |
+| `c-modal__speed-bump` | Marks a nested `<dialog>` as the "are you sure?" prompt for its parent modal. The speed-bump module — not the parent modal — owns the orchestration. See below. |
 
-**Speed bump for dirty close.** The consumer renders a nested `<dialog>` carrying the `c-modal-speed-bump` behavior inside the modal. Markup:
+**Speed bump for dirty close.** The consumer renders a nested `<dialog>` carrying the `c-modal__speed-bump` behavior inside the modal. Markup:
 
 ```html
 <dialog class="c-modal">
@@ -160,7 +160,7 @@ A form can use `t-submit` (or `addSubmitHandler`) without `t-validate` (no valid
   >
     ...
   </form>
-  <dialog class="c-modal" data-js="c-modal-speed-bump">
+  <dialog class="c-modal" data-js="c-modal__speed-bump">
     <form method="dialog">
       <p>You have unsaved changes.</p>
       <button value="cancel">Keep editing</button>
@@ -170,10 +170,10 @@ A form can use `t-submit` (or `addSubmitHandler`) without `t-validate` (no valid
 </dialog>
 ```
 
-Orchestration lives entirely inside `handlers/c-modal-speed-bump.ts` — `c-modal`'s code knows nothing about speed bumps. The module's `mount` handler:
+Orchestration lives entirely inside `handlers/c-modal__speed-bump.ts` — `c-modal`'s code knows nothing about speed bumps. The module's `mount` handler:
 
 1. Walks up from the speed-bump element to its ancestor `<dialog>` (the parent modal).
-2. Registers a `requestClose` hook on the parent modal via the public `onRequestClose(parentModal, fn)` helper (exposed by `handlers/t-request-close.ts`). The hook: walk the parent modal's `<form data-js~="t-validate">` descendants; if any returns `true` from `isDirty(form)`, call `parentModal.querySelector('[data-js~="c-modal-speed-bump"]').showModal()` and return `false` (cancel the parent close). Otherwise return `true` (allow the close).
+2. Registers a `requestClose` hook on the parent modal via the public `onRequestClose(parentModal, fn)` helper (exposed by `handlers/t-request-close.ts`). The hook: walk the parent modal's `<form data-js~="t-validate">` descendants; if any returns `true` from `isDirty(form)`, call `parentModal.querySelector('[data-js~="c-modal__speed-bump"]').showModal()` and return `false` (cancel the parent close). Otherwise return `true` (allow the close).
 3. Adds a `close` listener on the speed-bump element itself: if `returnValue === 'discard'`, call `forceClose(parentModal)` — a sibling helper that closes the dialog while bypassing the `requestClose` chain, so the hook from step 2 doesn't re-fire and re-open the speed bump.
 
 Two small additions to the public API to make this work:
@@ -385,7 +385,7 @@ Each utility ships as a handler module under `src/lib/dom/handlers/` with one or
 | `t-typeahead-filter` | `typeaheadFilter({ match })` | Buffers keystrokes (~500ms window) and calls `match(buffer)` to find / focus matching items. |
 | `t-active-descendant` | `activeDescendant({ items, onActive })` | Manages `aria-activedescendant` based on arrow keys without moving DOM focus. Used by listbox / combobox patterns. |
 | `t-open-tab` | `openTab(panelId)` | Smallest illustrative case — focuses a target element on click; reads target id from sibling `data-target`. |
-| `t-kb-nav` | *(page-level, no producer)* | Toggles `body[data-v-kb-nav="true"]` on first Tab / arrow-key, removes on first mousedown. This single boolean drives CSS conditionals: menu item hover highlights in mouse mode, active-descendant highlights in keyboard mode. Registered once at mount time. |
+| `t-kb-nav` | *(page-level, no producer)* | Sets the **presence flag** `body[data-v-kb-nav]` (no value) on first Tab / arrow-key, removes it on first mousedown. This single flag drives CSS conditionals via `[data-v-kb-nav]` / `:not([data-v-kb-nav])`: menu item hover highlights in mouse mode, active-descendant highlights in keyboard mode. Registered once at mount time. |
 | `t-empty` | *(auto-observing)* | Sets `data-t-empty` attribute on containers whose children render no visible content (empty text, no element children). Drives CSS empty-collapse rules: `.c-alert:has([data-t-empty]) { display: none }`, `.c-error-message:empty { display: none }`. Prevents dead vertical space in forms. |
 | `t-scroll-shadow` | `scrollShadow()` | Observes scroll position of an element. Sets `data-scroll-top` when scrolled to the top edge, `data-scroll-bottom` when at the bottom. CSS uses these to show/hide `--v-shadow-inner-top` / `--v-shadow-inner-bottom`. Used by modal/drawer scrollable content. |
 

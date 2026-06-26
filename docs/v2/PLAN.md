@@ -61,7 +61,7 @@ v2's CSS features (§15) have uneven browser support. This affects the build tar
 | Feature | Chromium | Firefox | WebKit/Safari |
 |---|---|---|---|
 | CSS anchor positioning | 125+ | No | No |
-| `commandfor` / `command` | 135+ | No | No |
+| `commandfor` / `command` | 135+ | **144+** | **26.2+** |
 | `scroll-state()` container queries | 133+ | No | No |
 | `oklch(from …)` relative color | 119+ | 128+ | 18+ |
 | `light-dark()` | 123+ | 120+ | 17.5+ |
@@ -69,16 +69,18 @@ v2's CSS features (§15) have uneven browser support. This affects the build tar
 | `<dialog>` | all | all | all |
 | `:has()`, container queries, `@layer` | all | all | all |
 
-**Playwright version.** Bump `@playwright/test` to a version shipping Chromium 135+ (for `commandfor`). v1 pins `^1.51.1` which ships Chromium 134 — too old. Check the [Playwright releases](https://github.com/microsoft/playwright/releases) for the first version bundling Chromium ≥135 and pin there. After bumping, run `npx playwright install` to pull the new browser binaries.
+**Minimum supported browsers: Chrome 135+, Firefox 144+, Safari 26.2+** (§15). At these versions `commandfor` is **cross-browser**, so the zero-JS modal path works in all three engines and `commandfor` tests are *not* tagged `@chromium-only`. The genuinely Chromium-leading features at these minimums are **anchor positioning** and **`scroll-state()`** — those stay `@chromium-only`.
 
-**Vite build target.** v1 already targets `['safari17', 'ios17', 'chrome135', 'firefox137']`. These are fine for v2 — the target controls JS/CSS *syntax* transforms, not feature availability. CSS features like anchor positioning that older browsers don't support degrade gracefully (the browser ignores the unknown properties). No change needed unless the target list drifts.
+**Playwright version.** Bump `@playwright/test` to a version shipping Chromium 135+ (for anchor positioning / `scroll-state`; `commandfor` is cross-browser at the §15 minimums). v1 pins `^1.51.1` which ships Chromium 134 — too old. Check the [Playwright releases](https://github.com/microsoft/playwright/releases) for the first version bundling Chromium ≥135 and pin there. After bumping, run `npx playwright install` to pull the new browser binaries.
+
+**Vite build target.** Bump toward the §15 minimums — `['safari26', 'ios26', 'chrome135', 'firefox144']`. The target controls JS/CSS *syntax* transforms, not feature availability, so the exact values are not load-bearing for behavior; CSS features like anchor positioning that older browsers don't support degrade gracefully (the browser ignores the unknown properties). No change needed unless the target list drifts.
 
 **Playwright project structure.** Restructure the Playwright config to separate tests into tiers by browser support:
 
 ```ts
 // playwright.config.ts — project structure sketch
 projects: [
-  // Tier 1: Chromium-only features (anchor positioning, commandfor, scroll-state)
+  // Tier 1: Chromium-only features (anchor positioning, scroll-state)
   {
     name: 'chromium-desktop',
     testMatch: '**/*.desktop.e2e.[tj]s?(x)',
@@ -180,8 +182,8 @@ Build in this order — each step depends on the previous:
    - **Body**: `background: var(--v-body-bg); background-attachment: fixed;` *(Aesthetic spec §02)*
    - **Links** (`a:where([href])`): `color: var(--v-link); font-weight: var(--v-link-weight-min, inherit); text-underline-offset: 0.25rem`. **Focus**: `a:focus-visible { outline: none; text-decoration-style: double; }` — inline links use a double underline on focus, not a box outline that disrupts the reading line. *(Aesthetic spec §08)*
    - **Heading demotion in `<header>`**: `header h1, h2 { font-size: var(--v-font-size-h2); }`, `header h2, h3 { font-size: var(--v-font-size-h3); }`, etc. This lets card titles use semantically correct heading levels (h2 for the card section) while rendering at an appropriate visual size (h3-scale inside the card header). *(Aesthetic spec §12)*
-   - **Default text truncation**: `a, b, em, h1, h2, h3, h4, h5, h6, p, span, strong { overflow-x: hidden; text-overflow: ellipsis; }`. Headings and inline text truncate by default — opt-out, not opt-in. Add `t-wrap` escape hatch. *(Aesthetic spec §20)*
-   - **Icon stroke scaling**: `.lucide, .icon { stroke-width: clamp(2, var(--v-font-weight) / 200, 3); }` — icon stroke thickens with surrounding text weight (body=2, label=2.5, title=3). *(Aesthetic spec §11)*
+   - **Text truncation is opt-in, NOT a base-layer default (§11.1).** Do **not** port v1's global `a, b, em, h1–h6, p, span, strong { overflow-x: hidden; text-overflow: ellipsis }` rule — §11.1 rejects it on purpose: it inverts the common case (most text should wrap), and `overflow-x: hidden` forces `overflow-y` to compute to `auto`, spawning the stray scroll container that was the original v1 bug. `base.css` leaves text wrapping normally. Truncation is the single opt-in `t-truncate` tool (`overflow-x: clip` + `min-width: 0` + `white-space: nowrap`, §11.1), applied per-element by the component/consumer that wants it. There is no `t-wrap` (nothing to opt out of). *(supersedes Aesthetic spec §20, which documents the v1 opt-out behavior — see §11.1 for why v2 flips it)*
+   - **Icon stroke scaling**: `.lucide, .icon { stroke-width: clamp(2, var(--v-font-weight) / 200, 3); }` — icon stroke thickens with surrounding text weight (weight 400 → 2, 500 → 2.5, 600 → 3). **This reads the tracked `--v-font-weight` custom property, not the CSS `font-weight` property** — CSS can't read inherited `font-weight` back into a variable. So every rule that sets `font-weight` from the weight stack (§5.1) must set `--v-font-weight` to the same number in tandem: base element styles, the weight-token utilities, and the tinted-surface weight bump (`v-colors-callout` etc.) all do this. `--v-font-weight` defaults to `400` at `:root`. Document the "set them together" contract wherever the weight stack is defined so the icon ramp (and the weight-floor fallback) have a value to read. *(Aesthetic spec §11)*
    - **Code surfaces**: `code` gets tinted-paper bg (`v-colors-code`); `pre` gets always-dark surface (`v-colors-pre`), even in light mode. *(Aesthetic spec §04)*
    - **List indent**: `ul, ol { padding-inline-start: 1em }` — the one base list rule, carried verbatim from the Slip Switch consumer fork. The `em` unit is the point: it **compounds per nesting level** so deep lists indent proportionally to their own (possibly smaller) text. This is the *base* behavior for any list; the richer marker-cycling lives in `o-prose` (Phase 2, folded from Slip Switch's editor CSS). Markers are otherwise left to the UA default. *(workbench: `docs/v2/spacing-workbench.html`)*
 
@@ -349,7 +351,7 @@ Browser-primitive component chrome (§10.2) — these need CSS only at this phas
     **Footer stickiness — opt-in, three modes** (not per-button — per-button was tried and reads badly with more than the submit): `none` (footer scrolls in flow, the default), `submit` (only the primary `[type=submit]` pins bottom-right via a sticky float mirror — its in-footer slot goes `visibility: hidden`; secondary actions scroll away), and `bar` (the whole footer pins as a glass action bar that breaks out to the dialog edges, top border + edge shadow, rounds its own bottom corners). Pairs with the `:has(:invalid) [type=submit]` disabled-but-clickable treatment (§10 / Aesthetic spec §18). **Width presets** (`--c-modal__width`, ship a few named defaults set *on the component*, not as global utilities): a comfortable default (~40rem), a container-width variant (`var(--o-container__max)` — matches the page reading width), and a narrow/mobile variant (~22rem). **Full-bleed boxes — one behavior for every frame.** Both the page region (`o-container`) and a dialog are `container-type: inline-size` **query containers sharing one container-name** (e.g. `frame`), so a *single* `@container frame (max-width: …)` rule makes the boxes inside *either* go full-bleed when their frame is narrow: the box **breaks out** of the frame's gutter to span its edges and drops its radius / side borders / shadow, and the frame's prose realigns to the box's inner text (§6.1, with its own block boxes bleeding too). Breakout (not gutter-collapse) is what keeps the dialog header clear of the frame's corner curve. Because it keys off each frame's *own* width, the page full-bleeds on a narrow viewport and a dialog full-bleeds when *it* is narrow (its Narrow width preset triggers it even on a wide screen) — one mechanism, no special-casing. The **default path makes page and dialog behave the same**; a frame that needs to differ overrides the breakpoint / opt-out via its own CSS vars. (This is the *contents* adapting — making a dialog **frame** itself fill the window is just `--o-dialog__offset → 0`.) `c-card`'s full-bleed collapse (§10) and `c-drawer` are the same mechanism on their frames.
 17. **`drawer.css`** — `c-drawer`. Edge-anchored `<dialog>` with side variants.
 18. **`popover.css`** — `c-popover`. Anchor-positioned `[popover]`. Applies `v-colors-popover` (matches surrounding chrome).
-19. **`menu-component.css`** — `c-menu`. Chrome on `o-menu`. Menu item highlight is conditional on keyboard/mouse mode: `body:not([data-v-kb-nav="true"]) .o-menu-item:hover` vs `body[data-v-kb-nav="true"] .o-menu-item[data-active]` both apply `v-colors-highlight`. *(Aesthetic spec §09)*
+19. **`menu-component.css`** — `c-menu`. Chrome on `o-menu`. Menu item highlight is conditional on keyboard/mouse mode: `body:not([data-v-kb-nav]) .o-menu-item:hover` vs `body[data-v-kb-nav] .o-menu-item[data-active]` both apply `v-colors-highlight` (presence flag, §12.2.4). *(Aesthetic spec §09)*
 20. **`styled-select.css`** — `c-styled-select` chrome.
 
 ### 3c: Tools (`src/lib2/css/tools/`)
@@ -469,11 +471,11 @@ Build in this order — each piece depends on the previous:
    - `t-request-close.ts` — used by modal, drawer, popover. Exports `onRequestClose` and `forceClose`.
    - `t-focus-trap.ts`, `t-restore-focus.ts` — standalone
    - `t-typeahead-filter.ts`, `t-active-descendant.ts`, `t-open-tab.ts` — standalone
-   - `t-kb-nav.ts` — **new** *(Aesthetic spec §09)*. Toggles `body[data-v-kb-nav="true"]` on first Tab/arrow-key, removes on first mousedown. This single boolean drives the CSS conditional for menu hover vs. active-descendant highlighting, ensuring mouse users see hover highlights while keyboard users see active-descendant highlights — never both simultaneously.
+   - `t-kb-nav.ts` — **new** *(Aesthetic spec §09)*. Sets the presence flag `body[data-v-kb-nav]` (no value) on first Tab/arrow-key, removes it on first mousedown. This single flag drives the CSS conditional (`[data-v-kb-nav]` / `:not([data-v-kb-nav])`) for menu hover vs. active-descendant highlighting, ensuring mouse users see hover highlights while keyboard users see active-descendant highlights — never both simultaneously.
    - `t-empty.ts` — **new** *(Aesthetic spec §19)*. Sets `data-t-empty` attribute on containers whose children render no visible content. Drives the empty-alert/error-message collapse in CSS (`.c-alert:has([data-t-empty]) { display: none }`).
    - `t-scroll-shadow.ts` — **new** *(Aesthetic spec §16)*. Observes scroll position of modal/drawer content areas. Sets `data-scroll-top` when scrolled to top, `data-scroll-bottom` when scrolled to bottom. CSS uses these to show/hide `--v-shadow-inner-top` / `--v-shadow-inner-bottom`.
    - Form behaviors: `t-validate.ts`, `t-submit.ts`, `t-validate-group.ts`, `t-validate-error.ts`, `t-reset-on-close.ts`, `t-close-on-success.ts`
-   - Component-internal: `c-modal__close.ts`, `c-modal-speed-bump.ts`, `c-tabs__select.ts`, etc.
+   - Component-internal: `c-modal__close.ts`, `c-modal__speed-bump.ts`, `c-tabs__select.ts`, etc.
 8. **`components/`** — thin compositions (§12.3): `tabs.ts`, `modal.ts`, `drawer.ts`, `popover.ts`, `menu.ts`, `styled-select.ts`.
 9. **`index.ts`** — public API (no handler side-effects). **`all.ts`** — Pattern A entry that imports every handler.
 

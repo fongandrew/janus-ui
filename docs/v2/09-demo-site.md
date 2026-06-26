@@ -38,7 +38,7 @@ The landing page. Explains what Janus is and how to use it.
 
 The first and largest section. It documents the building blocks that produce layout, rhythm, and type — the `--v-*` variable knobs, the `o-*` objects, the `t-*` tools, and typography — all in one place. Composition is **built first** (PLAN Phases 1–3) and is the primary human-review surface for the CSS: everything here is framework-free (static markup + `index.css`, zero JS).
 
-**Layout.** A persistent left **sidebar / table-of-contents** lists the four areas — Variables, Objects, Tools, Typography — and their sub-sections; the main column scrolls through the documentation, sidebar highlight tracking scroll position. On narrow viewports the sidebar collapses to a `c-drawer` (same recipe as the Components page, §10.4). Composition may be one long anchored page or split into sub-routes — either works; the ToC is the through-line.
+**Layout.** A persistent left **sidebar / table-of-contents** lists the four areas — Variables, Objects, Tools, Typography — and their sub-sections; the main column scrolls through the documentation. The ToC entries are **plain anchor links that work with zero JS** — clicking one jumps to its section via the URL fragment. The active-section *highlight* that follows scroll position is **strictly progressive enhancement** (a small scroll-spy island added in Phase 9); the page is fully navigable and complete without it, consistent with the framework-free claim for the CSS-reference pages. On narrow viewports the sidebar collapses to a `c-drawer` (same recipe as the Components page, §10.4). Composition may be one long anchored page or split into sub-routes — either works; the ToC is the through-line.
 
 **Bootstrapping note.** Composition is built before the Solid component layer exists, so its shell chrome (the sidebar, the section cards, the nav) is assembled from **ad-hoc markup + CSS classes**, not finished `Card`/`Sidebar` components. That is fine and expected — the point is to exercise the CSS as early as possible. These ad-hoc shells are refactored into real components later, once the Solid layer lands (see PLAN Phase 9).
 
@@ -89,14 +89,14 @@ Showcase of the typography system (still part of Composition — type *is* compo
 - Lists (ordered, unordered, nested), blockquotes, tables
 - `<pre>` / `<code>` blocks
 - A reference table showing each token's resolved size and effective ratio (from §5.1's line-height table)
-- A note that the scale is **fluid** (Utopia-style, §5.4): resizing the viewport between `--v-viewport-min` and `--v-viewport-max` continuously scales every level, and the heading↔body contrast widens toward the wide end (dual ratios). This is the visible proof the responsive type system works — no breakpoints, just interpolation.
-- A **width-draggable preview frame** demonstrating that fluidity *without resizing the browser*. Prose can't substitute here — the claim is only believable when the reader sees the ramp move. An `<iframe>` (or container-query-scoped region) hosting the type ramp, with a drag handle that varies its width across the `--v-viewport-min`…`--v-viewport-max` range, so heading sizes grow and the heading↔body contrast visibly widens as it gets wider. This is the same draggable-width frame the `spacing-workbench.html` prototype uses, brought into the doc. Like the Variables slider islands (§20.2.1) it is a JS enhancement layered on top of the static type ramp, not a prerequisite for the page.
+- A note that the scale **ships fixed by default** (§5.4): with the shipped collapsed anchors (`--v-font-size-min == --v-font-size-max`), every level is a constant size that does **not** track the viewport — the right default for app UI. The page's main type ramp is this fixed default; resizing the browser does *not* move it, and that is correct. The Utopia *mechanism* underneath is fluid-capable, but fluidity is an **opt-in** (recommended for marketing/content), not the out-of-the-box behavior.
+- A **clearly-labeled fluid opt-in demo** — a separate, explicitly-fluid region that spreads the anchors (e.g. `--v-font-size-min: 1rem; --v-font-size-max: 1.25rem` with `--v-font-ratio-max > --v-font-ratio-min`) inside its own scope, so the reader can see what opting in does. Because the *default* ramp is fixed, this demo must set the fluid anchors itself — it cannot rely on the page defaults. Implement it as a **width-draggable preview frame**: an `<iframe>` (or container-query-scoped region) hosting a type ramp with the fluid anchors set, plus a drag handle that varies its width across the `--v-viewport-min`…`--v-viewport-max` range, so heading sizes grow and the heading↔body contrast visibly widens as it gets wider. Label it unambiguously as the *fluid opt-in*, so no reader mistakes it for default behavior. This is the same draggable-width frame the `spacing-workbench.html` prototype uses; like the Variables slider islands (§20.2.1) it is a JS enhancement layered on top of the static ramp, not a prerequisite for the page.
 
 ### 20.3 Colors
 
 Color system showcase + interactive playground. Built **second** (after Composition). Section 1 (the contrast grid) is framework-free; Section 2 (the playground) is a hydrated island added once the DOM layer exists. This is also the home of the color-contrast checker that exists today — all color-specific tooling lives here.
 
-**Section 1 — Contrast grid (SSR).** The existing APCA contrast display carried forward from v1: a grid of `v-colors-*` variant boxes, each showing foreground text with APCA Lc scores and pass/fail indicators against the silver-level font-weight tables. Covers: `v-colors-card`, `v-colors-default`, `v-colors-code`, `v-colors-pre`, `v-colors-popover`, `v-colors-tooltip`, `v-colors-primary`, `v-colors-secondary`, `v-colors-callout`, `v-colors-highlight`, `v-colors-input`, `v-colors-success`, `v-colors-warning`, `v-colors-danger`.
+**Section 1 — Contrast grid (SSR).** The existing APCA contrast display carried forward from v1: a grid of `v-colors-*` variant boxes, each showing foreground text with APCA Lc scores and pass/fail indicators against the silver-level font-weight tables. Covers the §7 variant catalogue exactly: the **default** base palette (no variant) as the reference cell, then the tonal variants `v-colors-primary`, `v-colors-secondary`, `v-colors-success`, `v-colors-warn`, `v-colors-info`, `v-colors-danger`, and the surface-role variants `v-colors-code`, `v-colors-pre`, `v-colors-popover`, `v-colors-tooltip`, `v-colors-callout`, `v-colors-highlight`. (Names match §7 — note `v-colors-warn`, not `warning`; there are no `v-colors-card` / `v-colors-input` color variants — card/input surfaces are `v-surface-*` + the base palette, so they need no separate contrast cell.)
 
 **Section 2 — Color playground (island).** An interactive region for experimenting with the v2 color model. This section is a hydrated island inside the otherwise-SSR page.
 
@@ -190,7 +190,7 @@ The config modal (triggered from the top nav) provides live manipulation of the 
 - **Color scheme** — system / light / dark (radio group)
 - **Animations** — system / enabled / disabled (radio group)
 - **Font family** — select from available fonts
-- **Font size** — slider (12–24px)
+- **Font size** — slider (12–24px). Because the base size is now the *pair* of anchors (`--v-font-size-min` / `-max`), this slider **sets both anchors together** to the same value — keeping type fixed (the default), just larger or smaller. It never spreads the anchors; spreading them (to opt into fluid type) is done in the Knobs section by editing the two anchor fields independently.
 
 ### 21.2 Knobs section
 
@@ -200,7 +200,7 @@ A new section below the existing preferences. All inputs are **plain text fields
 
 | Knob | Default | Description |
 |---|---|---|
-| `--v-spacing` | `0.75rem` | Base spacing unit |
+| `--v-spacing` | `1rem` | Base spacing unit |
 | `--v-radius` | `0.5rem` | Frame / window radius |
 | `--v-input-height` | `2.5rem` | Control height |
 | `--v-border-width` | `1px` | Base border width |
@@ -233,9 +233,9 @@ Line-height derivatives:
 - `--v-line-height-caption`
 - `--v-line-height-code`
 
-Shadow:
-- `--v-shadow-outer` (default `0 0 transparent`)
-- `--v-shadow-inner` (default `0 0 transparent`)
+Shadow (ship lifted by default — §5.1 / §7.0):
+- `--v-shadow-outer` (default `0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%)`)
+- `--v-shadow-inner` (default `inset 0 1px 2px 0 rgb(0 0 0 / 10%)`)
 
 ### 21.3 Behavior
 

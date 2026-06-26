@@ -40,13 +40,18 @@ Two tiers, plus a convention for private intermediates:
 | Prefix | Tier | Who sets | Who reads | Notes |
 |---|---|---|---|---|
 | `--v-*` | **Root knob** | Consumers / variants / `:root` | Anything | Documented, stable, global concerns (spacing, radius, color base, typography). |
-| `--o-*` | **Scoped knob** | Owning rule's `:root` defaults; outer rules redefine for descendants; consumers via inline style, scoped class, or JS | The owning rule itself | The canonical form for any externally-settable CSS knob. Used by objects, components, and variants alike — the question the cascade cares about is "is this overridable from outside?", and the answer for any exposed knob is yes. Examples: `--o-box__radius`, `--o-dialog__offset`, `--o-drawer__side`. |
+| `--o-*` | **Scoped knob** | Owning rule's `:root` defaults; outer rules redefine for descendants; consumers via inline style, scoped class, or JS | The owning rule itself | The canonical form for any externally-settable CSS knob. Used by objects, components, and variants alike — the question the cascade cares about is "is this overridable from outside?", and the answer for any exposed knob is yes. Examples: `--o-box__radius`, `--o-dialog__offset`, `--o-grid__min`. |
 
 **`--_*` is a private-intermediate convention**, not a formal tier. When a stylesheet needs a working variable that nothing else should read — a derived `calc()` / `color-mix()` result, an internal animation duration, a temporary holding value — prefix it with `--_`. The underscore signals "do not consume from outside this stylesheet." Janus uses it internally; consumers can use it the same way in their own CSS and never read Janus's `--_*` values.
 
-Components don't have their own variable prefix. A component that needs to expose a CSS knob does so as `--o-{name}__{property}` — same form as objects, because what the cascade cares about is "is this externally settable?", not which class type owns the rule. Components still prefer JSX props for customization; CSS knobs are reserved for cross-cutting concerns (animation timings, exposing an inner object's knob through the component's class).
+Components expose CSS knobs in one of two forms, by ownership:
 
-**Namespacing convention for `--o-*` knobs.** Scoped knobs are written as `--o-{name}__{property}` — a double underscore separates the namespace from the property. So `--o-box__radius`, `--o-input-box__radius`, `--o-drawer__side`. This makes the boundary unambiguous (`o-input-box` is one namespace, not three) and lets you grep `--o-input-box__` to find every knob belonging to a single thing. Root knobs (`--v-*`) don't use the boundary — they're global and not scoped to a thing.
+- **`--o-{name}__{property}`** when the knob belongs to an *object* the component composes and the component is merely re-exposing or re-deriving it (e.g. nudging the `o-input-box` radius it inherits). This is the common case — the question the cascade cares about is "is this externally settable?", not which class type owns the rule.
+- **`--c-{component}__{property}`** when the knob is *genuinely component-specific* — it has no object behind it. Examples already in the spec: `--c-card__radius` (the full-bleed collapse target, §10.1), `--c-modal__width` (§10.2), `--c-drawer__side` (§10.2). Naming these `--c-*` keeps "this is the card's own knob, not an object's" unambiguous and greppable.
+
+Components still prefer JSX props for customization; CSS knobs (either form) are reserved for cross-cutting concerns (animation timings, exposing an inner object's knob, a component-only dimension). The double-underscore namespace boundary (`--c-modal__width`, not `--c-modal-width`) applies to both forms.
+
+**Namespacing convention for `--o-*` knobs.** Scoped knobs are written as `--o-{name}__{property}` — a double underscore separates the namespace from the property. So `--o-box__radius`, `--o-input-box__radius`, `--o-container__gutter`. This makes the boundary unambiguous (`o-input-box` is one namespace, not three) and lets you grep `--o-input-box__` to find every knob belonging to a single thing. Root knobs (`--v-*`) don't use the boundary — they're global and not scoped to a thing.
 
 **The override pattern.** A rule sets a *different-named* knob to redefine an inner object's appearance for its subtree. The canonical case is the radius cascade (§8.2): a box assigns the *control* knob (a different name than its own radius), so a control inside it rounds one step deeper:
 
@@ -68,7 +73,7 @@ Root knobs split into two tiers:
 #### Primary knobs
 
 Layout & rhythm:
-- `--v-spacing` — base spacing unit (default `0.75rem`).
+- `--v-spacing` — base spacing unit (default `1rem`). Keeps chrome rhythm on the 16px grid while body text sits a touch below it at a fixed 15px (see `--v-font-size-min`).
 - `--v-radius` — the **max** radius, carried by the outermost frame (window / dialog); the anchor the per-layer radii step *inward* from (§8). Default `0.5rem`. Used by `o-dialog`, `o-square`, and page-body framing.
 - `--v-radius-min` — the radius **floor** (default `0.25rem`). Nothing rounds below it, so corners are never sharp; the inward cascade bottoms out here (§8).
 - `--v-border-width` — base border width (default `1px`).
@@ -95,8 +100,19 @@ Color:
 - `--v-accent` — accent / current-action color (focus ring, selected state, primary action tint).
 - `--v-muted` — de-emphasized text color.
 
-Shadows:
-- `--v-shadow-outer`, `--v-shadow-inner` — both default to `0 0 transparent` (no shadow). Split so a `.t-shadow` helper or a component variant can replace one without disturbing the other.
+Shadows (ship **lifted by default** — real multi-layer shadows, not flat; §7.0 carries the values):
+- `--v-shadow-outer` — default `0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%)`. The resting outer elevation (cards, popovers). A multi-layer value reads as real depth, not a single fuzzy drop.
+- `--v-shadow-inner` — default `inset 0 1px 2px 0 rgb(0 0 0 / 10%)`. The embossed-input inset.
+- Split so a `.t-shadow` helper or a component variant can replace one without disturbing the other. A non-transparent default doesn't force every component to paint it — components apply the knob where they want elevation (cards at rest, buttons on hover); a component that wants none sets `box-shadow: none`.
+- `--v-shadow-inner-top`, `--v-shadow-inner-bottom` — scroll-edge shadows for scrollable regions (modal/drawer bodies). Defaults `inset 0 6px 6px -4px rgb(0 0 0 / 15%)` / `inset 0 -6px 6px -4px rgb(0 0 0 / 15%)`. Toggled by `t-scroll-shadow`'s `data-scroll-top`/`-bottom` sentinels (§12.2.4).
+
+Motion:
+- `--v-duration` — the standard transition pace (default `240ms`). Components derive faster/slower paces by `calc()` (`* 0.5` for hover/active, `* 2` for extended) rather than a t-shirt scale. `prefers-reduced-motion` zeros it and everything follows.
+- `--v-ease` — standard easing (default `cubic-bezier(0.4, 0, 0.2, 1)`, Material-style ease-out).
+
+Font weights (semantic stack consumed by base styles and components; tinted-surface variants bump the whole stack ~100 — §7):
+- `--v-font-weight-normal` (default `400`), `--v-font-weight-label` (`500`), `--v-font-weight-subtitle` (`600`), `--v-font-weight-strong` (`600`), `--v-font-weight-title` (`700`).
+- `--v-font-weight` — the **currently-applied** weight, tracked as a custom property. CSS cannot read the inherited `font-weight` back into a variable, so any rule that sets `font-weight` from the stack above **also sets `--v-font-weight` to the same number** (base styles and components do this in tandem). Features that need to *read* the active weight — the icon-stroke ramp (§6.4 / base), the weight-floor fallback — consume `--v-font-weight`, not `font-weight`. Default `400`.
 
 #### Secondary knobs
 
@@ -143,15 +159,17 @@ The line-height formula adds a fixed leading amount (half the base spacing) rath
 
 **This composes cleanly whether type is fixed or fluid.** Because the offset is added to `1em` — the element's *own resolved* font size — the leading tracks whatever each token's `clamp()` currently resolves to. Under the default fixed config that's a constant, so leading is simply correct per role; and if a consumer opts into fluid type, the leading tracks each fluid `clamp()` automatically at every viewport — an `h1` that grows from step +3-at-320px to step +3-at-1280px keeps correct leading the whole way, since `1em` is whatever the clamp currently resolves to. Nothing recomputes either way.
 
-The table below shows resolved values **at the minimum viewport anchor** (320px: 16px base, `--v-font-ratio-min` 1.2) and default spacing (`0.75rem` → offset `0.375rem`). Toward `--v-viewport-max` every font size grows and the steps spread further apart (ratio rises toward `--v-font-ratio-max`), but the *leading ratios* shown here only tighten slightly as the fixed offset shrinks proportionally:
+The table below shows resolved values under the **default fixed config** (15px base, ratio `1.2`, spacing `1rem` → additive offset `0.5 · 1rem` = 8px). Because type ships fixed (§5.4), these hold at *every* viewport — there is no narrow-vs-wide variation by default. A consumer who opts into fluid type gets the same roles interpolating between two such tables (a gentler one at `--v-viewport-min`, a bolder one at `--v-viewport-max`):
 
-| Role | Step | Font size @320px | Line height @320px | Effective ratio |
-|------|------|------------------|--------------------|-----------------|
-| caption / code | −1 | ~0.833rem | ~1.21rem | 1.45 |
-| body | 0 | 1rem | — (`--v-line-height: 1.5`, unitless) | 1.50 |
-| h3 | +1 | 1.2rem | 1.575rem | 1.31 |
-| h2 | +2 | 1.44rem | 1.815rem | 1.26 |
-| h1 | +3 | 1.728rem | 2.103rem | 1.22 |
+| Role | Step | Font size (fixed) | Line height | Effective ratio |
+|------|------|-------------------|-------------|-----------------|
+| caption / code | −1 | 13px *(12.5px floored up — see below)* | 21px | 1.62 |
+| body | 0 | 15px | 22.5px (`--v-line-height: 1.5`, unitless) | 1.50 |
+| h3 | +1 | 18px | 26px | 1.44 |
+| h2 | +2 | ~21.6px | ~29.6px | 1.37 |
+| h1 | +3 | ~25.9px | ~33.9px | 1.31 |
+
+**Readability-floor caveat (carry into the Variables/Typography review).** The `--_font-size-floor` (≈13px) clamps the *bottom* of each step, so under the default config caption/code resolve to **13px**, not their pure step value of 12.5px. The smallest step is therefore slightly larger — and, because leading is additive (`1em + 8px`), its effective ratio (1.62) reads looser — than the modular scale alone implies. This is intended: at the bottom of the ramp legibility wins over scale purity. A reviewer eyeballing the type ramp should expect caption to sit a hair above its "1.2-down-from-body" position.
 
 Body text uses the primary `--v-line-height` (unitless `1.5`, inherits and recomputes naturally). The secondary line-height knobs are for elements that set their own font-size and need to re-declare line-height — headings in the base layer, `o-caption`, `o-code`, `o-menu-item`.
 
@@ -172,7 +190,12 @@ Color (derive from `--v-bg`):
   ```
 
   `(0.5 - l) * infinity` resolves to `+infinity` when the bg's lightness is below 0.5 (clamping the result's lightness to `1` → white) and `-infinity` when above (clamping to `0` → black). Works on any Baseline browser that supports `oklch(from …)` and `infinity`, no `@supports` branch. Consumers who want non-binary contrast (e.g. very-dark-gray instead of pure black) override `--v-fg` directly.
-- `--v-link-weight-min`, `--v-accent-weight-min`, `--v-muted-weight-min` — minimum `font-weight` to apply to text using each color. Lets hue-distinguished text (e.g. a desaturated link) safely sit alongside WCAG-compliant text by bumping weight when the color alone is borderline. Default `inherit` (no bump); raise to `500` / `600` per color as needed for the chosen palette.
+- `--v-link-weight-min`, `--v-accent-weight-min`, `--v-muted-weight-min` — minimum `font-weight` to apply to text using each color. Lets hue-distinguished text (e.g. a desaturated link) safely sit alongside WCAG-compliant text by bumping weight when the color alone is borderline. **Default `500` for the shipped palette** (the bundled link/accent/muted colors need the bump); the *mechanism* falls back to `inherit` (no bump) when a consumer clears it.
+- `--v-border-dynamic-base` (default `light-dark(black, white)`), `--v-border-dynamic-mix` (default `light-dark(17.5%, 50%)`), and the resolved `--v-border-color: color-mix(in hsl, var(--v-border-dynamic-base) var(--v-border-dynamic-mix), var(--v-bg))` — one recipe places every border a fixed perceptual distance from any surface, so borders read correctly on tinted cards/alerts without hard-coding a gray.
+- `--v-body-bg` — the body's painted background: two low-opacity radial gradients (warm + cool) over `var(--v-bg)` (§7.0), applied with `background-attachment: fixed`. Keeps pages from reading flat.
+- `--v-ring` (default `var(--v-accent)`, crisp outline) and `--v-ring-alt` (default `color-mix(in hsl, var(--v-accent) 35%, transparent)`, soft halo) — the two layers of the focus ring; `--v-shadow-focus: 0 0 0 0.125rem var(--v-ring-alt)` is the halo layer (§7 / states mixin).
+
+> **Note on tiers.** Everything in this Color-secondary group is *derived from* `--v-bg` / `--v-accent` and exists so a consumer can break one relationship without touching the primary. The full resolved set (including the motion, weight, and scroll-shadow knobs above) is what the Variables doc page (§20.2.1) enumerates; this section is the source of truth for it.
 
 **No color-palette knobs at root.** Tonal variations (primary / danger / success / etc.) live as `v-colors-*` variants that re-set `--v-bg` / `--v-fg` / `--v-accent` together for a tonal subtree — see §7.
 
@@ -185,7 +208,7 @@ Two rules:
 
 ```css
 :root {
-  --v-spacing:    0.75rem;
+  --v-spacing:    1rem;
   --v-pad-block:  var(--v-spacing);
   --v-pad-inline: var(--v-spacing);
   --v-gap-block:  var(--v-spacing);

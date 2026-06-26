@@ -174,7 +174,7 @@ export function SubmitButton(props: ButtonProps) {
 
 ### 13.6 Modal form
 
-The three modal-form behaviors from §12.1 (`t-reset-on-close`, `t-close-on-success`, plus the speed-bump pattern via `c-modal-speed-bump`) compose into a single Solid wrapper. Defaults are opinionated — all on, individually opt-outable.
+The three modal-form behaviors from §12.1 (`t-reset-on-close`, `t-close-on-success`, plus the speed-bump pattern via `c-modal__speed-bump`) compose into a single Solid wrapper. Defaults are opinionated — all on, individually opt-outable.
 
 ```tsx
 export interface ModalFormProps extends FormProps {
@@ -194,7 +194,7 @@ export function ModalForm(props: ModalFormProps) {
 }
 ```
 
-`<ModalSpeedBump>` is a thin wrapper around a nested `<dialog>` carrying the `c-modal-speed-bump` behavior. The parent modal's `requestClose` dispatcher auto-discovers it via DOM — no `speedBumpId` prop, no ref:
+`<ModalSpeedBump>` is a thin wrapper around a nested `<dialog>` carrying the `c-modal__speed-bump` behavior. The parent modal's `requestClose` dispatcher auto-discovers it via DOM — no `speedBumpId` prop, no ref:
 
 ```tsx
 export interface ModalSpeedBumpProps {
@@ -205,7 +205,7 @@ export interface ModalSpeedBumpProps {
 
 export function ModalSpeedBump(props: ModalSpeedBumpProps) {
   return (
-    <dialog class="c-modal c-modal-speed-bump" data-js="c-modal-speed-bump">
+    <dialog class="c-modal c-modal__speed-bump" data-js="c-modal__speed-bump">
       <form method="dialog" class="o-stack">
         <p>{props.message ?? 'You have unsaved changes.'}</p>
         <div class="o-row">
@@ -242,7 +242,7 @@ What v1 drops:
 |---|---|
 | `modalFormCloseOnSuccess` (callbackAttrs registration) | `t-close-on-success` behavior token in `data-js` |
 | `modalFormResetOnClose` (custom afterHide callback machinery) | `t-reset-on-close` behavior + capture-phase `close` listener |
-| `modalFormMaybeShowSpeedBump` + explicit `speedBumpId` wiring | `c-modal-speed-bump` behavior + DOM-discovered orchestration |
+| `modalFormMaybeShowSpeedBump` + explicit `speedBumpId` wiring | `c-modal__speed-bump` behavior + DOM-discovered orchestration |
 | `ModalFormContent` wrapper that splits modal vs. form props | `<Modal>` + `<ModalForm>` composed directly |
 
 ### 13.7 Complete component catalogue

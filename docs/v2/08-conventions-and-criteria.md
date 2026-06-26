@@ -24,8 +24,8 @@ The build assumes the following are available without fallback. Verify against t
 - CSS custom properties + `calc()` (including `calc(infinity)`)
 - `color-mix()`, `light-dark()`
 - `oklch()` and the relative-color syntax `oklch(from <color> …)` — used for the `--v-fg` derivation in §5.1
-- `1lh` unit
-- `text-box-trim` / `text-box-edge` (the `text-box` shorthand) — used for uniform block padding on text (§6). **Not yet in Firefox.** This is a deliberate bet (§6): where unsupported, the first/last text line gets slightly loose leading — a minor optical issue we accept rather than carry per-element line-height compensation math everywhere. Unlike `commandfor` / anchor positioning, this is *not* a hard requirement — it degrades, it doesn't break.
+- `1lh` and `cap` / `1cap` units — both treated as Baseline (the `cap` unit backs the "continuous" list rhythm, §5.1/§6.2, and the pill curvature-clearance math, §8.6).
+- `text-box-trim` / `text-box-edge` (the `text-box` shorthand) — used for uniform block padding on text (§6). **Not yet in Firefox.** This is a deliberate bet (§6): where unsupported, the box edges sit at the line-box (not cap/baseline), so the first/last text line just gets **slightly looser leading** — the spacing reads a touch roomier, nothing more. It does **not** clip: padded boxes (`<pre>`, `blockquote` callouts) keep their generous perimeter padding, which already covers the cap/descender overshoot, so no glyph is cut even without the trim. A minor optical difference we accept rather than carry per-element line-height compensation math everywhere. Unlike `commandfor` / anchor positioning, this is *not* a hard requirement — it degrades, it doesn't break.
 - `:has()`
 - Container queries (`@container`, `cqw` units)
 - `<dialog>` + `showModal()`
@@ -35,6 +35,8 @@ The build assumes the following are available without fallback. Verify against t
 - `scroll-state()` container queries — used by the auto-hiding-nav recipe in §10.4. Optional: the recipe degrades gracefully (nav stays visible) where unsupported.
 
 `commandfor` and anchor positioning are both hard requirements — no shim, no polyfill. Consumers whose target browsers don't support them should pick a different library.
+
+**Minimum supported browsers: Chrome 135+, Safari 26.2+, Firefox 144+.** At these versions `commandfor` / `command` is **cross-browser** — it is *not* Chromium-only, and the zero-JS modal path (open via `commandfor`, §18) works in all three engines. This is what lets us make `commandfor` a hard requirement without a JS shim: every supported browser has it natively. Anchor positioning and `scroll-state()` container queries remain the narrower features (still effectively Chromium-leading as of these minimums) — tests touching them stay tagged `@chromium-only` and the affected components degrade per the §0.4 / Cross-cutting fallback tables.
 
 ## 16. Naming & file conventions
 
@@ -153,7 +155,7 @@ src/lib/
       t-close-on-success.ts
 
       # Component-internal behaviors.
-      c-modal-speed-bump.ts
+      c-modal__speed-bump.ts
       c-modal__close.ts
       c-tabs__select.ts
       ...

@@ -2,7 +2,7 @@
 
 This document specifies a clean-room rebuild of the Janus UI library. It describes the finished state of the system — what every layer looks like, how the pieces compose, and why each decision was made. It is written so an agent with no prior context can understand the full design.
 
-There is no migration path from v1; learn from v1 but do not preserve its structure.
+This is a clean-room redesign of the **API and structure** — class names, prefixes, file layout, and component APIs are all new and do not preserve v1's. The **visual language and proven mechanics** (palette warmth, dynamic borders, focus rings, the modal scroll structure, list-marker cycling, etc.) are deliberately carried forward — learn from v1's *looks*, discard its *structure*. The build itself is a **strangler-fig migration** (v2 grows in `src/lib2/` beside a still-running v1 — see [PLAN.md](./PLAN.md)), not a clean-slate deletion.
 
 For **implementation sequencing** — what to build in what order — see [PLAN.md](./PLAN.md).
 
