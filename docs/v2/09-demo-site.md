@@ -12,7 +12,7 @@ Part 9 of the [Janus v2 design spec](./README.md). Covers the documentation site
 
 ## 19. Site architecture
 
-**SSR-first.** Every page renders server-side. This inverts the v1 default (where SPA was the norm and SSR was a special page). The top nav shell, config modal, and sidebar are all SSR — they work without JS via the callback-attrs progressive enhancement pattern (§12). SPA interactivity exists only as **islands**: hydrated regions inside otherwise-static content. The Composition section (§20.2) and the Colors contrast grid (§20.3 Section 1) render entirely without JS — they are static markup + `index.css`.
+**SSR-first.** Every page renders server-side. This inverts the v1 default (where SPA was the norm and SSR was a special page). The top nav shell, config modal, and sidebar are all SSR — they work without JS via the callback-attrs progressive enhancement pattern (§12). SPA interactivity exists only as **islands**: hydrated regions inside otherwise-static content. The Composition section (§20.2) and the Colors contrast grid (§20.3 Section 1) render entirely without JS in their base form — they are static markup + `index.css`. Composition's per-token **slider islands** (§20.2.1) and the Typography **width-draggable frame** (§20.2.4) are optional enhancements that hydrate on top of that static render once the DOM layer exists; the page documents every knob with zero JS even if they never load.
 
 **Multi-page Vite app.** Same pattern as v1 — one HTML entry point per page at the repo root, each pointing at a TSX entry in `src/`. The `vite-plugin-ssg.ts` plugin (§3.1) handles SSR rendering at build time. Because the site shell and SSG are stood up first (Phase 0), every CSS doc page renders through the real site machinery from day one — no throwaway test harness.
 
@@ -52,7 +52,9 @@ The reference for every public `--v-*` knob. This is what humans review while th
 
 **Live render:** next to each group, a swatch/sample strip showing the knob in effect — spacing shown as a ruler of padded boxes, radius as a row of progressively rounded boxes, the color knobs as labeled swatches, the shadow knobs as elevated tiles, the font-size/line-height tokens as a type ramp. The point is that a reviewer sees both the *number* and *what it does* without leaving the page.
 
-This page is the static, read-only counterpart to the config modal (§21): the modal lets you *change* knobs live (once the DOM layer exists); this page *documents* them and works with zero JS from Phase 1 onward.
+**Scoped slider islands (layered on later).** Beyond the static reference, each token group carries an optional **inline "mini-workbench"**: that group's knobs as **sliders** driving a *scoped* preview region (an `@scope` block or a small `<iframe>` — **not** the whole page) plus a live **resolved-token readout** with a **"copy CSS"** button. This is the pattern from `docs/v2/spacing-workbench.html` (controls → live preview → resolved `:root`) brought inline per concept, so a reader can drag *one* rhythm or radius knob and watch *one* preview move without committing the change to the page. These islands are **distinct from the config modal (§21)** and do a different job: the modal is the *global, persistent* editor (text fields for `calc()`/`var()`, writes to `<html>` + localStorage), while these are *local, ephemeral* teaching tools (sliders, because continuous drag is the pedagogy, scoped to a preview). Keep both — do not unify them.
+
+**Progressive enhancement preserves the zero-JS claim.** The static reference table + static live render are authored first and **work with zero JS from Phase 1 onward** — that is the CSS-review artifact. The slider islands are a JS layer that **hydrates on top** once the DOM layer exists (alongside the config modal, §21), never a prerequisite for the page to render or document its knobs. The static page is always the floor; the islands are enhancement. This page is the read-only counterpart to the config modal: the modal *changes* knobs live and persistently; this page *documents* them, and (once hydrated) lets you explore each one in isolation.
 
 #### 20.2.2 Objects
 
@@ -88,6 +90,7 @@ Showcase of the typography system (still part of Composition — type *is* compo
 - `<pre>` / `<code>` blocks
 - A reference table showing each token's resolved size and effective ratio (from §5.1's line-height table)
 - A note that the scale is **fluid** (Utopia-style, §5.4): resizing the viewport between `--v-viewport-min` and `--v-viewport-max` continuously scales every level, and the heading↔body contrast widens toward the wide end (dual ratios). This is the visible proof the responsive type system works — no breakpoints, just interpolation.
+- A **width-draggable preview frame** demonstrating that fluidity *without resizing the browser*. Prose can't substitute here — the claim is only believable when the reader sees the ramp move. An `<iframe>` (or container-query-scoped region) hosting the type ramp, with a drag handle that varies its width across the `--v-viewport-min`…`--v-viewport-max` range, so heading sizes grow and the heading↔body contrast visibly widens as it gets wider. This is the same draggable-width frame the `spacing-workbench.html` prototype uses, brought into the doc. Like the Variables slider islands (§20.2.1) it is a JS enhancement layered on top of the static type ramp, not a prerequisite for the page.
 
 ### 20.3 Colors
 

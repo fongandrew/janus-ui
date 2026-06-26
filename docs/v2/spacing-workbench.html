@@ -165,7 +165,7 @@
     <div class="ctl">
       <div class="lab"><span class="name">Inset · prose (wide width)</span></div>
       <div class="seg" id="timode"><button data-v="zero">0</button><button data-v="radius">Radius</button><button data-v="text" aria-pressed="true">Text</button></div>
-      <div class="hint">A <strong>container with boxes</strong> insets its direct prose children to meet the cards: <strong>0</strong> = the cards' outer edge, <strong>Radius</strong> = their straight edge (--o-box__radius), <strong>Text</strong> = their inner text (--v-pad). Block boxes (code, blockquotes) break out. A toggle, not a slider — because at the full-bleed breakpoint the target has to <em>switch</em> (see below), not slide. The <strong>dialog</strong> uses the same idea but defaults to just Radius.</div>
+      <div class="hint">A <strong>container with boxes</strong> insets its direct prose children to meet the cards: <strong>0</strong> = the cards' outer edge, <strong>Radius</strong> = their straight edge (--o-box__radius), <strong>Text</strong> = their inner text (--v-pad-inline). Block boxes (code, blockquotes) break out. A toggle, not a slider — because at the full-bleed breakpoint the target has to <em>switch</em> (see below), not slide. The <strong>dialog</strong> uses the same idea but defaults to just Radius.</div>
     </div>
     <div class="ctl">
       <div class="lab"><span class="name">Full-bleed boxes (narrow frames)</span></div>
@@ -296,7 +296,7 @@
     <div class="ctl">
       <div class="lab"><span class="name">Header treatment</span></div>
       <div class="seg" id="dlgHeader"><button data-v="plain" aria-pressed="true">Plain</button><button data-v="glass">Glass</button></div>
-      <div class="hint">Open the dialog (the <strong>Open dialog</strong> button in the card grid) and scroll: the header slides away, only the <strong>X</strong> stays pinned. <strong>Plain</strong> = surface header sharing the body's <code style="color:#9fb0c4">--v-pad</code> seam. <strong>Glass</strong> = tinted two-tone panel; being two-tone it can't reuse that seam, so it gets <em>extra</em> padding before the body.</div>
+      <div class="hint">Open the dialog (the <strong>Open dialog</strong> button in the card grid) and scroll: the header slides away, only the <strong>X</strong> stays pinned. <strong>Plain</strong> = surface header sharing the body's <code style="color:#9fb0c4">--v-pad-block</code> seam. <strong>Glass</strong> = tinted two-tone panel; being two-tone it can't reuse that seam, so it gets <em>extra</em> padding before the body.</div>
     </div>
     <div class="ctl">
       <div class="lab"><span class="name">Sticky footer</span></div>
@@ -373,7 +373,12 @@ const DOC = `<!doctype html><html data-scheme="light" data-bar="text" data-cinse
   --v-font-weight-strong: 600;
   --v-font-weight-title: 700;
 
-  /* —— the FIVE rhythm scales (master + multipliers) —— */
+  /* —— WORKBENCH TUNING LAYER ——————————————————————————————————————————————
+     These --rk-* ratio knobs exist ONLY in the workbench, so the sliders can explore the
+     proportions live. The SHIPPED v2 CSS has no --rk-* layer: it bakes the chosen multiples
+     straight into the tokens below (spec §6.2 — "one master lever, named multiples"). Tokens
+     prefixed --_ are likewise workbench-private: they stand in for values the spec realizes
+     per-context (a scoped object knob, or an internal flow margin), NOT public --v-* knobs. —— */
   --rk-section: 1.5;
   --rk-pad: 1.25;
   --rk-prose: 1;       /* × line */
@@ -382,27 +387,31 @@ const DOC = `<!doctype html><html data-scheme="light" data-bar="text" data-cinse
   --rk-heading-before: 1; /* × line — space ABOVE a heading (the section break) */
   --rk-hgroup: 0.5;       /* × spacing — constant leading (space BETWEEN lines) inside <hgroup> */
 
-  --v-rhythm-section: calc(var(--rk-section) * var(--v-spacing));            /* ① between boxes */
-  --v-pad:            calc(var(--rk-pad)     * var(--v-spacing));            /* ② box padding   */
-  --v-control-inset:  calc((var(--v-input-height) - var(--v-font-size)) / 2); /* control text→border inline pad (v1) */
-  --v-rhythm-prose:   calc(var(--rk-prose)  * var(--v-line-height) * 1em);  /* ③ paragraphs    */
-  --v-rhythm-tight:   calc(var(--rk-tight)  * var(--v-spacing));            /* ④ label stacks  */
-  --v-gap-inline:     calc(var(--rk-cluster)* var(--v-spacing));            /* ⑤ inline groups */
-  --v-heading-before: calc(var(--rk-heading-before) * var(--v-line-height) * 1em);
-  /* hgroup leading is ADDITIVE: line-height = 1em + a constant, so line-height scales with font
-     size but the space BETWEEN lines stays put — title lines and subtitle lines share the same
-     visual leading, and so does the title→subtitle gap. (See the hgroup rules.) */
+  /* —— derived rhythm — these ARE the shipped token names (spec §5.1 / §6.2) —— */
+  --v-pad-block:      calc(var(--rk-pad)     * var(--v-spacing));            /* ② box block padding  */
+  --v-pad-inline:     calc(var(--rk-pad)     * var(--v-spacing));            /* ② box inline padding (equal here; may differ in prod) */
+  --v-gap-block:      var(--v-spacing);                                      /* base within-group stack gap */
+  --v-gap-inline:     calc(var(--rk-cluster) * var(--v-spacing));            /* ⑤ inline groups (o-group / o-row) */
+  --v-control-inset:  calc((var(--v-input-height) - 1em) / 2);              /* control text→border inline pad (v1) */
+  --o-prose__gap:     calc(var(--rk-prose)   * var(--v-line-height) * 1em);  /* ③ paragraph rhythm (× line) */
 
-  /* —— list rhythm: two recipes + the cascading switch (default grouped).
-        An editor root sets --v-list-rhythm: var(--v-rhythm-continuous) to flip
-        every list to continuous; marketing leaves it grouped. —— */
+  /* —— § no global token in v2 — a section-level grid/stack bumps its OWN gap knob above the
+        base (--o-grid__gap-block / --o-stack__gap, §6.2); the form label→control gap is a tight
+        form-stack gap; the heading space-above is internal to the o-prose flow. —— */
+  --_section-gap:          calc(var(--rk-section)        * var(--v-spacing));            /* ① → section grid/stack gap knob */
+  --_gap-tight:            calc(var(--rk-tight)          * var(--v-spacing));            /* ④ forms: label→control */
+  --_prose-heading-before: calc(var(--rk-heading-before) * var(--v-line-height) * 1em);  /* space ABOVE a heading (o-prose flow) */
+
+  /* —— list rhythm: two recipes + the cascading switch (default grouped). The recipes are
+        workbench-private intermediates; --v-list-rhythm is the one public switch (§5.1). An
+        editor root sets --v-list-rhythm: var(--_list-continuous) to flip every list. —— */
   --rk-list-grouped: 0.5; /* × prose */
-  --v-rhythm-continuous: calc(var(--v-line-height) * 1em - 1cap);              /* boundaries vanish */
-  --v-rhythm-grouped:    calc(var(--rk-list-grouped) * var(--v-rhythm-prose)); /* discrete points   */
-  --v-list-rhythm:       var(--v-rhythm-grouped);
+  --_list-continuous: calc(var(--v-line-height) * 1em - 1cap);              /* boundaries vanish */
+  --_list-grouped:    calc(var(--rk-list-grouped) * var(--o-prose__gap));   /* discrete points   */
+  --v-list-rhythm:       var(--_list-grouped);
 
-  /* —— heading leading rides font size (spec §5.1) —— */
-  --v-line-height-heading: calc(1em + 0.5 * var(--v-spacing));
+  /* —— heading leading rides font size; shipped per-level as --v-line-height-h1…h6, each this
+        same 1em + 0.5·spacing (spec §5.1). Applied uniformly here. —— */
 
   /* —— color —— */
   color-scheme: light dark;
@@ -452,7 +461,7 @@ body {
 .o-prose hgroup > :first-child { text-box: trim-start cap alphabetic; }
 .o-prose hgroup > :last-child  { text-box: trim-end cap alphabetic; }
 
-h1,h2,h3,h4,h5,h6 { line-height: var(--v-line-height-heading); }
+h1,h2,h3,h4,h5,h6 { line-height: calc(1em + 0.5 * var(--v-spacing)); } /* prod: --v-line-height-h1…h6, each this value */
 h1 { font-size: var(--v-font-size-h1); font-weight: var(--v-font-weight-title); letter-spacing: -.01em; }
 h2 { font-size: var(--v-font-size-h2); font-weight: var(--v-font-weight-strong); letter-spacing: -.005em; }
 h3 { font-size: var(--v-font-size-h3); font-weight: var(--v-font-weight-subtitle); }
@@ -530,7 +539,7 @@ pre {
   background: light-dark(hsl(216 16% 12%), hsl(216 16% 5%));
   color: light-dark(hsl(30 30% 92%), hsl(30 30% 88%));
   border-radius: var(--o-box__radius, var(--v-radius-min));
-  padding: var(--v-pad);
+  padding: var(--v-pad-block) var(--v-pad-inline);
   overflow-x: auto;
 }
 pre code { background: none; padding: 0; color: inherit; font-size: 1em; }
@@ -538,7 +547,7 @@ blockquote {
   background: var(--v-code-bg);
   border-inline-start: 3px solid var(--v-accent);
   border-radius: var(--o-box__radius, var(--v-radius-min));
-  padding: var(--v-pad);
+  padding: var(--v-pad-block) var(--v-pad-inline);
   color: var(--v-muted);
   font-style: italic;
 }
@@ -549,21 +558,21 @@ label { font-weight: var(--v-font-weight-label); display: block; }
 /* ============ OBJECTS ============ */
 /* the page container is a query CONTAINER named 'frame' — so its boxes can go full-bleed off its own
    width, exactly like a dialog does. One name, one rule for both (see Full-bleed below). */
-.o-container { width: 100%; max-width: var(--o-container__max, 64rem); margin-inline: auto; padding-inline: var(--v-pad); container: frame / inline-size; }
+.o-container { width: 100%; max-width: var(--o-container__max, 64rem); margin-inline: auto; padding-inline: var(--v-pad-inline); container: frame / inline-size; }
 
 /* ============ o-stack — uniform vertical gap (flex, UNTRIMMED) ============
    For discrete / mixed content: cards, control stacks, settings rows. Half-leading
    stays intact, so even gaps read optically right. "Tight" is just a gap value —
    not a different object. */
-.o-stack { display: flex; flex-direction: column; gap: var(--o-stack__gap, var(--v-rhythm-section)); }
-.o-stack--tight { --o-stack__gap: var(--v-rhythm-tight); }   /* ④ label→control, settings rows */
-.o-stack--card  { --o-stack__gap: var(--v-pad); }            /* in-card rhythm */
+.o-stack { display: flex; flex-direction: column; gap: var(--o-stack__gap, var(--_section-gap)); }
+.o-stack--tight { --o-stack__gap: var(--_gap-tight); }   /* ④ label→control, settings rows */
+.o-stack--card  { --o-stack__gap: var(--v-pad-block); }            /* in-card rhythm */
 
 /* ① Section rhythm is o-stack's default gap; the grid uses it too. */
 .o-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(var(--o-grid__min, 19rem), 100%), 1fr));
-  gap: var(--v-rhythm-section);
+  gap: var(--_section-gap);
 }
 
 /* ============ top-level vertical flow (hung on <main>, the frame's content) ============
@@ -573,10 +582,10 @@ label { font-weight: var(--v-font-weight-label); display: block; }
    HEADING, not the flat section gap. Works by margin-collapse: o-prose sections carry no
    padding/border, so the leading heading's margin escapes up into the page flow. */
 main > * { margin-block: 0; }
-main > * + * { margin-block-start: var(--v-rhythm-section); }
+main > * + * { margin-block-start: var(--_section-gap); }
 main > * + .o-prose:has(> :first-child:is(h1,h2,h3,h4,h5,h6)) { margin-block-start: 0; }
 main > * + .o-prose:has(> :first-child:is(h1,h2,h3,h4,h5,h6)) > :first-child {
-  margin-block-start: var(--v-heading-before);
+  margin-block-start: var(--_prose-heading-before);
 }
 
 /* ===== Radius cascade (§8.2) — ALWAYS ON, no preset classes. Objects read their OWN --o-*__radius
@@ -588,18 +597,18 @@ main > * + .o-prose:has(> :first-child:is(h1,h2,h3,h4,h5,h6)) > :first-child {
    The "look" is set purely by the two values: large range = pronounced stepping; min == max = flat. */
 :root {
   --o-dialog__radius:    max(var(--v-radius-min), calc(var(--v-radius) - var(--o-dialog__offset)));
-  --o-box__radius:       max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad)));
-  --o-input-box__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad)));
+  --o-box__radius:       max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad-inline)));
+  --o-input-box__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad-inline)));
 }
 /* a box steps the CONTROL radius one pad deeper for its own children (no self-reference: reads
    --o-box__radius, writes --o-input-box__radius) */
 :where(.o-box, .card) {
-  --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-box__radius) - var(--v-pad)));
+  --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-box__radius) - var(--v-pad-inline)));
 }
 /* the dialog re-roots the cascade: everything inside derives from the dialog radius */
 .o-dialog {
-  --o-box__radius:       max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad)));
-  --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad)));
+  --o-box__radius:       max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad-inline)));
+  --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad-inline)));
 }
 
 /* The frame corner a header must clear is the one actually PAINTED. When we draw the window radius
@@ -612,7 +621,7 @@ main > * + .o-prose:has(> :first-child:is(h1,h2,h3,h4,h5,h6)) > :first-child {
   background: var(--v-card-bg);
   border: var(--v-border-width) solid var(--v-border-color);
   border-radius: var(--o-box__radius, var(--v-radius-min));
-  padding: var(--v-pad);
+  padding: var(--v-pad-block) var(--v-pad-inline);
   box-shadow: 0 1px 3px rgb(0 0 0 / .07), 0 1px 2px -1px rgb(0 0 0 / .07);
 }
 
@@ -655,9 +664,9 @@ body:has(#dw-narrow:checked)    .o-dialog { --_dlg-width: 22rem; }
    (flex:1 0 auto) so there's never an unfilled gap below the content. */
 .dlg-body {
   flex: 1 0 auto;
-  display: flex; flex-direction: column; gap: var(--v-pad);
+  display: flex; flex-direction: column; gap: var(--v-pad-block);
   background: var(--v-card-bg);
-  padding: var(--v-pad);
+  padding: var(--v-pad-block) var(--v-pad-inline);
   border-bottom-left-radius: var(--o-dialog__radius, var(--v-radius));
   border-bottom-right-radius: var(--o-dialog__radius, var(--v-radius));
 }
@@ -725,8 +734,8 @@ body:has(#dw-narrow:checked)    .o-dialog { --_dlg-width: 22rem; }
    ONLY place a heading sits tight to following text. Flat-specificity :where(), source order wins. */
 .o-prose { display: block; }
 .o-prose > * { margin-block: 0; }
-.o-prose > * + * { margin-block-start: var(--v-rhythm-prose); }
-.o-prose > * + :where(h1,h2,h3,h4,h5,h6,hgroup) { margin-block-start: var(--v-heading-before); }
+.o-prose > * + * { margin-block-start: var(--o-prose__gap); }
+.o-prose > * + :where(h1,h2,h3,h4,h5,h6,hgroup) { margin-block-start: var(--_prose-heading-before); }
 
 /* <hgroup> — title + subtitle read as one continuous block. ADDITIVE leading (line-height =
    1em + a constant) keeps the whitespace between lines constant as font size changes. trim is
@@ -790,8 +799,8 @@ textarea { min-height: calc(var(--v-input-height) * 2.25); padding-block: calc(v
 .dlg-x {
   position: sticky; top: 0; z-index: 7;
   align-self: flex-end;
-  padding: var(--v-pad) var(--v-pad) 0 0;
-  margin-bottom: calc(-1 * (var(--v-input-height) + var(--v-pad)));
+  padding: var(--v-pad-block) var(--v-pad-inline) 0 0;
+  margin-bottom: calc(-1 * (var(--v-input-height) + var(--v-pad-block)));
 }
 .dlg-x .icon-btn { background: color-mix(in hsl, var(--v-card-bg) 70%, transparent); backdrop-filter: blur(4px); }
 .dlg-x .icon-btn:hover { background: var(--v-card-bg); box-shadow: 0 2px 10px rgb(0 0 0 / .18); }
@@ -804,8 +813,8 @@ textarea { min-height: calc(var(--v-input-height) * 2.25); padding-block: calc(v
   background: var(--v-card-bg);
   border-top-left-radius: var(--o-dialog__radius, var(--v-radius));
   border-top-right-radius: var(--o-dialog__radius, var(--v-radius));
-  padding: var(--v-pad);
-  padding-right: calc(var(--v-input-height) + 2 * var(--v-pad));
+  padding: var(--v-pad-block) var(--v-pad-inline);
+  padding-right: calc(var(--v-input-height) + 2 * var(--v-pad-inline));
   /* PLAIN: no bottom padding — the seam to the body is one pad, supplied by the body's top padding
      alone (same tone, so the header's flush bottom edge is invisible). GLASS adds its own pad back. */
   padding-bottom: 0;
@@ -833,7 +842,7 @@ textarea { min-height: calc(var(--v-input-height) * 2.25); padding-block: calc(v
   box-shadow: inset 0 1px 0 rgb(255 255 255 / .25), 0 1px 0 var(--v-border-color);
   /* GLASS is two-tone, so its text needs room inside the tinted panel: restore the bottom pad. Seam
      to the body is now header pad + body pad = two pads' worth (the extra two-tone breathing room). */
-  padding-bottom: var(--v-pad);
+  padding-bottom: var(--v-pad-block);
 }
 
 /* Footer — the natural-position action row (scrolls). Delete left, Cancel/Save right. Three opt-in
@@ -847,8 +856,8 @@ textarea { min-height: calc(var(--v-input-height) * 2.25); padding-block: calc(v
    bottom padding so it sits flush on the bottom edge. */
 [data-dlg-footer="bar"] .dlg-footer {
   position: sticky; bottom: 0; z-index: 6;
-  margin: 0 calc(-1 * var(--v-pad)) calc(-1 * var(--v-pad));
-  padding: var(--v-pad);
+  margin: 0 calc(-1 * var(--v-pad-inline)) calc(-1 * var(--v-pad-block));
+  padding: var(--v-pad-block) var(--v-pad-inline);
   background: color-mix(in hsl, var(--v-card-bg) 82%, transparent);
   backdrop-filter: blur(8px);
   border-top: var(--v-border-width) solid var(--v-border-color);
@@ -865,8 +874,8 @@ textarea { min-height: calc(var(--v-input-height) * 2.25); padding-block: calc(v
    plus the dialog's flex gap so it adds no scroll height. */
 .dlg-foot-float {
   display: none;                /* shown only in submit mode */
-  position: sticky; bottom: var(--v-pad); z-index: 6;
-  margin-block-start: calc(-1 * (var(--v-input-height) + var(--v-pad)));
+  position: sticky; bottom: var(--v-pad-block); z-index: 6;
+  margin-block-start: calc(-1 * (var(--v-input-height) + var(--v-pad-block)));
   pointer-events: none;
 }
 .dlg-foot-float .btn { margin-inline-start: auto; pointer-events: auto; box-shadow: 0 2px 12px rgb(0 0 0 / .2); }
@@ -875,25 +884,25 @@ textarea { min-height: calc(var(--v-input-height) * 2.25); padding-block: calc(v
 
 /* ===== Inline insets — accompanying text indents to line up with the box it introduces. Both pad
    BOTH inline edges; the boxes/controls themselves stay on the container edge.
-     • Prose (--o-prose-inset): a CONTAINER-WITH-BOXES gives its direct prose children an inset so
-       their text lines up with the boxes beside them — default the TEXT level (--v-pad). When the
+     • Prose (--o-prose__inset): a CONTAINER-WITH-BOXES gives its direct prose children an inset so
+       their text lines up with the boxes beside them — default the TEXT level (--v-pad-inline). When the
        prose sits at the container's top/bottom edge (first/last child) its block padding grows to
        match, so the inset is uniform around the corner. Block boxes (code, blockquote) break OUT.
        A DIALOG frame uses the same idea but a lighter default — just the RADIUS (the box's straight
        edge) — and only its DIRECT prose insets; prose inside the dialog's box stays flush.
-     • Form fields (--o-content-inset): a field's label + description indent to sit over the
+     • Form fields (--o-field__inset): a field's label + description indent to sit over the
        CONTROL's straight edge (--o-input-box__radius) / text (--v-control-inset). The radius/text
        snaps resolve ON the element, so they pick up the card's control radius. ===== */
-.o-container:has(.card, .o-box, .o-grid) > .o-prose { padding-inline: var(--o-prose-inset, 0px); }
-.o-container:has(.card, .o-box, .o-grid) > .o-prose:first-child { padding-block-start: var(--o-prose-inset, 0px); }
-.o-container:has(.card, .o-box, .o-grid) > .o-prose:last-child  { padding-block-end:   var(--o-prose-inset, 0px); }
-.o-container:has(.card, .o-box, .o-grid) > .o-prose > :is(pre, blockquote) { margin-inline: calc(-1 * var(--o-prose-inset, 0px)); }
+.o-container:has(.card, .o-box, .o-grid) > .o-prose { padding-inline: var(--o-prose__inset, 0px); }
+.o-container:has(.card, .o-box, .o-grid) > .o-prose:first-child { padding-block-start: var(--o-prose__inset, 0px); }
+.o-container:has(.card, .o-box, .o-grid) > .o-prose:last-child  { padding-block-end:   var(--o-prose__inset, 0px); }
+.o-container:has(.card, .o-box, .o-grid) > .o-prose > :is(pre, blockquote) { margin-inline: calc(-1 * var(--o-prose__inset, 0px)); }
 
 /* dialog frame: default the prose inset to just the radius (overrides the container value
    within the dialog), and inset only direct-child prose. */
-.o-dialog:has(.card, .o-box) { --o-prose-inset: var(--o-box__radius, var(--v-radius-min)); }
-.dlg-body > .o-prose { padding-inline: var(--o-prose-inset, 0px); }
-.dlg-body > .o-prose > :is(pre, blockquote) { margin-inline: calc(-1 * var(--o-prose-inset, 0px)); }
+.o-dialog:has(.card, .o-box) { --o-prose__inset: var(--o-box__radius, var(--v-radius-min)); }
+.dlg-body > .o-prose { padding-inline: var(--o-prose__inset, 0px); }
+.dlg-body > .o-prose > :is(pre, blockquote) { margin-inline: calc(-1 * var(--o-prose__inset, 0px)); }
 
 /* ===== Full-bleed boxes — ONE behavior for every FRAME. The page (.o-container) and a dialog are
    both query containers named 'frame', so a single rule covers both: when [data-fb=on] and a box's
@@ -901,18 +910,18 @@ textarea { min-height: calc(var(--v-input-height) * 2.25); padding-block: calc(v
    and drops its radius / side borders / shadow. Breakout (not gutter-collapse) is deliberate: it keeps
    the frame's own gutter, so a dialog's header stays clear of the frame's corner curve.
    The frame's prose then flushes — inset 0 — and its first/last-child block padding tracks that same
-   inset (the existing :first-child / :last-child rules read --o-prose-inset, so they go to 0 too: text
+   inset (the existing :first-child / :last-child rules read --o-prose__inset, so they go to 0 too: text
    sits flush on the inline edge AND the block edge, no lone top/bottom gap). Its own block boxes (code,
    blockquote) bleed out too. The page queries the viewport (its width tracks it); a dialog queries its
    own width — so the Narrow width preset full-bleeds even on a wide screen. ===== */
 @container frame (max-width: 30rem) {
-  [data-fb="on"] :is(.card, .o-box) { margin-inline: calc(-1 * var(--v-pad)); border-radius: 0; border-inline-width: 0; box-shadow: none; }
+  [data-fb="on"] :is(.card, .o-box) { margin-inline: calc(-1 * var(--v-pad-inline)); border-radius: 0; border-inline-width: 0; box-shadow: none; }
   [data-fb="on"] main .o-grid { grid-template-columns: 1fr; }
-  [data-fb="on"] :is(.o-container > .o-prose, .dlg-body > .o-prose) { --o-prose-inset: 0px; }
-  [data-fb="on"] :is(.o-container > .o-prose, .dlg-body > .o-prose) > :is(pre, blockquote) { margin-inline: calc(-1 * var(--v-pad)); border-radius: 0; }
+  [data-fb="on"] :is(.o-container > .o-prose, .dlg-body > .o-prose) { --o-prose__inset: 0px; }
+  [data-fb="on"] :is(.o-container > .o-prose, .dlg-body > .o-prose) > :is(pre, blockquote) { margin-inline: calc(-1 * var(--v-pad-inline)); border-radius: 0; }
 }
 
-.o-stack--tight > :where(label, .help) { padding-inline: var(--o-content-inset, 0px); }
+.o-stack--tight > :where(label, .help) { padding-inline: var(--o-field__inset, 0px); }
 html[data-cinset="radius"] .o-stack--tight > :where(label, .help) { padding-inline: var(--o-input-box__radius, var(--v-radius-min)); }
 html[data-cinset="text"]   .o-stack--tight > :where(label, .help) { padding-inline: var(--v-control-inset); }
 
@@ -929,7 +938,7 @@ input[type=radio], input[type=checkbox]:not(.switch) { accent-color: var(--v-acc
 /* pill/badge: floor the inline padding at the corner radius (= half the pill height, 0.5lh +
    block-pad) so text never intrudes into the rounded ends — the §8.3 curvature-clearance idea. */
 .tag { display: inline-flex; align-items: center; font-size: var(--v-font-size-caption); line-height: 1.35; padding-block: 0.25em; padding-inline: calc(0.5lh + 0.35em); border-radius: 999px; background: var(--v-code-bg); color: var(--v-muted); font-weight: var(--v-font-weight-label); }
-.page { padding-block: var(--v-rhythm-section) calc(var(--v-rhythm-section) * 2); }
+.page { padding-block: var(--_section-gap) calc(var(--_section-gap) * 2); }
 
 /* ============ t-truncate — single-line ellipsis (§11.1) ============
    Opt-in (NOT v1's global opt-out). Built on overflow-x:clip — clip does not force the other axis
@@ -1005,11 +1014,13 @@ input[type=radio], input[type=checkbox]:not(.switch) { accent-color: var(--v-acc
     <h3>Density &amp; code</h3>
     <p>Use <code>--v-spacing</code> as the master lever; the scales above are multipliers of it (prose excepted — it multiplies the line). Inline <code>code</code> and block code share a step-down size:</p>
     <pre><code>:root {
-  --v-spacing: 0.75rem;
-  --v-rhythm-section: calc(1.5 * var(--v-spacing));
-  --v-pad:            calc(1.25 * var(--v-spacing));
-  --v-rhythm-prose:   calc(0.75 * var(--v-line-height) * 1em);
-}</code></pre>
+  --v-spacing: 0.75rem;                              /* the one master lever */
+  --v-pad-block:  calc(1.25 * var(--v-spacing));     /* box padding — ×spacing */
+  --v-pad-inline: calc(1.25 * var(--v-spacing));
+  --o-prose__gap: calc(0.75 * var(--v-line-height) * 1em); /* prose — ×line */
+}
+/* section gap is not a root knob: a section grid/stack bumps its own gap, e.g. */
+.cards { --o-grid__gap-block: calc(1.5 * var(--v-spacing)); }</code></pre>
     <blockquote>Wrap a group, flow the children: the box owns the perimeter; the elements own the gaps between them.</blockquote>
   </section>
 
@@ -1170,7 +1181,7 @@ input[type=radio], input[type=checkbox]:not(.switch) { accent-color: var(--v-acc
       </div>
     </div>
     <div class="o-prose">
-      <p>Extra copy so the dialog actually overflows: watch the header leave the top while any pinned footer button holds at the bottom. Each button opts into stickiness on its own — Delete can pin bottom-left while Save pins bottom-right, independently.</p>
+      <p>Extra copy so the dialog actually overflows: watch the header leave the top while a pinned footer holds at the bottom. Footer stickiness is opt-in in three modes (sidebar): <strong>None</strong> scrolls in flow, <strong>Submit</strong> pins only the primary Save bottom-right while secondary actions scroll away, and <strong>Whole bar</strong> pins the entire footer as a glass action bar.</p>
       <p>Filler line so there's something to scroll past. Filler line. Filler line. Filler line. Filler line. Filler line.</p>
       <p>Filler line. Filler line. Filler line. Filler line. Filler line. Filler line. Filler line. Filler line.</p>
     </div>
@@ -1292,13 +1303,13 @@ function apply() {
 
   // global content inset — form field labels + descriptions sit over the control's edge. radius/text
   // snaps resolve ON the element (data-cinset → CSS) so they pick up the CARD's control radius; the
-  // 0 / custom values flow through the --o-content-inset variable (still a slider for this one).
+  // 0 / custom values flow through the --o-field__inset variable (still a slider for this one).
   const fs = parseFloat(getComputedStyle(root).fontSize) || 16;
   if (SEG.cimode === 'radius' || SEG.cimode === 'text') {
     root.dataset.cinset = SEG.cimode;
   } else {
     root.dataset.cinset = 'var';
-    setVar('--o-content-inset', SEG.cimode === 'zero' ? '0px' : num('contentInset') + 'rem');
+    setVar('--o-field__inset', SEG.cimode === 'zero' ? '0px' : num('contentInset') + 'rem');
   }
   if (SEG.cimode === 'custom') $('contentInset-o').textContent = num('contentInset').toFixed(3) + 'rem';
   else { // sync the content slider thumb to whatever the snap resolved to
@@ -1310,12 +1321,12 @@ function apply() {
 
   // prose inset — a plain toggle now (the wide-width target). At the full-bleed breakpoint the CSS
   // overrides it to the text level, because that's the only target left once margin + radius go.
-  setVar('--o-prose-inset',
+  setVar('--o-prose__inset',
     SEG.timode === 'zero'   ? '0px' :
     SEG.timode === 'radius' ? 'var(--o-box__radius, var(--v-radius-min))' :
-    'var(--v-pad)');  // text
+    'var(--v-pad-inline)');  // text
   // list grouped↔continuous = which token the cascading --v-list-rhythm resolves to
-  setVar('--v-list-rhythm', SEG.lmode === 'continuous' ? 'var(--v-rhythm-continuous)' : 'var(--v-rhythm-grouped)');
+  setVar('--v-list-rhythm', SEG.lmode === 'continuous' ? 'var(--_list-continuous)' : 'var(--_list-grouped)');
 
   // preview width + the WINDOW frame: round the preview itself to the frame radius (Window),
   // or a small browser-chrome radius (Web, page frame 0).
@@ -1462,25 +1473,27 @@ $('copy').addEventListener('click', () => {
   --v-font-size-h3: ${f('--v-font-size-h3')};
   --v-font-size-caption: ${f('--v-font-size-caption')};
 
-  /* five rhythm scales */
-  --v-rhythm-section: calc(${num('rkSection')} * var(--v-spacing));
-  --v-pad:            calc(${num('rkPad')} * var(--v-spacing));
-  --v-rhythm-prose:   calc(${num('rkProse')} * var(--v-line-height) * 1em);
-  --v-rhythm-tight:   calc(${num('rkTight')} * var(--v-spacing)); /* forms: label→control */
-  --v-gap-inline:     calc(${num('rkCluster')} * var(--v-spacing));
-  --v-heading-before: calc(${num('rkHbefore')} * var(--v-line-height) * 1em); /* space ABOVE a heading */
-  --v-hgroup-leading: calc(${num('rkHgroup')} * var(--v-spacing)); /* <hgroup>: constant space between lines */
+  /* rhythm — box rhythm × spacing, text rhythm × line (§6.2); multiples baked in (no --rk-* in prod) */
+  --v-pad-block:       calc(${num('rkPad')} * var(--v-spacing));
+  --v-pad-inline:      calc(${num('rkPad')} * var(--v-spacing));
+  --v-gap-block:       var(--v-spacing);
+  --v-gap-inline:      calc(${num('rkCluster')} * var(--v-spacing));
+  --o-prose__gap:      calc(${num('rkProse')} * var(--v-line-height) * 1em);
+  --o-hgroup__leading: calc(${num('rkHgroup')} * var(--v-spacing)); /* <hgroup>: constant space between lines */
+  /* not root knobs in v2 (§6.2): a section grid/stack sets its OWN gap knob to ~calc(${num('rkSection')} * var(--v-spacing));
+     forms use a tight stack gap calc(${num('rkTight')} * var(--v-spacing)); the heading space-above
+     calc(${num('rkHbefore')} * var(--v-line-height) * 1em) lives inside the o-prose flow. */
 
   /* o-prose rhythm is set by the boundary, owned by the lower element:
      body↔body & heading→next = prose; prev→heading/hgroup = heading-before.
-     <hgroup> children use ADDITIVE leading: line-height = 1em + --v-hgroup-leading. Trim only the
+     <hgroup> children use ADDITIVE leading: line-height = 1em + --o-hgroup__leading. Trim only the
      group's outer edges (first child top, last child bottom); the title↔subtitle boundary keeps
      its half-leading and needs NO margin, so every line gap in the group is the same leading. */
 
   /* list rhythm — flip --v-list-rhythm to continuous at an editor root */
-  --v-rhythm-continuous: calc(var(--v-line-height) * 1em - 1cap);
-  --v-rhythm-grouped:    calc(${num('rkListGrouped')} * var(--v-rhythm-prose));
-  --v-list-rhythm:       var(--v-rhythm-${SEG.lmode === 'continuous' ? 'continuous' : 'grouped'});
+  --_list-continuous: calc(var(--v-line-height) * 1em - 1cap);
+  --_list-grouped:    calc(${num('rkListGrouped')} * var(--o-prose__gap));
+  --v-list-rhythm:       var(--_list-${SEG.lmode === 'continuous' ? 'continuous' : 'grouped'});
 
   /* radius — two values (max/min); the always-on cascade below assigns the per-layer knobs,
      stepping inward from the frame and flooring at the min. Page frame painted: ${SEG.pframe}. */
@@ -1492,13 +1505,13 @@ $('copy').addEventListener('click', () => {
    each box steps the control knob one pad deeper. The look is set entirely by the two values above. */
 :root {
   --o-dialog__radius:    max(var(--v-radius-min), calc(var(--v-radius) - var(--o-dialog__offset)));
-  --o-box__radius:       max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad)));
-  --o-input-box__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad)));
+  --o-box__radius:       max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad-inline)));
+  --o-input-box__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad-inline)));
 }
-:where(.o-box, .card) { --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-box__radius) - var(--v-pad))); }
+:where(.o-box, .card) { --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-box__radius) - var(--v-pad-inline))); }
 .o-dialog {
-  --o-box__radius:       max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad)));
-  --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad)));
+  --o-box__radius:       max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad-inline)));
+  --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad-inline)));
 }`;
   const flash = () => { const btn = $('copy'); const t = btn.textContent; btn.textContent = 'Copied ✓'; setTimeout(() => btn.textContent = t, 1200); };
   const fallback = () => { const ta = document.createElement('textarea'); ta.value = css; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); flash(); };
