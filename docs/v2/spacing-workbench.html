@@ -292,6 +292,20 @@
   </fieldset>
 
   <fieldset>
+    <legend>Dialog (§ modal — folded forks)</legend>
+    <div class="ctl">
+      <div class="lab"><span class="name">Header treatment</span></div>
+      <div class="seg" id="dlgHeader"><button data-v="plain" aria-pressed="true">Plain</button><button data-v="glass">Glass</button></div>
+      <div class="hint">Open the dialog (the <strong>Open dialog</strong> button in the card grid) and scroll: the header slides away, only the <strong>X</strong> stays pinned. <strong>Plain</strong> = surface header sharing the body's <code style="color:#9fb0c4">--v-pad</code> seam. <strong>Glass</strong> = tinted two-tone panel; being two-tone it can't reuse that seam, so it gets <em>extra</em> padding before the body.</div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="name">Sticky footer</span></div>
+      <div class="seg" id="dlgFooter"><button data-v="none">None</button><button data-v="submit" aria-pressed="true">Submit</button><button data-v="bar">Whole bar</button></div>
+      <div class="hint">Opt-in stickiness. <strong>None</strong> = the footer scrolls with the content. <strong>Submit</strong> = only the primary Save pins (bottom-right); secondary actions scroll away. <strong>Whole bar</strong> = the entire footer pins as a glass action bar. Only visible once the dialog overflows.</div>
+    </div>
+  </fieldset>
+
+  <fieldset>
     <legend>Resolved tokens</legend>
     <div class="readout" id="readout"></div>
     <div class="btnrow" style="margin-top:10px">
@@ -445,7 +459,57 @@ h3 { font-size: var(--v-font-size-h3); font-weight: var(--v-font-weight-subtitle
 h4 { font-size: var(--v-font-size-h4); font-weight: var(--v-font-weight-strong); }
 a  { color: var(--v-link); font-weight: var(--v-font-weight-label); text-underline-offset: .15em; }
 strong { font-weight: var(--v-font-weight-strong); }
-ul, ol { padding-inline-start: 1.4em; }
+/* Bare base list rule — Slip Switch's *base* (applies to any list anywhere): a single em indent that
+   compounds per level. The RICH rendering below (cycled markers) is scoped to o-prose. */
+ul, ol { padding-inline-start: 1em; }
+
+/* ===== o-prose lists — folded from Slip Switch's editor CSS (slip-switch …/popup/tiptap-editor.css).
+   Slip Switch's base only indents; its editor is where lists get depth-cycled markers for BOTH types.
+   Brought into o-prose so v2 running-text / WYSIWYG matches the editor.
+     • ul: native list-style-type cycles disc → circle → square, REPEATING every 3 levels.
+     • ol: custom counter markers (list-style:none + ::before) so they're tabular-figure, right-aligned
+       and hang flush with the list edge; the counter STYLE cycles decimal → lower-alpha → lower-roman,
+       REPEATING every 3 levels; the left padding widens with the marker's digit count.
+   (The mixins' per-style alpha/roman digit breakpoints from the source are omitted here for brevity;
+   the decimal digit-aware padding is kept. Restore the full set when this lands in src/lib2.) ===== */
+.o-prose ul { list-style-type: disc; padding-inline-start: calc(1em + var(--v-gap-inline)); }
+.o-prose ul ul { list-style-type: circle; }
+.o-prose ul ul ul { list-style-type: square; }
+.o-prose ul ul ul ul { list-style-type: disc; }
+.o-prose ul ul ul ul ul { list-style-type: circle; }
+.o-prose ul ul ul ul ul ul { list-style-type: square; }
+
+.o-prose ol {
+  --_ol-pad: calc(max(1em, 1ch) + var(--v-gap-inline));
+  list-style: none;
+  counter-reset: item;
+  padding-inline-start: var(--_ol-pad);
+}
+.o-prose ol > li { counter-increment: item; }
+.o-prose ol > li::before {
+  content: counter(item, decimal) '.';
+  display: inline-block;
+  width: var(--_ol-pad);                              /* marker box spans the list's left padding */
+  margin-inline-start: calc(-1 * var(--_ol-pad));     /* pull it INTO that padding. negative margin
+                                                         moves flow (unlike transform), so the li text
+                                                         still starts flush at the content edge and the
+                                                         marker hangs right-aligned just before it. */
+  padding-inline-end: var(--v-gap-inline);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-align: right;
+}
+/* counter STYLE cycles every 3 levels (decimal → lower-alpha → lower-roman → …) */
+.o-prose ol ol > li::before          { content: counter(item, lower-alpha) '.'; }
+.o-prose ol ol ol > li::before       { content: counter(item, lower-roman) '.'; }
+.o-prose ol ol ol ol > li::before    { content: counter(item, decimal) '.'; }
+.o-prose ol ol ol ol ol > li::before { content: counter(item, lower-alpha) '.'; }
+.o-prose ol ol ol ol ol ol > li::before { content: counter(item, lower-roman) '.'; }
+/* decimal digit-aware left padding (widen as the count grows) */
+.o-prose ol:has(> li:nth-child(10))   { --_ol-pad: calc(max(1em, 2ch) + var(--v-gap-inline)); }
+.o-prose ol:has(> li:nth-child(100))  { --_ol-pad: calc(max(1em, 3ch) + var(--v-gap-inline)); }
+.o-prose ol:has(> li:nth-child(1000)) { --_ol-pad: calc(max(1em, 4ch) + var(--v-gap-inline)); }
+
 /* A list is a stack of <li>. The grouped↔continuous choice is just WHICH rhythm
    token --v-list-rhythm resolves to (set once at a scope, cascades):
      grouped    = a small gap; items read as discrete points (marketing).
@@ -557,6 +621,8 @@ main > * + .o-prose:has(> :first-child:is(h1,h2,h3,h4,h5,h6)) > :first-child {
    window − offset. */
 .dlg-layer { display: none; }
 body:has(.dlg-toggle:checked) .dlg-layer { display: block; }
+/* lock the page behind the open dialog so the background never scrolls (mirrors body:has(:modal)) */
+body:has(.dlg-toggle:checked) { overflow: hidden; }
 .dlg-backdrop { position: fixed; inset: 0; z-index: 49; background: var(--v-backdrop); cursor: pointer; }
 /* width is a COMPONENT-level choice, set on the dialog itself (radios inside it). Candidate defaults. */
 body:has(#dw-default:checked)   .o-dialog { --_dlg-width: 40rem; }
@@ -570,12 +636,30 @@ body:has(#dw-narrow:checked)    .o-dialog { --_dlg-width: 22rem; }
   /* the dialog is a query CONTAINER named 'frame' too — its boxes full-bleed off the dialog's width,
      by the same rule as the page's. */
   container: frame / inline-size;
-  display: flex; flex-direction: column; gap: var(--v-pad);
-  background: var(--v-card-bg); border: var(--v-border-width) solid var(--v-border-color);
+  /* This IS the scroll container (like Mind-the-Gap's .c-modal__view), and it is TRANSPARENT — it has
+     no background of its own. That's the whole trick: a scroll container with a solid background paints
+     that background PAST its radius during the overscroll rubber-band (the square-white-corner / opaque-
+     band bug I kept chasing). With NO background, overscroll just reveals the dialog's own backdrop
+     behind, clipped to the radius. The COLOR + rounded corners come from the surfaces inside: the
+     header rounds the TOP, the body rounds the BOTTOM and FILLS the rest (flex:1 0 auto), so together
+     they tile the dialog with no solid scroll-container fill to misbehave. */
+  display: flex; flex-direction: column;
+  background: transparent;
+  border: var(--v-border-width) solid var(--v-border-color);
   border-radius: var(--o-dialog__radius, var(--v-radius));
+  box-shadow: 0 24px 70px rgb(0 0 0 / .4);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+/* Body surface — carries the card color + rounds the BOTTOM corners, and grows to fill the scroller
+   (flex:1 0 auto) so there's never an unfilled gap below the content. */
+.dlg-body {
+  flex: 1 0 auto;
+  display: flex; flex-direction: column; gap: var(--v-pad);
+  background: var(--v-card-bg);
   padding: var(--v-pad);
-  /* corners occupied by round elements (a leading icon + a close button), not padded out — see o-bar */
-  box-shadow: 0 24px 70px rgb(0 0 0 / .4); overflow: auto;
+  border-bottom-left-radius: var(--o-dialog__radius, var(--v-radius));
+  border-bottom-right-radius: var(--o-dialog__radius, var(--v-radius));
 }
 /* the nested box, made obviously recessed so it reads as a separate layer inside the dialog */
 .o-dialog .dlg-box {
@@ -690,14 +774,98 @@ textarea { min-height: calc(var(--v-input-height) * 2.25); padding-block: calc(v
   font: inherit; font-size: 1.1em; line-height: 1;
 }
 .icon-btn:hover { background: var(--v-code-bg); }
-/* dialog head — a 3-col grid: leading icon (top-left corner), title, close button (top-right). */
-.dlg-head {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  column-gap: var(--v-gap-inline);
+/* ===== Dialog header / close / footer — the Mind-the-Gap fork, folded in. The transparent .o-dialog
+   is the scroll container; the header (a SURFACE that rounds the top) scrolls away with the content;
+   only the close X stays pinned. Footer stickiness is None/Submit/Bar. ===== */
+
+/* Sticky close. Child of the scroller, pinned top-right. The scroller has no padding, so the X insets
+   itself from the rounded corner with its own padding; the negative margin-bottom cancels the X's
+   height + that top inset, so the header still starts flush at the very top (the X overlays its corner). */
+.dlg-x {
+  position: sticky; top: 0; z-index: 7;
+  align-self: flex-end;
+  padding: var(--v-pad) var(--v-pad) 0 0;
+  margin-bottom: calc(-1 * (var(--v-input-height) + var(--v-pad)));
 }
-.dlg-head > .dlg-title { grid-column: 2; }
+.dlg-x .icon-btn { background: color-mix(in hsl, var(--v-card-bg) 70%, transparent); backdrop-filter: blur(4px); }
+.dlg-x .icon-btn:hover { background: var(--v-card-bg); box-shadow: 0 2px 10px rgb(0 0 0 / .18); }
+
+/* Header — a SURFACE that scrolls away with the content. Plain = card-bg; it rounds the TOP corners so
+   it tiles the frame's rounded top. padding-right reserves room so the title (and the top of the
+   subtitle) never run under the pinned X — the X is a real button with a larger tap target. */
+.dlg-header {
+  flex: none;
+  background: var(--v-card-bg);
+  border-top-left-radius: var(--o-dialog__radius, var(--v-radius));
+  border-top-right-radius: var(--o-dialog__radius, var(--v-radius));
+  padding: var(--v-pad);
+  padding-right: calc(var(--v-input-height) + 2 * var(--v-pad));
+  /* PLAIN: no bottom padding — the seam to the body is one pad, supplied by the body's top padding
+     alone (same tone, so the header's flush bottom edge is invisible). GLASS adds its own pad back. */
+  padding-bottom: 0;
+}
+.dlg-header .dlg-title { font-size: var(--v-font-size-h3); }
+/* Leading mark — purely DECORATIVE, NOT a button. A SMALL (~1em) glyph rendered INLINE at the start
+   of the title: it just nudges the first line clear of the rounded corner. Because it rides inside the
+   title only, the descriptive subtitle below is NOT indented — it runs full width from the text edge. */
+.dlg-header__mark {
+  color: var(--v-accent);
+  font-size: 0.7em;                /* small — a nudge, not a feature */
+  margin-inline-end: var(--v-gap-inline);
+  vertical-align: 0.15em;          /* optical-center the diamond on the title text */
+  user-select: none;
+}
+
+/* PLAIN header (default): white surface, same tone as the body, so their flush seam is invisible.
+   GLASS header (opt-in): a tinted two-tone surface. It's already full-width (the scroller has no
+   padding) and inherits the top-corner rounding above; it just re-tints and adds the glass blur/inset.
+   The two-tone EXTRA space before the body is white body padding (see [data-dlg-header="glass"]
+   .dlg-body above), not a transparent gap. */
+[data-dlg-header="glass"] .dlg-header {
+  background: color-mix(in hsl, var(--v-accent) 14%, var(--v-card-bg));
+  backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .25), 0 1px 0 var(--v-border-color);
+  /* GLASS is two-tone, so its text needs room inside the tinted panel: restore the bottom pad. Seam
+     to the body is now header pad + body pad = two pads' worth (the extra two-tone breathing room). */
+  padding-bottom: var(--v-pad);
+}
+
+/* Footer — the natural-position action row (scrolls). Delete left, Cancel/Save right. Three opt-in
+   stickiness modes via data-dlg-footer (on <html>): none (scrolls), submit (only Save pins), bar
+   (whole footer pins). ===== */
+.dlg-footer { display: flex; align-items: center; justify-content: space-between; gap: var(--v-gap-inline); }
+.dlg-footer__end { display: flex; align-items: center; gap: var(--v-gap-inline); }
+
+/* Mode: bar — the ENTIRE footer pins to the bottom as a glass action bar. It breaks out to the
+   dialog edges (so the surface spans the full width) and its bottom margin cancels the dialog's
+   bottom padding so it sits flush on the bottom edge. */
+[data-dlg-footer="bar"] .dlg-footer {
+  position: sticky; bottom: 0; z-index: 6;
+  margin: 0 calc(-1 * var(--v-pad)) calc(-1 * var(--v-pad));
+  padding: var(--v-pad);
+  background: color-mix(in hsl, var(--v-card-bg) 82%, transparent);
+  backdrop-filter: blur(8px);
+  border-top: var(--v-border-width) solid var(--v-border-color);
+  box-shadow: 0 -6px 12px -8px rgb(0 0 0 / .3);
+  /* backdrop-filter escapes the dialog's border-radius clip, so round the footer's own bottom
+     corners to the dialog radius — otherwise its square corners poke past the dialog's rounding. */
+  border-bottom-left-radius: var(--o-dialog__radius, var(--v-radius));
+  border-bottom-right-radius: var(--o-dialog__radius, var(--v-radius));
+}
+
+/* Mode: submit — only the primary Save pins (bottom-right), like the X pins top-right. Save's
+   in-footer slot goes visibility:hidden (keeps its place); the float mirror shows it. The rest of
+   the footer (Delete, Cancel) scrolls normally. The float's negative margin cancels its own height
+   plus the dialog's flex gap so it adds no scroll height. */
+.dlg-foot-float {
+  display: none;                /* shown only in submit mode */
+  position: sticky; bottom: var(--v-pad); z-index: 6;
+  margin-block-start: calc(-1 * (var(--v-input-height) + var(--v-pad)));
+  pointer-events: none;
+}
+.dlg-foot-float .btn { margin-inline-start: auto; pointer-events: auto; box-shadow: 0 2px 12px rgb(0 0 0 / .2); }
+[data-dlg-footer="submit"] .dlg-foot-float { display: flex; }
+[data-dlg-footer="submit"] .dlg-footer .btn-save { visibility: hidden; }
 
 /* ===== Inline insets — accompanying text indents to line up with the box it introduces. Both pad
    BOTH inline edges; the boxes/controls themselves stay on the container edge.
@@ -718,8 +886,8 @@ textarea { min-height: calc(var(--v-input-height) * 2.25); padding-block: calc(v
 /* dialog frame: default the prose inset to just the radius (overrides the container value
    within the dialog), and inset only direct-child prose. */
 .o-dialog:has(.card, .o-box) { --o-prose-inset: var(--o-box__radius, var(--v-radius-min)); }
-.o-dialog > .o-prose { padding-inline: var(--o-prose-inset, 0px); }
-.o-dialog > .o-prose > :is(pre, blockquote) { margin-inline: calc(-1 * var(--o-prose-inset, 0px)); }
+.dlg-body > .o-prose { padding-inline: var(--o-prose-inset, 0px); }
+.dlg-body > .o-prose > :is(pre, blockquote) { margin-inline: calc(-1 * var(--o-prose-inset, 0px)); }
 
 /* ===== Full-bleed boxes — ONE behavior for every FRAME. The page (.o-container) and a dialog are
    both query containers named 'frame', so a single rule covers both: when [data-fb=on] and a box's
@@ -734,8 +902,8 @@ textarea { min-height: calc(var(--v-input-height) * 2.25); padding-block: calc(v
 @container frame (max-width: 30rem) {
   [data-fb="on"] :is(.card, .o-box) { margin-inline: calc(-1 * var(--v-pad)); border-radius: 0; border-inline-width: 0; box-shadow: none; }
   [data-fb="on"] main .o-grid { grid-template-columns: 1fr; }
-  [data-fb="on"] :is(.o-container, .o-dialog) > .o-prose { --o-prose-inset: 0px; }
-  [data-fb="on"] :is(.o-container, .o-dialog) > .o-prose > :is(pre, blockquote) { margin-inline: calc(-1 * var(--v-pad)); border-radius: 0; }
+  [data-fb="on"] :is(.o-container > .o-prose, .dlg-body > .o-prose) { --o-prose-inset: 0px; }
+  [data-fb="on"] :is(.o-container > .o-prose, .dlg-body > .o-prose) > :is(pre, blockquote) { margin-inline: calc(-1 * var(--v-pad)); border-radius: 0; }
 }
 
 .o-stack--tight > :where(label, .help) { padding-inline: var(--o-content-inset, 0px); }
@@ -784,10 +952,39 @@ input[type=radio], input[type=checkbox]:not(.switch) { accent-color: var(--v-acc
     <p>A bare heading owns only the space <em>above</em> it (the section break); below it, the following text keeps its ordinary <strong>prose</strong> gap. A title and its subtitle are the exception — grouped in an <code>&lt;hgroup&gt;</code> whose internal gap is measured in the subtitle's own lines, so it stays even when the subtitle wraps.</p>
     <h2>Appearance</h2>
     <p>The five spacing scales are deliberately independent. Section spacing between cards need not equal a card's interior padding, and neither is tied to the rhythm between paragraphs of running text.</p>
+    <!-- Nested ul / ol to verify the folded Slip-Switch editor list treatment: ul cycles
+         disc→circle→square→disc… and ol cycles decimal→lower-alpha→lower-roman→decimal…, each
+         repeating every 3 levels; ol markers are tabular, right-aligned and hang flush. -->
     <ul>
-      <li>Inter-card and inter-section spacing — the <strong>section</strong> scale — the gap between cards in the grid and between the major regions of a page.</li>
+      <li>Inter-card and inter-section spacing — the <strong>section</strong> scale — the gap between cards and between the major regions of a page.
+        <ul>
+          <li>Nested once: <em>circle</em> marker, and the indent steps in against this level's text.
+            <ul>
+              <li>Nested twice: <em>square</em> marker.
+                <ul>
+                  <li>Nested three times: the cycle <em>repeats</em> back to <em>disc</em> — long enough to wrap so the hanging marker is visible.</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
       <li>Box interior padding — the <strong>pad</strong> scale, deliberately decoupled from the section gap so a roomy grid can still hold snug cards.</li>
-      <li>Paragraph-to-paragraph in running text — the <strong>prose</strong> scale, expressed as a multiple of a text line rather than the spacing unit.</li>
+      <li>Paragraph-to-paragraph in running text — the <strong>prose</strong> scale, a multiple of a text line. An ordered sub-list shows the <code>ol</code> cycle:
+        <ol>
+          <li>Decimal at the top level (custom counter — tabular figures, right-aligned, hanging flush).</li>
+          <li>Second step
+            <ol>
+              <li>Nested once → <em>lower-alpha</em> (a, b, c…).</li>
+              <li>Second sub-step
+                <ol>
+                  <li>Nested twice → <em>lower-roman</em> (i, ii, iii…), then a fourth level would cycle back to decimal.</li>
+                </ol>
+              </li>
+            </ol>
+          </li>
+        </ol>
+      </li>
       <li>Label-to-control and title-to-subtitle — the <strong>tight</strong> scale.</li>
       <li>Toolbar button and tag gaps — the <strong>cluster</strong> scale.</li>
     </ul>
@@ -917,26 +1114,38 @@ input[type=radio], input[type=checkbox]:not(.switch) { accent-color: var(--v-acc
 </main>
 </div>
 
-<!-- CSS-only dialog (no script): the checkbox drives body:has(...) -->
+<!-- CSS-only dialog (no script): the checkbox drives body:has(...). .o-dialog is the TRANSPARENT
+     scroll container; the header (rounds top) scrolls away with the content (sticky X); the body
+     (rounds bottom, fills) holds content + footer. Footer stickiness is None/Submit/Bar. Folded forks. -->
 <input type="checkbox" id="dlg-toggle" class="dlg-toggle" hidden>
 <div class="dlg-layer">
   <label for="dlg-toggle" class="dlg-backdrop" aria-label="Close dialog"></label>
   <div class="o-dialog">
-    <div class="dlg-head">
-      <span class="icon-btn" aria-hidden="true">◆</span>
-      <h2 class="dlg-title">Dialog frame</h2>
-      <label for="dlg-toggle" class="icon-btn" aria-label="Close">✕</label>
-    </div>
+    <!-- sticky close: the only pinned element; everything else scrolls past it -->
+    <div class="dlg-x"><label for="dlg-toggle" class="icon-btn" aria-label="Close">✕</label></div>
+
+    <!-- header: scrolls away. plain (surface) by default; glass = tinted two-tone panel -->
+    <header class="dlg-header">
+      <hgroup>
+        <h2 class="dlg-title"><span class="dlg-header__mark" aria-hidden="true">◆</span>Reschedule this block</h2>
+        <p class="subtitle">Scroll the dialog — this header slides away and only the X stays pinned. Switch Plain/Glass and the sticky-footer mode in the sidebar.</p>
+      </hgroup>
+    </header>
+
+    <!-- body — the white surface that rounds the BOTTOM corners and fills the rest of the frame -->
+    <div class="dlg-body">
     <div class="dlg-widths" role="group" aria-label="Dialog width">
       <span class="dlg-widths__lab">Width</span>
       <input type="radio" name="dw" id="dw-default" checked><label for="dw-default">Default</label>
       <input type="radio" name="dw" id="dw-container"><label for="dw-container">Container</label>
       <input type="radio" name="dw" id="dw-narrow"><label for="dw-narrow">Narrow</label>
     </div>
+
     <div class="o-prose">
-      <p>This prose sits at the <strong>dialog level</strong>, beside the box — so it insets to the box's <strong>radius</strong> (its straight edge), the dialog's lighter default rather than the full text inset. The round icon and close button take the corners so the text needn't dodge the curve.</p>
+      <p>This prose sits at the <strong>dialog level</strong>, beside the box — so it insets to the box's <strong>radius</strong> (its straight edge), the dialog's lighter default rather than the full text inset.</p>
+      <p>The header above is part of the scroll flow. As you scroll it leaves; the round close button stays in the corner so dismissing is always one click away.</p>
     </div>
-    <div class="card dlg-box">
+    <div class="card dlg-box o-stack o-stack--card">
       <div class="o-prose">
         <p>Prose <em>inside</em> the box has no box-siblings to meet, so it stays <strong>flush</strong> — just the card's own padding, no extra inset.</p>
       </div>
@@ -945,10 +1154,25 @@ input[type=radio], input[type=checkbox]:not(.switch) { accent-color: var(--v-acc
         <input type="text" value="floored at the minimum radius" />
       </div>
     </div>
-    <div class="cluster" style="justify-content:flex-end">
-      <label for="dlg-toggle" class="btn btn-ghost">Cancel</label>
-      <button class="btn btn-primary">Save · one step in, rounds more</button>
+    <div class="o-prose">
+      <p>Extra copy so the dialog actually overflows: watch the header leave the top while any pinned footer button holds at the bottom. Each button opts into stickiness on its own — Delete can pin bottom-left while Save pins bottom-right, independently.</p>
+      <p>Filler line so there's something to scroll past. Filler line. Filler line. Filler line. Filler line. Filler line.</p>
+      <p>Filler line. Filler line. Filler line. Filler line. Filler line. Filler line. Filler line. Filler line.</p>
     </div>
+
+    <!-- footer: natural-position action row (scrolls). In submit mode Save hides here and floats. -->
+    <div class="dlg-footer">
+      <button class="btn btn-ghost btn-delete">Delete</button>
+      <span class="dlg-footer__end">
+        <label for="dlg-toggle" class="btn btn-ghost btn-cancel">Cancel</label>
+        <button class="btn btn-primary btn-save">Save changes</button>
+      </span>
+    </div>
+    <!-- sticky float: only the primary Save, pinned bottom-right (submit mode) -->
+    <div class="dlg-foot-float" aria-hidden="true">
+      <button class="btn btn-primary btn-save" tabindex="-1">Save changes</button>
+    </div>
+    </div><!-- /.dlg-body -->
   </div>
 </div>
 </body></html>`;
@@ -1048,6 +1272,8 @@ function apply() {
   root.dataset.bar = SEG.bmode;
   root.dataset.pframe = SEG.pframe;
   root.dataset.fb = SEG.fbmode;       // full-bleed boxes — one toggle for every frame
+  root.dataset.dlgHeader = SEG.dlgHeader;          // plain (default) vs glass two-tone header
+  root.dataset.dlgFooter = SEG.dlgFooter;          // none / submit / bar — opt-in sticky footer
 
   // global content inset — form field labels + descriptions sit over the control's edge. radius/text
   // snaps resolve ON the element (data-cinset → CSS) so they pick up the CARD's control radius; the
@@ -1099,7 +1325,7 @@ function apply() {
 }
 
 /* segmented toggles */
-const SEG = { scheme: 'light', lmode: 'grouped', bmode: 'text', cimode: 'radius', timode: 'text', fbmode: 'off', rmode: 'concentric', pframe: 'draw' };
+const SEG = { scheme: 'light', lmode: 'grouped', bmode: 'text', cimode: 'radius', timode: 'text', fbmode: 'off', rmode: 'concentric', pframe: 'draw', dlgHeader: 'plain', dlgFooter: 'submit' };
 function wireSeg(id, key) {
   const box = $(id);
   box.addEventListener('click', e => {
@@ -1116,6 +1342,8 @@ wireSeg('cimode', 'cimode');
 wireSeg('timode', 'timode');
 wireSeg('fbmode', 'fbmode');
 wireSeg('pframe', 'pframe');
+wireSeg('dlgHeader', 'dlgHeader');
+wireSeg('dlgFooter', 'dlgFooter');
 
 /* Quick presets — just set the two radius values; the always-on cascade does the rest. */
 const RADIUS_PRESETS = {
@@ -1181,7 +1409,9 @@ document.querySelectorAll('.stagebar .preset button').forEach(b =>
 
 $('reset').addEventListener('click', () => {
   for (const id in DEFAULTS) $(id).value = DEFAULTS[id];
-  SEG.scheme = 'light'; SEG.lmode = 'grouped'; SEG.bmode = 'text'; SEG.cimode = 'radius'; SEG.timode = 'text'; SEG.fbmode = 'off'; SEG.rmode = 'concentric'; SEG.pframe = 'draw';
+  SEG.scheme = 'light'; SEG.lmode = 'grouped'; SEG.bmode = 'text'; SEG.cimode = 'radius'; SEG.timode = 'text'; SEG.fbmode = 'off'; SEG.rmode = 'concentric'; SEG.pframe = 'draw'; SEG.dlgHeader = 'plain'; SEG.dlgFooter = 'submit';
+  [...$('dlgHeader').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === 'plain')));
+  [...$('dlgFooter').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === 'submit')));
   [...$('scheme').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === 'light')));
   [...$('lmode').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === 'grouped')));
   [...$('bmode').children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === 'text')));
