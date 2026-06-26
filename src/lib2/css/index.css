@@ -1,0 +1,8 @@
+/*
+	Janus v2 CSS — single entry point.
+
+	Placeholder for Phase 0: the documentation-site shell imports this so the build
+	resolves and the (as-yet unstyled) pages render. Phase 1 populates it with the
+	layer declaration, reset, tokens, and base styles.
+*/
+@layer reset, base, objects, components, variants, tools;

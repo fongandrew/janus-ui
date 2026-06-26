@@ -29,34 +29,46 @@ export default defineConfig({
 		timeout: 120000,
 	},
 
-	// Configure projects for desktop and mobile browsers
+	// Configure projects for desktop and mobile browsers, tiered by browser support.
+	//
+	// Tier 1 (Chromium) runs every test, including ones that exercise features only
+	// Chromium ships at the §15 minimums (anchor positioning, scroll-state()). Those
+	// tests tag their title with `@chromium-only`.
+	//
+	// Tier 2 (Firefox / WebKit) skips the `@chromium-only` tests via `grepInvert` but
+	// runs everything else, keeping cross-browser features honest. At the §15 minimums
+	// (Chrome 135+, Firefox 144+, Safari 26.2+) `commandfor` is cross-browser, so the
+	// zero-JS modal path is NOT tagged chromium-only.
 	projects: [
-		// Desktop browser projects
+		// Tier 1: Chromium-only features (anchor positioning, scroll-state)
 		{
 			name: 'chromium-desktop',
 			testMatch: '**/*.desktop.e2e.[tj]s?(x)',
 			use: { ...devices['Desktop Chrome'] },
 		},
 		{
+			name: 'chromium-mobile',
+			testMatch: '**/*.mobile.e2e.[tj]s?(x)',
+			use: { ...devices['Pixel 7'] },
+		},
+
+		// Tier 2: Cross-browser (features supported by all three engines)
+		{
 			name: 'firefox-desktop',
 			testMatch: '**/*.desktop.e2e.[tj]s?(x)',
+			grepInvert: /@chromium-only/,
 			use: { ...devices['Desktop Firefox'] },
 		},
 		{
 			name: 'webkit-desktop',
 			testMatch: '**/*.desktop.e2e.[tj]s?(x)',
+			grepInvert: /@chromium-only/,
 			use: { ...devices['Desktop Safari'] },
-		},
-
-		// Mobile browser projects
-		{
-			name: 'chromium-mobile',
-			testMatch: '**/*.mobile.e2e.[tj]s?(x)',
-			use: { ...devices['Pixel 7'] },
 		},
 		{
 			name: 'webkit-mobile',
 			testMatch: '**/*.mobile.e2e.[tj]s?(x)',
+			grepInvert: /@chromium-only/,
 			use: { ...devices['iPhone 15'] },
 		},
 	],

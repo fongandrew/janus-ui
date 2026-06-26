@@ -32,6 +32,11 @@ export default defineConfig(({ mode }) => {
 		],
 		resolve: {
 			alias: {
+				// v2 pseudo-package aliases (coexist with v1 `~/lib/*` during migration)
+				'~/lib2/css': '/src/lib2/css',
+				'~/lib2/utils': '/src/lib2/utils',
+				'~/lib2/dom': '/src/lib2/dom',
+				'~/lib2/solid': '/src/lib2/solid',
 				'@': '/assets',
 				'~': '/src',
 			},
@@ -51,7 +56,7 @@ export default defineConfig(({ mode }) => {
 						.map((file) => [file.slice(0, -5), file]),
 				),
 			},
-			target: ['safari17', 'ios17', 'chrome135', 'firefox137'],
+			target: ['safari26', 'ios26', 'chrome135', 'firefox144'],
 		},
 		target: 'esnext',
 		server: { port: 3000, hmr: { port: 3000 } },
