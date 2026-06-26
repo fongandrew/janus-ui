@@ -65,7 +65,7 @@ The reference for every `o-*` object (§9).
 - The **markup snippet** that produced the render, so a consumer can copy it.
 
 **Key demonstrations** (these are the things worth seeing rendered, per §9):
-- The four-level **nesting** under each **radius preset** (§8.2): `o-dialog` > `o-box` > `o-input-box`, annotated with the computed `border-radius` at each tier, so the concentric (radius grows outward, never sharp) vs. uniform presets are visible side by side.
+- The four-level **nesting** at a couple of `--v-radius` / `--v-radius-min` settings (§8): `o-dialog` > `o-box` > `o-input-box`, annotated with the computed `border-radius` at each tier — radius steps inward and never goes sharp, and `min == max` flattens it — so the stepped vs. flat looks are visible side by side.
 - `o-grid` and `o-split` **reflow** shown at multiple container widths (resize handles or side-by-side narrow/wide frames).
 - `o-text-box` vs `o-box` block-padding difference (the `1lh` compensation).
 

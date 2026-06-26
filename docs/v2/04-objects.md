@@ -13,11 +13,11 @@ Janus is designed around a **four-level nesting model**. The first level always 
 3. **Level 3 — Box / card.** Rounded grouping of related components or rows of content. The `o-box` family. Reads `--o-box__radius`.
 4. **Level 4 — Control / text container.** Leaf controls (`o-input-box` — buttons, inputs) and standalone prose blocks (`o-text-box`). Reads its own `--o-*-radius` knob, which the enclosing box redefines.
 
-The four levels describe the *mental model*; the radius story for each is in §8. Container level is transparent for radius. Each object owns its own radius knob (`--o-box__radius`, `--o-input-box__radius`, etc.); a **radius preset** (§8.2) assigns those knobs per layer — there is no subtraction cascade *between* objects, and a top-level control vs. one inside a preset scope differ because the preset's scoped assignment reaches the inner one.
+The four levels describe the *mental model*; the radius story for each is in §8. Container level is transparent for radius. Each object owns its own radius knob (`--o-box__radius`, `--o-input-box__radius`, etc.); the **radius cascade** (§8.2, always on) assigns those knobs, stepping each level *inward* from the frame by the padding/inset between it and its parent (floored at `--v-radius-min`). So radius tracks **nesting depth** — the same control rounds less the deeper it sits — and a box re-derives its own children's control knob from its (already-stepped) radius.
 
-**Frame is two sub-roles.** For radius, "frame" splits into the **page frame** (the `<body>` in a browser viewport — usually `0`, the browser/OS rounds the window) and the **dialog frame** (`c-modal` / `c-drawer`, via `o-dialog` — rounded). A web preset keeps modals rounded while the page is square (§8.2). A **sidebar** is *not* a third frame kind: it's a level-2 `o-container` that may carry a surface (`v-surface-*`); in a narrow sidebar you generally prefer full-bleed sub-sections over nested cards (§9.3, and the card→bleed collapse).
+**Frame is two sub-roles.** For radius, "frame" splits into the **page frame** (the `<body>` in a browser viewport — usually `0`, the browser/OS rounds the window) and the **dialog frame** (`c-modal` / `c-drawer`, via `o-dialog` — rounded). Painting the frame radius is a per-frame choice (§8.1), so a web app keeps modals rounded while the page itself is square. A **sidebar** is *not* a third frame kind: it's a level-2 `o-container` that may carry a surface (`v-surface-*`); in a narrow sidebar you generally prefer full-bleed sub-sections over nested cards (§9.3, and the card→bleed collapse).
 
-This is a *guideline*, not a hard limit. The model deliberately does **not** auto-derive radii through arbitrary nesting depth: a nested `o-box` inside an `o-box` shares the parent's `--o-box__radius`. UI that needs two distinct rounded-box levels should introduce a new object (e.g. `o-panel`, or `o-segmented` for shared-border cells — §9.8) rather than relying on a recursive cascade (see §5.2 / §8). For uniform-radius layouts, use the `v-radius-uniform` / `v-radius-flat` preset (§8.2).
+This is a *guideline*, not a hard limit. The model deliberately does **not** auto-derive radii through arbitrary nesting depth: a nested `o-box` inside an `o-box` shares the parent's `--o-box__radius`. UI that needs two distinct rounded-box levels should introduce a new object (e.g. `o-panel`, or `o-segmented` for shared-border cells — §9.8) rather than relying on a recursive cascade (see §5.2 / §8). For a uniform radius everywhere, set `--v-radius-min == --v-radius` (§8.4).
 
 ### 9.2 Box family (padded containers)
 
@@ -81,8 +81,12 @@ Fixed-column layouts (e.g. "always two columns until 600px, then four") are not 
 
 | Class | Knobs | Purpose |
 |---|---|---|
+| `o-prose` | `--o-prose__gap` (the prose/line-based gap) | **Running-text flow.** A block-flow container for prose whose interior rhythm is *boundary-owned* (§6.2): every gap is a `margin-block-start` on the lower element, valued by what's above — body↔body & heading→content get the prose gap; content→heading gets the heading's space-above. It also opts its **immediate text children** into `text-box-trim` (the one container that signals "this is running text"), so the same object owns both the trim and the rhythm. Use it instead of hanging base-layer margins off raw `h*`/`p`. |
+| `<hgroup>` (styled) | `--o-hgroup__leading` | **Title + subtitle as one unit.** Uses *additive* leading (`line-height = 1em + constant`) so the whitespace between lines stays constant across the title/subtitle size difference, and trims **only the group's outer edges** (`trim-start` on the first child, `trim-end` on the last) so the title↔subtitle boundary keeps its half-leading and reads continuous with no margin (§6.2). The only place a heading sits tight to following text. |
 | `o-caption` | `--o-caption__font-size` (default `var(--v-font-size-caption)`) | Small-text structural primitive for badges, tooltips, and similar caption-class content. Sets font-size and a matching line-height. Does **not** carry color or chrome — those belong on the composing component (`c-badge`, `c-tooltip`). |
-| `o-code` | `--o-code__font-size` (default `var(--v-font-size-code)`) | Monospace text container for `<code>` and `<pre>`. Sets font-size, font-family (`--v-font-family-mono`), and a matching line-height. `<pre>` elements compose this with `o-text-box` for padded code blocks. |
+| `o-code` | `--o-code__font-size` (default `var(--v-font-size-code)`) | Monospace text container for `<code>` and `<pre>`. Sets font-size, font-family (`--v-font-family-mono`), and a matching line-height. `<pre>` elements compose this with `o-text-box` for padded code blocks. Because `<pre>` carries its own padding, it gets `text-box-trim: trim-both` (the padded-box rule, §6) — its padding also absorbs the trimmed cap/descender overshoot, so horizontal `overflow` doesn't clip the first/last line. |
+
+`o-text-box` remains the *perimeter + inline-alignment* primitive; `o-prose` is what you reach for when the box holds **multiple** flowing text elements and you want the boundary-owned rhythm. (A bare `o-text-box` with one block of text needs neither.)
 
 ### 9.6 Menu objects
 
@@ -97,13 +101,13 @@ Fixed-column layouts (e.g. "always two columns until 600px, then four") are not 
 |---|---|---|
 | `o-bar` | `--o-bar__height`, `--o-bar__pad-block`, `--o-bar__pad-inline` | Horizontal header / toolbar / app-bar strip. The **block-axis instance** of the inline-alignment principle (§6.1): it reconciles its own height and block padding with a control's intrinsic height so optical inset stays consistent. |
 
-Three height modes — the "magic header sizes" from v1, made explicit:
+The bar reconciles its height and padding with a control's intrinsic height, and follows the subtree's `v-align-edge` / `v-align-text` mode on **both** axes — block padding matches inline, so the result is symmetric. (An asymmetric bar — more padding on the sides than the top — reads wrong on filled buttons.) Common sizings:
 
-1. **Text height** — tall enough for one line of text; block padding `var(--v-pad-block)` (`text-box-trim`-corrected, §6).
-2. **Input height** — the bar *is* `--v-input-height` (a toolbar exactly one control tall; the control sits flush, no extra block padding).
-3. **Contains-input** — tall enough to hold a control, with *reduced* block padding so the control's text sits `--v-spacing` from the bar edge: `--o-bar__pad-block: calc(var(--v-pad-block) − <control's internal block padding>)`. This is the block-axis version of text-align (§6.1); positive padding only, no negative margins.
+1. **Text height** — tall enough for one line of text; padding `var(--v-pad-block)` (`text-box-trim`-corrected, §6).
+2. **Input height** — the bar *is* `--v-input-height` (a toolbar exactly one control tall; the control sits flush).
+3. **Contains-input** — holds a control with *reduced* padding so the control's **text** (not its border) sits `--v-spacing` from the bar edge. This is the block-axis of text-align (§6.1) and pairs with `v-align-text` inline; an **edge-aligned** bar of filled buttons uses symmetric padding instead, so the border lands at the inset on both axes. Positive padding only, no negative margins.
 
-A bar follows the subtree's `v-align-edge` / `v-align-text` mode for inline padding, exactly like a box.
+**Frame corners are occupied, not padded around (§8.5).** A bar on a painted frame corner can't pad its content out of a large curve without wrecking alignment, so instead it **puts a round control in the corner** — a leading icon button (sidebar/menu trigger) on a window header, a leading icon + close button on a dialog — and lets the brand/title sit clear *after* it (the trailing primary action, a pill at large radius, takes the opposite corner). Padding stays normal and symmetric; the corner control is the design answer, and it's frame-level only (never nested boxes).
 
 ### 9.8 Segmented object
 

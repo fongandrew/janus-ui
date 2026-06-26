@@ -16,6 +16,14 @@ Three padding modes, each implemented as `--o-*__pad-*` defaults set in the owni
 
 **Block padding is uniform, because of `text-box-trim`.** v1 subtracted the line-height overhang `(1lh − 1em)/2` from text-mode block padding so the optical space above and below the text matched the inline padding. v2 drops that fudge. Every text element renders with `text-box-trim: trim-both` (the `text-box` property — see §15), so its box edges sit at the cap height and alphabetic baseline. A plain `var(--v-pad-block)` then yields correct optical padding *regardless of font-size or line-height* — an `h1` and a `p` in the same box both look right, and no wrapper needs to know its content's type metrics. This is a deliberate bet on a not-yet-Firefox feature (§15); the degradation is slightly loose leading on the first/last line in Firefox, which we judge acceptable versus carrying per-element compensation math everywhere.
 
+**Where to trim — the perimeter rule.** Trimming is not "apply to every text element"; it's a property of where text meets a *non-text edge*:
+
+- **`trim-both`** — a single text element (or a *padded* text box: `<pre>`, a `blockquote` callout, a table cell) meeting a box edge / its own padding. This is what makes the perimeter padding read optically uniform. The generous padding of these boxes also absorbs the cap/descender overshoot that trimming pushes outside the content box, so `overflow: clip/auto` on a `<pre>` doesn't clip the first/last line.
+- **`trim-start` / `trim-end`** — only the *outer* edges of a group that should read as continuous text (an `<hgroup>`, a continuous list). The boundaries *between* members are left **untrimmed** so their natural half-leading carries the rhythm — see §6.2.
+- A text element with **no padding of its own** that lives *inside* a continuous group is trimmed only by the group's perimeter rules, never element-by-element.
+
+So trim follows *edges and group boundaries*, not element types. (Inline text — links, `<code>`, `<span>` — is never trimmed; trimming an inline box plus `overflow` clipping cuts descenders. §15.)
+
 Layout gaps:
 
 - **Stack gap** — `o-stack` exposes `--o-stack__gap`, defaulting to `var(--v-gap-block)`.
@@ -43,18 +51,29 @@ Because each child carries its own compensation as positive padding, **mixed con
 
 *(Implementation edge case, not a spec rule: at pill radii `--v-control-inset` can exceed `--v-pad-inline`, so the text-align container padding clamps at 0 and alignment can't fully hold. Normal radii never reach this.)*
 
+With a strong-bordered control, text-align leaves the border poking *past* the content line, so it suits only **light / borderless** controls (menus, list rows, toolbars) where that overhang is invisible; edge-align keeps strong borders tidy.
+
 **Negative-margin policy.** Positive, box-carried padding is the *only* alignment mechanism. Negative margins are reserved for exactly one job — the **full-bleed breakout**, where an element escapes its container's inline gutter (`margin-inline: calc(-1 * var(--o-container__gutter))`, §9.3). That case has no positive-padding equivalent. Everywhere else the rule is "wrap it in a box and let the box pad," which keeps every element inside its own bounds — safe under `overflow: clip` rounded corners, and easy to reason about.
 
 ### 6.2 Block spacing comes from flow, not box padding
 
-A box's block padding handles only its **perimeter** — first/last child to the box's top/bottom edge (uniform, per the `text-box-trim` note above). It does **not** carry the rhythm *between* siblings, because the right gap between, say, an `h1` and a `p` depends on each element's own type metrics, which a generic wrapper can't know.
+A box's block padding handles only its **perimeter** — first/last child to the box's top/bottom edge (uniform, per the `text-box-trim` note above). It does **not** carry the rhythm *between* siblings. Interior vertical rhythm comes from **flow**, and the rule for what that rhythm *is* follows.
 
-Interior vertical rhythm comes from **flow**:
+**Every vertical gap is owned by the element underneath.** It's always a `margin-block-start` on the *lower* element, and its value depends on what sits **above** it — "the thing below owns the gap above it." For prose inside an `o-text-box` (or the `o-prose` flow object, §9.5), the boundaries resolve as:
 
-- `o-stack` for explicit, even gaps between children (`--o-stack__gap`).
-- base-layer `margin-block` on `h1`–`h6`, `p`, etc., tuned per element, for prose inside an `o-text-box`.
+- **body ↔ body, and heading → whatever follows → the *prose* gap.** A bare heading does **not** hug its body; the element below simply keeps its ordinary prose gap. (The one place a heading sits tight to text is the `<hgroup>` exception below.)
+- **whatever → a heading → the heading's *space-above*** — the section break, the one bit of rhythm a heading owns (above itself, not below).
 
-This matches how developers actually write markup — they wrap a *group* in one box and drop several elements inside, not wrap every heading and paragraph individually. So the contract is **"wrap a group, flow the children":** the box owns the perimeter; the elements (or the stack) own the gaps. `o-text-box` is therefore a *perimeter + inline-alignment* primitive that leans on flow for its vertical story.
+`:where()` selectors keep these flat-specificity so source order resolves overlaps; the lower element always carries the margin, so mixed content composes without the container knowing its contents.
+
+**The prose gap is a multiple of the *line*, not of `--v-spacing`.** Paragraph rhythm rides `line-height` (e.g. a fraction of `1lh`, or `prose-multiplier · line-height · 1em`) so it stays proportional as the type scale moves — distinct from the spacing-derived box/gap knobs. The separation is the point: **box rhythm scales with `--v-spacing`; text rhythm scales with the line.** (Lists are running text: inter-item spacing is a fraction of the prose gap when "grouped", or `line-height − 1cap` when "continuous" so wrapped items share one baseline — a cascading `--v-list-rhythm` switches between them per context, e.g. marketing vs. a WYSIWYG editor.)
+
+**Title + subtitle live in an `<hgroup>` with their own rhythm.** This is the one place text reads as a tight unit, and the trickiest, because the two lines are different sizes. Two things make it hold up under wrapping:
+
+- **Additive leading.** Inside the group, `line-height = 1em + a constant`, so the line-height scales with the font but the whitespace *between* lines stays constant — the big title's lines and the small subtitle's lines get the same visual leading. (Same shape as the heading leading in §5.1, `1em + 0.5·spacing`. *Additive* leading, not multiplicative, is what holds inter-line space constant across sizes.)
+- **Trim only the group's outer edges.** With `text-box-trim` left *off* between the title and subtitle, their natural half-leadings sum to exactly the same whitespace as the gaps *within* each element, so the boundary reads like an internal line break — no margin needed, and the gap blends both sizes (§6, perimeter rule).
+
+This matches how developers write markup — wrap a *group* and drop several elements in. So the contract is **"wrap a group, flow the children":** the box owns the perimeter; the lower element owns each interior gap; an `<hgroup>` owns a title/subtitle unit.
 
 ### 6.3 The spacing bundle includes border-width (but not radius)
 
@@ -71,7 +90,7 @@ Janus's internal `v-spacing` mixin (§5.3 — an authoring tool, not a consumer 
 }
 ```
 
-**The mixin does not touch radius.** Radius is no longer coupled to spacing — it's preset-driven and independently assignable (§8). So changing `--v-spacing` changes padding/gap/border but leaves corner radii alone, which is the correct behavior: a denser layout shouldn't silently re-round its corners. To change radii, apply a radius preset (§8.2) or set the `--o-*__radius` knobs directly. (Note that the *concentric* preset derives its radii partly from `--v-pad-inline`, so under that preset a spacing change does shift radii — but only because the consumer opted into that relationship, not because the mixin forces it.)
+**The mixin does not touch the radius anchors.** Changing `--v-spacing` leaves the radius *anchors* — `--v-radius` (the frame max) and `--v-radius-min` (the floor) — alone, so a density change doesn't alter how round the window is or how square the floor gets. The intermediate radii *do* step by `--v-pad-inline` (the radius cascade, §8.2), so a spacing change shifts them to keep nested corners concentric — that's the intended relationship, not a side effect. To change the radius look itself, set the two anchors (§8.4) or an `--o-*__radius` knob directly.
 
 ### 6.4 Hi-DPI density bump
 
@@ -362,79 +381,77 @@ Naming note: the attribute is `data-v-color-scheme`, not `data-v-theme`, because
 
 ## 8. Border radius system
 
-Radius is **preset-driven**, not derived through a programmatic concentric cascade. v1 (and an earlier v2 draft) anchored at the outermost radius `--v-radius` and *subtracted* `--v-spacing` at each level inward — which clamps to sharp `0` corners in tight layouts and hard-couples radius to spacing. v2 inverts and decouples: anchor at an innermost **floor** that's never sharp, and let named presets assign each layer's radius.
+Radius is bounded by two anchors: a **max** (`--v-radius`, carried by the outermost frame — the window) and a **min** (`--v-radius-min`, the floor). Everything between **steps down from the max toward the min** by the spacing/inset between an element and its parent, floored at the min so a corner is never sharp. A consumer reasons about two endpoints — how round the window is, and how square things can get — and depth fills in the middle.
 
-### 8.1 The layers and their knobs
+### 8.1 The radius is a value, separate from whether it's *painted*
 
-Each rounded object owns an independently-assignable radius knob. There is **no subtraction chain** between them — a preset (§8.2) or the consumer sets them, and each object reads its own knob with a `var()` fallback.
+`--v-radius` is the radius the outermost frame is *assumed* to have, and it drives the whole inward cascade — **independently of whether anything actually draws a `border-radius` on the frame.** A browser web app never paints its own window corner (the OS does), but it still wants its top-level cards sized concentric to that corner; a desktop/webview shell paints the corner itself. So "what is the frame radius" and "do we draw it" are two separate decisions:
 
-| Knob | Owned by | Role |
-|---|---|---|
-| `--v-radius-min` | (root) | The innermost floor. Controls never round below this, so corners are never sharp. Default `0.25rem`. |
-| `--o-input-box__radius` | `o-input-box` | Leaf controls (button, input, textarea, select). Falls back to `--v-radius-min`. |
-| `--o-box__radius` | `o-box` | Boxes / cards. Falls back to `--v-radius-min`. |
-| `--o-text-box__radius` | `o-text-box` | Defaults to `--o-box__radius`. |
-| `--o-dialog__radius` | `o-dialog` | Dialog / modal / drawer frame. Falls back to `--v-radius`. |
-| `--v-radius` | (root) | The **window/dialog frame** radius and the generic frame value (`o-square`, page-body framing). |
+- **Cascade input:** `--v-radius` (the assumed window radius) — always feeds the step-down.
+- **Painted or not:** whether the frame element gets `border-radius: var(--v-radius)`. The page frame usually *doesn't* (the browser rounds the window); a dialog frame *does*.
 
-```css
-.o-box       { border-radius: var(--o-box__radius, var(--v-radius-min)); }
-.o-input-box { border-radius: var(--o-input-box__radius, var(--v-radius-min)); }
-.o-dialog    { border-radius: var(--o-dialog__radius, var(--v-radius)); }
-```
+There is one `--v-radius` (the assumed outer corner); painting it is a per-frame choice.
 
-No knob references itself, so the self-reference cycle that forced the old `inherit()`-workaround discussion simply doesn't arise — presets (in the `variants` layer, which outranks `objects`, §4) assign the knobs and win cleanly.
+### 8.2 Radius tracks nesting depth, not element type
 
-**Frame is two sub-roles for radius:** the **page frame** (the body in a browser viewport — usually `0`, since the browser/OS rounds the window) and the **dialog frame** (`--o-dialog__radius` — rounded). Presets set them independently, which is why a web preset can keep rounded modals while the page itself is square.
+The radius of an element is a function of **how many steps deep it sits**, not what kind of thing it is. The *same* control rounds differently by context: directly in a dialog it's one step in (`dialog − pad`); inside a card inside that dialog it's two steps in (`dialog − 2·pad`, usually floored). The cascade does the counting — each box re-derives the **control** knob from its own already-stepped radius, with no self-reference (it *reads* `--o-box__radius` and *writes* `--o-input-box__radius`, different names):
 
-### 8.2 Presets
-
-To avoid knob overload, ship a small family of **radius presets** as variant classes (neutral names). Each assigns the whole set from `--v-radius-min` and the spacing knobs; a consumer applies one class to a scope (usually `:root`).
-
-| Preset | Idea | Control | Box | Dialog frame | Page frame |
-|---|---|---|---|---|---|
-| `v-radius-concentric` | True concentric: each layer's radius = the inner radius + the padding between them, so nested corners stay optically parallel | `--v-radius-min` | `min + box-pad` | `box + frame-pad` | = dialog |
-| `v-radius-uniform` | Two flat values | `0.25rem` | `0.25rem` | `0.5rem` | `0.5rem` |
-| `v-radius-web-concentric` | Concentric, but the **page frame is `0`** (the browser/webview rounds the window); dialogs keep their radius | concentric | concentric | concentric | `0` |
-| `v-radius-web-uniform` | Uniform, page frame `0` | `0.25rem` | `0.25rem` | `0.5rem` | `0` |
-
-The **concentric** preset is the one that *relates* radius to padding — additively, inside-out, anchored at the floor, so it never produces a sharp corner:
+The cascade is **always on** — it's the radius system, not an opt-in class. It anchors at the frame, works inward, and floors every step at `--v-radius-min`:
 
 ```css
-.v-radius-concentric {
-  --o-input-box__radius: var(--v-radius-min);
-  --o-box__radius:       calc(var(--v-radius-min) + var(--v-pad-inline));
-  --o-dialog__radius:    calc(var(--o-box__radius)  + var(--v-pad-inline));
-  --v-radius:            var(--o-dialog__radius);
+:root {
+  --o-dialog__radius:    max(var(--v-radius-min), calc(var(--v-radius) - var(--o-dialog__offset)));
+  --o-box__radius:       max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad-inline)));
+  --o-input-box__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad-inline)));
+}
+/* a box steps the control knob one pad deeper for *its* children */
+:where(.o-box, .o-text-box) {
+  --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-box__radius) - var(--v-pad-inline)));
+}
+/* the dialog re-roots the cascade — everything inside derives from the dialog radius */
+.o-dialog {
+  --o-box__radius:       max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad-inline)));
+  --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad-inline)));
 }
 ```
 
-The relationship lives *inside the preset*, not as a global cascade — `v-radius-uniform` ignores it entirely. This is the "same effect, assigned properly" goal: opt-in concentricity, not an automatic step-down. A consumer raises the floor (`--v-radius-min`) or swaps the preset to change the look; per-element control comes from setting an `--o-*__radius` knob directly.
+Each object reads its own knob with a floor fallback (`.o-box { border-radius: var(--o-box__radius, var(--v-radius-min)) }`); the cascade assigns the knobs.
 
-**Why presets win cleanly.** Preset classes live in the `variants` layer; objects live in `objects`. Per §4 `variants` outranks `objects`, so a preset's `--o-*__radius` assignment beats the object's `var()` fallback regardless of specificity — for both descendant matches (`.v-radius-concentric .o-box`) and the same-element case (`<div class="o-box v-radius-concentric">`).
+| Knob | Owned by | Value |
+|---|---|---|
+| `--v-radius` | (root) | The **max** — the assumed window/frame corner. The anchor. |
+| `--v-radius-min` | (root) | The **min** — the floor. Nothing rounds below it; deep elements bottom out here. |
+| `--o-dialog__radius` | `o-dialog` | `max(min, frame − dialog-inset)` |
+| `--o-box__radius` | `o-box` | `max(min, parent-radius − pad)` |
+| `--o-input-box__radius` | `o-input-box` | `max(min, box-radius − pad)` — one step deeper than its box |
 
-**`v-radius-flat`** is the degenerate preset — every layer equals `--v-radius`. Kept as a one-liner for "make every corner the same":
+### 8.3 The dialog inset relationship
 
-```css
-:root.v-radius-flat { --v-radius: 8px; }   /* every box / dialog / control = 8px */
-```
+A modal floats `--o-dialog__offset` inside the viewport, so its corners only look concentric with the window's when **`dialog_radius = window_radius − offset`** (the same "outer − inner = the gap" rule, where the gap is the inset). A larger inset rounds the dialog *less*. An inset, floating dialog is not the same radius as the page frame — it's the frame radius minus how far it sits inside.
 
-### 8.3 Curvature, square content, nesting, escape hatches
+### 8.4 Tuning the look — two values, no preset classes
 
-- **Curvature clearance.** Text-bearing objects keep text off the corner by flooring their inline padding at the control radius — see §6.1's edge-align note and `--v-radius-min`.
+There are **no `v-radius-*` preset classes**. The cascade above *is* the system; the look is set entirely by the two root values, so "concentric / uniform / flat" are regions of one parameter space rather than separate modes:
+
+- **Concentric** — a large `--v-radius` (window) over a small `--v-radius-min` (floor): each level rounds visibly less than its parent, corners staying parallel down to the floor.
+- **Flat** — `--v-radius-min == --v-radius`: the `max(min, …)` pins the whole cascade to that one value, so every corner is identical. (No separate `flat` class — just set the two equal.)
+- **Near-uniform / two-tier** — a small range, or a `--v-pad-inline` large relative to it: the deep levels (controls, boxes) bottom out at the floor while the shallow ones (dialog, window) stay near the max. The "two flat tiers" look falls out without a non-stepping mode.
+
+For a one-off corner, a consumer sets that object's `--o-*__radius` directly, or uses `t-radius-none` / `t-radius-full` (§8.6). Nothing about the system needs a class — only its two inputs change.
+
+### 8.5 Frame corners are *occupied*, not padded around
+
+Content on a **painted frame corner** — a window header, a dialog's title row and footer — would crowd into the curve when the frame radius is large. Padding it out doesn't work: no inset keeps text clear of a large corner *and* keeps it aligned with the content below (the brand floats away from the gutter and the bar bloats). The corner is instead **occupied by a deliberate round element**, and the real content sits clear *after* it:
+
+- **A circular control nestles into a rounded corner without clipping.** Its rounded shape echoes the corner; its nearest point stays inside the arc at normal padding (a `--v-input-height` circle inset by `--v-spacing` clears even a near-pill frame radius). So the corner gets a **leading icon button** (a sidebar/menu trigger on a window header; a leading icon + a **close** button on a dialog), and the trailing primary action — which the radius cascade turns into a **pill** at large frame radius — takes the opposite corner.
+- **Padding stays normal and symmetric.** The brand/title sits at the standard position *after* the corner element, which puts it clear of the curve; "title after a leading control" is the conventional app-bar layout, so it reads as intentional.
+- **Empty corners need nothing.** A right-aligned footer leaves its bottom-left corner empty; nothing to clip.
+
+This is a **design constraint the radius surfaces**: a frame with a large corner radius wants a control in each occupied corner. Small radii need none of it — content never reaches the curve.
+
+### 8.6 Curvature, square content, escape hatches
+
+- **Curvature clearance (text & pills).** Text-bearing objects floor their inline padding at the corner radius so glyphs clear the curve (§6.1's edge-align note). For a **pill** the effective radius is half the height, so the floor is `0.5lh + block-pad`, not `--v-radius-min`. The general rule: *inline padding ≥ the effective corner radius*, where a pill's effective radius is `height/2`.
 - **Square / icon content.** `o-square`, `c-avatar`, `c-spinner`, `c-badge` (dot mode) read `--v-radius` directly and can go fully circular (`--v-radius: 50%`).
-- **No deeper nesting.** A nested `o-box` shares its parent's `--o-box__radius` — it does NOT step further. Two genuinely distinct rounded-box levels → a new object (`o-panel`) with its own knob, or a preset that distinguishes them (see §5.2).
+- **No deeper nesting in one object.** The cascade already handles depth, but a *nested same object* shares its parent's box knob unless a box re-roots it (as `.o-box` does for the control knob). Two genuinely distinct rounded-box levels → introduce a new object with its own knob.
 - **Escape hatches** in the tools layer: `t-radius-none`, `t-radius-full`.
-
-### 8.4 Two example tunings
-
-```css
-/* Window-style: roomy concentric corners */
-:root.v-radius-concentric { --v-radius-min: 0.5rem; --v-spacing: 0.75rem; }
-/* → control 8px, box 20px, dialog 32px, page = dialog */
-
-/* Web app: square page, modest rounded cards & controls, rounded modals */
-:root.v-radius-web-uniform { /* control 4px, box 4px, dialog 8px, page 0 */ }
-```
-
-Both start from the floor and never produce a sharp inner corner — the failure mode of the old subtractive cascade.
