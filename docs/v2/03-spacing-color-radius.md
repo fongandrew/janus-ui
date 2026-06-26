@@ -29,31 +29,44 @@ Layout gaps:
 - **Stack gap** — `o-stack` exposes `--o-stack__gap`, defaulting to `var(--v-gap-block)`.
 - **Inline gap** — `o-group` / `o-row` expose `--o-group__gap` / `--o-row__gap`, defaulting to `var(--v-gap-inline)`.
 
-### 6.1 Inline alignment: the spacing budget
+### 6.1 Inline alignment: text insets to meet the box
 
-Inline padding has to reconcile a container's padding with the self-padding of what sits inside it: a control carries its own internal inline padding (`--v-control-inset`); plain text carries ~none. The organizing principle:
+Boxes and controls **anchor the container's inline edge** — their border-box sits on the gutter, full-width. What needs reconciling is the **accompanying text** that introduces them: a field's label and description above a control, or running prose flowing beside cards. Plain text carries ~no self-padding, so left alone it either collides with a rounded corner or fails to line up with the text *inside* the boxes. The rule:
 
-> **`--v-spacing` is a budget from the container edge to "the content line." What lands *on* that line — the control's *text*, or the control's *border* — is a per-subtree choice.**
+> **Accompanying text insets to line up with the box it introduces — the box doesn't move, the text does.**
 
-Two modes, each a variant class applied to any scope:
+Three reference points, in increasing inset (all positive padding, on **both** inline edges):
 
-| Mode | Class | What lands at `--v-spacing` from the edge | Best for |
+| Inset | Lands on the box's… | Value |
+|---|---|---|
+| **0** (`v-align-edge`) | outer edge / border | `0` |
+| **straight edge** | where the corner curve ends — text sits over the flat side | the box's own corner radius |
+| **inner text** (`v-align-text`) | the text *inside* the box | the box's text-pad |
+
+**Where this applies — and why it's only two places.** Janus doesn't nest boxes: the structure is frame → box → control (§9.1), never box-in-box. So a run of text only ever sits *beside a box or control it should line up with* in two situations — there's no general depth cascade to chase:
+
+| Situation | The text | Aligns to | Knob (default) |
 |---|---|---|---|
-| **Edge-align** (default) | `v-align-edge` | The control's **border-box** | Controls with strong, visible borders (default Janus inputs) |
-| **Text-align** | `v-align-text` | The **text** — plain text and in-control text line up | Light / borderless controls; menus, list rows, toolbars |
+| **Field** — anywhere | a `<label>` + description above a control | the control's straight edge | `--o-field__inset` → `var(--o-input-box__radius)` |
+| **Prose in a container with boxes** | a container's direct prose children, beside its cards | the cards' inner text | `--o-prose__inset` → `var(--v-pad-inline)` (a dialog → `var(--o-box__radius)`) |
 
-Both are achieved with **positive padding only** — never negative margins (see policy). With `inset = var(--v-control-inset)` (a control's internal inline padding):
+A **field** is a composition (an `o-stack` of `<label>` + `o-input-box` + description); its label/description align to the control, and this holds wherever the field lives — directly on a frame or inside a card. It defaults to the **straight edge** — the Janus v1 form look (subtle, since a control's radius floors near `--v-radius-min`).
 
-- **Edge-align:** the container pads `--v-pad-inline`; controls sit flush, so their border-box lands on the line. Plain text gets a small inline inset of `var(--v-radius-min)` so it lines up with where the control's *flat* edge begins instead of colliding with the rounded corner — this is the "text padding = min radius" idea.
-- **Text-align:** the container pads `calc(var(--v-pad-inline) − var(--v-control-inset))`; controls sit flush, so their *text* lands on the line; plain-text boxes pad `var(--v-control-inset)`, so plain text lands on the same line. With light borders, the control's border-box sitting a little closer to the edge is invisible — you just see aligned text.
+**Prose insets when it's a direct child of a container that holds boxes** — there its running text wants to line up with the cards beside it. The *container* supplies the inset (`o-container:has(boxes) > o-prose`), defaulting to the **inner-text** level (`--v-pad-inline`) so the prose column shares the cards' text edge. A **dialog** does the same with a lighter default — just the **straight edge** (`--o-box__radius`), since a tight dialog doesn't want its prose pushed all the way in. The moment prose is *inside* a box there are no box-siblings to meet, so it takes the box's perimeter padding and sits flush — the inset never compounds with box padding, and only **direct** prose children inset.
 
-Because each child carries its own compensation as positive padding, **mixed content in one container resolves correctly without the container knowing its contents**, and there's no upward data flow — `--v-control-inset` is a pure function of shared knobs.
+**The inset wraps the corner.** When the inset prose is the container's **first or last** child, its block padding grows to match: `padding-block-start` on the first, `padding-block-end` on the last, each equal to `--o-prose__inset`. So a prose block at the top/bottom of a container is inset the same amount on the side it meets the container edge as on the inline edges — the corner reads uniform, like a box's. (A code block or blockquote that *was* inset breaks back out — below.)
 
-*(Implementation edge case, not a spec rule: at pill radii `--v-control-inset` can exceed `--v-pad-inline`, so the text-align container padding clamps at 0 and alignment can't fully hold. Normal radii never reach this.)*
+Each situation has its own default above; either can be moved across the three reference points with a subtree class — `v-align-edge` (flush, `0`) or `v-align-text` (the inner-text line: `--v-control-inset` for a control, `--v-pad-inline` for a box; drop the borders and every left-edge agrees). **Only the text moves** — the control/box stays edge-anchored, so a strong border never pokes past the alignment line.
 
-With a strong-bordered control, text-align leaves the border poking *past* the content line, so it suits only **light / borderless** controls (menus, list rows, toolbars) where that overhang is invisible; edge-align keeps strong borders tidy.
+**Block boxes inside prose break out.** A code block or blockquote is itself a box, so it must *not* follow the text inset — it re-anchors to the box edge with a matching negative `margin-inline: calc(-1 * var(--o-prose__inset))`, lining up with the cards/boxes around the prose instead of with the inset paragraphs. This is the prose-side member of the **breakout family** (see negative-margin policy).
 
-**Negative-margin policy.** Positive, box-carried padding is the *only* alignment mechanism. Negative margins are reserved for exactly one job — the **full-bleed breakout**, where an element escapes its container's inline gutter (`margin-inline: calc(-1 * var(--o-container__gutter))`, §9.3). That case has no positive-padding equivalent. Everywhere else the rule is "wrap it in a box and let the box pad," which keeps every element inside its own bounds — safe under `overflow: clip` rounded corners, and easy to reason about.
+**At full-bleed, the inset drops to flush.** When a frame is narrow enough that its boxes go full-bleed (the breakout below — they escape the frame's gutter, square off, lose their radius/border/shadow), there's no margin or corner left to align to, so `--o-prose__inset` goes to `0`. Because the first/last-child block padding *tracks* the inset, it drops to `0` too — the text sits flush on the inline **and** block edges, no lone top/bottom gap. The prose text still lines up with the now-edge-to-edge boxes' inner text (the frame's own gutter does the offsetting), and the prose's own block boxes bleed out the same way the cards do. One container query on the **frame's** width drives all of it, so the same rule serves the page (narrow viewport) and a dialog (narrow dialog) — see §9.3 / §10.
+
+Because each text element carries its own inset as positive padding keyed to a shared knob, **mixed content composes without the container knowing its contents**, and `--v-control-inset` / the radius knobs stay pure functions of shared knobs — no upward data flow.
+
+*(Edge case, not a rule: at pill radii a control's `--v-control-inset` can exceed `--v-pad-inline`, so the inner-text inset can't fully hold. Normal radii never reach this.)*
+
+**Negative-margin policy.** Positive, box-carried padding is the default alignment mechanism. Negative margins are reserved for the **breakout family** — an element escaping a known inline inset to re-anchor on an outer edge: the **full-bleed** container breakout (`margin-inline: calc(-1 * var(--o-container__gutter))`, §9.3) and the **prose block-box** breakout above. Both negate a known inset and have no positive-padding equivalent. Everywhere else the rule is "wrap it in a box and let the box pad," which keeps every element inside its own bounds — safe under `overflow: clip` rounded corners, and easy to reason about.
 
 ### 6.2 Block spacing comes from flow, not box padding
 
@@ -451,7 +464,7 @@ This is a **design constraint the radius surfaces**: a frame with a large corner
 
 ### 8.6 Curvature, square content, escape hatches
 
-- **Curvature clearance (text & pills).** Text-bearing objects floor their inline padding at the corner radius so glyphs clear the curve (§6.1's edge-align note). For a **pill** the effective radius is half the height, so the floor is `0.5lh + block-pad`, not `--v-radius-min`. The general rule: *inline padding ≥ the effective corner radius*, where a pill's effective radius is `height/2`.
+- **Curvature clearance (text & pills).** Text-bearing objects floor their *own* inline padding at the corner radius so glyphs clear the curve (the straight-edge principle of §6.1, applied to a box's own contents). For a **pill** the effective radius is half the height, so the floor is `0.5lh + block-pad`, not `--v-radius-min`. The general rule: *inline padding ≥ the effective corner radius*, where a pill's effective radius is `height/2`.
 - **Square / icon content.** `o-square`, `c-avatar`, `c-spinner`, `c-badge` (dot mode) read `--v-radius` directly and can go fully circular (`--v-radius: 50%`).
 - **No deeper nesting in one object.** The cascade already handles depth, but a *nested same object* shares its parent's box knob unless a box re-roots it (as `.o-box` does for the control knob). Two genuinely distinct rounded-box levels → introduce a new object with its own knob.
 - **Escape hatches** in the tools layer: `t-radius-none`, `t-radius-full`.

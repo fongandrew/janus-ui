@@ -84,10 +84,9 @@ src/lib/
     variants/
       colors.css                 # .v-colors-* (tones consumed by c- components)
       surface.css                # .v-surface-* (chrome treatments)
-      radius.css                 # .v-radius-* presets (concentric / uniform /
-                                 #   web-concentric / web-uniform / flat — §8.2)
-      align.css                  # .v-align-text / .v-align-edge (§6.1)
+      align.css                  # text-inset modes: .v-align-edge / .v-align-text (§6.1)
       text.css                   # .v-text-display / .v-text-meta (role-based, sparingly)
+      # No .v-radius-* presets — the radius cascade is always-on in tokens/radius.css (§8.2).
       # No .v-spacing-*, .v-input-size-*, or other t-shirt-scaled variants.
       # Consumers define those in their own CSS as semantic density scopes
       #   (the .v-dense / .v-toolbar / .v-touch convention — §6.6) and pick
