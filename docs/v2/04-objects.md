@@ -97,7 +97,7 @@ A single block of raw text just uses `o-box` (it trims for optical block padding
 
 | Class | Knobs | Purpose |
 |---|---|---|
-| `o-menu` | `--o-menu__pad-block`, `--o-menu__pad-inline` | Popover frame for dropdowns, selects, command palettes, and similar floating list containers. Structural only — radius, padding, overflow, max-height. Chrome (shadow, border, backdrop) comes from the composing component or `v-surface-*`. Typically composes with `o-dialog` when used inside a `<dialog>` / popover. |
+| `o-menu` | `--o-menu__pad-block`, `--o-menu__pad-inline`, `--o-menu__radius` (default `--v-radius-min`) | Popover frame for dropdowns, selects, command palettes, and similar floating list containers. Structural only — radius, padding, overflow, max-height. Chrome (shadow, border, backdrop) comes from the composing component or `v-surface-*`. Typically composes with `o-dialog` when used inside a `<dialog>` / popover. **Radius reads the floor, not the `--o-box__radius` cascade** — a popover floats over content rather than nesting in the frame's corner, so a small constant corner reads right regardless of the frame radius. |
 | `o-menu-item` | `--o-menu-item__height`, `--o-menu-item__font-size` | Individual row inside an `o-menu`. Owns its own height and font-size defaults (compact relative to `--v-input-height` / `--v-font-size`). Not coupled to a global "small" token — the object defines its own proportions. Consumed by option lists, dropdown items, select options, nav menus. |
 
 ### 9.7 Bar object

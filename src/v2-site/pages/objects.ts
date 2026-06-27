@@ -169,11 +169,11 @@ export function render(): string {
 			${demo({
 				id: 'menu',
 				title: 'o-menu / o-menu-item',
-				note: 'Popover frame + compact rows. Structural only — chrome comes from the composing component.',
-				render: `<div class="o-menu p-outline" style="background: var(--v-bg); max-inline-size: 16rem">
-					<div class="o-menu-item">First item</div>
-					<div class="o-menu-item">Second item</div>
-					<div class="o-menu-item">Third item</div>
+				note: 'Popover frame + compact rows; radius reads the floor (not the cascade) since a popover floats over content. Structural only — the row highlight here is demo chrome (the real hover/focus/selected states ship with <code>c-menu</code>, Phase 3).',
+				render: `<div class="o-menu p-outline p-menu-demo" style="background: var(--v-bg); max-inline-size: 16rem">
+					<button type="button" class="o-menu-item">First item</button>
+					<button type="button" class="o-menu-item" aria-current="true">Second item</button>
+					<button type="button" class="o-menu-item">Third item</button>
 				</div>`,
 			})}
 

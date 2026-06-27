@@ -334,3 +334,20 @@
 .p-cascade-box > .p-cascade-label {
 	padding-inline-start: max(0px, calc(var(--o-box__radius) - var(--v-pad-inline)));
 }
+
+/*
+	Menu demo only. o-menu-item is a structural object (no chrome); the real
+	hover / focus / selected highlight ships with c-menu (Phase 3). These styles just
+	make the rows visibly distinct on the Objects page so the structure reads.
+*/
+.p-menu-demo .o-menu-item {
+	color: var(--v-fg);
+	text-align: start;
+	cursor: pointer;
+}
+
+.p-menu-demo .o-menu-item:hover,
+.p-menu-demo .o-menu-item:focus-visible,
+.p-menu-demo .o-menu-item[aria-current='true'] {
+	background: color-mix(in hsl, var(--v-accent) 14%, transparent);
+}

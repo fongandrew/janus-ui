@@ -3,16 +3,22 @@
 	only: radius, padding, overflow, max-height. Chrome (shadow, border, backdrop) comes
 	from the composing component or v-surface-*. Typically composes o-dialog inside a
 	<dialog> / popover.
+
+	Radius reads the FLOOR (--v-radius-min) directly, not the --o-box__radius cascade: a
+	popover floats over content rather than nesting inside the frame's corner, so it isn't
+	a cascade level — a small, constant corner reads right regardless of the frame's
+	radius. Exposed as --o-menu__radius for the rare consumer who wants otherwise.
 */
 @layer objects {
 	.o-menu {
 		--o-menu__pad-block: var(--v-gap-block);
 		--o-menu__pad-inline: 0;
+		--o-menu__radius: var(--v-radius-min);
 
 		display: flex;
 		flex-direction: column;
 		padding: var(--o-menu__pad-block) var(--o-menu__pad-inline);
-		border-radius: var(--o-box__radius, var(--v-radius-min));
+		border-radius: var(--o-menu__radius);
 		overflow: auto;
 		max-block-size: min(20rem, 60cqb);
 	}
