@@ -84,15 +84,9 @@ export function render(): string {
 			${demo({
 				id: 'box',
 				title: 'o-box',
-				note: 'Block-mode padded container. Uniform <code>--v-pad-block</code> / <code>--v-pad-inline</code> padding.',
-				render: `<div class="o-box p-outline" id="demo-box">${ph('o-box contents')}</div>`,
-			})}
-
-			${demo({
-				id: 'text-box',
-				title: 'o-text-box',
-				note: 'Text-mode perimeter primitive. Uniform block padding via text-box-trim — no 1lh compensation.',
-				render: `<div class="o-text-box p-outline" id="demo-text-box">A standalone block of prose in an o-text-box. Its block padding reads optically uniform.</div>`,
+				note: 'The universal padded container. Uniform block padding (<code>text-box-trim</code> keeps it optically uniform around raw text — no 1lh compensation), inline padding = <code>--v-pad-inline</code> (the radius-cascade step). It holds components/rows <em>or</em> raw text — there is no separate text-box; perimeter text alignment is <code>o-prose</code>’s job.',
+				render: `<div class="o-box p-outline" id="demo-box">${ph('component contents')}</div>
+					<div class="o-box p-outline" id="demo-box-text" style="margin-block-start: var(--v-gap-block)">A standalone block of raw text in an o-box. Its block padding reads optically uniform thanks to text-box trimming.</div>`,
 			})}
 
 			${demo({

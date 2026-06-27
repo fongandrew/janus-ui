@@ -43,7 +43,7 @@
 }
 
 /* A box steps the CONTROL knob one pad deeper for its children (depth, not type). */
-:where(.o-box, .o-text-box) {
+:where(.o-box) {
 	--o-input-box__radius: max(
 		var(--v-radius-min),
 		calc(var(--o-box__radius) - var(--v-pad-inline))

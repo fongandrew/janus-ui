@@ -1,6 +1,14 @@
 /*
-	o-box (§9.2) — the default padded container (block-mode). Uniform block padding,
-	nesting-math inline padding. Use when contents are other components or rows.
+	o-box (§9.2) — the universal padded container. Uniform block padding (made optically
+	uniform by text-box-trim, so direct text reads right with no 1lh compensation),
+	nesting-math inline padding (= --v-pad-inline, the radius-cascade step, so a control
+	nested inside stays concentric), and the cascade-assigned radius.
+
+	One box serves both content modes: trim is a no-op when the children are components
+	(no direct line boxes to trim) and corrects the leading when the box holds raw text,
+	so there is no separate text-box. Text that needs perimeter inset / alignment with
+	sibling cards is the job of o-prose (§6.1, §9.5), not the box; leaf controls that need
+	their text floored clear of a pill curve keep that floor in o-input-box (§8.6).
 
 	Defined as a mixin + class so components (Phase 3) can compose the structure. The
 	radius reads its own knob (assigned by the always-on cascade in tokens/radius.css)
@@ -11,6 +19,8 @@
 	--o-box__pad-block: var(--v-pad-block);
 	--o-box__pad-inline: var(--v-pad-inline);
 
+	/* Optically-uniform block padding around direct text; no-op for component children. */
+	text-box: trim-both cap alphabetic;
 	padding: var(--o-box__pad-block) var(--o-box__pad-inline);
 	border-radius: var(--o-box__radius, var(--v-radius-min));
 }

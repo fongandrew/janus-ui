@@ -45,7 +45,9 @@ test('radius cascade steps inward, floors at the min, and flattens when min == m
 	expect(flat.box).toBeCloseTo(flat.input, 0);
 });
 
-test('o-box and o-text-box padding match the spacing knobs', async ({ page }) => {
+test('o-box padding matches the spacing knobs, in both component and text mode', async ({
+	page,
+}) => {
 	await page.goto(OBJECTS_URL);
 
 	const box = await page.evaluate(() => {
@@ -56,11 +58,12 @@ test('o-box and o-text-box padding match the spacing knobs', async ({ page }) =>
 	expect(parseFloat(box.top)).toBeCloseTo(16, 0);
 	expect(parseFloat(box.left)).toBeCloseTo(16, 0);
 
+	// The same o-box holding raw text: text-box-trim keeps block padding optically
+	// uniform (no 1lh compensation), so the merged box covers the old text-box case.
 	const textBox = await page.evaluate(() => {
-		const cs = getComputedStyle(document.getElementById('demo-text-box')!);
+		const cs = getComputedStyle(document.getElementById('demo-box-text')!);
 		return { top: parseFloat(cs.paddingTop), bottom: parseFloat(cs.paddingBottom) };
 	});
-	// Uniform block padding (text-box-trim handles optical alignment — no subtraction).
 	expect(textBox.top).toBeCloseTo(textBox.bottom, 1);
 	expect(textBox.top).toBeCloseTo(16, 0);
 });

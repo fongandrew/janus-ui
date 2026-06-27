@@ -10,8 +10,8 @@ Three padding modes, each implemented as `--o-*__pad-*` defaults set in the owni
 
 | Padding mode | Block (top/bottom) | Inline (left/right) | Used by |
 |---|---|---|---|
-| **Block-mode** (default) | `var(--v-pad-block)` | `var(--v-pad-inline)` | `o-box` — boxes whose children are other components / rows |
-| **Text-mode** (opt-in) | `var(--v-pad-block)` | alignment-dependent — see §6.1 | `o-text-box`, `o-input-box`, and text-bearing components (`c-tag`, `c-badge`, `c-alert` — see §10.1) |
+| **Block-mode** (default) | `var(--v-pad-block)` | `var(--v-pad-inline)` | `o-box` — the universal padded box (children are components/rows *or* raw text; `text-box-trim` keeps text's block padding optically uniform) |
+| **Text-mode** (control floor) | `var(--v-pad-block)` | alignment-dependent — see §6.1 | `o-input-box` and text-bearing components (`c-tag`, `c-badge`, `c-alert` — see §10.1), which floor inline padding at the corner radius for centered control text |
 | **Square** (opt-in) | `0` (aspect-driven) | `0` | `o-square` for icon / avatar / 1:1 content |
 
 **Block padding is uniform, because of `text-box-trim`.** v1 subtracted the line-height overhang `(1lh − 1em)/2` from text-mode block padding so the optical space above and below the text matched the inline padding. v2 drops that fudge. Every text element renders with `text-box-trim: trim-both` (the `text-box` property — see §15), so its box edges sit at the cap height and alphabetic baseline. A plain `var(--v-pad-block)` then yields correct optical padding *regardless of font-size or line-height* — an `h1` and a `p` in the same box both look right, and no wrapper needs to know its content's type metrics. This is a deliberate bet on a not-yet-Firefox feature (§15); the degradation is slightly loose leading on the first/last line in Firefox, which we judge acceptable versus carrying per-element compensation math everywhere.
@@ -74,7 +74,7 @@ A box's block padding handles only its **perimeter** — first/last child to the
 
 **One master lever, named multiples.** All of this rhythm derives from a single knob — `--v-spacing` — but *not* by multiplying everything uniformly. A documentation surface (running prose) and an app surface (cards of controls) want different rhythms, and one number applied everywhere serves neither well: the gap that reads right between paragraphs is wrong between toolbar buttons. So each context takes its own multiple of the master rather than the master itself. Box rhythm multiplies `--v-spacing` (`--v-pad-*`, `--v-gap-*`); **text rhythm multiplies the *line*** instead (`--o-prose__gap`, the heading space-above — below). The multiples are **baked into the derived tokens, not exposed as a separate ratio layer**: a consumer turns `--v-spacing` for global density (or overrides one derivative for one context) instead of tuning a wall of ratio knobs — the per-context proportions are already correct, which keeps the public surface small (§1). The decomposition is the point — a single uniformly-multiplied `--v-spacing` can't serve both surfaces; naming the multiples is what lets it.
 
-**Every vertical gap is owned by the element underneath.** It's always a `margin-block-start` on the *lower* element, and its value depends on what sits **above** it — "the thing below owns the gap above it." For prose inside an `o-text-box` (or the `o-prose` flow object, §9.5), the boundaries resolve as:
+**Every vertical gap is owned by the element underneath.** It's always a `margin-block-start` on the *lower* element, and its value depends on what sits **above** it — "the thing below owns the gap above it." For prose inside an `o-box` (or the `o-prose` flow object, §9.5), the boundaries resolve as:
 
 - **body ↔ body, and heading → whatever follows → the *prose* gap.** A bare heading does **not** hug its body; the element below simply keeps its ordinary prose gap. (The one place a heading sits tight to text is the `<hgroup>` exception below.)
 - **whatever → a heading → the heading's *space-above*** — the section break, the one bit of rhythm a heading owns (above itself, not below).
@@ -145,7 +145,7 @@ This is not a breakpoint — it's a pixel-density gate. A phone with a 200dpi sc
 
 Inside the scoped subtree, every `--o-*__pad-*` / `--o-*__gap` default re-resolves against the new bundle. (A consumer who forks the CSS package *may* reuse Janus's internal `v-spacing` mixin to shorten these, but it isn't required and isn't part of the documented surface.)
 
-**Rule of thumb for consumers:** raw text never goes directly inside an `o-box`. Wrap it in `o-text-box`, or place it inside a text-bearing component. This keeps inline alignment (§6.1) and curvature clearance well-defined, and is what makes the positive-padding-only model work without negative margins.
+**Rule of thumb for consumers:** raw text can sit directly inside an `o-box` — `text-box-trim` makes its block padding read optically uniform, and at normal block padding the text clears the corner curve (the curve's widest point is above the first line). Reach for `o-prose` when the box holds **multiple** flowing text elements that need boundary-owned rhythm or perimeter inline alignment with sibling cards (§6.1). This keeps the positive-padding-only model working without negative margins.
 
 ### 6.5 Fluid spacing (opt-in, same mechanism as type)
 
@@ -433,7 +433,7 @@ The cascade is **always on** — it's the radius system, not an opt-in class. It
   --o-input-box__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad-inline)));
 }
 /* a box steps the control knob one pad deeper for *its* children */
-:where(.o-box, .o-text-box) {
+:where(.o-box) {
   --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-box__radius) - var(--v-pad-inline)));
 }
 /* the dialog re-roots the cascade — everything inside derives from the dialog radius */

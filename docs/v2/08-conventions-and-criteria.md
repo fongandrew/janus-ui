@@ -63,8 +63,7 @@ src/lib/
       shadow.css
       breakpoints.css            # internal v-breakpoint-* / v-container-* mixins
     objects/
-      box.css                    # .o-box
-      text-box.css               # .o-text-box
+      box.css                    # .o-box  (universal padded box; trims for raw text)
       input-box.css              # .o-input-box  (shared base for button/input/textarea)
       dialog.css                 # .o-dialog
       square.css                 # .o-square

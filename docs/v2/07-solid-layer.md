@@ -256,7 +256,7 @@ Each component is one file under `src/lib/solid/`. The file exports named compon
 | File | Exports | Element | CSS class | Key props |
 |---|---|---|---|---|
 | `button.tsx` | `Button`, `IconButton` | `<button>` / `<a>` | `c-button o-input-box` | `variant?: 'primary'\|'danger'\|'success'\|'warn'` (maps to `v-colors-*`), `disabled`, standard button attrs. `IconButton` adds `c-button--icon` and square mode. |
-| `card.tsx` | `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent` | `<article>`/`<section>`, `<header>`, `<h3>`, `<p>`, `<div>` | `c-card o-box` / `c-card o-text-box` | `surface?: 'card'\|'elevated'\|'sunken'\|'glass'\|'gradient'` (maps to `v-surface-*`). Subcomponents are thin structural wrappers. |
+| `card.tsx` | `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent` | `<article>`/`<section>`, `<header>`, `<h3>`, `<p>`, `<div>` | `c-card o-box` | `surface?: 'card'\|'elevated'\|'sunken'\|'glass'\|'gradient'` (maps to `v-surface-*`). Subcomponents are thin structural wrappers. |
 | `alert.tsx` | `Alert` | `<div>` | `c-alert` | `variant`, `role` (default `"alert"`). |
 | `input.tsx` | `Input` | `<input>` | `c-input o-input-box` | `validators?: string`, `onValidate?: Validator` (§13.4). Standard input attrs except `type` is constrained (no `checkbox`/`radio`). |
 | `textarea.tsx` | `Textarea` | `<textarea>` | `c-input o-input-box` | Same validation props as `Input`. |

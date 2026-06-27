@@ -60,7 +60,7 @@ The reference for every public `--v-*` knob. This is what humans review while th
 
 The reference for every `o-*` object (§9).
 
-**Layout:** one demo card per object — `o-box`, `o-text-box`, `o-input-box`, `o-square`, `o-dialog`, `o-stack`, `o-group`, `o-row`, `o-grid`, `o-container`, `o-split`, `o-centric`, `o-caption`, `o-code`, `o-menu`, `o-menu-item`. Each card shows:
+**Layout:** one demo card per object — `o-box`, `o-input-box`, `o-square`, `o-dialog`, `o-stack`, `o-group`, `o-row`, `o-grid`, `o-container`, `o-split`, `o-centric`, `o-caption`, `o-code`, `o-menu`, `o-menu-item`. Each card shows:
 
 - A **live render** of the object doing its job, using neutral placeholder content (boxes/blocks, not finished components) so the object's *structural* behavior is the focus, not component chrome.
 - The object's **knobs** — its `--o-<name>__*` custom properties (e.g. `--o-box__pad-block`, `--o-grid__min`, `--o-stack__gap`) listed with defaults.
@@ -69,7 +69,7 @@ The reference for every `o-*` object (§9).
 **Key demonstrations** (these are the things worth seeing rendered, per §9):
 - The four-level **nesting** at a couple of `--v-radius` / `--v-radius-min` settings (§8): `o-dialog` > `o-box` > `o-input-box`, annotated with the computed `border-radius` at each tier — radius steps inward and never goes sharp, and `min == max` flattens it — so the stepped vs. flat looks are visible side by side.
 - `o-grid` and `o-split` **reflow** shown at multiple container widths (resize handles or side-by-side narrow/wide frames).
-- `o-text-box` vs `o-box` block-padding difference (the `1lh` compensation).
+- `o-box` block padding staying optically uniform around raw text (`text-box-trim`, no `1lh` compensation) — the same box that holds components also holds prose.
 
 #### 20.2.3 Tools
 
