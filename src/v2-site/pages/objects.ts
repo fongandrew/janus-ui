@@ -159,7 +159,8 @@ export function render(): string {
 						<li>
 							Second
 							<ol>
-								<li>Nested cycles to lower-alpha</li>
+								<li>Lower-alpha at level two</li>
+									<li>Then deeper<ol><li>Lower-roman at level three</li><li>And again<ol><li>Back to decimal at level four</li></ol></li></ol></li>
 							</ol>
 						</li>
 					</ol>

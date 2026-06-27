@@ -147,7 +147,7 @@ export function render(): string {
 		{
 			name: 't-sr-only',
 			desc: 'Visually hidden, kept for AT.',
-			demo: `<span class="p-tool__note">“present” + <span class="t-sr-only">screen-reader text</span>hidden text</span>`,
+			demo: `<span class="p-tool__note">Reads “Save changes” to a screen reader, shows only: <strong>Save</strong><span class="t-sr-only"> changes</span></span>`,
 		},
 	];
 

@@ -159,8 +159,18 @@
 	one-level box-in-box rule (§8.6), or the demos would paint at the control radius
 	instead of their natural radius. The card reads --o-box__radius so it still tracks
 	the radius system.
+
+	It DOES re-root --o-input-box__radius for its descendants exactly as an o-box would
+	(read --o-box__radius, write the control knob — §8.2), so a control inside a card
+	(inputs, buttons) steps its corner from the card rather than reading the larger root
+	value. This is the "cascade effect" an o-box gives, without being one.
 */
 .p-card {
+	--o-input-box__radius: max(
+		var(--v-radius-min),
+		calc(var(--o-box__radius) - var(--v-pad-inline))
+	);
+
 	padding: var(--v-pad-block) var(--v-pad-inline);
 	border: var(--v-border-width) solid var(--v-border-color);
 	border-radius: var(--o-box__radius, var(--v-radius-min));

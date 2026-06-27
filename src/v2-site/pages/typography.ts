@@ -92,7 +92,18 @@ export function render(): string {
 				</ul>
 				<ol>
 					<li>Ordered item</li>
-					<li>Ordered item</li>
+					<li>
+						Ordered item with nested levels
+						<ol>
+							<li>Second-level item</li>
+							<li>
+								Second-level item
+								<ol>
+									<li>Third-level item</li>
+								</ol>
+							</li>
+						</ol>
+					</li>
 				</ol>
 			</section>
 
