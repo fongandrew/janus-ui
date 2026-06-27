@@ -1,8 +1,9 @@
 /*
-	Tools sub-page (§20.2.3, under Composition) — one row per t-* utility with a one-line
-	description and a live example. Completes the Composition section. The tools are the
-	escape hatch (§11); the objects and component knobs cover the common cases, so this set
-	is deliberately small and fits on roughly one screen.
+	Tools sub-page (§20.2.3, under Composition) — the t-* utility cheat-sheet. One tile per
+	utility (name + one-line effect + a roomy live demo), laid out in a responsive grid so
+	each demo has room to read; a table squished them. Completes the Composition section.
+	The tools are the escape hatch (§11); the objects and component knobs cover the common
+	cases, so the set is deliberately small.
 */
 import { renderPage } from '~/v2-site/layout';
 
@@ -12,117 +13,116 @@ interface Tool {
 	demo: string;
 }
 
-/** A neutral block the utilities act on. */
-const BLOCK = '<span class="p-ph">box</span>';
+/** The neutral block the utilities act on (an accent fill so padding/borders read). */
+const BOX = (label: string, cls = '', style = '') =>
+	`<span class="p-demo-box ${cls}"${style ? ` style="${style}"` : ''}>${label}</span>`;
 
-function toolRow(t: Tool): string {
+function tile(t: Tool): string {
 	return `
-	<tr id="tool-${t.name}">
-		<td><code>${t.name}</code></td>
-		<td>${t.desc}</td>
-		<td>${t.demo}</td>
-	</tr>`;
+	<div class="p-tool" id="tool-${t.name}">
+		<code class="p-tool__name">${t.name}</code>
+		<span class="p-tool__desc">${t.desc}</span>
+		<div class="p-tool__demo">${t.demo}</div>
+	</div>`;
 }
 
 function group(title: string, rows: Tool[]): string {
 	return `
 	<section class="o-box p-card">
 		<h2>${title}</h2>
-		<table>
-			<thead><tr><th>Tool</th><th>Effect</th><th>Example</th></tr></thead>
-			<tbody>${rows.map(toolRow).join('')}</tbody>
-		</table>
+		<div class="o-grid" style="--o-grid__min: 13rem">${rows.map(tile).join('')}</div>
 	</section>`;
 }
 
 export function render(): string {
 	const spacing: Tool[] = [
+		{ name: 't-p', desc: 'Pad both axes by the box pad.', demo: BOX('t-p', 't-p') },
+		{ name: 't-px', desc: 'Pad the inline axis only.', demo: BOX('t-px', 't-px') },
+		{ name: 't-py', desc: 'Pad the block axis only.', demo: BOX('t-py', 't-py') },
 		{
-			name: 't-p',
-			desc: 'Apply the box pad on both axes.',
-			demo: `<span class="p-ph t-p">t-p</span>`,
+			name: 't-p-0',
+			desc: 'Zero all padding (vs a padded box).',
+			demo: `${BOX('padded', 't-p')}${BOX('t-p-0', 't-p t-p-0')}`,
 		},
-		{
-			name: 't-px',
-			desc: 'Apply inline pad only.',
-			demo: `<span class="p-ph t-px">t-px</span>`,
-		},
-		{
-			name: 't-py',
-			desc: 'Apply block pad only.',
-			demo: `<span class="p-ph t-py">t-py</span>`,
-		},
-		{ name: 't-p-0', desc: 'Zero all padding.', demo: `<span class="p-ph t-p-0">t-p-0</span>` },
 	];
 	const display: Tool[] = [
 		{
 			name: 't-flex',
-			desc: 'Flex container.',
-			demo: `<span class="t-flex" style="gap: 0.5rem">${BLOCK}${BLOCK}</span>`,
+			desc: 'Make a flex container.',
+			demo: `<span class="t-flex" style="gap: 0.5rem">${BOX('a')}${BOX('b')}</span>`,
 		},
 		{
 			name: 't-flex-fill',
 			desc: 'Grow + shrink to fill (flex: 1 1 0).',
-			demo: `<span class="t-flex" style="gap: 0.5rem">${BLOCK}<span class="p-ph t-flex-fill">fill</span></span>`,
+			demo: `<span class="t-flex" style="gap: 0.5rem; inline-size: 100%">${BOX('a')}${BOX('fill', 't-flex-fill')}</span>`,
 		},
 		{
 			name: 't-flex-none',
 			desc: 'Neither grow nor shrink.',
-			demo: `<span class="t-flex" style="gap: 0.5rem"><span class="p-ph t-flex-none">none</span>${BLOCK}</span>`,
+			demo: `<span class="t-flex" style="gap: 0.5rem; inline-size: 100%">${BOX('none', 't-flex-none')}${BOX('fill', 't-flex-fill')}</span>`,
 		},
 		{
 			name: 't-hidden',
 			desc: 'display: none.',
-			demo: `${BLOCK}<span class="p-ph t-hidden">gone</span>`,
+			demo: `${BOX('shown')}${BOX('gone', 't-hidden')}`,
 		},
 	];
 	const chrome: Tool[] = [
 		{
 			name: 't-border',
-			desc: 'Dynamic 1px border.',
-			demo: `<span class="p-ph t-border">t-border</span>`,
+			desc: 'Add the dynamic 1px border.',
+			demo: BOX('t-border', 't-border', 'background: var(--v-bg)'),
 		},
 		{
 			name: 't-border-inner',
 			desc: 'Inset hairline (no layout shift).',
-			demo: `<span class="p-ph t-border-inner">t-border-inner</span>`,
+			demo: BOX('t-border-inner', 't-border-inner', 'background: var(--v-bg)'),
 		},
 		{
 			name: 't-radius-none',
 			desc: 'Square the corners.',
-			demo: `<span class="p-ph t-radius-none">t-radius-none</span>`,
+			demo: BOX('t-radius-none', 't-radius-none'),
 		},
 		{
 			name: 't-radius-full',
 			desc: 'Pill the corners.',
-			demo: `<span class="p-ph t-radius-full t-px">t-radius-full</span>`,
+			demo: BOX('t-radius-full', 't-radius-full t-px'),
 		},
 		{
 			name: 't-shadow',
-			desc: 'Resting elevation.',
-			demo: `<span class="p-ph t-shadow">t-shadow</span>`,
+			desc: 'Resting outer elevation.',
+			demo: BOX('t-shadow', 't-shadow', 'background: var(--v-bg)'),
 		},
 		{
 			name: 't-shadow-inner',
 			desc: 'Embossed inner shadow.',
-			demo: `<span class="p-ph t-shadow-inner">t-shadow-inner</span>`,
+			demo: BOX('t-shadow-inner', 't-shadow-inner', 'background: var(--v-bg)'),
 		},
 	];
 	const text: Tool[] = [
 		{
 			name: 't-align-center',
 			desc: 'Center text.',
-			demo: `<span class="p-ph t-align-center" style="display: block">t-align-center</span>`,
+			demo: BOX('t-align-center', 't-align-center', 'display: block; inline-size: 100%'),
+		},
+		{
+			name: 't-align-end',
+			desc: 'End-align text.',
+			demo: BOX('t-align-end', 't-align-end', 'display: block; inline-size: 100%'),
 		},
 		{
 			name: 't-truncate',
 			desc: 'Single-line ellipsis.',
-			demo: `<span class="p-ph t-truncate" style="display: block; max-inline-size: 9rem">A long line that truncates with an ellipsis</span>`,
+			demo: BOX(
+				'A long line that truncates with an ellipsis',
+				't-truncate',
+				'display: block; max-inline-size: 100%',
+			),
 		},
 		{
 			name: 't-sr-only',
 			desc: 'Visually hidden, kept for AT.',
-			demo: `(hidden)<span class="t-sr-only">screen-reader text</span>`,
+			demo: `<span class="p-tool__note">“present” + <span class="t-sr-only">screen-reader text</span>hidden text</span>`,
 		},
 	];
 

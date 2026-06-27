@@ -384,3 +384,46 @@
 .p-color-cell__muted {
 	color: var(--v-muted);
 }
+
+/* Tools page — a card-grid cheat-sheet. Each tile gives its demo room (a table squished
+   them). The demo sits on a faint surface so an accent-filled p-demo-box reads against it. */
+.p-tool {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: var(--v-pad-block) var(--v-pad-inline);
+	border: var(--v-border-width) solid var(--v-border-color);
+	border-radius: var(--o-box__radius, var(--v-radius-min));
+}
+
+.p-tool__desc {
+	font-size: var(--v-font-size-caption);
+	color: var(--v-muted);
+}
+
+.p-tool__demo {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-block-size: 4.5rem;
+	margin-block-start: auto;
+	padding: 0.75rem;
+	border-radius: var(--v-radius-min);
+	background: color-mix(in hsl, var(--v-muted) 7%, var(--v-bg));
+	overflow: hidden;
+}
+
+.p-tool__note {
+	font-size: var(--v-font-size-caption);
+	color: var(--v-muted);
+}
+
+.p-demo-box {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-inline-size: 2.5rem;
+	min-block-size: 2rem;
+	background: color-mix(in hsl, var(--v-accent) 18%, var(--v-bg));
+	font-size: var(--v-font-size-caption);
+}
