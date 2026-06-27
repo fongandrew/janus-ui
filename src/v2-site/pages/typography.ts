@@ -39,7 +39,7 @@ export function render(): string {
 		section: 'composition',
 		composition: 'typography',
 		main: `
-		<div class="o-stack">
+		<div class="o-container o-stack">
 			<header class="o-prose">
 				<h1>Typography</h1>
 				<p>

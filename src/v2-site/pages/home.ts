@@ -27,7 +27,7 @@ function navCards(): string {
 export function render(): string {
 	return renderPage({
 		main: `
-		<div class="o-stack">
+		<div class="o-container o-stack">
 			<header class="p-hero o-prose">
 				<h1>A CSS-first design system</h1>
 				<p>

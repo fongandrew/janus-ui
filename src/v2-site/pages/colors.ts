@@ -34,7 +34,7 @@ export function render(): string {
 	return renderPage({
 		section: 'colors',
 		main: `
-		<div class="o-stack">
+		<div class="o-container o-stack">
 			<header class="o-prose">
 				<h1>Colors</h1>
 				<p>

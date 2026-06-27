@@ -377,7 +377,7 @@ export function render(): string {
 		section: 'composition',
 		composition: 'variables',
 		main: `
-		<div class="o-stack">
+		<div class="o-container o-stack">
 			<header class="o-prose">
 				<h1>Variables</h1>
 				<p>

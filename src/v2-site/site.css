@@ -441,3 +441,21 @@
 	background: color-mix(in hsl, var(--v-accent) 18%, var(--v-bg));
 	font-size: var(--v-font-size-caption);
 }
+
+/*
+	The main content is an o-container (composed with the o-stack) so it's a `frame`
+	query container and its direct prose can inset to line up with the section cards.
+	Zero the gutter — the p-page already provides the outer padding; we only want the
+	prose inset, not extra padding on the cards. The prose insets by its own default
+	--o-prose__inset (= --v-pad-inline), the project mirror of the library's
+	o-container:has(boxes) > o-prose align rule (§6.1) for our p-card sections.
+*/
+.p-main > .o-container {
+	--o-container__gutter: 0;
+}
+
+.p-main > .o-container:has(> .p-card) > .o-prose {
+	--o-prose__inset: var(--v-pad-inline);
+
+	padding-inline: var(--o-prose__inset);
+}

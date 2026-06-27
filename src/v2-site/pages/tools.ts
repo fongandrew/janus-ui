@@ -130,7 +130,7 @@ export function render(): string {
 		section: 'composition',
 		composition: 'tools',
 		main: `
-		<div class="o-stack">
+		<div class="o-container o-stack">
 			<header class="o-prose">
 				<h1>Tools</h1>
 				<p>
