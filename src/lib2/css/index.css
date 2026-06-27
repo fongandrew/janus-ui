@@ -24,3 +24,6 @@
 @import './objects/index.css';
 @import './variants/index.css';
 @import './components/index.css';
+
+/* The t-* utility classes (tools layer — last, so a utility wins over a component). */
+@import './tools/utilities.css';

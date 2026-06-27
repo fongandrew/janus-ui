@@ -1,0 +1,128 @@
+/*
+	Tools (§11) — the narrow set of single-purpose utility classes. They're the escape
+	hatch for the occasional one-off; the layout objects and component knobs cover the
+	common cases. Because `tools` is the LAST cascade layer, a utility wins over a
+	component/object without `!important`.
+
+	(t-sr-only lives in a11y.css; t-spin / t-shimmer in animations.css.)
+*/
+@layer tools {
+	/* Padding — reset or apply the spacing-bundle pads. */
+	.t-p-0 {
+		padding: 0;
+	}
+
+	.t-px-0 {
+		padding-inline: 0;
+	}
+
+	.t-py-0 {
+		padding-block: 0;
+	}
+
+	.t-p {
+		padding: var(--v-pad-block) var(--v-pad-inline);
+	}
+
+	.t-px {
+		padding-inline: var(--v-pad-inline);
+	}
+
+	.t-py {
+		padding-block: var(--v-pad-block);
+	}
+
+	/* Display + flex helpers. */
+	.t-block {
+		display: block;
+	}
+
+	.t-inline {
+		display: inline;
+	}
+
+	.t-inline-block {
+		display: inline-block;
+	}
+
+	.t-flex {
+		display: flex;
+	}
+
+	.t-hidden {
+		display: none;
+	}
+
+	.t-flex-fill {
+		flex: 1 1 0;
+	}
+
+	.t-flex-auto {
+		flex: 1 1 auto;
+	}
+
+	.t-flex-none {
+		flex: none;
+	}
+
+	.t-flex-wrap {
+		flex-wrap: wrap;
+	}
+
+	/* Borders. */
+	.t-border {
+		border: var(--v-border-width) solid var(--v-border-color);
+	}
+
+	.t-border-none {
+		border: 0;
+	}
+
+	/* An inset hairline that doesn't take layout space (dividers inside scrollers). */
+	.t-border-inner {
+		box-shadow: inset 0 0 0 var(--v-border-width) var(--v-border-color);
+	}
+
+	/* Radius escape hatches (the cascade owns the default — §8.6). */
+	.t-radius-none {
+		border-radius: 0;
+	}
+
+	.t-radius-full {
+		border-radius: 9999px;
+	}
+
+	/* Elevation. */
+	.t-shadow,
+	.t-shadow-outer {
+		box-shadow: var(--v-shadow-outer);
+	}
+
+	.t-shadow-inner {
+		box-shadow: var(--v-shadow-inner);
+	}
+
+	.t-shadow-none {
+		box-shadow: none;
+	}
+
+	/* Text alignment. */
+	.t-align-start {
+		text-align: start;
+	}
+
+	.t-align-center {
+		text-align: center;
+	}
+
+	.t-align-end {
+		text-align: end;
+	}
+
+	/* Single-line truncation with an ellipsis. */
+	.t-truncate {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+}
