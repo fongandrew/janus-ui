@@ -1,0 +1,12 @@
+/*
+	Root knobs (--v-*) and internal authoring mixins. Imported by index.css (and by
+	base.css, so base can use the mixins defined here). Mixin definitions emit nothing
+	until invoked; the :root declarations establish every documented default (§5.1).
+*/
+@import './breakpoints.css';
+@import './spacing.css';
+@import './radius.css';
+@import './color.css';
+@import './typography.css';
+@import './shadow.css';
+@import './motion.css';

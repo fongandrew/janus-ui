@@ -1,0 +1,17 @@
+/*
+	Shadows (§5.1, §7.0). Two semantic root knobs — NOT a t-shirt scale. Multi-layer
+	defaults read as real depth, not a single fuzzy drop. Components that need a
+	stronger/weaker shadow write a literal value or scope a redefinition.
+*/
+
+:root {
+	/* Resting outer elevation (cards, popovers). */
+	--v-shadow-outer: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
+
+	/* Embossed-input inset. */
+	--v-shadow-inner: inset 0 1px 2px 0 rgb(0 0 0 / 10%);
+
+	/* Scroll-edge shadows for scrollable regions (modal/drawer bodies — §16). */
+	--v-shadow-inner-top: inset 0 6px 6px -4px rgb(0 0 0 / 15%);
+	--v-shadow-inner-bottom: inset 0 -6px 6px -4px rgb(0 0 0 / 15%);
+}

@@ -1,0 +1,231 @@
+/* Derived from Tailwind's preset.css with v2 tweaks. Layer: reset. */
+@layer reset {
+	/*
+		1. Border-box sizing everywhere.
+		2. Remove default margins and padding.
+		3. Reset all borders to zero-width solid…
+		4. …with a TRANSPARENT default color. The input-box object reserves border
+		   space on interactive elements so the box doesn't shift on focus / invalid
+		   state; without a transparent default those reserved borders would paint as
+		   visible lines before they're needed. (§reset)
+	*/
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		box-sizing: border-box; /* 1 */
+		margin: 0; /* 2 */
+		padding: 0; /* 2 */
+		border: 0 solid; /* 3 */
+		border-color: transparent; /* 4 */
+	}
+
+	/*
+		1. Consistent line-height.
+		2. Prevent iOS font-size adjustment on orientation change.
+		3. Readable tab size.
+		4. System sans fallback (base.css applies --v-font-family on the body).
+		5. Disable tap highlights on iOS.
+	*/
+	html,
+	:host {
+		line-height: 1.5; /* 1 */
+		text-size-adjust: 100%; /* 2 */
+		tab-size: 4; /* 3 */
+		font-family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+			'Segoe UI Symbol', 'Noto Color Emoji'; /* 4 */
+
+		-webkit-tap-highlight-color: transparent; /* 5 */
+	}
+
+	body {
+		line-height: inherit;
+	}
+
+	/* Correct height + border-color inheritance in Firefox; 1px default rule. */
+	hr {
+		height: 0;
+		color: inherit;
+		border-top-width: 1px;
+	}
+
+	abbr:where([title]) {
+		text-decoration: underline dotted;
+	}
+
+	/* Headings inherit size/weight; base.css restyles them. */
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-size: inherit;
+		font-weight: inherit;
+	}
+
+	/* Opt-in link styling. */
+	a {
+		color: inherit;
+		text-decoration: inherit;
+	}
+
+	b,
+	strong {
+		font-weight: bolder;
+	}
+
+	/* Monospace fallback (base.css applies --v-font-family-mono). */
+	code,
+	kbd,
+	samp,
+	pre {
+		font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+			'Courier New', monospace;
+		font-size: 1em;
+	}
+
+	small {
+		font-size: 80%;
+	}
+
+	sub,
+	sup {
+		font-size: 75%;
+		line-height: 0;
+		position: relative;
+		vertical-align: baseline;
+	}
+
+	sub {
+		bottom: -0.25em;
+	}
+
+	sup {
+		top: -0.5em;
+	}
+
+	table {
+		text-indent: 0;
+		border-color: inherit;
+		border-collapse: collapse;
+	}
+
+	:-moz-focusring {
+		outline: auto;
+	}
+
+	progress {
+		vertical-align: baseline;
+	}
+
+	summary {
+		display: list-item;
+	}
+
+	/* Replaced elements behave as blocks and stay within their container. */
+	img,
+	svg,
+	video,
+	canvas,
+	audio,
+	iframe,
+	embed,
+	object {
+		display: block;
+		vertical-align: middle;
+	}
+
+	img,
+	video {
+		max-width: 100%;
+		height: auto;
+	}
+
+	/* Form controls inherit font + color; clear UA radius/background. */
+	button,
+	input,
+	select,
+	optgroup,
+	textarea,
+	::file-selector-button {
+		font: inherit;
+		font-feature-settings: inherit;
+		font-variation-settings: inherit;
+		letter-spacing: inherit;
+		color: inherit;
+		border-radius: 0;
+		background-color: transparent;
+		opacity: 1;
+	}
+
+	:where(select:is([multiple], [size])) optgroup {
+		font-weight: bolder;
+	}
+
+	:where(select:is([multiple], [size])) optgroup option {
+		padding-inline-start: 20px;
+	}
+
+	::file-selector-button {
+		margin-inline-end: 4px;
+	}
+
+	::placeholder {
+		opacity: 1;
+		color: color-mix(in oklab, currentcolor 50%, transparent);
+	}
+
+	textarea {
+		resize: vertical;
+	}
+
+	::-webkit-search-decoration {
+		appearance: none;
+	}
+
+	::-webkit-date-and-time-value {
+		min-height: 1lh;
+		text-align: inherit;
+	}
+
+	::-webkit-datetime-edit {
+		display: inline-flex;
+	}
+
+	::-webkit-datetime-edit-fields-wrapper {
+		padding: 0;
+	}
+
+	::-webkit-datetime-edit,
+	::-webkit-datetime-edit-year-field,
+	::-webkit-datetime-edit-month-field,
+	::-webkit-datetime-edit-day-field,
+	::-webkit-datetime-edit-hour-field,
+	::-webkit-datetime-edit-minute-field,
+	::-webkit-datetime-edit-second-field,
+	::-webkit-datetime-edit-millisecond-field,
+	::-webkit-datetime-edit-meridiem-field {
+		padding-block: 0;
+	}
+
+	:-moz-ui-invalid {
+		box-shadow: none;
+	}
+
+	button,
+	input:where([type='button'], [type='reset'], [type='submit']),
+	::file-selector-button {
+		appearance: auto;
+	}
+
+	::-webkit-inner-spin-button,
+	::-webkit-outer-spin-button {
+		height: auto;
+	}
+
+	[hidden]:where(:not([hidden='until-found'])) {
+		display: none !important;
+	}
+}

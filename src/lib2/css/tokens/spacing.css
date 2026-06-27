@@ -1,0 +1,51 @@
+/*
+	Spacing & padding knobs (§5.1, §6).
+
+	Five root knobs cover the whole rhythm: `--v-spacing` (the scale lever) plus the
+	four it derives — `--v-pad-block`, `--v-pad-inline`, `--v-gap-block`,
+	`--v-gap-inline`. The internal `v-spacing` mixin bundles all five together with
+	`--v-border-width` (denser layouts want thinner borders too — §6.3); it does NOT
+	touch radius (radius is anchor-driven and decoupled from spacing — §8).
+*/
+
+/*
+	Internal authoring tool (§5.3) — NOT a consumer API. Re-derives the whole bundle
+	at a scope, because the four pad/gap knobs are frozen at the scope they're
+	declared (§5.2). Consumers set the bundle by hand or in their own variant class.
+*/
+@define-mixin v-spacing $size, $border-width: 1px {
+	--v-spacing: $(size);
+	--v-pad-block: $(size);
+	--v-pad-inline: $(size);
+	--v-gap-block: $(size);
+	--v-gap-inline: calc($(size) * 0.5);
+	--v-border-width: $(border-width);
+}
+
+:root {
+	@mixin v-spacing 1rem, 1px;
+
+	/*
+		Control height. Deliberately INDEPENDENT of --v-spacing (§5.1): "tighten the
+		padding but keep the control comfortably clickable" is a common, real want.
+	*/
+	--v-input-height: 2.5rem;
+
+	/*
+		A control's internal inline padding (text-to-border). Height-relative (the v1
+		input-box inset), not --v-pad-inline, so inputs stay balanced independent of
+		box padding. Also the "inner text" reference for inline alignment (§6.1).
+	*/
+	--v-control-inset: calc((var(--v-input-height) - 1em) / 2);
+}
+
+/*
+	Hi-DPI density bump (§6.4) — a pixel-density gate, not a breakpoint. Phones want
+	larger touch targets. The font-anchor half of this bump lives in typography.css
+	(co-located with the anchors so source order keeps it winning).
+*/
+@media (resolution >= 200dpi) {
+	:root {
+		--v-input-height: 2.75rem;
+	}
+}

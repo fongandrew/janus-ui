@@ -1,8 +1,13 @@
 /*
 	Janus v2 CSS — single entry point.
 
-	Placeholder for Phase 0: the documentation-site shell imports this so the build
-	resolves and the (as-yet unstyled) pages render. Phase 1 populates it with the
-	layer declaration, reset, tokens, and base styles.
+	Declares the cascade layer order, then imports everything. Components sit ABOVE
+	objects so a component can do minor overrides of the objects it composes (§4.1).
+	Token :root declarations are unlayered: they only provide values consumed by the
+	layered rules.
 */
 @layer reset, base, objects, components, variants, tools;
+
+@import './reset.css';
+@import './tokens/index.css';
+@import './base.css';

@@ -1,0 +1,21 @@
+/*
+	Motion (§5.1, §7). One base duration knob, not a scale. Components derive
+	faster/slower paces via calc() (`* 0.5` for hover/active, `* 2` for extended).
+	prefers-reduced-motion (and the explicit data-v-animation hook) zeros --v-duration
+	and everything that derives from it follows.
+*/
+
+:root {
+	--v-duration: 240ms;
+	--v-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion) {
+	:root:not([data-v-animation='true']) {
+		--v-duration: 0ms;
+	}
+}
+
+:root[data-v-animation='false'] {
+	--v-duration: 0ms;
+}

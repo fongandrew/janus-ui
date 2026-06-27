@@ -9,15 +9,16 @@ import { esc, renderPage, TOP_NAV } from '~/lib2-site/layout';
 
 function navCards(): string {
 	const blurbs: Record<string, string> = {
-		composition: 'The building blocks: --v-* variables, o-* objects, t-* tools, and typography.',
+		composition:
+			'The building blocks: --v-* variables, o-* objects, t-* tools, and typography.',
 		colors: 'The APCA contrast grid and the color playground.',
 		components: 'The c-* component catalogue (built last, once objects and variants exist).',
 	};
 
 	return TOP_NAV.map(
 		(item) => `
-		<a class="c-card o-box t-unstyled" href="${item.href}">
-			<header><h2>${item.label}</h2></header>
+		<a class="s-card s-card--link" href="${item.href}">
+			<h2>${item.label}</h2>
 			<p>${esc(blurbs[item.key] ?? '')}</p>
 		</a>`,
 	).join('');
@@ -26,8 +27,8 @@ function navCards(): string {
 export function render(): string {
 	return renderPage({
 		main: `
-		<div class="o-stack">
-			<header class="c-hero o-text-box">
+		<div class="s-stack">
+			<header class="s-hero">
 				<h1>A CSS-first design system</h1>
 				<p>
 					Janus v2 is a fork-and-copy design system for modern browsers. Its core is
@@ -35,7 +36,7 @@ export function render(): string {
 					with optional vanilla-JS and SolidJS layers on top.
 				</p>
 			</header>
-			<section class="o-grid" aria-label="Sections">
+			<section class="s-grid" aria-label="Sections">
 				${navCards()}
 			</section>
 		</div>`,

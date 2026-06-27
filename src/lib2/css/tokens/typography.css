@@ -1,0 +1,216 @@
+/*
+	Typography (§5.4) — a Utopia-style modular scale that is FLUID-CAPABLE but SHIPS
+	FIXED. By default the two size anchors collapse to one value
+	(--v-font-size-min == --v-font-size-max == 0.9375rem ≈ 15px) and the two ratios are
+	equal, so every token resolves to a constant size that does NOT track the viewport
+	— the right default for app UI. A consumer opts into fluid type by spreading the
+	anchors (and, if desired, the ratios); the same engine then interpolates.
+
+	The clamp formula (per Utopia): each token is
+	    clamp(LO, LO + (HI − LO) * progress, HI)
+	where LO = max(floor, sizeMin), HI = sizeMax, and
+	    progress = (100vw − viewportMin) / (viewportMax − viewportMin).
+	A "step" n is sizeMin × ratioMin^n / sizeMax × ratioMax^n. CSS has no pow(), but
+	the exponents are small integers, so the powers are written as explicit products of
+	the ratio vars — keeping every token responsive to runtime anchor/ratio overrides.
+	The step exponents appear ONLY in this file; the public surface is semantic.
+*/
+
+/*
+	Track the currently-applied weight as a custom property (§5.1). CSS can't read the
+	inherited `font-weight` back into a variable, so every rule that sets font-weight
+	from the stack sets --v-font-weight to the same number in tandem; the icon-stroke
+	ramp and the weight-floor fallback read --v-font-weight, not font-weight.
+*/
+@define-mixin v-font-weight $weight {
+	--v-font-weight: $(weight);
+
+	font-weight: var(--v-font-weight);
+}
+
+:root {
+	/* Primary knobs (§5.1). */
+	--v-font-family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+		'Segoe UI Symbol', 'Noto Color Emoji';
+	--v-font-family-mono: ui-monospace, sfmono-regular, menlo, monaco, consolas, 'Liberation Mono',
+		'Courier New', monospace;
+
+	/* Anchors COLLAPSED by default → fixed 15px; spacing stays on the 16px grid. */
+	--v-font-size-min: 0.9375rem;
+	--v-font-size-max: 0.9375rem;
+
+	/* Ratios EQUAL by default → a single fixed ratio (minor third). */
+	--v-font-ratio-min: 1.2;
+	--v-font-ratio-max: 1.2;
+
+	/* Shared viewport anchors for the fluid interpolation (inert while collapsed). */
+	--v-viewport-min: 20rem;
+	--v-viewport-max: 80rem;
+	--v-line-height: 1.5;
+
+	/* Font-weight stack (semantic; tinted surfaces bump the whole stack ~100 — §7). */
+	--v-font-weight-normal: 400;
+	--v-font-weight-label: 500;
+	--v-font-weight-subtitle: 600;
+	--v-font-weight-strong: 600;
+	--v-font-weight-title: 700;
+
+	@mixin v-font-weight var(--v-font-weight-normal);
+
+	/* Private intermediates for the fluid engine. */
+	--_font-size-floor: min(13px, calc(var(--v-font-size-min) - 1px));
+	--_fluid-progress: calc(
+		(100vw - var(--v-viewport-min)) / (var(--v-viewport-max) - var(--v-viewport-min))
+	);
+
+	/* Resolved base body size — step 0. Every 1em resolves against this. */
+	--v-font-size: clamp(
+		max(var(--_font-size-floor), var(--v-font-size-min)),
+		calc(
+			max(var(--_font-size-floor), var(--v-font-size-min)) +
+				(var(--v-font-size-max) - max(var(--_font-size-floor), var(--v-font-size-min))) *
+				var(--_fluid-progress)
+		),
+		var(--v-font-size-max)
+	);
+
+	/* h1 — step +3. */
+	--v-font-size-h1: clamp(
+		max(
+			var(--_font-size-floor),
+			calc(
+				var(--v-font-size-min) * var(--v-font-ratio-min) * var(--v-font-ratio-min) *
+					var(--v-font-ratio-min)
+			)
+		),
+		calc(
+			max(
+					var(--_font-size-floor),
+					calc(
+						var(--v-font-size-min) * var(--v-font-ratio-min) * var(--v-font-ratio-min) *
+							var(--v-font-ratio-min)
+					)
+				) +
+				(
+					calc(
+							var(--v-font-size-max) * var(--v-font-ratio-max) *
+								var(--v-font-ratio-max) * var(--v-font-ratio-max)
+						) -
+						max(
+							var(--_font-size-floor),
+							calc(
+								var(--v-font-size-min) * var(--v-font-ratio-min) *
+									var(--v-font-ratio-min) * var(--v-font-ratio-min)
+							)
+						)
+				) *
+				var(--_fluid-progress)
+		),
+		calc(
+			var(--v-font-size-max) * var(--v-font-ratio-max) * var(--v-font-ratio-max) *
+				var(--v-font-ratio-max)
+		)
+	);
+
+	/* h2 — step +2. */
+	--v-font-size-h2: clamp(
+		max(
+			var(--_font-size-floor),
+			calc(var(--v-font-size-min) * var(--v-font-ratio-min) * var(--v-font-ratio-min))
+		),
+		calc(
+			max(
+					var(--_font-size-floor),
+					calc(var(--v-font-size-min) * var(--v-font-ratio-min) * var(--v-font-ratio-min))
+				) +
+				(
+					calc(
+							var(--v-font-size-max) * var(--v-font-ratio-max) *
+								var(--v-font-ratio-max)
+						) -
+						max(
+							var(--_font-size-floor),
+							calc(
+								var(--v-font-size-min) * var(--v-font-ratio-min) *
+									var(--v-font-ratio-min)
+							)
+						)
+				) *
+				var(--_fluid-progress)
+		),
+		calc(var(--v-font-size-max) * var(--v-font-ratio-max) * var(--v-font-ratio-max))
+	);
+
+	/* h3 — step +1. */
+	--v-font-size-h3: clamp(
+		max(var(--_font-size-floor), calc(var(--v-font-size-min) * var(--v-font-ratio-min))),
+		calc(
+			max(var(--_font-size-floor), calc(var(--v-font-size-min) * var(--v-font-ratio-min))) +
+				(
+					calc(var(--v-font-size-max) * var(--v-font-ratio-max)) -
+						max(
+							var(--_font-size-floor),
+							calc(var(--v-font-size-min) * var(--v-font-ratio-min))
+						)
+				) *
+				var(--_fluid-progress)
+		),
+		calc(var(--v-font-size-max) * var(--v-font-ratio-max))
+	);
+
+	/* h4–h6 — step 0 (body size). */
+	--v-font-size-h4: var(--v-font-size);
+	--v-font-size-h5: var(--v-font-size);
+	--v-font-size-h6: var(--v-font-size);
+
+	/* caption — step −1 (floored to ~13px under the default config). */
+	--v-font-size-caption: clamp(
+		max(var(--_font-size-floor), calc(var(--v-font-size-min) / var(--v-font-ratio-min))),
+		calc(
+			max(var(--_font-size-floor), calc(var(--v-font-size-min) / var(--v-font-ratio-min))) +
+				(
+					calc(var(--v-font-size-max) / var(--v-font-ratio-max)) -
+						max(
+							var(--_font-size-floor),
+							calc(var(--v-font-size-min) / var(--v-font-ratio-min))
+						)
+				) *
+				var(--_fluid-progress)
+		),
+		calc(var(--v-font-size-max) / var(--v-font-ratio-max))
+	);
+
+	/* code — step −1 (independently overridable from caption). */
+	--v-font-size-code: var(--v-font-size-caption);
+
+	/*
+		Additive leading (1em + constant) for headings: as font-size grows the fixed
+		portion is a smaller fraction, so effective ratio drops automatically (§5.1).
+	*/
+	--v-line-height-h1: calc(1em + 0.5 * var(--v-spacing));
+	--v-line-height-h2: calc(1em + 0.5 * var(--v-spacing));
+	--v-line-height-h3: calc(1em + 0.5 * var(--v-spacing));
+	--v-line-height-h4: calc(1em + 0.5 * var(--v-spacing));
+	--v-line-height-h5: calc(1em + 0.5 * var(--v-spacing));
+	--v-line-height-h6: calc(1em + 0.5 * var(--v-spacing));
+	--v-line-height-caption: calc(1em + 0.5 * var(--v-spacing));
+	--v-line-height-code: calc(1em + 0.5 * var(--v-spacing));
+
+	/*
+		Text rhythm — derives from the LINE, not --v-spacing (§6.2), so it stays
+		proportional as the type scale moves. Consumed by o-prose / <hgroup> (Phase 2).
+	*/
+	--o-prose__gap: calc(0.75 * var(--v-line-height) * 1em);
+	--o-hgroup__leading: calc(0.5 * var(--v-spacing));
+
+	/* Cascading list-item rhythm: "grouped" (a fraction of the prose gap) by default. */
+	--v-list-rhythm: calc(var(--o-prose__gap) * 0.5);
+}
+
+/* Hi-DPI density bump (§6.4) — anchors move TOGETHER, staying collapsed → fixed 16px. */
+@media (resolution >= 200dpi) {
+	:root {
+		--v-font-size-min: 1rem;
+		--v-font-size-max: 1rem;
+	}
+}

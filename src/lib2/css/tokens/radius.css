@@ -1,0 +1,53 @@
+/*
+	Border-radius system (§8).
+
+	Radius is bounded by two anchors: a MAX (`--v-radius`, carried by the outermost
+	frame — the window) and a MIN (`--v-radius-min`, the floor). Everything between
+	steps DOWN from the max toward the min by the spacing/inset between an element and
+	its parent, floored at the min so a corner is never sharp.
+
+	The cascade is ALWAYS ON — it's the radius system, not an opt-in class. The look
+	is set entirely by the two root values: flat is `min == max`; concentric is a
+	large max over a small min. There are no `v-radius-*` preset classes (§8.4).
+*/
+
+:root {
+	/* The MAX — the assumed window/frame corner; the anchor the cascade steps in from. */
+	--v-radius: 0.5rem;
+
+	/* The MIN — the floor. Nothing rounds below it; deep elements bottom out here. */
+	--v-radius-min: 0.25rem;
+
+	/*
+		Dialog floats this far inside the viewport, so its corners read concentric with
+		the window only when dialog_radius = window_radius − offset (§8.3). Owned by
+		o-dialog (Phase 2); declared here with the frame default so the cascade resolves
+		before that object exists.
+	*/
+	--o-dialog__offset: var(--v-spacing);
+
+	/*
+		The radius cascade (§8.2). Each step reads a knob and writes a DIFFERENT one, so
+		nothing self-references (no recursive var() cycle). Floored at --v-radius-min.
+	*/
+	--o-dialog__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--o-dialog__offset)));
+	--o-box__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad-inline)));
+	--o-input-box__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad-inline)));
+}
+
+/* A box steps the CONTROL knob one pad deeper for its children (depth, not type). */
+:where(.o-box, .o-text-box) {
+	--o-input-box__radius: max(
+		var(--v-radius-min),
+		calc(var(--o-box__radius) - var(--v-pad-inline))
+	);
+}
+
+/* The dialog re-roots the cascade — everything inside derives from the dialog radius. */
+.o-dialog {
+	--o-box__radius: max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad-inline)));
+	--o-input-box__radius: max(
+		var(--v-radius-min),
+		calc(var(--o-dialog__radius) - var(--v-pad-inline))
+	);
+}

@@ -1,0 +1,89 @@
+/*
+	Color & surface knobs (§5.1, §7).
+
+	Five root color knobs carry the whole base palette: --v-bg, --v-fg, --v-link,
+	--v-accent, --v-muted. Tonal variations (primary / danger / …) live as v-colors-*
+	variants (Phase 3) that re-set these together — there is no flat palette list at
+	root. The defaults carry v1's warmth (warm off-white, deep blue-gray), not generic
+	black-on-white.
+*/
+
+/*
+	Colored text with its contrast-floor weight bump (§7.1) bundled in. Authoring tool
+	for base styles / components so they don't write `font-weight: var()` directly.
+*/
+@define-mixin v-link-text {
+	color: var(--v-link);
+	font-weight: var(--v-link-weight-min, inherit);
+}
+
+:root {
+	/* Body / base background. Warm off-white (light) / deep blue-gray (dark). */
+	--v-bg: light-dark(hsl(30deg 12% 98.5%), hsl(216deg 16% 8%));
+
+	/*
+		Binary black-or-white contrast derived from the bg's OKLCH lightness:
+		`(0.5 - l) * infinity` clamps to white when bg is dark, black when bg is light.
+		Consumers wanting non-binary contrast override --v-fg directly.
+	*/
+	--v-fg: oklch(from var(--v-bg) calc((0.5 - l) * infinity) 0 0);
+
+	/* Saturated dark teal — distinctive, not generic blue. Lightened for dark mode. */
+	--v-link: light-dark(hsl(195deg 100% 20%), hsl(183deg 25% 85%));
+
+	/* Accent / current-action color (focus ring, selected state, primary tint). */
+	--v-accent: var(--v-link);
+
+	/* De-emphasized text. */
+	--v-muted: light-dark(hsl(30deg 7% 31%), hsl(30deg 7% 86.5%));
+
+	/*
+		Contrast-floor weight fallback (§7.1). The shipped palette's link/accent/muted
+		need the bump; the mechanism falls back to `inherit` when a consumer clears it.
+	*/
+	--v-link-weight-min: 500;
+	--v-accent-weight-min: 500;
+	--v-muted-weight-min: 500;
+
+	/*
+		Dynamic border color (§7). One recipe places every border a fixed perceptual
+		distance from any surface, so borders read correctly on tinted cards without a
+		hard-coded gray.
+	*/
+	--v-border-dynamic-base: light-dark(black, white);
+	--v-border-dynamic-mix: light-dark(17.5%, 50%);
+	--v-border-color: color-mix(
+		in hsl,
+		var(--v-border-dynamic-base) var(--v-border-dynamic-mix),
+		var(--v-bg)
+	);
+
+	/*
+		Body background: two low-opacity radial gradients (warm peach + cool teal) over
+		the solid --v-bg, painted `fixed` (set in base.css). Prevents flat-looking pages.
+	*/
+	--v-body-bg: radial-gradient(ellipse at 70% 20%, hsl(20deg 80% 70% / 15%), transparent 50%),
+		radial-gradient(ellipse at 30% 80%, hsl(195deg 80% 50% / 7%), transparent 50%), var(--v-bg);
+
+	/* Focus ring: a crisp outline (--v-ring) over a soft halo (--v-ring-alt) — §7. */
+	--v-ring: var(--v-accent);
+	--v-ring-alt: color-mix(in hsl, var(--v-accent) 35%, transparent);
+	--v-shadow-focus: 0 0 0 0.125rem var(--v-ring-alt);
+}
+
+/*
+	Color scheme (§7.2). `data-v-color-scheme` drives the active half of light-dark().
+	No attribute (or "system") follows prefers-color-scheme.
+*/
+:root,
+:root[data-v-color-scheme='system'] {
+	color-scheme: light dark;
+}
+
+:root[data-v-color-scheme='light'] {
+	color-scheme: light;
+}
+
+:root[data-v-color-scheme='dark'] {
+	color-scheme: dark;
+}

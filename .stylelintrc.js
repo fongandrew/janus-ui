@@ -24,7 +24,11 @@ export default {
 		'csstools/value-no-unknown-custom-properties': [
 			true,
 			{
-				importFrom: ['src/lib/styles/variables/index.css'],
+				importFrom: [
+					'src/lib/styles/variables/index.css',
+					// v2 token layer — the source of truth for every --v-* / --o-* default.
+					'src/lib2/css/tokens/index.css',
+				],
 			},
 		],
 	},
@@ -51,6 +55,17 @@ export default {
 					},
 					{ message: 'Prefer tool mixins' },
 				],
+			},
+		},
+		{
+			// v2 token-authoring files are the v2 equivalent of v1's variables/ — they
+			// legitimately set font-weight/animation from knobs inside their mixins.
+			// The doc-site application CSS (lib2-site) is a consumer, not library code,
+			// so the "prefer tool mixins" guidance doesn't apply to it either.
+			files: ['src/lib2/css/tokens/**/*.css', 'src/lib2-site/**/*.css'],
+			rules: {
+				'declaration-property-value-disallowed-list': null,
+				'declaration-property-value-allowed-list': null,
 			},
 		},
 	],

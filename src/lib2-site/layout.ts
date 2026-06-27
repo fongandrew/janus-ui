@@ -6,10 +6,13 @@
 	`data-js`. The SSG plugin (`vite-plugin-ssg.ts`) replaces the page's
 	`<!-- @render ... -->` comment with the returned markup at build time.
 
-	This module is the shared chrome: the top nav, the page layout (nav + main +
-	footer), and the Composition sidebar / ToC. Per PLAN Phase 0.5 this chrome is
-	intentionally ad-hoc markup + CSS classes — NOT finished Card/Nav/Sidebar Solid
-	components. It is refactored into real components later (Phase 9).
+	This module is the shared chrome: the top nav, the page layout, and the
+	Composition sidebar / ToC. Per PLAN Phase 0.5 this chrome is intentionally ad-hoc
+	markup — NOT finished Card/Nav/Sidebar Solid components — and it is refactored into
+	real components later (Phase 9). Its styling lives in `site.css` under an `s-`
+	(site) prefix, deliberately kept separate from the library classes under review so
+	the doc pages exercise the real `o-*` / `c-*` / `v-*` CSS without the shell's own
+	styling masking it.
 */
 
 /** Minimal HTML attribute-value escaping for interpolated strings. */
@@ -51,31 +54,29 @@ export interface PageOptions {
 function topNav(active?: TopNavKey): string {
 	const links = TOP_NAV.map((item) => {
 		const current = item.key === active ? ' aria-current="page"' : '';
-		return `<a class="c-nav__link" href="${item.href}"${current}>${item.label}</a>`;
+		return `<a class="s-nav__link" href="${item.href}"${current}>${item.label}</a>`;
 	}).join('');
 
 	return `
-	<header class="c-nav o-bar">
-		<a class="c-nav__brand" href="/lib2-home.html">Janus <span class="c-nav__brand-v">v2</span></a>
-		<nav class="c-nav__links" aria-label="Primary">
+	<header class="s-nav">
+		<a class="s-nav__brand" href="/lib2-home.html">Janus <span class="s-nav__brand-v">v2</span></a>
+		<nav class="s-nav__links" aria-label="Primary">
 			${links}
 		</nav>
-		<button type="button" class="c-button c-button--icon c-nav__config" aria-label="Configure" disabled>
-			<span aria-hidden="true">&#9881;</span>
-		</button>
+		<button type="button" class="s-nav__config" aria-label="Configure" disabled>&#9881;</button>
 	</header>`;
 }
 
 function compositionSidebar(active?: CompositionKey): string {
 	const links = COMPOSITION_NAV.map((item) => {
 		const current = item.key === active ? ' aria-current="page"' : '';
-		return `<li><a class="c-sidebar__link" href="${item.href}"${current}>${item.label}</a></li>`;
+		return `<li><a class="s-sidebar__link" href="${item.href}"${current}>${item.label}</a></li>`;
 	}).join('');
 
 	return `
-	<aside class="c-sidebar" aria-label="Composition">
-		<p class="c-sidebar__heading">Composition</p>
-		<ul class="c-sidebar__list">
+	<aside class="s-sidebar" aria-label="Composition">
+		<p class="s-sidebar__heading">Composition</p>
+		<ul class="s-sidebar__list">
 			${links}
 		</ul>
 	</aside>`;
@@ -84,18 +85,18 @@ function compositionSidebar(active?: CompositionKey): string {
 /** Render a full doc-page body (nav + main + footer). */
 export function renderPage(opts: PageOptions): string {
 	const sidebar = opts.composition ? compositionSidebar(opts.composition) : '';
-	const layoutClass = opts.composition ? 'o-split c-page c-page--with-sidebar' : 'c-page';
+	const layoutClass = opts.composition ? 's-page s-page--with-sidebar' : 's-page';
 
 	return `
 ${topNav(opts.section)}
 <div class="${layoutClass}">
 	${sidebar}
-	<main class="o-container c-page__main">
+	<main class="s-main">
 		${opts.main}
 	</main>
 </div>
-<footer class="c-footer o-container">
-	<p class="v-text-muted">Janus v2 — documentation site. This shell is ad-hoc markup; it becomes real components in Phase 9.</p>
+<footer class="s-footer">
+	<p>Janus v2 — documentation site. This shell is ad-hoc markup; it becomes real components in Phase 9.</p>
 </footer>`;
 }
 
@@ -110,8 +111,8 @@ export function renderStub(opts: {
 		...(opts.section ? { section: opts.section } : {}),
 		...(opts.composition ? { composition: opts.composition } : {}),
 		main: `
-		<div class="c-card o-box">
-			<header><h1>${esc(opts.title)}</h1></header>
+		<div class="s-card">
+			<h1>${esc(opts.title)}</h1>
 			<p>${esc(opts.blurb)}</p>
 		</div>`,
 	});

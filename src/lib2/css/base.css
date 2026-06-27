@@ -1,0 +1,223 @@
+/*
+	Element-level styles (§5.5, §6). Layer: base. Consumes --v-* tokens. Imports the
+	tokens first so it can use the authoring mixins (v-font-weight) defined there.
+*/
+@import './tokens/index.css';
+
+@layer base {
+	body {
+		background: var(--v-body-bg, var(--v-bg));
+		background-attachment: fixed;
+		color: var(--v-fg);
+		font-family: var(--v-font-family);
+		font-size: var(--v-font-size);
+		line-height: var(--v-line-height);
+		min-height: 100dvh;
+
+		/* So container queries can fall back to the body as a container. */
+		container-type: inline-size;
+	}
+
+	/*
+		Inline links. Focus uses a double underline rather than a box outline so it
+		doesn't disrupt the reading line (§08). The weight floor lets a slightly
+		desaturated link stay WCAG-safe (§7.1).
+	*/
+	a:where([href]) {
+		@mixin v-link-text;
+
+		text-underline-offset: 0.25rem;
+		text-decoration: underline;
+	}
+
+	a:where([href]):focus-visible {
+		outline: none;
+		text-decoration-style: double;
+	}
+
+	b,
+	strong {
+		@mixin v-font-weight var(--v-font-weight-strong);
+	}
+
+	/*
+		Headings. Each sets its own font-size + additive line-height and tracks its
+		weight via the mixin (so the icon-stroke ramp has a value to read).
+
+		Don't put multiple h1s on a page — the document-outline algorithm is not
+		implemented in any browser. h1 = page title, h2 = section, h3 = card.
+	*/
+	h1 {
+		font-size: var(--v-font-size-h1);
+		line-height: var(--v-line-height-h1);
+
+		@mixin v-font-weight var(--v-font-weight-title);
+	}
+
+	h2 {
+		font-size: var(--v-font-size-h2);
+		line-height: var(--v-line-height-h2);
+
+		@mixin v-font-weight var(--v-font-weight-title);
+	}
+
+	h3 {
+		font-size: var(--v-font-size-h3);
+		line-height: var(--v-line-height-h3);
+
+		@mixin v-font-weight var(--v-font-weight-subtitle);
+	}
+
+	h4,
+	h5,
+	h6 {
+		font-size: var(--v-font-size-h4);
+		line-height: var(--v-line-height-h4);
+
+		@mixin v-font-weight var(--v-font-weight-label);
+	}
+
+	/*
+		Heading demotion inside <header> (§12). A card can use a semantically correct
+		heading level (h2 for the card section) while rendering one scale-step smaller,
+		appropriate to the card header.
+	*/
+	header h1 {
+		font-size: var(--v-font-size-h2);
+		line-height: var(--v-line-height-h2);
+	}
+
+	header h2 {
+		font-size: var(--v-font-size-h3);
+		line-height: var(--v-line-height-h3);
+	}
+
+	header h3 {
+		font-size: var(--v-font-size-h4);
+		line-height: var(--v-line-height-h4);
+	}
+
+	/*
+		Text-box trim follows EDGES, not element types (§6). Apply trim-both to a
+		single / padded text box so its perimeter padding reads optically uniform
+		regardless of font-size. Firefox lacks it; the accepted degradation is slightly
+		loose first/last-line leading. (Continuous-group trimming lives on o-prose /
+		<hgroup>, Phase 2.)
+	*/
+	blockquote,
+	pre,
+	td,
+	th {
+		text-box: trim-both cap alphabetic;
+	}
+
+	/* Code surfaces (§04). Phase 3 refactors these to v-colors-code / v-colors-pre. */
+	code {
+		background: color-mix(in hsl, var(--v-muted) 8%, var(--v-bg));
+		border-radius: var(--v-radius-min);
+		padding: 0 0.25em;
+		font-family: var(--v-font-family-mono);
+		font-size: var(--v-font-size-code);
+	}
+
+	pre {
+		background: #141821;
+		color: #fdf3e1;
+		border-radius: var(--v-radius-min);
+		padding: var(--v-pad-block) var(--v-pad-inline);
+		font-family: var(--v-font-family-mono);
+		font-size: var(--v-font-size-code);
+		overflow: auto;
+	}
+
+	pre code {
+		background: none;
+		border-radius: 0;
+		padding: 0;
+		font-size: inherit;
+		color: inherit;
+	}
+
+	blockquote {
+		border-inline-start: 0.25rem solid var(--v-border-color);
+		padding: var(--v-pad-block) var(--v-pad-inline);
+	}
+
+	/*
+		List indent — the one base list rule (§6). The `em` unit compounds per nesting
+		level so deep lists indent proportionally to their own (possibly smaller) text.
+		Richer marker cycling lives in o-prose (Phase 2).
+	*/
+	ul,
+	ol {
+		padding-inline-start: 1em;
+	}
+
+	/* Icon stroke thickens with surrounding text weight (§11). Reads --v-font-weight. */
+	.lucide,
+	.icon {
+		display: inline-block;
+		height: 1em;
+		width: 1em;
+		flex-shrink: 0;
+		vertical-align: text-bottom;
+		stroke-width: clamp(2, var(--v-font-weight) / 200, 3);
+	}
+
+	/* Tables. */
+	table {
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--v-radius-min);
+		display: block;
+		overflow: auto;
+	}
+
+	td,
+	th {
+		padding: calc((var(--v-input-height) - 1lh) / 2) calc((var(--v-input-height) - 1em) / 2);
+		vertical-align: top;
+	}
+
+	th {
+		text-align: start;
+
+		@mixin v-font-weight var(--v-font-weight-label);
+	}
+
+	* + tbody,
+	* + tr,
+	* + tfoot {
+		border-top: var(--v-border-width) solid var(--v-border-color);
+	}
+
+	/* Divider. */
+	hr {
+		border-top: var(--v-border-width) solid var(--v-border-color);
+	}
+
+	/*
+		Default chrome for native form controls so they read as intentional on the
+		Typography page. Components (c-input / c-button, Phase 3) layer richer state on
+		top — they sit above base in the cascade.
+	*/
+	input:not(
+			[type='button'],
+			[type='submit'],
+			[type='reset'],
+			[type='checkbox'],
+			[type='radio'],
+			[type='range']
+		),
+	textarea,
+	select {
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--o-input-box__radius, var(--v-radius-min));
+		padding: calc((var(--v-input-height) - 1lh) / 2) var(--v-control-inset);
+		background: var(--v-bg);
+		box-shadow: var(--v-shadow-inner);
+	}
+
+	textarea {
+		min-height: calc(var(--v-input-height) * 2);
+	}
+}
