@@ -164,12 +164,15 @@
 		stroke-width: clamp(2, var(--v-font-weight) / 200, 3);
 	}
 
-	/* Tables. */
+	/* Tables fill their container; separated-but-spaceless cells sit flush, and overflow
+	   clip rounds the corners (incl. the header tint). */
 	table {
+		inline-size: 100%;
 		border: var(--v-border-width) solid var(--v-border-color);
 		border-radius: var(--v-radius-min);
-		display: block;
-		overflow: auto;
+		border-collapse: separate;
+		border-spacing: 0;
+		overflow: clip;
 	}
 
 	td,
