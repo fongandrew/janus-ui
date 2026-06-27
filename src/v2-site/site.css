@@ -303,6 +303,9 @@
 .p-cascade-input {
 	display: block;
 	inline-size: 100%;
+
+	/* Clear its own (smaller) corner curve, matching the inset labels above. */
+	padding-inline-start: var(--o-input-box__radius);
 	background: color-mix(in hsl, var(--v-accent) 28%, var(--v-bg));
 	color: var(--v-fg);
 	text-align: start;
@@ -313,4 +316,18 @@
 	font-size: var(--v-font-size-caption);
 	color: var(--v-muted);
 	margin-block-end: 0.25rem;
+}
+
+/*
+	The labels are flat text, so a large corner curve crowds them where a nested
+	rounded box wouldn't. Inset each label to its surface's own radius line so the
+	text clears the curve — the corner is "occupied", content sits clear after it
+	(§8.5). The knobs are inherited from the surfaces above (the dialog re-roots them).
+*/
+.p-cascade-dialog > .p-cascade-label {
+	padding-inline-start: max(0px, calc(var(--o-dialog__radius) - var(--v-pad-inline)));
+}
+
+.p-cascade-box > .p-cascade-label {
+	padding-inline-start: max(0px, calc(var(--o-box__radius) - var(--v-pad-inline)));
 }

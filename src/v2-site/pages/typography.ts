@@ -112,7 +112,7 @@ export function render(): string {
 					</thead>
 					<tbody>
 						<tr><td>--v-spacing</td><td>1rem</td></tr>
-						<tr><td>--v-radius</td><td>0.5rem</td></tr>
+						<tr><td>--v-radius</td><td>2.25rem</td></tr>
 						<tr><td>--v-font-size</td><td>15px (fixed)</td></tr>
 					</tbody>
 				</table>

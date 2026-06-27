@@ -23,6 +23,12 @@ function ph(label: string, extra = ''): string {
 	return `<div class="p-ph"${extra}>${esc(label)}</div>`;
 }
 
+// NOTE (Phase 9): the per-level radius readouts below ("o-dialog (2rem)", etc.) are
+// STATIC strings hand-matched to this demo's --v-radius override — they don't track the
+// real resolved radii or the shipped --v-radius anchor. Make this an interactive island:
+// sliders for --v-radius / --v-radius-min driving the surfaces, with each label showing
+// its element's *computed* border-radius live (read getComputedStyle). Until then the
+// numbers are illustrative, not authoritative. (PLAN Phase 9 — slider islands, §20.2.)
 function cascadeDemo(): string {
 	return `
 	<section class="o-box p-card" id="cascade">

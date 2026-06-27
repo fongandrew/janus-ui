@@ -130,8 +130,8 @@ function radiusSection(): string {
 		table: knobTable([
 			{
 				name: '--v-radius',
-				def: '0.5rem',
-				desc: 'The MAX radius — the assumed frame corner; the cascade anchor.',
+				def: 'calc(var(--v-radius-min) + 2 * var(--v-spacing))',
+				desc: 'The MAX radius — the assumed frame corner; the cascade anchor (~2.25rem at defaults).',
 			},
 			{
 				name: '--v-radius-min',
