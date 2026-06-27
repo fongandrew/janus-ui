@@ -1,9 +1,13 @@
 /*
 	Tools sub-page (§20.2.3, under Composition) — the t-* utility cheat-sheet. One tile per
-	utility (name + one-line effect + a roomy live demo), laid out in a responsive grid so
-	each demo has room to read; a table squished them. Completes the Composition section.
-	The tools are the escape hatch (§11); the objects and component knobs cover the common
-	cases, so the set is deliberately small.
+	utility (name + one-line effect + a roomy live demo), in a responsive grid.
+
+	Demo note: the doc-site p-* classes are UNLAYERED, so they win over the layered tools
+	(the cascade can't help here — tools is the last LAYER, but unlayered beats every
+	layer). So a removal/override tool (t-p-0, t-radius-none) is demoed against a baseline
+	whose property comes from a LAYERED source (the o-box object) that the tool can
+	override, and the alignment tools act on a clean flex row (only t-* classes) rather
+	than the p-tool__demo surface, which sets its own align-items.
 */
 import { renderPage } from '~/v2-site/layout';
 
@@ -13,9 +17,13 @@ interface Tool {
 	demo: string;
 }
 
-/** The neutral block the utilities act on (an accent fill so padding/borders read). */
+/** The neutral block the utilities act on (an accent fill so the effect reads). */
 const BOX = (label: string, cls = '', style = '') =>
 	`<span class="p-demo-box ${cls}"${style ? ` style="${style}"` : ''}>${label}</span>`;
+
+/** A clean flex row (only t-* classes) so alignment tools aren't overridden by p-*. */
+const ROW = (cls: string, items: string, style = '') =>
+	`<div class="t-flex ${cls}" style="inline-size: 100%; gap: 0.5rem; ${style}">${items}</div>`;
 
 function tile(t: Tool): string {
 	return `
@@ -41,30 +49,57 @@ export function render(): string {
 		{ name: 't-py', desc: 'Pad the block axis only.', demo: BOX('t-py', 't-py') },
 		{
 			name: 't-p-0',
-			desc: 'Zero all padding (vs a padded box).',
-			demo: `${BOX('padded', 't-p')}${BOX('t-p-0', 't-p t-p-0')}`,
+			desc: 'Zero padding (here, off an o-box).',
+			demo: `${BOX('o-box', 'o-box')}${BOX('t-p-0', 'o-box t-p-0')}`,
 		},
 	];
 	const display: Tool[] = [
 		{
 			name: 't-flex',
 			desc: 'Make a flex container.',
-			demo: `<span class="t-flex" style="gap: 0.5rem">${BOX('a')}${BOX('b')}</span>`,
+			demo: ROW('', `${BOX('a')}${BOX('b')}`),
 		},
 		{
 			name: 't-flex-fill',
 			desc: 'Grow + shrink to fill (flex: 1 1 0).',
-			demo: `<span class="t-flex" style="gap: 0.5rem; inline-size: 100%">${BOX('a')}${BOX('fill', 't-flex-fill')}</span>`,
+			demo: ROW('', `${BOX('a')}${BOX('fill', 't-flex-fill')}`),
 		},
 		{
 			name: 't-flex-none',
 			desc: 'Neither grow nor shrink.',
-			demo: `<span class="t-flex" style="gap: 0.5rem; inline-size: 100%">${BOX('none', 't-flex-none')}${BOX('fill', 't-flex-fill')}</span>`,
+			demo: ROW('', `${BOX('none', 't-flex-none')}${BOX('fill', 't-flex-fill')}`),
 		},
 		{
 			name: 't-hidden',
 			desc: 'display: none.',
-			demo: `${BOX('shown')}${BOX('gone', 't-hidden')}`,
+			demo: ROW('', `${BOX('shown')}${BOX('gone', 't-hidden')}`),
+		},
+	];
+	const align: Tool[] = [
+		{
+			name: 't-items-start / -center / -end',
+			desc: 'Flex CROSS-axis (align-items).',
+			demo: ROW('t-items-end', `${BOX('a')}${BOX('b')}`, 'block-size: 4rem'),
+		},
+		{
+			name: 't-justify-center',
+			desc: 'Flex MAIN-axis: center.',
+			demo: ROW('t-justify-center', `${BOX('a')}${BOX('b')}`),
+		},
+		{
+			name: 't-justify-between',
+			desc: 'Flex MAIN-axis: space-between.',
+			demo: ROW('t-justify-between', `${BOX('a')}${BOX('b')}`),
+		},
+		{
+			name: 't-text-center',
+			desc: 'TEXT align: center.',
+			demo: BOX('t-text-center', 't-text-center', 'display: block; inline-size: 100%'),
+		},
+		{
+			name: 't-text-end',
+			desc: 'TEXT align: end.',
+			demo: BOX('t-text-end', 't-text-end', 'display: block; inline-size: 100%'),
 		},
 	];
 	const chrome: Tool[] = [
@@ -80,8 +115,8 @@ export function render(): string {
 		},
 		{
 			name: 't-radius-none',
-			desc: 'Square the corners.',
-			demo: BOX('t-radius-none', 't-radius-none'),
+			desc: 'Square an o-box’s corners.',
+			demo: `${BOX('o-box', 'o-box')}${BOX('t-radius-none', 'o-box t-radius-none')}`,
 		},
 		{
 			name: 't-radius-full',
@@ -94,22 +129,12 @@ export function render(): string {
 			demo: BOX('t-shadow', 't-shadow', 'background: var(--v-bg)'),
 		},
 		{
-			name: 't-shadow-inner',
-			desc: 'Embossed inner shadow.',
-			demo: BOX('t-shadow-inner', 't-shadow-inner', 'background: var(--v-bg)'),
+			name: 't-shadow-none',
+			desc: 'Remove a shadow (off t-shadow).',
+			demo: `${BOX('t-shadow', 't-shadow', 'background: var(--v-bg)')}${BOX('none', 't-shadow t-shadow-none', 'background: var(--v-bg)')}`,
 		},
 	];
-	const text: Tool[] = [
-		{
-			name: 't-align-center',
-			desc: 'Center text.',
-			demo: BOX('t-align-center', 't-align-center', 'display: block; inline-size: 100%'),
-		},
-		{
-			name: 't-align-end',
-			desc: 'End-align text.',
-			demo: BOX('t-align-end', 't-align-end', 'display: block; inline-size: 100%'),
-		},
+	const misc: Tool[] = [
 		{
 			name: 't-truncate',
 			desc: 'Single-line ellipsis.',
@@ -141,8 +166,9 @@ export function render(): string {
 			</header>
 			${group('Spacing', spacing)}
 			${group('Display &amp; flex', display)}
+			${group('Alignment', align)}
 			${group('Border, radius, shadow', chrome)}
-			${group('Text', text)}
+			${group('Text &amp; a11y', misc)}
 		</div>`,
 	});
 }

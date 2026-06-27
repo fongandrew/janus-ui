@@ -356,7 +356,7 @@ Browser-primitive component chrome (§10.2) — these need CSS only at this phas
 
 ### 3c: Tools (`src/lib2/css/tools/`)
 
-The narrow set from §11: `t-px-0`, `t-py-0`, `t-p-0`, `t-px`, `t-py`, `t-p`, `t-flex`, `t-flex-fill`, `t-flex-auto`, `t-flex-none`, `t-flex-wrap`, `t-block`, `t-inline`, `t-inline-block`, `t-hidden`, `t-sr-only`, `t-border`, `t-border-none`, `t-border-inner`, `t-radius-none`, `t-radius-full`, `t-shadow`, `t-shadow-inner`, `t-shadow-outer`, `t-shadow-none`, `t-align-start`, `t-align-center`, `t-align-end`, `t-truncate`.
+The narrow set from §11: `t-px-0`, `t-py-0`, `t-p-0`, `t-px`, `t-py`, `t-p`, `t-flex`, `t-flex-fill`, `t-flex-auto`, `t-flex-none`, `t-flex-wrap`, `t-items-start`, `t-items-center`, `t-items-end`, `t-justify-start`, `t-justify-center`, `t-justify-end`, `t-justify-between`, `t-block`, `t-inline`, `t-inline-block`, `t-hidden`, `t-sr-only`, `t-border`, `t-border-none`, `t-border-inner`, `t-radius-none`, `t-radius-full`, `t-shadow`, `t-shadow-inner`, `t-shadow-outer`, `t-shadow-none`, `t-text-start`, `t-text-center`, `t-text-end`, `t-truncate`.
 
 ### 3.S Documentation pages
 

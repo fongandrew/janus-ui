@@ -75,7 +75,7 @@ The reference for every `o-*` object (§9).
 
 The reference for the narrow `t-*` tools layer (§11).
 
-**Layout:** a compact table/grid — one row per tool (`t-px`, `t-py`, `t-p`, `t-px-0` … `t-flex`, `t-flex-fill`, `t-hidden`, `t-sr-only`, `t-border`, `t-radius-none`, `t-radius-full`, `t-shadow*`, `t-align-*`, `t-truncate`, etc.) — each row showing the tool's name, what it does in one line, and a **before/after live render** (a pair of small boxes, one without and one with the class, so the effect is visible). Tools are deliberately few (§11); the section fits on one screen and serves as the "escape hatch" cheat-sheet.
+**Layout:** a compact table/grid — one row per tool (`t-px`, `t-py`, `t-p`, `t-px-0` … `t-flex`, `t-flex-fill`, `t-hidden`, `t-sr-only`, `t-border`, `t-radius-none`, `t-radius-full`, `t-shadow*`, `t-items-*` / `t-justify-*` (flex align), `t-text-*` (text align), `t-truncate`, etc.) — each row showing the tool's name, what it does in one line, and a **before/after live render** (a pair of small boxes, one without and one with the class, so the effect is visible). Tools are deliberately few (§11); the section fits on one screen and serves as the "escape hatch" cheat-sheet.
 
 #### 20.2.4 Typography
 

@@ -127,7 +127,8 @@ Approved tools:
 - Border toggle: `t-border`, `t-border-none`, `t-border-inner`
 - Radius toggle: `t-radius-none`, `t-radius-full` (per-element override of the object's `--o-*__radius` knob — see §8)
 - Shadow toggle: `t-shadow`, `t-shadow-inner`, `t-shadow-outer`, `t-shadow-none` (applies / removes `--v-shadow-outer` and `--v-shadow-inner` — the split knob design from §5.1 lets `t-shadow-inner` replace just the inner glow without disturbing an existing outer shadow, and vice versa)
-- Alignment: `t-align-start`, `t-align-center`, `t-align-end`
+- Flex alignment — cross-axis (`align-items`): `t-items-start`, `t-items-center`, `t-items-end`; main-axis (`justify-content`): `t-justify-start`, `t-justify-center`, `t-justify-end`, `t-justify-between`
+- Text alignment (`text-align`): `t-text-start`, `t-text-center`, `t-text-end`
 - Grid span: `t-col-span-full` (a grid item spans all columns — `grid-column: 1 / -1`). A layout *flag*, not a numeric scale, so it stays within the §11 cap; there is no `t-col-span-2/3/…` (write explicit `grid-column` in consumer CSS for those).
 - Overflow: `t-truncate` (single-line ellipsis)
 
