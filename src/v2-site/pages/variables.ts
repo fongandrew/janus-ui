@@ -120,7 +120,10 @@ function radiusSection(): string {
 	]
 		.map(
 			(t) =>
-				`<span class="p-radius-tile" style="border-radius: ${t.value}"><code>${t.label}</code></span>`,
+				`<div class="p-radius-fig">
+					<div class="p-radius-tile" style="border-radius: ${t.value}"></div>
+					<div class="p-radius-cap"><code>${t.label}</code></div>
+				</div>`,
 		)
 		.join('');
 
@@ -163,7 +166,7 @@ function radiusSection(): string {
 				derived: true,
 			},
 		]),
-		render: `<div class="p-tile-row">${tiles}</div>`,
+		render: `<div class="p-radius-row">${tiles}</div>`,
 	});
 }
 

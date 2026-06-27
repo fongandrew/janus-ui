@@ -214,24 +214,42 @@
 	border-radius: var(--v-radius-min);
 }
 
-/* Wrapping row of fixed-size demo tiles (radius swatches). */
-.p-tile-row {
+/*
+	Radius swatches. Each is a rounded square (big enough — 7rem — that even the max
+	radius reads as a rounded corner, not a circle) with its variable name as a caption
+	below, so long names never overflow the tile or overlap a neighbour.
+*/
+.p-radius-row {
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--v-spacing);
-	align-items: flex-end;
+}
+
+.p-radius-fig {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.5rem;
+	inline-size: 7rem;
 }
 
 .p-radius-tile {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	text-align: center;
-	inline-size: 5rem;
-	block-size: 5rem;
+	inline-size: 7rem;
+	block-size: 7rem;
 	background: color-mix(in hsl, var(--v-accent) 18%, var(--v-bg));
 	border: var(--v-border-width) solid var(--v-border-color);
+}
+
+.p-radius-cap {
 	font-size: var(--v-font-size-caption);
+	text-align: center;
+	overflow-wrap: anywhere;
+}
+
+/* Plain monospace caption — drop the inline code chip so it doesn't read as a pill. */
+.p-radius-cap code {
+	background: none;
+	padding: 0;
 }
 
 .p-swatch {
