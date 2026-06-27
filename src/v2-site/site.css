@@ -153,9 +153,17 @@
 	margin-block-start: var(--v-spacing);
 }
 
-/* Cards (project component — composes o-box for padding + radius) ------------- */
+/*
+	Cards — doc-site scaffolding (project chrome), self-contained so they are NOT o-box.
+	That matters: a demo's o-box content must not be treated as "nested in a box" by the
+	one-level box-in-box rule (§8.6), or the demos would paint at the control radius
+	instead of their natural radius. The card reads --o-box__radius so it still tracks
+	the radius system.
+*/
 .p-card {
+	padding: var(--v-pad-block) var(--v-pad-inline);
 	border: var(--v-border-width) solid var(--v-border-color);
+	border-radius: var(--o-box__radius, var(--v-radius-min));
 	background: var(--v-bg);
 	box-shadow: var(--v-shadow-outer);
 	display: flex;
@@ -386,14 +394,20 @@
 }
 
 /* Tools page — a card-grid cheat-sheet. Each tile gives its demo room (a table squished
-   them). The demo sits on a faint surface so an accent-filled p-demo-box reads against it. */
+   them). The demo sits on a faint surface so an accent-filled p-demo-box reads against it.
+   The tile rounds at the CONTROL radius — one step in from its section card — so it reads
+   concentric (the one-level box-in-box look, §8.6). */
 .p-tool {
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
 	padding: var(--v-pad-block) var(--v-pad-inline);
 	border: var(--v-border-width) solid var(--v-border-color);
-	border-radius: var(--o-box__radius, var(--v-radius-min));
+	border-radius: max(var(--v-radius-min), calc(var(--o-box__radius) - var(--v-pad-inline)));
+}
+
+.p-tool__name {
+	align-self: flex-start;
 }
 
 .p-tool__desc {

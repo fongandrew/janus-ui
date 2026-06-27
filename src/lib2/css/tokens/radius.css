@@ -50,6 +50,27 @@
 	);
 }
 
+/*
+	One level of box-in-box (§8.6): a box nested inside a box paints at the CONTROL radius
+	(one step in from its parent), so it reads concentric instead of echoing the parent's
+	corner. We override the painted border-radius rather than the knob — rewriting
+	--o-box__radius from --o-input-box__radius would be a self-referential cycle (§8.2's
+	read-one/write-another rule). Deeper nesting stays at the control radius, floored.
+*/
+:where(.o-box) .o-box {
+	border-radius: var(--o-input-box__radius, var(--v-radius-min));
+}
+
+/*
+	A dialog is a new FRAME: the boxes inside it are that frame's level-1 boxes (the dialog
+	already re-rooted --o-box__radius for them), not nested boxes — so they paint at
+	--o-box__radius even when the dialog itself sits inside an outer box. This keeps a
+	dialog's own cascade intact regardless of where the dialog is mounted.
+*/
+:where(.o-dialog) .o-box {
+	border-radius: var(--o-box__radius, var(--v-radius-min));
+}
+
 /* The dialog re-roots the cascade — everything inside derives from the dialog radius. */
 .o-dialog {
 	--o-box__radius: max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad-inline)));

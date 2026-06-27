@@ -11,7 +11,7 @@ import { esc, renderPage } from '~/v2-site/layout';
 
 function demo(opts: { id: string; title: string; note: string; render: string }): string {
 	return `
-	<section class="o-box p-card" id="${opts.id}">
+	<section class="p-card" id="${opts.id}">
 		<h2>${esc(opts.title)}</h2>
 		<p>${opts.note}</p>
 		<div class="p-render">${opts.render}</div>
@@ -31,7 +31,7 @@ function ph(label: string, extra = ''): string {
 // numbers are illustrative, not authoritative. (PLAN Phase 9 — slider islands, §20.2.)
 function cascadeDemo(): string {
 	return `
-	<section class="o-box p-card" id="cascade">
+	<section class="p-card" id="cascade">
 		<h2>Radius cascade — four-level nesting</h2>
 		<p>
 			<code>o-dialog</code> &gt; <code>o-box</code> &gt; <code>o-input-box</code>. Each level

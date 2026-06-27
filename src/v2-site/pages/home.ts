@@ -17,7 +17,7 @@ function navCards(): string {
 
 	return TOP_NAV.map(
 		(item) => `
-		<a class="o-box p-card p-card--link" href="${item.href}">
+		<a class="p-card p-card--link" href="${item.href}">
 			<h2>${item.label}</h2>
 			<p>${esc(blurbs[item.key] ?? '')}</p>
 		</a>`,

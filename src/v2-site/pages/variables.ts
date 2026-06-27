@@ -47,7 +47,7 @@ function section(opts: {
 	renderClass?: string;
 }): string {
 	return `
-	<section class="o-box p-card" id="${opts.id}">
+	<section class="p-card" id="${opts.id}">
 		<h2>${esc(opts.title)}</h2>
 		${opts.table}
 		<div class="p-render ${opts.renderClass ?? ''}">${opts.render}</div>

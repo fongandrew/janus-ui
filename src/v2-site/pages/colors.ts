@@ -45,21 +45,21 @@ export function render(): string {
 				</p>
 			</header>
 
-			<section class="o-box p-card" id="tonal">
+			<section class="p-card" id="tonal">
 				<h2>Tonal variants</h2>
 				<div class="o-grid" style="--o-grid__min: 14rem">
 					${TONAL.map(cell).join('')}
 				</div>
 			</section>
 
-			<section class="o-box p-card" id="surface-role">
+			<section class="p-card" id="surface-role">
 				<h2>Surface-role variants</h2>
 				<div class="o-grid" style="--o-grid__min: 14rem">
 					${SURFACE_ROLE.map(cell).join('')}
 				</div>
 			</section>
 
-			<section class="o-box p-card" id="surfaces">
+			<section class="p-card" id="surfaces">
 				<h2>Surface treatments</h2>
 				<div class="o-grid" style="--o-grid__min: 14rem">
 					${['card', 'elevated', 'sunken', 'glass', 'gradient'].map(surfaceCell).join('')}

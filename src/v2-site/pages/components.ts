@@ -9,7 +9,7 @@ import { esc, renderPage } from '~/v2-site/layout';
 /** A titled demo card: heading, note, and a bordered live-render frame. */
 function demo(opts: { id: string; title: string; note: string; body: string }): string {
 	return `
-	<section class="o-box p-card" id="${opts.id}">
+	<section class="p-card" id="${opts.id}">
 		<h2>${esc(opts.title)}</h2>
 		<p>${opts.note}</p>
 		<div class="p-render">${opts.body}</div>

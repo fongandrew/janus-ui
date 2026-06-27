@@ -28,7 +28,7 @@ function tile(t: Tool): string {
 
 function group(title: string, rows: Tool[]): string {
 	return `
-	<section class="o-box p-card">
+	<section class="p-card">
 		<h2>${title}</h2>
 		<div class="o-grid" style="--o-grid__min: 13rem">${rows.map(tile).join('')}</div>
 	</section>`;

@@ -113,7 +113,7 @@ export function renderStub(opts: {
 		...(opts.section ? { section: opts.section } : {}),
 		...(opts.composition ? { composition: opts.composition } : {}),
 		main: `
-		<div class="o-box p-card">
+		<div class="p-card">
 			<div class="o-prose">
 				<h1>${esc(opts.title)}</h1>
 				<p>${esc(opts.blurb)}</p>

@@ -50,7 +50,7 @@ export function render(): string {
 				</p>
 			</header>
 
-			<section class="o-box p-card" id="headings">
+			<section class="p-card" id="headings">
 				<h2>Headings</h2>
 				<h1>Heading level 1</h1>
 				<h2>Heading level 2</h2>
@@ -63,7 +63,7 @@ export function render(): string {
 				</header>
 			</section>
 
-			<section class="o-box p-card" id="prose">
+			<section class="p-card" id="prose">
 				<h2>Body &amp; links</h2>
 				<p>
 					Body text sits at a fixed 15px on the 16px spacing grid. It wraps normally —
@@ -78,7 +78,7 @@ export function render(): string {
 				</blockquote>
 			</section>
 
-			<section class="o-box p-card" id="lists">
+			<section class="p-card" id="lists">
 				<h2>Lists</h2>
 				<ul>
 					<li>Unordered item</li>
@@ -96,7 +96,7 @@ export function render(): string {
 				</ol>
 			</section>
 
-			<section class="o-box p-card" id="code">
+			<section class="p-card" id="code">
 				<h2>Code block</h2>
 				<pre><code>:root {
   --v-font-size: clamp(/* min */, /* fluid */, /* max */);
@@ -104,7 +104,7 @@ export function render(): string {
 }</code></pre>
 			</section>
 
-			<section class="o-box p-card" id="table">
+			<section class="p-card" id="table">
 				<h2>Table</h2>
 				<table>
 					<thead>
@@ -118,7 +118,7 @@ export function render(): string {
 				</table>
 			</section>
 
-			<section class="o-box p-card" id="forms">
+			<section class="p-card" id="forms">
 				<h2>Form defaults</h2>
 				<p><input type="text" placeholder="Text input" /></p>
 				<p><input type="email" placeholder="you@example.com" /></p>
@@ -131,7 +131,7 @@ export function render(): string {
 				</p>
 			</section>
 
-			<section class="o-box p-card" id="ramp">
+			<section class="p-card" id="ramp">
 				<h2>Resolved scale (default fixed config)</h2>
 				${rampTable()}
 			</section>
