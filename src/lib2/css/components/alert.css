@@ -1,0 +1,37 @@
+/*
+	c-alert (§10.1) — a toned message block. Composes o-box (padded, trims text) with a
+	default callout tone (tinted surface + weight bump); a v-colors-* class in markup
+	re-tones it to success / warn / danger / info. An empty alert (or one whose children
+	report empty) collapses so forms don't carry a dead vertical band (Aesthetic spec §19).
+*/
+@layer components {
+	.c-alert {
+		@mixin o-box;
+		@mixin v-colors-callout;
+
+		border: var(--v-border-width) solid var(--v-border-color);
+		display: flex;
+		gap: var(--v-gap-inline);
+	}
+
+	.c-alert:empty,
+	.c-alert:has(> .c-alert__children[data-t-empty]) {
+		display: none;
+	}
+
+	/* An icon leads the message, sized to the text. */
+	.c-alert > :where(.lucide, .icon) {
+		flex: none;
+		block-size: 1lh;
+	}
+
+	/* Inline error message under a field — collapses to nothing when empty. */
+	.c-error-message {
+		color: var(--v-danger-text);
+		font-size: var(--v-font-size-caption);
+	}
+
+	.c-error-message:empty {
+		display: none;
+	}
+}

@@ -1,0 +1,49 @@
+/*
+	c-styled-select (§10.2) — a composite select trigger (the listbox itself is a c-menu /
+	o-menu popover). Reads as a field (o-input-box, inner shadow, focus ring) with a value
+	slot that truncates and a trailing chevron. Keyboard/typeahead behaviour is Phase 5.
+*/
+@layer components {
+	.c-styled-select {
+		@mixin o-input-box;
+		@mixin t-transition-color;
+
+		display: inline-flex;
+		align-items: center;
+		gap: var(--v-gap-inline);
+		inline-size: 100%;
+		border-style: solid;
+		border-color: var(--v-border-color);
+		background: var(--v-bg);
+		box-shadow: var(--v-shadow-inner);
+		cursor: pointer;
+		text-align: start;
+	}
+
+	.c-styled-select:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-styled-select__value {
+		flex: 1 1 auto;
+		min-inline-size: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.c-styled-select__value:empty::before {
+		content: attr(data-placeholder);
+		color: var(--v-muted);
+	}
+
+	.c-styled-select__chevron {
+		flex: none;
+		color: var(--v-muted);
+	}
+
+	.c-styled-select:disabled,
+	.c-styled-select[aria-disabled='true'] {
+		@mixin t-disabled;
+	}
+}

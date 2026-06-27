@@ -1,0 +1,56 @@
+/*
+	c-tabs (§10.2) — tablist chrome. Tabs read as quiet (muted) until selected. The
+	selected indicator is an INSET box-shadow underline (not a border) so neighbouring
+	tabs don't shift on selection. Its colour is the dynamic-border recipe mixed against
+	the ACTIVE tone, so a tab strip inside v-colors-success picks up the success tint
+	(Aesthetic spec §17). JS wiring (roving focus, panel show/hide) lands in Phase 5.
+*/
+@layer components {
+	.c-tabs__list {
+		display: flex;
+		gap: var(--v-gap-inline);
+		border-block-end: var(--v-border-width) solid var(--v-border-color);
+	}
+
+	.c-tab {
+		@mixin o-input-box;
+		@mixin v-font-weight var(--v-font-weight-label);
+		@mixin t-transition-color;
+
+		--c-tabs__indicator: color-mix(
+			in hsl,
+			var(--v-border-dynamic-base) var(--v-border-dynamic-mix),
+			var(--v-accent)
+		);
+
+		border: 0;
+		border-radius: var(--o-box__radius, var(--v-radius-min))
+			var(--o-box__radius, var(--v-radius-min)) 0 0;
+		background: none;
+		color: var(--v-muted);
+		cursor: pointer;
+	}
+
+	.c-tab:hover {
+		@mixin t-hover;
+	}
+
+	.c-tab:focus-visible {
+		@mixin t-focus-ring;
+
+		outline-offset: -2px;
+	}
+
+	.c-tab[aria-selected='true'] {
+		color: var(--v-fg);
+		box-shadow: inset 0 calc(-2 * var(--v-border-width)) 0 0 var(--c-tabs__indicator);
+	}
+
+	.c-tab:where([aria-disabled='true'], :disabled) {
+		@mixin t-disabled;
+	}
+
+	.c-tab__panel {
+		@mixin o-box;
+	}
+}

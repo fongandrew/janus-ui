@@ -1,0 +1,32 @@
+/*
+	c-tooltip (§10.1) — a floating label. Always inverted (v-colors-tooltip) so it reads as
+	a separate layer above the page. Shown as a [popover] and placed with CSS anchor
+	positioning (Chromium); the surface styling here is engine-neutral. Positioning logic
+	(anchor name, fallbacks) is wired by the consumer / DOM layer (Phase 5).
+*/
+@layer components {
+	:root {
+		--c-tooltip__width: 15rem;
+	}
+
+	.c-tooltip {
+		@mixin o-box;
+		@mixin v-colors-tooltip;
+
+		position: absolute;
+		inline-size: max-content;
+		max-inline-size: var(--c-tooltip__width);
+		margin: 0;
+		padding-block: calc(var(--v-pad-block) * 0.5);
+		border: 0;
+		border-radius: var(--v-radius-min);
+		box-shadow: var(--v-shadow-outer);
+		font-size: var(--v-font-size-caption);
+		pointer-events: none;
+	}
+
+	/* As a popover it inherits UA chrome; clear it and let the surface above stand. */
+	.c-tooltip:popover-open {
+		overflow: visible;
+	}
+}

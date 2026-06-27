@@ -1,0 +1,19 @@
+/*
+	c-popover (§10.2) — a floating panel that matches the surrounding chrome (popovers
+	replace UI rather than float above it, hence v-colors-popover, not the inverted
+	tooltip tone). Shown as a [popover]; anchor positioning is wired by the consumer.
+*/
+@layer components {
+	.c-popover {
+		@mixin o-box;
+		@mixin v-colors-popover;
+
+		position: absolute;
+		inline-size: max-content;
+		max-inline-size: 20rem;
+		margin: 0;
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--o-box__radius, var(--v-radius-min));
+		box-shadow: var(--v-shadow-outer);
+	}
+}

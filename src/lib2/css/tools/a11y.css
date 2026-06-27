@@ -1,0 +1,22 @@
+/*
+	Accessibility utility. t-sr-only visually hides an element while keeping it in the
+	accessibility tree and focusable — used to hide the native input behind a custom
+	control (checkbox / radio / toggle) and for screen-reader-only labels.
+*/
+@define-mixin t-sr-only {
+	position: absolute;
+	inline-size: 1px;
+	block-size: 1px;
+	margin: -1px;
+	padding: 0;
+	border: 0;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+@layer tools {
+	.t-sr-only {
+		@mixin t-sr-only;
+	}
+}

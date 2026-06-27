@@ -1,0 +1,47 @@
+/*
+	c-disclosure (§10.1) — a native <details>/<summary> with v2 chrome. The summary reads
+	as a control row (o-input-box height/padding); the chevron rotates open. Content pads
+	itself with o-box. No JS — the browser primitive handles toggling.
+*/
+@layer components {
+	.c-disclosure {
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--o-box__radius, var(--v-radius-min));
+		overflow: hidden;
+	}
+
+	.c-disclosure > summary {
+		@mixin o-input-box;
+		@mixin v-font-weight var(--v-font-weight-label);
+
+		display: flex;
+		align-items: center;
+		gap: var(--v-gap-inline);
+		cursor: pointer;
+		list-style: none;
+	}
+
+	.c-disclosure > summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.c-disclosure > summary:focus-visible {
+		@mixin t-focus-ring;
+
+		outline-offset: -2px;
+	}
+
+	.c-disclosure__chevron {
+		@mixin t-transition transform;
+
+		margin-inline-start: auto;
+	}
+
+	.c-disclosure[open] > summary .c-disclosure__chevron {
+		transform: rotate(90deg);
+	}
+
+	.c-disclosure__content {
+		@mixin o-box;
+	}
+}

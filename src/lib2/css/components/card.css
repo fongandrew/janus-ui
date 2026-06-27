@@ -1,0 +1,75 @@
+/*
+	c-card (§10.1) — surface chrome only: dynamic border, background, resting elevation,
+	and the cascade radius. It carries NO padding — compose o-box in markup
+	(`<article class="c-card o-box">`) or use the __header / __content / __footer subparts
+	that pad themselves. The card is a query container (named via the frame system) so its
+	chrome can track its OWN width.
+
+	Context-aware shadow (Aesthetic spec §15): a card sitting in the page reading flow
+	(inside o-container) on a wide frame sheds its shadow — it isn't floating — while a
+	card inside a :modal / :popover-open always keeps it.
+*/
+@layer components {
+	.c-card {
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--o-box__radius, var(--v-radius-min));
+		background: var(--v-bg);
+		box-shadow: var(--v-shadow-outer);
+		display: flex;
+		flex-direction: column;
+		container-type: inline-size;
+	}
+
+	/* Composing o-grid would clash with the card's own container-type (Safari). */
+	.c-card.o-grid {
+		container-type: normal;
+	}
+
+	@container frame (width >= 48rem) {
+		.o-container .c-card {
+			box-shadow: none;
+		}
+	}
+
+	:modal .c-card,
+	:popover-open .c-card {
+		box-shadow: var(--v-shadow-outer);
+	}
+
+	/* Subparts carry the padding; header/footer zero the seam edge toward the body. */
+	.c-card__header {
+		@mixin o-box;
+
+		padding-block-end: 0;
+	}
+
+	.c-card__content {
+		@mixin o-box;
+
+		flex: 1 1 auto;
+	}
+
+	.c-card__footer {
+		@mixin o-box;
+
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--v-gap-inline);
+		padding-block-start: 0;
+	}
+
+	.c-card__footer > :only-child {
+		margin-inline-start: auto;
+	}
+
+	/*
+		A submit inside a card whose form has invalid fields looks disabled but stays
+		clickable, so the form engine can move focus to the first invalid field
+		(Aesthetic spec §18).
+	*/
+	.c-card:has(:invalid, [aria-invalid='true']) .c-card__footer [type='submit'] {
+		opacity: 0.5;
+		pointer-events: unset;
+	}
+}

@@ -1,0 +1,80 @@
+/*
+	c-button (§10.1) — the standard button. Composes o-input-box (height, text-mode
+	padding floored at the radius, cascade radius) and the interaction mixins. Default
+	tone is v-colors-secondary; a v-colors-* class in markup re-tones it. The border-width
+	comes from o-input-box, the style from the reset, the colour from the tone.
+*/
+@layer components {
+	.c-button {
+		@mixin o-input-box;
+		@mixin v-colors-secondary;
+		@mixin v-font-weight var(--v-font-weight-label);
+
+		/* Fast feedback (half the base pace) on colour + shadow. */
+		@mixin t-transition-color-plus box-shadow, calc(var(--v-duration) * 0.5);
+
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--v-gap-inline);
+		border-style: solid;
+		cursor: pointer;
+	}
+
+	/* A lucide/icon child sits at the cap line. */
+	.c-button > :where(.lucide, .icon) {
+		block-size: 1lh;
+	}
+
+	.c-button:hover {
+		@mixin t-hover;
+
+		box-shadow: var(--v-shadow-outer);
+	}
+
+	/* Pressed: the resting shadow drops so the surface reads as pushed in. */
+	.c-button:active {
+		box-shadow: none;
+	}
+
+	.c-button:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-button:disabled,
+	.c-button[aria-disabled='true'] {
+		@mixin t-disabled-button;
+	}
+
+	/* Square icon-only button. */
+	.c-button--icon {
+		aspect-ratio: 1;
+		padding-inline: 0;
+	}
+
+	/* Borderless text-link button — reads as an inline link, not a control. */
+	.c-button--link {
+		@mixin v-link-text;
+
+		display: inline;
+		min-block-size: auto;
+		padding: 0;
+		border: 0;
+		background: none;
+		cursor: pointer;
+		text-decoration-line: underline;
+		text-underline-offset: 0.2em;
+	}
+
+	.c-button--link:hover {
+		@mixin t-hover;
+
+		box-shadow: none;
+	}
+
+	.c-button--link:focus-visible {
+		@mixin t-no-focus-ring;
+
+		text-decoration-style: double;
+	}
+}

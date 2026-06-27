@@ -1,0 +1,99 @@
+/*
+	c-modal (§10.2) — a centred <dialog>. Composes o-dialog: the frame IS the scroll
+	container and is transparent, so the header/body/footer surfaces tile it and the
+	frame's radius clips them (a solid bg on the scroller would paint past the radius during
+	the overscroll rubber-band). Header/body/footer share the popover tone, so the plain
+	(default) seams are invisible; header zeroes its bottom pad and footer its top pad so a
+	seam totals one pad unit (Aesthetic spec §16).
+
+	Width presets ship on the component (not as global utilities). Scroll-edge shadows
+	switch on data-scroll-top / -bottom, set by a DOM handler in Phase 5.
+
+	Follow-ups (noted, not yet built): the glass two-tone header variant, the submit-only
+	sticky float-mirror footer mode, and the full-bleed @container rule (which also needs
+	the doc shell's p-page swapped to o-container — see PLAN Phase 3 shell flag).
+*/
+@layer components {
+	:root {
+		--c-modal__width: 40rem;
+	}
+
+	.c-modal {
+		@mixin o-dialog;
+
+		inline-size: min(var(--c-modal__width), calc(100vw - var(--v-spacing) * 2));
+		max-block-size: calc(100dvh - var(--v-spacing) * 2);
+		margin: auto;
+		padding: 0;
+	}
+
+	.c-modal--narrow {
+		--c-modal__width: 22rem;
+	}
+
+	.c-modal--container {
+		--c-modal__width: var(--o-container__max, 64rem);
+	}
+
+	.c-modal::backdrop {
+		background: hsl(0deg 0% 0% / 50%);
+		backdrop-filter: blur(4px);
+	}
+
+	.c-modal__header {
+		@mixin o-box;
+		@mixin v-colors-popover;
+
+		position: relative;
+		flex: none;
+		padding-block-end: 0;
+	}
+
+	.c-modal__body {
+		@mixin o-box;
+		@mixin v-colors-popover;
+
+		flex: 1 0 auto;
+	}
+
+	.c-modal__footer {
+		@mixin o-box;
+		@mixin v-colors-popover;
+
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: var(--v-gap-inline);
+		padding-block-start: 0;
+	}
+
+	/* Sticky glass action-bar footer (opt-in). */
+	.c-modal__footer--bar {
+		position: sticky;
+		inset-block-end: 0;
+		border-block-start: var(--v-border-width) solid var(--v-border-color);
+	}
+
+	/* Close X pinned to the top-right; its negative margin cancels its own height so the
+	   header still starts flush. */
+	.c-modal__close {
+		position: sticky;
+		inset-block-start: 0;
+		z-index: 1;
+		margin-inline-start: auto;
+		margin-block-end: calc(-1 * var(--v-input-height));
+	}
+
+	.c-modal[data-scroll-top] .c-modal__header {
+		box-shadow: var(--v-shadow-inner-top);
+	}
+
+	.c-modal[data-scroll-bottom] .c-modal__body {
+		box-shadow: var(--v-shadow-inner-bottom);
+	}
+
+	/* Lock the page behind an open modal (keep the bounce: overscroll-behavior, not none). */
+	body:has(:modal) {
+		overflow: hidden;
+	}
+}

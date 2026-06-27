@@ -1,0 +1,27 @@
+/*
+	c-badge (§10.1) — a count or status marker. Composes o-caption; default primary tone.
+	c-badge--dot drops the text for a bare status dot.
+*/
+@layer components {
+	.c-badge {
+		@mixin o-caption;
+		@mixin v-colors-primary;
+
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-inline-size: 1.4em;
+		block-size: 1.4em;
+		padding-inline: 0.4em;
+		border-radius: 9999px;
+		font-variant-numeric: tabular-nums;
+		line-height: 1;
+	}
+
+	.c-badge--dot {
+		min-inline-size: 0.6em;
+		inline-size: 0.6em;
+		block-size: 0.6em;
+		padding: 0;
+	}
+}

@@ -19,6 +19,7 @@
 @import './tools/states.css';
 @import './tools/transitions.css';
 @import './tools/animations.css';
+@import './tools/a11y.css';
 @import './base.css';
 @import './objects/index.css';
 @import './variants/index.css';

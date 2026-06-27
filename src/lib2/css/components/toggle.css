@@ -1,0 +1,59 @@
+/*
+	c-toggle (§10.1) — a pill track with a sliding thumb over a visually-hidden native
+	checkbox. Off: embossed track on the base surface. On: track fills with the accent
+	tone and the thumb slides to the far end. Pure CSS via :checked.
+*/
+@layer components {
+	.c-toggle {
+		@mixin t-transition-color;
+
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		flex: none;
+		inline-size: calc(var(--v-input-height) * 1.75);
+		block-size: var(--v-input-height);
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: 9999px;
+		background: var(--v-bg);
+		box-shadow: var(--v-shadow-inner);
+		cursor: pointer;
+	}
+
+	.c-toggle input {
+		@mixin t-sr-only;
+	}
+
+	.c-toggle__thumb {
+		@mixin t-transition single-arg(transform, background-color);
+
+		position: absolute;
+		inset-inline-start: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-inline: calc(0.25 * var(--v-gap-inline));
+		inline-size: calc(var(--v-input-height) - var(--v-gap-inline));
+		block-size: calc(var(--v-input-height) - var(--v-gap-inline));
+		border-radius: 50%;
+		background: var(--v-muted);
+	}
+
+	.c-toggle:has(input:checked) {
+		background: var(--v-accent);
+		border-color: var(--v-accent);
+	}
+
+	.c-toggle:has(input:checked) .c-toggle__thumb {
+		transform: translateX(calc(0.75 * var(--v-input-height)));
+		background: var(--v-bg);
+	}
+
+	.c-toggle:has(input:focus-visible) {
+		@mixin t-focus-ring;
+	}
+
+	.c-toggle:has(input:disabled, input[aria-disabled='true']) {
+		@mixin t-disabled;
+	}
+}

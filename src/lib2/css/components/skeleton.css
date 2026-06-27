@@ -1,0 +1,24 @@
+/*
+	c-skeleton (§10.1) — a loading placeholder block. A muted fill that shimmers via the
+	t-shimmer mixin (static under prefers-reduced-motion). Modifiers shape it as a text
+	line or a circle.
+*/
+@layer components {
+	.c-skeleton {
+		@mixin t-shimmer;
+
+		display: block;
+		min-block-size: 1em;
+		background: color-mix(in hsl, var(--v-muted) 28%, var(--v-bg));
+		border-radius: var(--v-radius-min);
+	}
+
+	.c-skeleton--text {
+		block-size: 1em;
+	}
+
+	.c-skeleton--circle {
+		aspect-ratio: 1;
+		border-radius: 50%;
+	}
+}

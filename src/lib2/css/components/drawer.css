@@ -1,0 +1,53 @@
+/*
+	c-drawer (§10.2) — an edge-anchored <dialog>. Composes o-dialog, then pins to one
+	viewport edge per side variant and fills the cross axis. Same backdrop treatment as
+	c-modal. Slide transitions + focus management are wired in Phase 5.
+*/
+@layer components {
+	.c-drawer {
+		@mixin o-dialog;
+
+		position: fixed;
+		margin: 0;
+		max-block-size: 100dvh;
+		max-inline-size: 100dvw;
+		border: 0;
+		background: var(--v-bg);
+		box-shadow: var(--v-shadow-outer);
+	}
+
+	.c-drawer--start,
+	.c-drawer--end {
+		inset-block: 0;
+		block-size: 100dvh;
+		inline-size: min(22rem, 90vw);
+	}
+
+	.c-drawer--start {
+		inset-inline-start: 0;
+	}
+
+	.c-drawer--end {
+		inset-inline-end: 0;
+	}
+
+	.c-drawer--top,
+	.c-drawer--bottom {
+		inset-inline: 0;
+		inline-size: 100dvw;
+		max-block-size: 90dvh;
+	}
+
+	.c-drawer--top {
+		inset-block-start: 0;
+	}
+
+	.c-drawer--bottom {
+		inset-block-end: 0;
+	}
+
+	.c-drawer::backdrop {
+		background: hsl(0deg 0% 0% / 50%);
+		backdrop-filter: blur(4px);
+	}
+}

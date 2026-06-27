@@ -1,0 +1,40 @@
+/*
+	c-select-native (§10.1) — chrome around a native <select>. Same surface as c-input
+	(o-input-box, inner shadow, focus ring) with the native arrow suppressed and a themed
+	chevron painted in the trailing inline space.
+*/
+@layer components {
+	.c-select-native {
+		@mixin o-input-box;
+		@mixin t-transition-color;
+
+		inline-size: 100%;
+		border-style: solid;
+		border-color: var(--v-border-color);
+		background: var(--v-bg);
+		box-shadow: var(--v-shadow-inner);
+		cursor: pointer;
+		appearance: none;
+
+		/* Room for the chevron + a chevron drawn with two gradients (themes via fg). */
+		padding-inline-end: calc(var(--v-control-inset) + 1.25em);
+		background-image: linear-gradient(45deg, transparent 50%, currentcolor 50%),
+			linear-gradient(135deg, currentcolor 50%, transparent 50%);
+		background-position:
+			calc(100% - var(--v-control-inset) - 0.35em) center,
+			calc(100% - var(--v-control-inset)) center;
+		background-size:
+			0.35em 0.35em,
+			0.35em 0.35em;
+		background-repeat: no-repeat;
+	}
+
+	.c-select-native:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-select-native:disabled,
+	.c-select-native[aria-disabled='true'] {
+		@mixin t-disabled;
+	}
+}

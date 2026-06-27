@@ -1,0 +1,18 @@
+/*
+	c-spinner (§10.1) — an indeterminate loading ring. Pure CSS: a partially-transparent
+	border with one opaque edge, spun via the t-spin mixin (which settles to a static frame
+	under prefers-reduced-motion). Sized in em so it tracks the surrounding text.
+*/
+@layer components {
+	.c-spinner {
+		@mixin t-spin;
+
+		display: inline-block;
+		inline-size: 1.25em;
+		block-size: 1.25em;
+		border: 0.15em solid color-mix(in hsl, currentcolor 25%, transparent);
+		border-block-start-color: currentcolor;
+		border-radius: 50%;
+		vertical-align: text-bottom;
+	}
+}

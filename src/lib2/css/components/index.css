@@ -1,1 +1,28 @@
-/* Components layer (§10.1) — visual chrome composing objects + variants. Filled in 3b. */
+/* Components layer (§10.1) — visual chrome composing objects + variants + state mixins. */
+
+/* Form + action primitives. */
+@import './button.css';
+@import './input.css';
+@import './checkbox.css';
+@import './radio.css';
+@import './toggle.css';
+@import './select-native.css';
+
+/* Surfaces + content. */
+@import './card.css';
+@import './alert.css';
+@import './tag.css';
+@import './badge.css';
+@import './avatar.css';
+@import './spinner.css';
+@import './skeleton.css';
+@import './disclosure.css';
+
+/* Browser-primitive chrome (JS wiring lands in Phase 5). */
+@import './tooltip.css';
+@import './tabs.css';
+@import './modal.css';
+@import './drawer.css';
+@import './popover.css';
+@import './menu-component.css';
+@import './styled-select.css';

@@ -1,0 +1,28 @@
+/*
+	c-menu (§10.1) — chrome on the o-menu object: the popover surface (border, shadow,
+	popover tone) plus the row highlight. The highlight is MODE-AWARE (§12.2.4): pointer
+	users get it on :hover, keyboard users (body[data-v-kb-nav]) get it on the active
+	descendant (data-active) — never both at once, so the mouse doesn't fight the caret.
+*/
+@layer components {
+	/* Composed with o-menu in markup (`class="c-menu o-menu"`); this adds the chrome. */
+	.c-menu {
+		@mixin v-colors-popover;
+
+		border: var(--v-border-width) solid var(--v-border-color);
+		box-shadow: var(--v-shadow-outer);
+	}
+
+	.c-menu .o-menu-item {
+		cursor: pointer;
+	}
+
+	body:not([data-v-kb-nav]) .c-menu .o-menu-item:hover,
+	body[data-v-kb-nav] .c-menu .o-menu-item[data-active] {
+		@mixin v-colors-highlight;
+	}
+
+	.c-menu .o-menu-item:where([aria-disabled='true'], [disabled]) {
+		@mixin t-disabled;
+	}
+}

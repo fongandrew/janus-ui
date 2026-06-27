@@ -1,0 +1,56 @@
+/*
+	c-radio (§10.1) — circular sibling of c-checkbox. Custom circle over a visually-hidden
+	native <input>; checked paints a centred dot in the accent tone.
+*/
+@layer components {
+	.c-radio {
+		display: inline-flex;
+		align-items: center;
+		block-size: 1lh;
+		flex: none;
+		cursor: pointer;
+	}
+
+	.c-radio__circle {
+		@mixin t-transition-color;
+
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		inline-size: 1em;
+		block-size: 1em;
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: 50%;
+		background: var(--v-bg);
+		box-shadow: var(--v-shadow-inner);
+	}
+
+	.c-radio input {
+		@mixin t-sr-only;
+	}
+
+	.c-radio:has(input:focus-visible) .c-radio__circle {
+		@mixin t-focus-ring;
+	}
+
+	.c-radio__dot {
+		display: none;
+		inline-size: 60%;
+		block-size: 60%;
+		border-radius: 50%;
+		background: var(--v-accent);
+	}
+
+	.c-radio input:checked ~ .c-radio__dot {
+		display: block;
+	}
+
+	.c-radio:has(input:checked) .c-radio__circle {
+		border-color: var(--v-accent);
+	}
+
+	.c-radio:has(input:disabled, input[aria-disabled='true']) {
+		@mixin t-disabled;
+	}
+}

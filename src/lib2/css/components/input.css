@@ -1,0 +1,64 @@
+/*
+	c-input / c-textarea (§10.1) — text-bearing controls. Compose o-input-box for height,
+	text-mode padding, and radius; add the embossed inner shadow, focus ring, invalid
+	border, and disabled treatment. The base palette is the surface (no separate input
+	tone in v2 — the page background IS the field background).
+*/
+@layer components {
+	.c-input,
+	.c-textarea {
+		@mixin o-input-box;
+		@mixin t-transition-color;
+
+		inline-size: 100%;
+		border-style: solid;
+		border-color: var(--v-border-color);
+		background: var(--v-bg);
+		box-shadow: var(--v-shadow-inner);
+		cursor: text;
+	}
+
+	/* Date/time controls drop their native chrome so the shared styling reads. */
+	.c-input:where(
+			[type='date'],
+			[type='time'],
+			[type='datetime-local'],
+			[type='month'],
+			[type='week']
+		) {
+		appearance: none;
+	}
+
+	/* Textarea is multi-line: uniform block padding, grows vertically. */
+	.c-textarea {
+		min-block-size: calc(var(--v-input-height) * 2);
+		padding-block: var(--v-pad-block);
+		resize: vertical;
+	}
+
+	.c-input::placeholder,
+	.c-textarea::placeholder {
+		color: var(--v-muted);
+	}
+
+	.c-input:focus-visible,
+	.c-textarea:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-input:user-invalid,
+	.c-input[aria-invalid='true'],
+	.c-textarea:user-invalid,
+	.c-textarea[aria-invalid='true'] {
+		@mixin t-error;
+	}
+
+	.c-input:disabled,
+	.c-input[aria-disabled='true'],
+	.c-textarea:disabled,
+	.c-textarea[aria-disabled='true'] {
+		@mixin t-disabled;
+
+		background: color-mix(in hsl, var(--v-muted) 10%, var(--v-bg));
+	}
+}

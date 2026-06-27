@@ -1,0 +1,30 @@
+/*
+	c-avatar (§10.1) — a 1:1 image or initials. Composes o-square (aspect-ratio: 1, reads
+	--v-radius, so `--v-radius: 50%` makes it a circle). Default size is the control height;
+	override --c-avatar__size or inline-size.
+*/
+@layer components {
+	.c-avatar {
+		@mixin o-square;
+		@mixin v-font-weight var(--v-font-weight-label);
+
+		--c-avatar__size: var(--v-input-height);
+
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		inline-size: var(--c-avatar__size);
+		overflow: hidden;
+		background: color-mix(in hsl, var(--v-muted) 35%, var(--v-bg));
+		color: var(--v-fg);
+		font-size: calc(var(--c-avatar__size) * 0.4);
+		text-transform: uppercase;
+		user-select: none;
+	}
+
+	.c-avatar img {
+		inline-size: 100%;
+		block-size: 100%;
+		object-fit: cover;
+	}
+}
