@@ -131,11 +131,11 @@ function radiusSection(): string {
 			{
 				name: '--v-radius',
 				def: 'calc(var(--v-radius-min) + 2 * var(--v-spacing))',
-				desc: 'The MAX radius — the assumed frame corner; the cascade anchor (~2.25rem at defaults).',
+				desc: 'The MAX radius — the assumed frame corner; the cascade anchor (~2.375rem at defaults).',
 			},
 			{
 				name: '--v-radius-min',
-				def: '0.25rem',
+				def: '0.375rem',
 				desc: 'The MIN radius — the floor. Nothing rounds below it.',
 			},
 			{

@@ -74,8 +74,8 @@ Root knobs split into two tiers:
 
 Layout & rhythm:
 - `--v-spacing` — base spacing unit (default `1rem`). Keeps chrome rhythm on the 16px grid while body text sits a touch below it at a fixed 15px (see `--v-font-size-min`).
-- `--v-radius` — the **max** radius, carried by the outermost frame (window / dialog); the anchor the per-layer radii step *inward* from (§8). Default `0.5rem`. Used by `o-dialog`, `o-square`, and page-body framing.
-- `--v-radius-min` — the radius **floor** (default `0.25rem`). Nothing rounds below it, so corners are never sharp; the inward cascade bottoms out here (§8).
+- `--v-radius` — the **max** radius, carried by the outermost frame (window / dialog); the anchor the per-layer radii step *inward* from (§8). Default `calc(--v-radius-min + 2 × --v-spacing)` (≈ `2.375rem`) — derived from the floor so the cascade always has range to step. Used by `o-dialog`, `o-square`, and page-body framing.
+- `--v-radius-min` — the radius **floor** (default `0.375rem`). Nothing rounds below it, so corners are never sharp; the inward cascade bottoms out here (§8).
 - `--v-border-width` — base border width (default `1px`).
 - `--v-input-height` — height of interactive controls (default `2.5rem`). Drives `o-input-box` and the controls layered on it. Deliberately *independent* of `--v-spacing`.
 
@@ -213,7 +213,8 @@ Two rules:
   --v-pad-inline: var(--v-spacing);
   --v-gap-block:  var(--v-spacing);
   --v-gap-inline: calc(var(--v-spacing) * 0.5);
-  --v-radius:     0.5rem;
+  --v-radius-min: 0.375rem;
+  --v-radius:     calc(var(--v-radius-min) + 2 * var(--v-spacing)); /* ≈ 2.375rem */
   /* …rest of §5.1 */
 }
 

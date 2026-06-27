@@ -14,7 +14,7 @@
 :root {
 	/*
 		The MAX — the assumed window/frame corner; the anchor the cascade steps in from.
-		Set to the floor plus two spacing steps (~2.25rem at defaults) so there's enough
+		Set to the floor plus two spacing steps (~2.375rem at defaults) so there's enough
 		range for the inward cascade to visibly step at each level on a real page, not
 		just in a contrived demo. Referencing the knobs documents the relationship; the
 		freezing rule (§5.2) keeps a descendant density scope's --v-spacing override from
@@ -23,7 +23,7 @@
 	--v-radius: calc(var(--v-radius-min) + 2 * var(--v-spacing));
 
 	/* The MIN — the floor. Nothing rounds below it; deep elements bottom out here. */
-	--v-radius-min: 0.25rem;
+	--v-radius-min: 0.375rem;
 
 	/*
 		Dialog floats this far inside the viewport, so its corners read concentric with
