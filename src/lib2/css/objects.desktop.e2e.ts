@@ -6,7 +6,7 @@ import { expect, test } from '@playwright/test';
 	spacing, and layout reflow / gaps.
 */
 
-const OBJECTS_URL = '/lib2-objects.html';
+const OBJECTS_URL = '/v2-objects.html';
 
 test('radius cascade steps inward, floors at the min, and flattens when min == max', async ({
 	page,

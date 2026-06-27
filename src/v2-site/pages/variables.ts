@@ -4,10 +4,11 @@
 	static markup + index.css, zero JS. The per-token slider islands hydrate on top
 	later (Phase 9) and are never a prerequisite for this page.
 
-	Shell/demo styling uses the site's `s-` classes (see site.css); the LIVE RENDERS
-	deliberately drive real --v-* tokens so a reviewer sees the token in effect.
+	Page structure dogfoods real objects (o-stack, o-grid, o-prose, o-box); genuine
+	chrome uses the project `p-` classes (see site.css). The LIVE RENDERS deliberately
+	drive real --v-* tokens so a reviewer sees the token in effect.
 */
-import { esc, renderPage } from '~/lib2-site/layout';
+import { esc, renderPage } from '~/v2-site/layout';
 
 interface Knob {
 	name: string;
@@ -38,12 +39,18 @@ function knobTable(rows: Knob[]): string {
 	</table>`;
 }
 
-function section(opts: { id: string; title: string; table: string; render: string }): string {
+function section(opts: {
+	id: string;
+	title: string;
+	table: string;
+	render: string;
+	renderClass?: string;
+}): string {
 	return `
-	<section class="s-card" id="${opts.id}">
+	<section class="o-box p-card" id="${opts.id}">
 		<h2>${esc(opts.title)}</h2>
 		${opts.table}
-		<div class="s-render">${opts.render}</div>
+		<div class="p-render ${opts.renderClass ?? ''}">${opts.render}</div>
 	</section>`;
 }
 
@@ -51,7 +58,7 @@ function spacingSection(): string {
 	const ruler = ['--v-gap-inline', '--v-gap-block', '--v-pad-inline', '--v-spacing']
 		.map(
 			(v) =>
-				`<div class="s-bar-row"><span class="s-bar-row__label"><code>${v}</code></span><span class="s-bar" style="inline-size: var(${v})"></span></div>`,
+				`<div class="p-bar-row"><span class="p-bar-row__label"><code>${v}</code></span><span class="p-bar" style="inline-size: var(${v})"></span></div>`,
 		)
 		.join('');
 
@@ -101,10 +108,19 @@ function spacingSection(): string {
 }
 
 function radiusSection(): string {
-	const row = ['0', '0.25rem', '0.5rem', '1rem', '2rem']
+	// Tiles read the ACTUAL tokens (not floating literals): the two root anchors plus
+	// each computed cascade step, so the corners shown are exactly what the variables
+	// resolve to at their defaults.
+	const tiles = [
+		{ label: '--v-radius', value: 'var(--v-radius)' },
+		{ label: '--o-dialog__radius', value: 'var(--o-dialog__radius)' },
+		{ label: '--o-box__radius', value: 'var(--o-box__radius)' },
+		{ label: '--o-input-box__radius', value: 'var(--o-input-box__radius)' },
+		{ label: '--v-radius-min', value: 'var(--v-radius-min)' },
+	]
 		.map(
-			(r) =>
-				`<span class="s-radius-tile" style="--v-radius: ${r}; border-radius: var(--v-radius)">${r}</span>`,
+			(t) =>
+				`<span class="p-radius-tile" style="border-radius: ${t.value}"><code>${t.label}</code></span>`,
 		)
 		.join('');
 
@@ -124,30 +140,30 @@ function radiusSection(): string {
 			},
 			{
 				name: '--v-border-color',
-				def: 'color-mix(… --v-border-dynamic-* and --v-bg)',
+				def: 'color-mix(in hsl, var(--v-border-dynamic-base) var(--v-border-dynamic-mix), var(--v-bg))',
 				desc: 'Dynamic border, a fixed perceptual distance from any surface.',
 				derived: true,
 			},
 			{
 				name: '--o-dialog__radius',
-				def: 'max(min, --v-radius − offset)',
+				def: 'max(var(--v-radius-min), calc(var(--v-radius) - var(--o-dialog__offset)))',
 				desc: 'Dialog corner (cascade).',
 				derived: true,
 			},
 			{
 				name: '--o-box__radius',
-				def: 'max(min, --v-radius − pad)',
+				def: 'max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad-inline)))',
 				desc: 'Box corner (cascade).',
 				derived: true,
 			},
 			{
 				name: '--o-input-box__radius',
-				def: 'max(min, box − pad)',
+				def: 'max(var(--v-radius-min), calc(var(--o-box__radius) - var(--v-pad-inline)))',
 				desc: 'Control corner, one step deeper than its box.',
 				derived: true,
 			},
 		]),
-		render: `<div class="s-tile-row">${row}</div>`,
+		render: `<div class="p-tile-row">${tiles}</div>`,
 	});
 }
 
@@ -162,7 +178,7 @@ function colorSection(): string {
 	]
 		.map(
 			(s) =>
-				`<div class="s-swatch" id="${s.id}" style="background: var(${s.cssVar})"><code>${s.label}</code></div>`,
+				`<div class="p-swatch" id="${s.id}" style="background: var(${s.cssVar})"><code>${s.label}</code></div>`,
 		)
 		.join('');
 
@@ -215,7 +231,7 @@ function colorSection(): string {
 				derived: true,
 			},
 		]),
-		render: `<div class="s-swatch-grid">${swatches}</div>`,
+		render: `<div class="o-grid" style="--o-grid__min: 10rem">${swatches}</div>`,
 	});
 }
 
@@ -230,7 +246,7 @@ function typographySection(): string {
 	]
 		.map(
 			([v, label]) =>
-				`<div class="s-ramp-row" style="font-size: var(${v})"><span class="s-ramp-row__label"><code>${v}</code></span> ${label}</div>`,
+				`<div class="p-ramp-row" style="font-size: var(${v})"><span class="p-ramp-row__label"><code>${v}</code></span> ${label}</div>`,
 		)
 		.join('');
 
@@ -274,9 +290,27 @@ function typographySection(): string {
 				derived: true,
 			},
 			{
+				name: '--v-font-size-h2',
+				def: 'clamp() step +2',
+				desc: 'Section heading.',
+				derived: true,
+			},
+			{
+				name: '--v-font-size-h3',
+				def: 'clamp() step +1',
+				desc: 'Sub-heading.',
+				derived: true,
+			},
+			{
 				name: '--v-font-size-caption',
 				def: 'clamp() step −1',
 				desc: 'Caption / badge / tooltip text (floored ~13px).',
+				derived: true,
+			},
+			{
+				name: '--v-font-size-code',
+				def: 'var(--v-font-size-caption)',
+				desc: 'Monospace text size.',
 				derived: true,
 			},
 			{
@@ -286,7 +320,7 @@ function typographySection(): string {
 				derived: true,
 			},
 		]),
-		render: `<div class="s-stack">${ramp}</div>`,
+		render: `<div class="o-stack">${ramp}</div>`,
 	});
 }
 
@@ -299,7 +333,7 @@ function shadowSection(): string {
 	]
 		.map(
 			(v) =>
-				`<div class="s-shadow-tile" style="box-shadow: var(${v})"><code>${v}</code></div>`,
+				`<div class="p-shadow-tile" style="box-shadow: var(${v})"><code>${v}</code></div>`,
 		)
 		.join('');
 
@@ -330,7 +364,8 @@ function shadowSection(): string {
 			{ name: '--v-duration', def: '240ms', desc: 'Standard transition pace.' },
 			{ name: '--v-ease', def: 'cubic-bezier(0.4, 0, 0.2, 1)', desc: 'Standard easing.' },
 		]),
-		render: `<div class="s-tile-row">${tiles}</div>`,
+		renderClass: 'p-render--surface',
+		render: `<div class="o-grid" style="--o-grid__min: 11rem">${tiles}</div>`,
 	});
 }
 
@@ -339,8 +374,8 @@ export function render(): string {
 		section: 'composition',
 		composition: 'variables',
 		main: `
-		<div class="s-stack">
-			<header class="s-prose">
+		<div class="o-stack">
+			<header class="o-prose">
 				<h1>Variables</h1>
 				<p>
 					Every public <code>--v-*</code> knob, with its default, tier, and a live

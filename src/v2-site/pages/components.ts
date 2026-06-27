@@ -1,5 +1,5 @@
 /* Components section stub — built last (PLAN Phase 9, §20.4). */
-import { renderStub } from '~/lib2-site/layout';
+import { renderStub } from '~/v2-site/layout';
 
 export function render(): string {
 	return renderStub({

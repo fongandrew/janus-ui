@@ -11,8 +11,10 @@
 	markup — NOT finished Card/Nav/Sidebar Solid components — and it is refactored into
 	real components later (Phase 9). Its styling lives in `site.css` under an `s-`
 	(site) prefix, deliberately kept separate from the library classes under review so
-	the doc pages exercise the real `o-*` / `c-*` / `v-*` CSS without the shell's own
-	styling masking it.
+	the doc pages exercise the real `o-*` / `c-*` / `v-*` CSS. The doc site is itself a
+	PROJECT consuming the library, so its chrome carries the `p-` (project) prefix —
+	the same tier v1 uses — while page structure dogfoods real objects (o-stack,
+	o-grid, o-prose, o-box). Refactored into real components later (Phase 9).
 */
 
 /** Minimal HTML attribute-value escaping for interpolated strings. */
@@ -26,17 +28,17 @@ export function esc(value: string): string {
 
 /** The three top-level sections. Three is the ceiling (§19). */
 export const TOP_NAV = [
-	{ label: 'Composition', href: '/lib2-variables.html', key: 'composition' },
-	{ label: 'Colors', href: '/lib2-colors.html', key: 'colors' },
-	{ label: 'Components', href: '/lib2-components.html', key: 'components' },
+	{ label: 'Composition', href: '/v2-variables.html', key: 'composition' },
+	{ label: 'Colors', href: '/v2-colors.html', key: 'colors' },
+	{ label: 'Components', href: '/v2-components.html', key: 'components' },
 ] as const;
 
-/** The Composition section's internal sidebar / ToC (§20.2). */
+/** The Composition section's internal sidebar / ToC. */
 export const COMPOSITION_NAV = [
-	{ label: 'Variables', href: '/lib2-variables.html', key: 'variables' },
-	{ label: 'Objects', href: '/lib2-objects.html', key: 'objects' },
-	{ label: 'Tools', href: '/lib2-tools.html', key: 'tools' },
-	{ label: 'Typography', href: '/lib2-typography.html', key: 'typography' },
+	{ label: 'Variables', href: '/v2-variables.html', key: 'variables' },
+	{ label: 'Objects', href: '/v2-objects.html', key: 'objects' },
+	{ label: 'Tools', href: '/v2-tools.html', key: 'tools' },
+	{ label: 'Typography', href: '/v2-typography.html', key: 'typography' },
 ] as const;
 
 export type TopNavKey = (typeof TOP_NAV)[number]['key'];
@@ -54,29 +56,29 @@ export interface PageOptions {
 function topNav(active?: TopNavKey): string {
 	const links = TOP_NAV.map((item) => {
 		const current = item.key === active ? ' aria-current="page"' : '';
-		return `<a class="s-nav__link" href="${item.href}"${current}>${item.label}</a>`;
+		return `<a class="p-nav__link" href="${item.href}"${current}>${item.label}</a>`;
 	}).join('');
 
 	return `
-	<header class="s-nav">
-		<a class="s-nav__brand" href="/lib2-home.html">Janus <span class="s-nav__brand-v">v2</span></a>
-		<nav class="s-nav__links" aria-label="Primary">
+	<header class="p-nav">
+		<a class="p-nav__brand" href="/v2-home.html">Janus <span class="p-nav__brand-v">v2</span></a>
+		<nav class="p-nav__links" aria-label="Primary">
 			${links}
 		</nav>
-		<button type="button" class="s-nav__config" aria-label="Configure" disabled>&#9881;</button>
+		<button type="button" class="p-nav__config" aria-label="Configure" disabled>&#9881;</button>
 	</header>`;
 }
 
 function compositionSidebar(active?: CompositionKey): string {
 	const links = COMPOSITION_NAV.map((item) => {
 		const current = item.key === active ? ' aria-current="page"' : '';
-		return `<li><a class="s-sidebar__link" href="${item.href}"${current}>${item.label}</a></li>`;
+		return `<li><a class="p-sidebar__link" href="${item.href}"${current}>${item.label}</a></li>`;
 	}).join('');
 
 	return `
-	<aside class="s-sidebar" aria-label="Composition">
-		<p class="s-sidebar__heading">Composition</p>
-		<ul class="s-sidebar__list">
+	<aside class="p-sidebar" aria-label="Composition">
+		<p class="p-sidebar__heading">Composition</p>
+		<ul class="p-sidebar__list">
 			${links}
 		</ul>
 	</aside>`;
@@ -85,17 +87,17 @@ function compositionSidebar(active?: CompositionKey): string {
 /** Render a full doc-page body (nav + main + footer). */
 export function renderPage(opts: PageOptions): string {
 	const sidebar = opts.composition ? compositionSidebar(opts.composition) : '';
-	const layoutClass = opts.composition ? 's-page s-page--with-sidebar' : 's-page';
+	const layoutClass = opts.composition ? 'p-page p-page--with-sidebar' : 'p-page';
 
 	return `
 ${topNav(opts.section)}
 <div class="${layoutClass}">
 	${sidebar}
-	<main class="s-main">
+	<main class="p-main">
 		${opts.main}
 	</main>
 </div>
-<footer class="s-footer">
+<footer class="p-footer">
 	<p>Janus v2 — documentation site. This shell is ad-hoc markup; it becomes real components in Phase 9.</p>
 </footer>`;
 }
@@ -111,9 +113,11 @@ export function renderStub(opts: {
 		...(opts.section ? { section: opts.section } : {}),
 		...(opts.composition ? { composition: opts.composition } : {}),
 		main: `
-		<div class="s-card">
-			<h1>${esc(opts.title)}</h1>
-			<p>${esc(opts.blurb)}</p>
+		<div class="o-box p-card">
+			<div class="o-prose">
+				<h1>${esc(opts.title)}</h1>
+				<p>${esc(opts.blurb)}</p>
+			</div>
 		</div>`,
 	});
 }

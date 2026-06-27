@@ -7,8 +7,8 @@ import { expect, test } from '@playwright/test';
 	base elements + light/dark switching apply.
 */
 
-const VARIABLES_URL = '/lib2-variables.html';
-const TYPOGRAPHY_URL = '/lib2-typography.html';
+const VARIABLES_URL = '/v2-variables.html';
+const TYPOGRAPHY_URL = '/v2-typography.html';
 
 const PRIMARY_KNOBS = [
 	'--v-spacing',

@@ -184,6 +184,16 @@
 		@mixin v-font-weight var(--v-font-weight-label);
 	}
 
+	/* Header row + zebra striping: a faint --v-muted tint, theme-tracking. */
+	thead th,
+	thead td {
+		background: color-mix(in hsl, var(--v-muted) 10%, var(--v-bg));
+	}
+
+	tbody tr:nth-child(even) > :where(td, th) {
+		background: color-mix(in hsl, var(--v-muted) 5%, var(--v-bg));
+	}
+
 	* + tbody,
 	* + tr,
 	* + tfoot {

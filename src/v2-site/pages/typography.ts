@@ -9,7 +9,7 @@
 	move it, and that is correct. The fluid opt-in (a width-draggable frame) is a
 	Phase 9 enhancement layered on top.
 */
-import { renderPage } from '~/lib2-site/layout';
+import { renderPage } from '~/v2-site/layout';
 
 function rampTable(): string {
 	const rows = [
@@ -39,8 +39,8 @@ export function render(): string {
 		section: 'composition',
 		composition: 'typography',
 		main: `
-		<div class="s-stack">
-			<header class="s-prose">
+		<div class="o-stack">
+			<header class="o-prose">
 				<h1>Typography</h1>
 				<p>
 					The base-layer type system rendered on real elements. The scale ships
@@ -50,7 +50,7 @@ export function render(): string {
 				</p>
 			</header>
 
-			<section class="s-card" id="headings">
+			<section class="o-box p-card" id="headings">
 				<h2>Headings</h2>
 				<h1>Heading level 1</h1>
 				<h2>Heading level 2</h2>
@@ -63,7 +63,7 @@ export function render(): string {
 				</header>
 			</section>
 
-			<section class="s-card" id="prose">
+			<section class="o-box p-card" id="prose">
 				<h2>Body &amp; links</h2>
 				<p>
 					Body text sits at a fixed 15px on the 16px spacing grid. It wraps normally —
@@ -78,7 +78,7 @@ export function render(): string {
 				</blockquote>
 			</section>
 
-			<section class="s-card" id="lists">
+			<section class="o-box p-card" id="lists">
 				<h2>Lists</h2>
 				<ul>
 					<li>Unordered item</li>
@@ -96,7 +96,7 @@ export function render(): string {
 				</ol>
 			</section>
 
-			<section class="s-card" id="code">
+			<section class="o-box p-card" id="code">
 				<h2>Code block</h2>
 				<pre><code>:root {
   --v-font-size: clamp(/* min */, /* fluid */, /* max */);
@@ -104,7 +104,7 @@ export function render(): string {
 }</code></pre>
 			</section>
 
-			<section class="s-card" id="table">
+			<section class="o-box p-card" id="table">
 				<h2>Table</h2>
 				<table>
 					<thead>
@@ -118,7 +118,7 @@ export function render(): string {
 				</table>
 			</section>
 
-			<section class="s-card" id="forms">
+			<section class="o-box p-card" id="forms">
 				<h2>Form defaults</h2>
 				<p><input type="text" placeholder="Text input" /></p>
 				<p><input type="email" placeholder="you@example.com" /></p>
@@ -131,7 +131,7 @@ export function render(): string {
 				</p>
 			</section>
 
-			<section class="s-card" id="ramp">
+			<section class="o-box p-card" id="ramp">
 				<h2>Resolved scale (default fixed config)</h2>
 				${rampTable()}
 			</section>

@@ -1,21 +1,25 @@
 /*
-	Documentation-site application styling. NOT part of the library.
+	Documentation-site application styling — the doc site is a PROJECT that consumes
+	the library, so its own chrome is prefixed `p-` (project), the same tier v1 uses
+	for app-specific components. It never collides with the library's `o-*` / `c-*` /
+	`v-*` / `t-*` classes.
 
-	Everything here is prefixed `s-` (site) so it never collides with the library's
-	`o-*` / `c-*` / `v-*` / `t-*` classes — the doc pages can drive the real library
-	tokens in their live renders without this stylesheet masking them. Per PLAN this
-	ad-hoc shell is refactored into real Solid components in Phase 9.
+	Where the library already ships a primitive, the pages use it directly (o-stack,
+	o-grid, o-prose, o-box) so the doc site dogfoods the real objects; `p-` is reserved
+	for genuine app chrome with no object equivalent (nav, sidebar, cards, demo frames).
 
 	It consumes the library's --v-* tokens (index.css is loaded first), so it tracks
 	the theme.
 */
 
 /* Top nav -------------------------------------------------------------------- */
-.s-nav {
+.p-nav {
 	display: flex;
 	align-items: center;
 	gap: var(--v-gap-inline);
-	padding: var(--v-pad-block) var(--v-pad-inline);
+
+	/* Block padding kept tight so the control-height config button sets the bar height. */
+	padding: calc(var(--v-spacing) * 0.5) var(--v-pad-inline);
 	border-bottom: var(--v-border-width) solid var(--v-border-color);
 	position: sticky;
 	top: 0;
@@ -23,78 +27,85 @@
 	background: var(--v-bg);
 }
 
-.s-nav__brand {
+.p-nav__brand {
 	font-weight: var(--v-font-weight-title);
 	font-size: var(--v-font-size-h3);
 	margin-inline-end: auto;
 }
 
-.s-nav__brand-v {
+.p-nav__brand-v {
 	color: var(--v-muted);
 	font-weight: var(--v-font-weight-label);
 }
 
-.s-nav__links {
+.p-nav__links {
 	display: flex;
 	gap: var(--v-gap-inline);
 }
 
-.s-nav__link {
+.p-nav__link {
 	color: var(--v-fg);
 	text-decoration: none;
-	padding: 0.25rem 0.5rem;
-	border-radius: var(--v-radius-min);
+	padding: var(--v-control-inset) var(--v-gap-inline);
+	border-radius: var(--o-input-box__radius, var(--v-radius-min));
 }
 
-.s-nav__link[aria-current='page'] {
+.p-nav__link[aria-current='page'] {
 	color: var(--v-link);
 	font-weight: var(--v-font-weight-label);
 }
 
-.s-nav__link:hover {
+.p-nav__link:hover {
 	background: color-mix(in hsl, var(--v-muted) 12%, transparent);
 }
 
-.s-nav__config {
-	border: var(--v-border-width) solid var(--v-border-color);
-	border-radius: var(--v-radius-min);
+/* Square icon button, control-height, sharing the cascade's control radius. */
+.p-nav__config {
+	display: grid;
+	place-content: center;
 	inline-size: var(--v-input-height);
 	block-size: var(--v-input-height);
+	border: var(--v-border-width) solid var(--v-border-color);
+	border-radius: var(--o-input-box__radius, var(--v-radius-min));
 	background: var(--v-bg);
 	cursor: not-allowed;
 }
 
 /* Page layout ---------------------------------------------------------------- */
-.s-page {
+.p-page {
 	max-inline-size: 64rem;
 	margin-inline: auto;
 	padding: var(--v-spacing);
 }
 
-.s-page--with-sidebar {
+.p-page--with-sidebar {
 	display: grid;
 	grid-template-columns: 1fr;
 	gap: var(--v-spacing);
 }
 
 @media (width >= 768px) {
-	.s-page--with-sidebar {
+	.p-page--with-sidebar {
 		grid-template-columns: 14rem minmax(0, 1fr);
+	}
+
+	/* Sticky only on wide layouts — at narrow widths it stacks above the content. */
+	.p-sidebar {
+		position: sticky;
+		top: calc(var(--v-input-height) + var(--v-spacing) * 2);
 	}
 }
 
-.s-sidebar {
+.p-sidebar {
 	align-self: start;
-	position: sticky;
-	top: calc(var(--v-input-height) + var(--v-spacing) * 2);
 }
 
-.s-sidebar__heading {
+.p-sidebar__heading {
 	font-weight: var(--v-font-weight-title);
 	margin-block-end: 0.5rem;
 }
 
-.s-sidebar__list {
+.p-sidebar__list {
 	list-style: none;
 	padding: 0;
 	display: flex;
@@ -102,7 +113,16 @@
 	gap: 0.125rem;
 }
 
-.s-sidebar__link {
+/* Below the sidebar breakpoint, lay the links out as a horizontal wrap bar so the
+   nav reads as a compact strip instead of a tall column pushing content down. */
+@media (width < 768px) {
+	.p-sidebar__list {
+		flex-flow: row wrap;
+		gap: var(--v-gap-inline);
+	}
+}
+
+.p-sidebar__link {
 	display: block;
 	color: var(--v-fg);
 	text-decoration: none;
@@ -110,17 +130,17 @@
 	border-radius: var(--v-radius-min);
 }
 
-.s-sidebar__link[aria-current='page'] {
+.p-sidebar__link[aria-current='page'] {
 	background: color-mix(in hsl, var(--v-accent) 14%, transparent);
 	color: var(--v-link);
 	font-weight: var(--v-font-weight-label);
 }
 
-.s-main {
+.p-main {
 	min-inline-size: 0;
 }
 
-.s-footer {
+.p-footer {
 	max-inline-size: 64rem;
 	margin-inline: auto;
 	padding: var(--v-spacing);
@@ -130,91 +150,80 @@
 	margin-block-start: var(--v-spacing);
 }
 
-/* Generic building blocks ---------------------------------------------------- */
-.s-stack {
-	display: flex;
-	flex-direction: column;
-	gap: calc(var(--v-spacing) * 1.5);
-}
-
-.s-grid {
-	display: grid;
-	gap: var(--v-spacing);
-	grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
-}
-
-.s-card {
+/* Cards (project component — composes o-box for padding + radius) ------------- */
+.p-card {
 	border: var(--v-border-width) solid var(--v-border-color);
-	border-radius: var(--v-radius);
 	background: var(--v-bg);
 	box-shadow: var(--v-shadow-outer);
-	padding: var(--v-spacing);
 	display: flex;
 	flex-direction: column;
 	gap: var(--v-spacing);
 }
 
-.s-card--link {
+.p-card--link {
 	text-decoration: none;
 	color: inherit;
 	gap: 0.5rem;
 }
 
-.s-card--link:hover {
+.p-card--link:hover {
 	border-color: var(--v-accent);
 }
 
-.s-hero {
+.p-hero {
 	padding-block: var(--v-spacing);
 }
 
-.s-hero h1 {
+.p-hero h1 {
 	margin-block-end: 0.5rem;
 }
 
-.s-prose p {
-	max-inline-size: 60ch;
-}
-
 /* Live-render demo helpers --------------------------------------------------- */
-.s-render {
+.p-render {
 	border: var(--v-border-width) dashed var(--v-border-color);
 	border-radius: var(--v-radius-min);
 	padding: var(--v-spacing);
 	overflow: auto;
 }
 
-.s-bar-row {
+/* A faintly tinted surface so light tiles + their shadows read against it. */
+.p-render--surface {
+	background: color-mix(in hsl, var(--v-muted) 6%, var(--v-bg));
+}
+
+.p-bar-row {
 	display: flex;
 	align-items: center;
 	gap: var(--v-gap-inline);
 	margin-block-end: 0.5rem;
 }
 
-.s-bar-row__label {
+.p-bar-row__label {
 	flex: none;
 	inline-size: 12rem;
 	font-size: var(--v-font-size-caption);
 }
 
-.s-bar {
+.p-bar {
 	display: block;
 	block-size: 1rem;
 	background: var(--v-accent);
 	border-radius: var(--v-radius-min);
 }
 
-.s-tile-row {
+/* Wrapping row of fixed-size demo tiles (radius swatches). */
+.p-tile-row {
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--v-spacing);
 	align-items: flex-end;
 }
 
-.s-radius-tile {
+.p-radius-tile {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	text-align: center;
 	inline-size: 5rem;
 	block-size: 5rem;
 	background: color-mix(in hsl, var(--v-accent) 18%, var(--v-bg));
@@ -222,13 +231,7 @@
 	font-size: var(--v-font-size-caption);
 }
 
-.s-swatch-grid {
-	display: grid;
-	gap: var(--v-spacing);
-	grid-template-columns: repeat(auto-fill, minmax(min(10rem, 100%), 1fr));
-}
-
-.s-swatch {
+.p-swatch {
 	block-size: 5rem;
 	border: var(--v-border-width) solid var(--v-border-color);
 	border-radius: var(--v-radius-min);
@@ -237,7 +240,7 @@
 	padding: 0.25rem;
 }
 
-.s-swatch code {
+.p-swatch code {
 	background: color-mix(in srgb, Canvas 80%, transparent);
 	color: CanvasText;
 	font-size: 0.6875rem;
@@ -245,22 +248,21 @@
 	padding: 0 0.25rem;
 }
 
-.s-ramp-row {
+.p-ramp-row {
 	line-height: 1.2;
 	display: flex;
 	align-items: baseline;
 	gap: var(--v-gap-inline);
 }
 
-.s-ramp-row__label {
+.p-ramp-row__label {
 	flex: none;
 	inline-size: 12rem;
 	font-size: var(--v-font-size-caption);
 	color: var(--v-muted);
 }
 
-.s-shadow-tile {
-	inline-size: 8rem;
+.p-shadow-tile {
 	block-size: 5rem;
 	border-radius: var(--v-radius-min);
 	background: var(--v-bg);
@@ -274,7 +276,7 @@
 /* Object-demo helpers (Objects page) --------------------------------------- */
 
 /* Neutral placeholder block to fill layout objects. */
-.s-ph {
+.p-ph {
 	padding: 0.5rem 0.75rem;
 	background: color-mix(in hsl, var(--v-muted) 12%, var(--v-bg));
 	border: var(--v-border-width) solid var(--v-border-color);
@@ -284,21 +286,21 @@
 }
 
 /* Make an object's own bounds visible without adding chrome semantics. */
-.s-outline {
+.p-outline {
 	border: var(--v-border-width) solid var(--v-border-color);
 }
 
 /* Radius-cascade demo surfaces — visible fills so the stepped corners read. */
-.s-cascade-dialog {
+.p-cascade-dialog {
 	padding: var(--v-pad-inline);
 	background: color-mix(in hsl, var(--v-accent) 8%, var(--v-bg));
 }
 
-.s-cascade-box {
+.p-cascade-box {
 	background: color-mix(in hsl, var(--v-accent) 16%, var(--v-bg));
 }
 
-.s-cascade-input {
+.p-cascade-input {
 	display: block;
 	inline-size: 100%;
 	background: color-mix(in hsl, var(--v-accent) 28%, var(--v-bg));
@@ -306,7 +308,7 @@
 	text-align: start;
 }
 
-.s-cascade-label {
+.p-cascade-label {
 	display: block;
 	font-size: var(--v-font-size-caption);
 	color: var(--v-muted);

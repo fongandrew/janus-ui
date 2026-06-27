@@ -7,26 +7,26 @@
 	cascade knob frozen at :root, §5.2) with the standard formula, so the inward radius
 	stepping is visible here AND drivable by the E2E test via the wrapper's knobs.
 */
-import { esc, renderPage } from '~/lib2-site/layout';
+import { esc, renderPage } from '~/v2-site/layout';
 
 function demo(opts: { id: string; title: string; note: string; render: string }): string {
 	return `
-	<section class="s-card" id="${opts.id}">
+	<section class="o-box p-card" id="${opts.id}">
 		<h2>${esc(opts.title)}</h2>
 		<p>${opts.note}</p>
-		<div class="s-render">${opts.render}</div>
+		<div class="p-render">${opts.render}</div>
 	</section>`;
 }
 
 /** A neutral placeholder block for filling layout objects. */
 function ph(label: string, extra = ''): string {
-	return `<div class="s-ph"${extra}>${esc(label)}</div>`;
+	return `<div class="p-ph"${extra}>${esc(label)}</div>`;
 }
 
 function cascadeDemo(): string {
 	return `
-	<section class="s-card" id="cascade">
-		<h2>Radius cascade — four-level nesting (§8)</h2>
+	<section class="o-box p-card" id="cascade">
+		<h2>Radius cascade — four-level nesting</h2>
 		<p>
 			<code>o-dialog</code> &gt; <code>o-box</code> &gt; <code>o-input-box</code>. Each level
 			steps inward from the frame by the padding between it and its parent, floored at
@@ -34,7 +34,7 @@ function cascadeDemo(): string {
 			<code>min == max</code> flattens the whole thing.
 		</p>
 		<div
-			class="s-render"
+			class="p-render"
 			id="cascade-root"
 			style="
 				--v-radius: 2.5rem;
@@ -45,11 +45,11 @@ function cascadeDemo(): string {
 				--o-dialog__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--o-dialog__offset)));
 			"
 		>
-			<div class="o-dialog s-cascade-dialog" id="cascade-dialog">
-				<span class="s-cascade-label">o-dialog (2rem)</span>
-				<div class="o-box s-cascade-box" id="cascade-box">
-					<span class="s-cascade-label">o-box (1.5rem)</span>
-					<button type="button" class="o-input-box s-cascade-input" id="cascade-input">
+			<div class="o-dialog p-cascade-dialog" id="cascade-dialog">
+				<span class="p-cascade-label">o-dialog (2rem)</span>
+				<div class="o-box p-cascade-box" id="cascade-box">
+					<span class="p-cascade-label">o-box (1.5rem)</span>
+					<button type="button" class="o-input-box p-cascade-input" id="cascade-input">
 						o-input-box (1rem)
 					</button>
 				</div>
@@ -63,8 +63,8 @@ export function render(): string {
 		section: 'composition',
 		composition: 'objects',
 		main: `
-		<div class="s-stack">
-			<header class="s-prose">
+		<div class="o-stack">
+			<header class="o-prose">
 				<h1>Objects</h1>
 				<p>
 					The structural / layout primitives (<code>o-*</code>). Each owns spacing,
@@ -79,28 +79,28 @@ export function render(): string {
 				id: 'box',
 				title: 'o-box',
 				note: 'Block-mode padded container. Uniform <code>--v-pad-block</code> / <code>--v-pad-inline</code> padding.',
-				render: `<div class="o-box s-outline" id="demo-box">${ph('o-box contents')}</div>`,
+				render: `<div class="o-box p-outline" id="demo-box">${ph('o-box contents')}</div>`,
 			})}
 
 			${demo({
 				id: 'text-box',
 				title: 'o-text-box',
 				note: 'Text-mode perimeter primitive. Uniform block padding via text-box-trim — no 1lh compensation.',
-				render: `<div class="o-text-box s-outline" id="demo-text-box">A standalone block of prose in an o-text-box. Its block padding reads optically uniform.</div>`,
+				render: `<div class="o-text-box p-outline" id="demo-text-box">A standalone block of prose in an o-text-box. Its block padding reads optically uniform.</div>`,
 			})}
 
 			${demo({
 				id: 'input-box',
 				title: 'o-input-box',
 				note: 'Shared base for text-bearing controls. Height = <code>--v-input-height</code>; inline padding = <code>--v-control-inset</code>.',
-				render: `<button type="button" class="o-input-box s-outline" id="demo-input-box">o-input-box</button>`,
+				render: `<button type="button" class="o-input-box p-outline" id="demo-input-box">o-input-box</button>`,
 			})}
 
 			${demo({
 				id: 'square',
 				title: 'o-square',
 				note: '1:1 content (icons, avatars). Reads <code>--v-radius</code> directly; circle via <code>--v-radius: 50%</code>.',
-				render: `<div class="o-square s-outline" style="inline-size: 4rem; background: color-mix(in hsl, var(--v-accent) 18%, var(--v-bg))">1:1</div>`,
+				render: `<div class="o-square p-outline" style="inline-size: 4rem; background: color-mix(in hsl, var(--v-accent) 18%, var(--v-bg))">1:1</div>`,
 			})}
 
 			${demo({
@@ -135,7 +135,7 @@ export function render(): string {
 				id: 'segmented',
 				title: 'o-segmented',
 				note: 'Cells sharing one border with dividers — the iOS-style grouped settings list. Replaces card-in-card.',
-				render: `<div class="o-segmented s-outline" style="background: var(--v-bg)">
+				render: `<div class="o-segmented p-outline" style="background: var(--v-bg)">
 					<div class="o-bar">First row</div>
 					<div class="o-bar">Second row</div>
 					<div class="o-bar">Third row</div>
@@ -170,7 +170,7 @@ export function render(): string {
 				id: 'menu',
 				title: 'o-menu / o-menu-item',
 				note: 'Popover frame + compact rows. Structural only — chrome comes from the composing component.',
-				render: `<div class="o-menu s-outline" style="background: var(--v-bg); max-inline-size: 16rem">
+				render: `<div class="o-menu p-outline" style="background: var(--v-bg); max-inline-size: 16rem">
 					<div class="o-menu-item">First item</div>
 					<div class="o-menu-item">Second item</div>
 					<div class="o-menu-item">Third item</div>

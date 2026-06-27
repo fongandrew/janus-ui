@@ -5,7 +5,7 @@
 	navigation cards that fill in as the section pages land. Full Home content
 	(§20.1) is finished in Phase 9.
 */
-import { esc, renderPage, TOP_NAV } from '~/lib2-site/layout';
+import { esc, renderPage, TOP_NAV } from '~/v2-site/layout';
 
 function navCards(): string {
 	const blurbs: Record<string, string> = {
@@ -17,7 +17,7 @@ function navCards(): string {
 
 	return TOP_NAV.map(
 		(item) => `
-		<a class="s-card s-card--link" href="${item.href}">
+		<a class="o-box p-card p-card--link" href="${item.href}">
 			<h2>${item.label}</h2>
 			<p>${esc(blurbs[item.key] ?? '')}</p>
 		</a>`,
@@ -27,8 +27,8 @@ function navCards(): string {
 export function render(): string {
 	return renderPage({
 		main: `
-		<div class="s-stack">
-			<header class="s-hero">
+		<div class="o-stack">
+			<header class="p-hero o-prose">
 				<h1>A CSS-first design system</h1>
 				<p>
 					Janus v2 is a fork-and-copy design system for modern browsers. Its core is
@@ -36,7 +36,7 @@ export function render(): string {
 					with optional vanilla-JS and SolidJS layers on top.
 				</p>
 			</header>
-			<section class="s-grid" aria-label="Sections">
+			<section class="o-grid" aria-label="Sections">
 				${navCards()}
 			</section>
 		</div>`,
