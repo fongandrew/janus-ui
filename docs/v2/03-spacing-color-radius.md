@@ -60,7 +60,7 @@ Each situation has its own default above; either can be moved across the three r
 
 **Block boxes inside prose break out.** A code block or blockquote is itself a box, so it must *not* follow the text inset — it re-anchors to the box edge with a matching negative `margin-inline: calc(-1 * var(--o-prose__inset))`, lining up with the cards/boxes around the prose instead of with the inset paragraphs. This is the prose-side member of the **breakout family** (see negative-margin policy).
 
-**At full-bleed, the inset drops to flush.** When a frame is narrow enough that its boxes go full-bleed (the breakout below — they escape the frame's gutter, square off, lose their radius/border/shadow), there's no margin or corner left to align to, so `--o-prose__inset` goes to `0`. Because the first/last-child block padding *tracks* the inset, it drops to `0` too — the text sits flush on the inline **and** block edges, no lone top/bottom gap. The prose text still lines up with the now-edge-to-edge boxes' inner text (the frame's own gutter does the offsetting), and the prose's own block boxes bleed out the same way the cards do. One container query on the **frame's** width drives all of it, so the same rule serves the page (narrow viewport) and a dialog (narrow dialog) — see §9.3 / §10.
+**At full-bleed, the inset drops to flush.** When a frame is narrow enough that its boxes go full-bleed (the breakout below — they escape the frame's gutter, square off, lose their radius/border/shadow), there's no margin or corner left to align to, so `--o-prose__inset` goes to `0`. Because the first/last-child block padding *tracks* the inset, it drops to `0` too — the text sits flush on the inline **and** block edges, no lone top/bottom gap. The prose text still lines up with the now-edge-to-edge boxes' inner text (the frame's own gutter does the offsetting), and the prose's own block boxes bleed out the same way the cards do. One container query on the **frame's** width drives all of it, so the same rule serves the page (narrow viewport) and a dialog (narrow dialog) — see §9.3 / §10. The squared-off box also drops out as a **radius step**, so the controls *inside* it round one step *more*, not less — see §8.2.
 
 Because each text element carries its own inset as positive padding keyed to a shared knob, **mixed content composes without the container knowing its contents**, and `--v-control-inset` / the radius knobs stay pure functions of shared knobs — no upward data flow.
 
@@ -452,6 +452,24 @@ Each object reads its own knob with a floor fallback (`.o-box { border-radius: v
 | `--o-dialog__radius` | `o-dialog` | `max(min, frame − dialog-inset)` |
 | `--o-box__radius` | `o-box` | `max(min, parent-radius − pad)` |
 | `--o-input-box__radius` | `o-input-box` | `max(min, box-radius − pad)` — one step deeper than its box |
+
+**At full-bleed, a box drops out as a radius step — its contents round *more*, not less.** When a box goes full-bleed (§6.1: it breaks out of the frame's gutter, spans edge-to-edge, and squares its *own* corner to `0`), it stops being a rounding reference. Naively re-deriving the control from the box's now-`0` painted radius reads `max(min, 0 − pad)` and floors every control to `--v-radius-min` — backwards. Geometrically, removing the gutter moves the box's contents one inset *closer* to the frame, so they should round **more**: a full-bleed box re-roots its descendants on the **frame anchor** (`--v-radius` on the page, `--o-dialog__radius` in a dialog) minus only the box's own padding — i.e. it cancels the extra step it normally adds, leaving the control rounded as if it sat one level shallower (directly on the frame). The painted box corner and *the knob its children step from* are two separate things: full-bleed zeroes the former but must pass the frame anchor through for the latter.
+
+```css
+/* the @container frame full-bleed rule (Phase 3) zeroes the box's own corner AND
+   undoes the radius step it adds, so controls inside round MORE, not less */
+@container frame (width < …) {
+  .o-box {
+    /* …break out of the gutter, square off, drop side borders / shadow… */
+    border-radius: 0;
+    /* children re-root on the FRAME anchor, not on this (now-zero) box */
+    --o-input-box__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad-inline)));
+  }
+}
+.o-dialog { /* a dialog's full-bleed boxes re-root on --o-dialog__radius the same way */ }
+```
+
+> The `docs/v2/spacing-workbench.html` prototype demonstrates full-bleed but does **not** yet re-root this knob, so controls inside a full-bleed box stay at their non-bleed radius (or floor) instead of rounding up. The workbench is a frozen reference; this `.md` is authoritative — implement the re-root in the Phase 3 `@container` rule.
 
 ### 8.3 The dialog inset relationship
 
