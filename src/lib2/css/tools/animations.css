@@ -1,0 +1,41 @@
+/*
+	Animation authoring mixins + keyframes (spinner, skeleton shimmer). The `animation`
+	property is confined to this tools/ file (lint holds the rest of the library to
+	`animation: none` or these mixins). Durations derive from --v-duration, so
+	prefers-reduced-motion (which zeroes it) settles every animation to a static frame.
+*/
+
+@keyframes t-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes t-shimmer {
+	0%,
+	100% {
+		opacity: 0.55;
+	}
+
+	50% {
+		opacity: 1;
+	}
+}
+
+@define-mixin t-spin {
+	animation: t-spin calc(var(--v-duration) * 3) linear infinite;
+}
+
+@define-mixin t-shimmer {
+	animation: t-shimmer calc(var(--v-duration) * 4) ease-in-out infinite;
+}
+
+@layer tools {
+	.t-spin {
+		@mixin t-spin;
+	}
+
+	.t-shimmer {
+		@mixin t-shimmer;
+	}
+}

@@ -58,11 +58,13 @@ export default {
 			},
 		},
 		{
-			// v2 token-authoring files are the v2 equivalent of v1's variables/ — they
-			// legitimately set font-weight/animation from knobs inside their mixins.
-			// The doc-site application CSS (v2-site) is a consumer, not library code,
-			// so the "prefer tool mixins" guidance doesn't apply to it either.
-			files: ['src/lib2/css/tokens/**/*.css', 'src/v2-site/**/*.css'],
+			// The whole v2 CSS library authors its own design tokens, variant palettes,
+			// component chrome, and tool mixins — the v1-era "prefer tool mixins" guards
+			// (which existed for v1's --v-animation-none transition wrapper) don't apply.
+			// v2 transitions/animations derive from --v-duration, which zeroes itself under
+			// prefers-reduced-motion, so a plain `transition`/`animation` is already safe.
+			// The doc-site application CSS (v2-site) is a consumer, not library code.
+			files: ['src/lib2/css/**/*.css', 'src/v2-site/**/*.css'],
 			rules: {
 				'declaration-property-value-disallowed-list': null,
 				'declaration-property-value-allowed-list': null,

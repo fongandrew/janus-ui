@@ -1,0 +1,46 @@
+/*
+	Surface-treatment variants (§7). Orthogonal to v-colors-* (which sets the palette):
+	v-surface-* sets the chrome — background fill, dynamic border, and elevation — on the
+	CURRENT palette. Self-contained (they carry their own border-width) so they read on a
+	bare box; pair with o-box for padding/radius and v-colors-* for a tone.
+
+	Layered in `variants` (above components) so a surface modifier wins over a component's
+	default chrome.
+*/
+@layer variants {
+	/* Resting card surface: the dynamic border + the standard outer elevation. */
+	.v-surface-card {
+		border: var(--v-border-width) solid var(--v-border-color);
+		background: var(--v-bg);
+		box-shadow: var(--v-shadow-outer);
+	}
+
+	/* Raised: a deeper drop shadow stacked on the resting one. */
+	.v-surface-elevated {
+		border: var(--v-border-width) solid var(--v-border-color);
+		background: var(--v-bg);
+		box-shadow:
+			var(--v-shadow-outer),
+			0 0.75rem 1.5rem -0.5rem rgb(0 0 0 / 22%);
+	}
+
+	/* Sunken: a slight inward tint + inner shadow, no border, no outer elevation. */
+	.v-surface-sunken {
+		background: color-mix(in hsl, var(--v-muted) 7%, var(--v-bg));
+		box-shadow: var(--v-shadow-inner);
+	}
+
+	/* Glass: translucent fill + backdrop blur. Rounds its own corners (a compositing
+	   layer escapes the ancestor clip), so it pairs with a radius from o-box. */
+	.v-surface-glass {
+		border: var(--v-border-width) solid var(--v-border-color);
+		background: color-mix(in hsl, var(--v-bg) 70%, transparent);
+		box-shadow: var(--v-shadow-outer);
+		backdrop-filter: blur(8px);
+	}
+
+	/* Gradient band: the warm-peach / cool-teal radial stack used by the page body. */
+	.v-surface-gradient {
+		background: var(--v-body-bg);
+	}
+}

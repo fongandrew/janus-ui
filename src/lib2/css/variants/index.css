@@ -1,0 +1,4 @@
+/* Variants layer (§7): tonal palettes, surface treatments, inline-alignment overrides. */
+@import './colors.css';
+@import './surface.css';
+@import './align.css';

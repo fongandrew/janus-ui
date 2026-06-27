@@ -1,0 +1,201 @@
+/*
+	Tonal + surface-role colour variants (§7). Unlike v1's flat `--v-*-bg/fg` palette,
+	a v2 variant just RE-SETS the five root colour knobs (--v-bg, --v-fg, --v-link,
+	--v-accent, --v-muted) for its subtree; descendants and composed components inherit
+	the new palette automatically. Light/dark pairs ride `light-dark()` (driven by the
+	cascaded color-scheme, §7.2), so no per-scheme class is needed.
+
+	Each variant ends with @mixin v-color-block, which re-mixes the dynamic border against
+	the subtree's own --v-bg (so a border on a tinted card sits a fixed perceptual distance
+	from it, §7) and paints the element itself.
+
+	Defined as mixins AND bound to classes: components that ARE a fixed surface (tooltip,
+	popover, pre) compose the mixin directly; everything else takes the class in markup.
+*/
+
+@define-mixin v-color-block {
+	--v-border-color: color-mix(
+		in hsl,
+		var(--v-border-dynamic-base) var(--v-border-dynamic-mix),
+		var(--v-bg)
+	);
+
+	background: var(--v-bg);
+	color: var(--v-fg);
+	border-color: var(--v-border-color);
+}
+
+/* Tinted-surface weight bump (§7 / Aesthetic spec §05): a mid-tone background eats
+   contrast, so shift the whole weight stack up ~100 and re-assert the body weight. */
+@define-mixin v-weight-bump {
+	--v-font-weight-normal: 500;
+	--v-font-weight-label: 600;
+	--v-font-weight-strong: 800;
+
+	@mixin v-font-weight var(--v-font-weight-normal);
+}
+
+/* ── Tonal variants (semantic intent) ───────────────────────────────────────── */
+
+@define-mixin v-colors-primary {
+	--v-bg: hsl(195deg 100% 20%);
+	--v-fg: hsl(30deg 100% 96%);
+	--v-link: var(--v-fg);
+	--v-accent: var(--v-fg);
+	--v-muted: color-mix(in hsl, var(--v-fg) 72%, var(--v-bg));
+
+	@mixin v-color-block;
+}
+
+@define-mixin v-colors-secondary {
+	--v-bg: light-dark(hsl(30deg 12% 92.5%), hsl(216deg 16% 18%));
+	--v-fg: light-dark(hsl(0deg 0% 3%), hsl(30deg 100% 96%));
+	--v-muted: light-dark(hsl(30deg 7% 31%), hsl(0deg 0% 80%));
+
+	@mixin v-color-block;
+}
+
+@define-mixin v-colors-success {
+	--v-bg: light-dark(hsl(158deg 77% 15%), hsl(158deg 55% 12%));
+	--v-fg: light-dark(hsl(30deg 100% 96%), hsl(150deg 30% 92%));
+	--v-link: var(--v-fg);
+	--v-muted: color-mix(in hsl, var(--v-fg) 70%, var(--v-bg));
+
+	@mixin v-color-block;
+}
+
+@define-mixin v-colors-warn {
+	--v-bg: light-dark(hsl(50deg 77% 86%), hsl(45deg 85% 12%));
+	--v-fg: light-dark(hsl(40deg 60% 12%), hsl(50deg 100% 92%));
+	--v-muted: color-mix(in hsl, var(--v-fg) 65%, var(--v-bg));
+
+	@mixin v-weight-bump;
+	@mixin v-color-block;
+}
+
+@define-mixin v-colors-info {
+	--v-bg: light-dark(hsl(205deg 65% 90%), hsl(205deg 60% 14%));
+	--v-fg: light-dark(hsl(205deg 55% 14%), hsl(205deg 50% 92%));
+	--v-muted: color-mix(in hsl, var(--v-fg) 65%, var(--v-bg));
+
+	@mixin v-weight-bump;
+	@mixin v-color-block;
+}
+
+@define-mixin v-colors-danger {
+	--v-bg: light-dark(hsl(0deg 89% 31%), hsl(0deg 55% 16%));
+	--v-fg: light-dark(hsl(0deg 0% 98%), hsl(0deg 100% 92%));
+	--v-link: var(--v-fg);
+	--v-muted: color-mix(in hsl, var(--v-fg) 72%, var(--v-bg));
+
+	@mixin v-color-block;
+}
+
+/* ── Surface-role variants (UI context) ─────────────────────────────────────── */
+
+/* Always inverted vs. the scheme — a tooltip floats above the page as its own layer. */
+@define-mixin v-colors-tooltip {
+	--v-bg: light-dark(hsl(216deg 16% 10%), hsl(30deg 12% 96%));
+	--v-fg: light-dark(hsl(30deg 12% 96%), hsl(216deg 16% 10%));
+	--v-link: var(--v-fg);
+	--v-accent: var(--v-fg);
+	--v-muted: color-mix(in hsl, var(--v-fg) 70%, var(--v-bg));
+
+	@mixin v-color-block;
+}
+
+/* Popovers replace UI rather than float above it, so they match the surrounding chrome. */
+@define-mixin v-colors-popover {
+	--v-bg: var(--v-bg);
+	--v-fg: var(--v-fg);
+
+	@mixin v-color-block;
+}
+
+/* Tinted paper for inline <code>. */
+@define-mixin v-colors-code {
+	--v-bg: color-mix(in hsl, var(--v-muted) 8%, var(--v-bg));
+
+	@mixin v-color-block;
+}
+
+/* Always dark — a code block is terminal context (dense, syntax-coloured, monospaced). */
+@define-mixin v-colors-pre {
+	--v-bg: hsl(216deg 16% 12%);
+	--v-fg: hsl(30deg 80% 92%);
+	--v-link: var(--v-fg);
+	--v-muted: hsl(30deg 10% 75%);
+	--v-danger-text: hsl(30deg 100% 79%);
+
+	@mixin v-color-block;
+}
+
+/* Tinted aside that draws attention in a wall of text — bumped weights for readability. */
+@define-mixin v-colors-callout {
+	--v-bg: light-dark(hsl(30deg 12% 92.5%), hsl(216deg 16% 16%));
+	--v-fg: light-dark(hsl(216deg 16% 8%), hsl(30deg 100% 96%));
+	--v-muted: color-mix(in hsl, var(--v-fg) 60%, var(--v-bg));
+
+	@mixin v-weight-bump;
+	@mixin v-color-block;
+}
+
+/* Selected / active-descendant highlight (menus, keyboard-navigated lists). */
+@define-mixin v-colors-highlight {
+	--v-bg: var(--v-accent);
+	--v-fg: oklch(from var(--v-bg) calc((0.5 - l) * infinity) 0 0);
+	--v-link: var(--v-fg);
+	--v-muted: color-mix(in hsl, var(--v-fg) 70%, var(--v-bg));
+
+	@mixin v-color-block;
+}
+
+@layer variants {
+	.v-colors-primary {
+		@mixin v-colors-primary;
+	}
+
+	.v-colors-secondary {
+		@mixin v-colors-secondary;
+	}
+
+	.v-colors-success {
+		@mixin v-colors-success;
+	}
+
+	.v-colors-warn {
+		@mixin v-colors-warn;
+	}
+
+	.v-colors-info {
+		@mixin v-colors-info;
+	}
+
+	.v-colors-danger {
+		@mixin v-colors-danger;
+	}
+
+	.v-colors-tooltip {
+		@mixin v-colors-tooltip;
+	}
+
+	.v-colors-popover {
+		@mixin v-colors-popover;
+	}
+
+	.v-colors-code {
+		@mixin v-colors-code;
+	}
+
+	.v-colors-pre {
+		@mixin v-colors-pre;
+	}
+
+	.v-colors-callout {
+		@mixin v-colors-callout;
+	}
+
+	.v-colors-highlight {
+		@mixin v-colors-highlight;
+	}
+}

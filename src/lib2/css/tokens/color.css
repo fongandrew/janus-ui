@@ -38,6 +38,13 @@
 	--v-muted: light-dark(hsl(30deg 7% 31%), hsl(30deg 7% 86.5%));
 
 	/*
+		Danger text/border tone — the one semantic colour the base layer needs outside the
+		v-colors-* variants (form-field invalid borders, error messages). The tonal
+		surfaces (success / warn / danger backgrounds) live in variants/colors.css.
+	*/
+	--v-danger-text: light-dark(hsl(0deg 89% 31%), hsl(30deg 100% 76%));
+
+	/*
 		Contrast-floor weight fallback (§7.1). The shipped palette's link/accent/muted
 		need the bump; the mechanism falls back to `inherit` when a consumer clears it.
 	*/

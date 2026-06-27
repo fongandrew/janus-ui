@@ -2,13 +2,24 @@
 	Janus v2 CSS — single entry point.
 
 	Declares the cascade layer order, then imports everything. Components sit ABOVE
-	objects so a component can do minor overrides of the objects it composes (§4.1).
-	Token :root declarations are unlayered: they only provide values consumed by the
-	layered rules.
+	objects so a component can do minor overrides of the objects it composes (§4.1);
+	variants sit above components so a tonal/surface modifier wins. Token :root
+	declarations are unlayered: they only provide values consumed by the layered rules.
+
+	The tool AUTHORING mixins (states / transitions / animations) are imported BEFORE the
+	rules that compose them — postcss-mixins resolves @define-mixin in source order — even
+	though their utility classes land in the last `tools` layer.
 */
 @layer reset, base, objects, components, variants, tools;
 
 @import './reset.css';
 @import './tokens/index.css';
+
+/* Tool authoring mixins (define-only, plus the .t-spin/.t-shimmer classes). */
+@import './tools/states.css';
+@import './tools/transitions.css';
+@import './tools/animations.css';
 @import './base.css';
 @import './objects/index.css';
+@import './variants/index.css';
+@import './components/index.css';

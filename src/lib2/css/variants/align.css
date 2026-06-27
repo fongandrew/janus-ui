@@ -1,0 +1,60 @@
+/*
+	Inline text-inset model (§6.1). Because boxes don't nest (frame → box → control),
+	plain text only ever needs to line up with a box/control in TWO situations, and each
+	gets a knob whose default is the right edge to meet:
+
+	  1. A form FIELD's <label> + description line up with the control's straight edge
+	     (--o-field__inset, default = the control radius). Wherever a field sits.
+	  2. PROSE that is a direct child of a container holding boxes lines up with the cards
+	     beside it (--o-prose__inset, declared on o-prose in Phase 2; applied here).
+
+	v-align-edge / v-align-text move a subtree to the flush edge (0) or the inner-text
+	line. A block-box child of inset prose (code, blockquote) breaks back out by the
+	negated inset (handled in prose.css's own rules).
+*/
+
+/* The :has() container rules and the first/last-child rules target related but distinct
+   elements, so their source order can't cause a real override — disable the global check. */
+/* stylelint-disable no-descending-specificity */
+@layer variants {
+	:root {
+		/* The control's straight edge — the v1 form look (subtle, floors near the min). */
+		--o-field__inset: var(--o-input-box__radius);
+	}
+
+	/* Prose beside boxes meets the cards: a page container uses the inner-text level. */
+	.o-container:has(> .o-box, > .c-card) > .o-prose {
+		--o-prose__inset: var(--v-pad-inline);
+
+		padding-inline: var(--o-prose__inset);
+	}
+
+	/* A dialog uses the lighter straight edge (a tight dialog doesn't over-inset prose). */
+	.o-dialog:has(> .o-box, > .c-card) > .o-prose {
+		--o-prose__inset: var(--o-box__radius);
+
+		padding-inline: var(--o-prose__inset);
+	}
+
+	/* Inset prose's first/last child grows block padding to keep the corner uniform. */
+	.o-container > .o-prose:first-child,
+	.o-dialog > .o-prose:first-child {
+		padding-block-start: var(--o-prose__inset, 0);
+	}
+
+	.o-container > .o-prose:last-child,
+	.o-dialog > .o-prose:last-child {
+		padding-block-end: var(--o-prose__inset, 0);
+	}
+
+	/* Subtree overrides — move the inset to the flush edge or to the inner-text line. */
+	.v-align-edge {
+		--o-field__inset: 0;
+		--o-prose__inset: 0;
+	}
+
+	.v-align-text {
+		--o-field__inset: var(--v-control-inset);
+		--o-prose__inset: var(--v-pad-inline);
+	}
+}

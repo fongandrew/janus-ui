@@ -1,0 +1,25 @@
+/*
+	Transition authoring mixins. Everything flows from --v-duration / --v-ease (§5.1):
+	under prefers-reduced-motion --v-duration is 0ms, so transitions become instant with
+	no per-rule guard. These are mixins so components stay declarative; the `transition`
+	shorthand itself is confined to this tools/ file (the rest of the library is held to
+	longhands or these mixins by lint).
+*/
+
+/* Transition one or more properties at the base pace (override the duration as needed). */
+@define-mixin t-transition $properties, $duration: var(--v-duration) {
+	transition-property: $(properties);
+	transition-duration: $(duration);
+	transition-timing-function: var(--v-ease);
+}
+
+/* The common colour set (text / background / border). */
+@define-mixin t-transition-color $duration: var(--v-duration) {
+	@mixin t-transition single-arg(color, background-color, border-color), $(duration);
+}
+
+/* The colour set plus an extra property (e.g. box-shadow on a button). */
+@define-mixin t-transition-color-plus $properties, $duration: var(--v-duration) {
+	@mixin t-transition single-arg(color, background-color, border-color, $(properties)),
+		$(duration);
+}

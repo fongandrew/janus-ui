@@ -1,0 +1,57 @@
+/*
+	Interaction-state mixins (§6–§7 / Aesthetic spec §06–§07). Every interactive
+	component composes these so hover / focus / disabled / error read identically across
+	the system. These are AUTHORING mixins — they emit no rules of their own; components
+	in the `components` layer pull them in with `@mixin`.
+*/
+
+/*
+	One hover treatment for every tone: a subtle contrast drop that darkens the surface
+	while saturation lifts so colours pop. No per-palette hover knob — the same filter
+	works on a button, a link, a badge, any tone.
+
+	v1 declared `will-change: filter` INSIDE the :hover rule as a Safari GPU nudge; that
+	is too late to do its job (the hint must precede the change) and is deliberately
+	omitted. If a real Safari filter glitch reappears, add a `transform: translateZ(0)`
+	to the component's BASE rule and re-verify it's still needed — don't reinstate the
+	in-hover hint.
+*/
+@define-mixin t-hover {
+	filter: contrast(0.95) saturate(1.15);
+}
+
+/*
+	Focus ring: a crisp outline stacked over a soft halo. Both are required — the outline
+	alone vanishes against a busy layout, the halo alone reads as fuzzy. The halo rides
+	--v-shadow-focus (a spread of --v-ring-alt); the outline is --v-ring.
+*/
+@define-mixin t-focus-ring {
+	box-shadow: var(--v-shadow-focus);
+	outline: 2px solid var(--v-ring);
+	outline-offset: 2px;
+}
+
+/* Remove a focus ring — use sparingly (e.g. an inline link showing a double underline). */
+@define-mixin t-no-focus-ring {
+	box-shadow: none;
+	outline: none;
+}
+
+/* Disabled: dim + not-allowed. Inputs keep pointer events; buttons drop them (below). */
+@define-mixin t-disabled {
+	opacity: 0.65;
+	cursor: not-allowed;
+}
+
+@define-mixin t-disabled-button {
+	@mixin t-disabled;
+
+	pointer-events: none;
+}
+
+/* Error state: the dynamic border picks up the danger tone for this subtree. */
+@define-mixin t-error {
+	--v-border-color: var(--v-danger-text);
+
+	border-color: var(--v-border-color);
+}
