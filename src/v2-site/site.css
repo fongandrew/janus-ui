@@ -46,7 +46,10 @@
 .p-nav__link {
 	color: var(--v-fg);
 	text-decoration: none;
-	padding: var(--v-control-inset) var(--v-gap-inline);
+	padding-block: var(--v-control-inset);
+
+	/* Floor inline padding at the corner radius so the hover pill clears the text (§8.6). */
+	padding-inline: max(var(--v-gap-inline), var(--o-input-box__radius, var(--v-radius-min)));
 	border-radius: var(--o-input-box__radius, var(--v-radius-min));
 }
 

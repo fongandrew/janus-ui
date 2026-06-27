@@ -48,10 +48,17 @@
 	/*
 		Dynamic border color (§7). One recipe places every border a fixed perceptual
 		distance from any surface, so borders read correctly on tinted cards without a
-		hard-coded gray.
+		hard-coded gray — and variants reuse the two knobs to mix against a DIFFERENT
+		surface (e.g. c-tabs mixes the base into --v-accent, Phase 3).
+
+		The base is a light-dark() color (valid as a color-mix color arg). The mix
+		percentage CANNOT be a light-dark() — color-mix() rejects light-dark() in the
+		percentage slot, which silently invalidated the whole declaration and dropped
+		every border in the library — so it's a literal switched per scheme by the
+		color-scheme rules below (17.5% light / 50% dark, matching §7.0).
 	*/
 	--v-border-dynamic-base: light-dark(black, white);
-	--v-border-dynamic-mix: light-dark(17.5%, 50%);
+	--v-border-dynamic-mix: 17.5%;
 	--v-border-color: color-mix(
 		in hsl,
 		var(--v-border-dynamic-base) var(--v-border-dynamic-mix),
@@ -84,6 +91,20 @@
 	color-scheme: light;
 }
 
+/*
+	The border-mix percentage can't ride light-dark() (see above), so switch it here in
+	lockstep with the active scheme: 50% under explicit dark and under system-follows-dark
+	(but never when the consumer has pinned light). --v-border-color resolves on :root with
+	this cascaded value, so it tracks without per-descendant recomputation.
+*/
 :root[data-v-color-scheme='dark'] {
 	color-scheme: dark;
+
+	--v-border-dynamic-mix: 50%;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-v-color-scheme='light']) {
+		--v-border-dynamic-mix: 50%;
+	}
 }

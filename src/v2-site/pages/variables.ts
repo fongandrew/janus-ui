@@ -141,7 +141,7 @@ function radiusSection(): string {
 			{
 				name: '--v-border-color',
 				def: 'color-mix(in hsl, var(--v-border-dynamic-base) var(--v-border-dynamic-mix), var(--v-bg))',
-				desc: 'Dynamic border, a fixed perceptual distance from any surface.',
+				desc: 'Dynamic border, a fixed perceptual distance from any surface (mix is per-scheme: 17.5% / 50%).',
 				derived: true,
 			},
 			{
