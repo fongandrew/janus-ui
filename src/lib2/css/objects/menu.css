@@ -8,12 +8,16 @@
 	popover floats over content rather than nesting inside the frame's corner, so it isn't
 	a cascade level — a small, constant corner reads right regardless of the frame's
 	radius. Exposed as --o-menu__radius for the rare consumer who wants otherwise.
+
+	Block padding tracks the radius (not --v-gap-block): full-bleed rows highlight edge to
+	edge, so the only block padding needed is enough to keep the first/last row's highlight
+	inside the rounded corners — exactly the radius. A big gap-block reads as dead space.
 */
 @layer objects {
 	.o-menu {
-		--o-menu__pad-block: var(--v-gap-block);
-		--o-menu__pad-inline: 0;
 		--o-menu__radius: var(--v-radius-min);
+		--o-menu__pad-block: var(--o-menu__radius);
+		--o-menu__pad-inline: 0;
 
 		display: flex;
 		flex-direction: column;
