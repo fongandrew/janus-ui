@@ -1,0 +1,23 @@
+/*
+	o-container (§9.3, §9.1 level 2) — section / width-bounded region. Holds the inline
+	gutter for narrow viewports plus an optional max-width. Transparent in radius terms
+	(never rounded); composes with v-surface-* to carry a section background.
+
+	It EXPOSES its gutter (--o-container__gutter) so a child can break out full-bleed
+	(margin-inline: calc(-1 * var(--o-container__gutter)) — the sanctioned negative
+	margin, §6.1). It is also a query container with the shared `frame` container-name
+	(the same name o-dialog uses), so ONE `@container frame` rule full-bleeds its boxes
+	when it is narrow — the same rule that full-bleeds a dialog's boxes (Phase 3).
+*/
+@layer objects {
+	.o-container {
+		--o-container__max: none;
+		--o-container__gutter: var(--v-pad-inline);
+
+		container-type: inline-size;
+		container-name: frame;
+		max-inline-size: var(--o-container__max);
+		margin-inline: auto;
+		padding-inline: var(--o-container__gutter);
+	}
+}

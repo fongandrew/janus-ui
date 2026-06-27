@@ -1,0 +1,14 @@
+/*
+	o-stack (§9.3) — vertical flow with a consistent gap. Transparent: no padding, no
+	surface, no radius. A section-level stack bumps its own --o-stack__gap above the
+	base so sections breathe more than their contents (§6.2).
+*/
+@layer objects {
+	.o-stack {
+		--o-stack__gap: var(--v-gap-block);
+
+		display: flex;
+		flex-direction: column;
+		gap: var(--o-stack__gap);
+	}
+}

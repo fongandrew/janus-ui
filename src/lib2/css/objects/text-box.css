@@ -1,0 +1,24 @@
+/*
+	o-text-box (§9.2, §6) — text-mode perimeter + inline-alignment primitive. Uniform
+	block padding (text-box-trim makes it read optically uniform regardless of
+	font-size, so no 1lh compensation), and inline padding floored at its OWN corner
+	radius so glyphs clear the curve (the straight-edge principle, §6.1 / §8.6).
+
+	Interior vertical rhythm between children comes from flow (o-prose, §6.2), not this
+	box. Its radius defaults to the box radius.
+*/
+@define-mixin o-text-box {
+	--o-text-box__radius: var(--o-box__radius, var(--v-radius-min));
+
+	/* text-box-trim handles optical alignment — no (1lh − 1em)/2 subtraction. */
+	text-box: trim-both cap alphabetic;
+	padding-block: var(--v-pad-block);
+	padding-inline: max(var(--v-pad-inline), var(--o-text-box__radius));
+	border-radius: var(--o-text-box__radius);
+}
+
+@layer objects {
+	.o-text-box {
+		@mixin o-text-box;
+	}
+}

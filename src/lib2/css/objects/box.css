@@ -1,0 +1,22 @@
+/*
+	o-box (§9.2) — the default padded container (block-mode). Uniform block padding,
+	nesting-math inline padding. Use when contents are other components or rows.
+
+	Defined as a mixin + class so components (Phase 3) can compose the structure. The
+	radius reads its own knob (assigned by the always-on cascade in tokens/radius.css)
+	with a floor fallback — the cascade writes a DIFFERENT knob than this reads, so no
+	self-reference (§5.2, §8.2).
+*/
+@define-mixin o-box {
+	--o-box__pad-block: var(--v-pad-block);
+	--o-box__pad-inline: var(--v-pad-inline);
+
+	padding: var(--o-box__pad-block) var(--o-box__pad-inline);
+	border-radius: var(--o-box__radius, var(--v-radius-min));
+}
+
+@layer objects {
+	.o-box {
+		@mixin o-box;
+	}
+}

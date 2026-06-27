@@ -1,0 +1,18 @@
+/*
+	o-code (§9.5) — monospace text container for <code> / <pre>. Sets font-size,
+	font-family, and a matching line-height. <pre> composes this with o-text-box for
+	padded code blocks.
+*/
+@define-mixin o-code {
+	--o-code__font-size: var(--v-font-size-code);
+
+	font-family: var(--v-font-family-mono);
+	font-size: var(--o-code__font-size);
+	line-height: var(--v-line-height-code);
+}
+
+@layer objects {
+	.o-code {
+		@mixin o-code;
+	}
+}

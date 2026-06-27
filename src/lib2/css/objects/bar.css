@@ -1,0 +1,24 @@
+/*
+	o-bar (§9.7) — horizontal header / toolbar / app-bar strip. The block-axis instance
+	of the inline-alignment principle (§6.1): it reconciles its own height and block
+	padding with a control's intrinsic height, keeping block and inline padding
+	SYMMETRIC so a control's reference point lands at the same optical inset on both
+	axes (an asymmetric bar reads wrong on filled buttons).
+
+	Default sizing is the "contains-input" mode — tall enough for a control, padded
+	symmetrically. Consumers set --o-bar__height for the input-height (flush) mode or
+	leave it auto for a text-height bar.
+*/
+@layer objects {
+	.o-bar {
+		--o-bar__height: var(--v-input-height);
+		--o-bar__pad-block: var(--v-pad-block);
+		--o-bar__pad-inline: var(--v-pad-inline);
+
+		display: flex;
+		align-items: center;
+		gap: var(--v-gap-inline);
+		min-block-size: var(--o-bar__height);
+		padding: var(--o-bar__pad-block) var(--o-bar__pad-inline);
+	}
+}

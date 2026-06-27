@@ -1,0 +1,14 @@
+/*
+	o-group (§9.3) — horizontal flow that wraps, top-aligned. For inline collections
+	(icon + label, tag rows). Transparent.
+*/
+@layer objects {
+	.o-group {
+		--o-group__gap: var(--v-gap-inline);
+
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		gap: var(--o-group__gap);
+	}
+}

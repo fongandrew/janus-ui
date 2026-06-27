@@ -1,0 +1,17 @@
+/*
+	o-caption (§9.5) — small-text structural primitive for badges, tooltips, and
+	caption-class content. Sets font-size + a matching line-height only; color/chrome
+	belong on the composing component (c-badge, c-tooltip).
+*/
+@define-mixin o-caption {
+	--o-caption__font-size: var(--v-font-size-caption);
+
+	font-size: var(--o-caption__font-size);
+	line-height: var(--v-line-height-caption);
+}
+
+@layer objects {
+	.o-caption {
+		@mixin o-caption;
+	}
+}

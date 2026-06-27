@@ -1,0 +1,18 @@
+/*
+	o-square (§9.2) — 1:1 content (icons, avatars). No padding floor, no curvature
+	avoidance; reads --v-radius directly so it can become a circle via --v-radius: 50%.
+*/
+@define-mixin o-square {
+	aspect-ratio: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	border-radius: var(--v-radius);
+}
+
+@layer objects {
+	.o-square {
+		@mixin o-square;
+	}
+}

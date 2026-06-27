@@ -1,0 +1,31 @@
+/*
+	o-dialog (§9.4) — chrome only (radius, breathing room, surface), position-agnostic;
+	the positioning models live on c-modal / c-drawer / c-popover (Phase 3).
+
+	The dialog frame IS the scroll container and is TRANSPARENT — the surface color and
+	rounded corners come from the surfaces tiled inside it (a header that rounds the top,
+	a body that rounds the bottom and fills). A solid background on the scroll element
+	paints past the radius during the overscroll rubber-band; a transparent one can't.
+	(The --o-dialog__offset / __radius cascade is assigned in tokens/radius.css.)
+*/
+@define-mixin o-dialog {
+	display: flex;
+	flex-direction: column;
+	overflow: auto;
+	overscroll-behavior: contain;
+
+	/* Query container sharing the `frame` name with o-container, so one @container
+	   rule full-bleeds the boxes inside whichever frame is narrow (§9.4, Phase 3). */
+	container-type: inline-size;
+	container-name: frame;
+	background: transparent;
+	border: var(--v-border-width) solid var(--v-border-color);
+	border-radius: var(--o-dialog__radius, var(--v-radius));
+	box-shadow: var(--v-shadow-outer);
+}
+
+@layer objects {
+	.o-dialog {
+		@mixin o-dialog;
+	}
+}

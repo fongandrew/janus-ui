@@ -270,3 +270,45 @@
 	font-size: var(--v-font-size-caption);
 	text-align: center;
 }
+
+/* Object-demo helpers (Objects page) --------------------------------------- */
+
+/* Neutral placeholder block to fill layout objects. */
+.s-ph {
+	padding: 0.5rem 0.75rem;
+	background: color-mix(in hsl, var(--v-muted) 12%, var(--v-bg));
+	border: var(--v-border-width) solid var(--v-border-color);
+	border-radius: var(--v-radius-min);
+	font-size: var(--v-font-size-caption);
+	color: var(--v-muted);
+}
+
+/* Make an object's own bounds visible without adding chrome semantics. */
+.s-outline {
+	border: var(--v-border-width) solid var(--v-border-color);
+}
+
+/* Radius-cascade demo surfaces — visible fills so the stepped corners read. */
+.s-cascade-dialog {
+	padding: var(--v-pad-inline);
+	background: color-mix(in hsl, var(--v-accent) 8%, var(--v-bg));
+}
+
+.s-cascade-box {
+	background: color-mix(in hsl, var(--v-accent) 16%, var(--v-bg));
+}
+
+.s-cascade-input {
+	display: block;
+	inline-size: 100%;
+	background: color-mix(in hsl, var(--v-accent) 28%, var(--v-bg));
+	color: var(--v-fg);
+	text-align: start;
+}
+
+.s-cascade-label {
+	display: block;
+	font-size: var(--v-font-size-caption);
+	color: var(--v-muted);
+	margin-block-end: 0.25rem;
+}

@@ -1,0 +1,25 @@
+/*
+	Structural / layout primitives (§9). All rules live in @layer objects; each object
+	declares its own --o-*__* defaults inside its own rule (§5.2) so scoping a --v-*
+	knob in a sub-tree cascades through. Box-family objects also expose mixins so
+	components (Phase 3) can compose their structure.
+*/
+@import './box.css';
+@import './text-box.css';
+@import './input-box.css';
+@import './square.css';
+@import './dialog.css';
+@import './stack.css';
+@import './group.css';
+@import './row.css';
+@import './grid.css';
+@import './container.css';
+@import './split.css';
+@import './centric.css';
+@import './bar.css';
+@import './segmented.css';
+@import './caption.css';
+@import './code.css';
+@import './prose.css';
+@import './menu.css';
+@import './menu-item.css';

@@ -1,0 +1,14 @@
+/*
+	o-row (§9.3) — like o-group but center-aligned; for action rows. (Renamed from v1's
+	o-cluster.) Transparent.
+*/
+@layer objects {
+	.o-row {
+		--o-row__gap: var(--v-gap-inline);
+
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--o-row__gap);
+	}
+}

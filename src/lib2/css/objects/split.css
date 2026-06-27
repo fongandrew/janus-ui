@@ -1,0 +1,20 @@
+/*
+	o-split (§9.3) — two-up layout that collapses to stacked below a threshold, with no
+	media queries. Intrinsic: each child has a flex-basis of --o-split__min, so once the
+	container can't fit two of them side by side they wrap to a single column.
+*/
+@layer objects {
+	.o-split {
+		--o-split__gap: var(--v-gap-inline);
+		--o-split__min: 20rem;
+
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--o-split__gap);
+	}
+
+	.o-split > * {
+		flex: 1 1 var(--o-split__min);
+		min-inline-size: 0;
+	}
+}

@@ -1,0 +1,144 @@
+/*
+	o-prose (§9.5, §6.2) — running-text flow with BOUNDARY-OWNED vertical rhythm: every
+	gap is a margin-block-start on the LOWER element, valued by what sits above it
+	("the thing below owns the gap above it"). body↔body and heading→content get the
+	prose gap; content→heading gets the heading's larger space-above (the section
+	break). :where() keeps these flat-specificity so source order resolves overlaps.
+
+	o-prose also opts its immediate text children into text-box-trim (the one container
+	that signals "this is running text"), and adds depth-cycled list markers on top of
+	the base 1em indent. The prose gap is line-based, not --v-spacing-based (§6.2).
+
+	The inline inset (--o-prose__inset) that lines prose up with sibling cards is
+	applied by the align variant (Phase 3, §6.1); the knob is declared here so it
+	exists.
+*/
+
+/*
+	The hgroup rules and the .o-prose rules target different elements, so their source
+	order can't cause a real specificity-override conflict — disable the global
+	ordering check for this file.
+*/
+/* stylelint-disable no-descending-specificity */
+@layer objects {
+	.o-prose {
+		--o-prose__gap: calc(0.75 * var(--v-line-height) * 1em);
+		--o-prose__space-above: calc(1.5 * var(--o-prose__gap));
+		--o-prose__inset: var(--v-pad-inline);
+	}
+
+	/* Immediate text children read as trimmed text boxes. */
+	.o-prose > :where(p, h1, h2, h3, h4, h5, h6, blockquote) {
+		text-box: trim-both cap alphabetic;
+	}
+
+	/* body↔body and heading→content: the ordinary prose gap on the lower element. */
+	.o-prose > * + * {
+		margin-block-start: var(--o-prose__gap);
+	}
+
+	/* content→heading: the larger space-above (declared after so it wins the overlap). */
+	.o-prose > * + :where(h1, h2, h3, h4, h5, h6) {
+		margin-block-start: var(--o-prose__space-above);
+	}
+
+	/* Unordered lists — native marker cycles disc → circle → square every 3 levels. */
+	.o-prose ul {
+		list-style-type: disc;
+		padding-inline-start: calc(1em + var(--v-gap-inline));
+	}
+
+	.o-prose ul ul {
+		list-style-type: circle;
+	}
+
+	.o-prose ul ul ul {
+		list-style-type: square;
+	}
+
+	.o-prose ul ul ul ul {
+		list-style-type: disc;
+	}
+
+	.o-prose ul ul ul ul ul {
+		list-style-type: circle;
+	}
+
+	.o-prose ul ul ul ul ul ul {
+		list-style-type: square;
+	}
+
+	/*
+		Ordered lists — drop the native marker for a custom counter so markers are
+		tabular-figure, right-aligned, and HANG FLUSH with the list edge: the marker box
+		spans the list's left padding and is pulled into it with a matching NEGATIVE
+		inline margin (negative margin moves flow, so the li text stays flush at the
+		content edge — a transform would leave the marker's width in flow and gap the
+		text, §9.5).
+	*/
+	.o-prose ol {
+		--_ol-pad: max(1em, 1ch);
+
+		list-style: none;
+		counter-reset: item;
+		padding-inline-start: calc(var(--_ol-pad) + var(--v-gap-inline));
+	}
+
+	.o-prose ol > li {
+		counter-increment: item;
+	}
+
+	.o-prose ol > li::before {
+		content: counter(item, decimal) '.';
+		display: inline-block;
+		inline-size: var(--_ol-pad);
+		margin-inline-start: calc(-1 * (var(--_ol-pad) + var(--v-gap-inline)));
+		padding-inline-end: var(--v-gap-inline);
+		text-align: end;
+		font-variant-numeric: tabular-nums;
+	}
+
+	/* Counter style cycles decimal → lower-alpha → lower-roman every 3 levels. */
+	.o-prose ol ol > li::before {
+		content: counter(item, lower-alpha) '.';
+	}
+
+	.o-prose ol ol ol > li::before {
+		content: counter(item, lower-roman) '.';
+	}
+
+	.o-prose ol ol ol ol > li::before {
+		content: counter(item, decimal) '.';
+	}
+
+	/* Widen the marker box as the digit count grows so markers stay flush. */
+	.o-prose ol:has(> li:nth-child(10)) {
+		--_ol-pad: max(1.5em, 2ch);
+	}
+
+	.o-prose ol:has(> li:nth-child(100)) {
+		--_ol-pad: max(2em, 3ch);
+	}
+
+	/*
+		<hgroup> (§6.2) — title + subtitle as one unit. Additive leading keeps the
+		whitespace between lines constant across the size difference; trimming only the
+		group's OUTER edges leaves the title↔subtitle boundary's half-leading intact so
+		it reads continuous with no margin.
+	*/
+	hgroup > * {
+		line-height: calc(1em + var(--o-hgroup__leading));
+	}
+
+	hgroup > :first-child {
+		text-box: trim-start cap alphabetic;
+	}
+
+	hgroup > :last-child {
+		text-box: trim-end cap alphabetic;
+	}
+
+	hgroup > :only-child {
+		text-box: trim-both cap alphabetic;
+	}
+}
