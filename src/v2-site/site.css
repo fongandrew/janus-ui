@@ -369,3 +369,18 @@
 .p-menu-demo .o-menu-item[aria-current='true'] {
 	background: color-mix(in hsl, var(--v-accent) 14%, transparent);
 }
+
+/* Colors page — a palette cell paints itself via v-colors-* / v-surface-*; this adds the
+   border and a min height so each tone reads as a card. */
+.p-color-cell {
+	min-block-size: 8rem;
+	border: var(--v-border-width) solid var(--v-border-color);
+}
+
+.p-color-cell__name {
+	display: block;
+}
+
+.p-color-cell__muted {
+	color: var(--v-muted);
+}
