@@ -79,6 +79,10 @@
 	--v-body-bg: radial-gradient(ellipse at 70% 20%, hsl(20deg 80% 70% / 15%), transparent 50%),
 		radial-gradient(ellipse at 30% 80%, hsl(195deg 80% 50% / 7%), transparent 50%), var(--v-bg);
 
+	/* Dialog / drawer backdrop scrim. light-dark() so it reads as a dim layer in both
+	   schemes (darker + more opaque in dark mode). Components reference it, never a literal. */
+	--v-backdrop: light-dark(hsl(216deg 16% 8% / 50%), hsl(216deg 16% 2% / 60%));
+
 	/* Focus ring: a crisp outline (--v-ring) over a soft halo (--v-ring-alt) — §7. */
 	--v-ring: var(--v-accent);
 	--v-ring-alt: color-mix(in hsl, var(--v-accent) 35%, transparent);

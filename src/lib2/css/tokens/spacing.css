@@ -17,8 +17,17 @@
 	--v-spacing: $(size);
 	--v-pad-block: $(size);
 	--v-pad-inline: $(size);
+
+	/*
+		The named-multiple gap stack — the shipped, baked-in form of the spacing
+		workbench's --rk-* rhythm sliders (one master lever, named multiples). A
+		section-level stack/grid or a form field reaches for the matching token instead
+		of hand-calcing a multiple of --v-spacing.
+	*/
 	--v-gap-block: $(size);
 	--v-gap-inline: calc($(size) * 0.5);
+	--v-gap-tight: calc($(size) * 0.25);
+	--v-gap-section: calc($(size) * 1.5);
 	--v-border-width: $(border-width);
 }
 

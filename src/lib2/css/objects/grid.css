@@ -18,4 +18,9 @@
 	.o-grid--fit {
 		grid-template-columns: repeat(auto-fit, minmax(min(var(--o-grid__min), 100%), 1fr));
 	}
+
+	/* Section rhythm — a card grid between page sections breathes more than in-card gaps. */
+	.o-grid--section {
+		--o-grid__gap-block: var(--v-gap-section);
+	}
 }

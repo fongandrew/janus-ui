@@ -55,7 +55,13 @@ function section(opts: {
 }
 
 function spacingSection(): string {
-	const ruler = ['--v-gap-inline', '--v-gap-block', '--v-pad-inline', '--v-spacing']
+	const ruler = [
+		'--v-gap-tight',
+		'--v-gap-inline',
+		'--v-gap-block',
+		'--v-pad-inline',
+		'--v-gap-section',
+	]
 		.map(
 			(v) =>
 				`<div class="p-bar-row"><span class="p-bar-row__label"><code>${v}</code></span><span class="p-bar" style="inline-size: var(${v})"></span></div>`,
@@ -89,11 +95,28 @@ function spacingSection(): string {
 				desc: 'Box inline padding.',
 				derived: true,
 			},
-			{ name: '--v-gap-block', def: 'var(--v-spacing)', desc: 'Stack gap.', derived: true },
+			{
+				name: '--v-gap-block',
+				def: 'var(--v-spacing)',
+				desc: 'Within-group stack gap (×1).',
+				derived: true,
+			},
 			{
 				name: '--v-gap-inline',
 				def: 'calc(var(--v-spacing) * 0.5)',
-				desc: 'Group / row gap.',
+				desc: 'Inline cluster gap — group / row (×0.5).',
+				derived: true,
+			},
+			{
+				name: '--v-gap-tight',
+				def: 'calc(var(--v-spacing) * 0.25)',
+				desc: 'Tight gap — form label→control, settings rows (×0.25). Use via o-stack--tight.',
+				derived: true,
+			},
+			{
+				name: '--v-gap-section',
+				def: 'calc(var(--v-spacing) * 1.5)',
+				desc: 'Section gap — between page sections / card groups (×1.5). Via o-stack--section / o-grid--section.',
 				derived: true,
 			},
 			{
@@ -225,6 +248,12 @@ function colorSection(): string {
 				name: '--v-ring-alt',
 				def: 'color-mix(in hsl, var(--v-accent) 35%, transparent)',
 				desc: 'Soft focus halo.',
+				derived: true,
+			},
+			{
+				name: '--v-backdrop',
+				def: 'light-dark(hsl(216 16% 8% / 50%), hsl(216 16% 2% / 60%))',
+				desc: 'Dialog / drawer backdrop scrim.',
 				derived: true,
 			},
 			{

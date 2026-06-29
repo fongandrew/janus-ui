@@ -47,7 +47,7 @@
 	}
 
 	.c-drawer::backdrop {
-		background: hsl(0deg 0% 0% / 50%);
+		background: var(--v-backdrop);
 		backdrop-filter: blur(4px);
 	}
 }

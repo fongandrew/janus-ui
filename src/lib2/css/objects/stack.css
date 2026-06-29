@@ -11,4 +11,14 @@
 		flex-direction: column;
 		gap: var(--o-stack__gap);
 	}
+
+	/* Rhythm modifiers — named-multiple gaps (§6.2). Tight: form label→control, settings
+	   rows. Section: page sections / card groups breathe more than their contents. */
+	.o-stack--tight {
+		--o-stack__gap: var(--v-gap-tight);
+	}
+
+	.o-stack--section {
+		--o-stack__gap: var(--v-gap-section);
+	}
 }
