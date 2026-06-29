@@ -235,6 +235,16 @@ export default tseslint.config(
 		},
 	},
 
+	// The v2 dom layer is the framework-agnostic DOM behavior system — direct
+	// document/window access (guarded for SSR) is its entire job. The layering
+	// boundary for dom/ forbids framework imports, not DOM globals.
+	{
+		files: ['src/lib2/dom/**/*.{js,ts,jsx,tsx}'],
+		rules: {
+			'no-restricted-globals': 'off',
+		},
+	},
+
 	// Allow console log in logging
 	{
 		// Logging files
