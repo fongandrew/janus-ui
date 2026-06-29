@@ -144,13 +144,33 @@
 	}
 
 	/*
-		List indent — the one base list rule (§6). The `em` unit compounds per nesting
-		level so deep lists indent proportionally to their own (possibly smaller) text.
-		Richer marker cycling lives in o-prose (Phase 2).
+		List indent (§6). The `em` unit compounds per nesting level so deep lists indent
+		proportionally to their own (possibly smaller) text.
 	*/
 	ul,
 	ol {
 		padding-inline-start: 1em;
+	}
+
+	/*
+		Ordered-list markers cycle by depth — decimal → lower-alpha → lower-roman →
+		(repeat) — the way browsers already cycle ul (disc → circle → square) but never do
+		for ol. o-prose layers its hanging tabular-figure marker treatment on top of this.
+	*/
+	ol {
+		list-style-type: decimal;
+	}
+
+	ol ol {
+		list-style-type: lower-alpha;
+	}
+
+	ol ol ol {
+		list-style-type: lower-roman;
+	}
+
+	ol ol ol ol {
+		list-style-type: decimal;
 	}
 
 	/* Icon stroke thickens with surrounding text weight (§11). Reads --v-font-weight. */
@@ -223,6 +243,8 @@
 		),
 	textarea,
 	select {
+		/* Form controls fill their column by default — the app-form norm (c-input matches). */
+		inline-size: 100%;
 		border: var(--v-border-width) solid var(--v-border-color);
 		border-radius: var(--o-input-box__radius, var(--v-radius-min));
 		padding: calc((var(--v-input-height) - 1lh) / 2) var(--v-control-inset);
