@@ -351,6 +351,30 @@ function typographySection(): string {
 				desc: 'Semantic weight: page title.',
 				derived: true,
 			},
+			{
+				name: '--o-prose__gap',
+				def: 'calc(0.75 * var(--v-line-height) * 1em)',
+				desc: 'Prose rhythm — paragraph gap. Scales with the LINE, not --v-spacing (§6.2).',
+				derived: true,
+			},
+			{
+				name: '--o-prose__space-above',
+				def: 'calc(1.5 * var(--o-prose__gap))',
+				desc: 'The larger gap above a heading (the section break) inside o-prose.',
+				derived: true,
+			},
+			{
+				name: '--v-list-rhythm',
+				def: 'calc(var(--o-prose__gap) * 0.5)',
+				desc: 'List item rhythm — grouped (discrete) vs continuous; cascades per context.',
+				derived: true,
+			},
+			{
+				name: '--o-hgroup__leading',
+				def: 'calc(0.5 * var(--v-spacing))',
+				desc: 'Constant leading between an hgroup’s title and subtitle.',
+				derived: true,
+			},
 		]),
 		render: `<div class="o-stack">${ramp}</div>`,
 	});
