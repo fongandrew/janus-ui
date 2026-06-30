@@ -9,7 +9,9 @@ import { type AttrValue, ca, concat, only } from '~/lib2/dom/compose-attrs';
 import { rovingFocus, type RovingFocusAxis } from '~/lib2/dom/handlers/t-roving-focus';
 
 /** Producer: the tablist container. */
-export function tabList(opts: { axis?: RovingFocusAxis } = {}): Record<string, AttrValue> {
+export function tabList(
+	opts: { axis?: RovingFocusAxis | undefined } = {},
+): Record<string, AttrValue> {
 	return ca(rovingFocus({ axis: opts.axis ?? 'horizontal' }), {
 		role: only('tablist'),
 		'data-js': concat('c-tabs__select'),
@@ -17,7 +19,10 @@ export function tabList(opts: { axis?: RovingFocusAxis } = {}): Record<string, A
 }
 
 /** Producer: one tab trigger, controlling the panel with id `panelId`. */
-export function tab(opts: { panelId: string; selected?: boolean }): Record<string, AttrValue> {
+export function tab(opts: {
+	panelId: string;
+	selected?: boolean | undefined;
+}): Record<string, AttrValue> {
 	return {
 		role: 'tab',
 		'aria-selected': String(opts.selected ?? false),
@@ -27,7 +32,10 @@ export function tab(opts: { panelId: string; selected?: boolean }): Record<strin
 }
 
 /** Producer: one tab panel, labelled by the tab with id `tabId`. */
-export function tabPanel(opts: { tabId: string; selected?: boolean }): Record<string, AttrValue> {
+export function tabPanel(opts: {
+	tabId: string;
+	selected?: boolean | undefined;
+}): Record<string, AttrValue> {
 	return {
 		role: 'tabpanel',
 		'aria-labelledby': opts.tabId,
