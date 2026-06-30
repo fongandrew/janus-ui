@@ -1,0 +1,19 @@
+/*
+	v-font-fluid (§5.4) — opt a subtree into the fluid scale. On its own this changes
+	nothing: it just re-derives --v-font-size-h1 etc. from whatever anchors are already
+	in scope. Pair it with anchor overrides (--v-font-size-min/max, --v-font-ratio-min/max
+	spread apart instead of collapsed) for an actually fluid result.
+
+	This class exists because overriding the anchors alone does nothing for a plain
+	descendant: --v-font-size-h1 is a custom property whose var() references resolve at
+	the element where IT is declared (tokens/typography.css's :root), not lazily at
+	whatever element finally reads it (§5.2's "frozen at declare-time" problem,
+	documented in full there). @mixin v-font-scale expands inline at its call site, so
+	invoking it again here gives this subtree its OWN --v-font-size-h1 etc., resolved
+	against this scope's own cascade.
+*/
+@layer variants {
+	.v-font-fluid {
+		@mixin v-font-scale;
+	}
+}

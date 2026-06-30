@@ -1,19 +1,29 @@
 /*
-	Typography (§5.4) — a Utopia-style modular scale that is FLUID-CAPABLE but SHIPS
-	FIXED. By default the two size anchors collapse to one value
-	(--v-font-size-min == --v-font-size-max == 0.9375rem ≈ 15px) and the two ratios are
-	equal, so every token resolves to a constant size that does NOT track the viewport
-	— the right default for app UI. A consumer opts into fluid type by spreading the
-	anchors (and, if desired, the ratios); the same engine then interpolates.
+	Typography (§5.4) — a fluid-capable modular scale that SHIPS FIXED. By default the
+	two size anchors collapse to one value (--v-font-size-min == --v-font-size-max ==
+	0.9375rem ≈ 15px) and the two ratios are equal, so every token resolves to a
+	constant size that does NOT track the viewport — the right default for app UI.
 
-	The clamp formula (per Utopia): each token is
+	The clamp formula: each token is
 	    clamp(LO, LO + (HI − LO) * progress, HI)
 	where LO = max(floor, sizeMin), HI = sizeMax, and
 	    progress = (100vw − viewportMin) / (viewportMax − viewportMin).
 	A "step" n is sizeMin × ratioMin^n / sizeMax × ratioMax^n. CSS has no pow(), but
 	the exponents are small integers, so the powers are written as explicit products of
-	the ratio vars — keeping every token responsive to runtime anchor/ratio overrides.
-	The step exponents appear ONLY in this file; the public surface is semantic.
+	the ratio vars. The step exponents appear ONLY in this file; the public surface is
+	semantic.
+
+	A consumer opts into fluid type by spreading the anchors (and, if desired, the
+	ratios) AND re-invoking @mixin v-font-scale at that scope. Overriding the anchors
+	alone does NOT work: --v-font-size-h1 etc. are custom properties, and a custom
+	property's var() references resolve at the element where IT is declared, not
+	lazily at whatever element finally reads it — so a --v-font-size-h1 declared only
+	at :root permanently locks in :root's anchors the moment :root is computed, no
+	matter what a descendant overrides. Wrapping the whole derivation in a mixin (the
+	same fix spacing.css uses for the identical problem, §5.2) makes it re-derivable:
+	each @mixin v-font-scale call gets its OWN --v-font-size-h1 etc., resolved against
+	whatever anchors are active at ITS scope. See variants/type-scale.css for the
+	scoped, fluid opt-in built on top of this.
 */
 
 /*
@@ -28,35 +38,14 @@
 	font-weight: var(--v-font-weight);
 }
 
-:root {
-	/* Primary knobs (§5.1). */
-	--v-font-family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-		'Segoe UI Symbol', 'Noto Color Emoji';
-	--v-font-family-mono: ui-monospace, sfmono-regular, menlo, monaco, consolas, 'Liberation Mono',
-		'Courier New', monospace;
-
-	/* Anchors COLLAPSED by default → fixed 15px; spacing stays on the 16px grid. */
-	--v-font-size-min: 0.9375rem;
-	--v-font-size-max: 0.9375rem;
-
-	/* Ratios EQUAL by default → a single fixed ratio (minor third). */
-	--v-font-ratio-min: 1.2;
-	--v-font-ratio-max: 1.2;
-
-	/* Shared viewport anchors for the fluid interpolation (inert while collapsed). */
-	--v-viewport-min: 20rem;
-	--v-viewport-max: 80rem;
-	--v-line-height: 1.5;
-
-	/* Font-weight stack (semantic; tinted surfaces bump the whole stack ~100 — §7). */
-	--v-font-weight-normal: 400;
-	--v-font-weight-label: 500;
-	--v-font-weight-subtitle: 600;
-	--v-font-weight-strong: 600;
-	--v-font-weight-title: 700;
-
-	@mixin v-font-weight var(--v-font-weight-normal);
-
+/*
+	The full derivation, as a mixin so it can be RE-INVOKED at any scope that overrides
+	the anchors/ratios (mixins expand inline at their call site, so every var() inside
+	resolves against THAT site's cascade — see the file header). Takes no parameters:
+	it always reads the ambient --v-font-size-min/max, --v-font-ratio-min/max,
+	--v-viewport-min/max in scope, by design (those are the public override surface).
+*/
+@define-mixin v-font-scale {
 	/* Private intermediates for the fluid engine. */
 	--_font-size-floor: min(13px, calc(var(--v-font-size-min) - 1px));
 	--_fluid-progress: calc(
@@ -182,6 +171,37 @@
 
 	/* code — step −1 (independently overridable from caption). */
 	--v-font-size-code: var(--v-font-size-caption);
+}
+
+:root {
+	/* Primary knobs (§5.1). */
+	--v-font-family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+		'Segoe UI Symbol', 'Noto Color Emoji';
+	--v-font-family-mono: ui-monospace, sfmono-regular, menlo, monaco, consolas, 'Liberation Mono',
+		'Courier New', monospace;
+
+	/* Anchors COLLAPSED by default → fixed 15px; spacing stays on the 16px grid. */
+	--v-font-size-min: 0.9375rem;
+	--v-font-size-max: 0.9375rem;
+
+	/* Ratios EQUAL by default → a single fixed ratio (minor third). */
+	--v-font-ratio-min: 1.2;
+	--v-font-ratio-max: 1.2;
+
+	/* Shared viewport anchors for the fluid interpolation (inert while collapsed). */
+	--v-viewport-min: 20rem;
+	--v-viewport-max: 80rem;
+	--v-line-height: 1.5;
+
+	/* Font-weight stack (semantic; tinted surfaces bump the whole stack ~100 — §7). */
+	--v-font-weight-normal: 400;
+	--v-font-weight-label: 500;
+	--v-font-weight-subtitle: 600;
+	--v-font-weight-strong: 600;
+	--v-font-weight-title: 700;
+
+	@mixin v-font-weight var(--v-font-weight-normal);
+	@mixin v-font-scale;
 
 	/*
 		Additive leading (1em + constant) for headings: as font-size grows the fixed

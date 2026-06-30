@@ -46,11 +46,12 @@
 .p-nav__link {
 	color: var(--v-fg);
 	text-decoration: none;
-	padding-block: var(--v-control-inset);
 
-	/* Floor inline padding at the corner radius so the hover pill clears the text (§8.6). */
-	padding-inline: max(var(--v-gap-inline), var(--o-input-box__radius, var(--v-radius-min)));
-	border-radius: var(--o-input-box__radius, var(--v-radius-min));
+	/* Compact, text-height padding — these are inline nav links, not corner-dwelling
+	   pill buttons, so they skip the input-box cascade radius (§8.6) and sit at the
+	   floor instead; same scale the sidebar links below use. */
+	padding: var(--v-gap-tight) var(--v-gap-inline);
+	border-radius: var(--v-radius-min);
 }
 
 .p-nav__link[aria-current='page'] {
@@ -450,6 +451,27 @@
 	min-block-size: 2rem;
 	background: color-mix(in hsl, var(--v-accent) 18%, var(--v-bg));
 	font-size: var(--v-font-size-caption);
+}
+
+/* Background-only tint — for demos that pair the real o-box object (real padding/radius,
+   text-box-trim) with the accent fill, without p-demo-box's flex centering / min-size
+   getting in the way (text-alignment / truncation tools act on normal block flow, which
+   that flex centering would otherwise mask). */
+.p-demo-bg {
+	background: color-mix(in hsl, var(--v-accent) 18%, var(--v-bg));
+}
+
+/*
+	Typography page — the spread (un-collapsed) anchors/ratios for the sliding-scale demo
+	(§5.4). Pair with the library's .v-font-fluid (variants/type-scale.css), which
+	re-derives --v-font-size-h1 etc. at this scope — these anchors alone do nothing,
+	since that derivation otherwise stays frozen to :root's collapsed values.
+*/
+.p-fluid-demo {
+	--v-font-size-min: 0.875rem;
+	--v-font-size-max: 1.125rem;
+	--v-font-ratio-min: 1.125;
+	--v-font-ratio-max: 1.333;
 }
 
 /*

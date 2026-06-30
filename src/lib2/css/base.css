@@ -243,7 +243,11 @@
 		),
 	textarea,
 	select {
-		/* Form controls fill their column by default — the app-form norm (c-input matches). */
+		/* Form controls fill their column by default — the app-form norm (c-input matches).
+		   Block, not the UA default inline-block: inline-block keeps them in the paragraph's
+		   line box, which reserves descender space below them (same "phantom gap under an
+		   image" bug img/video/etc. already avoid via reset.css's display: block). */
+		display: block;
 		inline-size: 100%;
 		border: var(--v-border-width) solid var(--v-border-color);
 		border-radius: var(--o-input-box__radius, var(--v-radius-min));

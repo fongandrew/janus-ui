@@ -25,6 +25,27 @@ const BOX = (label: string, cls = '', style = '') =>
 const ROW = (cls: string, items: string, style = '') =>
 	`<div class="t-flex ${cls}" style="inline-size: 100%; gap: 0.5rem; ${style}">${items}</div>`;
 
+/**
+ * A block-level demo surface for text-alignment / truncation tools — those act on normal
+ * block flow, which p-demo-box's flex centering would mask. Pairs the real o-box object
+ * (so padding/text-box-trim come from the actual library, not a hand-rolled copy) with the
+ * background-only tint; the radius knob is pinned to the floor so an o-box sitting this deep
+ * in the page (with nothing between it and the root re-rooting the cascade) doesn't paint at
+ * the much larger root-level radius (§8.6 — see the t-p-0 demo for the same fix).
+ */
+const BLOCK_BOX = (label: string, cls: string, style = '') =>
+	`<span class="o-box p-demo-bg ${cls}" style="display: block; --o-box__radius: var(--v-radius-min); ${style}">${label}</span>`;
+
+/** Three mixed-height items, so a CROSS-axis align variant visibly moves them apart. */
+const ALIGN_ITEMS = `${BOX('a')}${BOX('b', '', 'block-size: 3rem')}${BOX('c', '', 'block-size: 2.5rem')}`;
+
+/** One labelled row per t-items-* variant, stacked so all three are visible at once. */
+const itemsRow = (variant: 'start' | 'center' | 'end') => `
+	<div class="t-flex t-items-center" style="gap: 0.5rem">
+		<code style="inline-size: 3.5rem; flex: none">-${variant}</code>
+		${ROW(`t-items-${variant}`, ALIGN_ITEMS, 'block-size: 3.5rem')}
+	</div>`;
+
 function tile(t: Tool): string {
 	return `
 	<div class="p-tool" id="tool-${t.name}">
@@ -50,7 +71,7 @@ export function render(): string {
 		{
 			name: 't-p-0',
 			desc: 'Zero padding (here, off an o-box).',
-			demo: `${BOX('o-box', 'o-box')}${BOX('t-p-0', 'o-box t-p-0')}`,
+			demo: `${BOX('o-box', 'o-box', '--o-box__radius: var(--v-radius-min)')}${BOX('t-p-0', 'o-box t-p-0', '--o-box__radius: var(--v-radius-min)')}`,
 		},
 	];
 	const display: Tool[] = [
@@ -72,14 +93,21 @@ export function render(): string {
 		{
 			name: 't-hidden',
 			desc: 'display: none.',
-			demo: ROW('', `${BOX('shown')}${BOX('gone', 't-hidden')}`),
+			// The wrapping span (not p-demo-box itself) carries t-hidden: p-demo-box is an
+			// unlayered doc-site class, so its display: inline-flex would otherwise beat the
+			// layered tools class outright (no specificity contest possible across layers).
+			demo: ROW('', `${BOX('shown')}<span class="t-hidden">${BOX('gone')}</span>`),
 		},
 	];
 	const align: Tool[] = [
 		{
 			name: 't-items-start / -center / -end',
 			desc: 'Flex CROSS-axis (align-items).',
-			demo: ROW('t-items-end', `${BOX('a')}${BOX('b')}`, 'block-size: 4rem'),
+			demo: `<div style="display: flex; flex-direction: column; gap: 0.5rem; inline-size: 100%">${(
+				['start', 'center', 'end'] as const
+			)
+				.map(itemsRow)
+				.join('')}</div>`,
 		},
 		{
 			name: 't-justify-center',
@@ -94,12 +122,12 @@ export function render(): string {
 		{
 			name: 't-text-center',
 			desc: 'TEXT align: center.',
-			demo: BOX('t-text-center', 't-text-center', 'display: block; inline-size: 100%'),
+			demo: BLOCK_BOX('t-text-center', 't-text-center', 'inline-size: 100%'),
 		},
 		{
 			name: 't-text-end',
 			desc: 'TEXT align: end.',
-			demo: BOX('t-text-end', 't-text-end', 'display: block; inline-size: 100%'),
+			demo: BLOCK_BOX('t-text-end', 't-text-end', 'inline-size: 100%'),
 		},
 	];
 	const chrome: Tool[] = [
@@ -138,10 +166,10 @@ export function render(): string {
 		{
 			name: 't-truncate',
 			desc: 'Single-line ellipsis.',
-			demo: BOX(
+			demo: BLOCK_BOX(
 				'A long line that truncates with an ellipsis',
 				't-truncate',
-				'display: block; max-inline-size: 100%',
+				'max-inline-size: 100%',
 			),
 		},
 		{
