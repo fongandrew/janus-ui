@@ -12,6 +12,11 @@
 	Block padding tracks the radius (not --v-gap-block): full-bleed rows highlight edge to
 	edge, so the only block padding needed is enough to keep the first/last row's highlight
 	inside the rounded corners — exactly the radius. A big gap-block reads as dead space.
+
+	Closed-state hiding: see the matching note in objects/dialog.css -- `display: flex` is
+	unconditional for the static (no-JS) gallery case, so a real `[popover]` host needs an
+	explicit `display: none` override while closed instead of relying on (and losing) the
+	UA stylesheet's default.
 */
 @layer objects {
 	.o-menu {
@@ -25,5 +30,9 @@
 		border-radius: var(--o-menu__radius);
 		overflow: auto;
 		max-block-size: min(20rem, 60cqb);
+
+		&[popover]:not(:popover-open) {
+			display: none;
+		}
 	}
 }

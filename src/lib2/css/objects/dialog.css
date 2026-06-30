@@ -7,6 +7,13 @@
 	a body that rounds the bottom and fills). A solid background on the scroll element
 	paints past the radius during the overscroll rubber-band; a transparent one can't.
 	(The --o-dialog__offset / __radius cascade is assigned in tokens/radius.css.)
+
+	Closed-state hiding: `display: flex` is unconditional below because a static demo
+	(no JS, a plain `<div class="o-dialog">`) needs to render inline. A REAL `<dialog>` /
+	`[popover]` host needs the opposite when closed — the UA stylesheet's `display: none`
+	must win, not get clobbered by this rule's higher (author) priority. The `:is(...)`
+	override re-asserts `display: none` for those two closed cases specifically (a plain
+	div matches neither `dialog` nor `[popover]`, so it's untouched).
 */
 @define-mixin o-dialog {
 	display: flex;
@@ -22,6 +29,10 @@
 	border: var(--v-border-width) solid var(--v-border-color);
 	border-radius: var(--o-dialog__radius, var(--v-radius));
 	box-shadow: var(--v-shadow-outer);
+
+	&:is(dialog:not([open]), [popover]:not(:popover-open)) {
+		display: none;
+	}
 }
 
 @layer objects {
