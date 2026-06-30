@@ -48,7 +48,7 @@ export function StyledSelect(props: StyledSelectProps): JSX.Element {
 	function choose(opt: StyledSelectOption) {
 		setSelected(() => opt.value);
 		props.onChange?.(opt.value);
-		listboxEl?.hidePopover();
+		listboxEl?.hidePopover?.();
 	}
 
 	return (
