@@ -8,9 +8,9 @@
  * from submission. Also maps `required` / `invalid` to their ARIA forms.
  */
 export function ariaize(p: {
-	disabled?: boolean;
-	required?: boolean;
-	invalid?: boolean;
+	disabled?: boolean | undefined;
+	required?: boolean | undefined;
+	invalid?: boolean | undefined;
 }): {
 	'aria-disabled'?: true;
 	'aria-required'?: true;

@@ -8,11 +8,11 @@ import { ariaize, attrs } from '~/lib2/solid/aria';
  * for debuggability and stable hydration.
  */
 export interface LabelledInputOptions {
-	id?: string;
+	id?: string | undefined;
 	/** Whether a description element is rendered (controls aria-describedby). */
-	description?: boolean;
-	required?: boolean;
-	invalid?: boolean;
+	description?: boolean | undefined;
+	required?: boolean | undefined;
+	invalid?: boolean | undefined;
 	/**
 	 * When present (even null), the consumer controls the error slot end-to-end;
 	 * a `data-external-error` marker tells the engine to stay out of the slot
