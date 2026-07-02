@@ -1,0 +1,10 @@
+{
+	"extends": "../../../tsconfig.json",
+	"compilerOptions": {
+		// No "DOM" lib — this package must stay DOM-free
+		"lib": ["ESNext"],
+		"types": []
+	},
+	"include": ["."],
+	"exclude": ["node_modules"]
+}

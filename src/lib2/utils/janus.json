@@ -1,0 +1,5 @@
+{
+	"name": "utils",
+	"summary": "Framework-agnostic JS/TS utilities (data structures, type guards, DOM-free helpers).",
+	"depends": []
+}
