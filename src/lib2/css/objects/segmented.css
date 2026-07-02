@@ -1,0 +1,62 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * o-segmented — a rounded frame holding cells that share one border, dividers
+ * between them instead of gaps (the iOS-style grouped-list / settings-group
+ * pattern, §9.8). The group owns the radius/border; its own padding is 0 and
+ * the cells carry the padding. Cells round only their OUTER corners via logical
+ * corner properties, so interior corners stay square and nothing relies on
+ * overflow: clip (which would bite cell focus rings).
+ */
+@layer objects {
+	.o-segmented {
+		--o-segmented__divider: var(--v-border-width) solid var(--v-border-color);
+
+		display: flex;
+		flex-direction: column;
+		border-radius: var(--o-box__radius, var(--v-radius-min));
+		padding: 0;
+	}
+
+	.o-segmented > * {
+		border-radius: 0;
+	}
+
+	/* Divider on the shared edge (column mode). */
+	.o-segmented > * + * {
+		border-block-start: var(--o-segmented__divider);
+	}
+
+	/* Only the end cells round, and only on the group's outer side. */
+	.o-segmented > :first-child {
+		border-start-start-radius: var(--o-box__radius, var(--v-radius-min));
+		border-start-end-radius: var(--o-box__radius, var(--v-radius-min));
+	}
+
+	.o-segmented > :last-child {
+		border-end-start-radius: var(--o-box__radius, var(--v-radius-min));
+		border-end-end-radius: var(--o-box__radius, var(--v-radius-min));
+	}
+
+	/* Horizontal (row) variant: flip the logical pairs and the divider edge. */
+	.o-segmented--row {
+		flex-direction: row;
+	}
+
+	.o-segmented--row > * + * {
+		border-block-start: 0;
+		border-inline-start: var(--o-segmented__divider);
+	}
+
+	.o-segmented--row > :first-child {
+		border-radius: 0;
+		border-start-start-radius: var(--o-box__radius, var(--v-radius-min));
+		border-end-start-radius: var(--o-box__radius, var(--v-radius-min));
+	}
+
+	.o-segmented--row > :last-child {
+		border-radius: 0;
+		border-start-end-radius: var(--o-box__radius, var(--v-radius-min));
+		border-end-end-radius: var(--o-box__radius, var(--v-radius-min));
+	}
+}

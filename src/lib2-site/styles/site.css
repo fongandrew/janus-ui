@@ -57,6 +57,12 @@
 
 .p-doc-main {
 	padding-block: var(--v-gap-section, 1.5rem);
+	/* When p-doc-main is an o-container that is ALSO a grid item (the split
+	   layout), o-container's `margin-inline: auto` would make it shrink to
+	   content instead of filling its track. Neutralize the auto margin and let
+	   the default justify-self: stretch fill the column. */
+	margin-inline: 0;
+	min-inline-size: 0;
 }
 
 .p-doc-title {
@@ -143,6 +149,17 @@
 
 .p-doc-table code {
 	white-space: nowrap;
+}
+
+.p-doc-note {
+	margin-block-end: var(--v-gap-tight, 0.25rem);
+	color: var(--v-muted, #666);
+	font-size: var(--v-font-size-caption, 0.8125rem);
+}
+
+/* Draw a visible border on otherwise-transparent objects in demos. */
+.p-demo-outline {
+	border: var(--v-border-width, 1px) solid var(--v-border-color, #ccc);
 }
 
 /* A neutral framed area to show a live render of a token/object/component. */

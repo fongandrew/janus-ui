@@ -1,0 +1,20 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * o-menu — popover frame for dropdowns, selects, command palettes (§9.6).
+ * Structural only: radius, padding, overflow, max-height. Chrome (shadow,
+ * border, backdrop) comes from the composing component or v-surface-*.
+ */
+@layer objects {
+	.o-menu {
+		--o-menu__pad-block: var(--v-gap-tight);
+		--o-menu__pad-inline: 0;
+
+		display: flex;
+		flex-direction: column;
+		max-block-size: min(24rem, 60vh);
+		padding: var(--o-menu__pad-block) var(--o-menu__pad-inline);
+		border-radius: var(--o-box__radius, var(--v-radius-min));
+		overflow-y: auto;
+	}
+}

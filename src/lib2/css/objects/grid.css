@@ -1,0 +1,22 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * o-grid — intrinsic responsive grid (§9.3.1). Three knobs, one selector, no
+ * breakpoints. Gap defaults to the section scale on both axes (grid cells are
+ * section-level peers, §6.2). o-grid--fit collapses empty tracks.
+ */
+@layer objects {
+	.o-grid {
+		--o-grid__min: 16rem;
+		--o-grid__gap-block: var(--v-gap-section);
+		--o-grid__gap-inline: var(--v-gap-section);
+
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(min(var(--o-grid__min), 100%), 1fr));
+		gap: var(--o-grid__gap-block) var(--o-grid__gap-inline);
+	}
+
+	.o-grid--fit {
+		grid-template-columns: repeat(auto-fit, minmax(min(var(--o-grid__min), 100%), 1fr));
+	}
+}

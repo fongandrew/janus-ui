@@ -1,0 +1,18 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * o-stack — vertical flow with a consistent gap (§9.3). One object, several
+ * roles — the role is just which value the gap takes (§6.2): section stack →
+ * --v-gap-section; in-card → --v-pad-block (set by c-card); form field →
+ * --v-gap-tight. Trims its immediate text children (the shared trim rule lives
+ * in prose.css) so a bare heading in a card stack aligns optically.
+ */
+@layer objects {
+	.o-stack {
+		--o-stack__gap: var(--v-gap-block);
+
+		display: flex;
+		flex-direction: column;
+		gap: var(--o-stack__gap);
+	}
+}

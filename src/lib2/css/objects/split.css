@@ -1,0 +1,20 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * o-split — two-up layout (sidebar + main) that collapses to stacked below a
+ * threshold (§9.3). Flex-wrap with a shared basis: when the container is
+ * narrower than two basis widths, the items wrap to a single column — no media
+ * queries, keyed to the container's own width.
+ */
+@layer objects {
+	.o-split {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--v-gap-section);
+	}
+
+	.o-split > * {
+		flex: 1 1 20rem;
+		min-inline-size: 0;
+	}
+}

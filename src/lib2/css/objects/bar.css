@@ -1,0 +1,54 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * o-bar — horizontal header / toolbar / app-bar strip (§9.7). The block-axis
+ * instance of the inline-alignment principle: one SYMMETRIC padding knob
+ * (--o-bar__pad, block == inline) reconciled with a control's intrinsic height,
+ * in three height modes. Sticky page-header treatment (translucent card-tone
+ * background + blur + bottom border) is the default look; toolbars nested
+ * elsewhere override as needed.
+ *
+ * Overflow contract: exactly one row at any width — the leading cluster yields
+ * (flex: 1 1 auto; min-width: 0; its text composes t-truncate), the trailing
+ * cluster is fixed; clusters never wrap.
+ */
+@layer objects {
+	.o-bar {
+		--o-bar__pad: var(--v-spacing);
+
+		position: sticky;
+		top: 0;
+		z-index: 1;
+		display: flex;
+		flex-wrap: nowrap;
+		align-items: center;
+		gap: var(--v-gap-inline);
+		min-block-size: var(--v-input-height);
+		padding: var(--o-bar__pad);
+		background: color-mix(in hsl, var(--v-card-bg) 85%, transparent);
+		backdrop-filter: blur(8px);
+		border-block-end: var(--v-border-width) solid var(--v-border-color);
+	}
+
+	/* Contains-input: padding reduced by the control's own internal half-height,
+	   so the control's TEXT sits --v-spacing from the bar edge (fixes the
+	   too-tall-header bug). */
+	.o-bar--contains {
+		--o-bar__pad: calc(var(--v-spacing) - max(0px, (var(--v-input-height) - 1lh) / 2));
+	}
+
+	/* Input: flush — the bar is exactly one control tall. */
+	.o-bar--input {
+		--o-bar__pad: 0;
+	}
+
+	/* Leading cluster yields and truncates; trailing clusters stay fixed. */
+	.o-bar > * {
+		flex: none;
+	}
+
+	.o-bar > :first-child {
+		flex: 1 1 auto;
+		min-inline-size: 0;
+	}
+}

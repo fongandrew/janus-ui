@@ -1,0 +1,148 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * o-prose — running-text flow and the typography object (§9.5). Interior rhythm
+ * is boundary-owned (§6.2): every gap is a margin-block-start on the LOWER
+ * element, valued by what's above — body↔body & heading→content get the prose
+ * gap; content→heading gets the larger heading space-above. It also opts its
+ * immediate text children into text-box-trim (the one container that signals
+ * "running text"), and styles <hgroup> and depth-cycled list markers.
+ */
+@layer objects {
+	.o-prose {
+		--o-prose__inset: var(--v-pad-inline);
+
+		display: flow-root;
+	}
+
+	/* Boundary-owned rhythm — margin on the lower element. */
+	.o-prose > * {
+		margin-block-start: var(--o-prose__gap);
+	}
+
+	.o-prose > :where(h1, h2, h3, h4, h5, h6) {
+		margin-block-start: var(--o-prose__heading-gap);
+	}
+
+	.o-prose > :first-child {
+		margin-block-start: 0;
+	}
+
+	/* Lists are running text — inter-item spacing rides the cascading
+	   --v-list-rhythm (grouped default; continuous is a scope opt-in). */
+	.o-prose :where(li + li) {
+		margin-block-start: var(--v-list-rhythm);
+	}
+
+	/*
+	 * Shared trim rule (§6): the two containers that own rhythm opt their
+	 * immediate text children into text-box-trim. Named element list, never
+	 * `> *` — trim has no effect on flex/grid children and must not touch
+	 * controls (§6). <hgroup> trims only its outer edges so the title↔subtitle
+	 * boundary keeps its half-leading and reads continuous.
+	 */
+	:is(.o-prose, .o-stack)
+		> :where(h1, h2, h3, h4, h5, h6, p, label, figcaption, dt, dd, blockquote),
+	.o-prose > :where(ul, ol) > li {
+		text-box: trim-both cap alphabetic;
+	}
+
+	:is(.o-prose, .o-stack) hgroup > :first-child {
+		text-box: trim-start cap alphabetic;
+	}
+
+	:is(.o-prose, .o-stack) hgroup > :last-child {
+		text-box: trim-end cap alphabetic;
+	}
+
+	/*
+	 * <hgroup> — title + subtitle as one unit (§6.2). Additive leading keeps the
+	 * whitespace between the two lines constant across the size difference; no
+	 * margin between members.
+	 */
+	:is(.o-prose, .o-stack) hgroup {
+		display: flex;
+		flex-direction: column;
+	}
+
+	:is(.o-prose, .o-stack) hgroup > * {
+		margin-block-start: 0;
+		line-height: calc(1em + var(--o-hgroup__leading));
+	}
+
+	/*
+	 * Nested-list marker cycling (§9.5, folded from the Slip Switch editor CSS).
+	 * ul cycles the native list-style-type disc → circle → square every 3
+	 * levels; ol drops the native marker for a tabular, right-aligned custom
+	 * counter that hangs flush with the list edge (negative inline margin moves
+	 * flow, so item text stays flush — never a transform).
+	 */
+	.o-prose ul {
+		list-style-type: disc;
+		padding-inline-start: calc(1em + var(--v-gap-inline));
+	}
+
+	.o-prose ul ul {
+		list-style-type: circle;
+	}
+
+	.o-prose ul ul ul {
+		list-style-type: square;
+	}
+
+	.o-prose ul ul ul ul {
+		list-style-type: disc;
+	}
+
+	.o-prose ul ul ul ul ul {
+		list-style-type: circle;
+	}
+
+	.o-prose ul ul ul ul ul ul {
+		list-style-type: square;
+	}
+
+	.o-prose ol {
+		--_ol-pad: max(1em, 1ch);
+
+		list-style: none;
+		counter-reset: item;
+		padding-inline-start: calc(var(--_ol-pad) + var(--v-gap-inline));
+	}
+
+	.o-prose ol > li {
+		counter-increment: item;
+	}
+
+	.o-prose ol > li::before {
+		content: counter(item, decimal) '.';
+		display: inline-block;
+		inline-size: var(--_ol-pad);
+		margin-inline-start: calc(-1 * (var(--_ol-pad) + var(--v-gap-inline)));
+		margin-inline-end: var(--v-gap-inline);
+		text-align: end;
+		font-variant-numeric: tabular-nums;
+	}
+
+	/* Counter style cycles decimal → lower-alpha → lower-roman every 3 levels. */
+	.o-prose ol ol > li::before {
+		content: counter(item, lower-alpha) '.';
+	}
+
+	.o-prose ol ol ol > li::before {
+		content: counter(item, lower-roman) '.';
+	}
+
+	.o-prose ol ol ol ol > li::before {
+		content: counter(item, decimal) '.';
+	}
+
+	/* Widen the marker box as digit counts grow (port the per-style breaks). */
+	.o-prose ol:has(> li:nth-child(10)) {
+		--_ol-pad: max(1.5em, 2ch);
+	}
+
+	.o-prose ol:has(> li:nth-child(100)) {
+		--_ol-pad: max(2em, 3ch);
+	}
+}

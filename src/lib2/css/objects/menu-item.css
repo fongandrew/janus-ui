@@ -1,0 +1,24 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * o-menu-item — a row inside an o-menu (§9.6). Owns its own height and
+ * font-size defaults (compact relative to --v-input-height / --v-font-size),
+ * not coupled to a global "small" token. Centers a single line via the control
+ * height recipe (not trim).
+ */
+@layer objects {
+	.o-menu-item {
+		--o-menu-item__height: var(--v-input-height);
+		--o-menu-item__font-size: var(--v-font-size);
+
+		display: flex;
+		align-items: center;
+		gap: var(--v-gap-inline);
+		inline-size: 100%;
+		min-block-size: var(--o-menu-item__height);
+		padding-block: calc((var(--o-menu-item__height) - 1lh) / 2);
+		padding-inline: var(--v-control-inset);
+		font-size: var(--o-menu-item__font-size);
+		text-align: start;
+	}
+}

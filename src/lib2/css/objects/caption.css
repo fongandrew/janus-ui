@@ -1,0 +1,15 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * o-caption — small-text structural primitive for badges, tooltips, and similar
+ * caption-class content (§9.5). Sets font-size + a matching line-height. No
+ * color or chrome — those belong on the composing component.
+ */
+@layer objects {
+	.o-caption {
+		--o-caption__font-size: var(--v-font-size-caption);
+
+		font-size: var(--o-caption__font-size);
+		line-height: var(--v-line-height-caption);
+	}
+}

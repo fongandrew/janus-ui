@@ -1,0 +1,29 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * o-input-box — text-mode shared base for text-bearing leaf controls (§9.2):
+ * <button>, <input>, <textarea>, native <select>. A single line centers via
+ * padding MATH (not text-box-trim), so a control may be a flex container and
+ * behaves identically with or without trim support (§6). The object reserves
+ * border-width space; the border COLOR is chrome on c-input / c-button.
+ *
+ * Inline padding defaults to --v-control-inset (inputs/selects). Buttons pad
+ * roomier (--v-spacing) — set by c-button (Phase 3).
+ */
+@layer objects {
+	.o-input-box {
+		min-block-size: var(--v-input-height);
+		padding-block: calc((var(--v-input-height) - 1lh) / 2);
+		padding-inline: var(--v-control-inset);
+		border-width: var(--v-border-width);
+		border-radius: var(--o-input-box__radius, var(--v-radius-min));
+	}
+
+	/* A textarea is multi-line: uniform inset all round, block padding
+	   leading-corrected so the first line sits the same optical distance from
+	   the top as the text does from the sides (§9.2). */
+	textarea.o-input-box {
+		min-block-size: calc(var(--v-input-height) * 2);
+		padding-block: calc(var(--v-control-inset) - (1lh - 1em) / 2);
+	}
+}

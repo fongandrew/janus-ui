@@ -1,1 +1,29 @@
-/* objects layer — populated in a later phase. */
+/*
+ * Objects layer (§9) — structural / layout primitives. Zero JS, zero chrome.
+ * Built box-family first (components layer on these), then layout, then
+ * typography and menu objects.
+ */
+
+/* Box family. */
+@import '~/lib2/css/objects/box.css';
+@import '~/lib2/css/objects/prose.css';
+@import '~/lib2/css/objects/input-box.css';
+@import '~/lib2/css/objects/square.css';
+@import '~/lib2/css/objects/dialog.css';
+
+/* Layout objects. */
+@import '~/lib2/css/objects/stack.css';
+@import '~/lib2/css/objects/group.css';
+@import '~/lib2/css/objects/row.css';
+@import '~/lib2/css/objects/grid.css';
+@import '~/lib2/css/objects/container.css';
+@import '~/lib2/css/objects/split.css';
+@import '~/lib2/css/objects/centric.css';
+@import '~/lib2/css/objects/bar.css';
+@import '~/lib2/css/objects/segmented.css';
+
+/* Typography and menu objects. */
+@import '~/lib2/css/objects/caption.css';
+@import '~/lib2/css/objects/code.css';
+@import '~/lib2/css/objects/menu.css';
+@import '~/lib2/css/objects/menu-item.css';

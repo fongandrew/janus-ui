@@ -1,0 +1,16 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * o-code — monospace text container for <code> and <pre> (§9.5). Sets
+ * font-size, mono family, and a matching line-height. <pre>'s self-padded
+ * text-box treatment (padding + trim) lives in base.css.
+ */
+@layer objects {
+	.o-code {
+		--o-code__font-size: var(--v-font-size-code);
+
+		font-family: var(--v-font-family-mono);
+		font-size: var(--o-code__font-size);
+		line-height: var(--v-line-height-code);
+	}
+}

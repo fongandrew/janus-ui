@@ -1,0 +1,46 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * o-box — THE padded container (§9.2). Uniform block padding; inline padding
+ * floored at its own corner radius so content clears the curve (§8.6, a no-op
+ * at default values). Carries the box-scoped radius cascade (§8.2): each box
+ * steps the control knob one pad deeper for its children AND publishes an
+ * inner-box knob for a box nested inside it; a box-in-box reads the inner knob
+ * and steps its own controls once more.
+ *
+ * Zero-specificity `:where(.o-box)` selectors are used so the nested-box rule
+ * (also zero) wins by source order on the inner element (§8.2). A rule writes a
+ * DIFFERENT knob than it reads, so no knob references itself.
+ */
+@layer objects {
+	:where(.o-box) {
+		--o-box__pad-block: var(--v-pad-block);
+		--o-box__pad-inline: var(--v-pad-inline);
+
+		/* Step children one pad deeper; publish the one nested-box step. */
+		--o-input-box__radius: max(
+			var(--v-radius-min),
+			calc(var(--o-box__radius) - var(--v-pad-inline))
+		);
+		--o-box__radius-inner: max(
+			var(--v-radius-min),
+			calc(var(--o-box__radius) - var(--v-pad-inline))
+		);
+
+		padding: var(--o-box__pad-block)
+			max(var(--o-box__pad-inline), var(--o-box__radius, var(--v-radius-min)));
+		border-radius: var(--o-box__radius, var(--v-radius-min));
+	}
+
+	/* A box INSIDE a box rounds one step less and steps its controls once more.
+	   Overriding border-radius directly (not --o-box__radius) avoids the
+	   self-reference cycle (§5.2). */
+	:where(.o-box) :where(.o-box) {
+		--o-input-box__radius: max(
+			var(--v-radius-min),
+			calc(var(--o-box__radius-inner) - var(--v-pad-inline))
+		);
+
+		border-radius: var(--o-box__radius-inner, var(--v-radius-min));
+	}
+}

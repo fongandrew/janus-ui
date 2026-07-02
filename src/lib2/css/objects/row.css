@@ -1,0 +1,13 @@
+@import '~/lib2/css/tokens/index.css';
+
+/* o-row — like o-group but center-aligned; used for action rows (§9.3). */
+@layer objects {
+	.o-row {
+		--o-row__gap: var(--v-gap-inline);
+
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--o-row__gap);
+	}
+}

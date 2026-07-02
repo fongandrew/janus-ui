@@ -1,0 +1,38 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * o-dialog — dialog chrome (§9.4). Radius, viewport-edge breathing room, border
+ * and shadow, but NO background of its own: the dialog frame IS the scroll
+ * container and is transparent, so overscroll can't paint past the radius
+ * (load-bearing — §9.4). The surface color + rounded corners come from the
+ * header/body surfaces tiled inside it (c-modal, Phase 3).
+ *
+ * Re-roots the radius cascade: everything inside derives from the dialog
+ * radius. Also a query container sharing the `frame` container-name with
+ * o-container, so one @container rule full-bleeds boxes in either frame (§6.1).
+ */
+@layer objects {
+	.o-dialog {
+		--o-dialog__offset: calc(0.75 * var(--v-spacing));
+		--o-dialog__radius: max(
+			var(--v-radius-min),
+			calc(var(--v-radius) - var(--o-dialog__offset))
+		);
+
+		/* Re-root: boxes/controls inside derive from the dialog radius. */
+		--o-box__radius: max(var(--v-radius-min), calc(var(--o-dialog__radius) - var(--v-pad-inline)));
+		--o-input-box__radius: max(
+			var(--v-radius-min),
+			calc(var(--o-dialog__radius) - var(--v-pad-inline))
+		);
+
+		border-width: var(--v-border-width);
+		border-color: var(--v-border-color);
+		border-radius: var(--o-dialog__radius);
+		background: transparent;
+		box-shadow: var(--v-shadow-outer);
+
+		container-type: inline-size;
+		container-name: frame;
+	}
+}

@@ -16,12 +16,20 @@
 
 		color: var(--v-fg);
 		font-family: var(--v-font-family);
-		font-size: var(--v-font-size);
 		line-height: var(--v-line-height);
+		/*
+		 * Body text is a fixed 15px, but the SPACING grid stays on 16px (§5.1:
+		 * "--v-spacing: 1rem" while body sits a touch below). Setting the body
+		 * size here on :root/html would make `rem` self-referential (rem ==
+		 * 15px), collapsing every rem-derived token onto the 15px grid — so the
+		 * body size goes on `body`, keeping the root font-size at the 16px
+		 * default and `rem` on the 16px grid.
+		 */
 	}
 
 	body {
 		min-height: 100dvh;
+		font-size: var(--v-font-size);
 		background: var(--v-body-bg);
 		background-attachment: fixed;
 
