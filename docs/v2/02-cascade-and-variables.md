@@ -16,7 +16,7 @@ A single `@layer` declaration in the entry stylesheet establishes precedence:
 | `base` | — | Element-level typography, links, form defaults | `body { font-family: ... }`, `a { ... }` |
 | `objects` | `o-` | Structural / layout primitives | `.o-stack`, `.o-box`, `.o-grid` |
 | `components` | `c-` | Named, opinionated widgets that compose objects | `.c-button`, `.c-card`, `.c-modal` |
-| `variants` | `v-` | Knob setters (scoped re-themes) | `.v-spacing-sm`, `.v-colors-primary`, `.v-surface-glass` |
+| `variants` | `v-` | Scoped re-themes / re-modes — knob setters, plus mode flips on the classes beneath | `.v-colors-primary`, `.v-surface-glass`, `.v-bleed` |
 | `tools` | `t-` | Surgical overrides that always win | `.t-px-0`, `.t-flex-fill`, `.t-radius-none` |
 | *(unlayered)* | `p-` | **Project layer** — classes owned by the consuming project, not by Janus | `.p-site-nav`, `.p-doc-toc` |
 
@@ -27,8 +27,8 @@ A single `@layer` declaration in the entry stylesheet establishes precedence:
 
 **Discipline:**
 - `c-` and `o-` classes **consume** custom properties; they never set raw px/rem values. They may set derivations of properties from other properties though.
-- `v-` classes **set** custom properties only. They never declare display, layout, or other structural properties.
-- `t-` is the only layer permitted to set arbitrary properties directly. It is intentionally narrow (see §11).
+- `v-` classes **re-theme or re-mode a subtree**. Most do it by setting custom properties (`v-colors-*`, `v-surface-*` — still the preferred form, since knobs compose), but a variant may also **change how the underlying `o-`/`c-` classes beneath it behave** — its rules may target descendant library classes to flip a documented mode (`v-bleed` making a narrow frame's boxes break out, `v-align-edge` re-pointing the inset targets). Two things keep this honest: a variant's rules style *library classes in its subtree*, never arbitrary elements (the variant has no look of its own — remove every `o-`/`c-` class beneath it and it does nothing), and every behavior a variant flips is documented on the object/component it flips.
+- `t-` is the only layer permitted to set arbitrary properties directly on the element it's applied to. It is intentionally narrow (see §11).
 - **Behavior names inside `data-js` mirror the same prefix scheme.** The DOM layer's single canonical attribute is `data-js="..."` (§12.2.2); each space-separated token names a behavior whose `t-`/`c-`/`p-` prefix matches the CSS class scheme. So `data-js="t-roving-focus"` for a toolkit behavior, `data-js="c-modal__close"` for a component-internal one. State-style attributes for CSS-only hooks (no JS wiring) keep the `data-v-*` form (e.g. `data-v-color-scheme="dark"`). The framework's own DOM-scanning (`mount()`) only reads the canonical `data-js`, so consumer-defined `data-foo` attributes never collide with framework dispatch.
 
 ### 4.1 Objects vs. components
@@ -256,7 +256,7 @@ Two rules:
 **Consumers should not need them.** The supported ways a consumer customizes Janus are, in order of preference:
 
 1. **Variable overrides** — set `--v-*` knobs (on `:root` or any scope). This covers the large majority of theming.
-2. **`v-` variant classes** — apply a scoped re-theme (`v-colors-*`, `v-surface-*`, an alignment mode).
+2. **`v-` variant classes** — apply a scoped re-theme or re-mode (`v-colors-*`, `v-surface-*`, an alignment mode, `v-bleed`).
 3. **`t-` tools** — surgical per-element overrides.
 4. **Plain CSS overrides** — write your own rules. Because Janus is fork-and-copy, your CSS sits in the same project and can target anything.
 

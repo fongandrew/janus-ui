@@ -89,6 +89,7 @@ src/lib/
       colors.css                 # .v-colors-* (tones consumed by c- components)
       surface.css                # .v-surface-* (chrome treatments)
       align.css                  # text-inset modes: .v-align-edge / .v-align-text (§6.1)
+      bleed.css                  # .v-bleed — per-frame full-bleed mode (§6.1)
       text.css                   # .v-text-display / .v-text-meta (role-based, sparingly)
       # No .v-radius-* presets — the radius cascade is always-on in tokens/radius.css (§8.2).
       # No .v-spacing-*, .v-input-size-*, or other t-shirt-scaled variants.
