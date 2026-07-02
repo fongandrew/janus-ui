@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="/src/lib2/css/index.css" />
+		<link rel="stylesheet" href="/src/lib2-site/site.css" />
+		<title>DOM behaviors — Janus v2</title>
+	</head>
+	<body data-js="t-kb-nav">
+		<!--
+			The one deliberate raw-HTML page in the Solid-authored site: it
+			demonstrates (and E2E-tests) the vanilla-JS consumer path — raw
+			markup carrying data-js tokens + a script importing dom/all and
+			calling mount(). No framework in the loop. Permanent demo, not an
+			interim format.
+		-->
+		<main class="o-container p-site-main">
+			<hgroup>
+				<h1>DOM behaviors</h1>
+				<p>
+					Raw HTML + <code>data-js</code> tokens + <code>mount()</code> — the vanilla-JS
+					consumer path. View source: there is no framework here.
+				</p>
+			</hgroup>
+
+			<!-- Tabs: t-roving-focus + c-tabs__select -->
+			<section id="dom-tabs" class="c-card o-box">
+				<div class="o-stack">
+					<header><h2>Tabs</h2></header>
+					<div class="c-tabs">
+						<div
+							role="tablist"
+							aria-label="Demo tabs"
+							aria-orientation="horizontal"
+							data-js="t-roving-focus c-tabs__select"
+						>
+							<button type="button" role="tab" aria-selected="true" aria-controls="dom-panel-1" id="dom-tab-1">
+								First
+							</button>
+							<button type="button" role="tab" aria-selected="false" aria-controls="dom-panel-2" id="dom-tab-2">
+								Second
+							</button>
+							<button type="button" role="tab" aria-selected="false" aria-controls="dom-panel-3" id="dom-tab-3">
+								Third
+							</button>
+						</div>
+						<div role="tabpanel" id="dom-panel-1">Panel one content.</div>
+						<div role="tabpanel" id="dom-panel-2" hidden>Panel two content.</div>
+						<div role="tabpanel" id="dom-panel-3" hidden>Panel three content.</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- Modal: native dialog + t-request-close + t-restore-focus -->
+			<section id="dom-modal-demo" class="c-card o-box">
+				<div class="o-stack">
+					<header><h2>Modal</h2></header>
+					<div class="o-row">
+						<button
+							type="button"
+							class="c-button o-input-box"
+							commandfor="dom-modal"
+							command="show-modal"
+							id="dom-modal-open"
+						>
+							Open modal
+						</button>
+					</div>
+				</div>
+			</section>
+
+			<!-- Form: t-validate + t-submit with a named validator + handler -->
+			<section id="dom-form-demo" class="c-card o-box">
+				<div class="o-stack">
+					<header><h2>Form validation &amp; submit</h2></header>
+					<form
+						data-js="t-validate t-submit"
+						data-submit-handler="dom-demo"
+						novalidate
+						id="dom-form"
+					>
+						<div class="o-stack">
+							<div class="o-stack" style="--o-stack__gap: var(--v-gap-tight)">
+								<label for="dom-email">Email (required)</label>
+								<input
+									id="dom-email"
+									name="email"
+									type="email"
+									required
+									class="c-input o-input-box"
+									aria-describedby="dom-email-err"
+								/>
+								<span id="dom-email-err" class="c-error-message o-caption" data-js="t-validate-error"></span>
+							</div>
+							<div class="o-stack" style="--o-stack__gap: var(--v-gap-tight)">
+								<label for="dom-user">Username (no "bob")</label>
+								<input
+									id="dom-user"
+									name="username"
+									required
+									data-validators="dom-no-bob"
+									class="c-input o-input-box"
+									aria-describedby="dom-user-err"
+								/>
+								<span id="dom-user-err" class="c-error-message o-caption" data-js="t-validate-error"></span>
+							</div>
+							<div data-form-error class="c-error-message o-caption"></div>
+							<div class="o-row">
+								<button type="submit" class="c-button o-input-box v-colors-primary">
+									Submit
+								</button>
+							</div>
+							<output id="dom-form-output" class="o-caption"></output>
+						</div>
+					</form>
+				</div>
+			</section>
+
+			<!-- Menu: popover + t-roving-focus + t-typeahead-filter + t-request-close -->
+			<section id="dom-menu-demo" class="c-card o-box">
+				<div class="o-stack">
+					<header><h2>Menu</h2></header>
+					<div class="o-row">
+						<button
+							type="button"
+							class="c-button o-input-box"
+							popovertarget="dom-menu"
+							id="dom-menu-open"
+							style="anchor-name: --menu-anchor"
+						>
+							Open menu
+						</button>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<dialog
+			id="dom-modal"
+			class="c-modal o-dialog"
+			data-js="t-request-close t-restore-focus t-scroll-shadow"
+		>
+			<button
+				type="button"
+				class="c-button c-button--icon t-radius-full o-input-box c-modal__close"
+				data-js="c-modal__close"
+				aria-label="Close"
+			>
+				×
+			</button>
+			<header class="c-modal__header">
+				<h2><span class="c-modal__mark" aria-hidden="true">◆</span>A vanilla modal</h2>
+			</header>
+			<div class="c-modal__body">
+				<div class="o-prose">
+					<p>ESC closes it (through the request-close chain), clicking the backdrop closes
+					it, and focus returns to the trigger on close.</p>
+				</div>
+				<footer class="c-modal__footer">
+					<button type="button" class="c-button o-input-box" data-js="c-modal__close">
+						Done
+					</button>
+				</footer>
+			</div>
+		</dialog>
+
+		<div
+			id="dom-menu"
+			popover
+			class="c-menu o-menu"
+			role="menu"
+			aria-orientation="vertical"
+			data-js="t-roving-focus t-typeahead-filter t-request-close t-restore-focus"
+		>
+			<button type="button" class="o-menu-item" role="menuitem">Alpha</button>
+			<button type="button" class="o-menu-item" role="menuitem">Bravo</button>
+			<button type="button" class="o-menu-item" role="menuitem">Charlie</button>
+		</div>
+
+		<script type="module" src="/src/lib2-site/dom-demo.ts"></script>
+	</body>
+</html>

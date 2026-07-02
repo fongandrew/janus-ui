@@ -235,6 +235,17 @@ export default tseslint.config(
 		},
 	},
 
+	// The v2 DOM pseudo-package IS the document-coupled layer: it installs
+	// document-level listeners by design, and SSR safety is handled by
+	// deferring listener installation to mount(). The document-setup
+	// indirection the rule points at is a v1 pattern.
+	{
+		files: ['src/lib2/dom/**/*.{js,ts}'],
+		rules: {
+			'no-restricted-globals': 'off',
+		},
+	},
+
 	// Allow console log in logging
 	{
 		// Logging files

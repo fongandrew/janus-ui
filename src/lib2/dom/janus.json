@@ -1,0 +1,5 @@
+{
+	"name": "dom",
+	"summary": "Vanilla-JS progressive-enhancement layer: data-js behavior dispatch, form engine, keyboard/focus utilities.",
+	"depends": ["utils"]
+}
