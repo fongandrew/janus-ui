@@ -135,7 +135,9 @@ export function showError(el: FormMember, message: string): void {
 	el.setAttribute('aria-invalid', 'true');
 	liveFields.add(el);
 	const destination = errorDestination(el);
-	if (destination) {
+	// Prop-controlled slots (data-external-error, §13.2.1) are rendered by
+	// the framework — the engine stays out of their way.
+	if (destination && !destination.hasAttribute('data-external-error')) {
 		destination.textContent = message;
 		destination.setAttribute('role', 'alert');
 	}
@@ -144,7 +146,7 @@ export function showError(el: FormMember, message: string): void {
 export function clearError(el: FormMember): void {
 	el.removeAttribute('aria-invalid');
 	const destination = errorDestination(el);
-	if (destination) {
+	if (destination && !destination.hasAttribute('data-external-error')) {
 		destination.textContent = '';
 		destination.removeAttribute('role');
 	}
