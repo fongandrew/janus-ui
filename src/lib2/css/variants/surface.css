@@ -1,0 +1,46 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * v-surface-* (§7) — background treatment / elevation / blur. Orthogonal to
+ * v-colors-* (color). Compose the two for both: `c-card v-surface-glass
+ * v-colors-danger`.
+ */
+@layer variants {
+	.v-surface-card {
+		background-color: var(--v-card-bg);
+		border: var(--v-border-width) solid var(--v-border-color);
+		box-shadow: var(--v-shadow-outer);
+	}
+
+	.v-surface-elevated {
+		background-color: var(--v-card-bg);
+		border: 0;
+		box-shadow:
+			0 10px 25px -5px rgb(0 0 0 / 15%),
+			0 8px 10px -6px rgb(0 0 0 / 10%);
+	}
+
+	.v-surface-sunken {
+		background-color: color-mix(in hsl, var(--v-fg) 4%, var(--v-bg));
+		box-shadow: var(--v-shadow-inner);
+	}
+
+	.v-surface-glass {
+		background-color: color-mix(in hsl, var(--v-card-bg) 60%, transparent);
+		border: var(--v-border-width) solid var(--v-border-color);
+		box-shadow: var(--v-shadow-outer);
+		backdrop-filter: blur(12px);
+	}
+
+	.v-surface-gradient {
+		--v-surface-gradient__angle: to bottom right;
+
+		background-image: linear-gradient(
+			var(--v-surface-gradient__angle),
+			color-mix(in hsl, var(--v-accent) 12%, var(--v-card-bg)),
+			var(--v-card-bg)
+		);
+		border: var(--v-border-width) solid var(--v-border-color);
+		box-shadow: var(--v-shadow-outer);
+	}
+}

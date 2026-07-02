@@ -1,0 +1,130 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * v-colors-* (§7) — tonal + surface-role color variants. Each re-sets the five
+ * color knobs for its subtree, re-derives the dynamic border knobs from the new
+ * background, and paints bg + fg (the v1 v-color-block behavior). Compose with
+ * v-surface-* for elevation ("v-colors = what color, v-surface = how raised").
+ */
+@layer variants {
+	/* Shared: re-derive borders from the new bg/fg and paint the surface. */
+	@define-mixin v-color-block {
+		--v-border-color: light-dark(
+			color-mix(in hsl, var(--v-fg) 17.5%, var(--v-bg)),
+			color-mix(in hsl, var(--v-fg) 50%, var(--v-bg))
+		);
+		--v-border-color-strong: color-mix(in hsl, var(--v-fg) 28%, var(--v-bg));
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	/* Binary-contrast fg derived from the variant's own bg. */
+	@define-mixin v-auto-fg {
+		--v-fg: oklch(from var(--v-bg) calc((0.5 - l) * infinity) 0 0);
+		--v-link: var(--v-fg);
+		--v-accent: var(--v-fg);
+		--v-muted: color-mix(in hsl, var(--v-fg) 70%, var(--v-bg));
+	}
+
+	/* ---- Tonal variants (semantic intent) -------------------------------- */
+
+	.v-colors-primary {
+		--v-bg: light-dark(hsl(195deg 100% 20%), hsl(195deg 100% 28%));
+		@mixin v-auto-fg;
+		@mixin v-color-block;
+	}
+
+	.v-colors-danger {
+		--v-bg: light-dark(hsl(0deg 89% 31%), hsl(0deg 70% 42%));
+		@mixin v-auto-fg;
+		@mixin v-color-block;
+	}
+
+	.v-colors-success {
+		--v-bg: light-dark(hsl(158deg 77% 15%), hsl(158deg 55% 26%));
+		@mixin v-auto-fg;
+		@mixin v-color-block;
+	}
+
+	.v-colors-secondary {
+		--v-bg: light-dark(hsl(30deg 8% 93%), hsl(30deg 6% 22%));
+		@mixin v-auto-fg;
+		@mixin v-color-block;
+	}
+
+	/* Warn / info are tinted-surface variants — dark fg + the callout weight
+	   bump (body-weight text loses contrast on the tint). */
+	.v-colors-warn {
+		--v-bg: light-dark(hsl(50deg 77% 86%), hsl(50deg 45% 30%));
+		@mixin v-auto-fg;
+		--v-font-weight-normal: 500;
+		--v-font-weight-label: 600;
+		--v-font-weight-strong: 800;
+		@mixin v-font-weight var(--v-font-weight-normal);
+		@mixin v-color-block;
+	}
+
+	.v-colors-info {
+		--v-bg: light-dark(hsl(195deg 80% 90%), hsl(195deg 45% 28%));
+		@mixin v-auto-fg;
+		--v-font-weight-normal: 500;
+		--v-font-weight-label: 600;
+		--v-font-weight-strong: 800;
+		@mixin v-font-weight var(--v-font-weight-normal);
+		@mixin v-color-block;
+	}
+
+	/* ---- Surface-role variants (UI context) ------------------------------ */
+
+	/* Always inverted vs. the color scheme — tooltips float above the page. */
+	.v-colors-tooltip {
+		--v-bg: light-dark(#141821, #fafafa);
+		--v-fg: light-dark(#fafafa, #141821);
+		--v-link: var(--v-fg);
+		--v-accent: var(--v-fg);
+		--v-muted: color-mix(in hsl, var(--v-fg) 70%, var(--v-bg));
+		@mixin v-color-block;
+	}
+
+	/* Matches surrounding chrome — popovers replace UI. */
+	.v-colors-popover {
+		--v-bg: var(--v-card-bg, var(--v-bg));
+		--v-fg: oklch(from var(--v-bg) calc((0.5 - l) * infinity) 0 0);
+		@mixin v-color-block;
+	}
+
+	/* Tinted paper for inline code. */
+	.v-colors-code {
+		--v-bg: color-mix(in hsl, var(--v-muted) 8%, var(--v-bg));
+		@mixin v-color-block;
+	}
+
+	/* Always dark, even in light mode — terminal context. */
+	.v-colors-pre {
+		--v-bg: #141821;
+		--v-fg: #fdf3e1;
+		--v-muted: #d1ccc4;
+		--v-link: var(--v-fg);
+		--v-accent: var(--v-fg);
+		@mixin v-color-block;
+	}
+
+	/* Tinted background + auto weight-bump (§ aesthetic 5). */
+	.v-colors-callout {
+		--v-bg: color-mix(in hsl, var(--v-muted) 12%, var(--v-bg));
+		--v-fg: var(--v-fg);
+		--v-font-weight-normal: 500;
+		--v-font-weight-label: 600;
+		--v-font-weight-strong: 800;
+		@mixin v-font-weight var(--v-font-weight-normal);
+		@mixin v-color-block;
+	}
+
+	/* Active-descendant / selected-item highlight — used by menus & kb nav. */
+	.v-colors-highlight {
+		--v-bg: var(--v-accent);
+		@mixin v-auto-fg;
+		@mixin v-color-block;
+	}
+}

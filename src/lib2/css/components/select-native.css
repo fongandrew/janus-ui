@@ -1,0 +1,30 @@
+@import '~/lib2/css/tokens/index.css';
+@import '~/lib2/css/tools/states.css';
+
+/*
+ * c-select-native (§10.1) — styled chrome around a native <select>. Height =
+ * --v-input-height (from o-input-box). Custom chevron via a background SVG.
+ */
+@layer components {
+	.c-select-native {
+		appearance: none;
+		padding-inline-end: calc(var(--v-spacing) * 2);
+		background-color: var(--v-input-bg);
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%23888' stroke-width='1.5' d='M1 1.5 6 6.5 11 1.5'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: right var(--v-control-inset) center;
+		border: var(--v-border-width) solid var(--v-border-color-strong);
+		box-shadow: var(--v-shadow-inner);
+		color: var(--v-fg);
+		cursor: pointer;
+	}
+
+	.c-select-native:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-select-native:disabled {
+		opacity: 0.65;
+		cursor: not-allowed;
+	}
+}

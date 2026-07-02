@@ -1,0 +1,26 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * c-alert (§10.1) — text-mode, toned via v-colors-*. Empty error containers
+ * collapse to zero height so forms don't carry dead vertical bands (§ aesthetic
+ * 19).
+ */
+@layer components {
+	.c-alert {
+		display: block;
+		padding: var(--v-pad-block) var(--v-pad-inline);
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--o-box__radius, var(--v-radius-min));
+		background-color: var(--v-card-bg);
+		color: var(--v-fg);
+	}
+
+	/* Empty collapse. */
+	.c-error-message:empty {
+		display: none;
+	}
+
+	.c-alert:has(.c-alert__children[data-t-empty]) {
+		display: none;
+	}
+}

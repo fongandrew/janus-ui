@@ -13,7 +13,9 @@
 @layer objects {
 	.o-input-box {
 		min-block-size: var(--v-input-height);
-		padding-block: calc((var(--v-input-height) - 1lh) / 2);
+		/* Subtract the reserved border so the control's total border-box height
+		   is exactly --v-input-height (border-box + 1lh line + this padding). */
+		padding-block: calc((var(--v-input-height) - 1lh) / 2 - var(--v-border-width));
 		padding-inline: var(--v-control-inset);
 		border-width: var(--v-border-width);
 		border-radius: var(--o-input-box__radius, var(--v-radius-min));

@@ -1,0 +1,37 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * c-card (§10.1) — surface chrome on o-box. Sets --o-stack__gap to the card's
+ * own padding so a direct-child stack's rhythm matches the perimeter (§6.2).
+ * Context-aware shadow: cards in a wide frame lose their shadow (reading flow);
+ * cards floating in a modal/popover always show it.
+ */
+@layer components {
+	.c-card {
+		--c-card__radius: var(--o-box__radius);
+		--o-stack__gap: var(--v-pad-block);
+
+		background-color: var(--v-card-bg);
+		border: var(--v-border-width) solid var(--v-border-color);
+		box-shadow: var(--v-shadow-outer);
+	}
+
+	/* In a wide frame (page reading flow) the card drops its shadow. */
+	@container frame (width >= 48rem) {
+		.c-card {
+			box-shadow: none;
+		}
+	}
+
+	/* Floating cards always lift. */
+	:where(:modal, :popover-open) .c-card {
+		box-shadow: var(--v-shadow-outer);
+	}
+
+	/* A disabled-looking submit that stays clickable, so the form engine can
+	   dispatch focus to the first invalid field (§ aesthetic 18). */
+	.c-card:has(:invalid, [aria-invalid='true']) [type='submit'] {
+		opacity: 0.5;
+		pointer-events: unset;
+	}
+}

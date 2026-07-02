@@ -1,0 +1,53 @@
+@import '~/lib2/css/tokens/index.css';
+@import '~/lib2/css/tools/states.css';
+
+/*
+ * c-button (§10.1) — chrome on o-input-box. Roomier inline padding than inputs
+ * (--v-spacing, §9.2). Hover layers the filter + outer shadow; active drops the
+ * shadow (pressed feel); focus-visible gets the dual ring. Tone via v-colors-*.
+ */
+@layer components {
+	.c-button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--v-gap-inline);
+		padding-inline: var(--v-spacing);
+		border: var(--v-border-width) solid var(--v-border-color-strong);
+		background-color: var(--v-card-bg);
+		color: var(--v-fg);
+		cursor: pointer;
+		transition-property: color, background-color, border-color, box-shadow, filter;
+		transition-duration: calc(var(--v-duration) * 0.5);
+		transition-timing-function: var(--v-ease);
+		@mixin v-font-weight var(--v-font-weight-label);
+	}
+
+	.c-button:hover {
+		@mixin t-hover;
+
+		box-shadow: var(--v-shadow-outer);
+	}
+
+	.c-button:active {
+		box-shadow: none;
+	}
+
+	.c-button:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-button:disabled,
+	.c-button[aria-disabled='true'] {
+		opacity: 0.65;
+		cursor: not-allowed;
+	}
+
+	/* Square icon button — the frame-corner inhabitant (§8.5). */
+	.c-button--icon {
+		inline-size: var(--v-input-height);
+		padding: 0;
+		aspect-ratio: 1;
+		border-radius: 50%;
+	}
+}

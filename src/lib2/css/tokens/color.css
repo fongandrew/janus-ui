@@ -25,13 +25,14 @@
 	--v-muted-weight-min: 500;
 
 	/* Dynamic borders — one recipe places every border a fixed perceptual
-	   distance from any surface (§7.0), so borders read right on tinted cards. */
-	--v-border-dynamic-base: light-dark(black, white);
-	--v-border-dynamic-mix: light-dark(17.5%, 50%);
-	--v-border-color: color-mix(
-		in hsl,
-		var(--v-border-dynamic-base) var(--v-border-dynamic-mix),
-		var(--v-bg)
+	   distance toward the surface's own ink (§7.0), so borders read right on
+	   any surface (including tinted cards/alerts, which re-derive from their
+	   own --v-fg). light-dark() selects the per-scheme mix amount (heavier in
+	   dark mode); it can't return a bare percentage, so the two amounts live in
+	   the two color-mix branches. */
+	--v-border-color: light-dark(
+		color-mix(in hsl, var(--v-fg) 17.5%, var(--v-bg)),
+		color-mix(in hsl, var(--v-fg) 50%, var(--v-bg))
 	);
 	/* Controls need a visibly stronger border than cards (§7.0). */
 	--v-border-color-strong: color-mix(in hsl, var(--v-fg) 28%, var(--v-bg));

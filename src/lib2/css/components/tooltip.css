@@ -1,0 +1,26 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * c-tooltip (§10.1) — anchored [popover], no JS. Composes o-caption; applies
+ * v-colors-tooltip (always inverted). Positioning is CSS anchor positioning
+ * (Chromium-leading at the §15 floor) — the Solid wrapper sets anchor-name /
+ * position-anchor.
+ */
+@layer components {
+	.c-tooltip {
+		position: absolute;
+		position-area: block-start;
+		max-inline-size: 20rem;
+		margin: 0;
+		padding: var(--v-gap-tight) var(--v-gap-inline);
+		border-radius: var(--v-radius-min);
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+		box-shadow: var(--v-shadow-outer);
+		/* Fade handled by the popover show/hide; kept simple here. */
+	}
+
+	.c-tooltip:popover-open {
+		display: block;
+	}
+}

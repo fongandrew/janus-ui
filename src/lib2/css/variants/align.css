@@ -1,0 +1,58 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * Inline text-inset model (§6.1). Boxes/controls anchor the container edge;
+ * accompanying TEXT insets to line up with the box it introduces. Because boxes
+ * don't nest, this covers exactly two situations: a field's label/description →
+ * the control's straight edge, and prose in a container that holds boxes → the
+ * cards' inner text. `v-align-edge` / `v-align-text` move a subtree across the
+ * three reference points.
+ */
+@layer variants {
+	/* Field — label + description align to the control's straight edge. */
+	.o-field {
+		--o-field__inset: var(--o-input-box__radius);
+	}
+
+	.o-field > :where(label, .c-label, .c-description, .o-caption, p) {
+		padding-inline: var(--o-field__inset);
+	}
+
+	/* Prose beside boxes insets to the cards' inner text; a dialog uses the
+	   lighter straight-edge default. Only DIRECT prose children inset. */
+	.o-container:has(> .o-box, > .c-card, > .o-grid) > .o-prose {
+		--o-prose__inset: var(--v-pad-inline);
+
+		padding-inline: var(--o-prose__inset);
+	}
+
+	.o-dialog:has(.o-box, .c-card) > .o-prose,
+	.o-dialog .o-prose {
+		--o-prose__inset: var(--o-box__radius);
+	}
+
+	/* Wrap the corner: grow block padding to match when prose is first/last. */
+	.o-container > .o-prose:first-child {
+		padding-block-start: var(--o-prose__inset);
+	}
+
+	.o-container > .o-prose:last-child {
+		padding-block-end: var(--o-prose__inset);
+	}
+
+	/* Block-box children of inset prose break back out to the box edge. */
+	.o-prose > :where(pre, blockquote, figure, .o-box, .c-card) {
+		margin-inline: calc(-1 * var(--o-prose__inset));
+	}
+
+	/* Mode overrides for a subtree. */
+	.v-align-edge {
+		--o-field__inset: 0;
+		--o-prose__inset: 0;
+	}
+
+	.v-align-text {
+		--o-field__inset: var(--v-control-inset);
+		--o-prose__inset: var(--v-pad-inline);
+	}
+}

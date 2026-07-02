@@ -1,0 +1,16 @@
+@import '~/lib2/css/tokens/index.css';
+
+/* Text-role variants (§7) — used sparingly. */
+@layer variants {
+	.v-text-display {
+		font-size: var(--v-font-size-h1);
+		line-height: var(--v-line-height-h1);
+		@mixin v-font-weight var(--v-font-weight-title);
+	}
+
+	.v-text-meta {
+		color: var(--v-muted);
+		font-size: var(--v-font-size-caption);
+		@mixin v-font-weight var(--v-font-weight-label);
+	}
+}

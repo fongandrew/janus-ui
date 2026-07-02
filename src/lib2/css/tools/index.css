@@ -1,1 +1,9 @@
-/* tools layer — populated in a later phase. */
+/*
+ * Tools layer (§11) — surgical, intentionally narrow overrides that always win.
+ * (State mixins live in states.css and are pulled in by components, not here —
+ * they emit no rules of their own.)
+ */
+@import '~/lib2/css/tools/spacing.css';
+@import '~/lib2/css/tools/layout.css';
+@import '~/lib2/css/tools/chrome.css';
+@import '~/lib2/css/tools/text.css';

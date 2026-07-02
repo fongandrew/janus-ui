@@ -1,0 +1,12 @@
+@import '~/lib2/css/tokens/index.css';
+
+/* c-avatar (§10.1) — square-mode image / initials fallback; composes o-square. */
+@layer components {
+	.c-avatar {
+		inline-size: var(--v-input-height);
+		background-color: color-mix(in hsl, var(--v-muted) 30%, var(--v-bg));
+		color: var(--v-fg);
+		object-fit: cover;
+		@mixin v-font-weight var(--v-font-weight-label);
+	}
+}

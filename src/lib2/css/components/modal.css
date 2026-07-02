@@ -1,0 +1,128 @@
+@import '~/lib2/css/tokens/index.css';
+@import '~/lib2/css/tools/states.css';
+
+/*
+ * c-modal (§10.2, §9.4) — centered <dialog> composing o-dialog. The card IS the
+ * transparent scroll container; the header/body surfaces tile it and carry the
+ * rounding. The header scrolls away with the content (not sticky); only the
+ * close X stays pinned. Backdrop tint + blur; the page behind is locked.
+ *
+ * Footer stickiness is opt-in (none / submit / bar); scroll-edge shadows are
+ * driven by t-scroll-shadow's data-scroll-top / -bottom sentinels.
+ */
+@layer components {
+	.c-modal {
+		--c-modal__width: 40rem;
+
+		flex-direction: column;
+		inline-size: min(var(--c-modal__width), calc(100vw - 2 * var(--o-dialog__offset)));
+		max-block-size: calc(100dvh - 2 * var(--o-dialog__offset));
+		margin: auto; /* center in the viewport */
+		overflow: auto;
+		overscroll-behavior: contain; /* keep the bounce; never `none` */
+	}
+
+	/* Only lay out (and show) when open — otherwise `display: flex` would beat
+	   the UA `dialog:not([open]) { display: none }` and the invisible dialog
+	   would overlay the page. */
+	.c-modal[open] {
+		display: flex;
+	}
+
+	/* Width presets set on the component. */
+	.c-modal--narrow {
+		--c-modal__width: 22rem;
+	}
+
+	.c-modal--container {
+		--c-modal__width: var(--o-container__max, 64rem);
+	}
+
+	.c-modal::backdrop {
+		background-color: var(--v-backdrop);
+		backdrop-filter: blur(4px);
+	}
+
+	.c-modal:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	/* Lock the page behind an open modal (§9.4). */
+	body:has(:modal) {
+		overflow: hidden;
+	}
+
+	/* Header — rounds the top, scrolls away. No bottom padding by default so the
+	   plain header↔body seam is exactly one pad (the body's top padding). */
+	.c-modal__header {
+		position: relative;
+		flex: none;
+		padding: var(--v-pad-block) var(--v-pad-inline) 0;
+		background-color: var(--v-card-bg);
+		border-start-start-radius: var(--o-dialog__radius);
+		border-start-end-radius: var(--o-dialog__radius);
+	}
+
+	/* Body — grows to fill (no unfilled gap), rounds the bottom, holds content. */
+	.c-modal__body {
+		flex: 1 0 auto;
+		padding: var(--v-pad-block) var(--v-pad-inline);
+		background-color: var(--v-card-bg);
+		border-end-start-radius: var(--o-dialog__radius);
+		border-end-end-radius: var(--o-dialog__radius);
+	}
+
+	/* Close X — its own sticky element; a negative block-end margin cancels its
+	   height so the header still starts flush at the top. */
+	.c-modal__close {
+		position: sticky;
+		top: 0;
+		z-index: 1;
+		float: inline-end;
+		margin-block-end: calc(-1 * var(--v-input-height));
+	}
+
+	/* Scroll-edge shadows — shown when NOT scrolled to the respective edge. */
+	.c-modal:not([data-scroll-top]) .c-modal__body {
+		box-shadow: var(--v-shadow-inner-top);
+	}
+
+	.c-modal:not([data-scroll-bottom]) .c-modal__body {
+		box-shadow: var(--v-shadow-inner-bottom);
+	}
+
+	.c-modal:not([data-scroll-top]):not([data-scroll-bottom]) .c-modal__body {
+		box-shadow: var(--v-shadow-inner-top), var(--v-shadow-inner-bottom);
+	}
+
+	/* Glass header (opt-in): tinted two-tone surface; restores its own bottom
+	   padding so the seam becomes two pad units (two-tone wants the room). */
+	.c-modal__header--glass {
+		padding-block-end: var(--v-pad-block);
+		background-color: color-mix(in hsl, var(--v-card-bg) 70%, transparent);
+		backdrop-filter: blur(8px);
+	}
+
+	/* Footer — default `none` scrolls in flow. */
+	.c-modal__footer {
+		display: flex;
+		gap: var(--v-gap-inline);
+		justify-content: flex-end;
+		padding-block-start: var(--v-pad-block);
+	}
+
+	/* `bar` mode: the whole footer pins as a glass action bar to the edges. */
+	.c-modal__footer--bar {
+		position: sticky;
+		bottom: 0;
+		margin-inline: calc(-1 * var(--v-pad-inline));
+		margin-block-end: calc(-1 * var(--v-pad-block));
+		padding: var(--v-pad-block) var(--v-pad-inline);
+		background-color: color-mix(in hsl, var(--v-card-bg) 80%, transparent);
+		border-block-start: var(--v-border-width) solid var(--v-border-color);
+		border-end-start-radius: var(--o-dialog__radius);
+		border-end-end-radius: var(--o-dialog__radius);
+		box-shadow: var(--v-shadow-inner-bottom);
+		backdrop-filter: blur(8px);
+	}
+}

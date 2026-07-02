@@ -1,0 +1,44 @@
+@import '~/lib2/css/tokens/index.css';
+@import '~/lib2/css/tools/states.css';
+
+/* c-disclosure (§10.1) — native <details><summary>, styled. */
+@layer components {
+	.c-disclosure {
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--o-box__radius, var(--v-radius-min));
+		background-color: var(--v-card-bg);
+		overflow: clip;
+	}
+
+	.c-disclosure > summary {
+		display: flex;
+		align-items: center;
+		gap: var(--v-gap-inline);
+		padding: var(--v-pad-block) var(--v-pad-inline);
+		cursor: pointer;
+		list-style: none;
+		@mixin v-font-weight var(--v-font-weight-label);
+	}
+
+	.c-disclosure > summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.c-disclosure > summary::before {
+		content: '▸';
+		color: var(--v-muted);
+		transition: transform var(--v-duration) var(--v-ease);
+	}
+
+	.c-disclosure[open] > summary::before {
+		transform: rotate(90deg);
+	}
+
+	.c-disclosure > summary:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-disclosure > :not(summary) {
+		padding: 0 var(--v-pad-inline) var(--v-pad-block);
+	}
+}

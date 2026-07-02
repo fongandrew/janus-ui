@@ -1,0 +1,31 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * v-bleed (§6.1) — the per-frame full-bleed opt-in. The mechanism ships always
+ * but fires only on frames carrying this class. One @container rule keyed to
+ * the shared `frame` container serves both frames: a page o-container (narrow
+ * viewport) and an o-dialog (narrow dialog). When the frame is narrow, its
+ * boxes break out of the gutter to span the edges and drop their radius / side
+ * borders / shadow, and its prose realigns flush. A mode variant, not a knob
+ * setter — its rules target library classes in its subtree (§4).
+ *
+ * The breakpoint is a fixed length (container queries can't read custom
+ * properties); changing it is a consumer-CSS override.
+ */
+@layer variants {
+	@container frame (width < 30rem) {
+		.v-bleed > :where(.o-box, .c-card),
+		.v-bleed > .o-grid > :where(.o-box, .c-card) {
+			margin-inline: calc(-1 * var(--o-container__gutter, var(--v-pad-inline)));
+			border-inline-width: 0;
+			border-radius: 0;
+			box-shadow: none;
+			--c-card__radius: 0;
+		}
+
+		/* Prose realigns flush on both edges (the inset tracks to 0). */
+		.v-bleed > .o-prose {
+			--o-prose__inset: 0;
+		}
+	}
+}

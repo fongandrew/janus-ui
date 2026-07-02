@@ -1,0 +1,47 @@
+@import '~/lib2/css/tokens/index.css';
+@import '~/lib2/css/tools/states.css';
+
+/*
+ * c-styled-select (§10.3) — the one composite component: a custom trigger
+ * button + a listbox in a [popover]. Exists only for options that need rendered
+ * content (previews, swatches); plain-text options use c-select-native.
+ */
+@layer components {
+	.c-styled-select {
+		display: inline-flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--v-gap-inline);
+		inline-size: 100%;
+		padding-inline-end: var(--v-control-inset);
+		background-color: var(--v-input-bg);
+		border: var(--v-border-width) solid var(--v-border-color-strong);
+		box-shadow: var(--v-shadow-inner);
+		color: var(--v-fg);
+		cursor: pointer;
+		text-align: start;
+	}
+
+	.c-styled-select::after {
+		content: '';
+		flex: none;
+		inline-size: 0.75em;
+		block-size: 0.5em;
+		background-color: var(--v-muted);
+		clip-path: polygon(0 0, 100% 0, 50% 100%);
+	}
+
+	.c-styled-select:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-styled-select__listbox {
+		background-color: var(--v-card-bg);
+		border: var(--v-border-width) solid var(--v-border-color);
+		box-shadow: var(--v-shadow-outer);
+	}
+
+	.c-styled-select__listbox[popover] {
+		margin: 0;
+	}
+}

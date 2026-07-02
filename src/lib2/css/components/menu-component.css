@@ -1,0 +1,44 @@
+@import '~/lib2/css/tokens/index.css';
+@import '~/lib2/css/tools/states.css';
+
+/*
+ * c-menu (§10.2) — chrome on o-menu. Applies v-colors-popover (matches card
+ * chrome). Menu-item highlight is conditional on keyboard vs. mouse mode via
+ * the body[data-v-kb-nav] presence flag (§ aesthetic 9): mouse users see hover
+ * highlights, keyboard users see active-descendant highlights — never both.
+ */
+@layer components {
+	.c-menu {
+		background-color: var(--v-card-bg);
+		border: var(--v-border-width) solid var(--v-border-color);
+		box-shadow: var(--v-shadow-outer);
+		color: var(--v-fg);
+	}
+
+	.c-menu[popover] {
+		margin: 0;
+	}
+
+	/* Mouse mode: hover highlights. */
+	body:not([data-v-kb-nav]) .o-menu-item:hover {
+		background-color: var(--v-accent);
+		color: oklch(from var(--v-accent) calc((0.5 - l) * infinity) 0 0);
+	}
+
+	/* Keyboard mode: active-descendant highlights. */
+	body[data-v-kb-nav] .o-menu-item[data-active] {
+		background-color: var(--v-accent);
+		color: oklch(from var(--v-accent) calc((0.5 - l) * infinity) 0 0);
+	}
+
+	.o-menu-item:focus-visible {
+		@mixin t-focus-ring;
+
+		outline-offset: -2px;
+	}
+
+	.o-menu-item[aria-disabled='true'] {
+		opacity: 0.65;
+		cursor: not-allowed;
+	}
+}

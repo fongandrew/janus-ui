@@ -1,1 +1,30 @@
-/* components layer — populated in a later phase. */
+/*
+ * Components layer (§10) — visual chrome that composes objects. Sits ABOVE
+ * objects so a component can minorly override the objects it builds on (§4.1).
+ */
+
+/* Pure-CSS components. */
+@import '~/lib2/css/components/button.css';
+@import '~/lib2/css/components/card.css';
+@import '~/lib2/css/components/input.css';
+@import '~/lib2/css/components/alert.css';
+@import '~/lib2/css/components/checkbox.css';
+@import '~/lib2/css/components/radio.css';
+@import '~/lib2/css/components/toggle.css';
+@import '~/lib2/css/components/select-native.css';
+@import '~/lib2/css/components/tag.css';
+@import '~/lib2/css/components/badge.css';
+@import '~/lib2/css/components/avatar.css';
+@import '~/lib2/css/components/spinner.css';
+@import '~/lib2/css/components/skeleton.css';
+@import '~/lib2/css/components/disclosure.css';
+@import '~/lib2/css/components/tooltip.css';
+@import '~/lib2/css/components/table.css';
+
+/* Browser-primitive components. */
+@import '~/lib2/css/components/tabs.css';
+@import '~/lib2/css/components/modal.css';
+@import '~/lib2/css/components/drawer.css';
+@import '~/lib2/css/components/popover.css';
+@import '~/lib2/css/components/menu-component.css';
+@import '~/lib2/css/components/styled-select.css';

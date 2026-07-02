@@ -1,0 +1,55 @@
+@import '~/lib2/css/tokens/index.css';
+@import '~/lib2/css/tools/states.css';
+
+/* c-checkbox (§10.1) — custom-styled native <input type="checkbox">. */
+@layer components {
+	.c-checkbox {
+		display: inline-grid;
+		place-content: center;
+		inline-size: 1.25em;
+		block-size: 1.25em;
+		appearance: none;
+		background-color: var(--v-input-bg);
+		border: var(--v-border-width) solid var(--v-border-color-strong);
+		border-radius: var(--v-radius-min);
+		box-shadow: var(--v-shadow-inner);
+		cursor: pointer;
+		transition-property: background-color, border-color;
+		transition-duration: calc(var(--v-duration) * 0.5);
+		transition-timing-function: var(--v-ease);
+	}
+
+	.c-checkbox::before {
+		content: '';
+		inline-size: 0.7em;
+		block-size: 0.7em;
+		background-color: white;
+		clip-path: polygon(14% 44%, 0 65%, 43% 100%, 100% 16%, 82% 0, 39% 68%);
+		transform: scale(0);
+		transition: transform calc(var(--v-duration) * 0.5) var(--v-ease);
+	}
+
+	.c-checkbox:checked,
+	.c-checkbox:indeterminate {
+		background-color: var(--v-accent);
+		border-color: var(--v-accent);
+	}
+
+	.c-checkbox:checked::before {
+		transform: scale(1);
+	}
+
+	.c-checkbox:indeterminate::before {
+		clip-path: inset(45% 10%);
+		transform: scale(1);
+	}
+
+	.c-checkbox:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-checkbox:disabled {
+		opacity: 0.65;
+		cursor: not-allowed;
+	}
+}

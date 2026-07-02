@@ -1,0 +1,36 @@
+@import '~/lib2/css/tokens/index.css';
+@import '~/lib2/css/tools/states.css';
+
+/*
+ * c-input (§10.1) — chrome on o-input-box. Recessed control well
+ * (--v-input-bg), the stronger control border, an inner shadow for the
+ * embossed feel, a dual focus ring, and invalid-state chrome. Sizing / padding
+ * / radius come from o-input-box.
+ */
+@layer components {
+	.c-input {
+		--c-input__invalid: light-dark(hsl(0deg 89% 40%), hsl(0deg 70% 55%));
+
+		background-color: var(--v-input-bg);
+		border: var(--v-border-width) solid var(--v-border-color-strong);
+		box-shadow: var(--v-shadow-inner);
+		color: var(--v-fg);
+		transition-property: border-color, box-shadow;
+		transition-duration: calc(var(--v-duration) * 0.5);
+		transition-timing-function: var(--v-ease);
+	}
+
+	.c-input:focus-visible,
+	.c-input:focus {
+		@mixin t-focus-ring;
+	}
+
+	.c-input:disabled {
+		opacity: 0.65;
+		cursor: not-allowed;
+	}
+
+	.c-input:is(:invalid, [aria-invalid='true']) {
+		border-color: var(--c-input__invalid);
+	}
+}

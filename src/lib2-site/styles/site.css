@@ -259,3 +259,28 @@
 	border-radius: var(--v-radius-min, 0.375rem);
 	font-size: var(--v-font-size-caption, 0.8125rem);
 }
+
+/* ---- Colors page grid --------------------------------------------------- */
+
+.p-color-cell {
+	display: flex;
+	flex-direction: column;
+	gap: var(--v-gap-tight, 0.25rem);
+	padding: var(--v-pad-block, 1rem) var(--v-pad-inline, 1rem);
+	border: var(--v-border-width, 1px) solid var(--v-border-color, #ccc);
+	border-radius: var(--v-radius-min, 0.375rem);
+}
+
+.p-color-cell__label {
+	font-weight: var(--v-font-weight-label, 500);
+	text-transform: capitalize;
+}
+
+.p-color-cell__sample {
+	font-size: var(--v-font-size-caption, 0.8125rem);
+}
+
+.p-color-cell__score {
+	font-family: var(--v-font-family-mono, monospace);
+	font-size: var(--v-font-size-caption, 0.8125rem);
+}

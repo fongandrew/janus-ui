@@ -1,0 +1,24 @@
+@import '~/lib2/css/tokens/index.css';
+
+/* c-spinner (§10.1) — CSS animation; square-mode. */
+@layer components {
+	.c-spinner {
+		inline-size: var(--v-input-height);
+		border: 2px solid color-mix(in hsl, var(--v-fg) 20%, transparent);
+		border-block-start-color: var(--v-accent);
+		border-radius: 50%;
+		animation: c-spinner__spin 0.7s linear infinite;
+	}
+
+	@keyframes c-spinner__spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.c-spinner {
+			animation-duration: 2s;
+		}
+	}
+}

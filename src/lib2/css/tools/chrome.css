@@ -1,0 +1,39 @@
+@import '~/lib2/css/tokens/index.css';
+
+/* Border / radius / shadow toggles (§11). */
+@layer tools {
+	.t-border {
+		border: var(--v-border-width) solid var(--v-border-color);
+	}
+
+	.t-border-none {
+		border: 0;
+	}
+
+	.t-border-inner {
+		box-shadow: inset 0 0 0 var(--v-border-width) var(--v-border-color);
+	}
+
+	.t-radius-none {
+		border-radius: 0;
+	}
+
+	.t-radius-full {
+		border-radius: 999px;
+	}
+
+	/* The split shadow knobs let -inner replace just the inner glow without
+	   disturbing an existing outer shadow, and vice versa. */
+	.t-shadow,
+	.t-shadow-outer {
+		box-shadow: var(--v-shadow-outer);
+	}
+
+	.t-shadow-inner {
+		box-shadow: var(--v-shadow-inner);
+	}
+
+	.t-shadow-none {
+		box-shadow: none;
+	}
+}

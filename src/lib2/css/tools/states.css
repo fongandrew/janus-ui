@@ -1,0 +1,22 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * State mixins (§3a, aesthetic §06/§07) — the two core interaction mixins all
+ * interactive components use. Internal authoring mixins (not classes): a
+ * component pulls them in with `@mixin t-hover` / `@mixin t-focus-ring`.
+ */
+
+/* One filter that works on every tone — subtly darkens while colors pop. No
+   per-palette hover-color knobs. (v1's `will-change: filter` is deliberately
+   NOT ported — it was declared too late to help; §3a.) */
+@define-mixin t-hover {
+	filter: contrast(0.95) saturate(1.15);
+}
+
+/* Crisp outline over a soft halo — both needed (outline alone is invisible on
+   busy layouts; halo alone is fuzzy). */
+@define-mixin t-focus-ring {
+	outline: 2px solid var(--v-ring);
+	outline-offset: 2px;
+	box-shadow: var(--v-shadow-focus);
+}

@@ -1,0 +1,75 @@
+@import '~/lib2/css/tokens/index.css';
+@import '~/lib2/css/tools/states.css';
+
+/*
+ * c-drawer (§10.2) — edge-anchored <dialog> composing o-dialog's chrome with a
+ * slide-in transition. Side variants set the anchor edge; --c-drawer__side
+ * mirrors the modifier for the rare inline-style case.
+ */
+@layer components {
+	.c-drawer {
+		--c-drawer__size: 22rem;
+
+		flex-direction: column;
+		margin: 0;
+		background-color: var(--v-card-bg);
+		overflow: auto;
+		overscroll-behavior: contain;
+	}
+
+	/* Only lay out (and show) when open (see the c-modal note). */
+	.c-drawer[open] {
+		display: flex;
+	}
+
+	.c-drawer::backdrop {
+		background-color: var(--v-backdrop);
+		backdrop-filter: blur(4px);
+	}
+
+	.c-drawer:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	body:has(:modal) {
+		overflow: hidden;
+	}
+
+	.c-drawer--left,
+	.c-drawer--right {
+		inline-size: min(var(--c-drawer__size), 90vw);
+		block-size: 100dvh;
+		max-block-size: 100dvh;
+	}
+
+	.c-drawer--left {
+		margin-inline-end: auto;
+		border-start-end-radius: var(--o-dialog__radius);
+		border-end-end-radius: var(--o-dialog__radius);
+	}
+
+	.c-drawer--right {
+		margin-inline-start: auto;
+		border-start-start-radius: var(--o-dialog__radius);
+		border-end-start-radius: var(--o-dialog__radius);
+	}
+
+	.c-drawer--top,
+	.c-drawer--bottom {
+		inline-size: 100vw;
+		max-inline-size: 100vw;
+		block-size: min(var(--c-drawer__size), 90vh);
+	}
+
+	.c-drawer--top {
+		margin-block-end: auto;
+		border-end-start-radius: var(--o-dialog__radius);
+		border-end-end-radius: var(--o-dialog__radius);
+	}
+
+	.c-drawer--bottom {
+		margin-block-start: auto;
+		border-start-start-radius: var(--o-dialog__radius);
+		border-start-end-radius: var(--o-dialog__radius);
+	}
+}

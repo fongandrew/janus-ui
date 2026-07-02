@@ -1,0 +1,36 @@
+@import '~/lib2/css/tokens/index.css';
+
+/* c-skeleton (§10.1) — shimmering placeholder; CSS animation. */
+@layer components {
+	.c-skeleton {
+		min-block-size: 1em;
+		background-color: color-mix(in hsl, var(--v-fg) 10%, var(--v-bg));
+		background-image: linear-gradient(
+			90deg,
+			transparent,
+			color-mix(in hsl, var(--v-fg) 8%, transparent),
+			transparent
+		);
+		background-size: 200% 100%;
+		background-repeat: no-repeat;
+		border-radius: var(--v-radius-min);
+		animation: c-skeleton__shimmer 1.5s ease-in-out infinite;
+	}
+
+	.c-skeleton--circle {
+		aspect-ratio: 1;
+		border-radius: 50%;
+	}
+
+	@keyframes c-skeleton__shimmer {
+		to {
+			background-position: -200% 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.c-skeleton {
+			animation: none;
+		}
+	}
+}

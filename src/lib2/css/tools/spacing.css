@@ -1,0 +1,28 @@
+@import '~/lib2/css/tokens/index.css';
+
+/* Padding tools (§11) — zero-out and a single --v-spacing shorthand. No scale. */
+@layer tools {
+	.t-p-0 {
+		padding: 0;
+	}
+
+	.t-px-0 {
+		padding-inline: 0;
+	}
+
+	.t-py-0 {
+		padding-block: 0;
+	}
+
+	.t-p {
+		padding: var(--v-spacing);
+	}
+
+	.t-px {
+		padding-inline: var(--v-spacing);
+	}
+
+	.t-py {
+		padding-block: var(--v-spacing);
+	}
+}

@@ -1,1 +1,10 @@
-/* variants layer — populated in a later phase. */
+/*
+ * Variants layer (§7, §6.1) — scoped re-themes / re-modes. Knob setters
+ * (colors, surface, text) plus mode flips on the classes beneath (bleed,
+ * align). Outranks objects + components; yields to tools.
+ */
+@import '~/lib2/css/variants/colors.css';
+@import '~/lib2/css/variants/surface.css';
+@import '~/lib2/css/variants/bleed.css';
+@import '~/lib2/css/variants/align.css';
+@import '~/lib2/css/variants/text.css';

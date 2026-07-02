@@ -1,0 +1,37 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * c-table (§10.1) — data table with control-height rows, DECOUPLED from
+ * controls: --c-table__row-height defaults to --v-input-height (parity) but is
+ * its own knob, so a dense table densifies without shrinking form controls.
+ * Cell metrics use the control recipe (height math), NOT trim, so an
+ * inline-editable cell never misaligns against its input in any browser; cells
+ * additionally take trim-both where supported as an optical refinement.
+ */
+@layer components {
+	.c-table {
+		--c-table__row-height: var(--v-input-height);
+
+		inline-size: 100%;
+		border-collapse: collapse;
+	}
+
+	.c-table :is(th, td) {
+		padding-block: calc((var(--c-table__row-height) - 1lh) / 2);
+		padding-inline: var(--v-control-inset);
+		border-block-end: var(--v-border-width) solid var(--v-border-color);
+		text-align: start;
+		/*
+		 * NOTE: trim is deliberately NOT applied to cells. The control-height
+		 * recipe above assumes an untrimmed 1lh line box; text-box-trim shrinks
+		 * the line box to cap height in supporting browsers, which would make the
+		 * row shorter than --c-table__row-height. Height math must be
+		 * trim-independent (§6, §10.1), so cells stay untrimmed and centering
+		 * behaves identically with or without trim support.
+		 */
+	}
+
+	.c-table th {
+		@mixin v-font-weight var(--v-font-weight-label);
+	}
+}

@@ -1,0 +1,48 @@
+@import '~/lib2/css/tokens/index.css';
+@import '~/lib2/css/tools/states.css';
+
+/*
+ * c-tabs (§10.2) — tablist chrome. The selected-tab indicator uses the dynamic
+ * border color-mix recipe against --v-accent (so it self-themes inside a
+ * v-colors-* subtree) and an inset box-shadow (not a border) so neighboring
+ * tabs don't shift on selection (§ aesthetic 17).
+ */
+@layer components {
+	.c-tabs__list {
+		display: flex;
+		gap: var(--v-gap-inline);
+		border-block-end: var(--v-border-width) solid var(--v-border-color);
+	}
+
+	.c-tab {
+		padding: var(--v-gap-tight) var(--v-spacing);
+		background: none;
+		color: var(--v-fg);
+		cursor: pointer;
+		transition: color calc(var(--v-duration) * 0.5) var(--v-ease);
+	}
+
+	.c-tab[aria-selected='true'] {
+		color: var(--v-link);
+		box-shadow: inset 0 -2px 0 0 color-mix(in hsl, var(--v-fg) 25%, var(--v-accent));
+		@mixin v-font-weight var(--v-font-weight-label);
+	}
+
+	.c-tab:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-tab:disabled,
+	.c-tab[aria-disabled='true'] {
+		opacity: 0.65;
+		cursor: not-allowed;
+	}
+
+	.c-tab-panel[hidden] {
+		display: none;
+	}
+
+	.c-tab-panel:focus-visible {
+		@mixin t-focus-ring;
+	}
+}

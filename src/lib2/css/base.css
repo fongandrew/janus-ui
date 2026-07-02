@@ -164,7 +164,6 @@
 	th,
 	td {
 		text-align: start;
-		text-box: trim-both cap alphabetic;
 	}
 
 	th {

@@ -1,0 +1,22 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * c-popover (§10.2) — anchor-positioned [popover]. Applies v-colors-popover
+ * (matches surrounding chrome). No JS beyond requestClose; native CSS anchor
+ * positioning (the Solid wrapper sets anchor-name / position-anchor).
+ */
+@layer components {
+	.c-popover {
+		position: absolute;
+		position-area: block-end;
+		inline-size: max-content;
+		max-inline-size: min(20rem, 90vw);
+		margin: 0;
+		padding: var(--v-gap-tight);
+		background-color: var(--v-bg);
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--o-box__radius, var(--v-radius-min));
+		box-shadow: var(--v-shadow-outer);
+		color: var(--v-fg);
+	}
+}

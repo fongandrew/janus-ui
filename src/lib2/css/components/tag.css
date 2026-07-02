@@ -1,0 +1,32 @@
+@import '~/lib2/css/tokens/index.css';
+
+/* c-tag (§10.1) — interactive / removable text-mode label; composes o-caption. */
+@layer components {
+	.c-tag {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--v-gap-tight);
+		min-block-size: calc(var(--v-input-height) * 0.8);
+		padding-inline: var(--v-control-inset);
+		background-color: var(--v-card-bg);
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--o-input-box__radius, var(--v-radius-min));
+		color: var(--v-fg);
+	}
+
+	.c-tag__remove {
+		display: inline-grid;
+		place-items: center;
+		inline-size: 1.1em;
+		block-size: 1.1em;
+		border-radius: 50%;
+		background: none;
+		color: var(--v-muted);
+		cursor: pointer;
+	}
+
+	.c-tag__remove:hover {
+		color: var(--v-fg);
+		background-color: color-mix(in hsl, var(--v-fg) 12%, transparent);
+	}
+}

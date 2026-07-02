@@ -1,0 +1,54 @@
+@import '~/lib2/css/tokens/index.css';
+@import '~/lib2/css/tools/states.css';
+
+/*
+ * c-toggle (§10.1) — pure CSS switch via :checked. Track height derived from
+ * --v-input-height; inner shadow for depth; the thumb slides on a transform
+ * transition.
+ */
+@layer components {
+	.c-toggle {
+		--c-toggle__track-height: calc(var(--v-input-height) * 0.7);
+
+		position: relative;
+		inline-size: calc(var(--c-toggle__track-height) * 1.75);
+		block-size: var(--c-toggle__track-height);
+		appearance: none;
+		background-color: var(--v-input-bg);
+		border: var(--v-border-width) solid var(--v-border-color-strong);
+		border-radius: 999px;
+		box-shadow: var(--v-shadow-inner);
+		cursor: pointer;
+		transition: background-color calc(var(--v-duration) * 0.5) var(--v-ease);
+	}
+
+	.c-toggle::before {
+		content: '';
+		position: absolute;
+		inset-block: 2px;
+		inset-inline-start: 2px;
+		aspect-ratio: 1;
+		background-color: white;
+		border-radius: 50%;
+		box-shadow: var(--v-shadow-outer);
+		transition: transform var(--v-duration) var(--v-ease);
+	}
+
+	.c-toggle:checked {
+		background-color: var(--v-accent);
+		border-color: var(--v-accent);
+	}
+
+	.c-toggle:checked::before {
+		transform: translateX(calc(var(--c-toggle__track-height) * 0.75));
+	}
+
+	.c-toggle:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-toggle:disabled {
+		opacity: 0.65;
+		cursor: not-allowed;
+	}
+}

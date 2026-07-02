@@ -1,0 +1,23 @@
+@import '~/lib2/css/tokens/index.css';
+
+/* c-badge (§10.1) — count badge (text-mode) / dot indicator (square-mode). */
+@layer components {
+	.c-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-inline-size: 1.5em;
+		padding-inline: 0.4em;
+		background-color: var(--v-accent);
+		border-radius: 999px;
+		color: oklch(from var(--v-accent) calc((0.5 - l) * infinity) 0 0);
+		@mixin v-font-weight var(--v-font-weight-label);
+	}
+
+	.c-badge--dot {
+		inline-size: 0.6em;
+		min-inline-size: 0;
+		block-size: 0.6em;
+		padding: 0;
+	}
+}

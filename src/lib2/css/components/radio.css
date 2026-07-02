@@ -1,0 +1,49 @@
+@import '~/lib2/css/tokens/index.css';
+@import '~/lib2/css/tools/states.css';
+
+/* c-radio (§10.1) — custom-styled native <input type="radio">. */
+@layer components {
+	.c-radio {
+		display: inline-grid;
+		place-content: center;
+		inline-size: 1.25em;
+		block-size: 1.25em;
+		appearance: none;
+		background-color: var(--v-input-bg);
+		border: var(--v-border-width) solid var(--v-border-color-strong);
+		border-radius: 50%;
+		box-shadow: var(--v-shadow-inner);
+		cursor: pointer;
+		transition-property: background-color, border-color;
+		transition-duration: calc(var(--v-duration) * 0.5);
+		transition-timing-function: var(--v-ease);
+	}
+
+	.c-radio::before {
+		content: '';
+		inline-size: 0.6em;
+		block-size: 0.6em;
+		border-radius: 50%;
+		background-color: white;
+		transform: scale(0);
+		transition: transform calc(var(--v-duration) * 0.5) var(--v-ease);
+	}
+
+	.c-radio:checked {
+		background-color: var(--v-accent);
+		border-color: var(--v-accent);
+	}
+
+	.c-radio:checked::before {
+		transform: scale(1);
+	}
+
+	.c-radio:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-radio:disabled {
+		opacity: 0.65;
+		cursor: not-allowed;
+	}
+}

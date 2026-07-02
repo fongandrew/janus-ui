@@ -1,0 +1,33 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * Text-alignment trio + the single truncation tool (§11, §11.1). Text alignment
+ * is a SEPARATE trio from box alignment (they answer different questions).
+ */
+@layer tools {
+	.t-text-start {
+		text-align: start;
+	}
+
+	.t-text-center {
+		text-align: center;
+	}
+
+	.t-text-end {
+		text-align: end;
+	}
+
+	/*
+	 * Single-line ellipsis (§11.1). overflow-x: clip (NOT hidden) so it doesn't
+	 * force overflow-y to `auto` and spawn a stray scroll container; min-width:0
+	 * lets it shrink inside flex/grid parents. Put on an INNER element and keep
+	 * the focusable wrapper overflow-free so its ring is never clipped.
+	 */
+	.t-truncate {
+		min-inline-size: 0;
+		overflow-x: clip;
+		overflow-y: visible;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+}
