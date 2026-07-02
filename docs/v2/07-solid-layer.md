@@ -9,6 +9,8 @@ The Solid wrapper is the thinnest possible mapping from props to DOM plus the JS
 1. **No prop-mod context.** What v2 explicitly rejects is the v1 `PropModContext` pattern — a context whose value is a `(prev) => next` function that descendants run to transform their own props. Wrapper-to-leaf wiring uses a render-prop + hook pattern instead; layering across wrappers happens by explicit `ca(prev, ...)` merges at the consumer's call site (§12.2.1). Ordinary Solid `createContext` for narrow, ID-carrying state (e.g. `FormContext` in §13.5) is fine — those are read-only signals, not prop transforms.
 2. **No component-side behavior wiring.** Behaviors are activated by tokens in the `data-js` attribute (§12). The Solid component renders the attribute; `dom/`'s `mount()` runs registered behaviors. Components never call `createValidator` or push callbacks into a registry.
 
+**Wrappers begin life render-only.** Because the documentation site is authored in Solid JSX from day one (§19), most wrappers first appear during the CSS phases as ~5-line class-appliers — the component's one non-negotiable job is rendering the documented class list (`Card` → `c-card o-box`, the §4.1 composition contract). The full prop APIs, `ariaize`, and `data-js` wiring described in this section are layered onto those same files once the DOM layer exists (PLAN Phase 6). This also keeps the "there is no `o-card`" rule honest: no CSS class aggregates other classes; the JSX component is where composition happens.
+
 ### 13.1 Helpers at the framework boundary
 
 The DOM layer's `ca` (§12.2.1) is the workhorse for combining attribute objects produced by wrappers, handler producers, and consumer-passed props. Solid wrappers internally use `ca` to merge their own contributions with `...rest`. Two Solid-specific helpers sit alongside:
@@ -180,6 +182,8 @@ The three modal-form behaviors from §12.1 (`t-reset-on-close`, `t-close-on-succ
 export interface ModalFormProps extends FormProps {
   closeOnSuccess?: boolean;     // default true
   resetOnClose?: boolean;       // default true
+  stickyFooter?: 'none' | 'submit' | 'bar';  // default 'submit' (§10.2) — the
+                                // primary action stays reachable while fields scroll
 }
 
 export function ModalForm(props: ModalFormProps) {
@@ -256,7 +260,7 @@ Each component is one file under `src/lib/solid/`. The file exports named compon
 | File | Exports | Element | CSS class | Key props |
 |---|---|---|---|---|
 | `button.tsx` | `Button`, `IconButton` | `<button>` / `<a>` | `c-button o-input-box` | `variant?: 'primary'\|'danger'\|'success'\|'warn'` (maps to `v-colors-*`), `disabled`, standard button attrs. `IconButton` adds `c-button--icon` and square mode. |
-| `card.tsx` | `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent` | `<article>`/`<section>`, `<header>`, `<h3>`, `<p>`, `<div>` | `c-card o-box` / `c-card o-text-box` | `surface?: 'card'\|'elevated'\|'sunken'\|'glass'\|'gradient'` (maps to `v-surface-*`). Subcomponents are thin structural wrappers. |
+| `card.tsx` | `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent` | `<article>`/`<section>`, `<header>`, `<h3>`, `<p>`, `<div>` | `c-card o-box` | `surface?: 'card'\|'elevated'\|'sunken'\|'glass'\|'gradient'` (maps to `v-surface-*`). Subcomponents are thin structural wrappers; prose-bearing ones render an `o-prose` (§6). |
 | `alert.tsx` | `Alert` | `<div>` | `c-alert` | `variant`, `role` (default `"alert"`). |
 | `input.tsx` | `Input` | `<input>` | `c-input o-input-box` | `validators?: string`, `onValidate?: Validator` (§13.4). Standard input attrs except `type` is constrained (no `checkbox`/`radio`). |
 | `textarea.tsx` | `Textarea` | `<textarea>` | `c-input o-input-box` | Same validation props as `Input`. |
@@ -271,6 +275,7 @@ Each component is one file under `src/lib/solid/`. The file exports named compon
 | `skeleton.tsx` | `Skeleton` | `<div>` | `c-skeleton` | `width`, `height`, `circle?: boolean` (sets `border-radius: 50%`). |
 | `disclosure.tsx` | `Disclosure` | `<details><summary>` | `c-disclosure` | `summary: JSX.Element`, `open?: boolean`. Children go after `<summary>`. |
 | `tooltip.tsx` | `Tooltip` | `[popover]` | `c-tooltip` | `content: JSX.Element`, `anchor: string` (ID of the anchor element). Renders via CSS anchor positioning. No JS. |
+| `table.tsx` | `Table` | `<table>` | `c-table` | `rowHeight?: string` (sets `--c-table__row-height` inline). Otherwise a thin pass-through — `<thead>`/`<tbody>` are the consumer's own markup. |
 
 **Browser-primitive component wrappers (§10.2):**
 

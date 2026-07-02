@@ -13,6 +13,7 @@ Part 8 of the [Janus v2 design spec](./README.md). Covers what was deliberately 
 | Text-overflow tooltip machinery | Replaced by `t-truncate` + manual `c-tooltip` when needed. |
 | Empty-state object class | Compose with stack + center. |
 | v1's general-purpose mixin overuse | Mixins (via `postcss-mixins`) are kept but reframed as **internal to Janus only** — see §5.3. They are an authoring convenience for irreducibly-bundled knob sets (`v-spacing`) and mechanical expansions (`v-fluid` / `v-font-step` for the fluid type scale, §5.4; `v-breakpoint-*` / `v-container-*` query wrappers). They are *not* a consumer-facing customization surface: consumers theme via `--v-*` overrides, `v-`/`t-` classes, or their own CSS. The sync workflow never asks a consumer to invoke a mixin. |
+| v1's class-composition mixins (`.c-card` baking in its objects' rules) | Multi-class composition happens **in markup** — the JSX component or wrapper applies the full class list (`class="c-card o-box"`, §4.1). No CSS class expands to include another class's rules. |
 | v1's behavior callback registry (`data-callback-*` plumbing) | One unified pattern under one dispatcher (§12.2.2–§12.2.3): elements opt into behaviors via tokens in a single canonical `data-js="..."` attribute. Behavior names are stable strings tied to module filenames — no per-render generated IDs. Validators / submit handlers still use a name registry (§12.1). Closures go in a WeakMap. |
 | `o-top-nav-layout`, `o-sidebar-layout` (whole-page layouts) | Reframed as compositions of primitives (§10.4). The realistic needs — auto-hiding top nav, sidebar-to-drawer — decompose into recipes over `o-split`, `o-container`, `c-drawer` + CSS scroll-state / container queries. |
 
@@ -63,8 +64,7 @@ src/lib/
       shadow.css
       breakpoints.css            # internal v-breakpoint-* / v-container-* mixins
     objects/
-      box.css                    # .o-box
-      text-box.css               # .o-text-box
+      box.css                    # .o-box  (the one padded box — no o-text-box, §6)
       input-box.css              # .o-input-box  (shared base for button/input/textarea)
       dialog.css                 # .o-dialog
       square.css                 # .o-square
@@ -77,16 +77,19 @@ src/lib/
       centric.css                # .o-centric
       bar.css                    # .o-bar  (header/toolbar strip — §9.7)
       segmented.css              # .o-segmented  (shared-border cells — §9.8)
+      prose.css                  # .o-prose + <hgroup> (running-text flow — §9.5)
       ...
     components/
       button.css                 # .c-button
       card.css
       modal.css
+      table.css                  # .c-table (control-height rows, decoupled — §10.1)
       ...
     variants/
       colors.css                 # .v-colors-* (tones consumed by c- components)
       surface.css                # .v-surface-* (chrome treatments)
       align.css                  # text-inset modes: .v-align-edge / .v-align-text (§6.1)
+      bleed.css                  # .v-bleed — per-frame full-bleed mode (§6.1)
       text.css                   # .v-text-display / .v-text-meta (role-based, sparingly)
       # No .v-radius-* presets — the radius cascade is always-on in tokens/radius.css (§8.2).
       # No .v-spacing-*, .v-input-size-*, or other t-shirt-scaled variants.
@@ -210,6 +213,8 @@ eslint.config.js                # extends per-pseudo-package configs; includes
 ```
 
 One CSS file per object, component, variant. No barrel `.css` files that import many siblings — the entry `index.css` is the single import point.
+
+**Project CSS (`p-`) lives outside this tree and outside `@layer`.** Anything specific to the consuming application — for this repo, the documentation site's shell chrome — is written as `p-` classes in the application's own CSS files (e.g. `src/site/`), unlayered so it wins over every Janus layer (§4). The library directories above never contain a `p-` class.
 
 Every pseudo-package directory under `src/lib/` carries the same four files at its root: `janus.json`, `CHANGELOG.md`, `README.md`, and the configs it needs. This uniformity lets a consumer's agent treat any pseudo-package the same way at sync time — read the manifest, diff the local `CHANGELOG.md` against this repo's to find new entries, apply the changes, and copy the updated `CHANGELOG.md` forward as the next sync's high-water mark.
 
