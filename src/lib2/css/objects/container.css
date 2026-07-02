@@ -1,0 +1,50 @@
+/*
+ * o-container — the level-2 section / width-bounded region (§9.3).
+ * Transparent in radius terms — never rounded. Owns the inline gutter, the
+ * optional max width, and the top-level section flow (§6.2). It is also a
+ * QUERY CONTAINER sharing the `frame` name with o-dialog, so one
+ * @container frame rule can full-bleed the boxes of whichever frame is
+ * narrow (the rule itself ships in variants/bleed.css and fires only on
+ * frames carrying v-bleed — §6.1).
+ */
+@layer objects {
+	:where(.o-container) {
+		--o-container__max: none;
+		--o-container__gutter: var(--v-pad-inline);
+
+		container-name: frame;
+		container-type: inline-size;
+		inline-size: 100%;
+		margin-inline: auto;
+		max-inline-size: var(--o-container__max);
+		padding-inline: var(--o-container__gutter);
+	}
+
+	/*
+	 * Top-level section flow: direct children separated by the section gap —
+	 * margin on the lower element, same boundary-owned rule as prose.
+	 */
+	:where(.o-container) > :where(*) + :where(*) {
+		margin-block-start: var(--v-gap-section);
+	}
+
+	/*
+	 * The heading-led exception (§6.2): a prose section leading with a
+	 * heading takes the heading's own space-above as its lead-in instead of
+	 * the flat section gap — the break belongs to the heading, not to an
+	 * anonymous gap. (The heading carries the margin so the gap is measured
+	 * in the heading's em.)
+	 */
+	:where(.o-container)
+		> :where(*)
+		+ :where(.o-prose:has(> :is(h1, h2, h3, h4, h5, h6):first-child)) {
+		margin-block-start: 0;
+	}
+
+	:where(.o-container)
+		> :where(*)
+		+ :where(.o-prose)
+		> :where(h1, h2, h3, h4, h5, h6):where(:first-child) {
+		margin-block-start: var(--o-prose__heading-gap);
+	}
+}

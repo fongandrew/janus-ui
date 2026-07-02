@@ -1,0 +1,54 @@
+/*
+ * o-input-box — shared base for text-bearing leaf controls: <button>,
+ * <input>, <textarea>, native <select> (§9.2). NOT for checkbox / radio /
+ * toggle — those have their own dimensions.
+ *
+ * A single line centers via HEIGHT MATH, not text-box trim (§6): controls
+ * may be flex containers (buttons are), where trim silently no-ops, so the
+ * padding recipe is what guarantees identical behavior everywhere.
+ */
+@layer objects {
+	:where(.o-input-box) {
+		--_input-radius: var(--o-input-box__radius, var(--v-radius-min));
+
+		border-radius: var(--_input-radius);
+		border-width: var(--v-border-width);
+		min-height: var(--v-input-height);
+
+		/* Center one line inside --v-input-height (border-box). */
+		padding-block: calc((var(--v-input-height) - 1lh) / 2 - var(--v-border-width));
+
+		/*
+		 * Inputs/selects inset text by --v-control-inset; the inline padding
+		 * floors at the effective corner radius (§8.6 — a pill's effective
+		 * radius is height/2, so the floor never exceeds that).
+		 */
+		padding-inline: max(
+			var(--v-control-inset),
+			min(var(--_input-radius), calc(var(--v-input-height) / 2))
+		);
+	}
+
+	/* Buttons pad roomier — var(--v-spacing) inline, the v1 look (§9.2). */
+	:where(
+		button.o-input-box,
+		a.o-input-box,
+		.o-input-box:is([type='button'], [type='submit'], [type='reset'])
+	) {
+		padding-inline: max(
+			var(--v-spacing),
+			min(var(--_input-radius), calc(var(--v-input-height) / 2))
+		);
+	}
+
+	/*
+	 * A <textarea> is multi-line: uniform inset all round — inline stays
+	 * --v-control-inset; block padding is leading-corrected so the first
+	 * line sits the same optical distance from the top as the text does
+	 * from the sides (§9.2).
+	 */
+	:where(textarea.o-input-box) {
+		min-height: calc(2 * var(--v-input-height));
+		padding-block: calc(var(--v-control-inset) - (1lh - 1em) / 2);
+	}
+}

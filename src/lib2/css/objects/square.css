@@ -1,0 +1,16 @@
+/*
+ * o-square — 1:1 content: icons, avatars, dots (§9.2). No padding floor, no
+ * curvature avoidance; reads --v-radius directly and goes fully circular at
+ * --v-radius: 50%.
+ */
+@layer objects {
+	:where(.o-square) {
+		align-items: center;
+		aspect-ratio: 1;
+		border-radius: var(--v-radius);
+		display: inline-flex;
+		justify-content: center;
+		overflow: clip;
+		padding: 0;
+	}
+}

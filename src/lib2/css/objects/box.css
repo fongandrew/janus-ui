@@ -1,0 +1,56 @@
+/*
+ * o-box — THE padded container (§9.2). There is no separate text box: prose
+ * in a box is the composition o-box + o-prose (§6).
+ *
+ * All rules use :where() so they stay zero-specificity — the nested-box rule
+ * below must win over the base rule by source order alone (§8.2), and
+ * consumer CSS should beat any of it without games.
+ */
+@layer objects {
+	:where(.o-box) {
+		--o-box__pad-block: var(--v-pad-block);
+		--o-box__pad-inline: var(--v-pad-inline);
+
+		/* Reads its own knob (assigned by the radius cascade) with a floor. */
+		--_box-radius: var(--o-box__radius, var(--v-radius-min));
+
+		/*
+		 * The box-scoped cascade step (§8.2): a box writes the CONTROL knob
+		 * one pad-step deeper for its children, and publishes an inner-box
+		 * knob for a box nested inside it. It reads --o-box__radius and
+		 * writes different names, so no self-reference arises.
+		 */
+		--o-input-box__radius: max(
+			var(--v-radius-min),
+			calc(var(--o-box__radius) - var(--v-pad-inline))
+		);
+		--o-box__radius-inner: max(
+			var(--v-radius-min),
+			calc(var(--o-box__radius) - var(--v-pad-inline))
+		);
+
+		border-radius: var(--_box-radius);
+		border-width: var(--v-border-width);
+
+		/*
+		 * Curvature clearance (§8.6): inline padding floors at the box's own
+		 * corner radius so content clears the curve. A no-op at default
+		 * values; binds only at large radii.
+		 */
+		padding: var(--o-box__pad-block) max(var(--o-box__pad-inline), var(--_box-radius));
+	}
+
+	/*
+	 * A box INSIDE a box reads the inner-box knob instead and steps its own
+	 * controls once more — the one supported nested level (§5.2, §8.2). A
+	 * third-level box shares this radius; everything floors at the min.
+	 * Same zero specificity as above — source order makes this win.
+	 */
+	:where(.o-box) :where(.o-box) {
+		--_box-radius: var(--o-box__radius-inner, var(--v-radius-min));
+		--o-input-box__radius: max(
+			var(--v-radius-min),
+			calc(var(--o-box__radius-inner) - var(--v-pad-inline))
+		);
+	}
+}

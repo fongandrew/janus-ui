@@ -1,0 +1,17 @@
+/*
+ * o-centric — centers contents within an optional max width (§9.3).
+ * (Renamed from v1's o-center: "the centering container," not "the center".)
+ */
+@layer objects {
+	:where(.o-centric) {
+		--o-centric__max: none;
+
+		align-items: center;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		margin-inline: auto;
+		max-inline-size: var(--o-centric__max);
+		text-align: center;
+	}
+}

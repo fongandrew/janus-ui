@@ -1,0 +1,18 @@
+/*
+ * o-stack — vertical flow with a consistent gap (§9.3). One object, several
+ * roles — the role is just which value the gap takes (§6.2):
+ *   section stack → var(--v-gap-section)
+ *   generic group (default) → var(--v-gap-block)
+ *   inside a card → var(--v-pad-block)   (set by c-card)
+ *   form field → var(--v-gap-tight)
+ * Its text-child trim lives with o-prose (shared selector, §6).
+ */
+@layer objects {
+	:where(.o-stack) {
+		--o-stack__gap: var(--v-gap-block);
+
+		display: flex;
+		flex-direction: column;
+		gap: var(--o-stack__gap);
+	}
+}

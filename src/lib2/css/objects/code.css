@@ -1,0 +1,13 @@
+/*
+ * o-code — monospace text container (§9.5). Structural only; the tinted /
+ * always-dark surfaces live on the base code/pre styles and v-colors-*.
+ */
+@layer objects {
+	:where(.o-code) {
+		--o-code__font-size: var(--v-font-size-code);
+
+		font-family: var(--v-font-family-mono);
+		font-size: var(--o-code__font-size);
+		line-height: var(--v-line-height-code);
+	}
+}

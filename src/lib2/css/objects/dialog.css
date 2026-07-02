@@ -1,0 +1,41 @@
+/*
+ * o-dialog — dialog-frame chrome: radius, viewport-edge offset, border,
+ * shadow (§9.4). Position-agnostic — centered/edge/anchored positioning
+ * lives on c-modal / c-drawer / c-popover.
+ *
+ * THE FRAME IS THE SCROLL CONTAINER AND IT IS TRANSPARENT. The surface color
+ * and rounded corners come from the surfaces tiled inside it (header rounds
+ * the top, body rounds the bottom and grows to fill). A solid background on
+ * the scroll element paints past the radius during the overscroll
+ * rubber-band; transparent + self-rounding surfaces is the only arrangement
+ * that holds. Keep the bounce: overscroll-behavior contain, never none.
+ */
+@layer objects {
+	:where(.o-dialog) {
+		/* Dialog radius = frame radius − offset (§8.3), floored. */
+		--_dialog-radius: var(--o-dialog__radius, var(--v-radius));
+
+		/*
+		 * The dialog re-roots the radius cascade — everything inside derives
+		 * from the dialog radius (§8.2).
+		 */
+		--o-box__radius: max(
+			var(--v-radius-min),
+			calc(var(--_dialog-radius) - var(--v-pad-inline))
+		);
+		--o-input-box__radius: max(
+			var(--v-radius-min),
+			calc(var(--_dialog-radius) - var(--v-pad-inline))
+		);
+
+		/* Cards inside an overlay want a stronger lift (§7.0). */
+		--v-shadow-outer: 0 4px 12px -2px rgb(0 0 0 / 15%), 0 2px 4px -2px rgb(0 0 0 / 10%);
+
+		background: transparent;
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--_dialog-radius);
+		box-shadow: 0 10px 40px -10px rgb(0 0 0 / 35%);
+		overflow: auto;
+		overscroll-behavior: contain;
+	}
+}

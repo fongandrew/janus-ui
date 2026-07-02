@@ -1,0 +1,25 @@
+/*
+ * o-grid — intrinsic responsive grid (§9.3.1). Three knobs, no breakpoints.
+ * Gap defaults to the SECTION scale — grid cells are section-level peers
+ * (§6.2). Fixed-column layouts are not an o-grid use case; write
+ * grid-template-columns in consumer CSS for those.
+ */
+@layer objects {
+	:where(.o-grid) {
+		--o-grid__min: 16rem;
+		--o-grid__gap-block: var(--v-gap-section);
+		--o-grid__gap-inline: var(--v-gap-section);
+
+		display: grid;
+		gap: var(--o-grid__gap-block) var(--o-grid__gap-inline);
+
+		/* min(…, 100%) keeps a cell from overflowing a container narrower
+		   than the min. */
+		grid-template-columns: repeat(auto-fill, minmax(min(var(--o-grid__min), 100%), 1fr));
+	}
+
+	/* Collapses empty tracks — the last item stretches to fill. */
+	:where(.o-grid--fit) {
+		grid-template-columns: repeat(auto-fit, minmax(min(var(--o-grid__min), 100%), 1fr));
+	}
+}

@@ -1,0 +1,24 @@
+/*
+ * o-menu-item — a row inside an o-menu (§9.6). Owns its own height and
+ * font-size defaults, compact relative to the control scale — the object
+ * defines its own proportions rather than reaching for a global size step.
+ */
+@layer objects {
+	:where(.o-menu-item) {
+		--o-menu-item__height: calc(var(--v-input-height) - var(--v-gap-tight));
+		--o-menu-item__font-size: var(--v-font-size);
+
+		align-items: center;
+		border-radius: max(
+			var(--v-radius-min),
+			calc(var(--o-box__radius, var(--v-radius-min)) - var(--v-gap-tight))
+		);
+		display: flex;
+		font-size: var(--o-menu-item__font-size);
+		gap: var(--v-gap-inline);
+		inline-size: 100%;
+		min-block-size: var(--o-menu-item__height);
+		padding-inline: var(--v-control-inset);
+		text-align: start;
+	}
+}

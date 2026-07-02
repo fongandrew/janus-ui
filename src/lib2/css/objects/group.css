@@ -1,0 +1,10 @@
+/* o-group — horizontal flow with consistent gap. Wraps. (§9.3) */
+@layer objects {
+	:where(.o-group) {
+		--o-group__gap: var(--v-gap-inline);
+
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--o-group__gap);
+	}
+}

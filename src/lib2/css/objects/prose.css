@@ -1,0 +1,200 @@
+/*
+ * o-prose — running-text flow, and the typography object (§9.5).
+ *
+ * Owns three things:
+ * 1. text-box trim for its immediate text children (§6 — the selector list
+ *    names elements that are reliably plain block text; flex-based
+ *    components are deliberately absent, so trim never silently no-ops).
+ * 2. Boundary-owned vertical rhythm (§6.2): every gap is a margin-block-
+ *    start on the LOWER element, valued by what sits above it.
+ * 3. The inline text-inset behavior when it sits beside boxes (§6.1).
+ */
+@layer objects {
+	:where(.o-prose) {
+		display: block;
+	}
+
+	/*
+	 * Trim: applied by the two rhythm-owning containers to their immediate
+	 * text children only (§6). o-stack needs it for the heading-in-a-card
+	 * case; o-prose for its line-based rhythm.
+	 */
+	:where(.o-prose, .o-stack)
+		> :where(h1, h2, h3, h4, h5, h6, p, label, figcaption, dt, dd, blockquote),
+	:where(.o-prose) > :where(ul, ol) > :where(li) {
+		text-box: trim-both cap alphabetic;
+	}
+
+	/* hgroup: outer edges only — the title↔subtitle boundary keeps its
+	   half-leading so the unit reads continuous (§6.2). */
+	:where(.o-prose, .o-stack) :where(hgroup) > :where(:first-child) {
+		text-box: trim-start cap alphabetic;
+	}
+
+	:where(.o-prose, .o-stack) :where(hgroup) > :where(:last-child) {
+		text-box: trim-end cap alphabetic;
+	}
+
+	/*
+	 * Rhythm: body ↔ body and heading → following content take the prose
+	 * gap; whatever → heading takes the heading's own space-above (in the
+	 * HEADING's em, so a bigger heading claims a bigger break).
+	 */
+	:where(.o-prose) > :where(*) + :where(*) {
+		margin-block-start: var(--o-prose__gap);
+	}
+
+	:where(.o-prose) > :where(*) + :where(h1, h2, h3, h4, h5, h6) {
+		margin-block-start: var(--o-prose__heading-gap);
+	}
+
+	/*
+	 * <hgroup> — title + subtitle as one unit. Additive leading: line-height
+	 * = 1em + a constant, so the whitespace between lines stays the same
+	 * across the title/subtitle size difference. No margins between members.
+	 */
+	:where(hgroup) > :where(*) {
+		line-height: calc(1em + var(--o-hgroup__leading));
+	}
+
+	:where(hgroup) > :where(*) + :where(*) {
+		margin-block-start: 0;
+	}
+
+	/*
+	 * Inline inset (§6.1): prose that is a DIRECT child of a container
+	 * holding boxes insets to the cards' inner text. Only direct children —
+	 * prose inside a box takes the box's perimeter padding and stays flush.
+	 */
+	:where(.o-container:has(> .o-box, > .o-grid, > .o-segmented, > .c-card)) > :where(.o-prose) {
+		--o-prose__inset: var(--v-pad-inline);
+
+		padding-inline: var(--o-prose__inset);
+	}
+
+	/* A dialog frame uses the lighter straight-edge default. */
+	:where(.o-dialog .o-container:has(> .o-box, > .o-grid, > .o-segmented, > .c-card))
+		> :where(.o-prose) {
+		--o-prose__inset: var(--o-box__radius);
+	}
+
+	/*
+	 * The inset wraps the corner: at the container's first/last child the
+	 * block padding grows to match, so the corner reads uniform.
+	 */
+	:where(.o-container:has(> .o-box, > .o-grid, > .o-segmented, > .c-card))
+		> :where(.o-prose:first-child) {
+		padding-block-start: var(--o-prose__inset);
+	}
+
+	:where(.o-container:has(> .o-box, > .o-grid, > .o-segmented, > .c-card))
+		> :where(.o-prose:last-child) {
+		padding-block-end: var(--o-prose__inset);
+	}
+
+	/*
+	 * Block boxes inside prose break out: a code block or blockquote is
+	 * itself a box, so it re-anchors to the box edge (the sanctioned
+	 * negative-margin case, §6.1).
+	 */
+	:where(.o-prose) > :where(pre, blockquote) {
+		margin-inline: calc(-1 * var(--o-prose__inset, 0px));
+	}
+
+	/* ===== Lists (§9.5) ===== */
+
+	/* Item rhythm rides the cascading --v-list-rhythm switch. */
+	:where(.o-prose) :where(li) + :where(li) {
+		margin-block-start: var(--v-list-rhythm);
+	}
+
+	/* ul: native markers cycle disc → circle → square, repeating every 3. */
+	:where(.o-prose) :where(ul) {
+		list-style-type: disc;
+		padding-inline-start: calc(1em + var(--v-gap-inline));
+	}
+
+	:where(.o-prose) :where(ul ul) {
+		list-style-type: circle;
+	}
+
+	:where(.o-prose) :where(ul ul ul) {
+		list-style-type: square;
+	}
+
+	:where(.o-prose) :where(ul ul ul ul) {
+		list-style-type: disc;
+	}
+
+	:where(.o-prose) :where(ul ul ul ul ul) {
+		list-style-type: circle;
+	}
+
+	:where(.o-prose) :where(ul ul ul ul ul ul) {
+		list-style-type: square;
+	}
+
+	/*
+	 * ol: custom counter markers — tabular-figure, right-aligned, hanging
+	 * flush with the list edge. The marker box spans the list's left padding
+	 * and a matching negative margin pulls it into that padding (negative
+	 * margin moves flow, so the li text stays flush at the content edge —
+	 * a transform would leave the marker's inline width in flow).
+	 */
+	:where(.o-prose) :where(ol) {
+		--_ol-pad: calc(max(1em, 1ch) + var(--v-gap-inline));
+
+		list-style: none;
+		counter-reset: item;
+		padding-inline-start: var(--_ol-pad);
+	}
+
+	:where(.o-prose) :where(ol) > :where(li) {
+		counter-increment: item;
+	}
+
+	:where(.o-prose) :where(ol) > :where(li)::before {
+		content: counter(item, decimal) '.';
+		display: inline-block;
+		width: var(--_ol-pad);
+		margin-inline-start: calc(-1 * var(--_ol-pad));
+		padding-inline-end: var(--v-gap-inline);
+		font-variant-numeric: tabular-nums;
+		white-space: nowrap;
+		text-align: right;
+	}
+
+	/* Counter style cycles every 3 levels: decimal → lower-alpha → lower-roman. */
+	:where(.o-prose) :where(ol ol) > :where(li)::before {
+		content: counter(item, lower-alpha) '.';
+	}
+
+	:where(.o-prose) :where(ol ol ol) > :where(li)::before {
+		content: counter(item, lower-roman) '.';
+	}
+
+	:where(.o-prose) :where(ol ol ol ol) > :where(li)::before {
+		content: counter(item, decimal) '.';
+	}
+
+	:where(.o-prose) :where(ol ol ol ol ol) > :where(li)::before {
+		content: counter(item, lower-alpha) '.';
+	}
+
+	:where(.o-prose) :where(ol ol ol ol ol ol) > :where(li)::before {
+		content: counter(item, lower-roman) '.';
+	}
+
+	/* Digit-aware left padding — widen with the marker's digit count. */
+	:where(.o-prose) :where(ol:has(> li:nth-child(10))) {
+		--_ol-pad: calc(max(1em, 2ch) + var(--v-gap-inline));
+	}
+
+	:where(.o-prose) :where(ol:has(> li:nth-child(100))) {
+		--_ol-pad: calc(max(1em, 3ch) + var(--v-gap-inline));
+	}
+
+	:where(.o-prose) :where(ol:has(> li:nth-child(1000))) {
+		--_ol-pad: calc(max(1em, 4ch) + var(--v-gap-inline));
+	}
+}

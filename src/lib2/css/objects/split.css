@@ -1,0 +1,31 @@
+/*
+ * o-split — two-up layout (sidebar + main) that collapses to stacked below a
+ * threshold (§9.3). Container query keyed to the nearest frame, no media
+ * queries. The first child is the fixed rail; the last child fills.
+ */
+@layer objects {
+	:where(.o-split) {
+		align-items: flex-start;
+		display: flex;
+		gap: var(--v-gap-section);
+	}
+
+	:where(.o-split) > :where(:first-child) {
+		flex: none;
+	}
+
+	:where(.o-split) > :where(:last-child) {
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	@container frame (max-width: 48rem) {
+		:where(.o-split) {
+			flex-direction: column;
+		}
+
+		:where(.o-split) > :where(*) {
+			inline-size: 100%;
+		}
+	}
+}

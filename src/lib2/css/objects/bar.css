@@ -1,0 +1,64 @@
+/*
+ * o-bar — horizontal header / toolbar / app-bar strip (§9.7).
+ *
+ * ONE SYMMETRIC padding knob, three height modes (asymmetric bar padding
+ * reads wrong on filled buttons — workbench):
+ *   text (default)              pad = var(--v-spacing)
+ *   contains-input (--contains) pad reduced by the control's own internal
+ *                               half-height, so the control's TEXT sits
+ *                               --v-spacing from the bar edge (the fix for
+ *                               the too-tall-header bug)
+ *   input (--input)             pad = 0; the bar is exactly one control tall
+ *
+ * One-row overflow contract: the leading cluster yields and truncates; the
+ * trailing cluster never shrinks; clusters never wrap.
+ */
+@layer objects {
+	:where(.o-bar) {
+		--o-bar__pad: var(--v-spacing);
+
+		align-items: center;
+		display: flex;
+		gap: var(--v-gap-inline);
+		min-height: var(--v-input-height);
+		padding: var(--o-bar__pad);
+	}
+
+	:where(.o-bar--contains) {
+		--o-bar__pad: calc(var(--v-spacing) - max(0px, (var(--v-input-height) - 1lh) / 2));
+	}
+
+	:where(.o-bar--input) {
+		--o-bar__pad: 0px;
+	}
+
+	/*
+	 * Page-header role: sticky, translucent card tone under a blur, bottom
+	 * border — content scrolls under it legibly.
+	 */
+	:where(.o-bar--header) {
+		backdrop-filter: blur(8px);
+		background: color-mix(in hsl, var(--v-card-bg) 80%, transparent);
+		border-block-end: var(--v-border-width) solid var(--v-border-color);
+		inset-block-start: 0;
+		position: sticky;
+		z-index: 10;
+	}
+
+	/* Label side yields (and its text composes t-truncate)… */
+	:where(.o-bar) > :where(:first-child) {
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	/* …the action side doesn't. */
+	:where(.o-bar) > :where(:last-child:not(:first-child)) {
+		flex: none;
+	}
+
+	/* Clusters inside a bar must not wrap — wrapping drops buttons onto a
+	   second row. */
+	:where(.o-bar) :where(.o-group, .o-row) {
+		flex-wrap: nowrap;
+	}
+}
