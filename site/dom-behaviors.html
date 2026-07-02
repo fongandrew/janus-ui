@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="/src/lib2/css/index.css" />
+		<link rel="stylesheet" href="/src/lib2-site/styles/site.css" />
+		<title>DOM behaviors — Janus UI v2</title>
+	</head>
+	<body>
+		<main class="o-container p-doc-main">
+			<h1 class="p-doc-title">DOM behaviors (vanilla JS)</h1>
+			<p class="o-prose">
+				Raw markup carrying <code>data-js</code> tokens, enhanced by
+				<code>~/lib2/dom/all</code> + <code>mount()</code>. No framework.
+			</p>
+
+			<!-- Tabs -->
+			<section class="p-doc-section" id="tabs">
+				<h2>Tabs</h2>
+				<div class="c-tabs">
+					<div
+						class="c-tabs__list"
+						role="tablist"
+						aria-orientation="horizontal"
+						data-js="t-roving-focus c-tabs__select"
+					>
+						<button class="c-tab" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">
+							Tab one
+						</button>
+						<button class="c-tab" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2">
+							Tab two
+						</button>
+						<button class="c-tab" role="tab" aria-selected="false" aria-controls="panel-3" id="tab-3">
+							Tab three
+						</button>
+					</div>
+					<div class="c-tab-panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1">Panel one.</div>
+					<div class="c-tab-panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" hidden>Panel two.</div>
+					<div class="c-tab-panel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" hidden>Panel three.</div>
+				</div>
+			</section>
+
+			<!-- Modal -->
+			<section class="p-doc-section" id="modal">
+				<h2>Modal</h2>
+				<button class="c-button o-input-box" type="button" command="show-modal" commandfor="demo-modal" id="open-modal">
+					Open modal
+				</button>
+				<dialog id="demo-modal" class="c-modal o-dialog" data-js="t-request-close t-restore-focus">
+					<div class="c-modal__header">
+						<button
+							class="c-button c-button--icon o-input-box c-modal__close"
+							type="button"
+							data-js="c-modal__close"
+							aria-label="Close"
+							id="close-modal"
+						>
+							✕
+						</button>
+						<h2>Modal title</h2>
+					</div>
+					<div class="c-modal__body o-prose">
+						<p>Press ESC or click the backdrop to close.</p>
+						<button class="c-button o-input-box" type="button" id="modal-inner-button">A focusable button</button>
+					</div>
+				</dialog>
+			</section>
+
+			<!-- Form -->
+			<section class="p-doc-section" id="form">
+				<h2>Form validation</h2>
+				<form data-js="t-validate t-submit" data-submit-handler="demo-signup" id="demo-form" novalidate>
+					<div class="o-stack o-field">
+						<label for="email">Email</label>
+						<input
+							class="c-input o-input-box"
+							id="email"
+							name="email"
+							type="email"
+							required
+							aria-describedby="email-err"
+						/>
+						<span id="email-err" class="c-error-message" data-js="t-validate-error"></span>
+					</div>
+					<button class="c-button o-input-box v-colors-primary" type="submit" id="submit-form">
+						Submit
+					</button>
+					<p id="form-output"></p>
+				</form>
+			</section>
+
+			<!-- Menu -->
+			<section class="p-doc-section" id="menu">
+				<h2>Menu</h2>
+				<button class="c-button o-input-box" type="button" popovertarget="demo-menu" id="open-menu">
+					Open menu
+				</button>
+				<div
+					id="demo-menu"
+					popover
+					class="c-menu o-menu"
+					role="menu"
+					aria-orientation="vertical"
+					data-js="t-roving-focus t-typeahead-filter t-request-close"
+				>
+					<button class="o-menu-item" role="menuitem" id="menu-apple">Apple</button>
+					<button class="o-menu-item" role="menuitem" id="menu-banana">Banana</button>
+					<button class="o-menu-item" role="menuitem" id="menu-cherry">Cherry</button>
+				</div>
+			</section>
+		</main>
+
+		<script type="module" src="/src/lib2-site/dom-behaviors-entry.ts"></script>
+	</body>
+</html>

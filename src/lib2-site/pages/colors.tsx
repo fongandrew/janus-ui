@@ -12,9 +12,9 @@ import { renderPage } from '../render';
  */
 
 function lc(fg: string, bg: string): number {
-	const [fr, fgc, fb] = colorParsley(fg) as [number, number, number, number, boolean];
-	const [br, bgc, bb] = colorParsley(bg) as [number, number, number, number, boolean];
-	const raw = APCAcontrast(sRGBtoY([fr, fgc, fb]), sRGBtoY([br, bgc, bb]));
+	const [fr, fgc, fb] = colorParsley(fg) as unknown as number[];
+	const [br, bgc, bb] = colorParsley(bg) as unknown as number[];
+	const raw = APCAcontrast(sRGBtoY([fr!, fgc!, fb!]), sRGBtoY([br!, bgc!, bb!]));
 	const n = typeof raw === 'number' ? raw : parseFloat(raw);
 	return Math.round(Math.abs(n));
 }
