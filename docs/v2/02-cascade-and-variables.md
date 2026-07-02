@@ -18,6 +18,12 @@ A single `@layer` declaration in the entry stylesheet establishes precedence:
 | `components` | `c-` | Named, opinionated widgets that compose objects | `.c-button`, `.c-card`, `.c-modal` |
 | `variants` | `v-` | Knob setters (scoped re-themes) | `.v-spacing-sm`, `.v-colors-primary`, `.v-surface-glass` |
 | `tools` | `t-` | Surgical overrides that always win | `.t-px-0`, `.t-flex-fill`, `.t-radius-none` |
+| *(unlayered)* | `p-` | **Project layer** — classes owned by the consuming project, not by Janus | `.p-site-nav`, `.p-doc-toc` |
+
+**The `p-` project prefix.** Janus never ships a `p-` class; the prefix is reserved for the *consuming project's own* CSS (the documentation site is the first such consumer — its shell chrome is `p-` classes). Project CSS is written **outside `@layer`**, and unlayered author CSS beats every layered declaration — so any `p-` rule wins over any Janus rule with no specificity games. That is a feature (a project can always have the final word) and a responsibility, so two discipline rules keep it sane:
+
+1. **Override through your own class.** A `p-` rule styles elements *via the `p-` class on them* — never by re-targeting bare `.c-*` / `.o-*` selectors from project files. `.p-site-nav { … }` on `<header class="o-bar p-site-nav">` is right; `.o-bar { … }` in a project file is a global, ungreppable override and is wrong.
+2. **Prefer knobs over raw properties.** Where the customization is something the variable surface covers, a `p-` class should set `--v-*` / `--o-*` knobs (like a `v-` variant would) rather than raw properties, so it composes with the cascade instead of fighting it. Raw properties are for genuinely project-specific chrome the library has no opinion about.
 
 **Discipline:**
 - `c-` and `o-` classes **consume** custom properties; they never set raw px/rem values. They may set derivations of properties from other properties though.
@@ -30,6 +36,8 @@ A single `@layer` declaration in the entry stylesheet establishes precedence:
 Objects (`o-`) own **structure**: spacing, sizing, padding, layout, radius. They never carry visual chrome — no shadows, no hover states, no color. Some are padded containers (`o-box`, `o-input-box`); others are transparent layout primitives (`o-stack`, `o-grid`). All are pure CSS with zero JS.
 
 Components (`c-`) own **chrome**: shadows, borders, background treatments, hover/focus states, color application. They layer these on top of objects rather than reimplementing structure. A `c-button` composes `o-input-box` for its sizing and padding, then adds hover state and outer shadow. A `c-modal` composes `o-dialog` for its radius and offset, then adds centered positioning and backdrop.
+
+**Composition happens in markup, not in the stylesheet.** A component class does not "mix in" its objects — there is no build step where `.c-card` expands to include `o-box`'s rules (v1 did this and it made classes unpredictable to grep and override). An element that is a card *carries both classes*: `<section class="c-card o-box">`. The expected pattern is that the **JSX component (or whatever wrapper the consumer uses) applies the full class list** — `Card` renders `class="c-card o-box"` — so consumers writing components never think about which classes travel together, and consumers writing raw HTML copy the documented class list from the demo page. CSS mixins exist (§5.3) but only for knob bundles and mechanical expansions, never for class-into-class composition.
 
 The relationship is compositional — a component *uses* an object, it doesn't replace it. A component sits **above** its objects in the cascade: objects supply the structural baseline, and the component layers chrome plus the occasional minor structural override on top. This is why the cascade declares `objects` before `components`: when both layers target the same element, component declarations win, so a component can nudge a value the object set (e.g. a `c-toggle` adjusting the track proportions it inherited from `o-input-box`) without resorting to specificity hacks or `!important`. Components should override sparingly — the point of composing an object is to inherit its structure, not to rebuild it — but when a tweak is genuinely component-specific, the cascade lets the component have the final say over the objects it builds on. (Both still yield to `variants` and `tools`, which outrank them in turn — so a `v-surface-*` variant or a `t-` override beats a component's value.)
 
@@ -74,10 +82,10 @@ Root knobs split into two tiers:
 
 Layout & rhythm:
 - `--v-spacing` — base spacing unit (default `1rem`). Keeps chrome rhythm on the 16px grid while body text sits a touch below it at a fixed 15px (see `--v-font-size-min`).
-- `--v-radius` — the **max** radius, carried by the outermost frame (window / dialog); the anchor the per-layer radii step *inward* from (§8). Default `0.5rem`. Used by `o-dialog`, `o-square`, and page-body framing.
-- `--v-radius-min` — the radius **floor** (default `0.25rem`). Nothing rounds below it, so corners are never sharp; the inward cascade bottoms out here (§8).
+- `--v-radius` — the **max** radius, carried by the outermost frame (window / dialog); the anchor the per-layer radii step *inward* from (§8). Default `2.5rem` — a genuinely round window corner, so the inward steps are visible before they floor (the workbench's "stepped" look). Because most page frames don't *paint* this radius (§8.1), the large default costs nothing on a plain web page while giving dialogs and painted frames the concentric look out of the box. The near-uniform look is one override away (`--v-radius: 0.5rem`). Used by `o-dialog`, `o-square`, and page-body framing.
+- `--v-radius-min` — the radius **floor** (default `0.375rem`). Nothing rounds below it, so corners are never sharp; the inward cascade bottoms out here (§8). Flat = set it equal to `--v-radius`.
 - `--v-border-width` — base border width (default `1px`).
-- `--v-input-height` — height of interactive controls (default `2.5rem`). Drives `o-input-box` and the controls layered on it. Deliberately *independent* of `--v-spacing`.
+- `--v-input-height` — height of interactive controls (default `2rem` — the workbench default; v1's compact preset used `1.875rem`, and the hi-DPI/touch branch raises it to `2.75rem`, §6.4). Drives `o-input-box` and the controls layered on it. Deliberately *independent* of `--v-spacing`.
 
 Typography (a Utopia-style scale that ships **fixed by default** — the two anchors collapse to one size; fluid type is an opt-in, §5.4):
 - `--v-font-family`
@@ -85,7 +93,7 @@ Typography (a Utopia-style scale that ships **fixed by default** — the two anc
 - `--v-font-size-min` — base body size at (and below) the minimum viewport (default `0.9375rem` ≈ 15px).
 - `--v-font-size-max` — base body size at (and above) the maximum viewport (default `0.9375rem` ≈ 15px). **By default this equals `--v-font-size-min`, so body text is a fixed 15px** — the app-appropriate default, since UI text should not resize as the window changes. Marketing/content sites opt into fluid type by spreading the two anchors apart (§5.4, §6.7); the default app config anchors a touch below v1's 16px to read as denser, app-grade UI while spacing stays on the 16px grid (`--v-spacing: 1rem`).
 - `--v-font-ratio-min` — modular-scale ratio applied at the minimum viewport (default `1.2`, a minor third). Steps above/below body multiply/divide by this.
-- `--v-font-ratio-max` — modular-scale ratio applied at the maximum viewport (default `1.25`, a major third). Larger screens get a more dramatic scale.
+- `--v-font-ratio-max` — modular-scale ratio applied at the maximum viewport (default `1.2` — **equal to `-min` by default**, so the ramp is one fixed ratio and nothing tracks the viewport; a consumer opting into fluid type spreads the ratios, e.g. to `1.33`, for a more dramatic scale on large screens).
 - `--v-line-height` — base line height (default `1.5`).
 
 Fluid-scaling viewport anchors (primary; the shared engine behind opt-in fluid type and opt-in fluid spacing, §6.5 / §6.7 — inert while the size anchors are collapsed, as they are by default):
@@ -116,18 +124,20 @@ Font weights (semantic stack consumed by base styles and components; tinted-surf
 
 #### Secondary knobs
 
-Layout & rhythm (derive from `--v-spacing`):
-- `--v-pad-block` — default block padding for box objects (default `var(--v-spacing)`).
-- `--v-pad-inline` — default inline padding for box objects (default `var(--v-spacing)`).
-- `--v-gap-block` — default block gap (used by `o-stack`; default `var(--v-spacing)`).
-- `--v-gap-inline` — default inline gap (used by `o-group`, `o-row`; default `calc(var(--v-spacing) * 0.5)`).
-- `--v-control-inset` — a control's internal inline padding (text-to-border). Default is the **height-relative** `calc((var(--v-input-height) − 1em) / 2)` (the v1 input-box inset), *not* `var(--v-pad-inline)`: this keeps inputs balanced independent of box padding. Curvature-clamped on the object. It is also the **"inner text" reference** for inline alignment (§6.1) — the inset that lands accompanying text on a control's own text.
+Layout & rhythm (derive from `--v-spacing`; the multiples are the workbench defaults — §6.2 explains why each context takes a *named multiple* of the master rather than the master itself):
+- `--v-pad-block` — default block padding for box objects (default `calc(var(--v-spacing) * 1.25)` — the workbench **pad** scale, deliberately decoupled from the section gap so a roomy grid can still hold snug cards, and vice versa).
+- `--v-pad-inline` — default inline padding for box objects (default `calc(var(--v-spacing) * 1.25)`; block and inline are equal by default but split so a consumer can break the relationship).
+- `--v-gap-block` — the base within-group stack gap (used by `o-stack`; default `var(--v-spacing)`).
+- `--v-gap-inline` — inline gap between clustered items — toolbar buttons, tags (used by `o-group`, `o-row`; default `calc(var(--v-spacing) * 0.5)` — the workbench **cluster** scale).
+- `--v-gap-section` — the gap between cards / page sections (default `calc(var(--v-spacing) * 1.5)` — the workbench **section** scale). Consumed as the default gap of `o-grid` and of the top-level section flow in `o-container` (§6.2, §9.3); a section-level `o-stack` sets its gap to this token.
+- `--v-gap-tight` — the smallest gap: label→control inside a form field row, and similar bind-these-together cases (default `calc(var(--v-spacing) * 0.25)` — the workbench **tight** scale). Consumed by form-field stacks (`--o-stack__gap: var(--v-gap-tight)`).
+- `--v-control-inset` — a control's internal inline padding (text-to-border). Default is the **height-relative** `calc((var(--v-input-height) − 1em) / 2)` (the v1 input-box inset), *not* `var(--v-pad-inline)`: this keeps inputs balanced independent of box padding. Curvature-clamped on the object. It is also the **"inner text" reference** for inline alignment (§6.1) — the inset that lands accompanying text on a control's own text. (Buttons are the one control that pads roomier: their inline padding is `var(--v-spacing)`, the v1 look — §9.2.)
 
 Inline insets (accompanying text → the box it introduces, §6.1). Because boxes don't nest (frame → box → control), these arise in exactly two places:
 - `--o-field__inset` — inset for a form field's `<label>` + description, **default `var(--o-input-box__radius)`** (the control's straight edge — the v1 form look). On by default wherever a field sits, frame or box. `v-align-edge` sets it to `0`; `v-align-text` to `var(--v-control-inset)`.
 - `--o-prose__inset` — inset for an `o-prose` that is a **direct child of a container holding boxes** (`o-container:has(boxes) > o-prose`), so its running text lines up with the cards beside it. **Default `var(--v-pad-inline)`** (the cards' inner-text level); a **dialog** frame uses the lighter `var(--o-box__radius)` (straight edge). Only direct children inset — prose *inside* a box takes that box's perimeter padding and stays flush, so the inset never compounds with box padding. When the prose is the container's **first/last** child its block padding grows to match (`padding-block-start`/`-end` = the inset), so the corner stays uniform. Block-box children (code, blockquote) break out by `calc(-1 * var(--o-prose__inset))`. At a **full-bleed** breakpoint (the frame's boxes break out — §6.1) this drops to `0`, and because the block padding tracks it, that drops to `0` too (flush on both edges).
 
-The four `--v-pad-*` / `--v-gap-*` knobs are *frozen at root* once declared — changing `--v-spacing` in a sub-tree does NOT recompute them. To re-derive them at a scope, set all five together (Janus's internal `v-spacing` mixin does this in-house, §5.3; consumers set the bundle by hand or in their own variant class).
+The six `--v-pad-*` / `--v-gap-*` knobs are *frozen at root* once declared — changing `--v-spacing` in a sub-tree does NOT recompute them. To re-derive them at a scope, set the bundle together (`--v-spacing` plus the six derivatives; consumers set the bundle by hand or in their own variant class — §6.6).
 
 Font sizes (each a **step** on the scale — §5.4). Every token is its own `clamp()` between the viewport anchors; with the default collapsed size anchors each clamp resolves to a fixed size (it only *interpolates* once a consumer opts into fluid type). The per-role defaults below name the *step* the role occupies. Headings live above body, caption/code below:
 - `--v-font-size` — resolved base body size, **step 0**: `clamp(--v-font-size-min, slope·vw + intercept, --v-font-size-max)`. The value the page inherits and every `1em` resolves against. Derived, not hand-set — consumers move the `*-min` / `*-max` anchors instead.
@@ -173,12 +183,12 @@ The table below shows resolved values under the **default fixed config** (15px b
 
 Body text uses the primary `--v-line-height` (unitless `1.5`, inherits and recomputes naturally). The secondary line-height knobs are for elements that set their own font-size and need to re-declare line-height — headings in the base layer, `o-caption`, `o-code`, `o-menu-item`.
 
-**Text rhythm (derive from the *line*, not `--v-spacing`).** Vertical spacing *between* text elements scales with the line, so it stays proportional as the type scale moves — distinct from the spacing-derived `--v-gap-*` / `--v-pad-*` (§6.2). These knobs are consumed by the `o-prose` flow:
+**Text rhythm (derive from the *line*, not `--v-spacing`).** Vertical spacing *between* text elements scales with the line, so it stays proportional as the type scale moves — distinct from the spacing-derived `--v-gap-*` / `--v-pad-*` (§6.2). These knobs are consumed by the `o-prose` flow (defaults are the workbench values):
 
-- `--o-prose__gap` — the paragraph-to-paragraph gap; a multiple of the line (e.g. `calc(<n> * var(--v-line-height) * 1em)`). Also the default for `heading → following content`.
-- the **heading space-above** — the larger gap a heading owns before itself (the section break); also line-relative.
-- `--o-hgroup__leading` — the constant added to `1em` for additive leading inside an `<hgroup>` (§6.2).
-- `--v-list-rhythm` — a cascading switch for list-item spacing: a fraction of the prose gap ("grouped"), or `calc(var(--v-line-height) * 1em - 1cap)` ("continuous", so wrapped items share one baseline). Set once at a scope (e.g. an editor root) to flip every list.
+- `--o-prose__gap` — the paragraph-to-paragraph gap (default `calc(1 * var(--v-line-height) * 1em)` — one full line). Also the gap for `heading → following content`.
+- `--o-prose__heading-gap` — the larger gap a heading owns *above* itself (the section break; default `calc(1 * var(--v-line-height) * 1em)`, in the *heading's* em, so a bigger heading claims a bigger break). Distinct knobs even though the default multiples coincide — a consumer tightens paragraph rhythm without collapsing section breaks, or vice versa.
+- `--o-hgroup__leading` — the constant added to `1em` for additive leading inside an `<hgroup>` (default `calc(0.5 * var(--v-spacing))` — the same additive offset the heading line-heights use, §6.2).
+- `--v-list-rhythm` — a cascading switch for list-item spacing. Default **grouped**: `calc(0.5 * var(--o-prose__gap))` — items read as discrete points (marketing/docs). The alternative is **continuous**: `calc(var(--v-line-height) * 1em - 1cap)`, so wrapped items share one baseline and a list reads as a single passage (WYSIWYG/long-form). Set once at a scope (e.g. an editor root) to flip every list.
 
 **A modular scale under the hood, semantic names on the surface.** v1 shipped `--v-font-size-sm` / `-lg` / `-xl` / `-2xl`; v2 keeps the *mechanism* of a modular scale — now a **fluid** one (§5.4, Utopia-style) — but never exposes step indices as the public API. The internal steps (−2 … +3) exist only as the math that derives the tokens; the documented surface is semantic. Heading sizes are named by level, not by relative magnitude — a consumer who wants to restyle `h2` overrides `--v-font-size-h2` (or shifts the whole ramp by changing the two ratios) without wondering whether some `xl` step also affects something else. The two non-heading tokens (`caption`, `code`) name the *kind of content*, not a position on a scale. Objects that need their own text sizing (menus, list items) define it internally via `--o-*` knobs, not by reaching for a global step. This is the "mechanism + defaults; consumers name the contexts" principle (§1) applied to type: Janus owns the scale math, consumers tune anchors/ratios and name roles.
 
@@ -192,6 +202,10 @@ Color (derive from `--v-bg`):
   `(0.5 - l) * infinity` resolves to `+infinity` when the bg's lightness is below 0.5 (clamping the result's lightness to `1` → white) and `-infinity` when above (clamping to `0` → black). Works on any Baseline browser that supports `oklch(from …)` and `infinity`, no `@supports` branch. Consumers who want non-binary contrast (e.g. very-dark-gray instead of pure black) override `--v-fg` directly.
 - `--v-link-weight-min`, `--v-accent-weight-min`, `--v-muted-weight-min` — minimum `font-weight` to apply to text using each color. Lets hue-distinguished text (e.g. a desaturated link) safely sit alongside WCAG-compliant text by bumping weight when the color alone is borderline. **Default `500` for the shipped palette** (the bundled link/accent/muted colors need the bump); the *mechanism* falls back to `inherit` (no bump) when a consumer clears it.
 - `--v-border-dynamic-base` (default `light-dark(black, white)`), `--v-border-dynamic-mix` (default `light-dark(17.5%, 50%)`), and the resolved `--v-border-color: color-mix(in hsl, var(--v-border-dynamic-base) var(--v-border-dynamic-mix), var(--v-bg))` — one recipe places every border a fixed perceptual distance from any surface, so borders read correctly on tinted cards/alerts without hard-coding a gray.
+- `--v-border-color-strong` — the **control** border (default `color-mix(in hsl, var(--v-fg) 28%, var(--v-bg))`). A workbench finding: inputs and buttons need a visibly stronger border than cards — at card-weight the control's box edge (and the spacing around it) stops being legible and the control reads as borderless. Same fixed-perceptual-distance idea, mixed further toward the ink.
+- `--v-card-bg` — the raised-surface background cards and popovers sit on (default `light-dark(hsl(0deg 0% 100%), hsl(216deg 16% 12%))` — pure white over the warm off-white body in light mode; a step *lighter* than the body in dark mode). Consumed by `c-card`, `v-colors-popover`, and the modal body surface.
+- `--v-input-bg` — the control-well background (default `light-dark(hsl(0deg 0% 100%), hsl(216deg 16% 10%))` — in dark mode a step *darker* than the card, so inputs read as recessed wells while cards read as raised).
+- `--v-backdrop` — the modal/drawer backdrop tint (default `light-dark(hsl(216deg 16% 8% / 50%), hsl(216deg 16% 2% / 60%))`). A root knob because every overlay component shares it.
 - `--v-body-bg` — the body's painted background: two low-opacity radial gradients (warm + cool) over `var(--v-bg)` (§7.0), applied with `background-attachment: fixed`. Keeps pages from reading flat.
 - `--v-ring` (default `var(--v-accent)`, crisp outline) and `--v-ring-alt` (default `color-mix(in hsl, var(--v-accent) 35%, transparent)`, soft halo) — the two layers of the focus ring; `--v-shadow-focus: 0 0 0 0.125rem var(--v-ring-alt)` is the halo layer (§7 / states mixin).
 
@@ -208,12 +222,14 @@ Two rules:
 
 ```css
 :root {
-  --v-spacing:    1rem;
-  --v-pad-block:  var(--v-spacing);
-  --v-pad-inline: var(--v-spacing);
-  --v-gap-block:  var(--v-spacing);
-  --v-gap-inline: calc(var(--v-spacing) * 0.5);
-  --v-radius:     0.5rem;
+  --v-spacing:     1rem;
+  --v-pad-block:   calc(var(--v-spacing) * 1.25);
+  --v-pad-inline:  calc(var(--v-spacing) * 1.25);
+  --v-gap-block:   var(--v-spacing);
+  --v-gap-inline:  calc(var(--v-spacing) * 0.5);
+  --v-gap-section: calc(var(--v-spacing) * 1.5);
+  --v-gap-tight:   calc(var(--v-spacing) * 0.25);
+  --v-radius:      2.5rem;
   /* …rest of §5.1 */
 }
 
@@ -229,9 +245,9 @@ Two rules:
 
 **Derivation timing.** Custom properties resolve `var()` references at the element where the declaration sits, not where the value is read. So a `:root { --o-box__pad-block: var(--v-pad-block) }` declaration would freeze the pad-block default at root's value; scoping `--v-pad-block` in a sub-tree would leave the frozen default stuck. Janus avoids that by writing every `--o-*` default inside its own object's rule, where the derivation re-resolves at each matched element.
 
-**`--v-*` knobs are themselves frozen at the scope they're declared.** If a consumer scopes only `--v-spacing` in a sub-tree, the four derived `--v-pad-*` / `--v-gap-*` knobs (frozen at `:root`) do *not* recompute. To re-derive the bundle at a target scope a consumer sets the five knobs together (Janus's own CSS uses an internal `v-spacing` mixin for exactly this, §5.3 — but that mixin is an authoring convenience, not a consumer API).
+**`--v-*` knobs are themselves frozen at the scope they're declared.** If a consumer scopes only `--v-spacing` in a sub-tree, the six derived `--v-pad-*` / `--v-gap-*` knobs (frozen at `:root`) do *not* recompute. To re-derive the bundle at a target scope a consumer sets the seven knobs together (Janus's own CSS uses an internal `v-spacing` mixin for exactly this, §5.3 — but that mixin is an authoring convenience, not a consumer API).
 
-**No deeper nesting.** A nested `o-box` inside an `o-box` inherits the parent's `--o-box__radius` unchanged — it does NOT shrink further. If a design genuinely needs two distinct rounded-box levels, introduce a new object (e.g. `o-panel`) with its own knob. Inventing a name is cheaper than smuggling recursion into CSS variables.
+**One level of box nesting is supported — no unbounded recursion.** A CSS variable can't reference itself, so the cascade can't step a knob down through *arbitrary* depth. But one nested level needs no recursion — just a second knob name. Each `o-box` writes an **inner-box** knob (`--o-box__radius-inner`, one pad-step down from its own radius), and a box that finds itself inside another box reads that instead of `--o-box__radius` (§8.2 has the rules). Beyond one level the ladder runs out of names on purpose: a third-level box shares the second level's radius, its controls step one further, and everything floors at `--v-radius-min` — so deep nesting degrades to *imperfect concentric radii bottoming out at the floor*, which reads fine, rather than to an error. If a design genuinely needs a third *distinct* rounded level, introduce a new object (e.g. `o-panel`) with its own knob — inventing a name is still cheaper than smuggling recursion into CSS variables.
 
 ### 5.3 Composition mixins (internal to Janus)
 
@@ -249,28 +265,34 @@ None of those require touching a mixin. A consumer who wants a dense scope write
 ```css
 /* Consumer CSS — set the bundle directly; no Janus mixin needed. */
 .v-dense {
-  --v-spacing:    0.5rem;
-  --v-pad-block:  0.5rem;
-  --v-pad-inline: 0.5rem;
-  --v-gap-block:  0.5rem;
-  --v-gap-inline: 0.25rem;
+  --v-spacing:     0.5rem;
+  --v-pad-block:   calc(0.5rem * 1.25);
+  --v-pad-inline:  calc(0.5rem * 1.25);
+  --v-gap-block:   0.5rem;
+  --v-gap-inline:  calc(0.5rem * 0.5);
+  --v-gap-section: calc(0.5rem * 1.5);
+  --v-gap-tight:   calc(0.5rem * 0.25);
 }
 ```
 
-The reason the bundle must be set together is the freezing rule (§5.2): the four `--v-pad-*` / `--v-gap-*` knobs are frozen at `:root`, so changing `--v-spacing` alone won't recompute them. Internally Janus captures that exact bundle in a mixin:
+The reason the bundle must be set together is the freezing rule (§5.2): the six `--v-pad-*` / `--v-gap-*` knobs are frozen at `:root`, so changing `--v-spacing` alone won't recompute them. Internally Janus captures that exact bundle in a mixin:
 
 ```css
 /* Janus-internal — the authoring shorthand behind the bundle above. */
 @define-mixin v-spacing $size {
-  --v-spacing:    $size;
-  --v-pad-block:  $size;
-  --v-pad-inline: $size;
-  --v-gap-block:  $size;
-  --v-gap-inline: calc($size * 0.5);
+  --v-spacing:     $size;
+  --v-pad-block:   calc($size * 1.25);
+  --v-pad-inline:  calc($size * 1.25);
+  --v-gap-block:   $size;
+  --v-gap-inline:  calc($size * 0.5);
+  --v-gap-section: calc($size * 1.5);
+  --v-gap-tight:   calc($size * 0.25);
 }
 ```
 
 Mixins are implemented via PostCSS (`postcss-mixins`) — the same plugin the v1 codebase already runs. They expand at build time; the emitted CSS has no preprocessor footprint, so a consumer who forks the CSS package and *chooses* to reuse a mixin can — but the documented, portable path is the four mechanisms above. We don't document mixins as a customization surface, and the sync workflow (§3.2) never asks a consumer to call one.
+
+**And mixins never compose classes.** v1 leaned on mixins to make one class carry another's rules (`.c-card` effectively baked in its objects). v2 forbids that use entirely: multi-class composition happens **in markup** — the JSX component (or the consumer's own wrapper) renders the full class list (`class="c-card o-box"`, §4.1). A mixin bundles *knob values or a mechanical expansion*; it never stands in for putting the right classes on the element.
 
 The bar for an internal mixin is high: it must bundle a fixed set of knobs (or a fixed expansion) that *always* move together. The currently-shipped internal mixins are:
 

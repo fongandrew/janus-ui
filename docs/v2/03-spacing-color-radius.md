@@ -4,7 +4,7 @@ Part 3 of the [Janus v2 design spec](./README.md). Covers the three knob systems
 
 ## 6. Spacing & padding primitives
 
-Five root knobs cover the whole rhythm: `--v-spacing` (the scale lever) plus the four it derives — `--v-pad-block`, `--v-pad-inline`, `--v-gap-block`, `--v-gap-inline` (see §5.1).
+Seven root knobs cover the whole box rhythm: `--v-spacing` (the scale lever) plus the six it derives — `--v-pad-block` / `--v-pad-inline` (the **pad** scale, ×1.25), `--v-gap-block` (the base stack gap, ×1), `--v-gap-inline` (the **cluster** scale, ×0.5), `--v-gap-section` (the **section** scale, ×1.5), and `--v-gap-tight` (the **tight** scale, ×0.25) — see §5.1. Text rhythm is separate and multiplies the *line* instead (`--o-prose__gap`, `--o-prose__heading-gap`, `--v-list-rhythm` — §6.2). These named scales, with these multiples, are the ones tuned empirically in the [spacing workbench](./spacing-workbench.html); the workbench's slider defaults are the shipped defaults.
 
 Three padding modes, each implemented as `--o-*__pad-*` defaults set in the owning object's own rule (per §5.2). They re-resolve at each matched element using inherited `--v-pad-*` inputs.
 
@@ -23,6 +23,26 @@ Three padding modes, each implemented as `--o-*__pad-*` defaults set in the owni
 - A text element with **no padding of its own** that lives *inside* a continuous group is trimmed only by the group's perimeter rules, never element-by-element.
 
 So trim follows *edges and group boundaries*, not element types. (Inline text — links, `<code>`, `<span>` — is never trimmed; trimming an inline box plus `overflow` clipping cuts descenders. §15.)
+
+**Who applies the trim — `o-prose` and `o-stack`, via a selector list of known text elements.** Trim is not sprayed from `base.css` onto every element; it is applied by the two containers whose padding/gap math depends on it, and only to their *immediate text children*:
+
+```css
+/* the containers that own rhythm opt their text children into trim */
+:is(.o-prose, .o-stack) > :where(h1, h2, h3, h4, h5, h6, p, label, figcaption, dt, dd, blockquote),
+.o-prose > :where(ul, ol) > li {
+  text-box: trim-both cap alphabetic;
+}
+/* hgroup: outer edges only (§6.2) */
+:is(.o-prose, .o-stack) hgroup > :first-child { text-box: trim-start cap alphabetic; }
+:is(.o-prose, .o-stack) hgroup > :last-child  { text-box: trim-end   cap alphabetic; }
+```
+
+`o-prose` needs it so its line-based rhythm measures from cap/baseline. `o-stack` needs it for the *heading-in-a-card* case: a card is an `o-stack` of mixed children, and an untrimmed heading directly in that stack carries half-leading that makes the stack's uniform gap read uneven — trimming its text children makes gaps measure text-edge-to-text-edge.
+
+**Why a selector list and not `o-stack > *`: trim only works on some boxes.** `text-box` applies to block containers whose text lives in their own inline formatting context. It has **no effect** on flex/grid containers (their text is wrapped in anonymous boxes) — v1's buttons were `display: flex` and would silently ignore a blanket trim. Bulk-trimming every child therefore produces *inconsistent* results keyed to an invisible property (the child's display type), which is worse than not trimming. Two consequences:
+
+1. The trim selector names the elements that are reliably plain block text. Components (buttons, inputs, toggles) are deliberately **not** on the list.
+2. **Janus controls never depend on trim for their own vertical centering.** `o-input-box` centers one line inside `--v-input-height` with padding math (`calc((var(--v-input-height) − 1lh) / 2)`), which works identically with or without trim support and regardless of the control's display type. Trim is for *text meeting box edges*; control innards use height math. (This split also matters for tables — §10.1 `c-table`.)
 
 Layout gaps:
 
@@ -62,6 +82,8 @@ Each situation has its own default above; either can be moved across the three r
 
 **At full-bleed, the inset drops to flush.** When a frame is narrow enough that its boxes go full-bleed (the breakout below — they escape the frame's gutter, square off, lose their radius/border/shadow), there's no margin or corner left to align to, so `--o-prose__inset` goes to `0`. Because the first/last-child block padding *tracks* the inset, it drops to `0` too — the text sits flush on the inline **and** block edges, no lone top/bottom gap. The prose text still lines up with the now-edge-to-edge boxes' inner text (the frame's own gutter does the offsetting), and the prose's own block boxes bleed out the same way the cards do. One container query on the **frame's** width drives all of it, so the same rule serves the page (narrow viewport) and a dialog (narrow dialog) — see §9.3 / §10.
 
+**Full-bleed is a per-frame opt-in.** The mechanism ships always, but it fires only on frames carrying `data-v-bleed` (the CSS-only state-attribute convention, §4) — the workbench treats it as a mode, and blanket-breaking every card out of every narrow frame is too opinionated for a default. The breakpoint is a fixed length in the `@container` condition (`30rem`; container-query conditions can't read custom properties, so changing it is a consumer-CSS override, not a knob).
+
 Because each text element carries its own inset as positive padding keyed to a shared knob, **mixed content composes without the container knowing its contents**, and `--v-control-inset` / the radius knobs stay pure functions of shared knobs — no upward data flow.
 
 *(Edge case, not a rule: at pill radii a control's `--v-control-inset` can exceed `--v-pad-inline`, so the inner-text inset can't fully hold. Normal radii never reach this.)*
@@ -72,7 +94,18 @@ Because each text element carries its own inset as positive padding keyed to a s
 
 A box's block padding handles only its **perimeter** — first/last child to the box's top/bottom edge (uniform, per the `text-box-trim` note above). It does **not** carry the rhythm *between* siblings. Interior vertical rhythm comes from **flow**, and the rule for what that rhythm *is* follows.
 
-**One master lever, named multiples.** All of this rhythm derives from a single knob — `--v-spacing` — but *not* by multiplying everything uniformly. A documentation surface (running prose) and an app surface (cards of controls) want different rhythms, and one number applied everywhere serves neither well: the gap that reads right between paragraphs is wrong between toolbar buttons. So each context takes its own multiple of the master rather than the master itself. Box rhythm multiplies `--v-spacing` (`--v-pad-*`, `--v-gap-*`); **text rhythm multiplies the *line*** instead (`--o-prose__gap`, the heading space-above — below). The multiples are **baked into the derived tokens, not exposed as a separate ratio layer**: a consumer turns `--v-spacing` for global density (or overrides one derivative for one context) instead of tuning a wall of ratio knobs — the per-context proportions are already correct, which keeps the public surface small (§1). The decomposition is the point — a single uniformly-multiplied `--v-spacing` can't serve both surfaces; naming the multiples is what lets it.
+**One master lever, named multiples — each multiple a token.** All of this rhythm derives from a single knob — `--v-spacing` — but *not* by multiplying everything uniformly. A documentation surface (running prose) and an app surface (cards of controls) want different rhythms, and one number applied everywhere serves neither well: the gap that reads right between paragraphs is wrong between toolbar buttons. So each context takes its own **named multiple** of the master, and each named multiple ships as a derived token (§5.1). The workbench decomposed the rhythm into five scales, and they map to tokens one-for-one:
+
+| Workbench scale | What it spaces | Token | Default |
+|---|---|---|---|
+| ① **section** | between cards / page sections | `--v-gap-section` | `1.5 × --v-spacing` |
+| ② **pad** | a box's interior padding | `--v-pad-block` / `--v-pad-inline` | `1.25 × --v-spacing` |
+| ③ **prose** | paragraph → paragraph | `--o-prose__gap` | `1 × line` (*of the line, not spacing*) |
+| ④ **tight** | label → control in a field | `--v-gap-tight` | `0.25 × --v-spacing` |
+| ⑤ **cluster** | between toolbar buttons / tags | `--v-gap-inline` | `0.5 × --v-spacing` |
+| — base stack | between rows in a group | `--v-gap-block` | `1 × --v-spacing` |
+
+The multiples are **baked into the token defaults, not exposed as a separate ratio layer** (there is no `--rk-*` tier in shipped CSS — that layer exists only inside the workbench prototype so its sliders can explore the proportions): a consumer turns `--v-spacing` for global density, or overrides one derived token for one relationship, instead of tuning a wall of ratio knobs. The decomposition is the point — a single uniformly-multiplied `--v-spacing` can't serve both surfaces; naming the multiples is what lets it.
 
 **Every vertical gap is owned by the element underneath.** It's always a `margin-block-start` on the *lower* element, and its value depends on what sits **above** it — "the thing below owns the gap above it." For prose inside an `o-text-box` (or the `o-prose` flow object, §9.5), the boundaries resolve as:
 
@@ -81,9 +114,18 @@ A box's block padding handles only its **perimeter** — first/last child to the
 
 `:where()` selectors keep these flat-specificity so source order resolves overlaps; the lower element always carries the margin, so mixed content composes without the container knowing its contents.
 
-**The prose gap is a multiple of the *line*, not of `--v-spacing`.** Paragraph rhythm rides `line-height` (e.g. a fraction of `1lh`, or `prose-multiplier · line-height · 1em`) so it stays proportional as the type scale moves — distinct from the spacing-derived box/gap knobs. The separation is the point: **box rhythm scales with `--v-spacing`; text rhythm scales with the line.** (Lists are running text: inter-item spacing is a fraction of the prose gap when "grouped", or `line-height − 1cap` when "continuous" so wrapped items share one baseline — a cascading `--v-list-rhythm` switches between them per context, e.g. marketing vs. a WYSIWYG editor.)
+**The prose gap is a multiple of the *line*, not of `--v-spacing`.** Paragraph rhythm rides `line-height` (`--o-prose__gap`, default one full line — `calc(1 * var(--v-line-height) * 1em)`) so it stays proportional as the type scale moves — distinct from the spacing-derived box/gap knobs. The separation is the point: **box rhythm scales with `--v-spacing`; text rhythm scales with the line.** (Lists are running text: inter-item spacing is the cascading `--v-list-rhythm` — default *grouped*, `calc(0.5 * var(--o-prose__gap))`, items reading as discrete points; flip it to *continuous*, `calc(var(--v-line-height) * 1em − 1cap)`, at a scope like a WYSIWYG editor root so wrapped items share one baseline and read as a single passage.)
 
-**Section gaps read larger than item gaps.** The space *between* cards in a grid, or *between* page sections, wants to be a bigger step than the gap between items stacked inside one card — sections should breathe more than their contents. There is no separate global token for this: the section-level container bumps its **own** gap knob above the base — `--o-grid__gap-block` on the card grid, or `--o-stack__gap` on a section-level stack (empirically ~`calc(var(--v-spacing) * 1.5)` reads well) — while within-group stacks keep `--v-gap-block` at the base. Keeping it a *scoped* bump rather than a fourth global rhythm token is the same small-surface choice as above (§1): the grid and the section stack already expose the knob, so the larger section rhythm is a value a layout sets locally, not another root knob to learn.
+**Section gaps read larger than item gaps — `--v-gap-section`.** The space *between* cards in a grid, or *between* page sections, wants to be a bigger step than the gap between items stacked inside one card — sections should breathe more than their contents. This is a named token (`--v-gap-section`, default `calc(var(--v-spacing) * 1.5)`) because two shipped objects consume it as their default: `o-grid`'s gap and the **top-level section flow** below. Within-group stacks keep `--v-gap-block` at the base; a section-level `o-stack` sets `--o-stack__gap: var(--v-gap-section)`.
+
+**Gap values for common stack roles.** `o-stack` is one object; its roles differ only in which value its gap takes (§9.3):
+
+- section-level stack → `var(--v-gap-section)`
+- generic group (default) → `var(--v-gap-block)`
+- **inside a card** → `var(--v-pad-block)` — a card's internal rhythm defaults to its own padding, so the gaps between a card's children read the same as the card's perimeter (a workbench finding; `c-card` sets this for its direct stack)
+- form field (label → control → description) → `var(--v-gap-tight)`
+
+**Top-level flow: sections separated by the section gap, except when a heading leads.** The direct children of a frame's content container (`o-container`, §9.3) flow at `--v-gap-section` — margin-block-start on the lower element, same boundary-owned rule as prose. One exception, worked out in the workbench: a prose section that *leads with a heading* does not get the flat section gap — the heading's own **space-above** (`--o-prose__heading-gap`, in the heading's em) owns the lead-in instead, so the distance between the previous cards and that heading belongs to the *heading*, not to an anonymous gap. (Implementation: prose sections carry no padding/border, so the leading heading's margin collapses up into the container flow; the container zeroes its own gap for that boundary.)
 
 **Title + subtitle live in an `<hgroup>` with their own rhythm.** This is the one place text reads as a tight unit, and the trickiest, because the two lines are different sizes. Two things make it hold up under wrapping:
 
@@ -94,15 +136,17 @@ This matches how developers write markup — wrap a *group* and drop several ele
 
 ### 6.3 The spacing bundle includes border-width (but not radius)
 
-Janus's internal `v-spacing` mixin (§5.3 — an authoring tool, not a consumer API) bundles `--v-border-width` alongside the four pad/gap derivatives, because denser layouts want thinner borders, not just smaller padding. A consumer setting the bundle by hand sets `--v-border-width` in the same block:
+Janus's internal `v-spacing` mixin (§5.3 — an authoring tool, not a consumer API) bundles `--v-border-width` alongside the six pad/gap derivatives, because denser layouts want thinner borders, not just smaller padding. A consumer setting the bundle by hand sets `--v-border-width` in the same block:
 
 ```css
 @define-mixin v-spacing $size, $border-width: 1px {
   --v-spacing:      $size;
-  --v-pad-block:    $size;
-  --v-pad-inline:   $size;
+  --v-pad-block:    calc($size * 1.25);
+  --v-pad-inline:   calc($size * 1.25);
   --v-gap-block:    $size;
   --v-gap-inline:   calc($size * 0.5);
+  --v-gap-section:  calc($size * 1.5);
+  --v-gap-tight:    calc($size * 0.25);
   --v-border-width: $border-width;
 }
 ```
@@ -111,11 +155,11 @@ Janus's internal `v-spacing` mixin (§5.3 — an authoring tool, not a consumer 
 
 ### 6.4 Hi-DPI density bump
 
-A 2.5rem control on a desktop reads fine; on a phone, fingers want at least 2.75rem. The foundation layer ships a resolution-based density branch. The bump moves the size **anchors** (`--v-font-size-min` / `-max`) together — under the default fixed config they stay collapsed (both move to the same value, so text is still a fixed size, just a larger one); if a consumer has opted into fluid type, moving both anchors shifts the whole interpolation range. Either way the resolved `--v-font-size` and every step recompute automatically:
+A 2rem control on a desktop reads fine; on a phone, fingers want at least 2.75rem. The foundation layer ships a resolution-based density branch. The bump moves the size **anchors** (`--v-font-size-min` / `-max`) together — under the default fixed config they stay collapsed (both move to the same value, so text is still a fixed size, just a larger one); if a consumer has opted into fluid type, moving both anchors shifts the whole interpolation range. Either way the resolved `--v-font-size` and every step recompute automatically:
 
 ```css
 :root {
-  --v-input-height:  2.5rem;
+  --v-input-height:  2rem;
   --v-font-size-min: 0.9375rem;   /* default: anchors collapsed → fixed 15px */
   --v-font-size-max: 0.9375rem;
 }
@@ -135,11 +179,14 @@ This is not a breakpoint — it's a pixel-density gate. A phone with a 200dpi sc
 **No t-shirt size variants ship with Janus.** Consumers who want a tighter spacing for a specific context — a toolbar, a dense table, a nav bar — define their own semantic class via the supported customization paths (§5.3): variable overrides, a `v-` variant, or plain CSS — *not* a Janus mixin. Because `--v-pad-*` and `--v-gap-*` are frozen at root, set the bundle together:
 
 ```css
-/* Consumer CSS — set the knob bundle directly. */
-.v-dense { --v-spacing: 0.5rem; --v-pad-block: 0.5rem; --v-pad-inline: 0.5rem;
-           --v-gap-block: 0.5rem; --v-gap-inline: 0.25rem; }
-.v-nav   { --v-spacing: 0.5rem; --v-pad-block: 0.5rem; --v-pad-inline: 0.5rem;
-           --v-gap-block: 0.5rem; --v-gap-inline: 0.25rem; --v-input-height: 2rem; }
+/* Consumer CSS — set the knob bundle directly (all six derivatives move with
+   the master; a consumer may keep the shipped multiples or pick their own). */
+.v-dense { --v-spacing: 0.5rem; --v-pad-block: 0.625rem; --v-pad-inline: 0.625rem;
+           --v-gap-block: 0.5rem; --v-gap-inline: 0.25rem;
+           --v-gap-section: 0.75rem; --v-gap-tight: 0.125rem; }
+.v-nav   { --v-spacing: 0.5rem; --v-pad-block: 0.625rem; --v-pad-inline: 0.625rem;
+           --v-gap-block: 0.5rem; --v-gap-inline: 0.25rem;
+           --v-gap-section: 0.75rem; --v-gap-tight: 0.125rem; --v-input-height: 1.75rem; }
 .v-cta   { --v-input-height: 3rem; --v-radius: 9999px; }
 ```
 
@@ -157,15 +204,17 @@ When a consumer *does* want roomier gutters on wide screens, the same Utopia-sty
 /* Consumer CSS — fluid spacing between the §5.1 viewport anchors.
    slope/intercept computed exactly as in §5.4. */
 :root {
-  --v-spacing:    clamp(0.75rem, calc(0.6818rem + 0.34vw), 1rem);
-  --v-pad-block:  var(--v-spacing);
-  --v-pad-inline: var(--v-spacing);
-  --v-gap-block:  var(--v-spacing);
-  --v-gap-inline: calc(var(--v-spacing) * 0.5);
+  --v-spacing:     clamp(0.75rem, calc(0.6818rem + 0.34vw), 1rem);
+  --v-pad-block:   calc(var(--v-spacing) * 1.25);
+  --v-pad-inline:  calc(var(--v-spacing) * 1.25);
+  --v-gap-block:   var(--v-spacing);
+  --v-gap-inline:  calc(var(--v-spacing) * 0.5);
+  --v-gap-section: calc(var(--v-spacing) * 1.5);
+  --v-gap-tight:   calc(var(--v-spacing) * 0.25);
 }
 ```
 
-Because the four derivatives read `var(--v-spacing)` here, they track the fluid value. (This is one of the rare cases where the freezing rule helps you: deriving the bundle *from* a fluid `--v-spacing` in the same `:root` block makes the whole bundle fluid in lockstep.) The hi-DPI gate (§6.4) still composes — it can override the anchors of the clamp at high resolution. Janus's internal `v-fluid $min, $max` mixin (§5.3) is what generates these clamps in-house; consumers paste the computed `clamp()` or write their own.
+Because the six derivatives read `var(--v-spacing)` here, they track the fluid value. (This is one of the rare cases where the freezing rule helps you: deriving the bundle *from* a fluid `--v-spacing` in the same `:root` block makes the whole bundle fluid in lockstep.) The hi-DPI gate (§6.4) still composes — it can override the anchors of the clamp at high resolution. Janus's internal `v-fluid $min, $max` mixin (§5.3) is what generates these clamps in-house; consumers paste the computed `clamp()` or write their own.
 
 ### 6.6 Density scopes (the compactness convention)
 
@@ -178,26 +227,26 @@ A density scope sets some or all of three knob groups:
 3. **Legibility** — the type anchors, if this scope should also read smaller (a dense toolbar usually wants ~13px labels).
 
 ```css
-/* Consumer CSS. Three escalating levels of "dense". */
+/* Consumer CSS. Three escalating levels of "dense". (Bundles shown with the
+   shipped multiples; abbreviated — set all six derivatives in real code.) */
 
 /* Padding/gaps tighten; controls stay full-size and clickable. */
 .v-dense {
-  --v-spacing: 0.5rem; --v-pad-block: 0.5rem; --v-pad-inline: 0.5rem;
+  --v-spacing: 0.5rem; --v-pad-block: 0.625rem; --v-pad-inline: 0.625rem;
   --v-gap-block: 0.5rem; --v-gap-inline: 0.25rem;
+  --v-gap-section: 0.75rem; --v-gap-tight: 0.125rem;
 }
 
 /* Toolbar role: everything compact together — rhythm + control height + type. */
 .v-toolbar {
-  --v-spacing: 0.375rem; --v-pad-block: 0.375rem; --v-pad-inline: 0.375rem;
-  --v-gap-block: 0.375rem; --v-gap-inline: 0.1875rem;
-  --v-input-height: 2rem;
+  --v-spacing: 0.375rem; /* …bundle… */
+  --v-input-height: 1.75rem;
   --v-font-size-min: 0.8125rem; --v-font-size-max: 0.8125rem;  /* fixed, small */
 }
 
 /* Touch role: the inverse — roomier rhythm AND bigger targets together. */
 .v-touch {
-  --v-spacing: 1rem; --v-pad-block: 1rem; --v-pad-inline: 1rem;
-  --v-gap-block: 1rem; --v-gap-inline: 0.5rem;
+  --v-spacing: 1.25rem; /* …bundle… */
   --v-input-height: 2.75rem;
 }
 ```
@@ -254,8 +303,7 @@ Per-section variety (airy hero, dense footer) is a **scope** that re-declares th
   :root {
     --v-font-size-min: 1.0625rem; --v-font-size-max: 1.1875rem;  /* legible   */
     --v-input-height: 2.75rem;                                    /* touch     */
-    --v-spacing: 1rem; --v-pad-block: 1rem; --v-pad-inline: 1rem; /* roomy     */
-    --v-gap-block: 1rem; --v-gap-inline: 0.5rem;
+    --v-spacing: 1.25rem; /* …and the six-knob bundle, roomier…              */
   }
 }
 /* Mild viewport fluidity for body copy is fine on top of this; chrome density
@@ -289,6 +337,16 @@ The defaults matter — they set the visual tone for every consumer who doesn't 
 | `--v-bg` | `hsl(216deg 16% 8%)` | Deep blue-gray. NOT pure `#000`. |
 | `--v-fg` | (derived) | Resolves to warm off-white |
 | `--v-link` | `hsl(195deg 100% 50%)` or lighter variant | Same hue as light, adjusted for dark bg contrast |
+
+**Surface backgrounds (secondary knobs, workbench values).** Two more surfaces sit above/below the body and ship as root knobs (§5.1):
+
+| Knob | Default | Notes |
+|---|---|---|
+| `--v-card-bg` | `light-dark(hsl(0deg 0% 100%), hsl(216deg 16% 12%))` | Raised surface — cards, popovers, the modal body. Pure white pops against the warm off-white body in light mode; a step *lighter* than the body in dark mode. |
+| `--v-input-bg` | `light-dark(hsl(0deg 0% 100%), hsl(216deg 16% 10%))` | Control well. In dark mode a step *darker* than the card so inputs read recessed while cards read raised. |
+| `--v-backdrop` | `light-dark(hsl(216deg 16% 8% / 50%), hsl(216deg 16% 2% / 60%))` | Modal/drawer backdrop tint (pairs with the backdrop blur on `c-modal`). |
+
+**Control borders are stronger than card borders.** `--v-border-color` (the dynamic recipe below) is tuned for card seams; at that weight a control's border isn't legible and the control reads borderless — which breaks the spacing story, since the gaps around a control are measured to an edge you can't see. Controls use `--v-border-color-strong` (default `color-mix(in hsl, var(--v-fg) 28%, var(--v-bg))`) — same adapt-to-any-surface idea, mixed further toward the ink. *(workbench finding)*
 
 **Body background treatment.** Beyond the flat `--v-bg`, the `base.css` body rule should include subtle radial gradient overlays for visual depth (v1 pattern):
 
@@ -432,9 +490,18 @@ The cascade is **always on** — it's the radius system, not an opt-in class. It
   --o-box__radius:       max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad-inline)));
   --o-input-box__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad-inline)));
 }
-/* a box steps the control knob one pad deeper for *its* children */
+/* a box steps the control knob one pad deeper for *its* children, and also
+   publishes an inner-box knob for a box nested inside it */
 :where(.o-box, .o-text-box) {
   --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-box__radius) - var(--v-pad-inline)));
+  --o-box__radius-inner: max(var(--v-radius-min), calc(var(--o-box__radius) - var(--v-pad-inline)));
+}
+/* a box INSIDE a box reads the inner-box knob instead, and steps its own
+   controls one pad further. (Same zero specificity as the rule above —
+   source order makes this one win on the nested element.) */
+:where(.o-box, .o-text-box) :where(.o-box, .o-text-box) {
+  border-radius: var(--o-box__radius-inner, var(--v-radius-min));
+  --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-box__radius-inner) - var(--v-pad-inline)));
 }
 /* the dialog re-roots the cascade — everything inside derives from the dialog radius */
 .o-dialog {
@@ -447,11 +514,14 @@ Each object reads its own knob with a floor fallback (`.o-box { border-radius: v
 
 | Knob | Owned by | Value |
 |---|---|---|
-| `--v-radius` | (root) | The **max** — the assumed window/frame corner. The anchor. |
-| `--v-radius-min` | (root) | The **min** — the floor. Nothing rounds below it; deep elements bottom out here. |
+| `--v-radius` | (root) | The **max** — the assumed window/frame corner. The anchor. Default `2.5rem`. |
+| `--v-radius-min` | (root) | The **min** — the floor. Nothing rounds below it; deep elements bottom out here. Default `0.375rem`. |
 | `--o-dialog__radius` | `o-dialog` | `max(min, frame − dialog-inset)` |
 | `--o-box__radius` | `o-box` | `max(min, parent-radius − pad)` |
+| `--o-box__radius-inner` | written by each box, read by a box nested in it | `max(min, box-radius − pad)` — the **one supported nested-box step** (§5.2) |
 | `--o-input-box__radius` | `o-input-box` | `max(min, box-radius − pad)` — one step deeper than its box |
+
+**Nested boxes step once, then bottom out.** A box in a box rounds one pad-step less (via `--o-box__radius-inner`); a control inside *that* steps once more. A third-level box shares the second level's radius — the ladder deliberately stops inventing names — so very deep nesting converges on `--v-radius-min` with imperfect concentricity, which reads fine. This replaces the old "a nested box inherits its parent's radius unchanged" rule: the common card-holds-a-recessed-panel case now rounds correctly with zero configuration.
 
 ### 8.3 The dialog inset relationship
 
@@ -459,11 +529,11 @@ A modal floats `--o-dialog__offset` inside the viewport, so its corners only loo
 
 ### 8.4 Tuning the look — two values, no preset classes
 
-There are **no `v-radius-*` preset classes**. The cascade above *is* the system; the look is set entirely by the two root values, so "concentric / uniform / flat" are regions of one parameter space rather than separate modes:
+There are **no `v-radius-*` preset classes**. The cascade above *is* the system; the look is set entirely by the two root values, so "concentric / uniform / flat" are regions of one parameter space rather than separate modes (the workbench's radius "presets" are literally buttons that set these two sliders):
 
-- **Concentric** — a large `--v-radius` (window) over a small `--v-radius-min` (floor): each level rounds visibly less than its parent, corners staying parallel down to the floor.
-- **Flat** — `--v-radius-min == --v-radius`: the `max(min, …)` pins the whole cascade to that one value, so every corner is identical. (No separate `flat` class — just set the two equal.)
-- **Near-uniform / two-tier** — a small range, or a `--v-pad-inline` large relative to it: the deep levels (controls, boxes) bottom out at the floor while the shallow ones (dialog, window) stay near the max. The "two flat tiers" look falls out without a non-stepping mode.
+- **Concentric / stepped** — a large `--v-radius` over a small `--v-radius-min`: each level rounds visibly less than its parent, corners staying parallel down to the floor. **This is the shipped default** (`2.5rem` / `0.375rem`).
+- **Flat** — `--v-radius-min == --v-radius` (e.g. both `0.5rem`): the `max(min, …)` pins the whole cascade to that one value, so every corner is identical. (No separate `flat` class — just set the two equal.)
+- **Near-uniform / two-tier** — a small range (e.g. `0.5rem` / `0.25rem`), or a `--v-pad-inline` large relative to it: the deep levels (controls, boxes) bottom out at the floor while the shallow ones (dialog, window) stay near the max. The "two flat tiers" look falls out without a non-stepping mode.
 
 For a one-off corner, a consumer sets that object's `--o-*__radius` directly, or uses `t-radius-none` / `t-radius-full` (§8.6). Nothing about the system needs a class — only its two inputs change.
 
