@@ -3,6 +3,7 @@ import path from 'path';
 import solidPlugin from 'vite-plugin-solid';
 import { defineConfig } from 'vitest/config';
 
+import janusBundlePlugin from './plugins/vite-plugin-janus-bundle';
 import purgeCSSPlugin from './plugins/vite-plugin-purgecss';
 import viteSSGPlugin from './plugins/vite-plugin-ssg';
 
@@ -46,6 +47,9 @@ export default defineConfig(({ mode }) => {
 				],
 			}),
 			viteSSGPlugin(),
+			// SSR-driven handler purge (§12.4): emits a client entry importing only
+			// the handler modules referenced by data-js tokens in the SSR output.
+			janusBundlePlugin(),
 		],
 		resolve: {
 			alias: {

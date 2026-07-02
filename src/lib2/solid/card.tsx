@@ -11,14 +11,29 @@ import { Dynamic } from 'solid-js/web';
  * applies the right classes" (`Card` -> `c-card o-box`).
  */
 
+export type CardSurface = 'card' | 'elevated' | 'sunken' | 'glass' | 'gradient';
+
+const SURFACE_CLASS: Record<CardSurface, string> = {
+	card: 'v-surface-card',
+	elevated: 'v-surface-elevated',
+	sunken: 'v-surface-sunken',
+	glass: 'v-surface-glass',
+	gradient: 'v-surface-gradient',
+};
+
 export type CardProps = ComponentProps<'section'> & {
 	as?: 'article' | 'div' | 'section' | undefined;
+	surface?: CardSurface;
 };
 
 export function Card(props: CardProps) {
-	const [local, rest] = splitProps(props, ['as', 'class']);
+	const [local, rest] = splitProps(props, ['as', 'class', 'surface']);
 	return (
-		<Dynamic component={local.as ?? 'section'} {...rest} class={cx('c-card o-box', local.class)} />
+		<Dynamic
+			component={local.as ?? 'section'}
+			{...rest}
+			class={cx('c-card o-box', local.surface && SURFACE_CLASS[local.surface], local.class)}
+		/>
 	);
 }
 
