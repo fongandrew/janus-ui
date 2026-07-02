@@ -1,0 +1,16 @@
+/*
+ * c-avatar — square-mode identity mark (§10.1). Sizes scale off
+ * --v-input-height so a scoped control-height change resizes avatars too.
+ */
+@layer components {
+	.c-avatar {
+		background-color: color-mix(in hsl, var(--v-accent) 20%, var(--v-bg));
+		block-size: var(--v-input-height);
+		color: var(--v-fg);
+		font-weight: var(--v-font-weight-label);
+		inline-size: var(--v-input-height);
+		object-fit: cover;
+		user-select: none;
+		--v-font-weight: var(--v-font-weight-label);
+	}
+}

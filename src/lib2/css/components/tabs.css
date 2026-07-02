@@ -1,0 +1,66 @@
+/*
+ * c-tabs — tablist chrome (§10.2). The selected-tab indicator uses the
+ * dynamic-border color-mix recipe against --v-accent, so a tab strip inside
+ * a v-colors-* subtree self-themes (aesthetic spec §17). The indicator is
+ * an inset box-shadow, not a border, so neighboring tabs don't shift on
+ * selection.
+ */
+@layer components {
+	.c-tabs [role='tablist'] {
+		border-block-end: var(--v-border-width) solid var(--v-border-color);
+		display: flex;
+		gap: var(--v-gap-tight);
+	}
+
+	.c-tabs [role='tab'] {
+		background: none;
+		border: 0;
+		border-start-end-radius: var(--v-radius-min);
+		border-start-start-radius: var(--v-radius-min);
+		color: var(--v-muted);
+		cursor: pointer;
+		font-weight: var(--v-font-weight-label);
+		min-block-size: var(--v-input-height);
+		padding: calc((var(--v-input-height) - 1lh) / 2) var(--v-spacing);
+		transition:
+			color calc(var(--v-duration) * 0.5) var(--v-ease),
+			box-shadow calc(var(--v-duration) * 0.5) var(--v-ease),
+			filter calc(var(--v-duration) * 0.5) var(--v-ease);
+		--v-font-weight: var(--v-font-weight-label);
+	}
+
+	.c-tabs [role='tab']:hover:not([aria-disabled='true']) {
+		@mixin t-hover;
+
+		color: var(--v-fg);
+	}
+
+	.c-tabs [role='tab']:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-tabs [role='tab'][aria-selected='true'] {
+		box-shadow: inset 0 calc(-2 * var(--v-border-width)) 0 0
+			color-mix(
+				in hsl,
+				var(--v-border-dynamic-base) var(--v-border-dynamic-mix),
+				var(--v-accent)
+			);
+		color: var(--v-fg);
+		font-weight: var(--v-font-weight-subtitle);
+		--v-font-weight: var(--v-font-weight-subtitle);
+	}
+
+	.c-tabs [role='tab'][aria-disabled='true'] {
+		cursor: not-allowed;
+		opacity: 0.5;
+	}
+
+	.c-tabs [role='tabpanel'] {
+		padding-block-start: var(--v-gap-block);
+	}
+
+	.c-tabs [role='tabpanel'][hidden] {
+		display: none;
+	}
+}

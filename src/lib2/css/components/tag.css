@@ -1,0 +1,45 @@
+/*
+ * c-tag — interactive / removable text-mode label composing o-caption
+ * (§10.1). Tone via v-colors-*.
+ */
+@layer components {
+	.c-tag {
+		align-items: center;
+		background-color: color-mix(in hsl, var(--v-muted) 12%, var(--v-bg));
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: 999px;
+		color: var(--v-fg);
+		display: inline-flex;
+		gap: calc(0.5 * var(--v-gap-inline));
+		padding: 0.125em 0.75em;
+	}
+
+	.c-tag:is([class*='v-colors-']) {
+		background-color: var(--v-bg);
+		border-color: transparent;
+	}
+
+	.c-tag__remove {
+		align-items: center;
+		aspect-ratio: 1;
+		background: none;
+		border: 0;
+		border-radius: 50%;
+		cursor: pointer;
+		display: inline-flex;
+		justify-content: center;
+		inline-size: 1.25em;
+		margin-inline-end: -0.375em;
+		transition: filter calc(var(--v-duration) * 0.5) var(--v-ease);
+	}
+
+	.c-tag__remove:hover {
+		@mixin t-hover;
+
+		background-color: color-mix(in hsl, var(--v-fg) 12%, transparent);
+	}
+
+	.c-tag__remove:focus-visible {
+		@mixin t-focus-ring;
+	}
+}

@@ -1,0 +1,48 @@
+/*
+ * c-table — data-table chrome with control-height rows, decoupled from
+ * controls (§10.1). --c-table__row-height defaults to --v-input-height
+ * (v1 parity: table rows read like control rows) but is its own knob, so
+ * data tables densify independently.
+ *
+ * Cell metrics use the CONTROL recipe, not trim: block padding centers a
+ * single line by height math — identical behavior with or without
+ * text-box-trim support, so an inline-editable cell never misaligns
+ * against its input. Trim rides on top as an optical refinement only.
+ */
+@layer components {
+	.c-table {
+		--c-table__row-height: var(--v-input-height);
+
+		border-collapse: collapse;
+		inline-size: 100%;
+	}
+
+	.c-table :is(th, td) {
+		/* height acts as a MINIMUM in table layout: single-line rows sit at
+		   exactly the row height (with or without text-box-trim support —
+		   trim only refines the optical centering), multi-line content grows
+		   the row past it. */
+		block-size: var(--c-table__row-height);
+		padding-block: calc((var(--c-table__row-height) - 1lh) / 2);
+		padding-inline: var(--v-control-inset);
+		text-align: start;
+		text-box: trim-both cap alphabetic;
+		vertical-align: middle;
+	}
+
+	.c-table tbody tr {
+		border-block-start: var(--v-border-width) solid var(--v-border-color);
+	}
+
+	.c-table thead th {
+		border-block-end: var(--v-border-width) solid var(--v-border-color-strong);
+		font-weight: var(--v-font-weight-label);
+		--v-font-weight: var(--v-font-weight-label);
+	}
+
+	/* An inline-editable cell: the control centers by the same height math,
+	   so heights align. Zero the padding and let the control fill. */
+	.c-table td:has(> .o-input-box) {
+		padding-block: calc((var(--c-table__row-height) - var(--v-input-height)) / 2);
+	}
+}

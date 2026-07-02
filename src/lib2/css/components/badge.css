@@ -1,0 +1,34 @@
+/*
+ * c-badge — static count badges (text-mode, o-caption) and dot indicators
+ * (square-mode) (§10.1).
+ */
+@layer components {
+	.c-badge {
+		align-items: center;
+		background-color: var(--v-accent);
+		border-radius: 999px;
+		color: light-dark(hsl(30deg 100% 96%), hsl(216deg 16% 8%));
+		display: inline-flex;
+		font-variant-numeric: tabular-nums;
+		font-weight: var(--v-font-weight-label);
+		justify-content: center;
+		line-height: 1;
+		min-inline-size: 1.5em;
+		padding: 0.25em 0.5em;
+		--v-font-weight: var(--v-font-weight-label);
+	}
+
+	.c-badge:is([class*='v-colors-']) {
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	/* Dot mode: a pure presence indicator. */
+	.c-badge--dot {
+		block-size: 0.625rem;
+		border-radius: 50%;
+		inline-size: 0.625rem;
+		min-inline-size: 0;
+		padding: 0;
+	}
+}

@@ -1,0 +1,67 @@
+/*
+ * c-button — chrome on o-input-box (§10.1). Sizing/padding/radius come from
+ * the object; this layer owns hover lift, active press, focus ring, and the
+ * self-theming tone (composes v-colors-* by consuming the knobs).
+ */
+@layer components {
+	.c-button {
+		align-items: center;
+		background-color: var(--v-input-bg);
+		border-color: var(--v-border-color-strong);
+		border-style: solid;
+		color: var(--v-fg);
+		display: inline-flex;
+		font-weight: var(--v-font-weight-label);
+		gap: var(--v-gap-inline);
+		justify-content: center;
+		text-decoration: none;
+		user-select: none;
+		--v-font-weight: var(--v-font-weight-label);
+
+		/* Fast feedback — half the standard pace (aesthetic spec §06). */
+		transition:
+			color calc(var(--v-duration) * 0.5) var(--v-ease),
+			background-color calc(var(--v-duration) * 0.5) var(--v-ease),
+			border-color calc(var(--v-duration) * 0.5) var(--v-ease),
+			box-shadow calc(var(--v-duration) * 0.5) var(--v-ease),
+			filter calc(var(--v-duration) * 0.5) var(--v-ease);
+	}
+
+	/* A toned button paints the subtree palette on itself. */
+	.c-button:is([class*='v-colors-']) {
+		background-color: var(--v-bg);
+		border-color: transparent;
+	}
+
+	.c-button:is(:disabled, [aria-disabled='true']) {
+		cursor: not-allowed;
+		opacity: 0.65;
+	}
+
+	.c-button:hover:not(:disabled, [aria-disabled='true']) {
+		@mixin t-hover;
+
+		box-shadow: var(--v-shadow-outer);
+	}
+
+	/* Pressed: shadow gone — pushed into the page. */
+	.c-button:active:not(:disabled, [aria-disabled='true']) {
+		box-shadow: none;
+	}
+
+	.c-button:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	/* Square icon mode; a circular icon button is the frame-corner
+	   inhabitant (§8.5). */
+	.c-button--icon {
+		aspect-ratio: 1;
+		inline-size: var(--v-input-height);
+		padding: 0;
+	}
+
+	.c-button--icon.t-radius-full {
+		border-radius: 50%;
+	}
+}

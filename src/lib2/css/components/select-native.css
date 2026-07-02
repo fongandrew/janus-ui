@@ -1,0 +1,42 @@
+/*
+ * c-select-native — styled chrome around the native <select> (§10.1).
+ * The default for almost all dropdowns. Height = --v-input-height via
+ * o-input-box; adds the well treatment and a chevron affordance.
+ */
+@layer components {
+	.c-select-native {
+		appearance: none;
+		background-color: var(--v-input-bg);
+		background-image: linear-gradient(45deg, transparent 50%, var(--v-muted) 50%),
+			linear-gradient(135deg, var(--v-muted) 50%, transparent 50%);
+		background-position:
+			calc(100% - var(--v-control-inset) - 0.5em) 50%,
+			calc(100% - var(--v-control-inset) - 0.5em + 0.3em) 50%;
+		background-repeat: no-repeat;
+		background-size:
+			0.3em 0.3em,
+			0.3em 0.3em;
+		border-color: var(--v-border-color-strong);
+		border-style: solid;
+		box-shadow: var(--v-shadow-inner);
+		color: var(--v-fg);
+		cursor: pointer;
+		padding-inline-end: calc(var(--v-control-inset) + 1.25em);
+		transition:
+			border-color calc(var(--v-duration) * 0.5) var(--v-ease),
+			box-shadow calc(var(--v-duration) * 0.5) var(--v-ease);
+	}
+
+	.c-select-native:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-select-native:is(:user-invalid, [aria-invalid='true']) {
+		border-color: light-dark(hsl(0deg 89% 31%), hsl(30deg 100% 60%));
+	}
+
+	.c-select-native:is(:disabled, [aria-disabled='true']) {
+		cursor: not-allowed;
+		opacity: 0.65;
+	}
+}

@@ -1,0 +1,184 @@
+/*
+ * The tools layer (§11) — intentionally narrow. Every tool either zeros a
+ * knob-derived value or toggles a layout flag. No arbitrary scale utilities.
+ */
+@layer tools {
+	/* Padding zero-out */
+	.t-px-0 {
+		padding-inline: 0;
+	}
+
+	.t-py-0 {
+		padding-block: 0;
+	}
+
+	.t-p-0 {
+		padding: 0;
+	}
+
+	/* Padding shorthand — each applies --v-spacing */
+	.t-px {
+		padding-inline: var(--v-spacing);
+	}
+
+	.t-py {
+		padding-block: var(--v-spacing);
+	}
+
+	.t-p {
+		padding: var(--v-spacing);
+	}
+
+	/* Flex */
+	.t-flex {
+		display: flex;
+	}
+
+	.t-flex-fill {
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	.t-flex-auto {
+		flex: 0 1 auto;
+	}
+
+	.t-flex-none {
+		flex: none;
+	}
+
+	.t-flex-wrap {
+		flex-wrap: wrap;
+	}
+
+	/* Display */
+	.t-block {
+		display: block;
+	}
+
+	.t-inline {
+		display: inline;
+	}
+
+	.t-inline-block {
+		display: inline-block;
+	}
+
+	.t-hidden {
+		display: none;
+	}
+
+	.t-sr-only {
+		border: 0;
+		clip-path: inset(50%);
+		height: 1px;
+		margin: -1px;
+		overflow: hidden;
+		padding: 0;
+		position: absolute;
+		white-space: nowrap;
+		width: 1px;
+	}
+
+	/* Border toggles */
+	.t-border {
+		border: var(--v-border-width) solid var(--v-border-color);
+	}
+
+	.t-border-none {
+		border: 0;
+	}
+
+	.t-border-inner > * + * {
+		border-block-start: var(--v-border-width) solid var(--v-border-color);
+	}
+
+	/* Radius toggles — per-element override of the object's radius knob (§8) */
+	.t-radius-none {
+		--o-box__radius: 0px;
+		--o-input-box__radius: 0px;
+
+		border-radius: 0;
+	}
+
+	.t-radius-full {
+		--o-box__radius: 9999px;
+		--o-input-box__radius: 9999px;
+
+		border-radius: 9999px;
+	}
+
+	/* Shadow toggles — the split outer/inner knobs compose (§5.1, §11) */
+	.t-shadow {
+		box-shadow: var(--v-shadow-outer), var(--v-shadow-inner);
+	}
+
+	.t-shadow-outer {
+		box-shadow: var(--v-shadow-outer);
+	}
+
+	.t-shadow-inner {
+		box-shadow: var(--v-shadow-inner);
+	}
+
+	.t-shadow-none {
+		box-shadow: none;
+	}
+
+	/* Box alignment (flex/grid align-items) */
+	.t-align-start {
+		align-items: flex-start;
+	}
+
+	.t-align-center {
+		align-items: center;
+	}
+
+	.t-align-end {
+		align-items: flex-end;
+	}
+
+	/*
+	 * Text alignment — a SEPARATE trio from box alignment (§11): "where do
+	 * my flex children sit" vs "where do my inline boxes justify". One
+	 * element can legitimately carry one of each.
+	 */
+	.t-text-start {
+		text-align: start;
+	}
+
+	.t-text-center {
+		text-align: center;
+	}
+
+	.t-text-end {
+		text-align: end;
+	}
+
+	/* Grid span — a layout flag, not a numeric scale */
+	.t-col-span-full {
+		grid-column: 1 / -1;
+	}
+
+	/*
+	 * Truncation — the opt-in overflow recipe (§11.1). overflow-x: clip
+	 * (not hidden) so overflow-y stays visible and no scroll container
+	 * spawns; min-width: 0 so it shrinks inside flex/grid parents. Put it
+	 * on an INNER element and keep the focusable wrapper overflow-free so
+	 * focus rings never clip.
+	 */
+	.t-truncate {
+		min-width: 0;
+		overflow: clip visible;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	/* Multi-line clamp — a separate tool, different layout model (§11.1) */
+	.t-line-clamp {
+		display: -webkit-box;
+		overflow: clip;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: var(--t-line-clamp, 2);
+	}
+}

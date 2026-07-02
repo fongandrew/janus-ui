@@ -1,0 +1,28 @@
+/*
+ * c-spinner — square-mode CSS loading indicator (§10.1).
+ */
+@layer components {
+	.c-spinner {
+		animation: c-spinner__spin calc(var(--v-duration) * 4) linear infinite;
+		block-size: 1.25em;
+		border: 0.1875em solid color-mix(in hsl, var(--v-accent) 25%, transparent);
+		border-block-start-color: var(--v-accent);
+		border-radius: 50%;
+		display: inline-block;
+		inline-size: 1.25em;
+	}
+
+	/* Reduced motion zeros --v-duration; fall back to a slow visible spin
+	   rather than a frozen arc. */
+	@media (prefers-reduced-motion: reduce) {
+		.c-spinner {
+			animation-duration: 2s;
+		}
+	}
+
+	@keyframes c-spinner__spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+}

@@ -1,0 +1,30 @@
+/*
+ * c-alert — text-mode callout, toned via v-colors-* (§10.1). The tinted
+ * variants bump the weight stack automatically (variants/colors.css).
+ */
+@layer components {
+	.c-alert {
+		background-color: var(--v-bg);
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--o-box__radius, var(--v-radius-min));
+		color: var(--v-fg);
+		display: flex;
+		align-items: baseline;
+		gap: var(--v-gap-inline);
+		padding: var(--v-pad-block)
+			max(var(--v-pad-inline), var(--o-box__radius, var(--v-radius-min)));
+	}
+
+	/*
+	 * Empty collapse (aesthetic spec §19): error containers collapse to
+	 * zero height when they have nothing to say — no dead vertical bands.
+	 * data-t-empty is set by the DOM layer's t-empty handler.
+	 */
+	.c-error-message:empty {
+		display: none;
+	}
+
+	.c-alert:has(.c-alert__children[data-t-empty]) {
+		display: none;
+	}
+}

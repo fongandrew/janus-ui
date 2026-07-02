@@ -1,0 +1,42 @@
+/*
+ * v-bleed — the full-bleed opt-in (§6.1). One shared @container rule serves
+ * every frame (page o-container or o-dialog — they share the `frame`
+ * container name): when an opted-in frame is narrower than 30rem, the boxes
+ * inside it break out of the frame's gutter to span its edges, dropping
+ * radius / side borders / shadow, and the frame's prose realigns to flush.
+ *
+ * A MODE variant, not a knob setter — its rules target library classes in
+ * its subtree and it has no look of its own (§4). The breakpoint is a fixed
+ * length because @container conditions can't read custom properties;
+ * changing it is a consumer-CSS override.
+ */
+@layer variants {
+	@container frame (max-width: 30rem) {
+		/* Boxes break out of the frame's gutter and square off. */
+		:where(.v-bleed) :where(.o-box, .o-segmented, .c-card) {
+			border-inline: none;
+			border-radius: 0;
+			box-shadow: none;
+			margin-inline: calc(-1 * var(--o-container__gutter, 0px));
+		}
+
+		/* A grid's cells are boxes too — the grid itself breaks out and its
+		   cells stack edge-to-edge. */
+		:where(.v-bleed) :where(.o-grid) {
+			margin-inline: calc(-1 * var(--o-container__gutter, 0px));
+		}
+
+		:where(.v-bleed) :where(.o-grid) :where(.o-box, .c-card) {
+			border-inline: none;
+			border-radius: 0;
+			box-shadow: none;
+			margin-inline: 0;
+		}
+
+		/* Prose realigns to flush — and because the first/last-child block
+		   padding tracks the inset, it drops too (§6.1). */
+		:where(.v-bleed) :where(.o-prose) {
+			--o-prose__inset: 0px;
+		}
+	}
+}

@@ -1,0 +1,54 @@
+/*
+ * c-disclosure — styled native <details><summary> (§10.1).
+ */
+@layer components {
+	.c-disclosure {
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--o-box__radius, var(--v-radius-min));
+	}
+
+	.c-disclosure > summary {
+		align-items: center;
+		border-radius: inherit;
+		cursor: pointer;
+		display: flex;
+		font-weight: var(--v-font-weight-label);
+		gap: var(--v-gap-inline);
+		padding: var(--v-gap-tight) var(--v-pad-inline);
+		min-block-size: var(--v-input-height);
+		transition: background-color calc(var(--v-duration) * 0.5) var(--v-ease);
+		user-select: none;
+		--v-font-weight: var(--v-font-weight-label);
+	}
+
+	.c-disclosure > summary::before {
+		content: '▸';
+		display: inline-block;
+		transition: rotate var(--v-duration) var(--v-ease);
+	}
+
+	.c-disclosure[open] > summary::before {
+		rotate: 90deg;
+	}
+
+	.c-disclosure > summary::marker {
+		content: '';
+	}
+
+	.c-disclosure > summary:hover {
+		background-color: color-mix(in hsl, var(--v-fg) 5%, transparent);
+	}
+
+	.c-disclosure > summary:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-disclosure[open] > summary {
+		border-end-end-radius: 0;
+		border-end-start-radius: 0;
+	}
+
+	.c-disclosure__content {
+		padding: var(--v-pad-block) var(--v-pad-inline);
+	}
+}

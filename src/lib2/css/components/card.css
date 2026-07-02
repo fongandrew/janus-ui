@@ -1,0 +1,43 @@
+/*
+ * c-card — surface chrome on o-box (§10.1). Raised card-tone bg, dynamic
+ * border, resting shadow. Prose content goes in an o-prose child.
+ */
+@layer components {
+	.c-card {
+		background-color: var(--v-card-bg);
+		border-color: var(--v-border-color);
+		border-style: solid;
+		box-shadow: var(--v-shadow-outer);
+
+		/*
+		 * In-card rhythm defaults to the card's own padding: a direct-child
+		 * stack's gaps read the same as the card's perimeter (§6.2).
+		 */
+		--o-stack__gap: var(--v-pad-block);
+	}
+
+	/*
+	 * Context-aware chrome (aesthetic spec §15): cards in the reading flow
+	 * of a WIDE container lose their shadow; floating cards (inside a modal
+	 * or popover) always keep it. Container-query-driven, so it tracks the
+	 * card's own frame, not the viewport.
+	 */
+	@container frame (min-width: 48rem) {
+		:where(.o-container) .c-card {
+			box-shadow: none;
+		}
+	}
+
+	:is(:modal, :popover-open) .c-card {
+		box-shadow: var(--v-shadow-outer);
+	}
+
+	/*
+	 * Disabled-looking-but-clickable submit (aesthetic spec §18): the form
+	 * engine needs the click to dispatch focus to the first invalid field,
+	 * so pointer-events stays on.
+	 */
+	.c-card:has(:invalid, [aria-invalid='true']) [type='submit'] {
+		opacity: 0.5;
+	}
+}

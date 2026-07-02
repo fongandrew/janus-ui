@@ -1,0 +1,62 @@
+/*
+ * c-toggle — switch chrome on <input type="checkbox" role="switch">, pure
+ * CSS via :checked (§10.1). Track height derives from --v-input-height;
+ * embossed track, smooth thumb slide, accent when on.
+ */
+@layer components {
+	.c-toggle {
+		--_track-height: calc(var(--v-input-height) * 0.625);
+		--_thumb-size: calc(var(--_track-height) - 2 * var(--_thumb-inset));
+		--_thumb-inset: 0.125rem;
+
+		appearance: none;
+		background-color: color-mix(in hsl, var(--v-fg) 15%, var(--v-bg));
+		block-size: var(--_track-height);
+		border: var(--v-border-width) solid var(--v-border-color-strong);
+		border-radius: calc(var(--_track-height) / 2);
+		box-shadow: var(--v-shadow-inner);
+		cursor: pointer;
+		display: inline-block;
+		flex: none;
+		inline-size: calc(var(--_track-height) * 1.75);
+		position: relative;
+		transition: background-color var(--v-duration) var(--v-ease);
+		vertical-align: middle;
+	}
+
+	.c-toggle::before {
+		background-color: light-dark(hsl(0deg 0% 100%), hsl(30deg 12% 98.5%));
+		block-size: var(--_thumb-size);
+		border-radius: 50%;
+		box-shadow: var(--v-shadow-outer);
+		content: '';
+		inline-size: var(--_thumb-size);
+		inset-block-start: var(--_thumb-inset);
+		inset-inline-start: var(--_thumb-inset);
+		position: absolute;
+		transition: translate var(--v-duration) var(--v-ease);
+	}
+
+	.c-toggle:checked {
+		background-color: var(--v-accent);
+		border-color: var(--v-accent);
+		box-shadow: none;
+	}
+
+	.c-toggle:checked::before {
+		translate: calc(var(--_track-height) * 0.75) 0;
+	}
+
+	.c-toggle:hover:not(:disabled) {
+		@mixin t-hover;
+	}
+
+	.c-toggle:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-toggle:disabled {
+		cursor: not-allowed;
+		opacity: 0.65;
+	}
+}

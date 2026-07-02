@@ -1,0 +1,35 @@
+/*
+ * c-input — text-input chrome on o-input-box (§10.1). Recessed well:
+ * input-bg, strong border (controls need legible edges — §7.0), inner
+ * shadow. Focus dual-ring; invalid state paints the danger border.
+ */
+@layer components {
+	.c-input {
+		background-color: var(--v-input-bg);
+		border-color: var(--v-border-color-strong);
+		border-style: solid;
+		box-shadow: var(--v-shadow-inner);
+		color: var(--v-fg);
+		transition:
+			border-color calc(var(--v-duration) * 0.5) var(--v-ease),
+			box-shadow calc(var(--v-duration) * 0.5) var(--v-ease);
+	}
+
+	.c-input::placeholder {
+		color: var(--v-muted);
+	}
+
+	.c-input:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-input:is(:user-invalid, [aria-invalid='true']) {
+		border-color: light-dark(hsl(0deg 89% 31%), hsl(30deg 100% 60%));
+	}
+
+	.c-input:is(:disabled, [aria-disabled='true']) {
+		background-color: color-mix(in hsl, var(--v-input-bg) 60%, var(--v-bg));
+		cursor: not-allowed;
+		opacity: 0.65;
+	}
+}

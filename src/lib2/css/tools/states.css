@@ -1,0 +1,26 @@
+/*
+ * Core interaction-state mixins (Janus-internal — §5.3, aesthetic spec
+ * §06–07). Components consume these; they are not consumer API.
+ */
+
+/*
+ * t-hover: one filter that works on every button, link, badge, and tone —
+ * subtly darkens while making colors pop. No per-palette hover knobs.
+ * (v1's `will-change: filter` inside the hover rule is deliberately NOT
+ * ported: a hint applied once the element is already hovered is too late
+ * to do its job.)
+ */
+@define-mixin t-hover {
+	filter: contrast(0.95) saturate(1.15);
+}
+
+/*
+ * t-focus-ring: soft halo (--v-ring-alt via --v-shadow-focus) stacked under
+ * a crisp outline (--v-ring). Both are needed — an outline alone is
+ * invisible against busy layouts; a halo alone is fuzzy.
+ */
+@define-mixin t-focus-ring {
+	box-shadow: var(--v-shadow-focus);
+	outline: 0.125rem solid var(--v-ring);
+	outline-offset: 0.125rem;
+}

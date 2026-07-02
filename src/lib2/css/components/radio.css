@@ -1,0 +1,55 @@
+/*
+ * c-radio — custom-styled native <input type="radio"> (§10.1).
+ */
+@layer components {
+	.c-radio {
+		appearance: none;
+		background-color: var(--v-input-bg);
+		block-size: 1.125rem;
+		border: var(--v-border-width) solid var(--v-border-color-strong);
+		border-radius: 50%;
+		box-shadow: var(--v-shadow-inner);
+		cursor: pointer;
+		display: inline-grid;
+		flex: none;
+		inline-size: 1.125rem;
+		place-content: center;
+		transition:
+			background-color calc(var(--v-duration) * 0.5) var(--v-ease),
+			border-color calc(var(--v-duration) * 0.5) var(--v-ease);
+		vertical-align: text-bottom;
+	}
+
+	.c-radio::before {
+		background-color: light-dark(hsl(30deg 100% 96%), hsl(216deg 16% 8%));
+		block-size: 0.5rem;
+		border-radius: 50%;
+		content: '';
+		inline-size: 0.5rem;
+		transform: scale(0);
+		transition: transform calc(var(--v-duration) * 0.5) var(--v-ease);
+	}
+
+	.c-radio:checked {
+		background-color: var(--v-accent);
+		border-color: var(--v-accent);
+		box-shadow: none;
+	}
+
+	.c-radio:checked::before {
+		transform: scale(1);
+	}
+
+	.c-radio:hover:not(:disabled) {
+		@mixin t-hover;
+	}
+
+	.c-radio:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-radio:disabled {
+		cursor: not-allowed;
+		opacity: 0.65;
+	}
+}

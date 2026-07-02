@@ -1,0 +1,52 @@
+/*
+ * Inline text-inset model (§6.1). Because boxes don't nest, accompanying
+ * text meets a box in exactly two situations:
+ *
+ *   field:  a <label> + description above a control → the control's
+ *           straight edge (--o-field__inset, default the control radius)
+ *   prose:  a container's direct prose children beside its cards → the
+ *           cards' inner text (--o-prose__inset — lives with o-prose)
+ *
+ * v-align-edge / v-align-text move a subtree across the three reference
+ * points (edge / straight edge / inner text). Only the text moves — the
+ * box stays edge-anchored.
+ */
+@layer variants {
+	/*
+	 * A field is an o-stack holding a label + control (+ description). Its
+	 * label and description inset to the control's straight edge — the
+	 * v1 form look. Applied wherever a field sits, frame or box.
+	 */
+	:where(.o-stack:has(> .o-input-box, > .c-input, > .c-select-native))
+		> :where(label, .o-caption, p) {
+		--o-field__inset: var(--o-input-box__radius, var(--v-radius-min));
+
+		padding-inline: var(--o-field__inset);
+	}
+
+	/* v-align-edge: text sits flush on the box's outer edge. */
+	.v-align-edge
+		:where(.o-stack:has(> .o-input-box, > .c-input, > .c-select-native))
+		> :where(label, .o-caption, p) {
+		--o-field__inset: 0px;
+	}
+
+	.v-align-edge
+		:where(.o-container:has(> .o-box, > .o-grid, > .o-segmented, > .c-card))
+		> :where(.o-prose) {
+		--o-prose__inset: 0px;
+	}
+
+	/* v-align-text: text lands on the box's INNER text line. */
+	.v-align-text
+		:where(.o-stack:has(> .o-input-box, > .c-input, > .c-select-native))
+		> :where(label, .o-caption, p) {
+		--o-field__inset: var(--v-control-inset);
+	}
+
+	.v-align-text
+		:where(.o-container:has(> .o-box, > .o-grid, > .o-segmented, > .c-card))
+		> :where(.o-prose) {
+		--o-prose__inset: var(--v-pad-inline);
+	}
+}

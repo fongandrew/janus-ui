@@ -1,0 +1,70 @@
+/*
+ * c-menu — dropdown chrome on o-menu / o-menu-item (§10.2). Applies the
+ * popover surface role (matches card chrome).
+ *
+ * Item highlight is conditional on input mode (aesthetic spec §09): mouse
+ * users see hover highlights; keyboard users see active-descendant
+ * highlights — never both. body[data-v-kb-nav] is the presence flag set by
+ * t-kb-nav (Phase 5).
+ */
+@layer components {
+	.c-menu {
+		background-color: var(--v-card-bg, var(--v-bg));
+		border: var(--v-border-width) solid var(--v-border-color);
+		box-shadow:
+			0 4px 12px -2px rgb(0 0 0 / 15%),
+			0 2px 4px -2px rgb(0 0 0 / 10%);
+		color: var(--v-fg);
+		margin: 0;
+		min-inline-size: 12rem;
+		inset: auto;
+		position: fixed;
+		position-anchor: --menu-anchor;
+		position-area: block-end span-inline-end;
+		position-try-fallbacks: flip-block, flip-inline;
+		margin-block-start: var(--v-gap-tight);
+		opacity: 0;
+		transition:
+			opacity calc(var(--v-duration) * 0.5) var(--v-ease),
+			display calc(var(--v-duration) * 0.5) allow-discrete,
+			overlay calc(var(--v-duration) * 0.5) allow-discrete;
+	}
+
+	.c-menu:popover-open {
+		opacity: 1;
+
+		@starting-style {
+			opacity: 0;
+		}
+	}
+
+	.c-menu .o-menu-item {
+		background: none;
+		border: 0;
+		cursor: pointer;
+	}
+
+	.c-menu .o-menu-item:focus-visible {
+		@mixin t-focus-ring;
+
+		outline-offset: -0.125rem;
+	}
+
+	/* Mouse mode: hover highlights. */
+	body:not([data-v-kb-nav]) .c-menu .o-menu-item:hover {
+		background-color: hsl(195deg 100% 20%);
+		color: hsl(30deg 100% 96%);
+	}
+
+	/* Keyboard mode: active-descendant highlights. */
+	body[data-v-kb-nav] .c-menu .o-menu-item[data-active] {
+		background-color: hsl(195deg 100% 20%);
+		color: hsl(30deg 100% 96%);
+	}
+
+	.c-menu hr {
+		border: 0;
+		border-block-start: var(--v-border-width) solid var(--v-border-color);
+		margin-block: var(--o-menu__pad-block);
+	}
+}

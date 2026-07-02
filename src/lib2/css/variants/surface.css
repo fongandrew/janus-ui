@@ -1,0 +1,46 @@
+/*
+ * v-surface-* — chrome treatment: elevation, border, blur — NOT color (§7).
+ * Composes with v-colors-* ("v-colors- = what color, v-surface- = how
+ * raised"). This closes the v1 gap where consumers hand-rolled gradients.
+ */
+@layer variants {
+	.v-surface-card {
+		background-color: var(--v-card-bg);
+		border: var(--v-border-width) solid var(--v-border-color);
+		box-shadow: var(--v-shadow-outer);
+	}
+
+	.v-surface-elevated {
+		background-color: var(--v-card-bg);
+		border: var(--v-border-width) solid transparent;
+		box-shadow:
+			0 4px 12px -2px rgb(0 0 0 / 15%),
+			0 2px 4px -2px rgb(0 0 0 / 10%);
+	}
+
+	.v-surface-sunken {
+		background-color: color-mix(in hsl, var(--v-fg) 4%, var(--v-bg));
+		border: var(--v-border-width) solid transparent;
+		box-shadow: var(--v-shadow-inner);
+	}
+
+	.v-surface-glass {
+		backdrop-filter: blur(12px);
+		background-color: color-mix(in hsl, var(--v-card-bg) 60%, transparent);
+		border: var(--v-border-width) solid
+			color-mix(in hsl, var(--v-border-color) 60%, transparent);
+		box-shadow: var(--v-shadow-outer);
+	}
+
+	.v-surface-gradient {
+		--v-surface-gradient__angle: to bottom right;
+
+		background: linear-gradient(
+			var(--v-surface-gradient__angle),
+			color-mix(in hsl, var(--v-accent) 12%, var(--v-bg)),
+			color-mix(in hsl, var(--v-accent) 2%, var(--v-bg))
+		);
+		border: var(--v-border-width) solid var(--v-border-color);
+		box-shadow: var(--v-shadow-outer);
+	}
+}

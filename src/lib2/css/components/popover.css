@@ -1,0 +1,38 @@
+/*
+ * c-popover — anchor-positioned [popover] (§10.2). Matches surrounding
+ * chrome (the popover surface role). Anchor positioning is Chromium-leading
+ * (§15); elsewhere the popover renders untracked.
+ */
+@layer components {
+	.c-popover {
+		background-color: var(--v-card-bg, var(--v-bg));
+		border: var(--v-border-width) solid var(--v-border-color);
+		border-radius: var(--o-box__radius, var(--v-radius-min));
+		box-shadow:
+			0 4px 12px -2px rgb(0 0 0 / 15%),
+			0 2px 4px -2px rgb(0 0 0 / 10%);
+		color: var(--v-fg);
+		margin: 0;
+		padding: var(--v-pad-block)
+			max(var(--v-pad-inline), var(--o-box__radius, var(--v-radius-min)));
+		inset: auto;
+		position: fixed;
+		position-anchor: --popover-anchor;
+		position-area: block-end span-inline-end;
+		position-try-fallbacks: flip-block, flip-inline;
+		margin-block-start: var(--v-gap-tight);
+		opacity: 0;
+		transition:
+			opacity calc(var(--v-duration) * 0.5) var(--v-ease),
+			display calc(var(--v-duration) * 0.5) allow-discrete,
+			overlay calc(var(--v-duration) * 0.5) allow-discrete;
+	}
+
+	.c-popover:popover-open {
+		opacity: 1;
+
+		@starting-style {
+			opacity: 0;
+		}
+	}
+}

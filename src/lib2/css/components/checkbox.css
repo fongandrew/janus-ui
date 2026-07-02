@@ -1,0 +1,62 @@
+/*
+ * c-checkbox — custom-styled native <input type="checkbox"> (§10.1).
+ * NOT an o-input-box — it has its own dimensions.
+ */
+@layer components {
+	.c-checkbox {
+		appearance: none;
+		background-color: var(--v-input-bg);
+		block-size: 1.125rem;
+		border: var(--v-border-width) solid var(--v-border-color-strong);
+		border-radius: max(calc(var(--v-radius-min) * 0.6), 2px);
+		box-shadow: var(--v-shadow-inner);
+		cursor: pointer;
+		display: inline-grid;
+		flex: none;
+		inline-size: 1.125rem;
+		place-content: center;
+		transition:
+			background-color calc(var(--v-duration) * 0.5) var(--v-ease),
+			border-color calc(var(--v-duration) * 0.5) var(--v-ease);
+		vertical-align: text-bottom;
+	}
+
+	.c-checkbox::before {
+		background-color: light-dark(hsl(30deg 100% 96%), hsl(216deg 16% 8%));
+		block-size: 0.875rem;
+		clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+		content: '';
+		inline-size: 0.875rem;
+		transform: scale(0);
+		transition: transform calc(var(--v-duration) * 0.5) var(--v-ease);
+	}
+
+	.c-checkbox:checked,
+	.c-checkbox:indeterminate {
+		background-color: var(--v-accent);
+		border-color: var(--v-accent);
+		box-shadow: none;
+	}
+
+	.c-checkbox:checked::before {
+		transform: scale(1);
+	}
+
+	.c-checkbox:indeterminate::before {
+		clip-path: inset(40% 10% 40% 10%);
+		transform: scale(1);
+	}
+
+	.c-checkbox:hover:not(:disabled) {
+		@mixin t-hover;
+	}
+
+	.c-checkbox:focus-visible {
+		@mixin t-focus-ring;
+	}
+
+	.c-checkbox:disabled {
+		cursor: not-allowed;
+		opacity: 0.65;
+	}
+}

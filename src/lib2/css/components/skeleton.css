@@ -1,0 +1,32 @@
+/*
+ * c-skeleton — loading placeholder with a soft shimmer (§10.1).
+ */
+@layer components {
+	.c-skeleton {
+		animation: c-skeleton__pulse calc(var(--v-duration) * 6) var(--v-ease) infinite alternate;
+		background-color: color-mix(in hsl, var(--v-fg) 8%, var(--v-bg));
+		block-size: 1em;
+		border-radius: var(--v-radius-min);
+		display: block;
+	}
+
+	.c-skeleton--circle {
+		border-radius: 50%;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.c-skeleton {
+			animation: none;
+		}
+	}
+
+	@keyframes c-skeleton__pulse {
+		from {
+			opacity: 1;
+		}
+
+		to {
+			opacity: 0.45;
+		}
+	}
+}

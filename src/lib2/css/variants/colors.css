@@ -1,0 +1,156 @@
+/*
+ * v-colors-* — tonal and surface-role variants (§7). Each re-sets the five
+ * root color knobs together for its subtree; components underneath consume
+ * the knobs and self-theme. Values carry v1's palette.
+ *
+ * Tinted-surface variants (callout, warn, info) also bump the whole
+ * font-weight stack ~100 — body-weight text loses contrast against a
+ * mid-tone surface (aesthetic spec §05).
+ */
+@layer variants {
+	/* ===== Tonal variants ===== */
+
+	.v-colors-primary {
+		--v-bg: hsl(195deg 100% 20%);
+		--v-fg: hsl(30deg 100% 96%);
+		--v-link: hsl(183deg 25% 85%);
+		--v-accent: hsl(183deg 25% 85%);
+		--v-muted: hsl(183deg 15% 80%);
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	.v-colors-danger {
+		--v-bg: light-dark(hsl(0deg 89% 31%), hsl(30deg 100% 8%));
+		--v-fg: light-dark(hsl(0deg 0% 98%), hsl(30deg 100% 85%));
+		--v-link: light-dark(hsl(0deg 89% 93%), hsl(30deg 100% 85%));
+		--v-accent: light-dark(hsl(0deg 89% 93%), hsl(30deg 100% 85%));
+		--v-muted: light-dark(hsl(0deg 89% 93%), hsl(30deg 25% 85%));
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	.v-colors-success {
+		--v-bg: light-dark(hsl(158deg 77% 15%), hsl(158deg 77% 8%));
+		--v-fg: light-dark(hsl(30deg 100% 96%), hsl(30deg 12% 98.5%));
+		--v-link: light-dark(hsl(158deg 77% 90%), hsl(158deg 30% 86.5%));
+		--v-accent: light-dark(hsl(158deg 77% 90%), hsl(158deg 30% 86.5%));
+		--v-muted: light-dark(hsl(158deg 40% 85%), hsl(158deg 10% 80%));
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	.v-colors-warn {
+		--v-bg: light-dark(hsl(50deg 77% 86%), hsl(50deg 100% 10%));
+		--v-fg: light-dark(hsl(216deg 16% 8%), hsl(30deg 12% 98.5%));
+		--v-link: light-dark(hsl(50deg 77% 15%), hsl(50deg 60% 80%));
+		--v-accent: light-dark(hsl(50deg 77% 21.5%), hsl(50deg 100% 50%));
+		--v-muted: light-dark(hsl(50deg 77% 21.5%), hsl(50deg 15% 80%));
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	.v-colors-info {
+		--v-bg: light-dark(hsl(195deg 80% 90%), hsl(195deg 80% 12%));
+		--v-fg: light-dark(hsl(216deg 16% 8%), hsl(30deg 12% 98.5%));
+		--v-link: light-dark(hsl(195deg 100% 18%), hsl(195deg 60% 80%));
+		--v-accent: light-dark(hsl(195deg 100% 20%), hsl(195deg 60% 75%));
+		--v-muted: light-dark(hsl(195deg 50% 25%), hsl(195deg 15% 80%));
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	.v-colors-secondary {
+		--v-bg: light-dark(hsl(30deg 8% 93%), hsl(216deg 16% 18%));
+		--v-fg: light-dark(hsl(0deg 0% 3%), hsl(30deg 100% 96%));
+		--v-link: light-dark(hsl(195deg 100% 20%), hsl(183deg 25% 85%));
+		--v-accent: light-dark(hsl(195deg 100% 20%), hsl(183deg 25% 85%));
+		--v-muted: light-dark(hsl(30deg 7% 31%), hsl(0deg 0% 86.5%));
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	/* ===== Surface-role variants (aesthetic spec §03–05) ===== */
+
+	/* Tooltips float ABOVE the page — always inverted vs. the scheme. */
+	.v-colors-tooltip {
+		--v-bg: light-dark(hsl(219deg 25% 10%), hsl(0deg 0% 98%));
+		--v-fg: light-dark(hsl(0deg 0% 98%), hsl(219deg 25% 10%));
+		--v-link: light-dark(hsl(183deg 25% 85%), hsl(195deg 100% 20%));
+		--v-accent: light-dark(hsl(183deg 25% 85%), hsl(195deg 100% 20%));
+		--v-muted: light-dark(hsl(30deg 7% 82.5%), hsl(30deg 7% 31%));
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	/* Popovers REPLACE UI — they match card/surrounding chrome. */
+	.v-colors-popover {
+		--v-bg: var(--v-card-bg, var(--v-bg));
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	/* Inline code: tinted paper. */
+	.v-colors-code {
+		--v-bg: color-mix(in hsl, var(--v-muted) 8%, var(--v-bg));
+
+		background-color: var(--v-bg);
+	}
+
+	/* Code blocks: terminal context — always dark, even in light mode. */
+	.v-colors-pre {
+		--v-bg: hsl(219deg 25% 10%);
+		--v-fg: hsl(30deg 100% 96%);
+		--v-muted: hsl(30deg 7% 82.5%);
+		--v-link: hsl(183deg 25% 85%);
+		--v-accent: hsl(183deg 25% 85%);
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	/* Callout: tinted bg + auto weight bump. */
+	.v-colors-callout {
+		--v-bg: light-dark(hsl(30deg 12% 92.5%), hsl(216deg 16% 18%));
+		--v-fg: light-dark(hsl(216deg 16% 8%), hsl(30deg 100% 96%));
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	/* Active-descendant / selected-item highlight (keyboard nav). */
+	.v-colors-highlight {
+		--v-bg: light-dark(hsl(195deg 100% 20%), hsl(195deg 100% 20%));
+		--v-fg: hsl(30deg 100% 96%);
+		--v-link: hsl(183deg 25% 86%);
+		--v-accent: hsl(183deg 25% 86%);
+		--v-muted: hsl(183deg 25% 86%);
+
+		background-color: var(--v-bg);
+		color: var(--v-fg);
+	}
+
+	/*
+	 * Tinted-surface weight bump: the whole stack shifts up ~100, and the
+	 * tracked --v-font-weight moves with the applied weight (§5.1).
+	 */
+	.v-colors-callout,
+	.v-colors-warn,
+	.v-colors-info {
+		--v-font-weight-normal: 500;
+		--v-font-weight-label: 600;
+		--v-font-weight-subtitle: 700;
+		--v-font-weight-strong: 800;
+		--v-font-weight: 500;
+
+		font-weight: var(--v-font-weight-normal);
+	}
+}

@@ -1,0 +1,56 @@
+/*
+ * c-styled-select — the one composite component (§10.3): a custom button +
+ * listbox in a [popover], for options that need RENDERED content (font
+ * previews, swatches). Never for plain text options — use c-select-native.
+ */
+@layer components {
+	.c-styled-select {
+		position: relative;
+	}
+
+	.c-styled-select__button {
+		justify-content: space-between;
+		min-inline-size: 12rem;
+		text-align: start;
+	}
+
+	.c-styled-select__button::after {
+		content: '';
+		border-block-start: 0.3em solid var(--v-muted);
+		border-inline: 0.3em solid transparent;
+		margin-inline-start: var(--v-gap-inline);
+	}
+
+	.c-styled-select__listbox {
+		background-color: var(--v-card-bg, var(--v-bg));
+		border: var(--v-border-width) solid var(--v-border-color);
+		box-shadow:
+			0 4px 12px -2px rgb(0 0 0 / 15%),
+			0 2px 4px -2px rgb(0 0 0 / 10%);
+		margin: 0;
+		min-inline-size: anchor-size(width);
+		inset: auto;
+		position: fixed;
+		position-anchor: --select-anchor;
+		position-area: block-end span-inline-end;
+		position-try-fallbacks: flip-block;
+		margin-block-start: var(--v-gap-tight);
+	}
+
+	.c-styled-select [role='option'] {
+		background: none;
+		border: 0;
+		cursor: pointer;
+	}
+
+	.c-styled-select [role='option'][aria-selected='true'] {
+		font-weight: var(--v-font-weight-subtitle);
+		--v-font-weight: var(--v-font-weight-subtitle);
+	}
+
+	body:not([data-v-kb-nav]) .c-styled-select [role='option']:hover,
+	body[data-v-kb-nav] .c-styled-select [role='option'][data-active] {
+		background-color: hsl(195deg 100% 20%);
+		color: hsl(30deg 100% 96%);
+	}
+}

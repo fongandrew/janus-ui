@@ -1,0 +1,111 @@
+/*
+ * c-drawer — edge-anchored <dialog> composing o-dialog's chrome with slide
+ * positioning (§10.2). Side variants set the anchor edge and slide
+ * direction; --c-drawer__side mirrors the modifier for the rare inline-
+ * style case (a --c-* knob: there is no o-drawer object behind it).
+ */
+@layer components {
+	.c-drawer {
+		--c-drawer__size: 20rem;
+
+		background-color: var(--v-card-bg);
+		display: none;
+		margin: 0;
+		padding: var(--v-pad-block) max(var(--v-pad-inline), var(--_dialog-radius));
+
+		/* Drawers are frames too — the same v-bleed machinery applies. */
+		container-name: frame;
+		container-type: inline-size;
+		opacity: 0;
+		transition:
+			opacity var(--v-duration) var(--v-ease),
+			translate var(--v-duration) var(--v-ease),
+			display var(--v-duration) allow-discrete,
+			overlay var(--v-duration) allow-discrete;
+	}
+
+	.c-drawer[open] {
+		display: flex;
+		flex-direction: column;
+		opacity: 1;
+		translate: 0 0;
+
+		@starting-style {
+			opacity: 0;
+		}
+	}
+
+	.c-drawer::backdrop {
+		backdrop-filter: blur(4px);
+		background: var(--v-backdrop);
+	}
+
+	.c-drawer--left,
+	.c-drawer--right {
+		block-size: calc(100dvh - 2 * var(--o-dialog__offset));
+		inline-size: min(var(--c-drawer__size), calc(100vw - 4 * var(--o-dialog__offset)));
+		margin-block: var(--o-dialog__offset);
+		max-block-size: none;
+	}
+
+	.c-drawer--left {
+		--c-drawer__side: left;
+
+		margin-inline: var(--o-dialog__offset) auto;
+		translate: -1rem 0;
+	}
+
+	.c-drawer--right {
+		--c-drawer__side: right;
+
+		margin-inline: auto var(--o-dialog__offset);
+		translate: 1rem 0;
+	}
+
+	.c-drawer--top,
+	.c-drawer--bottom {
+		block-size: auto;
+		inline-size: calc(100vw - 2 * var(--o-dialog__offset));
+		margin-inline: var(--o-dialog__offset);
+		max-block-size: min(24rem, calc(100dvh - 4 * var(--o-dialog__offset)));
+		max-inline-size: none;
+	}
+
+	.c-drawer--top {
+		--c-drawer__side: top;
+
+		margin-block: var(--o-dialog__offset) auto;
+		translate: 0 -1rem;
+	}
+
+	.c-drawer--bottom {
+		--c-drawer__side: bottom;
+
+		margin-block: auto var(--o-dialog__offset);
+		translate: 0 1rem;
+	}
+
+	.c-drawer--left[open] {
+		@starting-style {
+			translate: -1rem 0;
+		}
+	}
+
+	.c-drawer--right[open] {
+		@starting-style {
+			translate: 1rem 0;
+		}
+	}
+
+	.c-drawer--top[open] {
+		@starting-style {
+			translate: 0 -1rem;
+		}
+	}
+
+	.c-drawer--bottom[open] {
+		@starting-style {
+			translate: 0 1rem;
+		}
+	}
+}

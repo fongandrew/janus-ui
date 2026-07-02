@@ -1,0 +1,33 @@
+/*
+ * c-tooltip — anchored [popover], no JS (§10.1). Composes o-caption for
+ * small text; applies the tooltip surface role (always inverted). Anchor
+ * positioning is Chromium-leading (§15) — elsewhere the popover still
+ * renders, just untracked.
+ */
+@layer components {
+	.c-tooltip {
+		background-color: light-dark(hsl(219deg 25% 10%), hsl(0deg 0% 98%));
+		border: 0;
+		border-radius: var(--v-radius-min);
+		box-shadow: var(--v-shadow-outer);
+		color: light-dark(hsl(0deg 0% 98%), hsl(219deg 25% 10%));
+		font-size: var(--v-font-size-caption);
+		line-height: var(--v-line-height-caption);
+		margin: 0;
+		max-inline-size: 15rem;
+		padding: calc(0.5 * var(--v-gap-tight)) var(--v-gap-inline);
+		pointer-events: none;
+
+		/* Anchor positioning: the trigger sets anchor-name; we track it. */
+		inset: auto;
+		position: fixed;
+		position-anchor: --tooltip-anchor;
+		position-area: block-start;
+		position-try-fallbacks: flip-block, flip-inline;
+		margin-block-end: var(--v-gap-tight);
+	}
+
+	.c-tooltip:popover-open {
+		display: block;
+	}
+}

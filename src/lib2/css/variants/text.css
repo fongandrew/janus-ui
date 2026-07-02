@@ -1,0 +1,21 @@
+/*
+ * Text-role variants (§ Phase 3a) — sparingly. Display text for heroes;
+ * meta text for de-emphasized annotations (with the muted weight floor).
+ */
+@layer variants {
+	.v-text-display {
+		font-size: var(--v-font-size-h1);
+		font-weight: var(--v-font-weight-title);
+		line-height: var(--v-line-height-h1);
+		text-wrap: balance;
+		--v-font-weight: var(--v-font-weight-title);
+	}
+
+	.v-text-meta {
+		color: var(--v-muted);
+		font-size: var(--v-font-size-caption);
+		font-weight: var(--v-muted-weight-min);
+		line-height: var(--v-line-height-caption);
+		--v-font-weight: var(--v-muted-weight-min);
+	}
+}
