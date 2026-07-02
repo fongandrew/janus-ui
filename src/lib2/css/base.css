@@ -1,0 +1,228 @@
+/*
+ * Base layer — element-level defaults. Consumes --v-* tokens only.
+ *
+ * Carried v1 conventions: warm body gradient, dynamic link weight floor,
+ * double-underline link focus, heading demotion inside <header>, tinted code
+ * surfaces (always-dark <pre>), icon stroke scaling off the tracked
+ * --v-font-weight, em-relative list indent, and text-box trim on padded text
+ * boxes (§6 — trim follows edges, not element types; container-scoped trim
+ * lives with o-prose / o-stack in the objects layer).
+ *
+ * NO global truncation: text wraps by default; truncation is the opt-in
+ * t-truncate tool (§11.1).
+ */
+@layer base {
+	body {
+		background: var(--v-body-bg);
+		background-attachment: fixed;
+		color: var(--v-fg);
+		font-family: var(--v-font-family);
+		font-size: var(--v-font-size);
+		font-weight: var(--v-font-weight-normal);
+		line-height: var(--v-line-height);
+		accent-color: var(--v-accent);
+		--v-font-weight: var(--v-font-weight-normal);
+	}
+
+	/* Headings — semantic size tokens + additive leading (§5.1) */
+	h1 {
+		font-size: var(--v-font-size-h1);
+		line-height: var(--v-line-height-h1);
+	}
+
+	h2 {
+		font-size: var(--v-font-size-h2);
+		line-height: var(--v-line-height-h2);
+	}
+
+	h3 {
+		font-size: var(--v-font-size-h3);
+		line-height: var(--v-line-height-h3);
+	}
+
+	h4 {
+		font-size: var(--v-font-size-h4);
+		line-height: var(--v-line-height-h4);
+	}
+
+	h5 {
+		font-size: var(--v-font-size-h5);
+		line-height: var(--v-line-height-h5);
+	}
+
+	h6 {
+		font-size: var(--v-font-size-h6);
+		line-height: var(--v-line-height-h6);
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-weight: var(--v-font-weight-title);
+		--v-font-weight: var(--v-font-weight-title);
+
+		text-wrap: balance;
+	}
+
+	/*
+	 * Heading demotion inside <header> (aesthetic spec §12): a card section
+	 * keeps its semantically-correct heading level (h2) while rendering one
+	 * visual step down (h3 scale) inside the card's header.
+	 */
+	header :is(h1) {
+		font-size: var(--v-font-size-h2);
+		line-height: var(--v-line-height-h2);
+	}
+
+	header :is(h2) {
+		font-size: var(--v-font-size-h3);
+		line-height: var(--v-line-height-h3);
+	}
+
+	header :is(h3) {
+		font-size: var(--v-font-size-h4);
+		line-height: var(--v-line-height-h4);
+	}
+
+	b,
+	strong {
+		font-weight: var(--v-font-weight-strong);
+		--v-font-weight: var(--v-font-weight-strong);
+	}
+
+	/*
+	 * Links: weight floor carries the emphasis a borderline hue can't
+	 * (§7.1); focus is a double underline, not a box outline that would
+	 * disrupt the reading line (aesthetic spec §08).
+	 */
+	a:where([href]) {
+		color: var(--v-link);
+		font-weight: var(--v-link-weight-min);
+		--v-font-weight: var(--v-link-weight-min);
+
+		text-decoration-line: underline;
+		text-underline-offset: 0.25rem;
+		transition: color calc(var(--v-duration) * 0.5) var(--v-ease);
+	}
+
+	a:where([href]):focus-visible {
+		outline: none;
+		text-decoration-style: double;
+	}
+
+	/*
+	 * Icon stroke scaling (aesthetic spec §11): stroke thickens with the
+	 * surrounding text weight, read from the tracked --v-font-weight
+	 * (weight 400 → 2, 500 → 2.5, 600 → 3).
+	 */
+	.lucide,
+	.icon {
+		stroke-width: clamp(2, calc(var(--v-font-weight) / 200), 3);
+	}
+
+	/* Code surfaces (aesthetic spec §04) */
+	code,
+	kbd,
+	samp {
+		font-family: var(--v-font-family-mono);
+		font-size: var(--v-font-size-code);
+	}
+
+	/* Inline code: tinted paper */
+	:not(pre) > code {
+		background: color-mix(in hsl, var(--v-muted) 8%, var(--v-bg));
+		border-radius: calc(0.5 * var(--v-radius-min));
+		padding: 0.0625em 0.25em;
+	}
+
+	/*
+	 * Code blocks: always-dark terminal surface, even in light mode. A
+	 * padded text box, so it takes box padding + trim-both (§6); the
+	 * padding absorbs the trimmed overshoot so overflow doesn't clip.
+	 */
+	pre {
+		background: hsl(216deg 16% 10%);
+		color: hsl(30deg 100% 96%);
+		--v-muted: hsl(30deg 7% 82.5%);
+
+		border-radius: var(--v-radius-min);
+		font-family: var(--v-font-family-mono);
+		font-size: var(--v-font-size-code);
+		line-height: var(--v-line-height-code);
+		padding: var(--v-pad-block) var(--v-pad-inline);
+		overflow-x: auto;
+		text-box: trim-both cap alphabetic;
+	}
+
+	pre > code {
+		background: none;
+		padding: 0;
+		font-size: 1em;
+	}
+
+	/* Blockquote callouts: padded text boxes (§6) */
+	blockquote {
+		border-inline-start: calc(3 * var(--v-border-width)) solid var(--v-border-color);
+		color: var(--v-muted);
+		font-weight: var(--v-muted-weight-min);
+		--v-font-weight: var(--v-muted-weight-min);
+
+		padding: var(--v-pad-block) var(--v-pad-inline);
+		text-box: trim-both cap alphabetic;
+	}
+
+	/*
+	 * List indent: em-relative so it compounds per nesting level — deep
+	 * lists indent proportionally to their own (possibly smaller) text.
+	 * Richer marker cycling lives in o-prose (§9.5).
+	 */
+	ul,
+	ol {
+		padding-inline-start: 1em;
+	}
+
+	/*
+	 * Minimal table defaults — the data-table treatment with control-height
+	 * rows is c-table (components layer). Cells are padded text boxes.
+	 */
+	th,
+	td {
+		padding: calc(0.5 * var(--v-gap-tight)) var(--v-gap-tight);
+		text-align: start;
+		text-box: trim-both cap alphabetic;
+	}
+
+	th {
+		font-weight: var(--v-font-weight-label);
+		--v-font-weight: var(--v-font-weight-label);
+	}
+
+	/* Form element defaults — chrome belongs to c-input / c-button etc. */
+	label {
+		font-weight: var(--v-font-weight-label);
+		--v-font-weight: var(--v-font-weight-label);
+	}
+
+	button:not(:disabled),
+	select:not(:disabled),
+	input:where(
+			[type='button'],
+			[type='submit'],
+			[type='reset'],
+			[type='checkbox'],
+			[type='radio']
+		):not(:disabled) {
+		cursor: pointer;
+	}
+
+	hr {
+		border-top: var(--v-border-width) solid var(--v-border-color);
+	}
+
+	::selection {
+		background: color-mix(in hsl, var(--v-accent) 25%, var(--v-bg));
+	}
+}

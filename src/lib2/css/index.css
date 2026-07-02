@@ -1,6 +1,19 @@
 /*
  * Janus v2 — single CSS entry point.
- * Phase 0 placeholder: declares the layer order (§4) so pages can link this
- * file before the token/base layers exist. Phase 1 populates it.
+ *
+ * Layer order (§4): reset < base < objects < components < variants < tools.
+ * Components sit above objects so a component can nudge values of the objects
+ * it composes; variants re-theme/re-mode subtrees; tools always win.
+ * Consumer (`p-`) CSS is written outside @layer and beats everything.
  */
 @layer reset, base, objects, components, variants, tools;
+
+@import './reset.css';
+@import './tokens/spacing.css';
+@import './tokens/radius.css';
+@import './tokens/color.css';
+@import './tokens/typography.css';
+@import './tokens/shadow.css';
+@import './tokens/motion.css';
+@import './tokens/breakpoints.css';
+@import './base.css';

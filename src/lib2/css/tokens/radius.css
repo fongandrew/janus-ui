@@ -1,0 +1,41 @@
+/*
+ * Radius tokens + the always-on radius cascade (§8).
+ *
+ * Two anchors: --v-radius (the assumed window/frame corner — the max) and
+ * --v-radius-min (the floor; nothing rounds below it). Everything between
+ * steps inward from the max by the pad/inset between an element and its
+ * parent, floored at the min. The look is tuned by the two root values alone:
+ * stepped (large range — the default), near-uniform (small range), or flat
+ * (min == max). There are no preset classes.
+ *
+ * The :root rules below anchor the cascade at the frame. The box-scoped
+ * step-down rules (a box re-deriving its controls' radius, the one supported
+ * nested-box step via --o-box__radius-inner) live with the objects
+ * (objects/box.css, objects/dialog.css) since they belong to those rules.
+ */
+@layer base {
+	:root {
+		/* Primary knobs */
+		--v-radius: 2.5rem;
+		--v-radius-min: 0.375rem;
+		--v-border-width: 1px;
+
+		/*
+		 * The dialog's viewport-edge breathing room. Root-level so the
+		 * cascade below can reference it (dialog radius = frame − offset,
+		 * §8.3); o-dialog consumes it for positioning.
+		 */
+		--o-dialog__offset: calc(0.75 * var(--v-spacing));
+
+		/* The cascade anchors: first step inward from the assumed frame. */
+		--o-dialog__radius: max(
+			var(--v-radius-min),
+			calc(var(--v-radius) - var(--o-dialog__offset))
+		);
+		--o-box__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad-inline)));
+		--o-input-box__radius: max(
+			var(--v-radius-min),
+			calc(var(--v-radius) - var(--v-pad-inline))
+		);
+	}
+}

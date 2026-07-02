@@ -1,0 +1,101 @@
+/*
+ * Color tokens (§5.1, §7).
+ *
+ * Five root color knobs carry the base palette; everything else derives.
+ * Light/dark branches ride light-dark(), driven by the cascaded color-scheme
+ * property (data-v-color-scheme on any subtree root — §7.2).
+ *
+ * The defaults carry v1's warmth: warm off-white light bg, deep blue-gray
+ * dark bg, saturated teal link — not generic black-on-white.
+ */
+@layer base {
+	:root {
+		color-scheme: light dark;
+
+		/* Primary knobs */
+		--v-bg: light-dark(hsl(30deg 12% 98.5%), hsl(216deg 16% 8%));
+		--v-link: light-dark(hsl(195deg 100% 20%), hsl(183deg 25% 85%));
+		--v-accent: light-dark(hsl(195deg 100% 20%), hsl(183deg 25% 85%));
+		--v-muted: light-dark(hsl(30deg 7% 31%), hsl(30deg 7% 86.5%));
+
+		/*
+		 * Binary black-or-white contrast derived from the bg's OKLCH
+		 * lightness: (0.5 − l) · infinity clamps to 1 (white) on dark
+		 * backgrounds and 0 (black) on light ones (§5.1).
+		 */
+		--v-fg: oklch(from var(--v-bg) calc((0.5 - l) * infinity) 0 0);
+
+		/*
+		 * Contrast-floor weight fallback (§7.1): minimum font-weight for text
+		 * rendered in each color. The shipped palette needs the bump; a
+		 * consumer clearing a knob (--v-link-weight-min: initial) falls back
+		 * to inherited weight.
+		 */
+		--v-link-weight-min: 500;
+		--v-accent-weight-min: 500;
+		--v-muted-weight-min: 500;
+
+		/*
+		 * Dynamic borders: one recipe places every border at a fixed
+		 * perceptual distance from any surface (aesthetic spec §01).
+		 */
+		--v-border-dynamic-base: light-dark(black, white);
+		--v-border-dynamic-mix: light-dark(17.5%, 50%);
+		--v-border-color: color-mix(
+			in hsl,
+			var(--v-border-dynamic-base) var(--v-border-dynamic-mix),
+			var(--v-bg)
+		);
+
+		/*
+		 * Controls need a visibly stronger border than cards or their edges
+		 * (and the spacing measured to them) stop being legible (§7.0).
+		 */
+		--v-border-color-strong: color-mix(in hsl, var(--v-fg) 28%, var(--v-bg));
+
+		/* Surface + control wells (§7.0 — workbench values) */
+		--v-card-bg: light-dark(hsl(0deg 0% 100%), hsl(216deg 16% 12%));
+		--v-input-bg: light-dark(hsl(0deg 0% 100%), hsl(216deg 16% 10%));
+		--v-backdrop: light-dark(hsl(216deg 16% 8% / 50%), hsl(216deg 16% 2% / 60%));
+
+		/*
+		 * Body background: two low-opacity radial gradients (warm + cool)
+		 * over the solid bg — barely-perceptible depth so pages don't read
+		 * flat (aesthetic spec §02). Applied with background-attachment:
+		 * fixed by base.css.
+		 */
+		--v-body-bg: radial-gradient(
+				ellipse at 70% 20%,
+				light-dark(hsl(30deg 75% 75% / 15%), hsl(158deg 77% 15% / 20%)),
+				transparent 50%
+			),
+			radial-gradient(
+				ellipse at 30% 80%,
+				light-dark(hsl(183deg 25% 71% / 7%), hsl(195deg 100% 71% / 10%)),
+				transparent 50%
+			),
+			var(--v-bg);
+
+		/* Focus ring: crisp outline + soft halo, split knobs (§7 / states) */
+		--v-ring: var(--v-accent);
+		--v-ring-alt: color-mix(in hsl, var(--v-accent) 35%, transparent);
+		--v-shadow-focus: 0 0 0 0.125rem var(--v-ring-alt);
+	}
+
+	/*
+	 * Color-scheme switching (§7.2). No attribute = follow the OS;
+	 * light/dark force a scheme for the subtree; system is an explicit
+	 * "follow OS" for tri-state pickers.
+	 */
+	[data-v-color-scheme='light'] {
+		color-scheme: light;
+	}
+
+	[data-v-color-scheme='dark'] {
+		color-scheme: dark;
+	}
+
+	[data-v-color-scheme='system'] {
+		color-scheme: light dark;
+	}
+}

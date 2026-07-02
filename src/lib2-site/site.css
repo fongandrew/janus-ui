@@ -29,12 +29,14 @@
 .p-site-main {
 	--o-container__max: 70rem;
 	--o-container__gutter: var(--v-pad-inline, 1.25rem);
+
 	min-height: 80vh;
 	padding-block: var(--v-gap-section, 1.5rem);
 }
 
 .p-site-footer {
 	--o-container__max: 70rem;
+
 	color: var(--v-muted, inherit);
 	padding-block: var(--v-gap-section, 1.5rem);
 }
@@ -83,4 +85,148 @@
 .p-nav-cards a {
 	color: inherit;
 	text-decoration: none;
+}
+
+/* Doc sections */
+.p-doc-section {
+	margin-block-start: var(--v-gap-section, 1.5rem);
+}
+
+.p-doc-section > h2 {
+	margin-block-end: var(--v-gap-block, 1rem);
+}
+
+/* Token reference tables */
+.p-token-table {
+	border: var(--v-border-width, 1px) solid var(--v-border-color, #ccc);
+	border-radius: var(--v-radius-min, 0.375rem);
+	font-size: var(--v-font-size-caption, 0.875rem);
+	inline-size: 100%;
+}
+
+.p-token-table th,
+.p-token-table td {
+	border-block-start: var(--v-border-width, 1px) solid var(--v-border-color, #ccc);
+	padding: calc(0.5 * var(--v-gap-tight, 0.25rem)) var(--v-gap-tight, 0.25rem);
+	vertical-align: top;
+}
+
+.p-token-table thead th {
+	border-block-start: none;
+}
+
+.p-token-table__primary td:first-child {
+	font-weight: var(--v-font-weight-label, 500);
+}
+
+.p-token-table__badge {
+	background: color-mix(in hsl, var(--v-accent, teal) 15%, transparent);
+	border-radius: 999px;
+	font-family: var(--v-font-family, sans-serif);
+	font-size: 0.8em;
+	margin-inline-start: 0.5em;
+	padding: 0.05em 0.6em;
+	white-space: nowrap;
+}
+
+/* Live render strips */
+.p-token-render {
+	background: var(--v-card-bg, white);
+	border: var(--v-border-width, 1px) solid var(--v-border-color, #ccc);
+	border-radius: var(--v-radius-min, 0.375rem);
+	margin-block-start: var(--v-gap-block, 1rem);
+	padding: var(--v-pad-block, 1.25rem) var(--v-pad-inline, 1.25rem);
+}
+
+.p-token-render__label {
+	color: var(--v-muted, gray);
+	font-size: var(--v-font-size-caption, 0.875rem);
+	margin-block-end: var(--v-gap-block, 1rem);
+}
+
+.p-spacing-ruler {
+	align-items: center;
+	display: flex;
+	gap: var(--v-gap-inline, 0.5rem);
+	margin-block-start: var(--v-gap-tight, 0.25rem);
+}
+
+.p-spacing-ruler code {
+	inline-size: 10rem;
+}
+
+.p-spacing-ruler__bar {
+	background: var(--v-accent, teal);
+	block-size: 1rem;
+	border-radius: 2px;
+	display: inline-block;
+}
+
+.p-radius-row,
+.p-shadow-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--v-gap-section, 1.5rem);
+}
+
+.p-radius-tile {
+	align-items: center;
+	background: var(--v-bg, white);
+	border: var(--v-border-width, 1px) solid var(--v-border-color-strong, gray);
+	display: flex;
+	block-size: 7rem;
+	inline-size: 11rem;
+	justify-content: center;
+}
+
+.p-shadow-tile {
+	align-items: center;
+	background: var(--v-card-bg, white);
+	border-radius: var(--v-radius-min, 0.375rem);
+	display: flex;
+	block-size: 5rem;
+	inline-size: 8rem;
+	justify-content: center;
+}
+
+.p-swatch-grid {
+	display: grid;
+	gap: var(--v-gap-block, 1rem);
+	grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+}
+
+.p-swatch {
+	align-items: center;
+	display: flex;
+	gap: var(--v-gap-inline, 0.5rem);
+}
+
+.p-swatch__chip {
+	block-size: 2rem;
+	border: var(--v-border-width, 1px) solid var(--v-border-color, #ccc);
+	border-radius: var(--v-radius-min, 0.375rem);
+	display: inline-block;
+	flex: none;
+	inline-size: 2rem;
+}
+
+.p-type-ramp {
+	display: flex;
+	flex-direction: column;
+	gap: var(--v-gap-tight, 0.25rem);
+}
+
+/* Typography page samples */
+.p-demo-header {
+	border-block-start: var(--v-border-width, 1px) dashed var(--v-border-color, #ccc);
+	margin-block-start: var(--v-gap-block, 1rem);
+	padding-block-start: var(--v-gap-block, 1rem);
+}
+
+.p-form-sample {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: var(--v-gap-tight, 0.25rem);
+	max-inline-size: 20rem;
 }

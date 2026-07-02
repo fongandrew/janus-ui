@@ -1,0 +1,61 @@
+/*
+ * Spacing & rhythm tokens (§5.1, §6.2).
+ *
+ * One master lever (--v-spacing) plus six derived rhythm tokens with the
+ * workbench multiples baked in. The derived tokens are frozen at :root —
+ * changing --v-spacing in a subtree does NOT recompute them; set the bundle
+ * together (the internal v-spacing mixin below captures it).
+ */
+
+/*
+ * Janus-internal authoring mixin (§5.3, §6.3) — NOT a consumer API.
+ * Bundles the six rhythm derivatives plus border-width (denser layouts want
+ * thinner borders, not just tighter padding). Does not touch radius anchors.
+ */
+@define-mixin v-spacing $size, $border-width: 1px {
+	--v-spacing: $size;
+	--v-pad-block: calc($size * 1.25);
+	--v-pad-inline: calc($size * 1.25);
+	--v-gap-block: $size;
+	--v-gap-inline: calc($size * 0.5);
+	--v-gap-section: calc($size * 1.5);
+	--v-gap-tight: calc($size * 0.25);
+	--v-border-width: $border-width;
+}
+
+@layer base {
+	:root {
+		/* Primary knobs */
+		--v-spacing: 1rem;
+		--v-input-height: 2rem;
+
+		/* Derived rhythm tokens (workbench multiples — §6.2) */
+		--v-pad-block: calc(var(--v-spacing) * 1.25);
+		--v-pad-inline: calc(var(--v-spacing) * 1.25);
+		--v-gap-block: var(--v-spacing);
+		--v-gap-inline: calc(var(--v-spacing) * 0.5);
+		--v-gap-section: calc(var(--v-spacing) * 1.5);
+		--v-gap-tight: calc(var(--v-spacing) * 0.25);
+
+		/*
+		 * A control's internal inline padding (text-to-border) — height-
+		 * relative (the v1 input-box inset), deliberately NOT --v-pad-inline,
+		 * so inputs stay balanced independent of box padding (§6.1).
+		 */
+		--v-control-inset: calc((var(--v-input-height) - 1em) / 2);
+	}
+
+	/*
+	 * Hi-DPI density bump (§6.4): dense screens (phones) get larger touch
+	 * targets and body text. Moves both font anchors together so the default
+	 * fixed-type config stays collapsed — text stays fixed, just larger.
+	 */
+	@media (resolution >= 200dpi) {
+		:root {
+			--v-input-height: 2.75rem;
+			--v-font-size-min: 1rem;
+			--v-font-size-max: 1rem;
+			--v-spacing: 1rem;
+		}
+	}
+}

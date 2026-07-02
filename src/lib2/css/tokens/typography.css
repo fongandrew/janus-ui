@@ -1,0 +1,139 @@
+/*
+ * Typography tokens (§5.1, §5.4).
+ *
+ * A Utopia-style fluid-capable scale that SHIPS FIXED: the default collapses
+ * both size anchors to 0.9375rem (15px) and both ratios to 1.2, so every
+ * token resolves to a constant that does not track the viewport — the right
+ * default for app UI. A consumer opts into fluid type by spreading the
+ * anchors (and, if desired, the ratios); the same clamp() engine serves both
+ * modes with no special-casing.
+ *
+ * Step math: step n = anchor × ratio^n, computed independently at each
+ * viewport anchor, then interpolated linearly between --v-viewport-min and
+ * --v-viewport-max. pow() and the tan(atan2()) length-division trick are
+ * both safe at the §15 browser floor, so the anchors and ratios stay LIVE
+ * knobs — overriding them at :root recomputes the whole ramp (subtree scopes
+ * follow the §5.2 freezing rule: re-declare the tokens at the scope).
+ *
+ * Step indices appear only in this file; the public surface is semantic
+ * (--v-font-size-h1, -caption, -code).
+ */
+
+/*
+ * Janus-internal mixin (§5.3): emits the private intermediates and floored
+ * clamp for one type step. Not a consumer API.
+ */
+@define-mixin v-font-step $name, $n {
+	--_fs-min-$(name): calc(var(--v-font-size-min) * pow(var(--v-font-ratio-min), $n));
+	--_fs-max-$(name): calc(var(--v-font-size-max) * pow(var(--v-font-ratio-max), $n));
+	--_fs-$(name): clamp(
+		max(var(--_font-size-floor), var(--_fs-min-$(name))),
+		calc(
+			var(--_fs-min-$(name)) +
+				tan(
+					atan2(calc(var(--_fs-max-$(name)) - var(--_fs-min-$(name))), var(--_vp-range))
+				) *
+				(100vw - var(--v-viewport-min))
+		),
+		var(--_fs-max-$(name))
+	);
+}
+
+@layer base {
+	:root {
+		/* Primary knobs */
+		--v-font-family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+			'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+		--v-font-family-mono: ui-monospace, 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas',
+			'Liberation Mono', monospace;
+
+		/* Size anchors — equal by default: fixed 15px body text (§5.4) */
+		--v-font-size-min: 0.9375rem;
+		--v-font-size-max: 0.9375rem;
+
+		/* Per-anchor scale ratios — equal by default: one fixed ratio */
+		--v-font-ratio-min: 1.2;
+		--v-font-ratio-max: 1.2;
+
+		/* Shared viewport anchors for all fluid interpolation (§5.5, §6.5) */
+		--v-viewport-min: 20rem;
+		--v-viewport-max: 80rem;
+
+		/* Base line height (body copy keeps multiplicative leading — §5.1) */
+		--v-line-height: 1.5;
+
+		/*
+		 * Readability floor (§5.1): a step's narrow-viewport size never
+		 * falls below ~13px; when the base itself is ≤13px the floor drops
+		 * to 1px below base so caption/code keep their distinction.
+		 */
+		--_font-size-floor: min(13px, calc(var(--v-font-size-min) - 1px));
+		--_vp-range: calc(var(--v-viewport-max) - var(--v-viewport-min));
+
+		/* The scale: body = step 0, headings +1…+3, caption/code −1 */
+		@mixin v-font-step step-1, -1;
+		@mixin v-font-step step0, 0;
+		@mixin v-font-step step1, 1;
+		@mixin v-font-step step2, 2;
+		@mixin v-font-step step3, 3;
+
+		/* Resolved semantic tokens (secondary knobs — the public surface) */
+		--v-font-size: var(--_fs-step0);
+		--v-font-size-h1: var(--_fs-step3);
+		--v-font-size-h2: var(--_fs-step2);
+		--v-font-size-h3: var(--_fs-step1);
+		--v-font-size-h4: var(--_fs-step0);
+		--v-font-size-h5: var(--_fs-step0);
+		--v-font-size-h6: var(--_fs-step0);
+		--v-font-size-caption: var(--_fs-step-1);
+		--v-font-size-code: var(--_fs-step-1);
+
+		/*
+		 * Additive leading for elements that set their own font-size
+		 * (§5.1): line-height = 1em + half the base spacing. The 1em
+		 * resolves at the consuming element, so leading tracks each token
+		 * whether the scale is fixed or fluid.
+		 */
+		--v-line-height-h1: calc(1em + 0.5 * var(--v-spacing));
+		--v-line-height-h2: calc(1em + 0.5 * var(--v-spacing));
+		--v-line-height-h3: calc(1em + 0.5 * var(--v-spacing));
+		--v-line-height-h4: calc(1em + 0.5 * var(--v-spacing));
+		--v-line-height-h5: calc(1em + 0.5 * var(--v-spacing));
+		--v-line-height-h6: calc(1em + 0.5 * var(--v-spacing));
+		--v-line-height-caption: calc(1em + 0.5 * var(--v-spacing));
+		--v-line-height-code: calc(1em + 0.5 * var(--v-spacing));
+
+		/*
+		 * Prose rhythm — multiples of the LINE, not of --v-spacing (§6.2):
+		 * box rhythm scales with spacing; text rhythm scales with the line.
+		 */
+		--o-prose__gap: calc(1 * var(--v-line-height) * 1em);
+		--o-prose__heading-gap: calc(1 * var(--v-line-height) * 1em);
+		--o-hgroup__leading: calc(0.5 * var(--v-spacing));
+
+		/*
+		 * List rhythm — cascading switch (§5.1): grouped by default (items
+		 * read as discrete points); flip to continuous at a scope
+		 * (calc(var(--v-line-height) * 1em - 1cap)) so wrapped items share
+		 * one baseline.
+		 */
+		--v-list-rhythm: calc(0.5 * var(--o-prose__gap));
+
+		/* Semantic font-weight stack (§5.1) */
+		--v-font-weight-normal: 400;
+		--v-font-weight-label: 500;
+		--v-font-weight-subtitle: 600;
+		--v-font-weight-strong: 600;
+		--v-font-weight-title: 700;
+
+		/*
+		 * The currently-applied weight, tracked as a custom property —
+		 * CSS can't read inherited font-weight back into a variable, so
+		 * EVERY rule that sets font-weight from the stack must set
+		 * --v-font-weight to the same value in tandem (base styles, weight
+		 * tools, and tinted-surface weight bumps all do). The icon-stroke
+		 * ramp and weight-floor fallback consume this.
+		 */
+		--v-font-weight: 400;
+	}
+}

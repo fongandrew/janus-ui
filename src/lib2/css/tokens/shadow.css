@@ -1,0 +1,22 @@
+/*
+ * Shadow tokens (§5.1, §7.0). Two semantic role knobs — no t-shirt scale.
+ * Components needing stronger shadows write literal values or scope a
+ * redefinition (o-dialog can redefine --v-shadow-outer for its subtree).
+ */
+@layer base {
+	:root {
+		/* Resting outer elevation — multi-layer for realistic depth */
+		--v-shadow-outer: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
+
+		/* Embossed-input inset */
+		--v-shadow-inner: inset 0 1px 2px 0 rgb(0 0 0 / 10%);
+
+		/*
+		 * Scroll-edge shadows for scrollable regions (modal/drawer bodies),
+		 * toggled by t-scroll-shadow's data-scroll-top/-bottom sentinels
+		 * (aesthetic spec §16).
+		 */
+		--v-shadow-inner-top: inset 0 6px 6px -4px rgb(0 0 0 / 15%);
+		--v-shadow-inner-bottom: inset 0 -6px 6px -4px rgb(0 0 0 / 15%);
+	}
+}

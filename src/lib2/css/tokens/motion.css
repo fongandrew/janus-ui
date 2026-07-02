@@ -1,0 +1,18 @@
+/*
+ * Motion tokens (§5.1). One base duration knob — components derive faster
+ * (× 0.5 for hover/active feedback) or slower (× 2 for extended transitions)
+ * via calc(), never a -sm/-md/-lg scale.
+ */
+@layer base {
+	:root {
+		--v-duration: 240ms;
+		--v-ease: cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	/* Zero the base pace and every derived pace follows. */
+	@media (prefers-reduced-motion: reduce) {
+		:root {
+			--v-duration: 0ms;
+		}
+	}
+}
