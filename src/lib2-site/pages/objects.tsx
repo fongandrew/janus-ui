@@ -62,6 +62,7 @@ const TOC = [
 	{ href: '#o-segmented', label: 'o-segmented' },
 	{ href: '#o-prose', label: 'o-prose' },
 	{ href: '#insets', label: 'Inline insets' },
+	{ href: '#bleed', label: 'v-bleed' },
 	{ href: '#o-caption', label: 'o-caption / o-code' },
 	{ href: '#o-menu', label: 'o-menu' },
 ];
@@ -491,9 +492,11 @@ function ObjectsPage() {
 					<>
 						Boxes anchor the container edge; the <em>accompanying text</em> insets to
 						line up with them — prose beside cards insets to the cards' inner text, and
-						a code block (itself a box) breaks back out to the box edge. Field-label
-						alignment modes (<code>v-align-edge</code> / <code>v-align-text</code>) land
-						with the variants layer.
+						a code block (itself a box) breaks back out to the box edge. A field's
+						label/description defaults to the control's <em>straight edge</em>;{' '}
+						<code>v-align-edge</code> pulls a subtree flush and{' '}
+						<code>v-align-text</code> lands it on the inner-text line — only the text
+						moves, never the box.
 					</>
 				}
 			>
@@ -512,6 +515,58 @@ function ObjectsPage() {
 						<div class="o-prose" id="inset-prose-in-box">
 							<p>Prose inside a box stays flush — the inset never compounds.</p>
 						</div>
+					</div>
+				</div>
+				<div class="p-nest-pair" style={{ 'margin-block-start': '1rem' }}>
+					<div id="inset-field-default">
+						<p class="p-token-render__label">Field default (straight edge)</p>
+						<div class="o-stack" style={{ '--o-stack__gap': 'var(--v-gap-tight)' }}>
+							<label for="inset-input-1">Label insets to the flat side</label>
+							<input id="inset-input-1" class="o-input-box p-outline-strong" />
+						</div>
+					</div>
+					<div class="v-align-edge" id="inset-field-edge">
+						<p class="p-token-render__label">v-align-edge (flush)</p>
+						<div class="o-stack" style={{ '--o-stack__gap': 'var(--v-gap-tight)' }}>
+							<label for="inset-input-2">Label sits on the outer edge</label>
+							<input id="inset-input-2" class="o-input-box p-outline-strong" />
+						</div>
+					</div>
+					<div class="v-align-text" id="inset-field-text">
+						<p class="p-token-render__label">v-align-text (inner text line)</p>
+						<div class="o-stack" style={{ '--o-stack__gap': 'var(--v-gap-tight)' }}>
+							<label for="inset-input-3">Label lands on the control's text</label>
+							<input id="inset-input-3" class="o-input-box p-outline-strong" />
+						</div>
+					</div>
+				</div>
+			</ObjectCard>
+
+			<ObjectCard
+				id="bleed"
+				title="v-bleed: full-bleed on a narrow frame"
+				snippet={`<div class="o-container v-bleed">\n  <div class="o-box">…</div>\n</div>`}
+				description={
+					<>
+						Opt-in per frame: when a <code>v-bleed</code> frame is narrower than 30rem,
+						its boxes break out of the gutter to span the frame's edges — dropping
+						radius, side borders, and shadow — and its prose realigns to flush. One{' '}
+						<code>@container frame</code> rule serves the page and dialogs alike. The
+						narrow frame below demonstrates it at any viewport.
+					</>
+				}
+			>
+				<div
+					class="o-container v-bleed p-outline"
+					id="bleed-narrow-frame"
+					style={{ 'max-inline-size': '20rem', 'margin-inline': '0' }}
+				>
+					<div class="o-box p-outline-strong" id="bleed-box">
+						This box has gone full-bleed: square corners, no side borders, spanning the
+						frame edge to edge.
+					</div>
+					<div class="o-prose" id="bleed-prose">
+						<p>And this prose sits flush — the inset dropped to zero with it.</p>
 					</div>
 				</div>
 			</ObjectCard>
