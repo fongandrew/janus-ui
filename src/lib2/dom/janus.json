@@ -1,0 +1,5 @@
+{
+	"name": "dom",
+	"summary": "Vanilla-JS progressive-enhancement layer. Reads data-js behavior tokens off DOM nodes.",
+	"depends": ["utils"]
+}

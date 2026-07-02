@@ -1,0 +1,79 @@
+/*
+ * Color tokens (§5.1, §7). Five root knobs carry the base palette; tonal
+ * variations live as v-colors-* variants (Phase 3). Defaults carry v1's warmth
+ * — a warm off-white / deep blue-gray, saturated teal links — not generic
+ * black-on-white.
+ */
+
+:root {
+	/* Follow prefers-color-scheme by default; the attribute rules below force it. */
+	color-scheme: light dark;
+
+	/* Base palette. */
+	--v-bg: light-dark(hsl(30deg 12% 98.5%), hsl(216deg 16% 8%));
+	/* Binary black-or-white contrast derived from the bg's OKLCH lightness:
+	   (0.5 − l) * infinity → +inf below 0.5 (white), −inf above (black). */
+	--v-fg: oklch(from var(--v-bg) calc((0.5 - l) * infinity) 0 0);
+	--v-link: light-dark(hsl(195deg 100% 20%), hsl(195deg 100% 50%));
+	--v-accent: var(--v-link);
+	--v-muted: light-dark(hsl(30deg 8% 40%), hsl(30deg 8% 65%));
+
+	/* Contrast-floor weights (§7.1). Shipped palette needs the bump; a consumer
+	   clearing these gets `inherit` (no bump) via the read-site fallback. */
+	--v-link-weight-min: 500;
+	--v-accent-weight-min: 500;
+	--v-muted-weight-min: 500;
+
+	/* Dynamic borders — one recipe places every border a fixed perceptual
+	   distance from any surface (§7.0), so borders read right on tinted cards. */
+	--v-border-dynamic-base: light-dark(black, white);
+	--v-border-dynamic-mix: light-dark(17.5%, 50%);
+	--v-border-color: color-mix(
+		in hsl,
+		var(--v-border-dynamic-base) var(--v-border-dynamic-mix),
+		var(--v-bg)
+	);
+	/* Controls need a visibly stronger border than cards (§7.0). */
+	--v-border-color-strong: color-mix(in hsl, var(--v-fg) 28%, var(--v-bg));
+
+	/* Surfaces. */
+	--v-card-bg: light-dark(hsl(0deg 0% 100%), hsl(216deg 16% 12%));
+	--v-input-bg: light-dark(hsl(0deg 0% 100%), hsl(216deg 16% 10%));
+	--v-backdrop: light-dark(hsl(216deg 16% 8% / 50%), hsl(216deg 16% 2% / 60%));
+
+	/* Body background — two low-opacity radial gradients over the flat bg give
+	   barely-perceptible warm/cool depth (§7.0). */
+	--v-body-bg:
+		radial-gradient(ellipse at 70% 20%, hsl(20deg 80% 70% / 15%), transparent 50%),
+		radial-gradient(ellipse at 30% 80%, hsl(195deg 80% 50% / 7%), transparent 50%),
+		var(--v-bg);
+
+	/* Focus ring: crisp outline (--v-ring) over a soft halo (--v-ring-alt). */
+	--v-ring: var(--v-accent);
+	--v-ring-alt: color-mix(in hsl, var(--v-accent) 35%, transparent);
+	--v-shadow-focus: 0 0 0 0.125rem var(--v-ring-alt);
+
+	/* Motion. */
+	--v-duration: 240ms;
+	--v-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Color-scheme control (§7.2). data-v-color-scheme on the root or any subtree. */
+[data-v-color-scheme='light'] {
+	color-scheme: light;
+}
+
+[data-v-color-scheme='dark'] {
+	color-scheme: dark;
+}
+
+[data-v-color-scheme='system'] {
+	color-scheme: light dark;
+}
+
+/* prefers-reduced-motion zeros the pace and everything derived follows. */
+@media (prefers-reduced-motion: reduce) {
+	:root {
+		--v-duration: 0ms;
+	}
+}

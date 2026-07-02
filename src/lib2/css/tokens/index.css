@@ -1,0 +1,13 @@
+/*
+ * Token layer aggregate: emits every `--v-*` / cascade default on :root and
+ * defines the internal authoring mixins (v-spacing, v-font-weight, the
+ * breakpoint helpers). Consuming CSS files @import this to pull the mixins in;
+ * the :root emission is deduped by the bundler, so importing it many times
+ * costs nothing.
+ */
+@import '~/lib2/css/tokens/spacing.css';
+@import '~/lib2/css/tokens/radius.css';
+@import '~/lib2/css/tokens/color.css';
+@import '~/lib2/css/tokens/typography.css';
+@import '~/lib2/css/tokens/shadow.css';
+@import '~/lib2/css/tokens/breakpoints.css';

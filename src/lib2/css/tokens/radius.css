@@ -1,0 +1,32 @@
+/*
+ * Border-radius tokens & the always-on radius cascade (§8).
+ *
+ * Two anchors set the whole look: --v-radius (the max — the assumed window
+ * corner) and --v-radius-min (the floor). Everything between steps INWARD from
+ * the max by the spacing/inset between an element and its parent, floored at
+ * the min so a corner is never sharp. Flat = set the two equal.
+ *
+ * These are the :root-level assignments of the per-layer knobs. The box-scoped
+ * cascade rules (a box stepping its children, the one nested-box step) live
+ * with the objects (box.css, dialog.css — Phase 2). Each object reads its own
+ * knob with a --v-radius-min fallback; a rule writes a DIFFERENT knob than it
+ * reads, so no knob references itself (§5.2 — no self-reference cycle).
+ */
+
+:root {
+	--v-radius: 2.5rem;
+	--v-radius-min: 0.375rem;
+
+	/* Dialog floats --o-dialog__offset inside the viewport, so its corners look
+	   concentric only when dialog-radius = window-radius − offset (§8.3). The
+	   offset default lives on o-dialog (Phase 2); fall back to it here so the
+	   cascade resolves before dialog.css loads. */
+	--o-dialog__radius: max(
+		var(--v-radius-min),
+		calc(var(--v-radius) - var(--o-dialog__offset, calc(0.75 * var(--v-spacing))))
+	);
+
+	/* A box and a top-level control step one pad in from the frame. */
+	--o-box__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad-inline)));
+	--o-input-box__radius: max(var(--v-radius-min), calc(var(--v-radius) - var(--v-pad-inline)));
+}

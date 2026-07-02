@@ -1,0 +1,15 @@
+/*
+ * Shadow tokens (§5.1, §7.0). Two semantic root knobs — no t-shirt scale.
+ * Multi-layer defaults read as real depth, not a single fuzzy drop. Split so a
+ * t-shadow helper or a component can replace one without disturbing the other.
+ */
+
+:root {
+	--v-shadow-outer: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
+	--v-shadow-inner: inset 0 1px 2px 0 rgb(0 0 0 / 10%);
+
+	/* Scroll-edge shadows for scrollable regions (modal/drawer bodies, §16).
+	   Toggled by t-scroll-shadow's data-scroll-top / -bottom sentinels. */
+	--v-shadow-inner-top: inset 0 6px 6px -4px rgb(0 0 0 / 15%);
+	--v-shadow-inner-bottom: inset 0 -6px 6px -4px rgb(0 0 0 / 15%);
+}

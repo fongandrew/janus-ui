@@ -1,0 +1,73 @@
+@layer reset {
+	/*
+	 * Reset (§reset). box-sizing + margin normalization, and the load-bearing
+	 * `border: 0 solid transparent` default: every element reserves border space
+	 * with a transparent color, so setting a border-width elsewhere reserves
+	 * layout and a focus/invalid state only changes the COLOR — the box never
+	 * shifts. Without the transparent default, reserved borders show as lines
+	 * before they're needed.
+	 */
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+		border: 0 solid transparent;
+	}
+
+	* {
+		margin: 0;
+	}
+
+	html {
+		-webkit-text-size-adjust: 100%;
+		text-size-adjust: 100%;
+		-moz-tab-size: 4;
+		tab-size: 4;
+	}
+
+	body {
+		min-height: 100vh;
+		line-height: var(--v-line-height, 1.5);
+		-webkit-font-smoothing: antialiased;
+	}
+
+	/* Media defaults — block-level, never overflow their container. */
+	img,
+	picture,
+	video,
+	canvas,
+	svg {
+		display: block;
+		max-width: 100%;
+	}
+
+	/* Form controls inherit typography rather than using UA defaults. */
+	input,
+	button,
+	textarea,
+	select {
+		font: inherit;
+		color: inherit;
+	}
+
+	button {
+		background: none;
+		cursor: pointer;
+	}
+
+	/* Avoid the UA min-content overflow trap on flex/grid children. */
+	p,
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		overflow-wrap: break-word;
+	}
+
+	:where(a) {
+		color: inherit;
+		text-decoration: none;
+	}
+}

@@ -1,0 +1,244 @@
+/*
+ * Documentation-site chrome. These are `p-` classes — owned by the site (the
+ * first consumer), written OUTSIDE `@layer` so they win over library rules
+ * with no specificity games (§4). They prefer `--v-*`/`--o-*` knobs and fall
+ * back to literals so the shell is usable before the library CSS lands.
+ */
+
+/* ---- Top nav ------------------------------------------------------------- */
+
+.p-site-nav {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	display: flex;
+	gap: var(--v-gap-inline, 0.5rem);
+	align-items: center;
+	padding: var(--v-spacing, 1rem);
+	background: var(--v-card-bg, #fff);
+	border-block-end: var(--v-border-width, 1px) solid var(--v-border-color, #ddd);
+}
+
+.p-site-nav__brand {
+	font-weight: var(--v-font-weight-title, 700);
+	font-size: var(--v-font-size-h3, 1.125rem);
+	color: inherit;
+	text-decoration: none;
+}
+
+.p-site-nav__brand-mark {
+	color: var(--v-accent, #067);
+}
+
+.p-site-nav__links {
+	display: flex;
+	flex: 1 1 auto;
+	gap: var(--v-gap-inline, 0.5rem);
+	align-items: center;
+}
+
+.p-site-nav__link {
+	padding: var(--v-gap-tight, 0.25rem) var(--v-gap-inline, 0.5rem);
+	color: inherit;
+	text-decoration: none;
+	border-radius: var(--v-radius-min, 0.375rem);
+}
+
+.p-site-nav__link.is-active {
+	color: var(--v-link, #067);
+	font-weight: var(--v-font-weight-label, 500);
+}
+
+.p-site-nav__workbench {
+	flex: none;
+}
+
+/* ---- Doc layout ---------------------------------------------------------- */
+
+.p-doc-main {
+	padding-block: var(--v-gap-section, 1.5rem);
+}
+
+.p-doc-title {
+	margin-block-end: var(--v-gap-section, 1.5rem);
+}
+
+.p-doc-split {
+	display: grid;
+	grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
+	gap: var(--v-gap-section, 1.5rem);
+	align-items: start;
+}
+
+@media (width < 48rem) {
+	.p-doc-split {
+		grid-template-columns: 1fr;
+	}
+}
+
+.p-doc-sidebar {
+	position: sticky;
+	top: 4.5rem;
+	padding-inline-start: var(--v-pad-inline, 1.25rem);
+	padding-block: var(--v-gap-section, 1.5rem);
+}
+
+.p-doc-toc__heading {
+	margin: 0 0 var(--v-gap-tight, 0.25rem);
+	font-weight: var(--v-font-weight-label, 500);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	font-size: var(--v-font-size-caption, 0.8125rem);
+	color: var(--v-muted, #666);
+}
+
+.p-doc-toc__list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	gap: var(--v-gap-tight, 0.25rem);
+}
+
+.p-doc-toc__link {
+	color: inherit;
+	text-decoration: none;
+}
+
+.p-doc-toc__link.is-active {
+	color: var(--v-link, #067);
+	font-weight: var(--v-font-weight-label, 500);
+}
+
+/* ---- Footer -------------------------------------------------------------- */
+
+.p-site-footer {
+	margin-block-start: var(--v-gap-section, 1.5rem);
+	padding-block: var(--v-gap-section, 1.5rem);
+	border-block-start: var(--v-border-width, 1px) solid var(--v-border-color, #ddd);
+	color: var(--v-muted, #666);
+	font-size: var(--v-font-size-caption, 0.8125rem);
+}
+
+/* ---- Doc reference tables / demo frames (used from Phase 1 on) ----------- */
+
+.p-doc-section {
+	margin-block-end: var(--v-gap-section, 1.5rem);
+}
+
+.p-doc-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: var(--v-font-size-caption, 0.8125rem);
+}
+
+.p-doc-table th,
+.p-doc-table td {
+	text-align: start;
+	padding: var(--v-gap-tight, 0.25rem) var(--v-gap-inline, 0.5rem);
+	border-block-end: var(--v-border-width, 1px) solid var(--v-border-color, #ddd);
+	vertical-align: top;
+}
+
+.p-doc-table code {
+	white-space: nowrap;
+}
+
+/* A neutral framed area to show a live render of a token/object/component. */
+.p-doc-demo {
+	padding: var(--v-pad-block, 1.25rem) var(--v-pad-inline, 1.25rem);
+	border: var(--v-border-width, 1px) dashed var(--v-border-color, #ccc);
+	border-radius: var(--v-radius-min, 0.375rem);
+	background: var(--v-card-bg, #fff);
+}
+
+.p-doc-nav-cards {
+	--o-grid__min: 16rem;
+}
+
+.p-doc-nav-card-link {
+	color: inherit;
+	text-decoration: none;
+}
+
+/* ---- Variables-page demo renders --------------------------------------- */
+
+.p-demo-ruler {
+	display: flex;
+	flex-direction: column;
+	gap: var(--v-gap-tight, 0.25rem);
+}
+
+.p-demo-ruler__row {
+	display: flex;
+	gap: var(--v-gap-inline, 0.5rem);
+	align-items: center;
+}
+
+.p-demo-ruler__label {
+	inline-size: 4rem;
+	font-size: var(--v-font-size-caption, 0.8125rem);
+	color: var(--v-muted, #666);
+}
+
+.p-demo-ruler__bar {
+	block-size: 0.75rem;
+	background: var(--v-accent, #067);
+	border-radius: var(--v-radius-min, 0.375rem);
+}
+
+.p-demo-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--v-gap-inline, 0.5rem);
+	align-items: center;
+}
+
+.p-demo-swatch {
+	display: grid;
+	place-items: center;
+	inline-size: 4rem;
+	block-size: 4rem;
+	background: var(--v-card-bg, #fff);
+	font-size: var(--v-font-size-caption, 0.8125rem);
+}
+
+.p-demo-color {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--v-gap-tight, 0.25rem);
+}
+
+.p-demo-color__chip {
+	inline-size: 3rem;
+	block-size: 3rem;
+	border: var(--v-border-width, 1px) solid var(--v-border-color, #ccc);
+	border-radius: var(--v-radius-min, 0.375rem);
+}
+
+.p-demo-color__label {
+	font-size: var(--v-font-size-caption, 0.8125rem);
+	color: var(--v-muted, #666);
+}
+
+.p-demo-ramp {
+	display: flex;
+	flex-direction: column;
+	gap: var(--v-gap-tight, 0.25rem);
+}
+
+.p-demo-ramp p {
+	margin: 0;
+}
+
+.p-demo-tile {
+	display: grid;
+	place-items: center;
+	inline-size: 6rem;
+	block-size: 4rem;
+	background: var(--v-card-bg, #fff);
+	border-radius: var(--v-radius-min, 0.375rem);
+	font-size: var(--v-font-size-caption, 0.8125rem);
+}

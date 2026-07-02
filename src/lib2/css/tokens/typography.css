@@ -1,0 +1,122 @@
+/*
+ * Typography tokens (§5.1, §5.4). A Utopia-style modular scale that is
+ * fluid-capable but SHIPS FIXED: the two size anchors collapse to one value
+ * (0.9375rem ≈ 15px) and the two ratios are equal, so every token resolves to
+ * a constant that does not track the viewport. A consumer opts into fluid type
+ * by spreading the anchors (and, optionally, the ratios) apart — the same
+ * tokens then interpolate across the viewport range.
+ *
+ * The scale is computed in pure CSS via pow() (Baseline at the §15 floor), so
+ * the semantic tokens are genuine functions of the four primary knobs — no
+ * hard-coded multiples, no build step. Step indices appear ONLY in this file
+ * (§5.4); the public surface is semantic.
+ */
+
+:root {
+	--v-font-family: system-ui, -apple-system, 'Segoe UI', roboto, helvetica, arial, sans-serif;
+	--v-font-family-mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', menlo, consolas,
+		monospace;
+
+	/* Primary knobs — the four the scale derives from, plus the viewport anchors. */
+	--v-font-size-min: 0.9375rem; /* body at/below --v-viewport-min */
+	--v-font-size-max: 0.9375rem; /* body at/above --v-viewport-max (== min → fixed) */
+	--v-font-ratio-min: 1.2; /* modular ratio at the min viewport (minor third) */
+	--v-font-ratio-max: 1.2; /* == min → single fixed ratio */
+	--v-viewport-min: 20rem;
+	--v-viewport-max: 80rem;
+	--v-line-height: 1.5;
+
+	/* Readability floor: no step's min side drops below ~13px (§5.1). */
+	--_font-size-floor: min(13px, calc(var(--v-font-size-min) - 1px));
+
+	/* Shared fluid-interpolation pieces (Utopia slope form, §5.4). */
+	--_vw-range: calc(var(--v-viewport-max) - var(--v-viewport-min));
+	--_vw-progress: calc(100vw - var(--v-viewport-min));
+
+	/* Per-step anchor sizes: size × ratio^step, computed at each anchor. */
+	--_fs-min-3: calc(var(--v-font-size-min) * pow(var(--v-font-ratio-min), 3));
+	--_fs-max-3: calc(var(--v-font-size-max) * pow(var(--v-font-ratio-max), 3));
+	--_fs-min-2: calc(var(--v-font-size-min) * pow(var(--v-font-ratio-min), 2));
+	--_fs-max-2: calc(var(--v-font-size-max) * pow(var(--v-font-ratio-max), 2));
+	--_fs-min-1: calc(var(--v-font-size-min) * pow(var(--v-font-ratio-min), 1));
+	--_fs-max-1: calc(var(--v-font-size-max) * pow(var(--v-font-ratio-max), 1));
+	--_fs-min-0: var(--v-font-size-min);
+	--_fs-max-0: var(--v-font-size-max);
+	--_fs-min-n1: calc(var(--v-font-size-min) * pow(var(--v-font-ratio-min), -1));
+	--_fs-max-n1: calc(var(--v-font-size-max) * pow(var(--v-font-ratio-max), -1));
+
+	/* Resolved semantic font sizes. Each is a floored clamp between the two
+	   anchors; under the default collapsed config every clamp is a constant. */
+	--v-font-size: clamp(
+		max(var(--_font-size-floor), var(--_fs-min-0)),
+		calc(var(--_fs-min-0) + (var(--_fs-max-0) - var(--_fs-min-0)) / var(--_vw-range) * var(--_vw-progress)),
+		var(--_fs-max-0)
+	);
+	--v-font-size-h1: clamp(
+		max(var(--_font-size-floor), var(--_fs-min-3)),
+		calc(var(--_fs-min-3) + (var(--_fs-max-3) - var(--_fs-min-3)) / var(--_vw-range) * var(--_vw-progress)),
+		var(--_fs-max-3)
+	);
+	--v-font-size-h2: clamp(
+		max(var(--_font-size-floor), var(--_fs-min-2)),
+		calc(var(--_fs-min-2) + (var(--_fs-max-2) - var(--_fs-min-2)) / var(--_vw-range) * var(--_vw-progress)),
+		var(--_fs-max-2)
+	);
+	--v-font-size-h3: clamp(
+		max(var(--_font-size-floor), var(--_fs-min-1)),
+		calc(var(--_fs-min-1) + (var(--_fs-max-1) - var(--_fs-min-1)) / var(--_vw-range) * var(--_vw-progress)),
+		var(--_fs-max-1)
+	);
+	--v-font-size-h4: var(--v-font-size);
+	--v-font-size-h5: var(--v-font-size);
+	--v-font-size-h6: var(--v-font-size);
+	--v-font-size-caption: clamp(
+		max(var(--_font-size-floor), var(--_fs-min-n1)),
+		calc(var(--_fs-min-n1) + (var(--_fs-max-n1) - var(--_fs-min-n1)) / var(--_vw-range) * var(--_vw-progress)),
+		var(--_fs-max-n1)
+	);
+	--v-font-size-code: var(--v-font-size-caption);
+
+	/* Line heights — ADDITIVE leading (1em + constant), so inter-line space
+	   stays constant across sizes; the constant tracks --v-spacing (§5.1). */
+	--v-line-height-h1: calc(1em + 0.5 * var(--v-spacing));
+	--v-line-height-h2: calc(1em + 0.5 * var(--v-spacing));
+	--v-line-height-h3: calc(1em + 0.5 * var(--v-spacing));
+	--v-line-height-h4: calc(1em + 0.5 * var(--v-spacing));
+	--v-line-height-h5: calc(1em + 0.5 * var(--v-spacing));
+	--v-line-height-h6: calc(1em + 0.5 * var(--v-spacing));
+	--v-line-height-caption: calc(1em + 0.5 * var(--v-spacing));
+	--v-line-height-code: calc(1em + 0.5 * var(--v-spacing));
+
+	/* Text rhythm — multiples of the LINE, not --v-spacing (§6.2). Consumed by
+	   the o-prose flow and <hgroup> (Phase 2). */
+	--o-prose__gap: calc(1 * var(--v-line-height) * 1em);
+	--o-prose__heading-gap: calc(1 * var(--v-line-height) * 1em);
+	--o-hgroup__leading: calc(0.5 * var(--v-spacing));
+	/* Cascading list-item spacing. Default grouped; flip to continuous
+	   (calc(var(--v-line-height) * 1em - 1cap)) at a scope like an editor root. */
+	--v-list-rhythm: calc(0.5 * var(--o-prose__gap));
+
+	/* Font-weight stack (§5.1). Any rule that sets font-weight from this stack
+	   also sets --v-font-weight to the same number so the icon-stroke ramp and
+	   the weight floor have a value to read. */
+	--v-font-weight-normal: 400;
+	--v-font-weight-label: 500;
+	--v-font-weight-subtitle: 600;
+	--v-font-weight-strong: 600;
+	--v-font-weight-title: 700;
+	--v-font-weight: 400;
+}
+
+/*
+ * The "set them together" contract (§5.1): any rule applying a weight from the
+ * stack sets both `font-weight` and the tracked `--v-font-weight` (so the
+ * icon-stroke ramp and the weight floor have a value to read), and floors at
+ * `--v-font-weight-min` for the contrast-weight fallback (§7.1). Internal
+ * authoring mixin — not a consumer API.
+ */
+@define-mixin v-font-weight $weight {
+	--v-font-weight: $(weight);
+
+	font-weight: max(var(--v-font-weight), var(--v-font-weight-min, 0));
+}

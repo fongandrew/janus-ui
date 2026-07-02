@@ -1,0 +1,180 @@
+@import '~/lib2/css/tokens/index.css';
+
+/*
+ * Base element styles (§base). Consumes the --v-* tokens. Carries several v1
+ * conventions: text-box-trim on padded text boxes, warm body background,
+ * focus-double-underline links, heading demotion in <header>, dark code
+ * surfaces, em-relative list indent, and the icon-stroke weight ramp.
+ *
+ * Text truncation is deliberately NOT a base default (§11.1) — text wraps
+ * normally; truncation is the opt-in t-truncate tool.
+ */
+@layer base {
+	:root {
+		/* Apply the default weight and seed the tracked --v-font-weight. */
+		@mixin v-font-weight var(--v-font-weight-normal);
+
+		color: var(--v-fg);
+		font-family: var(--v-font-family);
+		font-size: var(--v-font-size);
+		line-height: var(--v-line-height);
+	}
+
+	body {
+		min-height: 100dvh;
+		background: var(--v-body-bg);
+		background-attachment: fixed;
+
+		/* So container queries can fall back to the body as a query container. */
+		container-type: inline-size;
+	}
+
+	/* Headings — size + additive line-height + weight (set with --v-font-weight). */
+	h1 {
+		font-size: var(--v-font-size-h1);
+		line-height: var(--v-line-height-h1);
+		@mixin v-font-weight var(--v-font-weight-title);
+	}
+
+	h2 {
+		font-size: var(--v-font-size-h2);
+		line-height: var(--v-line-height-h2);
+		@mixin v-font-weight var(--v-font-weight-title);
+	}
+
+	h3 {
+		font-size: var(--v-font-size-h3);
+		line-height: var(--v-line-height-h3);
+		@mixin v-font-weight var(--v-font-weight-subtitle);
+	}
+
+	h4 {
+		font-size: var(--v-font-size-h4);
+		line-height: var(--v-line-height-h4);
+		@mixin v-font-weight var(--v-font-weight-subtitle);
+	}
+
+	h5 {
+		font-size: var(--v-font-size-h5);
+		line-height: var(--v-line-height-h5);
+		@mixin v-font-weight var(--v-font-weight-label);
+	}
+
+	h6 {
+		font-size: var(--v-font-size-h6);
+		line-height: var(--v-line-height-h6);
+		@mixin v-font-weight var(--v-font-weight-label);
+	}
+
+	/*
+	 * Heading demotion inside <header> (§aesthetic 12): a card can use a
+	 * semantically correct heading level while rendering at a size that fits the
+	 * card header.
+	 */
+	header h1 {
+		font-size: var(--v-font-size-h2);
+	}
+
+	header h2 {
+		font-size: var(--v-font-size-h3);
+	}
+
+	header h3 {
+		font-size: var(--v-font-size-h4);
+	}
+
+	/* Links — colored, contrast-weight floored, subtle underline; on focus a
+	   double underline instead of a box outline that disrupts the reading line. */
+	a:where([href]) {
+		--v-font-weight-min: var(--v-link-weight-min);
+
+		color: var(--v-link);
+		text-decoration: underline;
+		text-underline-offset: 0.25rem;
+		@mixin v-font-weight var(--v-font-weight-normal);
+	}
+
+	a:where([href]):focus-visible {
+		outline: none;
+		text-decoration-style: double;
+	}
+
+	b,
+	strong {
+		@mixin v-font-weight var(--v-font-weight-strong);
+	}
+
+	/* Em-relative list indent — compounds per nesting level (§base). Richer
+	   marker cycling lives in o-prose (Phase 2). */
+	ul,
+	ol {
+		padding-inline-start: 1em;
+	}
+
+	/* Inline code — tinted paper (the v-colors-code look, inlined here). */
+	code {
+		background: color-mix(in hsl, var(--v-muted) 8%, var(--v-bg));
+		border-radius: var(--v-radius-min);
+		padding-inline: 0.25em;
+		font-family: var(--v-font-family-mono);
+		font-size: var(--v-font-size-code);
+	}
+
+	/* Code blocks — always-dark terminal surface, even in light mode. Padding
+	   absorbs the trimmed cap/descender overshoot so overflow doesn't clip. */
+	pre {
+		overflow: auto;
+		padding: var(--v-pad-block) var(--v-pad-inline);
+		background: #141821;
+		color: #fdf3e1;
+		border-radius: var(--o-box__radius);
+		font-family: var(--v-font-family-mono);
+		font-size: var(--v-font-size-code);
+		text-box: trim-both cap alphabetic;
+	}
+
+	pre code {
+		padding: 0;
+		background: none;
+		border-radius: 0;
+		color: inherit;
+		font-size: inherit;
+	}
+
+	/* Callout-style blockquote — self-padded text box. */
+	blockquote {
+		padding: var(--v-pad-block) var(--v-pad-inline);
+		border-inline-start: 0.25rem solid var(--v-border-color);
+		text-box: trim-both cap alphabetic;
+	}
+
+	/* Minimal table defaults — the data-table treatment is c-table (Phase 3). */
+	table {
+		border-collapse: collapse;
+	}
+
+	th,
+	td {
+		text-align: start;
+		text-box: trim-both cap alphabetic;
+	}
+
+	th {
+		@mixin v-font-weight var(--v-font-weight-label);
+	}
+
+	::placeholder {
+		color: var(--v-muted);
+		opacity: 1;
+	}
+
+	/*
+	 * Icon stroke thickens with surrounding text weight (§aesthetic 11). Reads
+	 * the TRACKED --v-font-weight custom property (CSS can't read inherited
+	 * font-weight back into a variable): 400 -> 2, 500 -> 2.5, 600 -> 3.
+	 */
+	.lucide,
+	.icon {
+		stroke-width: clamp(2, var(--v-font-weight) / 200, 3);
+	}
+}

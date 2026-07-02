@@ -1,0 +1,70 @@
+/*
+ * Breakpoint / container-query mixins (§5.3) — internal authoring helpers,
+ * carried forward from v1. Consumers writing their own responsive CSS use plain
+ * @media / @container. The `&:is(*)` wrapper is a PurgeCSS workaround
+ * (FullHuman/purgecss#1347).
+ */
+
+@define-mixin v-breakpoint-lt-mobile-wide {
+	@media (width < 40rem) {
+		&:is(*) {
+			@mixin-content;
+		}
+	}
+}
+
+@define-mixin v-breakpoint-mobile-wide {
+	@media (width >= 40rem) {
+		&:is(*) {
+			@mixin-content;
+		}
+	}
+}
+
+@define-mixin v-breakpoint-lt-tablet {
+	@media (width < 48rem) {
+		&:is(*) {
+			@mixin-content;
+		}
+	}
+}
+
+@define-mixin v-breakpoint-tablet {
+	@media (width >= 48rem) {
+		&:is(*) {
+			@mixin-content;
+		}
+	}
+}
+
+@define-mixin v-breakpoint-lt-desktop {
+	@media (width < 75rem) {
+		&:is(*) {
+			@mixin-content;
+		}
+	}
+}
+
+@define-mixin v-breakpoint-desktop {
+	@media (width >= 75rem) {
+		&:is(*) {
+			@mixin-content;
+		}
+	}
+}
+
+@define-mixin v-container-lt-tablet {
+	@container (width < 48rem) {
+		&:is(*) {
+			@mixin-content;
+		}
+	}
+}
+
+@define-mixin v-container-tablet {
+	@container (width >= 48rem) {
+		&:is(*) {
+			@mixin-content;
+		}
+	}
+}

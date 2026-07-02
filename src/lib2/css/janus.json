@@ -1,0 +1,5 @@
+{
+	"name": "css",
+	"summary": "Pure CSS design system — tokens, objects, components, variants, tools. No JS. Standalone.",
+	"depends": []
+}

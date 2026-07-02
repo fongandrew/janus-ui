@@ -1,0 +1,24 @@
+/*
+ * Janus v2 — CSS entry point.
+ *
+ * A single @layer declaration establishes precedence (§4). Components sit ABOVE
+ * objects so a component can do minor overrides of the objects it composes;
+ * variants and tools outrank both. The project layer (`p-`) is unlayered and
+ * beats everything — it's owned by the consuming site, not by Janus.
+ */
+@layer reset, base, objects, components, variants, tools;
+
+/* Reset + tokens (tokens emit :root defaults; unlayered custom properties). */
+@import '~/lib2/css/reset.css';
+@import '~/lib2/css/tokens/index.css';
+
+/* Base element styles. */
+@import '~/lib2/css/base.css';
+
+/* Objects (Phase 2). */
+@import '~/lib2/css/objects/index.css';
+
+/* Components, variants, tools (Phase 3). */
+@import '~/lib2/css/components/index.css';
+@import '~/lib2/css/variants/index.css';
+@import '~/lib2/css/tools/index.css';

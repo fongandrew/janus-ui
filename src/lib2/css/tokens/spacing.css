@@ -1,0 +1,66 @@
+/*
+ * Spacing & rhythm tokens (§5.1, §6.2).
+ *
+ * One master lever — `--v-spacing` — plus six named multiples baked into the
+ * derived tokens (the spacing-workbench defaults). The six derivatives are
+ * frozen at :root: changing `--v-spacing` in a sub-tree does NOT recompute
+ * them (§5.2). To re-derive at a scope, set the bundle together — the internal
+ * `v-spacing` mixin below is the authoring shorthand for exactly that.
+ */
+
+:root {
+	--v-spacing: 1rem;
+
+	/* Box padding (the "pad" scale, ×1.25). */
+	--v-pad-block: calc(var(--v-spacing) * 1.25);
+	--v-pad-inline: calc(var(--v-spacing) * 1.25);
+
+	/* Layout gaps. */
+	--v-gap-block: var(--v-spacing); /* base within-group stack gap (×1) */
+	--v-gap-inline: calc(var(--v-spacing) * 0.5); /* cluster scale (×0.5) */
+	--v-gap-section: calc(var(--v-spacing) * 1.5); /* section scale (×1.5) */
+	--v-gap-tight: calc(var(--v-spacing) * 0.25); /* tight scale (×0.25) */
+
+	/* Control height — deliberately independent of --v-spacing. */
+	--v-input-height: 2rem;
+
+	/* A control's internal inline padding (text-to-border) — height-relative,
+	   so inputs stay balanced independent of box padding. Also the "inner text"
+	   reference for inline alignment (§6.1). Curvature-clamped on the object. */
+	--v-control-inset: calc((var(--v-input-height) - 1em) / 2);
+
+	/* Base border width — bundled with spacing (§6.3): denser layouts want
+	   thinner borders. */
+	--v-border-width: 1px;
+}
+
+/*
+ * Hi-DPI / touch density bump (§6.4). Not a breakpoint — a pixel-density gate.
+ * Moves the font-size anchors together (stays collapsed → fixed, just larger)
+ * and raises the control height for finger targets.
+ */
+@media (resolution >= 200dpi) {
+	:root {
+		--v-input-height: 2.75rem;
+		--v-font-size-min: 1rem;
+		--v-font-size-max: 1rem;
+		--v-spacing: 1rem;
+	}
+}
+
+/*
+ * Internal authoring shorthand (§5.3, §6.3) — NOT a consumer API. Bundles the
+ * spacing derivatives plus --v-border-width so a single density change moves
+ * them together (works around the freezing rule, §5.2). Does not touch the
+ * radius anchors (§6.3).
+ */
+@define-mixin v-spacing $size, $border-width: 1px {
+	--v-spacing: $size;
+	--v-pad-block: calc($size * 1.25);
+	--v-pad-inline: calc($size * 1.25);
+	--v-gap-block: $size;
+	--v-gap-inline: calc($size * 0.5);
+	--v-gap-section: calc($size * 1.5);
+	--v-gap-tight: calc($size * 0.25);
+	--v-border-width: $border-width;
+}

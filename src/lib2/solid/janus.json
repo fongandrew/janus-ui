@@ -1,0 +1,5 @@
+{
+	"name": "solid",
+	"summary": "Thin Solid wrappers around css/ + dom/. Optional convenience layer.",
+	"depends": ["css", "dom", "utils"]
+}
