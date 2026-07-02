@@ -60,7 +60,7 @@ The reference for every public `--v-*` knob. This is what humans review while th
 
 The reference for every `o-*` object (§9).
 
-**Layout:** one demo card per object — `o-box`, `o-text-box`, `o-input-box`, `o-square`, `o-dialog`, `o-stack`, `o-group`, `o-row`, `o-grid`, `o-container`, `o-split`, `o-centric`, `o-bar`, `o-segmented`, `o-prose` (+ `<hgroup>`), `o-caption`, `o-code`, `o-menu`, `o-menu-item`. Each card shows:
+**Layout:** one demo card per object — `o-box`, `o-input-box`, `o-square`, `o-dialog`, `o-stack`, `o-group`, `o-row`, `o-grid`, `o-container`, `o-split`, `o-centric`, `o-bar`, `o-segmented`, `o-prose` (+ `<hgroup>`), `o-caption`, `o-code`, `o-menu`, `o-menu-item`. Each card shows:
 
 - A **live render** of the object doing its job, using neutral placeholder content (boxes/blocks, not finished components) so the object's *structural* behavior is the focus, not component chrome.
 - The object's **knobs** — its `--o-<name>__*` custom properties (e.g. `--o-box__pad-block`, `--o-grid__min`, `--o-stack__gap`) listed with defaults.
@@ -71,8 +71,8 @@ The reference for every `o-*` object (§9).
 - `o-bar` in its **three height modes** (text / contains-input / input, §9.7) with the same control in each, so the "too-tall header" fix is visible.
 - `o-prose` rhythm: bare heading vs. `<hgroup>`, the heading space-above vs. prose gap, and the **list rhythm** switch (grouped ↔ continuous) with wrapped bullets.
 - The **inline inset modes** (§6.1) side by side: field label at edge/radius/text; container prose meeting cards; a code block breaking out.
-- `o-grid` and `o-split` **reflow** shown at multiple container widths (resize handles or side-by-side narrow/wide frames), and the **full-bleed opt-in** (`data-v-bleed`) on a narrow frame.
-- `o-text-box` vs `o-box`: uniform block padding via `text-box-trim` (no `1lh` compensation math — §6).
+- `o-grid` and `o-split` **reflow** shown at multiple container widths (resize handles or side-by-side narrow/wide frames), and the **full-bleed opt-in** (the `--bleed` frame modifier) on a narrow frame.
+- Prose in a box (`o-box` + `o-prose`): uniform block padding via `text-box-trim` (no `1lh` compensation math, no separate text box — §6).
 
 Where a demonstration has discrete modes (bar height, list rhythm, insets, full-bleed), the demo card carries **scoped mode toggles** (§20.6) once the site hydrates — segmented controls that flip the class/attribute on that one render, with the markup snippet updating to match.
 

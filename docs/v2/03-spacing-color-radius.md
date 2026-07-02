@@ -10,11 +10,13 @@ Three padding modes, each implemented as `--o-*__pad-*` defaults set in the owni
 
 | Padding mode | Block (top/bottom) | Inline (left/right) | Used by |
 |---|---|---|---|
-| **Block-mode** (default) | `var(--v-pad-block)` | `var(--v-pad-inline)` | `o-box` — boxes whose children are other components / rows |
-| **Text-mode** (opt-in) | `var(--v-pad-block)` | alignment-dependent — see §6.1 | `o-text-box`, `o-input-box`, and text-bearing components (`c-tag`, `c-badge`, `c-alert` — see §10.1) |
+| **Block-mode** (default) | `var(--v-pad-block)` | `var(--v-pad-inline)`, floored at the box's own corner radius (§8.6) | `o-box` — every padded box, whether its children are component rows or running text (wrap text in `o-prose`) |
+| **Text-mode** (opt-in) | `var(--v-pad-block)` | alignment-dependent — see §6.1 | `o-input-box` and text-bearing components (`c-tag`, `c-badge`, `c-alert` — see §10.1) |
 | **Square** (opt-in) | `0` (aspect-driven) | `0` | `o-square` for icon / avatar / 1:1 content |
 
 **Block padding is uniform, because of `text-box-trim`.** v1 subtracted the line-height overhang `(1lh − 1em)/2` from text-mode block padding so the optical space above and below the text matched the inline padding. v2 drops that fudge. Every text element renders with `text-box-trim: trim-both` (the `text-box` property — see §15), so its box edges sit at the cap height and alphabetic baseline. A plain `var(--v-pad-block)` then yields correct optical padding *regardless of font-size or line-height* — an `h1` and a `p` in the same box both look right, and no wrapper needs to know its content's type metrics. This is a deliberate bet on a not-yet-Firefox feature (§15); the degradation is slightly loose leading on the first/last line in Firefox, which we judge acceptable versus carrying per-element compensation math everywhere.
+
+**This is also why there is no `o-text-box`.** v1-style systems need a distinct text box because text demands compensated padding; with trim, the compensation is gone and **one padded box serves both kinds of content**. Prose in a box is the composition `o-box` + `o-prose` — the box owns the perimeter (padding, radius, curvature clearance §8.6); the prose object owns the trim and the interior rhythm (§6.2). The only self-padded text elements left are the ones `base.css` handles directly (`<pre>`, `blockquote` callouts, table cells).
 
 **Where to trim — the perimeter rule.** Trimming is not "apply to every text element"; it's a property of where text meets a *non-text edge*:
 
@@ -82,7 +84,7 @@ Each situation has its own default above; either can be moved across the three r
 
 **At full-bleed, the inset drops to flush.** When a frame is narrow enough that its boxes go full-bleed (the breakout below — they escape the frame's gutter, square off, lose their radius/border/shadow), there's no margin or corner left to align to, so `--o-prose__inset` goes to `0`. Because the first/last-child block padding *tracks* the inset, it drops to `0` too — the text sits flush on the inline **and** block edges, no lone top/bottom gap. The prose text still lines up with the now-edge-to-edge boxes' inner text (the frame's own gutter does the offsetting), and the prose's own block boxes bleed out the same way the cards do. One container query on the **frame's** width drives all of it, so the same rule serves the page (narrow viewport) and a dialog (narrow dialog) — see §9.3 / §10.
 
-**Full-bleed is a per-frame opt-in.** The mechanism ships always, but it fires only on frames carrying `data-v-bleed` (the CSS-only state-attribute convention, §4) — the workbench treats it as a mode, and blanket-breaking every card out of every narrow frame is too opinionated for a default. The breakpoint is a fixed length in the `@container` condition (`30rem`; container-query conditions can't read custom properties, so changing it is a consumer-CSS override, not a knob).
+**Full-bleed is a per-frame opt-in — the `--bleed` frame modifier.** The mechanism ships always, but it fires only on frames carrying the modifier class: `o-container--bleed` on a page region, `o-dialog--bleed` on a dialog (one shared `@container` rule matches both via `:is()`). The workbench treats full-bleed as a mode, and blanket-breaking every card out of every narrow frame is too opinionated for a default. A **class**, not a variable or attribute, on purpose: it's a structural mode chosen at authoring time — exactly what an object modifier is for (`o-grid--fit` is the precedent) — while `data-v-*` attributes are reserved for *runtime state* (`data-v-color-scheme`), and a custom property can't do the job at all (`@container` conditions can't read custom properties, and gating the rule body on one would need `style()` container queries, which aren't dependable at our §15 browser floor). The breakpoint is likewise a fixed length in the `@container` condition (`30rem`) for the same reason — changing it is a consumer-CSS override, not a knob.
 
 Because each text element carries its own inset as positive padding keyed to a shared knob, **mixed content composes without the container knowing its contents**, and `--v-control-inset` / the radius knobs stay pure functions of shared knobs — no upward data flow.
 
@@ -107,7 +109,7 @@ A box's block padding handles only its **perimeter** — first/last child to the
 
 The multiples are **baked into the token defaults, not exposed as a separate ratio layer** (there is no `--rk-*` tier in shipped CSS — that layer exists only inside the workbench prototype so its sliders can explore the proportions): a consumer turns `--v-spacing` for global density, or overrides one derived token for one relationship, instead of tuning a wall of ratio knobs. The decomposition is the point — a single uniformly-multiplied `--v-spacing` can't serve both surfaces; naming the multiples is what lets it.
 
-**Every vertical gap is owned by the element underneath.** It's always a `margin-block-start` on the *lower* element, and its value depends on what sits **above** it — "the thing below owns the gap above it." For prose inside an `o-text-box` (or the `o-prose` flow object, §9.5), the boundaries resolve as:
+**Every vertical gap is owned by the element underneath.** It's always a `margin-block-start` on the *lower* element, and its value depends on what sits **above** it — "the thing below owns the gap above it." Inside the `o-prose` flow object (§9.5), the boundaries resolve as:
 
 - **body ↔ body, and heading → whatever follows → the *prose* gap.** A bare heading does **not** hug its body; the element below simply keeps its ordinary prose gap. (The one place a heading sits tight to text is the `<hgroup>` exception below.)
 - **whatever → a heading → the heading's *space-above*** — the section break, the one bit of rhythm a heading owns (above itself, not below).
@@ -192,7 +194,7 @@ This is not a breakpoint — it's a pixel-density gate. A phone with a 200dpi sc
 
 Inside the scoped subtree, every `--o-*__pad-*` / `--o-*__gap` default re-resolves against the new bundle. (A consumer who forks the CSS package *may* reuse Janus's internal `v-spacing` mixin to shorten these, but it isn't required and isn't part of the documented surface.)
 
-**Rule of thumb for consumers:** raw text never goes directly inside an `o-box`. Wrap it in `o-text-box`, or place it inside a text-bearing component. This keeps inline alignment (§6.1) and curvature clearance well-defined, and is what makes the positive-padding-only model work without negative margins.
+**Rule of thumb for consumers:** raw text never goes directly inside an `o-box`. Wrap it in `o-prose` (which owns the trim and rhythm — §9.5), or place it inside a text-bearing component. This keeps inline alignment (§6.1) and interior rhythm well-defined; the box itself handles curvature clearance (§8.6).
 
 ### 6.5 Fluid spacing (opt-in, same mechanism as type)
 
@@ -492,14 +494,14 @@ The cascade is **always on** — it's the radius system, not an opt-in class. It
 }
 /* a box steps the control knob one pad deeper for *its* children, and also
    publishes an inner-box knob for a box nested inside it */
-:where(.o-box, .o-text-box) {
+:where(.o-box) {
   --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-box__radius) - var(--v-pad-inline)));
   --o-box__radius-inner: max(var(--v-radius-min), calc(var(--o-box__radius) - var(--v-pad-inline)));
 }
 /* a box INSIDE a box reads the inner-box knob instead, and steps its own
    controls one pad further. (Same zero specificity as the rule above —
    source order makes this one win on the nested element.) */
-:where(.o-box, .o-text-box) :where(.o-box, .o-text-box) {
+:where(.o-box) :where(.o-box) {
   border-radius: var(--o-box__radius-inner, var(--v-radius-min));
   --o-input-box__radius: max(var(--v-radius-min), calc(var(--o-box__radius-inner) - var(--v-pad-inline)));
 }
@@ -549,7 +551,7 @@ This is a **design constraint the radius surfaces**: a frame with a large corner
 
 ### 8.6 Curvature, square content, escape hatches
 
-- **Curvature clearance (text & pills).** Text-bearing objects floor their *own* inline padding at the corner radius so glyphs clear the curve (the straight-edge principle of §6.1, applied to a box's own contents). For a **pill** the effective radius is half the height, so the floor is `0.5lh + block-pad`, not `--v-radius-min`. The general rule: *inline padding ≥ the effective corner radius*, where a pill's effective radius is `height/2`.
+- **Curvature clearance (boxes, text & pills).** `o-box` and text-bearing controls/components floor their *own* inline padding at their corner radius so content clears the curve (the straight-edge principle of §6.1, applied to a box's own contents; with `o-text-box` dropped, the floor lives on `o-box` itself — at default values it's a no-op, since box radii floor well below the pad, and it only binds at large radii). For a **pill** the effective radius is half the height, so the floor is `0.5lh + block-pad`, not `--v-radius-min`. The general rule: *inline padding ≥ the effective corner radius*, where a pill's effective radius is `height/2`.
 - **Square / icon content.** `o-square`, `c-avatar`, `c-spinner`, `c-badge` (dot mode) read `--v-radius` directly and can go fully circular (`--v-radius: 50%`).
 - **No deeper nesting in one object.** The cascade already handles depth, but a *nested same object* shares its parent's box knob unless a box re-roots it (as `.o-box` does for the control knob). Two genuinely distinct rounded-box levels → introduce a new object with its own knob.
 - **Escape hatches** in the tools layer: `t-radius-none`, `t-radius-full`.
