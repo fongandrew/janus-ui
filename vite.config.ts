@@ -2,6 +2,7 @@ import { readdirSync, statSync } from 'fs';
 import solidPlugin from 'vite-plugin-solid';
 import { defineConfig } from 'vitest/config';
 
+import janusBundlePlugin from './plugins/vite-plugin-janus-bundle';
 import purgeCSSPlugin from './plugins/vite-plugin-purgecss';
 import viteSSGPlugin from './plugins/vite-plugin-ssg';
 
@@ -29,6 +30,9 @@ export default defineConfig(({ mode }) => {
 				],
 			}),
 			viteSSGPlugin(),
+			// Serves virtual:janus-handlers — Pattern A (everything) in dev,
+			// SSR-output-driven handler purge in a second-pass client build (§12.4).
+			janusBundlePlugin(),
 		],
 		resolve: {
 			alias: {
