@@ -1,0 +1,86 @@
+/*
+ * Documentation-site chrome — `p-` classes only (§4).
+ * Deliberately unlayered: project CSS beats every Janus layer.
+ * Only site-specific arrangement lives here; anything that feels like library
+ * material should become a real o-/c-/v- class instead.
+ */
+
+.p-site-nav {
+	justify-content: space-between;
+}
+
+.p-site-nav__brand {
+	align-items: center;
+}
+
+.p-site-nav__title {
+	font-weight: var(--v-font-weight-title, 700);
+	text-decoration: none;
+}
+
+.p-site-nav__links {
+	align-items: center;
+}
+
+.p-site-nav__links a[aria-current='page'] {
+	font-weight: var(--v-font-weight-subtitle, 600);
+}
+
+.p-site-main {
+	--o-container__max: 70rem;
+	--o-container__gutter: var(--v-pad-inline, 1.25rem);
+	min-height: 80vh;
+	padding-block: var(--v-gap-section, 1.5rem);
+}
+
+.p-site-footer {
+	--o-container__max: 70rem;
+	color: var(--v-muted, inherit);
+	padding-block: var(--v-gap-section, 1.5rem);
+}
+
+/* Composition sidebar / ToC */
+.p-doc-split {
+	align-items: flex-start;
+	gap: var(--v-gap-section, 1.5rem);
+}
+
+.p-doc-toc {
+	position: sticky;
+	top: calc(var(--v-input-height, 2rem) + 2 * var(--v-spacing, 1rem));
+	flex: none;
+	inline-size: 14rem;
+}
+
+.p-doc-toc ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.p-doc-toc ul ul {
+	padding-inline-start: var(--v-spacing, 1rem);
+}
+
+.p-doc-toc a {
+	color: inherit;
+	display: block;
+	padding-block: calc(0.5 * var(--v-gap-tight, 0.25rem));
+	text-decoration: none;
+}
+
+.p-doc-toc a[aria-current='page'] {
+	color: var(--v-link, inherit);
+	font-weight: var(--v-font-weight-subtitle, 600);
+}
+
+.p-doc-main {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+/* Home nav cards */
+.p-nav-cards a {
+	color: inherit;
+	text-decoration: none;
+}

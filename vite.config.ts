@@ -51,7 +51,7 @@ export default defineConfig(({ mode }) => {
 						.map((file) => [file.slice(0, -5), file]),
 				),
 			},
-			target: ['safari17', 'ios17', 'chrome135', 'firefox137'],
+			target: ['safari26', 'ios26', 'chrome135', 'firefox144'],
 		},
 		target: 'esnext',
 		server: { port: 3000, hmr: { port: 3000 } },

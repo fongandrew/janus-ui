@@ -1,0 +1,6 @@
+/*
+ * Janus v2 — single CSS entry point.
+ * Phase 0 placeholder: declares the layer order (§4) so pages can link this
+ * file before the token/base layers exist. Phase 1 populates it.
+ */
+@layer reset, base, objects, components, variants, tools;
